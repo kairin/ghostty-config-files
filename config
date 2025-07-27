@@ -10,7 +10,5 @@ config-file = keybindings.conf
 initial-command = "mousepad /home/kkk/.config/ghostty/keybindings.md"
 
 shell-integration = zsh
-show-menubar = true
-show-toolbar = true
-show-scrollbars = true
 gtk-tabs-location = top
+window-new-tab-position = last
