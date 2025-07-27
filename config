@@ -7,4 +7,4 @@ config-file = layout.conf
 config-file = keybindings.conf
 
 
-initial-command = "gedit --new-window --geometry=800x600 /home/kkk/.config/ghostty/keybindings.md"
+initial-command = "kate --geometry 800x600 /home/kkk/.config/ghostty/keybindings.md"
