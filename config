@@ -7,4 +7,4 @@ config-file = layout.conf
 config-file = keybindings.conf
 
 
-initial-command = "kate --geometry 800x600 /home/kkk/.config/ghostty/keybindings.md"
+initial-command = "mousepad /home/kkk/.config/ghostty/keybindings.md"
