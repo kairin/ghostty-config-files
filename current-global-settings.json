@@ -121,6 +121,11 @@
     "pwsh": {
       "path": "pwsh",
       "icon": "terminal-powershell"
+    },
+    "ghostty": {
+      "path": "ghostty",
+      "icon": "terminal",
+      "args": []
     }
   },
   "terminal.integrated.cursorBlinking": true,

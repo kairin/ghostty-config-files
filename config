@@ -11,6 +11,8 @@ config-file = keybindings.conf
 # To view keybindings, run: cat ~/.config/ghostty/keybindings.md
 # Or create alias: alias ghostty-help="cat ~/.config/ghostty/keybindings.md"
 
+# Use zsh as default shell
+command = zsh
 shell-integration = zsh
 gtk-tabs-location = top
 window-new-tab-position = end

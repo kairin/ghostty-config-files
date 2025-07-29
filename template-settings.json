@@ -9,7 +9,7 @@
   "editor.lineNumbers": "on",
   "terminal.integrated.fontSize": 16,
   "terminal.integrated.fontFamily": "'Fira Code', 'JetBrains Mono', monospace",
-  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.defaultProfile.linux": "zsh",
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "git.autofetch": "all",
@@ -121,6 +121,11 @@
     "pwsh": {
       "path": "pwsh",
       "icon": "terminal-powershell"
+    },
+    "ghostty": {
+      "path": "ghostty",
+      "icon": "terminal",
+      "args": []
     }
   },
   "terminal.integrated.cursorBlinking": true,
