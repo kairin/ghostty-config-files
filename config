@@ -7,7 +7,9 @@ config-file = layout.conf
 config-file = keybindings.conf
 
 
-initial-command = "mousepad /home/kkk/.config/ghostty/keybindings.md"
+# Removed initial-command to prevent conflicts with VS Code external terminal
+# To view keybindings, run: cat ~/.config/ghostty/keybindings.md
+# Or create alias: alias ghostty-help="cat ~/.config/ghostty/keybindings.md"
 
 shell-integration = zsh
 gtk-tabs-location = top
