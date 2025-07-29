@@ -84,7 +84,15 @@
     "python.terminal.shellIntegration.enabled",
     "python-envs.terminal.autoActivationType",
     "python-envs.terminal.showActivateButton",
-    "editor.defaultFoldingRangeProvider"
+    "editor.defaultFoldingRangeProvider",
+    "terminal.explorerKind",
+    "terminal.integrated.accessibleViewFocusOnCommandExecution",
+    "terminal.integrated.accessibleViewPreserveCursorPosition",
+    "terminal.integrated.allowChords",
+    "terminal.integrated.allowedLinkSchemes",
+    "terminal.integrated.allowMnemonics",
+    "terminal.integrated.altClickMovesCursor",
+    "terminal.integrated.automationProfile.linux"
   ],
   "terminal.integrated.copyOnSelection": true,
   "settingsSync.ignoredSettings": [
@@ -128,5 +136,12 @@
   "python.terminal.executeInFileDir": true,
   "python.terminal.focusAfterLaunch": true,
   "python.terminal.shellIntegration.enabled": true,
-  "python-envs.terminal.showActivateButton": true
+  "python-envs.terminal.showActivateButton": true,
+  "terminal.external.linuxExec": "ghostty",
+  "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+  "terminal.integrated.accessibleViewPreserveCursorPosition": true,
+  "terminal.integrated.allowMnemonics": true,
+  "terminal.integrated.automationProfile.linux": {
+  
+  }
 }
