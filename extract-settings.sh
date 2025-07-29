@@ -35,7 +35,7 @@ fi
 check_settings_sync() {
     echo -e "\n${BLUE}Checking VS Code Settings Sync Status${NC}"
     echo "====================================="
-    
+
     local sync_state_file="$VSCODE_USER_DIR/globalState.json"
     if [[ -f "$sync_state_file" ]]; then
         if grep -q "userDataSyncStore.resource" "$sync_state_file" 2>/dev/null; then
@@ -46,7 +46,7 @@ check_settings_sync() {
     else
         echo -e "${RED}✗${NC} VS Code user data not found"
     fi
-    
+
     echo ""
     echo "To ensure Settings Sync is working properly:"
     echo "1. Open VS Code"
@@ -60,17 +60,17 @@ check_settings_sync() {
 extract_current_settings() {
     echo -e "\n${BLUE}Extracting Current VS Code Settings${NC}"
     echo "=================================="
-    
+
     local settings_file="$VSCODE_USER_DIR/settings.json"
     local keybindings_file="$VSCODE_USER_DIR/keybindings.json"
     local snippets_dir="$VSCODE_USER_DIR/snippets"
-    
+
     # Extract user settings
     if [[ -f "$settings_file" ]]; then
         echo -e "${GREEN}✓${NC} Found user settings.json"
         cp "$settings_file" "$SCRIPT_DIR/extracted-user-settings.json"
         echo -e "${GREEN}✓${NC} Copied to extracted-user-settings.json"
-        
+
         # Count settings
         local setting_count=$(grep -c '".*":' "$settings_file" 2>/dev/null || echo "0")
         echo -e "  ${YELLOW}→${NC} Contains $setting_count settings"
@@ -78,7 +78,7 @@ extract_current_settings() {
         echo -e "${RED}✗${NC} User settings.json not found"
         echo "{}" > "$SCRIPT_DIR/extracted-user-settings.json"
     fi
-    
+
     # Extract keybindings
     if [[ -f "$keybindings_file" ]]; then
         echo -e "${GREEN}✓${NC} Found keybindings.json"
@@ -88,7 +88,7 @@ extract_current_settings() {
         echo -e "${YELLOW}!${NC} No custom keybindings found"
         echo "[]" > "$SCRIPT_DIR/extracted-keybindings.json"
     fi
-    
+
     # Extract snippets
     if [[ -d "$snippets_dir" ]]; then
         echo -e "${GREEN}✓${NC} Found snippets directory"
@@ -106,21 +106,21 @@ extract_current_settings() {
 extract_extensions() {
     echo -e "\n${BLUE}Extracting Installed Extensions${NC}"
     echo "=============================="
-    
+
     if command -v code &> /dev/null; then
         echo -e "${GREEN}✓${NC} VS Code CLI found"
-        
+
         # Get list of installed extensions
         local extensions_list=$(code --list-extensions 2>/dev/null)
         local extension_count=$(echo "$extensions_list" | wc -l)
-        
+
         if [[ -n "$extensions_list" ]]; then
             echo -e "${GREEN}✓${NC} Found $extension_count installed extensions"
-            
+
             # Create comprehensive extensions.json
             echo '{' > "$SCRIPT_DIR/complete-extensions.json"
             echo '  "recommendations": [' >> "$SCRIPT_DIR/complete-extensions.json"
-            
+
             local first=true
             while IFS= read -r ext; do
                 if [[ -n "$ext" ]]; then
@@ -132,10 +132,10 @@ extract_extensions() {
                     fi
                 fi
             done <<< "$extensions_list"
-            
+
             echo '  ]' >> "$SCRIPT_DIR/complete-extensions.json"
             echo '}' >> "$SCRIPT_DIR/complete-extensions.json"
-            
+
             echo -e "${GREEN}✓${NC} Created complete-extensions.json with all $extension_count extensions"
         else
             echo -e "${YELLOW}!${NC} No extensions found or VS Code CLI not working"
@@ -150,11 +150,11 @@ extract_extensions() {
 merge_settings() {
     echo -e "\n${BLUE}Merging Settings with Template${NC}"
     echo "============================"
-    
+
     local extracted_file="$SCRIPT_DIR/extracted-user-settings.json"
     local template_file="$SCRIPT_DIR/template-settings.json"
     local merged_file="$SCRIPT_DIR/merged-complete-settings.json"
-    
+
     if [[ -f "$extracted_file" ]] && [[ -f "$template_file" ]]; then
         # Use jq if available, otherwise manual merge
         if command -v jq &> /dev/null; then
@@ -165,9 +165,9 @@ merge_settings() {
             # Simple manual merge - just copy extracted for now
             cp "$extracted_file" "$merged_file"
         fi
-        
+
         echo -e "${GREEN}✓${NC} Created merged-complete-settings.json"
-        
+
         # Count final settings
         local final_count=$(grep -c '".*":' "$merged_file" 2>/dev/null || echo "0")
         echo -e "  ${YELLOW}→${NC} Final merged file contains $final_count settings"
@@ -180,7 +180,7 @@ merge_settings() {
 fix_profiles() {
     echo -e "\n${BLUE}Creating Single Profile Setup${NC}"
     echo "============================"
-    
+
     cat > "$SCRIPT_DIR/profile-fix-instructions.md" << 'EOF'
 # VS Code Profile Fix Instructions
 
@@ -250,7 +250,7 @@ EOF
 create_auto_sync() {
     echo -e "\n${BLUE}Creating Auto-Sync System${NC}"
     echo "========================"
-    
+
     cat > "$SCRIPT_DIR/auto-update-repo.sh" << 'EOF'
 #!/bin/bash
 
@@ -269,7 +269,7 @@ echo "🔄 Auto-updating repository with current VS Code settings..."
 if [[ -f "merged-complete-settings.json" ]]; then
     CURRENT_COUNT=$(grep -c '".*":' "merged-complete-settings.json" 2>/dev/null || echo "0")
     TEMPLATE_COUNT=$(grep -c '".*":' "template-settings.json" 2>/dev/null || echo "0")
-    
+
     if [[ $CURRENT_COUNT -gt $TEMPLATE_COUNT ]]; then
         echo "📈 Current settings ($CURRENT_COUNT) more comprehensive than template ($TEMPLATE_COUNT)"
         echo "🔄 Updating template-settings.json..."
@@ -281,7 +281,7 @@ fi
 if [[ -f "complete-extensions.json" ]]; then
     CURRENT_EXT_COUNT=$(grep -c '".*\.[^"]*"' "complete-extensions.json" 2>/dev/null || echo "0")
     TEMPLATE_EXT_COUNT=$(grep -c '".*\.[^"]*"' ".vscode/extensions.json" 2>/dev/null || echo "0")
-    
+
     if [[ $CURRENT_EXT_COUNT -gt $TEMPLATE_EXT_COUNT ]]; then
         echo "📦 Current extensions ($CURRENT_EXT_COUNT) more than template ($TEMPLATE_EXT_COUNT)"
         echo "🔄 Updating .vscode/extensions.json..."
@@ -292,14 +292,14 @@ fi
 # Git operations (if this is a git repo)
 if [[ -d ".git" ]]; then
     echo "📝 Checking for changes to commit..."
-    
+
     if git diff --quiet && git diff --staged --quiet; then
         echo "✅ No changes to commit"
     else
         echo "💾 Committing updated settings..."
         git add .
         git commit -m "Auto-update: VS Code settings and extensions $(date '+%Y-%m-%d %H:%M')"
-        
+
         echo "🚀 Pushing to remote..."
         git push origin main || echo "⚠️  Push failed - you may need to pull first"
     fi
@@ -316,7 +316,7 @@ EOF
 create_scheduled_sync() {
     echo -e "\n${BLUE}Creating Scheduled Sync (Optional)${NC}"
     echo "================================="
-    
+
     cat > "$SCRIPT_DIR/setup-cron.sh" << 'EOF'
 #!/bin/bash
 

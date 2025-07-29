@@ -21,12 +21,12 @@ download_file() {
     local url="$1"
     local output="$2"
     local description="$3"
-    
+
     echo -e "Downloading ${YELLOW}$description${NC}..."
-    
+
     # Create directory if it doesn't exist
     mkdir -p "$(dirname "$output")"
-    
+
     # Download with wget (with resume support)
     if wget -c "$url" -O "$output"; then
         echo -e "${GREEN}✓${NC} Downloaded: $output"
@@ -40,16 +40,16 @@ download_file() {
 # Function to setup a single workspace
 setup_workspace() {
     local target_dir="${1:-.}"
-    
+
     echo -e "\n${BLUE}Setting up workspace in:${NC} $target_dir"
     echo "========================================"
-    
+
     cd "$target_dir" || exit 1
-    
+
     # Download main configuration files
     download_file "$BASE_URL/template-settings.json" ".vscode/settings.json" "VS Code settings"
     download_file "$BASE_URL/.vscode/extensions.json" ".vscode/extensions.json" "Extension recommendations"
-    
+
     # Optional: Download utility scripts
     if [[ "$2" == "--with-scripts" ]]; then
         download_file "$BASE_URL/sync-workspaces.sh" "sync-workspaces.sh" "Sync script"
@@ -57,22 +57,22 @@ setup_workspace() {
         chmod +x sync-workspaces.sh dual-setup.sh 2>/dev/null
         echo -e "${GREEN}✓${NC} Made scripts executable"
     fi
-    
+
     echo -e "\n${GREEN}✓ Workspace setup complete!${NC}"
 }
 
 # Function to setup multiple workspaces
 setup_multiple() {
     local base_dir="$1"
-    
+
     echo -e "\n${BLUE}Setting up all workspaces in:${NC} $base_dir"
     echo "============================================="
-    
+
     if [[ ! -d "$base_dir" ]]; then
         echo -e "${RED}✗${NC} Directory does not exist: $base_dir"
         exit 1
     fi
-    
+
     local count=0
     for dir in "$base_dir"/*; do
         if [[ -d "$dir" ]]; then
@@ -81,30 +81,30 @@ setup_multiple() {
             ((count++))
         fi
     done
-    
+
     echo -e "\n${GREEN}✓ Processed $count workspaces!${NC}"
 }
 
 # Function to just download template files for manual setup
 download_templates() {
     local target_dir="${1:-./vscode-templates}"
-    
+
     echo -e "\n${BLUE}Downloading templates to:${NC} $target_dir"
     echo "==========================================="
-    
+
     mkdir -p "$target_dir"
     cd "$target_dir" || exit 1
-    
+
     # Download all template files
     download_file "$BASE_URL/template-settings.json" "template-settings.json" "Settings template"
     download_file "$BASE_URL/.vscode/extensions.json" "extensions.json" "Extensions template"
     download_file "$BASE_URL/sync-workspaces.sh" "sync-workspaces.sh" "Sync script"
     download_file "$BASE_URL/dual-setup.sh" "dual-setup.sh" "Dual setup script"
     download_file "$BASE_URL/COMPLETE-SETUP-GUIDE.md" "COMPLETE-SETUP-GUIDE.md" "Setup guide"
-    
+
     # Make scripts executable
     chmod +x sync-workspaces.sh dual-setup.sh 2>/dev/null
-    
+
     echo -e "\n${GREEN}✓ Templates downloaded!${NC}"
     echo -e "Use: ${YELLOW}cp template-settings.json /path/to/project/.vscode/settings.json${NC}"
 }

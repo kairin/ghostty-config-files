@@ -27,7 +27,7 @@ mkdir -p .vscode
 # Download settings with progress
 wget -c --progress=bar:force https://raw.githubusercontent.com/kairin/ghostty-config-files/main/template-settings.json -O .vscode/settings.json
 
-# Download extensions with progress  
+# Download extensions with progress
 wget -c --progress=bar:force https://raw.githubusercontent.com/kairin/ghostty-config-files/main/.vscode/extensions.json -O .vscode/extensions.json
 
 echo "✅ Setup complete! Open VS Code and install recommended extensions."
@@ -54,7 +54,7 @@ echo "✅ All templates downloaded to vscode-templates/"
 ## 🌟 Why wget -c?
 
 - **Resume Support**: `-c` continues partial downloads
-- **Reliability**: Better handling of network interruptions  
+- **Reliability**: Better handling of network interruptions
 - **Progress**: Shows download progress by default
 - **Availability**: Installed on most Linux systems
 - **Efficiency**: Only downloads what's needed

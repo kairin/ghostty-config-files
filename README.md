@@ -1,7 +1,7 @@
 # Ghostty Configuration + VS Code Workspace Templates
 
 This repository contains:
-- Personal Ghostty terminal emulator configuration  
+- Personal Ghostty terminal emulator configuration
 - VS Code workspace templates and sync tools
 - Cross-device development environment setup
 - **Automatic MCP app and extension tracking system**
@@ -45,7 +45,7 @@ When you install new MCP apps, Claude Desktop integrations, or any VS Code exten
 
 This captures:
 - ✅ New MCP extensions (Model Context Protocol apps)
-- ✅ All VS Code extensions and settings  
+- ✅ All VS Code extensions and settings
 - ✅ Keybindings and snippets
 - ✅ Commits and pushes changes automatically
 

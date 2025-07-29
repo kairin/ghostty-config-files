@@ -9,7 +9,7 @@ Your settings sync is restoring old versions because of profile conflicts. Here'
 1. **Open VS Code**
 2. **Press `Ctrl+Shift+P`**
 3. **Type `"Settings Sync: Turn Off"`** and confirm
-4. **Type `"Profiles: Show Profiles"`** 
+4. **Type `"Profiles: Show Profiles"`**
 5. **Delete ALL profiles except "Default"**
 6. **Type `"Settings Sync: Turn On"`**
 7. **Sign in with your preferred account**
@@ -21,7 +21,7 @@ Your settings sync is restoring old versions because of profile conflicts. Here'
 2. **Type `"Settings Sync: Show Settings"`**
 3. **Ensure ALL items are checked:**
    - ✅ Settings
-   - ✅ Keybindings  
+   - ✅ Keybindings
    - ✅ Extensions
    - ✅ User Snippets
    - ✅ UI State
@@ -52,10 +52,10 @@ This script will:
 
 ### **What Gets Tracked Automatically:**
 
-✅ **New MCP Extensions** (like Claude Desktop, GPT integration, etc.)  
-✅ **Settings Changes** (keybindings, themes, editor preferences)  
-✅ **New Snippets** (code templates you create)  
-✅ **Workspace Configurations** (project-specific settings)  
+✅ **New MCP Extensions** (like Claude Desktop, GPT integration, etc.)
+✅ **Settings Changes** (keybindings, themes, editor preferences)
+✅ **New Snippets** (code templates you create)
+✅ **Workspace Configurations** (project-specific settings)
 
 ### **Daily Auto-Sync (Optional)**
 
@@ -119,7 +119,7 @@ You now have a **dual-sync system**:
 
 This means:
 - ✅ Personal preferences sync automatically
-- ✅ New MCP apps get captured in repository  
+- ✅ New MCP apps get captured in repository
 - ✅ All devices stay synchronized
 - ✅ No manual work required after initial setup
 
