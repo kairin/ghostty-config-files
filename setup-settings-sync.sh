@@ -43,10 +43,10 @@ check_vscode_running() {
 backup_settings() {
     echo -e "\n${BLUE}Creating Backup of Current Settings${NC}"
     echo "=================================="
-    
+
     local backup_dir="$HOME/vscode-settings-backup-$(date +%Y%m%d-%H%M%S)"
     mkdir -p "$backup_dir"
-    
+
     if [[ -d "$VSCODE_USER_DIR" ]]; then
         cp -r "$VSCODE_USER_DIR" "$backup_dir/"
         echo -e "${GREEN}✓${NC} Backup created at: $backup_dir"
@@ -59,12 +59,12 @@ backup_settings() {
 configure_sync_settings() {
     echo -e "\n${BLUE}Configuring Optimal Sync Settings${NC}"
     echo "================================="
-    
+
     local settings_file="$VSCODE_USER_DIR/settings.json"
-    
+
     # Create user directory if it doesn't exist
     mkdir -p "$VSCODE_USER_DIR"
-    
+
     # Create or update settings.json
     if [[ -f "$settings_file" ]]; then
         echo -e "${GREEN}✓${NC} Found existing settings.json"
@@ -75,11 +75,11 @@ configure_sync_settings() {
         echo -e "${YELLOW}!${NC} No existing settings.json, creating new one"
         echo "{}" > "$settings_file"
     fi
-    
+
     # Use jq to update settings if available, otherwise manual approach
     if command -v jq &> /dev/null; then
         echo -e "${GREEN}✓${NC} Using jq for settings update"
-        
+
         # Update settings with optimal sync configuration
         jq '. + {
             "settingsSync.keybindingsPerPlatform": false,
@@ -93,7 +93,7 @@ configure_sync_settings() {
             "git.confirmSync": false,
             "git.autofetch": "all"
         }' "$settings_file" > "$settings_file.tmp" && mv "$settings_file.tmp" "$settings_file"
-        
+
         echo -e "${GREEN}✓${NC} Updated settings.json with optimal sync configuration"
     else
         echo -e "${YELLOW}!${NC} jq not found, manual configuration required"
@@ -109,7 +109,7 @@ configure_sync_settings() {
 show_manual_steps() {
     echo -e "\n${BLUE}Manual Steps to Complete Setup${NC}"
     echo "=============================="
-    
+
     echo -e "${YELLOW}1. Open VS Code${NC}"
     echo -e "${YELLOW}2. Press Ctrl+Shift+P${NC}"
     echo -e "${YELLOW}3. Type 'Settings Sync: Turn Off' and confirm${NC}"
@@ -130,7 +130,7 @@ show_manual_steps() {
 create_commands_reference() {
     echo -e "\n${BLUE}Creating VS Code Commands Reference${NC}"
     echo "=================================="
-    
+
     cat > "vscode-sync-commands.md" << 'EOF'
 # VS Code Settings Sync Commands Reference
 
@@ -154,7 +154,7 @@ create_commands_reference() {
 
 ## Settings to Enable in Configure:
 ✅ Settings (user settings.json)
-✅ Keybindings (custom shortcuts)  
+✅ Keybindings (custom shortcuts)
 ✅ Extensions (all installed extensions)
 ✅ User Snippets (code templates)
 ✅ UI State (workbench layout)
@@ -177,24 +177,24 @@ EOF
 test_vscode_cli() {
     echo -e "\n${BLUE}Testing VS Code CLI Integration${NC}"
     echo "=============================="
-    
+
     if command -v code &> /dev/null; then
         echo -e "${GREEN}✓${NC} VS Code CLI is available"
-        
+
         # Test if we can list extensions
         local ext_count=$(code --list-extensions 2>/dev/null | wc -l)
         echo -e "${GREEN}✓${NC} Found $ext_count extensions via CLI"
-        
+
         # Show some extensions
         echo -e "${YELLOW}Current extensions:${NC}"
         code --list-extensions 2>/dev/null | head -5 | while read -r ext; do
             echo "  - $ext"
         done
-        
+
         if [[ $ext_count -gt 5 ]]; then
             echo "  ... and $((ext_count - 5)) more"
         fi
-        
+
     else
         echo -e "${RED}✗${NC} VS Code CLI not available"
         echo "To enable VS Code CLI:"
