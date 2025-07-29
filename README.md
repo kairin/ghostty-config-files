@@ -1,18 +1,21 @@
 # Ghostty Configuration + VS Code Workspace Templates
 
 This repository contains:
-- Personal Ghostty terminal emulator configuration
+- Personal Ghostty terminal emulator configuration  
 - VS Code workspace templates and sync tools
 - Cross-device development environment setup
+- **Automatic MCP app and extension tracking system**
 
-## 🚀 Quick VS Code Setup (wget method)
+## � **IMPORTANT: Fix VS Code Settings Sync First!**
 
-### **Single Workspace Setup**
+If your settings sync is restoring old versions, **read `SETTINGS-SYNC-FIX.md` immediately** to fix profile conflicts and ensure proper syncing.
+
+## �🚀 Quick VS Code Setup (wget method)
+
+### **Single Workspace Setup (Copy & Paste)**
 ```bash
-# Quick setup using wget (with resume support)
-mkdir -p .vscode
-wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/template-settings.json -O .vscode/settings.json
-wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/.vscode/extensions.json -O .vscode/extensions.json
+# Ultimate one-liner - works anywhere
+mkdir -p .vscode && wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/template-settings.json -O .vscode/settings.json && wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/.vscode/extensions.json -O .vscode/extensions.json && echo "✅ VS Code workspace configured!"
 ```
 
 ### **Automated Setup Script**
@@ -24,11 +27,32 @@ chmod +x quick-setup-wget.sh
 # Setup current directory
 ./quick-setup-wget.sh quick
 
-# Setup multiple projects
+# Setup multiple projects at once
 ./quick-setup-wget.sh setup-all ~/Projects
 
 # Download templates for manual use
 ./quick-setup-wget.sh download ~/vscode-templates
+```
+
+## 🤖 **Auto-Tracking MCP Apps & Extensions**
+
+When you install new MCP apps, Claude Desktop integrations, or any VS Code extensions:
+
+```bash
+# Automatically update this repository with your latest settings
+./auto-update-repo.sh
+```
+
+This captures:
+- ✅ New MCP extensions (Model Context Protocol apps)
+- ✅ All VS Code extensions and settings  
+- ✅ Keybindings and snippets
+- ✅ Commits and pushes changes automatically
+
+### **Set Up Daily Auto-Sync (Optional)**
+```bash
+# Automatically sync every day at 6 PM
+./setup-cron.sh
 ```
 
 ## 📁 Ghostty Terminal Installation
