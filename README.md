@@ -1,8 +1,37 @@
-# Ghostty Configuration
+# Ghostty Configuration + VS Code Workspace Templates
 
-This repository contains my personal Ghostty terminal emulator configuration.
+This repository contains:
+- Personal Ghostty terminal emulator configuration
+- VS Code workspace templates and sync tools
+- Cross-device development environment setup
 
-## Installation
+## 🚀 Quick VS Code Setup (wget method)
+
+### **Single Workspace Setup**
+```bash
+# Quick setup using wget (with resume support)
+mkdir -p .vscode
+wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/template-settings.json -O .vscode/settings.json
+wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/.vscode/extensions.json -O .vscode/extensions.json
+```
+
+### **Automated Setup Script**
+```bash
+# Download and run the quick setup script
+wget -c https://raw.githubusercontent.com/kairin/ghostty-config-files/main/quick-setup-wget.sh
+chmod +x quick-setup-wget.sh
+
+# Setup current directory
+./quick-setup-wget.sh quick
+
+# Setup multiple projects
+./quick-setup-wget.sh setup-all ~/Projects
+
+# Download templates for manual use
+./quick-setup-wget.sh download ~/vscode-templates
+```
+
+## 📁 Ghostty Terminal Installation
 
 1.  **Clone this repository:**
     ```bash
