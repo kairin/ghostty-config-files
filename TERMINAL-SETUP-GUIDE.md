@@ -12,7 +12,7 @@ Your current setup is actually **optimal** for most developers:
 ## 📋 How to Use Your Terminals
 
 ### **Integrated Terminal (Inside VS Code)**
-- **Trigger**: Press `Ctrl+\`` (backtick) 
+- **Trigger**: Press `Ctrl+\`` (backtick)
 - **What opens**: Zsh shell inside VS Code panel
 - **Best for**: Quick commands, git operations, npm/pip installs
 - **Advantage**: Stays in your coding workflow
@@ -74,10 +74,10 @@ system administration
 
 **Keep your current setup!** It's actually perfect:
 
-✅ **Quick tasks**: Use `Ctrl+\`` for zsh inside VS Code  
-✅ **Heavy work**: Right-click → External Terminal for Ghostty with zsh  
-✅ **Best of both worlds**: Fast integrated + powerful external  
-✅ **Consistent shell**: zsh everywhere for consistent experience  
+✅ **Quick tasks**: Use `Ctrl+\`` for zsh inside VS Code
+✅ **Heavy work**: Right-click → External Terminal for Ghostty with zsh
+✅ **Best of both worlds**: Fast integrated + powerful external
+✅ **Consistent shell**: zsh everywhere for consistent experience
 
 ## 🐛 If Ghostty Window Opens Unexpectedly
 
