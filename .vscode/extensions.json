@@ -1,28 +1,27 @@
 {
-    "recommendations": [
-        "editorconfig.editorconfig",
-        "github.codespaces",
-        "github.copilot",
-        "github.copilot-chat",
-        "github.remotehub",
-        "github.vscode-codeql",
-        "github.vscode-github-actions",
-        "github.vscode-pull-request-github",
-        "ms-python.debugpy",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-python.vscode-python-envs",
-        "ms-vscode.azure-repos",
-        "ms-vscode.hexeditor",
-        "ms-vscode.remote-repositories",
-        "redhat.vscode-yaml",
-        "timonwong.shellcheck",
-        "ms-vscode.vscode-json",
-        "ms-vscode.vscode-typescript-next",
-        "esbenp.prettier-vscode",
-        "bradlc.vscode-tailwindcss",
-        "ms-vscode.live-server",
-        "formulahendry.auto-rename-tag",
-        "ms-vsliveshare.vsliveshare"
-    ]
+  "recommendations": [
+    "bradlc.vscode-tailwindcss"
+    ,"editorconfig.editorconfig"
+    ,"esbenp.prettier-vscode"
+    ,"formulahendry.auto-rename-tag"
+    ,"github.codespaces"
+    ,"github.copilot"
+    ,"github.copilot-chat"
+    ,"github.remotehub"
+    ,"github.vscode-codeql"
+    ,"github.vscode-github-actions"
+    ,"github.vscode-pull-request-github"
+    ,"ms-python.debugpy"
+    ,"ms-python.python"
+    ,"ms-python.vscode-pylance"
+    ,"ms-python.vscode-python-envs"
+    ,"ms-vscode.azure-repos"
+    ,"ms-vscode.hexeditor"
+    ,"ms-vscode.live-server"
+    ,"ms-vscode.remote-repositories"
+    ,"ms-vscode.vscode-typescript-next"
+    ,"ms-vsliveshare.vsliveshare"
+    ,"redhat.vscode-yaml"
+    ,"timonwong.shellcheck"
+  ]
 }

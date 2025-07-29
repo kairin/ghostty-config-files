@@ -1,6 +1,9 @@
 {
   "recommendations": [
-    "editorconfig.editorconfig"
+    "bradlc.vscode-tailwindcss"
+    ,"editorconfig.editorconfig"
+    ,"esbenp.prettier-vscode"
+    ,"formulahendry.auto-rename-tag"
     ,"github.codespaces"
     ,"github.copilot"
     ,"github.copilot-chat"
@@ -14,7 +17,10 @@
     ,"ms-python.vscode-python-envs"
     ,"ms-vscode.azure-repos"
     ,"ms-vscode.hexeditor"
+    ,"ms-vscode.live-server"
     ,"ms-vscode.remote-repositories"
+    ,"ms-vscode.vscode-typescript-next"
+    ,"ms-vsliveshare.vsliveshare"
     ,"redhat.vscode-yaml"
     ,"timonwong.shellcheck"
   ]
