@@ -1,11 +1,8 @@
-# Ghostty Configuration Agent-OS Directory
+# Ghostty Configuration Agent-OS Documentation
 
-This directory contains Agent-OS related documentation specific to the Ghostty configuration repository.
-Its purpose is to define the mission, architecture, and development specifications for maintaining and enhancing this Ghostty configuration.
+This directory contains documentation related to the Ghostty configuration repository's mission, architecture, and development specifications.
 
-- `product/` - Defines the mission and architectural principles for this Ghostty configuration.
-- `specs/` - Contains current development specifications and guidelines for configuration changes.
+- `product/`: Defines the mission and architectural principles.
+- `specs/`: Contains current development specifications and guidelines.
 
-This setup aims to ensure the Ghostty configuration remains compliant with official documentation (`https://ghostty.org/docs/config`), simplified, and highly usable, with a focus on features like clear scrollback and visible scrollbars.
-
-To interact with the Ghostty configuration, refer to the `config` file in the root of this repository and use `ghostty` CLI commands (e.g., `ghostty +show-config`).
+This documentation ensures the Ghostty configuration remains compliant, simplified, and usable.
