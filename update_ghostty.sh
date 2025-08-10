@@ -2,12 +2,11 @@
 
 # This script automates the process of updating Ghostty to the latest version.
 
-# Check for dependencies
+# Check for dependencies and install them if they are missing
 if ! dpkg -s libgtk-4-dev >/dev/null 2>&1 || ! dpkg -s libadwaita-1-dev >/dev/null 2>&1; then
     echo "Required dependencies are not installed."
-    echo "Please run the following command to install them:"
-    echo "sudo apt update && sudo apt install libgtk-4-dev libadwaita-1-dev"
-    exit 1
+    echo "Installing them now..."
+    sudo apt update && sudo apt install -y libgtk-4-dev libadwaita-1-dev
 fi
 
 echo "======================================="
