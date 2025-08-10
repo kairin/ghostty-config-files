@@ -46,6 +46,21 @@ For a fresh installation or to ensure Ghostty and its configuration are up-to-da
     ```
     Always review the output of the script to confirm successful completion.
 
+## Configuration Protection and Validation
+
+The update scripts now include comprehensive protection mechanisms to prevent configuration corruption:
+
+*   **Automatic Backup**: Before any git operations, working configuration files (`config`, `theme.conf`) are automatically backed up to a timestamped directory in `/tmp/`.
+
+*   **Configuration Validation**: After pulling repository changes and after installing new Ghostty versions, configurations are automatically tested using `ghostty +show-config`. If errors are detected, the script will:
+    - Display detailed error messages
+    - Automatically restore the backup configuration
+    - Verify the restored configuration works
+
+*   **Compatibility Testing**: When a new Ghostty version is installed, the configuration is tested against the new binary to catch version compatibility issues.
+
+*   **Safe Recovery**: If configuration problems are detected, the system automatically falls back to the last known working configuration without manual intervention.
+
 3.  **Manual Dependency Installation (If Required):**
     If the automated dependency installation fails, the script will provide a comprehensive manual installation guide. Run the suggested commands:
     

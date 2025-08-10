@@ -24,3 +24,9 @@ This document outlines the active tasks for the agent. Each task requires explic
     - Manual installation commands for troubleshooting
     - Verification steps for GTK4 and libadwaita
     - Tool requirements for source compilation
+*   [x] **Implement configuration backup and validation system:** Enhanced update scripts with comprehensive protection mechanisms:
+    - Automatic backup of working configurations before git operations
+    - Configuration validation using `ghostty +show-config` after changes
+    - Automatic restoration of backup if configuration errors are detected
+    - Post-installation compatibility testing against new Ghostty versions
+    - Safe recovery with automatic fallback to last known working configuration

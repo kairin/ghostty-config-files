@@ -10,6 +10,7 @@
 - [x] Applied a consistent theme.
 - [x] Updated all related documentation (`docs/CLAUDE.md`, `docs/GEMINI.md`, `.agent-os/README.md`, `.agent-os/product/mission.md`, `.agent-os/product/architecture.md`).
 - [x] Enhanced all update scripts (`scripts/update_ghostty.sh`, `scripts/install_ghostty_config.sh`, `scripts/update_zig.sh`) for robustness with explicit error handling.
+- [x] Implemented comprehensive configuration protection in update scripts with automatic backup, validation testing, and safe recovery mechanisms.
 - [x] Tidied up the root folder by moving scripts to `scripts/` and documentation to `docs/`.
 - [x] Added a root-level `setup_ghostty.sh` launcher script for simplified installation and updates on new systems.
 - [ ] **Sudo Behavior**: The script should run normally, and the `sudo` password prompt should only appear after dependency checks, and only if `apt install` or other privileged operations are required.
