@@ -141,12 +141,17 @@ fi
 
 echo ""
 echo "-> Checking for running Ghostty processes holding /usr/bin/ghostty..."
-GHOSTTY_PID=$(sudo lsof -t /usr/bin/ghostty 2>/dev/null || true)
-if [ -n "$GHOSTTY_PID" ]; then
+GHOSTTY_PIDS=$(sudo lsof -t /usr/bin/ghostty 2>/dev/null || true)
+if [ -n "$GHOSTTY_PIDS" ]; then
+    # Convert newlines to spaces for display and create an array
+    PID_LIST=$(echo "$GHOSTTY_PIDS" | tr '\n' ' ')
     echo ""
-echo "-> Found Ghostty process (PID: $GHOSTTY_PID) holding /usr/bin/ghostty. Terminating..."
-    sudo kill -9 "$GHOSTTY_PID"
-    sleep 1 # Give the process a moment to terminate
+    echo "-> Found Ghostty process(es) (PIDs: $PID_LIST) holding /usr/bin/ghostty. Terminating..."
+    # Kill each PID individually
+    for pid in $GHOSTTY_PIDS; do
+        sudo kill -9 "$pid" 2>/dev/null || true
+    done
+    sleep 1 # Give the processes a moment to terminate
 else
     echo ""
     echo "-> No Ghostty process found holding /usr/bin/ghostty."
