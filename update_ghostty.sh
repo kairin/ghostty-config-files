@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Function to get Ghostty version
 get_ghostty_version() {
     if command -v ghostty &> /dev/null; then
@@ -10,6 +12,10 @@ get_ghostty_version() {
 }
 
 # This script automates the process of updating Ghostty to the latest version.
+
+# Pull latest changes for the config repository itself
+echo "-> Pulling latest changes for Ghostty config..."
+git pull || { echo "Error: Failed to pull Ghostty config changes."; exit 1; }
 
 # List of required dependencies
 REQUIRED_DEPS=(
@@ -54,16 +60,21 @@ echo "  Updating Ghostty to the latest version"
 echo "======================================="
 
 # Navigate to the Ghostty repository
-cd ~/Apps/ghostty
+cd ~/Apps/ghostty || { echo "Error: Ghostty application directory not found at ~/Apps/ghostty."; exit 1; }
 
-echo "-> Pulling the latest changes..."
-git pull
+echo "-> Pulling the latest changes for Ghostty app..."
+git pull || { echo "Error: Failed to pull Ghostty app changes."; exit 1; }
 
 echo "-> Building Ghostty..."
-DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=baseline
+DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=baseline || { echo "Error: Ghostty build failed."; exit 1; }
 
 echo "-> Installing Ghostty..."
-sudo cp -r /tmp/ghostty/usr/* /usr/
+sudo cp -r /tmp/ghostty/usr/* /usr/ || { echo "Error: Ghostty installation failed."; exit 1; }
+
+# Return to config directory to pull latest config changes
+cd ~/.config/ghostty || { echo "Error: Ghostty config directory not found at ~/.config/ghostty."; exit 1; }
+echo "-> Pulling latest changes for Ghostty config..."
+git pull || { echo "Error: Failed to pull Ghostty config changes (second attempt)."; exit 1; }
 
 echo "======================================="
 echo "  Ghostty Update Summary"

@@ -9,6 +9,7 @@
 - [x] Integrated productivity-focused keybindings.
 - [x] Applied a consistent theme.
 - [x] Updated all related documentation (`CLAUDE.md`, `GEMINI.md`, `.agent-os/README.md`, `product/mission.md`, `product/architecture.md`).
+- [x] Enhanced all update scripts (`update_ghostty.sh`, `install_ghostty_config.sh`, `update_zig.sh`) for robustness with explicit error handling.
 
 ### Next Steps
 1.  **Refine `config`:** Optimize and integrate new Ghostty features.

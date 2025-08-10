@@ -1,12 +1,14 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # This script installs the improved Ghostty configuration and sets it as the default terminal on Ubuntu.
 
 # Create the ghostty config directory if it doesn't exist
-mkdir -p ~/.config/ghostty
+mkdir -p ~/.config/ghostty || { echo "Error: Failed to create config directory."; exit 1; }
 
 # Create the config file
-cat << EOF > ~/.config/ghostty/config
+cat << EOF > ~/.config/ghostty/config || { echo "Error: Failed to create config file."; exit 1; }
 # Ghostty Configuration File
 # A complete list of options can be found by running `ghostty +show-config --default --docs`
 
@@ -21,14 +23,14 @@ window-new-tab-position = end
 EOF
 
 # Create the keybindings.conf file
-cat << EOF > ~/.config/ghostty/keybindings.conf
+cat << EOF > ~/.config/ghostty/keybindings.conf || { echo "Error: Failed to create keybindings.conf."; exit 1; }
 keybind = ctrl+alt+s=write_screen_file:paste
 keybind = ctrl+shift+t=new_tab
 keybind = ctrl+alt+d=new_split:right
 EOF
 
 # Create the layout.conf file
-cat << EOF > ~/.config/ghostty/layout.conf
+cat << EOF > ~/.config/ghostty/layout.conf || { echo "Error: Failed to create layout.conf."; exit 1; }
 # Font
 font-family = "monospace"
 font-size = 14
@@ -47,13 +49,13 @@ window-padding-balance = true
 EOF
 
 # Create the scroll.conf file
-cat << EOF > ~/.config/ghostty/scroll.conf
+cat << EOF > ~/.config/ghostty/scroll.conf || { echo "Error: Failed to create scroll.conf."; exit 1; }
 # Scrollback
 scrollback-limit = 10000
 EOF
 
 # Create the theme.conf file
-cat << EOF > ~/.config/ghostty/theme.conf
+cat << EOF > ~/.config/ghostty/theme.conf || { echo "Error: Failed to create theme.conf."; exit 1; }
 # Theme
 # A list of available themes can be found by running `ghostty +list-themes`
 theme = "catppuccin-mocha"

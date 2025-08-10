@@ -28,17 +28,13 @@ For a fresh installation or to ensure Ghostty and its configuration are up-to-da
     (Replace `your-username` with your GitHub username)
 
 3.  **Run the Update Script:**
-    Navigate to your Ghostty config directory and execute the `update_ghostty.sh` script. This script will:
-    *   Check for and install necessary system dependencies.
-    *   Pull the latest changes for Ghostty from its upstream repository.
-    *   Build and install the latest Ghostty version.
-    *   Verify the Ghostty version before and after the update.
-    *   Ensure your Ghostty configuration files are up-to-date.
+    Navigate to your Ghostty config directory and execute the `update_ghostty.sh` script. This script is now more robust with explicit error handling. If any step fails, the script will exit immediately with an informative error message.
 
     ```bash
     cd ~/.config/ghostty
     ./update_ghostty.sh
     ```
+    Always review the output of the script to confirm successful completion.
 
 ## Configuration:
 
