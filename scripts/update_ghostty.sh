@@ -216,8 +216,8 @@ if [ ${#MISSING_DEPS[@]} -ne 0 ]; then
     # Try to install dependencies with better error handling
     if sudo apt update; then
         # Install in smaller batches to identify problematic packages
-        local install_failed=false
-        local failed_packages=()
+        install_failed=false
+        failed_packages=()
         
         for dep in "${MISSING_DEPS[@]}"; do
             if ! sudo apt install -y "$dep"; then
