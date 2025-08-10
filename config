@@ -1,65 +1,11 @@
-# Ghostty Configuration (Minimal Working Example)
-# Based on sample-configs.md
+# Ghostty Configuration File
+# A complete list of options can be found by running `ghostty +show-config --default --docs`
 
-background-opacity = 0.95
-background-blur-radius = 20
+config-file = theme.conf
+config-file = scroll.conf
+config-file = layout.conf
+config-file = keybindings.conf
 
-palette = 1=#cb7c94
-palette = 2=#b7cc85
-palette = 3=#ffe066
-palette = 4=#7fb4ca
-palette = 5=#ff8dd7
-palette = 6=#7aa89f
-palette = 7=#f3f6f9
-palette = 8=#8a8fa3
-
-background = 06080f
-foreground = f3f6f9
-cursor-color = e0c15a
-selection-background = 263356
-selection-foreground = f3f6f9
-
-font-family = IosevkaTerm NF
-font-size = 16
-
-window-padding-color = extend
-window-step-resize = true
-window-padding-balance = true
-
-keybind = cmd+k=clear_screen
-keybind = alt+s=write_screen_file:paste
-keybind = ctrl+comma=open_config
-keybind = shift+insert=paste_from_selection
-keybind = ctrl+shift+v=paste_from_clipboard
-keybind = ctrl+shift+c=copy_to_clipboard
-keybind = ctrl+shift+q=quit
-keybind = ctrl+shift+n=new_window
-keybind = ctrl+shift+t=new_tab
-keybind = ctrl+shift+w=close_tab
-keybind = ctrl+shift+i=inspector:toggle
-keybind = ctrl+equal=increase_font_size:1
-keybind = ctrl+minus=decrease_font_size:1
-keybind = ctrl+zero=reset_font_size
-keybind = ctrl+page_up=previous_tab
-keybind = ctrl+page_down=next_tab
-keybind = shift+page_up=scroll_page_up
-keybind = shift+page_down=scroll_page_down
-keybind = shift+home=scroll_to_top
-keybind = shift+end=scroll_to_bottom
-keybind = ctrl+shift+a=select_all
-keybind = ctrl+enter=toggle_fullscreen
-keybind = alt+f4=close_window
-keybind = ctrl+shift+e=new_split:down
-keybind = ctrl+shift+o=new_split:right
-keybind = super+ctrl+shift+up=resize_split:up,10
-keybind = super+ctrl+shift+down=resize_split:down,10
-keybind = super+ctrl+shift+left=resize_split:left,10
-keybind = super+ctrl+shift+right=resize_split:right,10
-keybind = super+ctrl+shift+equal=equalize_splits
-keybind = ctrl+alt+up=goto_split:up
-keybind = ctrl+alt+down=goto_split:down
-keybind = ctrl+alt+left=goto_split:left
-keybind = ctrl+alt+right=goto_split:right
-keybind = ctrl+shift+page_down=jump_to_prompt:1
-keybind = ctrl+shift+page_up=jump_to_prompt:-1
-keybind = ctrl+shift+enter=toggle_split_zoom
+shell-integration = zsh
+gtk-tabs-location = top
+window-new-tab-position = end
