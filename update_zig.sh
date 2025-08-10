@@ -4,19 +4,17 @@
 
 LATEST_VERSION="0.14.1"
 FILE_NAME="zig-linux-x86_64-$LATEST_VERSION"
-ARCHIVE_NAME="$FILE_NAME.tar.xz"
-DOWNLOAD_URL="https://ziglang.org/download/$LATEST_VERSION/$ARCHIVE_NAME"
+ARCHIVE_NAME="zig.tar.xz" # Use the new simple filename
+DOWNLOAD_URL="https://ziglang.org/download/$LATEST_VERSION/zig-linux-x86_64-$LATEST_VERSION.tar.xz"
 
 
 echo "Updating Zig to version $LATEST_VERSION"
-echo "Archive name: $ARCHIVE_NAME"
 
 # Try to download the latest version
 if ! wget "$DOWNLOAD_URL"; then
     echo "Could not download the file from the URL. Checking for a local file."
     if [ ! -f "$ARCHIVE_NAME" ]; then
         echo "Local file not found. Please download the file manually and place it in the same directory as the script."
-        ls -l "$ARCHIVE_NAME"
         exit 1
     else
         echo "Using local file."
