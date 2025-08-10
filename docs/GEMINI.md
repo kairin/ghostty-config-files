@@ -19,26 +19,21 @@ This repository contains a modular and minimalist Ghostty configuration. When ma
 
 ## Fresh Installation and Update Process
 
-For a fresh installation or to ensure Ghostty and its configuration are up-to-date, follow these steps:
+For a fresh installation or to ensure Ghostty and its configuration are up-to-date, use the `setup_ghostty.sh` launcher script.
 
-1.  **Clone Ghostty (if not already present):**
-    ```bash
-    git clone https://github.com/ghostty-org/ghostty.git ~/Apps/ghostty
-    ```
-    (Assuming `~/Apps/` is your preferred location for applications)
-
-2.  **Clone Ghostty Configuration:**
+1.  **Clone Ghostty Configuration:**
+    If you haven't already, clone this configuration repository:
     ```bash
     git clone https://github.com/your-username/ghostty-config.git ~/.config/ghostty
     ```
     (Replace `your-username` with your GitHub username)
 
-3.  **Run the Update Script:**
-    Navigate to your Ghostty config directory and execute the `update_ghostty.sh` script. This script is now more robust with explicit error handling. If any step fails, the script will exit immediately with an informative error message.
+2.  **Run the Setup Script:**
+    Navigate to your Ghostty config directory and execute the `setup_ghostty.sh` launcher script. This script will handle cloning the Ghostty application (if not present), installing the configuration, and updating Ghostty to the latest version.
 
     ```bash
     cd ~/.config/ghostty
-    ./scripts/update_ghostty.sh
+    ./setup_ghostty.sh
     ```
     Always review the output of the script to confirm successful completion.
 

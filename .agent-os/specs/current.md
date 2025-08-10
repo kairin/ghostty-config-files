@@ -11,6 +11,7 @@
 - [x] Updated all related documentation (`docs/CLAUDE.md`, `docs/GEMINI.md`, `.agent-os/README.md`, `.agent-os/product/mission.md`, `.agent-os/product/architecture.md`).
 - [x] Enhanced all update scripts (`scripts/update_ghostty.sh`, `scripts/install_ghostty_config.sh`, `scripts/update_zig.sh`) for robustness with explicit error handling.
 - [x] Tidied up the root folder by moving scripts to `scripts/` and documentation to `docs/`.
+- [x] Added a root-level `setup_ghostty.sh` launcher script for simplified installation and updates on new systems.
 
 ### Next Steps
 1.  **Refine `config`:** Optimize and integrate new Ghostty features.
