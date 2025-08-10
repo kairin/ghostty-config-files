@@ -67,21 +67,41 @@ if ghostty +show-config >/dev/null 2>config_test_errors.log; then
     echo "✅ Configuration test passed"
     rm -f config_test_errors.log
 else
-    echo "❌ Configuration test failed. Restoring backup..."
+    echo "❌ Configuration test failed. Attempting automatic cleanup..."
     cat config_test_errors.log
     
-    # Restore from backup
-    cp "$CONFIG_BACKUP_DIR/config" config 2>/dev/null && echo "-> Restored config file"
-    cp "$CONFIG_BACKUP_DIR/theme.conf" theme.conf 2>/dev/null && echo "-> Restored theme.conf file"
+    # Try to fix common configuration issues automatically
+    if [ -x "scripts/fix_config.sh" ]; then
+        echo "-> Running automatic configuration cleanup..."
+        if scripts/fix_config.sh; then
+            echo "-> Automatic cleanup completed, re-testing configuration..."
+            if ghostty +show-config >/dev/null 2>&1; then
+                echo "✅ Configuration fixed automatically"
+                rm -f config_test_errors.log
+            else
+                echo "❌ Automatic fix failed, restoring backup..."
+                cp "$CONFIG_BACKUP_DIR/config" config 2>/dev/null && echo "-> Restored config file"
+                cp "$CONFIG_BACKUP_DIR/theme.conf" theme.conf 2>/dev/null && echo "-> Restored theme.conf file"
+            fi
+        else
+            echo "❌ Automatic cleanup failed, restoring backup..."
+            cp "$CONFIG_BACKUP_DIR/config" config 2>/dev/null && echo "-> Restored config file"
+            cp "$CONFIG_BACKUP_DIR/theme.conf" theme.conf 2>/dev/null && echo "-> Restored theme.conf file"
+        fi
+    else
+        echo "❌ Automatic cleanup script not found, restoring backup..."
+        cp "$CONFIG_BACKUP_DIR/config" config 2>/dev/null && echo "-> Restored config file"
+        cp "$CONFIG_BACKUP_DIR/theme.conf" theme.conf 2>/dev/null && echo "-> Restored theme.conf file"
+    fi
     
-    echo "-> Configuration restored from backup. Please check for incompatible changes in the repository."
+    echo "-> Configuration issues handled. Please check for incompatible changes in the repository."
     rm -f config_test_errors.log
     
-    # Re-test after restoration
+    # Re-test after restoration/fix
     if ghostty +show-config >/dev/null 2>&1; then
-        echo "✅ Backup configuration works"
+        echo "✅ Configuration now works"
     else
-        echo "❌ Even backup configuration has issues. Please check manually."
+        echo "❌ Configuration still has issues. Please check manually."
     fi
 fi
 
