@@ -17,6 +17,35 @@ This repository contains a modular and minimalist Ghostty configuration. When ma
 
 *   **Documentation**: Any new features, complex configurations, or changes to the installation process should be documented in the `README.md` file.
 
+## Fresh Installation and Update Process
+
+For a fresh installation or to ensure Ghostty and its configuration are up-to-date, follow these steps:
+
+1.  **Clone Ghostty (if not already present):**
+    ```bash
+    git clone https://github.com/ghostty-org/ghostty.git ~/Apps/ghostty
+    ```
+    (Assuming `~/Apps/` is your preferred location for applications)
+
+2.  **Clone Ghostty Configuration:**
+    ```bash
+    git clone https://github.com/your-username/ghostty-config.git ~/.config/ghostty
+    ```
+    (Replace `your-username` with your GitHub username)
+
+3.  **Run the Update Script:**
+    Navigate to your Ghostty config directory and execute the `update_ghostty.sh` script. This script will:
+    *   Check for and install necessary system dependencies.
+    *   Pull the latest changes for Ghostty from its upstream repository.
+    *   Build and install the latest Ghostty version.
+    *   Verify the Ghostty version before and after the update.
+    *   Ensure your Ghostty configuration files are up-to-date.
+
+    ```bash
+    cd ~/.config/ghostty
+    ./update_ghostty.sh
+    ```
+
 ## Git Workflow
 
 *   Commit messages should be clear and concise, following the conventional commit format (e.g., `feat:`, `fix:`, `docs:`).

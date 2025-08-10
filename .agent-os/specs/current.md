@@ -1,10 +1,10 @@
 # Current Ghostty Configuration Specification
 
-## Active: Consolidated and Compliant Ghostty Configuration
+## Active: Modular and Compliant Ghostty Configuration
 
 ### Status
-- [x] Consolidated all configurations into a single `config` file.
-- [x] Ensured `config` adheres to official Ghostty documentation.
+- [x] Modularized configurations into separate files (e.g., `theme.conf`, `scroll.conf`, `layout.conf`, `keybindings.conf`), included by the main `config` file.
+- [x] Ensured `config` and included files adhere to official Ghostty documentation.
 - [x] Implemented clear scrollback with visible scrollbar.
 - [x] Integrated productivity-focused keybindings.
 - [x] Applied a consistent theme.

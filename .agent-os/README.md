@@ -5,4 +5,4 @@ This directory contains documentation related to the Ghostty configuration repos
 - `product/`: Defines the mission and architectural principles.
 - `specs/`: Contains current development specifications and guidelines.
 
-This documentation ensures the Ghostty configuration remains compliant, simplified, and usable.
+This documentation ensures the Ghostty configuration remains compliant, modular, and usable.
