@@ -21,7 +21,10 @@ get_ghostty_version() {
 # This script automates the process of updating Ghostty to the latest version.
 
 # Pull latest changes for the config repository itself
+echo ""
+echo ""
 echo "-> Pulling latest changes for Ghostty config..."
+
 if ! CONFIG_PULL_OUTPUT=$(git pull 2>&1); then
     echo "Error: Failed to pull Ghostty config changes."
     exit 1
@@ -41,6 +44,7 @@ echo "Starting dependency check..."
 
 # List of required dependencies
 REQUIRED_DEPS=(
+    lsof
     libgtk-4-dev
     libadwaita-1-dev
     blueprint-compiler
@@ -81,13 +85,16 @@ echo "Getting old Ghostty version..."
 OLD_VERSION=$(get_ghostty_version)
 
 echo "======================================="
-echo "  Updating Ghostty to the latest version"
+echo "   Updating Ghostty to the latest version"
 echo "======================================="
 
 # Navigate to the Ghostty repository
 cd ~/Apps/ghostty || { echo "Error: Ghostty application directory not found at ~/Apps/ghostty."; exit 1; }
 
+echo ""
+echo ""
 echo "-> Pulling the latest changes for Ghostty app..."
+
 if ! APP_PULL_OUTPUT=$(git pull 2>&1); then
     echo "Error: Failed to pull Ghostty app changes."
     exit 1
@@ -102,6 +109,8 @@ else
     APP_UPDATED=true
 fi
 
+echo ""
+echo ""
 echo "-> Building Ghostty..."
 if ! DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=baseline; then
     echo "Error: Ghostty build failed."
@@ -109,6 +118,24 @@ if ! DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=b
     exit 1
 fi
 
+echo ""
+echo ""
+echo "-> Checking for running Ghostty processes holding /usr/bin/ghostty..."
+GHOSTTY_PID=$(sudo lsof -t /usr/bin/ghostty 2>/dev/null || true)
+if [ -n "$GHOSTTY_PID" ]; then
+    echo ""
+echo ""
+echo "-> Found Ghostty process (PID: $GHOSTTY_PID) holding /usr/bin/ghostty. Terminating..."
+    sudo kill -9 "$GHOSTTY_PID"
+    sleep 1 # Give the process a moment to terminate
+else
+    echo ""
+echo ""
+echo "-> No Ghostty process found holding /usr/bin/ghostty."
+fi
+
+echo ""
+echo ""
 echo "-> Installing Ghostty..."
 if ! sudo cp -r /tmp/ghostty/usr/* /usr/; then
     echo "Error: Ghostty installation failed."
@@ -120,7 +147,7 @@ fi
 
 
 echo "======================================="
-echo "  Ghostty Update Summary"
+echo "         Ghostty Update Summary"
 echo "======================================="
 
 NEW_VERSION=$(get_ghostty_version)

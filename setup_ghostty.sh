@@ -11,7 +11,7 @@ GHOSTTY_APP_DIR="$HOME/Apps/ghostty"
 GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 
 echo "======================================="
-echo "  Ghostty Setup Launcher"
+echo "          Ghostty Setup Launcher"
 echo "======================================="
 
 # Step 1: Ensure Ghostty application is cloned
@@ -50,6 +50,6 @@ if ! "$GHOSTTY_CONFIG_DIR/scripts/update_ghostty.sh"; then
 fi
 
 echo "======================================="
-echo "  Ghostty Setup Complete!"
+echo "        Ghostty Setup Complete!"
 echo "======================================="
 echo "You may need to restart your terminal or log out and back in for changes to take full effect."
