@@ -3,9 +3,9 @@
 # This script automates the process of updating Zig to version 0.14.1.
 
 LATEST_VERSION="0.14.1"
-FILE_NAME="zig-linux-x86_64-$LATEST_VERSION"
-ARCHIVE_NAME="zig.tar.xz"
-DOWNLOAD_URL="https://ziglang.org/download/$LATEST_VERSION/zig-linux-x86_64-$LATEST_VERSION.tar.xz"
+FILE_NAME="zig-x86_64-linux-$LATEST_VERSION"
+ARCHIVE_NAME="$FILE_NAME.tar.xz"
+DOWNLOAD_URL="https://ziglang.org/download/$LATEST_VERSION/$ARCHIVE_NAME"
 
 
 echo "Updating Zig to version $LATEST_VERSION"
@@ -23,9 +23,6 @@ fi
 
 # Extract the archive
 tar -xf "$ARCHIVE_NAME"
-
-echo "Files after extraction:"
-ls -l
 
 # Remove the old Zig installation
 sudo rm -rf /usr/local/zig
