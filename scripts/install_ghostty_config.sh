@@ -83,14 +83,14 @@ if [ -f /etc/os-release ]; then
 
         # Add ghostty to the update-alternatives system
         if ! sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$GHOSTTY_PATH" 50; then
-            echo "Failed to add Ghostty to the update-alternatives system. Please run this script in a terminal to enter your sudo password."
+            echo "Error: Failed to add Ghostty to the update-alternatives system."
             exit 1
         fi
 
 
         # Set ghostty as the default terminal
         if ! sudo update-alternatives --set x-terminal-emulator "$GHOSTTY_PATH"; then
-            echo "Failed to set Ghostty as the default terminal. Please run this script in a terminal to enter your sudo password."
+            echo "Error: Failed to set Ghostty as the default terminal."
             exit 1
         fi
 

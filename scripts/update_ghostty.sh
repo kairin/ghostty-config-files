@@ -8,8 +8,11 @@ APP_UPDATED=false
 # Function to get Ghostty version
 get_ghostty_version() {
     if command -v ghostty &> /dev/null; then
-        if ghostty --version 2>/dev/null | head -n 1 | awk '{print $NF}'; then
-            ghostty --version 2>/dev/null | head -n 1 | awk '{print $NF}'
+        # Capture the version output once
+        local version_output
+        version_output=$(ghostty --version 2>/dev/null | head -n 1 | awk '{print $NF}')
+        if [ -n "$version_output" ]; then
+            echo "$version_output"
         else
             echo ""
         fi
