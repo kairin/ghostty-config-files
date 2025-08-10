@@ -2,13 +2,6 @@
 
 set -euo pipefail
 
-# Check for sudo access upfront
-if ! sudo -n true 2>/dev/null; then
-    echo "Error: sudo password is required, but cannot be prompted in this environment."
-    echo "Please run 'sudo -v' in your terminal before executing this script."
-    exit 1
-fi
-
 # This script provides a simple launcher for setting up Ghostty on a fresh Ubuntu 25.04 PC.
 # It ensures the Ghostty application is cloned, the configuration repository is present,
 # and then runs the necessary installation and update scripts.

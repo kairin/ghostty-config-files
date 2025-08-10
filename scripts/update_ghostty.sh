@@ -94,9 +94,14 @@ done
 
 if [ ${#MISSING_DEPS[@]} -ne 0 ]; then
     echo "Required dependencies are not installed: ${MISSING_DEPS[*]}"
-    echo "Please run the following command manually to install them, then re-run this script:"
-    echo "sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
-    exit 1
+    echo "Installing missing dependencies (this will require sudo password)..."
+    if ! sudo apt update && sudo apt install -y "${MISSING_DEPS[@]}"; then
+        echo "Error: Failed to install dependencies."
+        echo "You can try to install them manually with:"
+        echo "sudo apt update && sudo apt install -y ${MISSING_DEPS[*]}"
+        exit 1
+    fi
+    echo "Dependencies installed successfully."
 fi
 
 echo "Getting old Ghostty version..."
