@@ -9,12 +9,14 @@ DOWNLOAD_URL="https://ziglang.org/download/$LATEST_VERSION/$ARCHIVE_NAME"
 
 
 echo "Updating Zig to version $LATEST_VERSION"
+echo "Archive name: $ARCHIVE_NAME"
 
 # Try to download the latest version
 if ! wget "$DOWNLOAD_URL"; then
     echo "Could not download the file from the URL. Checking for a local file."
     if [ ! -f "$ARCHIVE_NAME" ]; then
         echo "Local file not found. Please download the file manually and place it in the same directory as the script."
+        ls -l "$ARCHIVE_NAME"
         exit 1
     else
         echo "Using local file."
