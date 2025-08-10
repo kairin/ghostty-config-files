@@ -10,8 +10,16 @@ DOWNLOAD_URL="https://ziglang.org/download/$LATEST_VERSION/$ARCHIVE_NAME"
 
 echo "Updating Zig to version $LATEST_VERSION"
 
-# Download the latest version
-wget "$DOWNLOAD_URL"
+# Try to download the latest version
+if ! wget "$DOWNLOAD_URL"; then
+    echo "Could not download the file from the URL. Checking for a local file."
+    if [ ! -f "$ARCHIVE_NAME" ]; then
+        echo "Local file not found. Please download the file manually and place it in the same directory as the script."
+        exit 1
+    else
+        echo "Using local file."
+    fi
+fi
 
 # Extract the archive
 tar -xf "$ARCHIVE_NAME"
@@ -25,7 +33,10 @@ sudo mv "$FILE_NAME" /usr/local/zig
 # Verify the new version
 zig version
 
-# Clean up the downloaded archive
-rm "$ARCHIVE_NAME"
+# Clean up the downloaded archive if it was downloaded
+if [ -f "$ARCHIVE_NAME" ]; then
+    rm "$ARCHIVE_NAME"
+fi
+
 
 echo "Zig has been updated to version $LATEST_VERSION"
