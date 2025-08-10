@@ -1,4 +1,5 @@
 # Ghostty Configuration File
+<<<<<<< HEAD
 # A complete list of options can be found by running # The font families to use.
 # 
 # You can generate the list of valid values using the CLI:
@@ -3350,6 +3351,9 @@ auto-update =
 # 
 # This only works on macOS since only macOS has an auto-update feature.
 auto-update-channel = 
+=======
+# A complete list of options can be found by running `ghostty +show-config --default --docs`
+>>>>>>> 7ff280b ([38;2;131;148;150m───────┬────────────────────────────────────────────────────────────────────────[0m)
 
 config-file = theme.conf
 config-file = scroll.conf
