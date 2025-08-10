@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script installs the improved Ghostty configuration.
+# This script installs the improved Ghostty configuration and sets it as the default terminal on Ubuntu.
 
 # Create the ghostty config directory if it doesn't exist
 mkdir -p ~/.config/ghostty
@@ -63,4 +63,30 @@ background-opacity = 0.75
 EOF
 
 echo "Ghostty configuration installed successfully!"
+
+# Check if the OS is Ubuntu
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    if [ "$ID" = "ubuntu" ]; then
+        echo "Ubuntu detected. Trying to set Ghostty as the default terminal."
+
+        # Check if ghostty is installed
+        if ! command -v ghostty &> /dev/null; then
+            echo "Ghostty is not installed or not in your PATH. Please install it first."
+            exit 1
+        fi
+
+        # Get the path to the ghostty executable
+        GHOSTTY_PATH=$(command -v ghostty)
+
+        # Add ghostty to the update-alternatives system
+        sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$GHOSTTY_PATH" 50
+
+        # Set ghostty as the default terminal
+        sudo update-alternatives --set x-terminal-emulator "$GHOSTTY_PATH"
+
+        echo "Ghostty has been set as the default terminal. You may need to log out and log back in for the changes to take effect."
+    fi
+fi
+
 echo "You can now run this script on other systems to replicate this configuration."
