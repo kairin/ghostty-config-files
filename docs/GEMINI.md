@@ -38,7 +38,7 @@ For a fresh installation or to ensure Ghostty and its configuration are up-to-da
 
     ```bash
     cd ~/.config/ghostty
-    ./update_ghostty.sh
+    ./scripts/update_ghostty.sh
     ```
     Always review the output of the script to confirm successful completion.
 

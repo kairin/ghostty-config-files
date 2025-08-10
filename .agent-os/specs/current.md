@@ -8,8 +8,9 @@
 - [x] Implemented clear scrollback with visible scrollbar.
 - [x] Integrated productivity-focused keybindings.
 - [x] Applied a consistent theme.
-- [x] Updated all related documentation (`CLAUDE.md`, `GEMINI.md`, `.agent-os/README.md`, `product/mission.md`, `product/architecture.md`).
-- [x] Enhanced all update scripts (`update_ghostty.sh`, `install_ghostty_config.sh`, `update_zig.sh`) for robustness with explicit error handling.
+- [x] Updated all related documentation (`docs/CLAUDE.md`, `docs/GEMINI.md`, `.agent-os/README.md`, `.agent-os/product/mission.md`, `.agent-os/product/architecture.md`).
+- [x] Enhanced all update scripts (`scripts/update_ghostty.sh`, `scripts/install_ghostty_config.sh`, `scripts/update_zig.sh`) for robustness with explicit error handling.
+- [x] Tidied up the root folder by moving scripts to `scripts/` and documentation to `docs/`.
 
 ### Next Steps
 1.  **Refine `config`:** Optimize and integrate new Ghostty features.

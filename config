@@ -2354,7 +2354,7 @@ gtk-opengl-debug = false
 # Ghostty 1.1.3 and no longer has any effect. The configuration key will
 # be fully removed in 1.2.0. You can manually override the GSK renderer
 # using standard environment variables such as `GSK_RENDERER` (from GTK).
-gtk-gsk-renderer = default
+# gtk-gsk-renderer = default
 
 # If `true`, the Ghostty GTK application will run in single-instance mode:
 # each new `ghostty` process launched will result in a new window if there is
@@ -2432,7 +2432,7 @@ gtk-wide-tabs = true
 # 
 # This configuration only has an effect if Ghostty was built with
 # Adwaita support.
-gtk-adwaita = true
+# gtk-adwaita = true
 
 # Custom CSS files to be loaded.
 # 
