@@ -34,6 +34,12 @@ get_ghostty_version() {
 echo ""
 echo "-> Pulling latest changes for Ghostty config..."
 
+# Backup current working configuration files
+CONFIG_BACKUP_DIR="/tmp/ghostty-config-backup-$(date +%s)"
+mkdir -p "$CONFIG_BACKUP_DIR"
+echo "-> Backing up current config to $CONFIG_BACKUP_DIR"
+cp config theme.conf "$CONFIG_BACKUP_DIR/" 2>/dev/null || echo "Warning: Some config files may not exist"
+
 # Check for local changes before pulling
 if ! git diff-index --quiet HEAD --; then
     echo "-> Local changes detected. Stashing them before pull..."
@@ -53,6 +59,35 @@ fi
 if [ "$STASHED_CHANGES" = true ]; then
     echo "-> Reapplying stashed changes..."
     git stash pop || { echo "Warning: Failed to reapply stashed changes. Please resolve conflicts manually."; }
+fi
+
+# Test the configuration for errors
+echo "-> Testing Ghostty configuration for errors..."
+if ghostty +show-config >/dev/null 2>config_test_errors.log; then
+    echo "✅ Configuration test passed"
+    rm -f config_test_errors.log
+else
+    echo "❌ Configuration test failed. Restoring backup..."
+    cat config_test_errors.log
+    
+    # Restore from backup
+    cp "$CONFIG_BACKUP_DIR/config" config 2>/dev/null && echo "-> Restored config file"
+    cp "$CONFIG_BACKUP_DIR/theme.conf" theme.conf 2>/dev/null && echo "-> Restored theme.conf file"
+    
+    echo "-> Configuration restored from backup. Please check for incompatible changes in the repository."
+    rm -f config_test_errors.log
+    
+    # Re-test after restoration
+    if ghostty +show-config >/dev/null 2>&1; then
+        echo "✅ Backup configuration works"
+    else
+        echo "❌ Even backup configuration has issues. Please check manually."
+    fi
+fi
+
+# Clean up backup if everything is working
+if [ -d "$CONFIG_BACKUP_DIR" ]; then
+    rm -rf "$CONFIG_BACKUP_DIR"
 fi
 
 
@@ -441,6 +476,19 @@ if ! sudo cp -r /tmp/ghostty/usr/* /usr/; then
     echo "Error: Ghostty installation failed."
     APP_UPDATED=false
     exit 1
+fi
+
+# Test configuration after Ghostty installation to catch any issues
+echo "-> Testing configuration after Ghostty installation..."
+if ! ghostty +show-config >/dev/null 2>post_install_errors.log; then
+    echo "❌ Configuration errors detected after Ghostty installation:"
+    cat post_install_errors.log
+    echo "-> This suggests the new Ghostty version has compatibility issues with current config."
+    echo "-> Consider updating your configuration format or reporting this as a compatibility issue."
+    rm -f post_install_errors.log
+else
+    echo "✅ Configuration works with new Ghostty version"
+    rm -f post_install_errors.log
 fi
 
 # Return to config directory to pull latest config changes
