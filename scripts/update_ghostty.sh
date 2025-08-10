@@ -25,12 +25,27 @@ get_ghostty_version() {
 
 # Pull latest changes for the config repository itself
 echo ""
-echo ""
 echo "-> Pulling latest changes for Ghostty config..."
+
+# Check for local changes before pulling
+if ! git diff-index --quiet HEAD --; then
+    echo "-> Local changes detected. Stashing them before pull..."
+    git stash push -m "Ghostty config changes before pull by setup_ghostty.sh" || { echo "Error: Failed to stash local changes."; exit 1; }
+    STASHED_CHANGES=true
+else
+    STASHED_CHANGES=false
+fi
 
 if ! CONFIG_PULL_OUTPUT=$(git pull 2>&1); then
     echo "Error: Failed to pull Ghostty config changes."
+    echo "Git output: $CONFIG_PULL_OUTPUT"
     exit 1
+fi
+
+# If changes were stashed, reapply them
+if [ "$STASHED_CHANGES" = true ]; then
+    echo "-> Reapplying stashed changes..."
+    git stash pop || { echo "Warning: Failed to reapply stashed changes. Please resolve conflicts manually."; }
 fi
 
 
@@ -95,7 +110,6 @@ echo "======================================="
 cd ~/Apps/ghostty || { echo "Error: Ghostty application directory not found at ~/Apps/ghostty."; exit 1; }
 
 echo ""
-echo ""
 echo "-> Pulling the latest changes for Ghostty app..."
 
 if ! APP_PULL_OUTPUT=$(git pull 2>&1); then
@@ -113,7 +127,6 @@ else
 fi
 
 echo ""
-echo ""
 echo "-> Building Ghostty..."
 if ! DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=baseline; then
     echo "Error: Ghostty build failed."
@@ -122,22 +135,18 @@ if ! DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=b
 fi
 
 echo ""
-echo ""
 echo "-> Checking for running Ghostty processes holding /usr/bin/ghostty..."
 GHOSTTY_PID=$(sudo lsof -t /usr/bin/ghostty 2>/dev/null || true)
 if [ -n "$GHOSTTY_PID" ]; then
     echo ""
-echo ""
 echo "-> Found Ghostty process (PID: $GHOSTTY_PID) holding /usr/bin/ghostty. Terminating..."
     sudo kill -9 "$GHOSTTY_PID"
     sleep 1 # Give the process a moment to terminate
 else
     echo ""
-echo ""
-echo "-> No Ghostty process found holding /usr/bin/ghostty."
+    echo "-> No Ghostty process found holding /usr/bin/ghostty."
 fi
 
-echo ""
 echo ""
 echo "-> Installing Ghostty..."
 if ! sudo cp -r /tmp/ghostty/usr/* /usr/; then

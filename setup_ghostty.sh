@@ -14,8 +14,15 @@ fi
 # and then runs the necessary installation and update scripts.
 
 # Define paths
-GHOSTTY_APP_DIR="$HOME/Apps/ghostty"
-GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
+# Determine the real user's home directory, even when run with sudo
+if [ -n "${SUDO_USER:-}" ]; then
+    REAL_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+else
+    REAL_HOME="$HOME"
+fi
+
+GHOSTTY_APP_DIR="$REAL_HOME/Apps/ghostty"
+GHOSTTY_CONFIG_DIR="$REAL_HOME/.config/ghostty"
 
 echo "======================================="
 echo "          Ghostty Setup Launcher"

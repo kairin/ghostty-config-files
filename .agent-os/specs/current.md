@@ -12,9 +12,13 @@
 - [x] Enhanced all update scripts (`scripts/update_ghostty.sh`, `scripts/install_ghostty_config.sh`, `scripts/update_zig.sh`) for robustness with explicit error handling.
 - [x] Tidied up the root folder by moving scripts to `scripts/` and documentation to `docs/`.
 - [x] Added a root-level `setup_ghostty.sh` launcher script for simplified installation and updates on new systems.
+- [ ] **Sudo Behavior**: The script should run normally, and the `sudo` password prompt should only appear after dependency checks, and only if `apt install` or other privileged operations are required.
+- [ ] **No New Scripts:** Do not create new scripts to fix issues. Resolve problems within existing scripts.
+- [ ] **To-Do List Confirmation:** Every task from now on must generate a to-do list that requires user confirmation before checking off anything from the to-do list.
 
 ### Next Steps
-1.  **Refine `config`:** Optimize and integrate new Ghostty features.
-2.  **Automate Validation:** Develop scripts to validate the `config` file.
-3.  **Integrate User Feedback:** Incorporate feedback for usability enhancements.
-4.  **Explore Advanced Features:** Investigate and integrate advanced Ghostty features.
+1.  **Active To-Do List:** Refer to `agent-todo.md` for the current active tasks.
+2.  **Refine `config`:** Optimize and integrate new Ghostty features.
+3.  **Automate Validation:** Develop scripts to validate the `config` file.
+4.  **Integrate User Feedback:** Incorporate feedback for usability enhancements.
+5.  **Explore Advanced Features:** Investigate and integrate advanced Ghostty features.
