@@ -74,8 +74,9 @@ if [ -f /etc/os-release ]; then
 
         # Check if ghostty is installed
         if ! command -v ghostty &> /dev/null; then
-            echo "Ghostty is not installed or not in your PATH. Please install it first."
-            exit 1
+            echo "Ghostty is not installed or not in your PATH. Skipping default terminal setup."
+            echo "You can run this script again after Ghostty is installed to set it as default."
+            exit 0
         fi
 
         # Get the path to the ghostty executable

@@ -2,8 +2,73 @@
 
 set -euo pipefail
 
+# Ghostty Update Script with Agent Monitoring
+# Enhanced with comprehensive logging and process monitoring capabilities
+
 CONFIG_UPDATED=false
 APP_UPDATED=false
+
+# Agent configuration
+AGENT_MODE="${1:-normal}"
+AGENT_VERBOSE="${GHOSTTY_AGENT_VERBOSE:-true}"
+AGENT_LOG_DIR="/tmp/ghostty-agent-logs"
+AGENT_LOG_FILE="$AGENT_LOG_DIR/update-agent-$(date +%s).log"
+AGENT_PID_FILE="/tmp/ghostty-update-agent.pid"
+
+# Create agent log directory
+mkdir -p "$AGENT_LOG_DIR"
+
+# Store agent PID for monitoring
+echo $$ > "$AGENT_PID_FILE"
+
+# Import dynamic messaging functions from setup script if available
+get_step_status() {
+    local step="$1"
+    local status="$2"
+    case "$status" in
+        "start") echo "🔄 Starting: $step" ;;
+        "progress") echo "⏳ In progress: $step" ;;
+        "success") echo "✅ Completed: $step" ;;
+        "warning") echo "⚠️  Warning in: $step" ;;
+        "error") echo "❌ Failed: $step" ;;
+        *) echo "📋 $step: $status" ;;
+    esac
+}
+
+get_process_details() {
+    local process="$1"
+    local detail="$2"
+    echo "   └─ $process: $detail"
+}
+
+# Enhanced agent logging with process visibility
+agent_log() {
+    local level="$1"
+    shift
+    local message="$*"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local log_entry="[$timestamp] [UPDATE-AGENT] [$level] $message"
+    
+    # Always log to file
+    echo "$log_entry" >> "$AGENT_LOG_FILE"
+    
+    # Show on console based on verbosity
+    if [ "$AGENT_VERBOSE" = "true" ] || [ "$level" = "ERROR" ] || [ "$level" = "WARNING" ]; then
+        echo "$log_entry"
+    fi
+}
+
+# Agent cleanup function
+agent_cleanup() {
+    agent_log "INFO" "🧹 Update agent cleanup initiated"
+    rm -f "$AGENT_PID_FILE"
+    agent_log "INFO" "📋 Agent log available at: $AGENT_LOG_FILE"
+}
+
+# Set trap for agent cleanup
+trap agent_cleanup EXIT
+
+agent_log "INFO" "🚀 Update agent started in mode: $AGENT_MODE"
 
 # Determine the real user's home directory, even when run with sudo
 if [ -n "${SUDO_USER:-}" ]; then
@@ -121,6 +186,7 @@ else
 fi
 
 echo "Starting dependency check..."
+agent_log "INFO" "🔍 Initiating dependency verification process..."
 
 # Function to install Zig
 install_zig() {
@@ -466,11 +532,14 @@ fi
 
 echo ""
 echo "-> Building Ghostty..."
+agent_log "INFO" "🔨 Starting Ghostty build process..."
 if ! DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=baseline; then
+    agent_log "ERROR" "❌ Ghostty build failed"
     echo "Error: Ghostty build failed."
     APP_UPDATED=false
     exit 1
 fi
+agent_log "SUCCESS" "✅ Ghostty build completed successfully"
 
 echo ""
 echo "-> Checking for running Ghostty processes holding /usr/bin/ghostty..."

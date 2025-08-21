@@ -1,0 +1,11 @@
+# Ghostty Configuration File
+# A complete list of options can be found by running 
+
+config-file = theme.conf
+config-file = scroll.conf
+config-file = layout.conf
+config-file = keybindings.conf
+
+shell-integration = zsh
+gtk-tabs-location = top
+window-new-tab-position = end
