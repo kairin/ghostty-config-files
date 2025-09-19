@@ -1,6 +1,6 @@
-# Ghostty Configuration with Comprehensive Terminal Tools
+# Ghostty Configuration with Comprehensive Terminal Tools (2025 Edition)
 
-A complete terminal environment setup featuring Ghostty terminal emulator with optimized configuration, plus integrated AI tools (Claude Code, Gemini CLI) and Ptyxis terminal via Flatpak.
+A complete terminal environment setup featuring Ghostty terminal emulator with **2025 performance optimizations**, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and Ptyxis terminal via Flatpak.
 
 ## 🚀 One-Command Installation
 
@@ -10,7 +10,8 @@ A complete terminal environment setup featuring Ghostty terminal emulator with o
 
 This single command installs and configures everything you need:
 - **ZSH** - Modern shell with Oh My ZSH and enhanced plugins
-- **Ghostty** - Latest version built from source with Zig 0.14.0  
+- **Ghostty** - Latest version built from source with Zig 0.14.0 + **2025 optimizations**
+- **Context Menu** - Right-click "Open in Ghostty" integration for file managers
 - **Ptyxis** - Latest version via Flatpak with proper permissions
 - **Node.js** - Latest LTS via NVM with npm
 - **Claude Code** - Latest AI assistant CLI
@@ -19,12 +20,24 @@ This single command installs and configures everything you need:
 
 ## ✨ Features
 
+### 🚀 2025 Performance Optimizations
+- **Linux CGroup Single Instance** - Dramatically faster startup and reduced memory usage
+- **Enhanced Shell Integration** - Auto-detection with cursor, sudo, title, and SSH features
+- **Memory Management** - Optimized scrollback limits and cgroup process controls
+- **Auto Theme Switching** - Light/dark mode support with Catppuccin themes
+- **Security Features** - Clipboard paste protection
+
+### 📁 Right-Click Context Menu
+- **Nautilus Integration** - Right-click any folder → "Scripts" → "Open in Ghostty"
+- **Smart Path Handling** - Works with files, folders, and special characters
+- **Automatic Installation** - Fully integrated into the setup process
+
 ### Modular Ghostty Configuration
-- **`configs/ghostty/theme.conf`** - Theme and appearance settings
+- **`configs/ghostty/theme.conf`** - Theme and appearance settings with 2025 optimizations
 - **`configs/ghostty/scroll.conf`** - Scrollback and history settings
-- **`configs/ghostty/layout.conf`** - Font, padding, and window layout settings  
+- **`configs/ghostty/layout.conf`** - Font, padding, and window layout settings
 - **`configs/ghostty/keybindings.conf`** - Optimized keybindings for productivity
-- **`configs/ghostty/config`** - Main configuration file that includes all modules
+- **`configs/ghostty/config`** - Main configuration file with performance optimizations
 
 ### Smart Installation Management
 - **Intelligent Detection** - Automatically detects existing installations
@@ -96,9 +109,23 @@ gemini "your prompt here"  # Automatically runs in Ptyxis terminal with proper w
 - **Keystroke**: `Cmd+S > R` (or `Ctrl+S > R` on Linux)
 - **Command**: `ghostty +show-config` (to validate)
 
-### Update Everything
+### Intelligent Updates
+
+**Smart Update Checker** (automatically detects what needs updating):
 ```bash
-./start.sh  # Re-run to update all components
+./scripts/check_updates.sh  # Check and apply only necessary updates
+```
+
+**Force Full Update**:
+```bash
+./start.sh  # Re-run to update all components (handles existing installations intelligently)
+```
+
+**Update Options**:
+```bash
+./scripts/check_updates.sh --force        # Force update even if no changes detected
+./scripts/check_updates.sh --config-only  # Only update configuration
+./scripts/check_updates.sh --help         # Show all options
 ```
 
 ### Manual Updates
