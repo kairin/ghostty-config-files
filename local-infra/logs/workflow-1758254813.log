@@ -1,0 +1,7 @@
+[2025-09-19 12:06:53] [STEP] 🔧 Validating Ghostty configuration...
+[2025-09-19 12:06:53] [SUCCESS] ✅ Ghostty configuration is valid
+[2025-09-19 12:06:53] [SUCCESS] ✅ CGroup single-instance optimization found
+[2025-09-19 12:06:53] [SUCCESS] ✅ Enhanced shell integration found
+[2025-09-19 12:06:53] [SUCCESS] ✅ Clipboard paste protection found
+[2025-09-19 12:06:53] [INFO] 📊 Found 3/3 2025 optimizations
+[2025-09-19 12:06:53] [INFO] ⏱️ Configuration validation completed in 0s
