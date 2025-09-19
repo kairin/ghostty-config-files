@@ -31,29 +31,167 @@ APPS_DIR="$REAL_HOME/Apps"
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
 
-# Logging function
+# Enhanced logging function with structured output
 log() {
     local level="$1"
     shift
     local message="$*"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     local color=""
-    
+    local prefix=""
+
     case "$level" in
-        "ERROR") color="$RED" ;;
-        "SUCCESS") color="$GREEN" ;;
-        "WARNING") color="$YELLOW" ;;
-        "INFO") color="$BLUE" ;;
-        "STEP") color="$CYAN" ;;
+        "ERROR") color="$RED"; prefix="❌" ;;
+        "SUCCESS") color="$GREEN"; prefix="✅" ;;
+        "WARNING") color="$YELLOW"; prefix="⚠️" ;;
+        "INFO") color="$BLUE"; prefix="ℹ️" ;;
+        "STEP") color="$CYAN"; prefix="🔧" ;;
+        "DEBUG") color="$YELLOW"; prefix="🐛" ;;
+        "TEST") color="$CYAN"; prefix="🧪" ;;
     esac
-    
-    echo -e "${color}[$timestamp] [$level] $message${NC}" | tee -a "$LOG_FILE"
+
+    # Console output with colors
+    echo -e "${color}[$timestamp] [$level] $prefix $message${NC}"
+
+    # Structured log file output (JSON-like for parsing)
+    echo "{\"timestamp\":\"$timestamp\",\"level\":\"$level\",\"message\":\"$message\",\"function\":\"${FUNCNAME[1]:-main}\",\"line\":\"${BASH_LINENO[1]:-0}\"}" >> "$LOG_FILE.json"
+
+    # Human-readable log file
+    echo "[$timestamp] [$level] $message" >> "$LOG_FILE"
+
+    # Error log file for critical issues
+    if [ "$level" = "ERROR" ] || [ "$level" = "WARNING" ]; then
+        echo "[$timestamp] [$level] [${FUNCNAME[1]:-main}:${BASH_LINENO[1]:-0}] $message" >> "$LOG_DIR/errors.log"
+    fi
 }
 
-# Error handling
+# Debug logging (only shown if VERBOSE=true)
+debug() {
+    if $VERBOSE; then
+        log "DEBUG" "$@"
+    else
+        # Still log to file even if not shown
+        local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+        echo "[$timestamp] [DEBUG] $*" >> "$LOG_FILE"
+    fi
+}
+
+# Test result logging
+test_result() {
+    local test_name="$1"
+    local result="$2"
+    local details="$3"
+
+    if [ "$result" = "PASS" ]; then
+        log "TEST" "✅ $test_name: PASSED - $details"
+    else
+        log "TEST" "❌ $test_name: FAILED - $details"
+    fi
+}
+
+# Performance timing
+start_timer() {
+    TIMER_START=$(date +%s)
+}
+
+end_timer() {
+    local operation="$1"
+    if [ -n "$TIMER_START" ]; then
+        local duration=$(($(date +%s) - TIMER_START))
+        log "INFO" "⏱️ $operation completed in ${duration}s"
+        unset TIMER_START
+    fi
+}
+
+# System state capture
+capture_system_state() {
+    local state_file="$LOG_DIR/system_state_$(date +%s).json"
+    debug "Capturing system state to $state_file"
+
+    cat > "$state_file" << EOF
+{
+    "timestamp": "$(date -Iseconds)",
+    "system": {
+        "os": "$(lsb_release -d 2>/dev/null | cut -f2 || echo "Unknown")",
+        "kernel": "$(uname -r)",
+        "architecture": "$(uname -m)",
+        "memory_gb": "$(free -g | awk '/^Mem:/{print $2}')",
+        "disk_space_gb": "$(df -BG / | awk 'NR==2{print $4}' | sed 's/G//')"
+    },
+    "ghostty": {
+        "installed": $(command -v ghostty >/dev/null && echo "true" || echo "false"),
+        "version": "$(ghostty --version 2>/dev/null || echo "not_installed")",
+        "config_exists": $([ -f "$GHOSTTY_CONFIG_DIR/config" ] && echo "true" || echo "false"),
+        "config_valid": $(ghostty +show-config >/dev/null 2>&1 && echo "true" || echo "false")
+    },
+    "environment": {
+        "shell": "$SHELL",
+        "desktop_session": "${XDG_CURRENT_DESKTOP:-unknown}",
+        "display_server": "${XDG_SESSION_TYPE:-unknown}",
+        "node_version": "$(node --version 2>/dev/null || echo "not_installed")",
+        "npm_version": "$(npm --version 2>/dev/null || echo "not_installed")"
+    }
+}
+EOF
+
+    debug "System state captured successfully"
+}
+
+# Performance monitoring
+monitor_performance() {
+    local operation="$1"
+    local start_time=$(date +%s.%N)
+    local start_memory=$(free -m | awk 'NR==2{printf "%.2f", $3/1024 }')
+
+    debug "Starting performance monitoring for: $operation"
+    debug "Initial memory usage: ${start_memory}GB"
+
+    # Store for later use
+    PERF_START_TIME="$start_time"
+    PERF_START_MEMORY="$start_memory"
+    PERF_OPERATION="$operation"
+}
+
+end_performance_monitoring() {
+    if [ -n "$PERF_START_TIME" ]; then
+        local end_time=$(date +%s.%N)
+        local end_memory=$(free -m | awk 'NR==2{printf "%.2f", $3/1024 }')
+        local duration=$(echo "$end_time - $PERF_START_TIME" | bc 2>/dev/null || echo "0")
+        local memory_delta=$(echo "$end_memory - $PERF_START_MEMORY" | bc 2>/dev/null || echo "0")
+
+        log "INFO" "⏱️ Performance: $PERF_OPERATION"
+        log "INFO" "   Duration: ${duration}s"
+        log "INFO" "   Memory delta: ${memory_delta}GB"
+
+        # Log to structured file
+        echo "{\"timestamp\":\"$(date -Iseconds)\",\"operation\":\"$PERF_OPERATION\",\"duration\":\"$duration\",\"memory_delta\":\"$memory_delta\"}" >> "$LOG_DIR/performance.json"
+
+        unset PERF_START_TIME PERF_START_MEMORY PERF_OPERATION
+    fi
+}
+
+# Enhanced error handling with context
 handle_error() {
-    log "ERROR" "Script failed at line $1. Check $LOG_FILE for details."
-    exit 1
+    local line_number="$1"
+    local exit_code="${2:-1}"
+    local context="${FUNCNAME[1]:-main}"
+
+    log "ERROR" "💥 FATAL ERROR in function '$context' at line $line_number"
+    log "ERROR" "Exit code: $exit_code"
+    log "ERROR" "Check logs: $LOG_FILE"
+    log "ERROR" "Error log: $LOG_DIR/errors.log"
+
+    # Capture final system state
+    capture_system_state
+
+    # Display recent error context
+    if [ -f "$LOG_DIR/errors.log" ]; then
+        echo ""
+        echo "Recent errors:"
+        tail -5 "$LOG_DIR/errors.log"
+    fi
+
+    exit "$exit_code"
 }
 trap 'handle_error $LINENO' ERR
 
@@ -169,6 +307,90 @@ check_installation_status() {
     
     # Determine installation strategy
     determine_install_strategy "$ghostty_installed" "$ghostty_config_valid" "$ptyxis_installed"
+
+    # Check for 2025 optimizations
+    check_config_optimizations "$ghostty_installed"
+}
+
+# Check if configuration has 2025 optimizations
+check_config_optimizations() {
+    local ghostty_installed="$1"
+
+    if $ghostty_installed && [ -f "$GHOSTTY_CONFIG_DIR/config" ]; then
+        local config_file="$GHOSTTY_CONFIG_DIR/config"
+        local has_optimizations=true
+
+        # Check for key 2025 optimizations
+        if ! grep -q "linux-cgroup.*single-instance" "$config_file"; then
+            has_optimizations=false
+            log "INFO" "📋 Missing: linux-cgroup single-instance optimization"
+        fi
+
+        if ! grep -q "shell-integration.*detect" "$config_file"; then
+            has_optimizations=false
+            log "INFO" "📋 Missing: enhanced shell integration"
+        fi
+
+        if ! grep -q "clipboard-paste-protection" "$config_file"; then
+            has_optimizations=false
+            log "INFO" "📋 Missing: clipboard paste protection"
+        fi
+
+        if $has_optimizations; then
+            log "SUCCESS" "✅ Configuration has 2025 optimizations"
+            CONFIG_NEEDS_UPDATE=false
+        else
+            log "WARNING" "⚠️  Configuration needs 2025 optimizations"
+            CONFIG_NEEDS_UPDATE=true
+        fi
+    else
+        CONFIG_NEEDS_UPDATE=true
+    fi
+}
+
+# Smart configuration update
+update_ghostty_config() {
+    log "STEP" "🔧 Updating Ghostty configuration with 2025 optimizations..."
+
+    # Always backup existing config
+    if [ -f "$GHOSTTY_CONFIG_DIR/config" ]; then
+        local backup_file="$GHOSTTY_CONFIG_DIR/config.backup-$(date +%Y%m%d-%H%M%S)"
+        cp "$GHOSTTY_CONFIG_DIR/config" "$backup_file"
+        log "SUCCESS" "✅ Backed up existing config to: $(basename "$backup_file")"
+    fi
+
+    # Create config directory if it doesn't exist
+    mkdir -p "$GHOSTTY_CONFIG_DIR"
+
+    # Copy optimized configurations
+    if [ -d "$GHOSTTY_CONFIG_SOURCE" ]; then
+        cp -r "$GHOSTTY_CONFIG_SOURCE"/* "$GHOSTTY_CONFIG_DIR/"
+        log "SUCCESS" "✅ Applied 2025 optimized configuration"
+
+        # Preserve user's custom keybindings if they exist
+        if [ -f "$backup_file" ] && grep -q "keybind.*shift+enter" "$backup_file"; then
+            if ! grep -q "keybind.*shift+enter" "$GHOSTTY_CONFIG_DIR/config"; then
+                echo "" >> "$GHOSTTY_CONFIG_DIR/config"
+                echo "# Custom keybindings (preserved from previous config)" >> "$GHOSTTY_CONFIG_DIR/config"
+                grep "keybind.*shift+enter" "$backup_file" >> "$GHOSTTY_CONFIG_DIR/config"
+                log "SUCCESS" "✅ Preserved custom keybindings"
+            fi
+        fi
+
+        # Validate new configuration
+        if command -v ghostty >/dev/null 2>&1 && ghostty +show-config >/dev/null 2>&1; then
+            log "SUCCESS" "✅ Configuration validated successfully"
+        else
+            log "ERROR" "❌ Configuration validation failed, restoring backup"
+            if [ -f "$backup_file" ]; then
+                cp "$backup_file" "$GHOSTTY_CONFIG_DIR/config"
+            fi
+            return 1
+        fi
+    else
+        log "ERROR" "❌ Source configuration directory not found: $GHOSTTY_CONFIG_SOURCE"
+        return 1
+    fi
 }
 
 # Check for available updates online
@@ -861,15 +1083,104 @@ show_final_instructions() {
     fi
 }
 
+# Install Ghostty context menu integration
+install_context_menu() {
+    log "STEP" "🖱️  Installing Ghostty context menu integration..."
+
+    # Check if running on a desktop environment with Nautilus
+    if ! command -v nautilus >/dev/null 2>&1; then
+        log "INFO" "⏭️  Nautilus not found, skipping context menu integration"
+        return 0
+    fi
+
+    # Create Nautilus scripts directory
+    local scripts_dir="$REAL_HOME/.local/share/nautilus/scripts"
+    mkdir -p "$scripts_dir"
+
+    # Create the Nautilus script
+    cat > "$scripts_dir/Open in Ghostty" << 'EOF'
+#!/bin/bash
+
+# Nautilus script to open selected folder in Ghostty terminal
+# This script will appear in the right-click context menu
+
+# Get the selected directory path
+if [ -n "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" ]; then
+    # Use the selected folder/file path
+    TARGET_PATH="$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS"
+
+    # If it's a file, get its directory
+    if [ -f "$TARGET_PATH" ]; then
+        TARGET_PATH="$(dirname "$TARGET_PATH")"
+    fi
+else
+    # If no selection, use current directory
+    TARGET_PATH="$NAUTILUS_SCRIPT_CURRENT_URI"
+    # Convert file:// URI to local path
+    TARGET_PATH=$(echo "$TARGET_PATH" | sed 's|^file://||' | python3 -c "import sys, urllib.parse; print(urllib.parse.unquote(sys.stdin.read().strip()))")
+fi
+
+# Launch Ghostty with the target directory as working directory
+if command -v ghostty >/dev/null 2>&1; then
+    cd "$TARGET_PATH" && ghostty &
+else
+    # Fallback notification if Ghostty is not found
+    notify-send "Ghostty not found" "Please ensure Ghostty is installed and in your PATH"
+fi
+EOF
+
+    # Make the script executable
+    chmod +x "$scripts_dir/Open in Ghostty"
+
+    # Create desktop file for better integration
+    local apps_dir="$REAL_HOME/.local/share/applications"
+    mkdir -p "$apps_dir"
+    cat > "$apps_dir/ghostty-here.desktop" << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=Open Ghostty Here
+Comment=Open Ghostty terminal in selected folder
+Exec=ghostty --working-directory=%f
+Icon=utilities-terminal
+StartupNotify=true
+NoDisplay=true
+MimeType=inode/directory;
+EOF
+
+    # Update desktop database
+    if command -v update-desktop-database >/dev/null 2>&1; then
+        update-desktop-database "$apps_dir" 2>/dev/null || true
+    fi
+
+    # Restart Nautilus to apply changes (only if running)
+    if pgrep nautilus >/dev/null 2>&1; then
+        nautilus -q 2>/dev/null || true
+        log "INFO" "🔄 Restarted Nautilus to apply context menu changes"
+    fi
+
+    log "SUCCESS" "✅ Ghostty context menu integration installed"
+    log "INFO" "💡 Right-click any folder and select 'Scripts' > 'Open in Ghostty'"
+}
+
 # Main execution
 main() {
     echo -e "${CYAN}========================================${NC}"
     echo -e "${CYAN}  Comprehensive Terminal Tools Installer${NC}"
     echo -e "${CYAN}========================================${NC}"
     echo ""
-    
+
+    # Start performance monitoring for entire operation
+    monitor_performance "Complete Installation"
+
     log "INFO" "🚀 Starting comprehensive installation..."
-    log "INFO" "📋 Log file: $LOG_FILE"
+    log "INFO" "📋 Log files:"
+    log "INFO" "   Main: $LOG_FILE"
+    log "INFO" "   JSON: $LOG_FILE.json"
+    log "INFO" "   Errors: $LOG_DIR/errors.log"
+    log "INFO" "   Performance: $LOG_DIR/performance.json"
+
+    # Capture initial system state
+    capture_system_state
     
     # Create necessary directories
     mkdir -p "$APPS_DIR"
@@ -887,19 +1198,39 @@ main() {
     install_zsh
     install_zig
     install_ghostty
+
+    # Smart configuration update (always run to ensure latest optimizations)
+    if $CONFIG_NEEDS_UPDATE || [ "$GHOSTTY_STRATEGY" = "fresh" ] || [ "$GHOSTTY_STRATEGY" = "reconfig" ]; then
+        update_ghostty_config
+    fi
+
+    install_context_menu
     install_ptyxis
     install_nodejs
     install_claude_code
     install_gemini_cli
     
     # Verify everything
+    start_timer
     if verify_installation; then
+        end_timer "Installation verification"
         log "SUCCESS" "🎉 All installations completed successfully!"
         show_final_instructions
     else
         log "WARNING" "⚠️  Some installations may need attention. Check the log for details."
-        echo "Log file: $LOG_FILE"
+        echo "Log files:"
+        echo "  Main: $LOG_FILE"
+        echo "  Errors: $LOG_DIR/errors.log"
+        echo "  Performance: $LOG_DIR/performance.json"
     fi
+
+    # End performance monitoring for entire operation
+    end_performance_monitoring
+
+    # Final system state capture
+    capture_system_state
+
+    log "INFO" "📊 Installation completed. Check $LOG_DIR for detailed logs."
 }
 
 # Run main function

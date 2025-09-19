@@ -1,214 +1,539 @@
-# AI Agent Instructions for Ghostty Configuration Project
+# Ghostty Configuration Files - LLM Instructions (2025 Edition)
 
-This document serves as the unified source of truth for all AI agents (Claude Code, Gemini CLI, and others) working with this Ghostty configuration repository.
+> 🔧 **CRITICAL**: This file contains NON-NEGOTIABLE requirements that ALL AI assistants (Claude, Gemini, ChatGPT, etc.) working on this repository MUST follow at ALL times.
 
-## Project Overview
+## 🎯 Project Overview
 
-This repository contains a modular and minimalist Ghostty terminal emulator configuration with automated installation and setup scripts. The project emphasizes simplicity, cross-platform compatibility, and comprehensive tooling integration.
+**Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-## Guiding Principles
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Performance Optimizations](#performance-optimizations)
 
-### 1. Modularity
-The configuration is split into multiple files for better organization:
-- `theme.conf`: Theme and appearance settings
-- `scroll.conf`: Scrollback and history settings  
-- `layout.conf`: Font, padding, and window layout settings
-- `keybindings.conf`: All keybindings
-- Main `config` file: Contains only includes to these files
+## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
-### 2. Minimalism
-- Keep configuration clean and simple
-- Avoid unnecessary settings or complexity
-- Focus on essential functionality
-- Use clear, self-documenting code
+### 🚨 CRITICAL: Ghostty Performance & Optimization (2025)
+- **Linux CGroup Single-Instance**: MANDATORY for performance (`linux-cgroup = single-instance`)
+- **Enhanced Shell Integration**: Auto-detection with advanced features
+- **Memory Management**: Optimized scrollback limits and process controls
+- **Auto Theme Switching**: Light/dark mode support with Catppuccin themes
+- **Security Features**: Clipboard paste protection enabled
 
-### 3. Cross-Platform Compatibility
-- Primary target: Linux (Ubuntu/Debian)
-- Configuration should work across different environments
-- Installation scripts handle various system configurations gracefully
-- Robust error handling and recovery mechanisms
+### 🚨 CRITICAL: Package Management & Dependencies
+- **Ghostty**: Built from source with Zig 0.14.0 (latest stable)
+- **ZSH**: Oh My ZSH with enhanced plugins for productivity
+- **Node.js**: Latest LTS via NVM for AI tool integration
+- **Dependencies**: Smart detection and minimal installation footprint
 
-### 4. Comprehensive Tooling
-The project includes complete installation for:
-- **ZSH Shell**: Modern shell with Oh My ZSH and enhanced plugins
-- **Ghostty**: Latest version built from source with Zig 0.14.0
-- **Ptyxis**: Latest version via Flatpak with proper permissions
-- **Node.js Environment**: Via NVM with latest LTS and npm
-- **Claude Code**: Latest version via npm global install
-- **Gemini CLI**: Latest version via npm global install
-- **System Dependencies**: All required development libraries and tools
+### 🚨 CRITICAL: Branch Management & Git Strategy
 
-## Installation Architecture
+#### Branch Preservation (MANDATORY)
+- **NEVER DELETE BRANCHES** without explicit user permission
+- **ALL BRANCHES** contain valuable configuration history
+- **NO** automatic cleanup with `git branch -d`
+- **YES** to automatic merge to main branch, preserving dedicated branch
 
-### Primary Installation Script: `start.sh`
-- **Purpose**: Single command for complete environment setup
-- **Intelligence**: Automatic detection of existing installations
-- **Smart Logic**: Optimal upgrade vs reinstall decision making
-- **Version Monitoring**: Online update checking and compatibility testing
-- **Features**: Comprehensive logging, error handling, dependency management
-- **Options**: Modular installation with skip flags for different components
-- **Safety**: Configuration backup and validation throughout process
+#### Branch Naming (MANDATORY SCHEMA)
+**Format**: `YYYYMMDD-HHMMSS-type-short-description`
 
-### Configuration Protection
-- **Automatic Backup**: Before any git operations, configurations are backed up with timestamps
-- **Configuration Validation**: All changes tested using `ghostty +show-config`
-- **Safe Recovery**: Automatic restoration of last known working configuration
-- **Compatibility Testing**: New Ghostty versions tested against existing configuration
+Examples:
+- `20250919-143000-feat-context-menu-integration`
+- `20250919-143515-fix-performance-optimization`
+- `20250919-144030-docs-agents-enhancement`
 
-### Dependency Management
-The installation process handles all required dependencies:
-- **Build Tools**: build-essential, pkg-config, gettext, msgfmt, xmllint
-- **GTK4 Development**: Complete GTK4 and libadwaita packages
-- **Graphics Libraries**: freetype, harfbuzz, fontconfig, png, cairo, vulkan
-- **System Libraries**: X11, Wayland, glib, system integration libraries
-- **Zig 0.14.0**: Downloaded and installed from source with system-wide linking
+#### GitHub Safety Strategy
+```bash
+# MANDATORY: Every commit must use this workflow
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+BRANCH_NAME="${DATETIME}-feat-description"
+git checkout -b "$BRANCH_NAME"
+git add .
+git commit -m "Descriptive commit message
 
-## Agent Workflow Guidelines
-
-### For Code Changes
-1. **Read Before Writing**: Always use Read tool before making any edits
-2. **Configuration Validation**: Test changes with `ghostty +show-config`
-3. **Modular Organization**: Add new settings to appropriate files in `configs/ghostty/`
-4. **Structured Layout**: Maintain clean separation between configs, scripts, and docs
-5. **No New Scripts**: Resolve issues within existing scripts, don't create new ones
-6. **Documentation**: Update relevant documentation for significant changes
-
-### For Git Operations
-- **Commit Messages**: Use conventional commit format (`feat:`, `fix:`, `docs:`)
-- **Branch Strategy**: Work on `main` branch
-- **Testing**: Always run configuration validation before commits
-- **Backup First**: Configuration backup happens automatically
-
-### For Troubleshooting
-1. **Check Logs**: Installation logs stored in `/tmp/ghostty-start-logs/`
-2. **Validate Config**: Use `ghostty +show-config` for configuration issues
-3. **Smart Diagnosis**: Script automatically determines upgrade vs reinstall strategy
-4. **Dependency Check**: Verify all required packages are installed
-5. **Permission Issues**: Check file permissions and ownership
-6. **Fallback Process**: Use automatic backup restoration when needed
-
-## Terminal Integration Workflows
-
-### Ptyxis Integration
-Based on the ptyxis flatpak command execution guidance:
-- **Correct Usage**: `flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- [COMMAND]`
-- **Working Directory**: Use `-d "$(pwd)"` for current directory context
-- **Command Separation**: Use `--` separator for reliable argument passing
-- **Permissions**: Home directory access granted via flatpak override
-- **Seamless Integration**: `gemini` command aliased to automatically run in Ptyxis
-- **Shell Support**: Aliases configured for both ZSH and Bash
-
-### Claude Code Integration
-- **Installation**: Via npm global install from @anthropic-ai/claude-code
-- **Authentication**: Requires API key setup via `claude-code auth login`
-- **Usage**: Available system-wide after shell restart
-- **Configuration**: Follows standard Claude Code CLI patterns
-
-### Gemini CLI Integration  
-- **Installation**: Via npm global install from @google/generative-ai-cli
-- **System Linking**: Symlinked to `/usr/local/bin/gemini` for easy access
-- **API Setup**: Requires Google AI Studio API key configuration
-- **Integration**: Works seamlessly with ptyxis terminal launcher
-
-## File Structure Standards
-
+🤖 Generated with [Claude Code](https://claude.ai/code)
+Co-Authored-By: Claude <noreply@anthropic.com>"
+git push -u origin "$BRANCH_NAME"
+git checkout main
+git merge "$BRANCH_NAME" --no-ff
+git push origin main
+# NEVER: git branch -d "$BRANCH_NAME"
 ```
-ghostty-config-files/
-├── start.sh              # Primary installation script with smart upgrade logic
-├── README.md             # User-facing documentation  
-├── AGENTS.md            # This file - AI agent instructions (single source of truth)
-├── CLAUDE.md            # Claude Code setup guide
-├── GEMINI.md            # Gemini CLI setup guide
-├── configs/             # Configuration files organized by category
-│   ├── ghostty/         # Ghostty terminal configuration
-│   │   ├── config       # Main configuration file
-│   │   ├── theme.conf   # Theme settings
-│   │   ├── scroll.conf  # Scrollback settings
-│   │   ├── layout.conf  # Layout and font settings
-│   │   └── keybindings.conf # Keybinding configuration
-│   └── workspace/       # Development workspace files
+
+### 🚨 CRITICAL: Local CI/CD Requirements
+
+#### Pre-Deployment Verification (MANDATORY)
+**EVERY** configuration change MUST complete these steps locally FIRST:
+
+```bash
+# 1. Run local workflow (MANDATORY before GitHub)
+./local-infra/runners/gh-workflow-local.sh local
+
+# 2. Verify local build success
+./local-infra/runners/gh-workflow-local.sh status
+
+# 3. Test configuration locally
+ghostty +show-config && ./scripts/check_updates.sh
+
+# 4. Only then commit using branch strategy
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+BRANCH_NAME="${DATETIME}-config-optimization"
+git checkout -b "$BRANCH_NAME"
+# ... rest of workflow
+```
+
+#### Local Workflow Tools (MANDATORY)
+- **`./local-infra/runners/gh-workflow-local.sh`** - Local GitHub Actions simulation
+- **`./local-infra/runners/gh-pages-setup.sh`** - Zero-cost Pages configuration
+- **Commands**: `local`, `status`, `trigger`, `pages`, `all`
+- **Requirement**: Local success BEFORE any GitHub deployment
+
+#### Cost Verification (MANDATORY)
+```bash
+# Check GitHub Actions usage
+gh api user/settings/billing/actions
+
+# Monitor workflow runs
+gh run list --limit 10 --json status,conclusion,name,createdAt
+
+# Verify zero-cost compliance
+./local-infra/runners/gh-pages-setup.sh
+```
+
+#### Logging & Debugging (MANDATORY)
+```bash
+# Comprehensive logging system
+LOG_LOCATIONS="/tmp/ghostty-start-logs/"
+├── start-TIMESTAMP.log          # Human-readable main log
+├── start-TIMESTAMP.log.json     # Structured JSON log for parsing
+├── errors.log                   # Critical issues only
+├── performance.json             # Performance metrics
+└── system_state_TIMESTAMP.json  # Complete system state snapshots
+
+# Local CI/CD logs
+LOCAL_CI_LOGS="./local-infra/logs/"
+├── workflow-TIMESTAMP.log       # Local workflow execution
+├── gh-pages-TIMESTAMP.log       # GitHub Pages simulation
+├── performance-TIMESTAMP.json   # CI performance metrics
+└── test-results-TIMESTAMP.json  # Test execution results
+```
+
+## 🏗️ System Architecture
+
+### Directory Structure (MANDATORY)
+```
+/home/kkk/Apps/ghostty-config-files/
+├── start.sh                    # 🚀 Primary installation & update script
+├── AGENTS.md                   # This file - LLM instructions (single source of truth)
+├── CLAUDE.md                   # Claude Code integration (symlink to AGENTS.md)
+├── GEMINI.md                   # Gemini CLI integration (symlink to AGENTS.md)
+├── README.md                   # User documentation & quick start
+├── configs/                    # Modular configuration files
+│   ├── ghostty/               # Ghostty terminal configuration
+│   │   ├── config             # Main config with 2025 optimizations
+│   │   ├── theme.conf         # Auto-switching themes (dark/light)
+│   │   ├── scroll.conf        # Scrollback settings
+│   │   ├── layout.conf        # Font, padding, layout (2025 optimized)
+│   │   └── keybindings.conf   # Productivity keybindings
+│   └── workspace/             # Development workspace files
 │       └── ghostty.code-workspace # VS Code workspace
-└── scripts/             # Additional utility scripts
-    ├── install_ghostty_config.sh
-    ├── update_ghostty.sh
-    ├── fix_config.sh
-    └── agent_functions.sh
+├── scripts/                   # Utility and automation scripts
+│   ├── check_updates.sh       # Intelligent update detection
+│   ├── install_context_menu.sh # Right-click integration
+│   ├── install_ghostty_config.sh # Configuration installer
+│   ├── update_ghostty.sh      # Ghostty version management
+│   ├── fix_config.sh          # Configuration repair tools
+│   └── agent_functions.sh     # AI assistant helper functions
+└── local-infra/              # Zero-cost local infrastructure
+    ├── runners/              # Local CI/CD scripts
+    │   ├── gh-workflow-local.sh    # Local GitHub Actions simulation
+    │   ├── gh-pages-setup.sh       # GitHub Pages local testing
+    │   ├── test-runner.sh          # Local test execution
+    │   └── performance-monitor.sh   # Performance tracking
+    ├── logs/                 # Local CI/CD logs
+    └── config/               # CI/CD configuration files
+        ├── workflows/        # Local workflow definitions
+        └── test-suites/      # Test configuration
 ```
 
-## Error Handling Protocols
+### Technology Stack (NON-NEGOTIABLE)
 
-### Configuration Errors
-1. **Detect**: Use `ghostty +show-config` for validation
-2. **Backup**: Automatic backup before any changes
-3. **Restore**: Automatic restoration if validation fails  
-4. **Report**: Clear error messages with resolution steps
-5. **Verify**: Confirm restored configuration works
+**Terminal Environment**:
+- **Ghostty**: Latest from source (Zig 0.14.0) with 2025 optimizations
+- **ZSH**: Oh My ZSH with productivity plugins
+- **Context Menu**: Nautilus integration for "Open in Ghostty"
 
-### Build Errors
-1. **Dependency Check**: Verify all required packages installed
-2. **Zig Version**: Ensure Zig 0.14.0 is available
-3. **Clean Build**: Remove build artifacts and retry
-4. **Log Analysis**: Parse build logs for specific error patterns
-5. **Fallback**: Provide manual installation steps
+**AI Integration**:
+- **Claude Code**: Latest CLI via npm for code assistance
+- **Gemini CLI**: Google's AI assistant with Ptyxis integration
+- **Node.js**: Latest LTS via NVM for tool compatibility
 
-### Installation Errors
-1. **Sudo Authentication**: Pre-authenticate to avoid mid-process failures
-2. **Network Issues**: Handle download failures gracefully
-3. **Permission Problems**: Check and fix file ownership
-4. **Partial Installs**: Clean up incomplete installations
-5. **Recovery**: Provide clear recovery instructions
+**Local CI/CD**:
+- **GitHub CLI**: For workflow simulation and API access
+- **Local Runners**: Shell-based workflow execution
+- **Performance Monitoring**: System state and timing analysis
+- **Zero-Cost Strategy**: All CI/CD runs locally before GitHub
 
-## Security Considerations
+## 📊 Core Functionality
 
-### Safe Installation Practices
-- **Privilege Escalation**: Sudo only when necessary, pre-authenticated
-- **Download Verification**: Checksums where available
-- **Permission Management**: Proper file ownership and permissions
-- **Sandbox Compliance**: Flatpak permission management
-- **Secret Handling**: No secrets or keys in configuration files
+### Primary Goals
+1. **Zero-Configuration Terminal**: One-command setup for Ubuntu fresh installs
+2. **2025 Performance Optimizations**: Latest Ghostty features and speed improvements
+3. **Context Menu Integration**: Right-click "Open in Ghostty" in file manager
+4. **Intelligent Updates**: Smart detection and preservation of user customizations
+5. **Local CI/CD**: Complete workflow execution without GitHub Actions costs
+6. **AI Tool Integration**: Seamless Claude Code and Gemini CLI setup
 
-### Log Security
-- **Sensitive Data**: Filter passwords, tokens, keys from logs
-- **User Information**: Redact personal paths and email addresses
-- **API Keys**: Never log authentication credentials
-- **Network URLs**: Remove embedded credentials from URLs
-- **File Paths**: Generalize user-specific paths in logs
+### Local CI/CD Workflows
+```
+Local Development Workflow:
+├── Configuration change detection
+├── Local testing and validation
+├── Performance impact assessment
+├── GitHub Actions simulation
+├── Documentation update verification
+├── Branch creation and safe merging
+└── Zero-cost GitHub deployment
 
-## Agent Behavioral Guidelines
+CI/CD Pipeline Stages:
+├── 01-validate-config        # Ghostty configuration validation
+├── 02-test-performance       # 2025 optimization verification
+├── 03-check-compatibility    # Cross-system compatibility
+├── 04-simulate-workflows     # GitHub Actions local simulation
+├── 05-generate-docs          # Documentation update and validation
+├── 06-package-release        # Release artifact preparation
+└── 07-deploy-pages           # GitHub Pages local build and test
+```
 
-### Communication Style
-- **Concise Responses**: Brief, direct answers unless detail requested
-- **Task Focus**: Address specific queries without unnecessary elaboration
-- **Error Clarity**: Clear error messages with actionable solutions
-- **Status Updates**: Regular progress updates for long-running operations
+## 🛠️ Development Commands (MANDATORY)
 
-### Code Quality Standards
-- **Security First**: Never introduce vulnerabilities or expose secrets
-- **Idiomatic Code**: Follow existing patterns and conventions
-- **Error Handling**: Comprehensive error checking and recovery
-- **Documentation**: Self-documenting code, minimal comments
-- **Testing**: Validate all changes before finalizing
+### Environment Setup
+```bash
+# MANDATORY: One-command fresh Ubuntu setup
+cd /home/kkk/Apps/ghostty-config-files
+./start.sh
 
-### Problem-Solving Approach
-1. **Understand**: Thoroughly analyze the problem and context
-2. **Research**: Use existing codebase patterns and documentation  
-3. **Plan**: Break complex tasks into manageable steps
-4. **Implement**: Make minimal, targeted changes
-5. **Validate**: Test thoroughly before marking complete
-6. **Document**: Update relevant documentation for significant changes
+# Initialize local CI/CD infrastructure
+./local-infra/runners/gh-workflow-local.sh init
 
-## Version Management
+# Setup GitHub CLI integration
+gh auth login
+gh repo set-default
+```
 
-### Ghostty Updates
-- **Source**: Always build from latest Ghostty repository
-- **Configuration Compatibility**: Test configuration after updates
-- **Backup Strategy**: Automatic backup before version changes
-- **Rollback Process**: Clear rollback procedure if issues arise
+### Local CI/CD Operations
+```bash
+# Complete local workflow execution
+./local-infra/runners/gh-workflow-local.sh all
 
-### Tool Updates
-- **Node.js**: Use NVM for version management, LTS versions preferred
-- **npm Packages**: Regular updates for Claude Code and Gemini CLI
-- **System Dependencies**: Keep development libraries updated
-- **Zig**: Pin to 0.14.0 for Ghostty compatibility
+# Individual workflow stages
+./local-infra/runners/gh-workflow-local.sh validate    # Config validation
+./local-infra/runners/gh-workflow-local.sh test       # Performance testing
+./local-infra/runners/gh-workflow-local.sh build      # Build simulation
+./local-infra/runners/gh-workflow-local.sh deploy     # Deployment simulation
 
-This document should be referenced by all AI agents working on this project to ensure consistent behavior and maintain the project's quality standards.
+# GitHub Actions cost monitoring
+./local-infra/runners/gh-workflow-local.sh billing    # Check usage
+./local-infra/runners/gh-workflow-local.sh status     # Workflow status
+```
+
+### Update Management
+```bash
+# Smart update detection and application
+./scripts/check_updates.sh              # Check and apply necessary updates
+./scripts/check_updates.sh --force      # Force all updates
+./scripts/check_updates.sh --config-only # Configuration updates only
+
+# Local CI/CD for updates
+./local-infra/runners/gh-workflow-local.sh update     # Update workflow
+```
+
+### Testing & Validation
+```bash
+# Configuration validation
+ghostty +show-config                    # Validate current configuration
+./local-infra/runners/test-runner.sh    # Complete test suite
+
+# Performance monitoring
+./local-infra/runners/performance-monitor.sh --baseline # Establish baseline
+./local-infra/runners/performance-monitor.sh --compare  # Compare performance
+
+# System testing
+./start.sh --verbose                    # Full installation with detailed logs
+```
+
+## 🔄 Local CI/CD Implementation
+
+### GitHub CLI Integration
+```bash
+# File: local-infra/runners/gh-workflow-local.sh
+#!/bin/bash
+
+# GitHub CLI-based local workflow simulation
+case "$1" in
+    "local")
+        # Simulate GitHub Actions locally
+        echo "🚀 Running local GitHub Actions simulation..."
+
+        # Configuration validation
+        ghostty +show-config || exit 1
+
+        # Performance testing
+        ./local-infra/runners/performance-monitor.sh --test
+
+        # Build simulation
+        ./start.sh --verbose --dry-run
+        ;;
+
+    "status")
+        # Check workflow status using gh CLI
+        gh run list --limit 5 --json status,conclusion,name,createdAt
+        ;;
+
+    "billing")
+        # Monitor GitHub Actions usage
+        gh api user/settings/billing/actions | jq '.total_minutes_used, .included_minutes'
+        ;;
+
+    "pages")
+        # Local GitHub Pages simulation
+        ./local-infra/runners/gh-pages-setup.sh
+        ;;
+
+    "all")
+        # Complete local workflow
+        $0 local && $0 status && $0 billing
+        ;;
+esac
+```
+
+### Performance Monitoring
+```bash
+# File: local-infra/runners/performance-monitor.sh
+#!/bin/bash
+
+monitor_ghostty_performance() {
+    echo "📊 Monitoring Ghostty performance..."
+
+    # Startup time measurement
+    startup_time=$(time (ghostty --version) 2>&1 | grep real | awk '{print $2}')
+
+    # Memory usage measurement
+    memory_usage=$(ps aux | grep ghostty | awk '{sum+=$6} END {print sum/1024}')
+
+    # Configuration load time
+    config_time=$(time (ghostty +show-config) 2>&1 | grep real | awk '{print $2}')
+
+    # Store results in JSON
+    cat > "./local-infra/logs/performance-$(date +%s).json" << EOF
+{
+    "timestamp": "$(date -Iseconds)",
+    "startup_time": "$startup_time",
+    "memory_usage_mb": "$memory_usage",
+    "config_load_time": "$config_time",
+    "optimizations": {
+        "cgroup_single_instance": $(grep -q "linux-cgroup.*single-instance" ~/.config/ghostty/config && echo "true" || echo "false"),
+        "shell_integration_detect": $(grep -q "shell-integration.*detect" ~/.config/ghostty/config && echo "true" || echo "false")
+    }
+}
+EOF
+}
+```
+
+### Zero-Cost GitHub Pages Setup
+```bash
+# File: local-infra/runners/gh-pages-setup.sh
+#!/bin/bash
+
+setup_github_pages() {
+    echo "📄 Setting up zero-cost GitHub Pages..."
+
+    # Create documentation directory
+    mkdir -p docs/
+
+    # Copy README as index
+    cp README.md docs/index.md
+
+    # Create simple GitHub Pages config
+    cat > docs/_config.yml << EOF
+title: Ghostty Configuration Files
+description: Comprehensive terminal environment setup with 2025 optimizations
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+EOF
+
+    # Test local Jekyll build (if available)
+    if command -v jekyll >/dev/null 2>&1; then
+        cd docs && jekyll build --destination _site_test
+        echo "✅ Local Jekyll build successful"
+    else
+        echo "ℹ️ Jekyll not available, skipping local build test"
+    fi
+}
+```
+
+## 🚨 LLM Conversation Logging (MANDATORY)
+
+**CRITICAL REQUIREMENT**: All AI assistants working on this repository **MUST** save complete conversation logs and maintain debugging information.
+
+### Requirements
+- **Complete Logs**: Save entire conversation from start to finish
+- **Exclude Sensitive Data**: Remove API keys, passwords, personal information
+- **Storage Location**: `docs/development/conversation_logs/`
+- **Naming Convention**: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
+- **System State**: Capture before/after system states for debugging
+- **CI/CD Logs**: Include local workflow execution logs
+
+### Example Workflow
+```bash
+# After completing work, save conversation log and system state
+mkdir -p docs/development/conversation_logs/
+cp /path/to/conversation.md docs/development/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
+
+# Capture system state and CI/CD logs
+cp /tmp/ghostty-start-logs/system_state_*.json docs/development/system_states/
+cp ./local-infra/logs/* docs/development/ci_cd_logs/
+
+git add docs/development/
+git commit -m "Add conversation log, system state, and CI/CD logs for local infrastructure setup"
+```
+
+## ⚠️ ABSOLUTE PROHIBITIONS
+
+### DO NOT
+- Delete branches without explicit user permission
+- Use GitHub Actions for anything that consumes minutes
+- Skip local CI/CD validation before GitHub deployment
+- Ignore existing user customizations during updates
+- Apply configuration changes without backup
+- Commit sensitive data (API keys, passwords, personal information)
+- Bypass the intelligent update system for configuration changes
+
+### DO NOT BYPASS
+- Branch preservation requirements
+- Local CI/CD execution requirements
+- Zero-cost operation constraints
+- Configuration validation steps
+- User customization preservation
+- Logging and debugging requirements
+
+## ✅ MANDATORY ACTIONS
+
+### Before Every Configuration Change
+1. **Local CI/CD Execution**: Run `./local-infra/runners/gh-workflow-local.sh all`
+2. **Configuration Validation**: Run `ghostty +show-config` to ensure validity
+3. **Performance Testing**: Execute `./local-infra/runners/performance-monitor.sh`
+4. **Backup Creation**: Automatic timestamped backup of existing configuration
+5. **User Preservation**: Extract and preserve user customizations
+6. **Documentation**: Update relevant docs if adding features
+7. **Conversation Log**: Save complete AI conversation log with system state
+
+### Quality Gates
+- Local CI/CD workflows execute successfully
+- Configuration validates without errors via `ghostty +show-config`
+- All 2025 performance optimizations are present and functional
+- User customizations are preserved and functional
+- Context menu integration works correctly
+- GitHub Actions usage remains within free tier limits
+- All logging systems capture complete information
+
+## 🎯 Success Criteria
+
+### Performance Metrics (2025)
+- **Startup Time**: <500ms for new Ghostty instance (CGroup optimization)
+- **Memory Usage**: <100MB baseline with optimized scrollback management
+- **Shell Integration**: 100% feature detection and activation
+- **Theme Switching**: Instant response to system light/dark mode changes
+- **CI/CD Performance**: <2 minutes for complete local workflow execution
+
+### User Experience Metrics
+- **One-Command Setup**: Fresh Ubuntu system fully configured in <10 minutes
+- **Context Menu**: "Open in Ghostty" available immediately after installation
+- **Update Efficiency**: Only necessary components updated, no full reinstalls
+- **Customization Preservation**: 100% user setting retention during updates
+- **Zero-Cost Operation**: No GitHub Actions minutes consumed for routine operations
+
+### Technical Metrics
+- **Configuration Validity**: 100% successful validation rate
+- **Update Success**: >99% successful intelligent update application
+- **Error Recovery**: Automatic rollback on configuration failures
+- **Logging Coverage**: Complete system state capture for all operations
+- **CI/CD Success**: >99% local workflow execution success rate
+
+## 📚 Documentation & Help
+
+### Key Documents
+- [README.md](README.md) - User documentation and quick start guide
+- [CLAUDE.md](CLAUDE.md) - Claude Code integration details (symlink to this file)
+- [GEMINI.md](GEMINI.md) - Gemini CLI integration details (symlink to this file)
+
+### Support Commands
+```bash
+# Get help with installation
+./start.sh --help
+
+# Get help with local CI/CD
+./local-infra/runners/gh-workflow-local.sh --help
+
+# Get help with updates
+./scripts/check_updates.sh --help
+
+# Validate system state
+ghostty +show-config
+./local-infra/runners/test-runner.sh --validate
+
+# Emergency configuration recovery
+cp ~/.config/ghostty/config.backup-* ~/.config/ghostty/config
+ghostty +show-config
+```
+
+### Debugging & Troubleshooting
+```bash
+# View comprehensive logs
+ls -la /tmp/ghostty-start-logs/
+ls -la ./local-infra/logs/
+
+# Analyze system state
+jq '.' /tmp/ghostty-start-logs/system_state_*.json
+
+# Check CI/CD performance
+jq '.' ./local-infra/logs/performance-*.json
+
+# View errors only
+cat /tmp/ghostty-start-logs/errors.log
+cat ./local-infra/logs/workflow-errors.log
+```
+
+## 🔄 Continuous Integration & Automation
+
+### Daily Maintenance (Recommended)
+```bash
+# Add to crontab for automatic local CI/CD
+# 0 9 * * * cd /home/kkk/Apps/ghostty-config-files && ./local-infra/runners/gh-workflow-local.sh all
+
+# Weekly performance monitoring
+# 0 9 * * 0 cd /home/kkk/Apps/ghostty-config-files && ./local-infra/runners/performance-monitor.sh --weekly-report
+```
+
+### GitHub CLI Automation
+```bash
+# Monitor repository activity
+gh repo view --json name,description,pushedAt,isPrivate
+
+# Check workflow status without triggering actions
+gh run list --limit 10 --json status,conclusion,name,createdAt
+
+# Monitor billing to ensure zero cost
+gh api user/settings/billing/actions | jq '{total_minutes_used, included_minutes, total_paid_minutes_used}'
+```
+
+---
+
+**CRITICAL**: These requirements are NON-NEGOTIABLE. All AI assistants must follow these guidelines exactly. Failure to comply may result in configuration corruption, performance degradation, user data loss, or unexpected GitHub Actions charges.
+
+**Version**: 2.0-2025-LocalCI
+**Last Updated**: 2025-09-19
+**Status**: ACTIVE - MANDATORY COMPLIANCE
+**Target**: Ubuntu 25.04+ with Ghostty 1.2.0+ and zero-cost local CI/CD
+**Review**: Required before any major configuration changes

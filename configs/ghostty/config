@@ -1,11 +1,39 @@
-# Ghostty Configuration File
-# A complete list of options can be found by running 
+# Ghostty Configuration File - Optimized for 2025
+# A complete list of options can be found by running ghostty +show-config --default --docs
 
+# =============================================================================
+# PERFORMANCE OPTIMIZATIONS (Critical for Linux)
+# =============================================================================
+linux-cgroup = single-instance
+linux-cgroup-memory-limit = 2147483648
+linux-cgroup-processes-limit = 1000
+
+# =============================================================================
+# SHELL INTEGRATION (Enhanced for 2025)
+# =============================================================================
+shell-integration = detect
+shell-integration-features = cursor,sudo,title,ssh-env
+
+# =============================================================================
+# MEMORY MANAGEMENT
+# =============================================================================
+scrollback-limit = 10000
+
+# =============================================================================
+# SECURITY
+# =============================================================================
+clipboard-paste-protection = confirm
+
+# =============================================================================
+# UI IMPROVEMENTS
+# =============================================================================
+gtk-tabs-location = top
+window-new-tab-position = end
+
+# =============================================================================
+# MODULAR CONFIGURATION
+# =============================================================================
 config-file = theme.conf
 config-file = scroll.conf
 config-file = layout.conf
 config-file = keybindings.conf
-
-shell-integration = zsh
-gtk-tabs-location = top
-window-new-tab-position = end
