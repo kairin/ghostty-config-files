@@ -72,17 +72,21 @@ validate_config() {
 
                 if grep -q "linux-cgroup.*single-instance" "$config_file"; then
                     log "SUCCESS" "✅ CGroup single-instance optimization found"
-                    ((optimizations_found++))
+                    optimizations_found=$((optimizations_found + 1))
                 fi
 
                 if grep -q "shell-integration.*detect" "$config_file"; then
                     log "SUCCESS" "✅ Enhanced shell integration found"
-                    ((optimizations_found++))
+                    optimizations_found=$((optimizations_found + 1))
+                else
+                    log "INFO" "ℹ️ Enhanced shell integration not found"
                 fi
 
                 if grep -q "clipboard-paste-protection" "$config_file"; then
                     log "SUCCESS" "✅ Clipboard paste protection found"
-                    ((optimizations_found++))
+                    optimizations_found=$((optimizations_found + 1))
+                else
+                    log "INFO" "ℹ️ Clipboard paste protection not found"
                 fi
 
                 log "INFO" "📊 Found $optimizations_found/3 2025 optimizations"
