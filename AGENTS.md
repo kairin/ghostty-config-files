@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Performance Optimizations](#performance-optimizations)
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Spec-Kit Guides](spec-kit/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
 
 ## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
@@ -467,6 +467,19 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 - [README.md](README.md) - User documentation and quick start guide
 - [CLAUDE.md](CLAUDE.md) - Claude Code integration details (symlink to this file)
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration details (symlink to this file)
+
+### 🎯 Spec-Kit Development Guides
+For implementing modern web development stacks with local CI/CD:
+- **[Spec-Kit Index](spec-kit/SPEC_KIT_INDEX.md)** - Complete navigation and overview for uv + Astro + GitHub Pages stack
+- **[Comprehensive Guide](spec-kit/SPEC_KIT_GUIDE.md)** - Original detailed implementation document
+- **Individual Command Guides**:
+  - [1. Constitution](spec-kit/1-spec-kit-constitution.md) - Establish project principles
+  - [2. Specify](spec-kit/2-spec-kit-specify.md) - Create technical specifications
+  - [3. Plan](spec-kit/3-spec-kit-plan.md) - Create implementation plans
+  - [4. Tasks](spec-kit/4-spec-kit-tasks.md) - Generate actionable tasks
+  - [5. Implement](spec-kit/5-spec-kit-implement.md) - Execute implementation
+
+**Key Features**: uv-first Python management, Astro.build static sites, Tailwind CSS + shadcn/ui, mandatory local CI/CD, zero-cost GitHub Pages deployment.
 
 ### Support Commands
 ```bash
