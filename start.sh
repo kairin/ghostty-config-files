@@ -202,7 +202,8 @@ show_help() {
     echo "This script installs and configures:"
     echo "  • ZSH shell with Oh My ZSH and enhanced plugins"
     echo "  • Ghostty terminal emulator with optimized configuration"
-    echo "  • Ptyxis terminal via Flatpak (latest version)"
+    echo "  • Ptyxis terminal (prefers apt/snap, fallback to flatpak)"
+    echo "  • uv Python package manager (latest version)"
     echo "  • Node.js (via NVM) with npm and development tools"
     echo "  • Claude Code CLI (latest version)"
     echo "  • Gemini CLI (latest version)"
@@ -290,14 +291,29 @@ check_installation_status() {
         log "INFO" "❌ Ghostty not installed"
     fi
     
-    # Check Ptyxis installation
+    # Check Ptyxis installation (prefer official: apt, snap, then flatpak)
     local ptyxis_installed=false
     local ptyxis_version=""
-    
-    if flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
+    local ptyxis_source=""
+
+    # Check apt installation first (official)
+    if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+        ptyxis_installed=true
+        ptyxis_version=$(ptyxis --version 2>/dev/null | head -n1 | awk '{print $2}' || echo "unknown")
+        ptyxis_source="apt"
+        log "INFO" "✅ Ptyxis installed via apt: $ptyxis_version"
+    # Check snap installation (official)
+    elif snap list 2>/dev/null | grep -q "ptyxis"; then
+        ptyxis_installed=true
+        ptyxis_version=$(snap list ptyxis 2>/dev/null | tail -n +2 | awk '{print $2}' || echo "unknown")
+        ptyxis_source="snap"
+        log "INFO" "✅ Ptyxis installed via snap: $ptyxis_version"
+    # Check flatpak installation (fallback)
+    elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
         ptyxis_installed=true
         ptyxis_version=$(flatpak info app.devsuite.Ptyxis 2>/dev/null | grep "Version:" | cut -d: -f2 | xargs || echo "unknown")
-        log "INFO" "✅ Ptyxis installed: $ptyxis_version"
+        ptyxis_source="flatpak"
+        log "INFO" "✅ Ptyxis installed via flatpak: $ptyxis_version"
     else
         log "INFO" "❌ Ptyxis not installed"
     fi
@@ -414,12 +430,29 @@ check_available_updates() {
         fi
     fi
     
-    # Check Ptyxis updates (Flatpak will handle this automatically)
+    # Check Ptyxis updates based on installation method
     if $ptyxis_installed; then
-        if flatpak remote-ls --updates 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
-            log "INFO" "🆕 Ptyxis update available"
-        else
-            log "INFO" "✅ Ptyxis is up to date"
+        if [ "$ptyxis_source" = "apt" ]; then
+            # Check apt updates
+            if apt list --upgradable 2>/dev/null | grep -q "ptyxis"; then
+                log "INFO" "🆕 Ptyxis update available via apt"
+            else
+                log "INFO" "✅ Ptyxis is up to date (apt)"
+            fi
+        elif [ "$ptyxis_source" = "snap" ]; then
+            # Check snap updates
+            if snap refresh --list 2>/dev/null | grep -q "ptyxis"; then
+                log "INFO" "🆕 Ptyxis update available via snap"
+            else
+                log "INFO" "✅ Ptyxis is up to date (snap)"
+            fi
+        elif [ "$ptyxis_source" = "flatpak" ]; then
+            # Check flatpak updates
+            if flatpak remote-ls --updates 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
+                log "INFO" "🆕 Ptyxis update available via flatpak"
+            else
+                log "INFO" "✅ Ptyxis is up to date (flatpak)"
+            fi
         fi
     fi
 }
@@ -474,23 +507,37 @@ pre_auth_sudo() {
 # Install ZSH and Oh My ZSH
 install_zsh() {
     log "STEP" "🐚 Setting up ZSH and Oh My ZSH..."
-    
-    # Check if ZSH is installed
+
+    # Check if ZSH is installed and update if needed
     if ! command -v zsh >/dev/null 2>&1; then
-        log "INFO" "📥 Installing ZSH..."
-        if sudo apt install -y zsh >> "$LOG_FILE" 2>&1; then
+        log "INFO" "📥 Installing latest ZSH..."
+        if sudo apt update && sudo apt install -y zsh >> "$LOG_FILE" 2>&1; then
             log "SUCCESS" "✅ ZSH installed"
         else
             log "ERROR" "❌ Failed to install ZSH"
             return 1
         fi
     else
-        log "SUCCESS" "✅ ZSH already installed"
+        local current_version=$(zsh --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+        log "INFO" "✅ ZSH already installed: $current_version"
+
+        # Check for ZSH updates
+        log "INFO" "🔄 Checking for ZSH updates..."
+        if apt list --upgradable 2>/dev/null | grep -q "^zsh/"; then
+            log "INFO" "🆕 ZSH update available, updating..."
+            if sudo apt update && sudo apt upgrade -y zsh >> "$LOG_FILE" 2>&1; then
+                log "SUCCESS" "✅ ZSH updated to latest version"
+            else
+                log "WARNING" "⚠️  ZSH update may have failed"
+            fi
+        else
+            log "SUCCESS" "✅ ZSH is up to date"
+        fi
     fi
-    
-    # Check if Oh My ZSH is installed
+
+    # Check if Oh My ZSH is installed and update if needed
     if [ ! -d "$REAL_HOME/.oh-my-zsh" ]; then
-        log "INFO" "📥 Installing Oh My ZSH..."
+        log "INFO" "📥 Installing latest Oh My ZSH..."
         # Download and install Oh My ZSH non-interactively
         if sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended >> "$LOG_FILE" 2>&1; then
             log "SUCCESS" "✅ Oh My ZSH installed"
@@ -499,7 +546,29 @@ install_zsh() {
             return 1
         fi
     else
-        log "SUCCESS" "✅ Oh My ZSH already installed"
+        log "INFO" "✅ Oh My ZSH already installed"
+
+        # Update Oh My ZSH to latest version
+        log "INFO" "🔄 Updating Oh My ZSH to latest version..."
+        if [ -f "$REAL_HOME/.oh-my-zsh/tools/upgrade.sh" ]; then
+            # Run the upgrade script non-interactively
+            if ZSH="$REAL_HOME/.oh-my-zsh" sh "$REAL_HOME/.oh-my-zsh/tools/upgrade.sh" --unattended >> "$LOG_FILE" 2>&1; then
+                log "SUCCESS" "✅ Oh My ZSH updated to latest version"
+            else
+                log "WARNING" "⚠️  Oh My ZSH update may have failed, trying git pull..."
+                # Fallback: manual git pull
+                cd "$REAL_HOME/.oh-my-zsh" && git pull origin master >> "$LOG_FILE" 2>&1 && cd - >/dev/null
+                log "SUCCESS" "✅ Oh My ZSH updated via git pull"
+            fi
+        else
+            # Fallback: manual git pull if upgrade script doesn't exist
+            log "INFO" "🔄 Updating Oh My ZSH via git pull..."
+            if cd "$REAL_HOME/.oh-my-zsh" && git pull origin master >> "$LOG_FILE" 2>&1 && cd - >/dev/null; then
+                log "SUCCESS" "✅ Oh My ZSH updated via git pull"
+            else
+                log "WARNING" "⚠️  Oh My ZSH update may have failed"
+            fi
+        fi
     fi
     
     # Check current default shell
@@ -822,63 +891,189 @@ install_ptyxis() {
     esac
 }
 
-# Fresh Ptyxis installation
+# Fresh Ptyxis installation (prefer official: apt, snap, then flatpak)
 fresh_install_ptyxis() {
-    log "STEP" "🐚 Fresh installation of Ptyxis terminal via Flatpak..."
-    
-    log "INFO" "📥 Installing Ptyxis..."
-    if flatpak install -y flathub app.devsuite.Ptyxis >> "$LOG_FILE" 2>&1; then
-        log "SUCCESS" "✅ Ptyxis installed"
+    log "STEP" "🐚 Fresh installation of Ptyxis terminal..."
+
+    # Try apt first (official Ubuntu packages)
+    log "INFO" "📥 Attempting Ptyxis installation via apt..."
+    if apt-cache show ptyxis >/dev/null 2>&1; then
+        if sudo apt update && sudo apt install -y ptyxis >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Ptyxis installed via apt"
+            configure_ptyxis_system
+            return 0
+        else
+            log "WARNING" "⚠️  Ptyxis installation via apt failed, trying snap..."
+        fi
     else
-        log "ERROR" "❌ Ptyxis installation failed"
+        log "INFO" "ℹ️ Ptyxis not available via apt, trying snap..."
+    fi
+
+    # Try snap second (official snap packages)
+    log "INFO" "📥 Attempting Ptyxis installation via snap..."
+    if snap find ptyxis 2>/dev/null | grep -q "ptyxis"; then
+        if sudo snap install ptyxis >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Ptyxis installed via snap"
+            configure_ptyxis_system
+            return 0
+        else
+            log "WARNING" "⚠️  Ptyxis installation via snap failed, falling back to flatpak..."
+        fi
+    else
+        log "INFO" "ℹ️ Ptyxis not available via snap, falling back to flatpak..."
+    fi
+
+    # Fallback to flatpak
+    log "INFO" "📥 Installing Ptyxis via flatpak (fallback)..."
+    if flatpak install -y flathub app.devsuite.Ptyxis >> "$LOG_FILE" 2>&1; then
+        log "SUCCESS" "✅ Ptyxis installed via flatpak"
+        configure_ptyxis_flatpak
+    else
+        log "ERROR" "❌ Ptyxis installation failed via all methods"
         return 1
     fi
-    
-    configure_ptyxis
 }
 
-# Update existing Ptyxis installation
+# Update existing Ptyxis installation based on installation method
 update_ptyxis() {
     log "STEP" "🔄 Updating existing Ptyxis installation..."
-    
-    log "INFO" "🔄 Updating Ptyxis..."
-    if flatpak update -y app.devsuite.Ptyxis >> "$LOG_FILE" 2>&1; then
-        log "SUCCESS" "✅ Ptyxis updated"
+
+    # Determine current installation method and update accordingly
+    if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+        log "INFO" "🔄 Updating Ptyxis via apt..."
+        if sudo apt update && sudo apt upgrade -y ptyxis >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Ptyxis updated via apt"
+        else
+            log "WARNING" "⚠️  Ptyxis apt update may have failed"
+        fi
+        configure_ptyxis_system
+    elif snap list 2>/dev/null | grep -q "ptyxis"; then
+        log "INFO" "🔄 Updating Ptyxis via snap..."
+        if sudo snap refresh ptyxis >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Ptyxis updated via snap"
+        else
+            log "WARNING" "⚠️  Ptyxis snap update may have failed"
+        fi
+        configure_ptyxis_system
+    elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
+        log "INFO" "🔄 Updating Ptyxis via flatpak..."
+        if flatpak update -y app.devsuite.Ptyxis >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Ptyxis updated via flatpak"
+        else
+            log "WARNING" "⚠️  Ptyxis flatpak update may have failed"
+        fi
+        configure_ptyxis_flatpak
     else
-        log "WARNING" "⚠️  Ptyxis update may have failed"
+        log "WARNING" "⚠️  Could not determine Ptyxis installation method for update"
     fi
-    
-    configure_ptyxis
 }
 
-# Configure Ptyxis permissions and aliases
-configure_ptyxis() {
-    # Grant necessary permissions for file access
-    log "INFO" "🔧 Configuring Ptyxis permissions..."
-    flatpak override app.devsuite.Ptyxis --filesystem=home >> "$LOG_FILE" 2>&1
-    
-    # Create gemini alias in both bashrc and zshrc (handle conflicts)
+# Configure Ptyxis for system installations (apt/snap)
+configure_ptyxis_system() {
+    log "INFO" "🔧 Configuring Ptyxis (system installation)..."
+
+    # Create gemini alias in both bashrc and zshrc for system installation
     for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
         if [ -f "$shell_config" ]; then
-            # Check if Ptyxis integration already exists
-            if grep -q "flatpak run app.devsuite.Ptyxis.*gemini" "$shell_config"; then
+            # Check if Ptyxis system integration already exists
+            if grep -q "ptyxis.*-d.*gemini" "$shell_config" && ! grep -q "flatpak" "$shell_config"; then
                 log "SUCCESS" "✅ Ptyxis gemini integration already configured in $(basename "$shell_config")"
             else
-                # Check if any gemini alias exists
+                # Remove any existing gemini aliases
                 if grep -q "alias gemini=" "$shell_config"; then
                     log "INFO" "🔄 Updating existing gemini alias in $(basename "$shell_config")"
-                    # Comment out existing alias and add new one
-                    sed -i '/alias gemini=/s/^/# (replaced by Ptyxis integration) /' "$shell_config"
+                    sed -i '/alias gemini=/d' "$shell_config"
                 fi
-                
-                # Add the correct Ptyxis integration alias
+
+                # Add the system Ptyxis integration alias
                 echo "" >> "$shell_config"
-                echo "# Gemini CLI integration with Ptyxis" >> "$shell_config"
-                echo 'alias gemini='"'"'flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- ~/.nvm/versions/node/v24.6.0/bin/gemini'"'" >> "$shell_config"
-                log "SUCCESS" "✅ Added Ptyxis gemini integration to $(basename "$shell_config")"
+                echo "# Gemini CLI integration with Ptyxis (system)" >> "$shell_config"
+                echo 'alias gemini='"'"'ptyxis -d "$(pwd)" -- ~/.nvm/versions/node/v24.6.0/bin/gemini'"'" >> "$shell_config"
+                log "SUCCESS" "✅ Added Ptyxis system gemini integration to $(basename "$shell_config")"
             fi
         fi
     done
+}
+
+# Configure Ptyxis for flatpak installation
+configure_ptyxis_flatpak() {
+    log "INFO" "🔧 Configuring Ptyxis (flatpak installation)..."
+
+    # Grant necessary permissions for file access
+    flatpak override app.devsuite.Ptyxis --filesystem=home >> "$LOG_FILE" 2>&1
+
+    # Create gemini alias in both bashrc and zshrc for flatpak
+    for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
+        if [ -f "$shell_config" ]; then
+            # Check if Ptyxis flatpak integration already exists
+            if grep -q "flatpak run app.devsuite.Ptyxis.*gemini" "$shell_config"; then
+                log "SUCCESS" "✅ Ptyxis flatpak gemini integration already configured in $(basename "$shell_config")"
+            else
+                # Remove any existing gemini aliases
+                if grep -q "alias gemini=" "$shell_config"; then
+                    log "INFO" "🔄 Updating existing gemini alias in $(basename "$shell_config")"
+                    sed -i '/alias gemini=/d' "$shell_config"
+                fi
+
+                # Add the flatpak Ptyxis integration alias
+                echo "" >> "$shell_config"
+                echo "# Gemini CLI integration with Ptyxis (flatpak)" >> "$shell_config"
+                echo 'alias gemini='"'"'flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- ~/.nvm/versions/node/v24.6.0/bin/gemini'"'" >> "$shell_config"
+                log "SUCCESS" "✅ Added Ptyxis flatpak gemini integration to $(basename "$shell_config")"
+            fi
+        fi
+    done
+}
+
+# Install uv Python package manager
+install_uv() {
+    log "STEP" "🐍 Installing uv Python package manager..."
+
+    # Check if uv is already installed
+    if command -v uv >/dev/null 2>&1; then
+        local current_version=$(uv --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+        log "INFO" "✅ uv already installed: $current_version"
+
+        # Update uv to latest version
+        log "INFO" "🔄 Updating uv to latest version..."
+        if curl -LsSf https://astral.sh/uv/install.sh | sh >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ uv updated successfully"
+        else
+            log "WARNING" "⚠️  uv update may have failed"
+        fi
+    else
+        # Install uv
+        log "INFO" "📥 Installing uv..."
+        if curl -LsSf https://astral.sh/uv/install.sh | sh >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ uv installed successfully"
+        else
+            log "ERROR" "❌ uv installation failed"
+            return 1
+        fi
+    fi
+
+    # Add uv to PATH for current session
+    export PATH="$HOME/.cargo/bin:$PATH"
+
+    # Add uv to shell configurations
+    for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
+        if [ -f "$shell_config" ]; then
+            if ! grep -q 'export PATH="$HOME/.cargo/bin:$PATH"' "$shell_config"; then
+                echo "" >> "$shell_config"
+                echo "# uv Python package manager" >> "$shell_config"
+                echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$shell_config"
+                log "SUCCESS" "✅ Added uv to PATH in $(basename "$shell_config")"
+            fi
+        fi
+    done
+
+    # Verify installation
+    if command -v uv >/dev/null 2>&1; then
+        local version=$(uv --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+        log "SUCCESS" "✅ uv Python package manager ready: $version"
+    else
+        log "WARNING" "⚠️  uv may not be immediately available (restart shell)"
+    fi
 }
 
 # Install Node.js via NVM
@@ -890,13 +1085,29 @@ install_nodejs() {
     
     log "STEP" "📦 Installing Node.js via NVM..."
     
-    # Install NVM if not present
+    # Install or update NVM
     if [ ! -d "$NVM_DIR" ]; then
         log "INFO" "📥 Installing NVM $NVM_VERSION..."
         curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1
         log "SUCCESS" "✅ NVM installed"
     else
         log "INFO" "✅ NVM already present"
+
+        # Check if NVM update is available
+        log "INFO" "🔄 Checking for NVM updates..."
+        export NVM_DIR="$NVM_DIR"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+        local current_nvm_version=$(nvm --version 2>/dev/null || echo "unknown")
+        local target_version=$(echo "$NVM_VERSION" | sed 's/v//')
+
+        if [ "$current_nvm_version" != "$target_version" ]; then
+            log "INFO" "🆕 NVM update available ($current_nvm_version → $target_version), updating..."
+            curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1
+            log "SUCCESS" "✅ NVM updated to $NVM_VERSION"
+        else
+            log "SUCCESS" "✅ NVM is up to date ($current_nvm_version)"
+        fi
     fi
     
     # Source NVM
@@ -999,9 +1210,13 @@ verify_installation() {
         status=1
     fi
     
-    # Check Ptyxis
+    # Check Ptyxis (prefer official: apt, snap, then flatpak)
     if ! $SKIP_PTYXIS; then
-        if flatpak list | grep -q "app.devsuite.Ptyxis"; then
+        if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+            log "SUCCESS" "✅ Ptyxis: Available via apt"
+        elif snap list 2>/dev/null | grep -q "ptyxis"; then
+            log "SUCCESS" "✅ Ptyxis: Available via snap"
+        elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
             log "SUCCESS" "✅ Ptyxis: Available via flatpak"
         else
             log "ERROR" "❌ Ptyxis not found"
@@ -1022,7 +1237,15 @@ verify_installation() {
         log "ERROR" "❌ ZSH not found"
         status=1
     fi
-    
+
+    # Check uv
+    if command -v uv >/dev/null 2>&1; then
+        local version=$(uv --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+        log "SUCCESS" "✅ uv Python package manager: $version"
+    else
+        log "WARNING" "⚠️  uv not found (may need shell restart)"
+    fi
+
     # Check Node.js
     if ! $SKIP_NODE; then
         if command -v node >/dev/null 2>&1; then
@@ -1206,6 +1429,7 @@ main() {
 
     install_context_menu
     install_ptyxis
+    install_uv
     install_nodejs
     install_claude_code
     install_gemini_cli
