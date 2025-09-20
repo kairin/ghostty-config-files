@@ -481,6 +481,58 @@ For implementing modern web development stacks with local CI/CD:
 
 **Key Features**: uv-first Python management, Astro.build static sites, Tailwind CSS + shadcn/ui, mandatory local CI/CD, zero-cost GitHub Pages deployment.
 
+## 🌐 Modern Web Development Stack Integration
+
+### Feature 001: Modern Web Development Stack
+**Implementation Status**: Planning Phase Complete, Ready for Tasks Generation
+**Location**: `specs/001-modern-web-development/`
+**Branch**: `001-modern-web-development`
+
+**Core Stack Components**:
+- **uv (≥0.4.0)**: Exclusive Python dependency management with virtual environment integration
+- **Astro.build (≥4.0)**: Static site generation with TypeScript strict mode and islands architecture
+- **Tailwind CSS (≥3.4)**: Utility-first CSS framework with design system optimization
+- **shadcn/ui**: Copy-paste component library with Radix UI primitives and accessibility compliance
+- **Local CI/CD Infrastructure**: Zero GitHub Actions consumption with complete workflow simulation
+
+**Performance Targets**:
+- Lighthouse scores 95+ across all metrics (Performance, Accessibility, Best Practices, SEO)
+- Core Web Vitals: FCP <1.5s, LCP <2.5s, CLS <0.1
+- JavaScript bundle size <100KB for initial load
+- Build time <30 seconds locally with hot reload <1 second
+
+**Local CI/CD Requirements**:
+```bash
+# Modern web stack local workflow
+./local-infra/runners/astro-build-local.sh       # Astro build simulation
+./local-infra/runners/performance-monitor.sh     # Core Web Vitals monitoring
+./local-infra/runners/gh-workflow-local.sh all   # Complete validation
+```
+
+**Constitutional Compliance**:
+- ✅ uv-First Python Management: Exclusive use of uv for all Python operations
+- ✅ Static Site Generation Excellence: Astro.build with performance optimization
+- ✅ Local CI/CD First: Mandatory local validation before GitHub deployment
+- ✅ Component-Driven UI: shadcn/ui with accessibility requirements
+- ✅ Zero-Cost Deployment: GitHub Pages with branch preservation
+
+**Development Workflow Integration**:
+```bash
+# Spec-kit workflow commands for modern web development
+/.specify/scripts/bash/create-new-feature.sh    # Feature specification
+# Available commands: /constitution, /specify, /plan, /tasks, /implement
+
+# Project structure follows constitutional requirements
+project-root/
+├── .venv/                  # uv managed Python environment
+├── src/                    # Astro source files
+├── components/             # shadcn/ui components
+├── local-infra/            # Local CI/CD infrastructure
+└── [config files]          # Constitutional configuration files
+```
+
+**Next Steps**: Execute `/tasks` command to generate implementation tasks following Phase 2 planning approach.
+
 ### Support Commands
 ```bash
 # Get help with installation

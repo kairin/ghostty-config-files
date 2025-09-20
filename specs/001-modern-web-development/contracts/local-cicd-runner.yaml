@@ -1,0 +1,283 @@
+openapi: 3.0.3
+info:
+  title: Local CI/CD Runner Interface
+  description: Contract for local CI/CD infrastructure runner scripts
+  version: 1.0.0
+
+paths:
+  /local-cicd/astro-build:
+    post:
+      summary: Execute local Astro build simulation
+      description: Simulates complete Astro build process locally
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                environment:
+                  type: string
+                  enum: [development, production]
+                  default: production
+                validation_level:
+                  type: string
+                  enum: [basic, full]
+                  default: full
+              required:
+                - environment
+      responses:
+        '200':
+          description: Build successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+                  build_time:
+                    type: number
+                    description: Build time in seconds
+                  output_size:
+                    type: number
+                    description: Total build output size in bytes
+                  performance_metrics:
+                    $ref: '#/components/schemas/PerformanceMetrics'
+        '400':
+          description: Build configuration error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Build execution error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /local-cicd/gh-workflow:
+    post:
+      summary: Execute GitHub Actions local simulation
+      description: Simulates complete GitHub Actions workflow locally
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workflow_type:
+                  type: string
+                  enum: [all, validate, test, build, deploy]
+                  default: all
+                skip_checks:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional checks to skip for testing
+              required:
+                - workflow_type
+      responses:
+        '200':
+          description: Workflow simulation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+                  execution_time:
+                    type: number
+                    description: Total execution time in seconds
+                  checks_passed:
+                    type: array
+                    items:
+                      type: string
+                    description: List of passed validation checks
+                  github_actions_consumption:
+                    type: number
+                    description: Must always be 0
+        '422':
+          description: Validation check failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /local-cicd/performance-monitor:
+    post:
+      summary: Execute performance monitoring
+      description: Runs comprehensive performance analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_url:
+                  type: string
+                  format: uri
+                  description: Local or deployed URL to test
+                test_type:
+                  type: string
+                  enum: [lighthouse, core-web-vitals, accessibility, security]
+                  default: lighthouse
+              required:
+                - target_url
+      responses:
+        '200':
+          description: Performance analysis complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+                  metrics:
+                    $ref: '#/components/schemas/PerformanceMetrics'
+                  recommendations:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Performance test configuration error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /local-cicd/pre-commit:
+    post:
+      summary: Execute pre-commit validation
+      description: Runs all pre-commit validation checks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                files_changed:
+                  type: array
+                  items:
+                    type: string
+                  description: List of changed file paths
+                commit_message:
+                  type: string
+                  description: Proposed commit message
+              required:
+                - files_changed
+      responses:
+        '200':
+          description: Pre-commit validation passed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+                  validations_passed:
+                    type: array
+                    items:
+                      type: string
+        '422':
+          description: Pre-commit validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+components:
+  schemas:
+    PerformanceMetrics:
+      type: object
+      properties:
+        lighthouse:
+          type: object
+          properties:
+            performance:
+              type: number
+              minimum: 95
+            accessibility:
+              type: number
+              minimum: 95
+            best_practices:
+              type: number
+              minimum: 95
+            seo:
+              type: number
+              minimum: 95
+        core_web_vitals:
+          type: object
+          properties:
+            first_contentful_paint:
+              type: number
+              maximum: 1.5
+              description: Seconds
+            largest_contentful_paint:
+              type: number
+              maximum: 2.5
+              description: Seconds
+            cumulative_layout_shift:
+              type: number
+              maximum: 0.1
+        bundle_sizes:
+          type: object
+          properties:
+            initial_js:
+              type: number
+              maximum: 102400
+              description: Bytes (100KB limit)
+            total_css:
+              type: number
+              description: Bytes
+            total_assets:
+              type: number
+              description: Bytes
+
+    ValidationError:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [failed]
+        failed_checks:
+          type: array
+          items:
+            type: object
+            properties:
+              check_name:
+                type: string
+              error_message:
+                type: string
+              suggested_fix:
+                type: string
+        block_commit:
+          type: boolean
+          description: Whether this failure should block commit
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [error]
+        error_type:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
