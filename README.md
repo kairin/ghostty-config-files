@@ -16,8 +16,12 @@ cd ghostty-config-files
 
 ### What Gets Installed
 - **Ghostty Terminal**: Latest from source with 2025 optimizations
+- **Ptyxis Terminal**: Official packages preferred (apt/snap), fallback to flatpak
+- **ZSH + Oh My ZSH**: Latest versions with automatic updates
+- **uv Python Manager**: Latest version with virtual environment support
+- **Node.js via NVM**: Latest LTS with automatic version management
+- **AI Tools**: Claude Code + Gemini CLI (latest versions, auto-updated)
 - **Context Menu Integration**: Right-click "Open in Ghostty" in file manager
-- **AI Tools**: Claude Code + Gemini CLI for development assistance
 - **Performance Monitoring**: Local CI/CD with constitutional validation
 - **Zero-Cost Infrastructure**: All workflows run locally, zero GitHub Actions consumption
 
@@ -31,9 +35,12 @@ cd ghostty-config-files
 5. **Local Validation**: Test everything locally before deployment
 
 ### Technology Stack
-- **Terminal**: Ghostty 1.2.0+ with Linux CGroup optimizations
+- **Terminal**: Ghostty 1.2.0+ with Linux CGroup optimizations • Ptyxis terminal support
+- **Shell**: ZSH with Oh My ZSH (latest versions, auto-updated)
+- **Package Management**: uv for Python • NVM for Node.js • apt/snap preferred over flatpak
 - **Frontend**: Astro.build v5.13.9 • TypeScript strict mode • Tailwind CSS
 - **Components**: shadcn/ui design system with accessibility compliance
+- **AI Integration**: Claude Code + Gemini CLI with automatic updates
 - **Automation**: Python 3.12+ with uv-first approach • Constitutional compliance
 - **CI/CD**: Local shell runners • Zero GitHub Actions consumption
 

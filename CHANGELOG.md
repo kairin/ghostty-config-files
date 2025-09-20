@@ -2,6 +2,39 @@
 
 All notable changes to the Modern Web Development Stack implementation are documented in this file.
 
+## [2025-09-20] - Installation & Update System Enhancements
+
+### 🚀 **Major Improvements**
+- **Fixed Ptyxis Detection**: Now properly detects apt/snap installations instead of only flatpak
+- **Added uv Support**: Complete Python package manager installation and configuration
+- **Enhanced Update Logic**: All tools now check for and apply latest versions when already installed
+- **Improved Package Preferences**: Official installations (apt/snap) preferred over flatpak
+
+### 🔧 **Installation Logic Updates**
+- **Ptyxis**: Now checks apt → snap → flatpak (in preference order)
+- **ZSH + Oh My ZSH**: Added automatic update checks and latest version installation
+- **NVM**: Added version comparison and update logic for Node Version Manager
+- **All Tools**: Consistent "detect → check updates → update if needed → verify" pattern
+
+### 📦 **New Features**
+- **uv Python Manager**: Full installation with PATH setup and shell integration
+- **Smart Updates**: Tools display current versions and update only when newer versions available
+- **Better Logging**: Enhanced detection messages showing installation methods and versions
+- **Preservation Logic**: Maintains existing configurations while updating core tools
+
+### 🏗️ **Technical Improvements**
+- **Detection Priority**: apt (official) → snap (official) → flatpak (fallback)
+- **Update Automation**: Oh My ZSH uses official upgrade script with git pull fallback
+- **Version Tracking**: All tools now display current and target versions during updates
+- **Error Handling**: Improved fallback mechanisms for update failures
+
+### 📚 **Documentation Updates**
+- **README**: Updated technology stack and installation details
+- **Help Text**: Reflects new package preferences and uv support
+- **Process Documentation**: Better explanation of update logic and tool preferences
+
+---
+
 ## [Unreleased] - Feature 002: Production Deployment & Maintenance Excellence
 
 ### Current Implementation Status: Feature 001 COMPLETE (62/62 tasks) | Feature 002 READY for implementation
