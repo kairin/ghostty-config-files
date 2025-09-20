@@ -1,0 +1,140 @@
+---
+export interface Props {
+  placeholder?: string;
+  value?: string;
+  disabled?: boolean;
+  required?: boolean;
+  readonly?: boolean;
+  rows?: number;
+  cols?: number;
+  maxlength?: number;
+  minlength?: number;
+  class?: string;
+  id?: string;
+  name?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  resize?: 'none' | 'both' | 'horizontal' | 'vertical';
+}
+
+const {
+  class: className = '',
+  disabled = false,
+  required = false,
+  readonly = false,
+  rows = 3,
+  resize = 'vertical',
+  ...props
+} = Astro.props;
+
+// Constitutional textarea styling with accessibility
+const textareaClasses = [
+  "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm",
+  "ring-offset-background placeholder:text-muted-foreground",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "disabled:cursor-not-allowed disabled:opacity-50",
+  "aria-invalid:border-destructive aria-invalid:ring-destructive",
+  resize === 'none' ? 'resize-none' :
+  resize === 'horizontal' ? 'resize-x' :
+  resize === 'vertical' ? 'resize-y' : 'resize',
+  className
+].filter(Boolean).join(' ');
+---
+
+<textarea
+  class={textareaClasses}
+  disabled={disabled}
+  required={required}
+  readonly={readonly}
+  rows={rows}
+  {...props}
+></textarea>
+
+<style>
+  /* Enhanced textarea styling for constitutional compliance */
+  textarea {
+    field-sizing: content;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Focus states */
+  textarea:focus-visible {
+    box-shadow: 0 0 0 2px hsl(var(--ring));
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    textarea {
+      border-width: 2px;
+    }
+
+    textarea:focus-visible {
+      border-color: hsl(var(--ring));
+      box-shadow: 0 0 0 3px hsl(var(--ring));
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    textarea {
+      transition: none;
+    }
+  }
+
+  /* Dark mode optimizations */
+  .dark textarea::placeholder {
+    opacity: 0.7;
+  }
+
+  /* Resize handle styling */
+  textarea:not(.resize-none) {
+    resize: vertical;
+  }
+
+  textarea.resize-x {
+    resize: horizontal;
+  }
+
+  textarea.resize-y {
+    resize: vertical;
+  }
+
+  textarea.resize {
+    resize: both;
+  }
+
+  /* Custom scrollbar for constitutional design consistency */
+  textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  textarea::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  textarea::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 4px;
+  }
+
+  textarea::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  /* Performance optimization */
+  textarea {
+    contain: layout style paint;
+  }
+
+  /* Accessibility improvements */
+  textarea[aria-invalid="true"] {
+    border-color: hsl(var(--destructive));
+  }
+
+  textarea[aria-invalid="true"]:focus-visible {
+    ring-color: hsl(var(--destructive));
+  }
+</style>
