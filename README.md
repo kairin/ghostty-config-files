@@ -1,273 +1,218 @@
-# Ghostty Configuration with Comprehensive Terminal Tools (2025 Edition)
+# Ghostty Configuration Files - Constitutional Framework
 
-A complete terminal environment setup featuring Ghostty terminal emulator with **2025 performance optimizations**, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and modern web development stack with Astro.build.
+> 🏛️ **Constitutional Compliance**: Zero GitHub Actions consumption • Local CI/CD only • Performance validated • User customization preserved
 
-## 🏗️ Project Status
+## 🚀 Quick Start
 
-**Implementation Progress: 30 of 58 tasks completed (52%)**
-
-### ✅ Completed Features
-- ✅ **Complete Local CI/CD Infrastructure** - All 6 runner scripts operational with GitHub CLI integration
-- ✅ Modern web development stack (Astro.build + Tailwind CSS + shadcn/ui)
-- ✅ Constitutional compliance framework with TDD methodology (35 tests)
-- ✅ Performance validation framework (Lighthouse 95+ targets)
-- ✅ **Pre-commit validation system** - Comprehensive file, commit, and constitutional compliance checking
-- ✅ Context menu integration ("Open in Ghostty")
-- ✅ AI tool integration (Claude Code + Gemini CLI)
-- ✅ **Zero GitHub Actions consumption** - Complete local execution with API contract compliance
-- ✅ Comprehensive logging and debugging systems with JSON reports
-
-### 🚧 System Installation Status
-Based on recent verification (2025-01-20):
-
-**✅ Currently Working:**
-- **Ghostty**: v1.2.0 (installed via Snap, not source build)
-- **Context Menu**: Functional "Open in Ghostty" integration
-- **Ptyxis**: v47.5 (installed via APT, not Flatpak)
-- **Node.js**: v22.13.1 via NVM (working)
-- **Claude Code CLI**: v0.12.2 (working)
-- **Gemini CLI**: v0.1.13 (working)
-- **Complete development environment**: Python, TypeScript, testing frameworks
-
-**❌ Installation Gaps:**
-- **ZSH + Oh My ZSH**: Not installed (system using bash)
-- **Zig 0.14.0**: Not installed (Ghostty via Snap instead of source)
-- **Flatpak**: Not installed (Ptyxis via APT instead)
-
-### 📋 Current Development Phase
-**Phase 3.5**: ✅ **COMPLETE** - Local CI/CD Runner Implementation (6/6 tasks completed)
-
-**Next Phase 3.6**: Astro.build Implementation (5 remaining tasks)
-- Create Astro project structure and components
-- Implement shadcn/ui integration
-- Setup TypeScript configuration for components
-- Remaining phases: Python automation, GitHub Pages, validation integration, and optimization
-
-## 🚀 One-Command Installation
-
+### One-Command Installation (Ubuntu)
 ```bash
+# Clone repository
+git clone https://github.com/yourusername/ghostty-config-files.git
+cd ghostty-config-files
+
+# Install everything (Ghostty + optimizations + AI tools)
 ./start.sh
 ```
 
-This command manages installation and configuration:
-- **Modern Web Stack** - Astro.build + Tailwind CSS + shadcn/ui with TypeScript
-- **Local CI/CD** - Zero GitHub Actions consumption with local runners
-- **Context Menu** - Right-click "Open in Ghostty" integration (✅ working)
-- **AI Tools** - Claude Code + Gemini CLI integration (✅ working)
-- **Node.js** - Latest LTS via NVM (✅ working)
-- **Development Environment** - Python via uv, TypeScript, testing frameworks (✅ working)
+### What Gets Installed
+- **Ghostty Terminal**: Latest from source with 2025 optimizations
+- **Context Menu Integration**: Right-click "Open in Ghostty" in file manager
+- **AI Tools**: Claude Code + Gemini CLI for development assistance
+- **Performance Monitoring**: Local CI/CD with constitutional validation
+- **Zero-Cost Infrastructure**: All workflows run locally, zero GitHub Actions consumption
 
-**Note**: Some documented installations (ZSH, Zig, Flatpak) are currently gaps in the system but core functionality works via alternative methods (Ghostty via Snap, Ptyxis via APT).
+## 🏗️ Constitutional Architecture
 
-## ✨ Features
+### Core Principles
+1. **Zero GitHub Actions Consumption**: All CI/CD runs locally
+2. **Performance First**: Lighthouse 95+ • <100KB JS • <2.5s LCP
+3. **User Preservation**: Never overwrite customizations
+4. **Branch Preservation**: Constitutional naming • No branch deletion
+5. **Local Validation**: Test everything locally before deployment
 
-### 🚀 Modern Web Development Stack
-- **Astro.build v5.13.9** - High-performance static site generation with TypeScript strict mode
-- **Tailwind CSS v3.4.17** - Constitutional design system with CSS variables and dark mode
-- **shadcn/ui Integration** - Component-driven architecture with accessibility plugins
-- **Performance Targets** - Lighthouse 95+ scores, JavaScript <100KB, build time <30s
-- **Local CI/CD** - Zero GitHub Actions consumption with comprehensive local runners
+### Technology Stack
+- **Terminal**: Ghostty 1.2.0+ with Linux CGroup optimizations
+- **Frontend**: Astro.build v5.13.9 • TypeScript strict mode • Tailwind CSS
+- **Components**: shadcn/ui design system with accessibility compliance
+- **Automation**: Python 3.12+ with uv-first approach • Constitutional compliance
+- **CI/CD**: Local shell runners • Zero GitHub Actions consumption
 
-### 📁 Right-Click Context Menu
-- **Nautilus Integration** - Right-click any folder → "Scripts" → "Open in Ghostty"
-- **Smart Path Handling** - Works with files, folders, and special characters
-- **Automatic Installation** - Fully integrated into the setup process
+## 📊 Performance Targets (Constitutional)
 
-### Complete Local CI/CD Infrastructure
-- **`local-infra/runners/astro-build-local.sh`** - Astro build validation with performance monitoring
-- **`local-infra/runners/gh-workflow-local.sh`** - GitHub workflow simulation with zero Actions consumption
-- **`local-infra/runners/performance-monitor.sh`** - Lighthouse and Core Web Vitals validation
-- **`local-infra/runners/pre-commit-local.sh`** - Comprehensive pre-commit validation with GitHub CLI
-- **`local-infra/logs/`** - Structured logging with JSON reports and system state capture
-- **`local-infra/config/`** - CI/CD configuration management and templates
+### Core Web Vitals
+- **First Contentful Paint (FCP)**: <1.8 seconds
+- **Largest Contentful Paint (LCP)**: <2.5 seconds
+- **Cumulative Layout Shift (CLS)**: <0.1
+- **First Input Delay (FID)**: <100 milliseconds
 
-### Constitutional Compliance Framework
-- **Complete Local CI/CD** - 6 operational runner scripts with GitHub CLI integration
-- **Zero GitHub Actions Consumption** - All validation runs locally with API contract compliance
-- **Test-Driven Development** - 35 properly failing tests across contract, integration, and performance
-- **Pre-commit Validation** - File changes, commit messages, and constitutional compliance checking
-- **Performance Validation** - Lighthouse 95+ scores, bundle size limits, build time targets
-- **uv-First Python Management** - Strict tooling with ruff, black, mypy compliance
-- **Branch Preservation Strategy** - Timestamped branches with constitutional merging
+### Build Performance
+- **Build Time**: <30 seconds
+- **JavaScript Bundle**: <100KB (gzipped)
+- **CSS Bundle**: <20KB (gzipped)
+- **Lighthouse Performance**: 95+
 
-### Safety Features
-- **Automatic backup** before any configuration changes
-- **Configuration validation** using `ghostty +show-config`
-- **Safe recovery** - automatic restoration of last working configuration
-- **Comprehensive logging** - detailed logs for troubleshooting
+### System Performance
+- **Ghostty Startup**: <500ms
+- **Memory Usage**: <100MB baseline
+- **CI/CD Execution**: <2 minutes complete workflow
 
-## 📦 Quick Start
+## 🛠️ Development Commands
 
-1. **Clone this repository:**
-   ```bash
-   git clone <repository-url> ~/.config/ghostty
-   cd ~/.config/ghostty
-   ```
+### Local CI/CD
+```bash
+# Complete local workflow
+./local-infra/runners/gh-workflow-local.sh all
 
-2. **Run the installer:**
-   ```bash
-   ./start.sh
-   ```
+# Individual components
+./local-infra/runners/test-runner-local.sh           # Run tests
+./local-infra/runners/benchmark-runner.sh           # Performance benchmarks
+./local-infra/runners/performance-monitor.sh        # Monitor performance
 
-3. **Follow the prompts** and restart your terminal when complete.
+# Documentation generation
+python scripts/doc_generator.py                     # Generate all docs
+```
 
-## ⚙️  Installation Options
+### Configuration Management
+```bash
+# Intelligent updates (preserves customizations)
+./scripts/check_updates.sh
 
-The `start.sh` script supports various options for customized installation:
+# Validate configuration
+ghostty +show-config
+
+# Install context menu
+./scripts/install_context_menu.sh
+```
+
+### Performance Monitoring
+```bash
+# Monitor Core Web Vitals
+python scripts/performance_monitor.py --url http://localhost:4321
+
+# Check constitutional compliance
+python scripts/constitutional_automation.py --validate
+
+# Benchmark system performance
+./local-infra/runners/benchmark-runner.sh --full
+```
+
+## 🏛️ Constitutional Compliance
+
+### Branch Management
+All branches follow constitutional naming: `YYYYMMDD-HHMMSS-type-description`
 
 ```bash
-./start.sh --help              # Show all options
-./start.sh --skip-deps         # Skip system dependencies
-./start.sh --skip-node         # Skip Node.js/NVM installation  
-./start.sh --skip-ai           # Skip AI tools (Claude Code, Gemini CLI)
-./start.sh --skip-ptyxis       # Skip Ptyxis installation
-./start.sh --verbose           # Verbose logging output
+# Constitutional branch creation
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+BRANCH_NAME="${DATETIME}-feat-enhancement"
+git checkout -b "$BRANCH_NAME"
+# Work on changes
+git add .
+git commit -m "Descriptive commit message
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+Co-Authored-By: Claude <noreply@anthropic.com>"
+git push -u origin "$BRANCH_NAME"
 ```
 
-## 🤖 AI Assistant Setup (✅ Working)
-
-### Claude Code (v0.12.2)
-Already authenticated and working:
+### Zero-Cost Validation
 ```bash
-claude --version  # v0.12.2
-```
-Working with development environment integration.
+# Check GitHub Actions usage
+gh api user/settings/billing/actions | jq '.total_paid_minutes_used'
 
-### Gemini CLI (v0.1.13)
-Already configured and working:
-```bash
-gemini --version  # v0.1.13
+# Validate local workflows
+./local-infra/runners/gh-workflow-local.sh validate
 ```
 
-### Ptyxis Integration (v47.5 via APT)
-The `gemini` command works with Ptyxis terminal integration:
-```bash
-gemini "your prompt here"  # Runs with proper working directory context
-```
+## 📚 Documentation
 
-## 🔧 Configuration Management
+### Core Documentation
+- [Constitutional Requirements](docs/constitutional/README.md)
+- [Performance Guide](docs/performance/README.md)
+- [API Documentation](docs/api/README.md)
+- [Development Guide](docs/guides/development.md)
 
-### Reload Ghostty Config
-- **Keystroke**: `Cmd+S > R` (or `Ctrl+S > R` on Linux)
-- **Command**: `ghostty +show-config` (to validate)
+### Generated Documentation
+- [Component Documentation](docs/api/components/)
+- [Script Documentation](docs/api/scripts/)
+- [Performance Reports](docs/performance/)
 
-### Intelligent Updates
-
-**Smart Update Checker** (automatically detects what needs updating):
-```bash
-./scripts/check_updates.sh  # Check and apply only necessary updates
-```
-
-**Force Full Update**:
-```bash
-./start.sh  # Re-run to update all components (handles existing installations intelligently)
-```
-
-**Update Options**:
-```bash
-./scripts/check_updates.sh --force        # Force update even if no changes detected
-./scripts/check_updates.sh --config-only  # Only update configuration
-./scripts/check_updates.sh --help         # Show all options
-```
-
-### Manual Updates
-- **Ghostty**: `./scripts/update_ghostty.sh`
-- **Configuration**: `./scripts/install_ghostty_config.sh`
-- **Dependencies**: `./start.sh --verbose`
-
-## 📋 Project Structure
-
-```
-ghostty-config-files/
-├── start.sh              # 🚀 Primary installation script
-├── README.md             # This file - user documentation  
-├── AGENTS.md            # AI agent instructions (single source of truth)
-├── CLAUDE.md            # Claude Code setup guide
-├── GEMINI.md            # Gemini CLI setup guide
-├── configs/             # Configuration files
-│   ├── ghostty/         # Ghostty terminal configuration
-│   │   ├── config       # Main configuration file
-│   │   ├── theme.conf   # Theme settings
-│   │   ├── scroll.conf  # Scrollback settings
-│   │   ├── layout.conf  # Layout and font settings
-│   │   └── keybindings.conf # Keybinding configuration
-│   └── workspace/       # Development workspace files
-│       └── ghostty.code-workspace # VS Code workspace
-└── scripts/             # Additional utility scripts
-    ├── install_ghostty_config.sh
-    ├── update_ghostty.sh
-    ├── fix_config.sh
-    └── agent_functions.sh
-```
-
-## 🛠️ Troubleshooting
-
-### Check Installation Status
-```bash
-# Verify Ghostty (Snap installation)
-snap list | grep ghostty
-ghostty --version  # v1.2.0
-
-# Verify AI tools (working)
-claude --version   # v0.12.2
-gemini --version   # v0.1.13
-
-# Verify Ptyxis (APT installation)
-apt list --installed | grep ptyxis
-ptyxis --version   # v47.5
-
-# Verify development environment
-uv --version       # v0.8.15
-node --version     # v22.13.1
-```
-
-### View Logs
-Installation logs are stored in `/tmp/ghostty-start-logs/`:
-```bash
-# View latest installation log
-ls -la /tmp/ghostty-start-logs/
-tail -f /tmp/ghostty-start-logs/start-*.log
-```
+## 🔧 Troubleshooting
 
 ### Common Issues
+```bash
+# Configuration validation fails
+ghostty +show-config                   # Check configuration
+./scripts/fix_config.sh                # Automatic repair
 
-1. **Configuration Validation Errors**: 
-   - Automatic backup restoration will occur
-   - Check logs for specific configuration issues
-   - Run `ghostty +show-config` manually to debug
+# Performance issues
+./local-infra/runners/benchmark-runner.sh --diagnose
 
-2. **Development Environment Issues**:
-   - Ensure all dependencies are installed: `./start.sh --verbose`
-   - Check uv installation: `uv --version` (should be ≥0.8.15)
-   - Run local CI/CD validation: `./local-infra/runners/astro-build-local.sh`
+# Update failures
+./scripts/check_updates.sh --force      # Force updates
+```
 
-3. **AI Tools Not in PATH**:
-   - Restart your terminal or run: `source ~/.bashrc`
-   - Check Node.js installation: `node --version`
-   - Verify npm global installs: `npm list -g`
+### Logs & Debugging
+```bash
+# View system logs
+ls -la /tmp/ghostty-start-logs/
 
-## 📚 Additional Resources
+# View CI/CD logs
+ls -la ./local-infra/logs/
 
-- **AI Agent Guidelines**: [AGENTS.md](./AGENTS.md) - Complete instructions for AI assistants
-- **Development Progress**: [CHANGELOG.md](./CHANGELOG.md) - Comprehensive implementation tracking
-- **Spec-Kit Methodology**: [spec-kit/SPEC_KIT_GUIDE.md](./spec-kit/SPEC_KIT_GUIDE.md) - Constitutional development approach
-- **Claude Code Setup**: [CLAUDE.md](./CLAUDE.md) - Detailed Claude Code configuration
-- **Gemini CLI Setup**: [GEMINI.md](./GEMINI.md) - Detailed Gemini CLI configuration
-- **Astro Documentation**: https://docs.astro.build - Modern web development stack
-- **Ghostty Documentation**: https://ghostty.org/docs/config
-- **Ptyxis Documentation**: https://gitlab.gnome.org/chergert/ptyxis
-
-## 🔒 Security
-
-- Sudo access is only requested when necessary
-- API keys and credentials are never logged
-- Configuration backups protect against corruption
-- Flatpak sandboxing for Ptyxis provides security isolation
+# Performance metrics
+jq '.' ./local-infra/logs/performance-*.json
+```
 
 ## 🤝 Contributing
 
-For AI assistants working on this project, please refer to [AGENTS.md](./AGENTS.md) for comprehensive guidelines, workflows, and best practices.
+### Constitutional Requirements
+- All changes must pass local CI/CD validation
+- Performance targets must be maintained
+- User customizations must be preserved
+- Zero GitHub Actions consumption
+- Complete documentation required
+
+### Development Workflow
+1. Run `./local-infra/runners/gh-workflow-local.sh all` before starting
+2. Create constitutional branch with timestamp naming
+3. Implement changes with constitutional compliance
+4. Validate performance targets locally
+5. Generate documentation updates
+6. Commit with constitutional format
+7. Merge to main preserving branch
+
+## 📋 Constitutional Checklist
+
+### Before Deployment
+- [ ] Local CI/CD passes (`./local-infra/runners/gh-workflow-local.sh all`)
+- [ ] Configuration validates (`ghostty +show-config`)
+- [ ] Performance targets met (Lighthouse 95+, <100KB JS, <2.5s LCP)
+- [ ] Zero GitHub Actions consumption confirmed
+- [ ] User customizations preserved
+- [ ] Documentation updated
+- [ ] Constitutional branch naming used
+
+### Quality Gates
+- [ ] Build time <30 seconds
+- [ ] Bundle size <100KB (JS) + <20KB (CSS)
+- [ ] Core Web Vitals targets met
+- [ ] Accessibility compliance (WCAG 2.1 AA)
+- [ ] Constitutional compliance validated
+- [ ] Complete test coverage
 
 ## 📄 License
 
-This configuration is provided as-is for educational and personal use. Please respect the licenses of the individual tools and applications.
+MIT License - See [LICENSE](LICENSE) for details.
+
+## 🏛️ Constitutional Framework
+
+This project operates under a Constitutional Framework ensuring:
+- **Performance**: Lighthouse 95+ scores maintained
+- **Efficiency**: Zero GitHub Actions consumption
+- **Preservation**: User customizations protected
+- **Quality**: Comprehensive local validation
+- **Accessibility**: WCAG 2.1 AA compliance
+
+Generated with Constitutional Documentation Generator v2.0
+Last Updated: 2025-09-20 12:10:41
