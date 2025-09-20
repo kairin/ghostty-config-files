@@ -11,17 +11,33 @@ git clone https://github.com/yourusername/ghostty-config-files.git
 cd ghostty-config-files
 
 # Install everything (Ghostty + optimizations + AI tools)
+# Features intelligent detection, real-time logging, and progress display
 ./start.sh
+
+# Options for selective installation
+./start.sh --skip-deps      # Skip system dependencies
+./start.sh --skip-node      # Skip Node.js/NVM installation
+./start.sh --skip-ai        # Skip AI tools (Claude Code, Gemini CLI)
+./start.sh --skip-ptyxis    # Skip Ptyxis installation
+./start.sh --verbose        # Show detailed real-time output
 ```
 
+### Advanced Installation Features
+- **Intelligent Detection**: Automatically detects existing installations (snap, APT, source)
+- **Real-Time Progress**: See actual command output with progressive disclosure
+- **Session Logging**: Complete logs saved with git-style naming (`YYYYMMDD-HHMMSS-*)
+- **Smart Updates**: Only updates what's needed, preserves existing configurations
+- **Graceful Handling**: Continues installation even if individual components fail
+
 ### What Gets Installed
-- **Ghostty Terminal**: Latest from source with 2025 optimizations
-- **Ptyxis Terminal**: Official packages preferred (apt/snap), fallback to flatpak
-- **ZSH + Oh My ZSH**: Latest versions with automatic updates
-- **uv Python Manager**: Latest version with virtual environment support
-- **Node.js via NVM**: Latest LTS with automatic version management
-- **AI Tools**: Claude Code + Gemini CLI (latest versions, auto-updated)
+- **Ghostty Terminal**: Intelligent detection of snap/APT/source installations with 2025 optimizations
+- **Ptyxis Terminal**: Smart detection (apt → snap → flatpak preference order)
+- **ZSH + Oh My ZSH**: Latest versions with automatic updates and intelligent configuration preservation
+- **uv Python Manager**: Latest version with virtual environment support and PATH management
+- **Node.js via NVM**: Latest LTS with automatic version management and dependency validation
+- **AI Tools**: Claude Code + Gemini CLI with proper dependency checking and error handling
 - **Context Menu Integration**: Right-click "Open in Ghostty" in file manager
+- **Advanced Logging System**: Git-style session management with real-time command streaming
 - **Performance Monitoring**: Local CI/CD with constitutional validation
 - **Zero-Cost Infrastructure**: All workflows run locally, zero GitHub Actions consumption
 
@@ -38,6 +54,8 @@ cd ghostty-config-files
 - **Terminal**: Ghostty 1.2.0+ with Linux CGroup optimizations • Ptyxis terminal support
 - **Shell**: ZSH with Oh My ZSH (latest versions, auto-updated)
 - **Package Management**: uv for Python • NVM for Node.js • apt/snap preferred over flatpak
+- **Intelligent Detection**: Smart tool recognition (snap/APT/source) with appropriate update strategies
+- **Advanced Logging**: Git-style session management with real-time command streaming
 - **Frontend**: Astro.build v5.13.9 • TypeScript strict mode • Tailwind CSS
 - **Components**: shadcn/ui design system with accessibility compliance
 - **AI Integration**: Claude Code + Gemini CLI with automatic updates
@@ -62,6 +80,41 @@ cd ghostty-config-files
 - **Ghostty Startup**: <500ms
 - **Memory Usage**: <100MB baseline
 - **CI/CD Execution**: <2 minutes complete workflow
+
+## 🔍 Intelligent Detection System
+
+### Smart Tool Recognition
+The installation system automatically detects existing tools and their installation sources:
+
+```bash
+# Installation Source Detection
+- **Ghostty**: Detects snap, APT, or source installations
+- **Ptyxis**: Prefers apt → snap → flatpak (in order)
+- **System Packages**: Only installs missing dependencies
+- **Node.js Tools**: Validates npm dependencies before installation
+```
+
+### Installation Strategies
+Based on detection, the system chooses optimal strategies:
+
+```bash
+# Strategy Examples
+- **Snap/APT Installations**: Configuration updates only (no rebuilding)
+- **Source Installations**: Repository updates and rebuilds when needed
+- **Missing Tools**: Fresh installation with dependency validation
+- **Update Management**: Smart version comparison and targeted updates
+```
+
+### Error Handling
+Comprehensive dependency checking and graceful failures:
+
+```bash
+# Dependency Validation
+- **Node.js Tools**: Checks for Node.js and npm before installation
+- **Python Tools**: Validates curl and other dependencies
+- **Build Tools**: Ensures all required packages before compilation
+- **Configuration**: Validates settings before applying changes
+```
 
 ## 🛠️ Development Commands
 
@@ -159,11 +212,46 @@ ghostty +show-config                   # Check configuration
 ./scripts/check_updates.sh --force      # Force updates
 ```
 
-### Logs & Debugging
-```bash
-# View system logs
-ls -la /tmp/ghostty-start-logs/
+### Advanced Logging & Debugging
 
+#### Git-Style Session Logs
+Each installation creates a complete log session with timestamped files:
+```bash
+# View all logs from a session (replace with your timestamp)
+ls -la /tmp/ghostty-start-logs/20250921-040238-ghostty-install*
+
+# Main installation log (human-readable)
+cat /tmp/ghostty-start-logs/20250921-040238-ghostty-install.log
+
+# Complete command outputs (detailed debugging)
+cat /tmp/ghostty-start-logs/20250921-040238-ghostty-install-commands.log
+
+# Errors and warnings only
+cat /tmp/ghostty-start-logs/20250921-040238-ghostty-install-errors.log
+
+# Structured JSON data for parsing
+jq '.' /tmp/ghostty-start-logs/20250921-040238-ghostty-install.json
+
+# Performance metrics
+jq '.' /tmp/ghostty-start-logs/20250921-040238-ghostty-install-performance.json
+```
+
+#### Quick Log Access
+```bash
+# Find latest session logs
+ls -la /tmp/ghostty-start-logs/ | head -10
+
+# View most recent installation
+LOG_SESSION=$(ls -t /tmp/ghostty-start-logs/*.log | head -1 | sed 's/.*\///; s/\.log//')
+echo "Latest session: $LOG_SESSION"
+cat "/tmp/ghostty-start-logs/${LOG_SESSION}.log"
+
+# Check for recent errors
+cat /tmp/ghostty-start-logs/*errors.log | tail -20
+```
+
+#### Legacy CI/CD Logs
+```bash
 # View CI/CD logs
 ls -la ./local-infra/logs/
 
@@ -221,5 +309,6 @@ This project operates under a Constitutional Framework ensuring:
 - **Quality**: Comprehensive local validation
 - **Accessibility**: WCAG 2.1 AA compliance
 
-Generated with Constitutional Documentation Generator v2.0
-Last Updated: 2025-09-20 12:10:41
+Generated with Constitutional Documentation Generator v2.1
+Last Updated: 2025-09-21 04:15:00
+Recent Updates: Intelligent Detection System • Git-Style Session Logging • Progressive Disclosure
