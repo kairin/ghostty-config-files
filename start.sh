@@ -139,9 +139,9 @@ stream_command() {
     local command="$2"
     local description="$3"
 
-    echo -e "${YELLOW}💻 Running: ${NC}$description"
-    echo -e "${CYAN}   Command: ${NC}$command"
-    echo "───────────────────────────────────────"
+    echo -e "   ${YELLOW}💻 ${NC}$description"
+    echo -e "   ${CYAN}├─ Command: ${NC}$command"
+    echo -e "   ${CYAN}└─ Output:${NC}"
 
     # Log command start to all relevant log files
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
@@ -162,9 +162,9 @@ EOF
         echo "[$timestamp] [COMMAND] $command"
         echo "───────────────────────────────────────"
 
-        # Execute command and capture all output
+        # Execute command and capture all output with indentation for readability
         if eval "$command" 2>&1 | while IFS= read -r line; do
-            echo "$line"  # Show to user in real-time
+            echo "      $line"  # Show to user with indentation
             echo "$line" >> "$temp_log"  # Temp storage
             echo "[$timestamp] [OUTPUT] $line" >> "$LOG_COMMANDS"  # Log all output
             echo "[$timestamp] [COMMAND_OUTPUT] $line" >> "$LOG_FILE"  # Main log
@@ -177,13 +177,13 @@ EOF
         local end_time=$(date +%s.%N)
         local duration=$(echo "$end_time - $start_time" | bc 2>/dev/null || echo "unknown")
 
-        echo "───────────────────────────────────────"
+        echo ""
         if [ $exit_code -eq 0 ]; then
-            echo -e "${GREEN}✅ Completed in ${duration}s${NC}"
+            echo -e "   ${GREEN}✅ Completed in ${duration}s${NC}"
             echo "[$timestamp] [COMMAND_SUCCESS] Duration: ${duration}s | Exit: $exit_code" >> "$LOG_COMMANDS"
             echo "[$timestamp] [COMMAND_SUCCESS] $description completed in ${duration}s" >> "$LOG_FILE"
         else
-            echo -e "${RED}❌ Failed after ${duration}s${NC}"
+            echo -e "   ${RED}❌ Failed after ${duration}s${NC}"
             echo "[$timestamp] [COMMAND_FAILED] Duration: ${duration}s | Exit: $exit_code" >> "$LOG_COMMANDS"
             echo "[$timestamp] [COMMAND_FAILED] $description failed after ${duration}s (exit: $exit_code)" >> "$LOG_FILE"
             echo "[$timestamp] [ERROR] [stream_command] Command failed: $command" >> "$LOG_ERRORS"
@@ -216,11 +216,8 @@ complete_task() {
             echo "[$timestamp] [TASK_SUMMARY] $summary" >> "$LOG_FILE"
         fi
 
-        # Clear the detailed output area (progressive collapse)
-        tput cuu 10  # Move cursor up 10 lines
-        tput ed      # Clear from cursor to end of screen
-
-        # Show collapsed summary with enhanced information
+        # Show collapsed summary with enhanced information (no cursor manipulation for compatibility)
+        echo ""  # Add some space
         if [ "$status" = "success" ]; then
             echo -e "${GREEN}✅ $task_name${NC} ${CYAN}(${duration}s)${NC}"
             if [ -n "$summary" ]; then
@@ -242,6 +239,7 @@ complete_task() {
         if [ "$status" = "error" ]; then
             echo -e "${BLUE}   📋 Check logs: $LOG_FILE${NC}"
         fi
+        echo ""  # Add space after completion
 
         # Copy command output to main log if it exists
         if [ -f "/tmp/command_output_$task_id" ]; then
@@ -407,7 +405,7 @@ show_help() {
     echo -e "${CYAN}Comprehensive Terminal Tools Installer${NC}"
     echo ""
     echo "This script installs and configures:"
-    echo "  • ZSH shell with Oh My ZSH and enhanced plugins"
+    echo "  • ZSH shell with Oh My ZSH, essential plugins, and modern tools (eza, bat, ripgrep, fzf, zoxide)"
     echo "  • Ghostty terminal emulator with optimized configuration"
     echo "  • Ptyxis terminal (prefers apt/snap, fallback to flatpak)"
     echo "  • uv Python package manager (latest version)"
@@ -485,21 +483,24 @@ check_installation_status() {
 
     if command -v ghostty >/dev/null 2>&1; then
         ghostty_installed=true
-        ghostty_version=$(ghostty --version 2>/dev/null | head -1 || echo "unknown")
 
-        # Detect installation source
+        # Detect installation source first, then get version accordingly
         local ghostty_path=$(which ghostty 2>/dev/null)
         if [[ "$ghostty_path" == "/snap/"* ]]; then
             ghostty_source="snap"
+            ghostty_version=$(snap list ghostty 2>/dev/null | tail -1 | awk '{print $2}' || echo "unknown")
             log "INFO" "✅ Ghostty installed via snap: $ghostty_version"
         elif [[ "$ghostty_path" == "/usr/local/"* ]]; then
             ghostty_source="source"
+            ghostty_version=$(ghostty --version 2>/dev/null | head -1 || echo "unknown")
             log "INFO" "✅ Ghostty installed from source: $ghostty_version"
         elif dpkg -l 2>/dev/null | grep -q "^ii.*ghostty"; then
             ghostty_source="apt"
+            ghostty_version=$(dpkg -l ghostty 2>/dev/null | tail -1 | awk '{print $3}' || echo "unknown")
             log "INFO" "✅ Ghostty installed via apt: $ghostty_version"
         else
             ghostty_source="unknown"
+            ghostty_version=$(ghostty --version 2>/dev/null | head -1 || echo "unknown")
             log "INFO" "✅ Ghostty installed (unknown source): $ghostty_version"
         fi
 
@@ -836,29 +837,12 @@ install_zsh() {
     else
         log "INFO" "✅ Oh My ZSH already installed"
 
-        # Update Oh My ZSH to latest version
+        # Update Oh My ZSH to latest version using git pull (more reliable than upgrade script)
         log "INFO" "🔄 Updating Oh My ZSH to latest version..."
-        if [ -f "$REAL_HOME/.oh-my-zsh/tools/upgrade.sh" ]; then
-            # Run the upgrade script non-interactively
-            if ZSH="$REAL_HOME/.oh-my-zsh" sh "$REAL_HOME/.oh-my-zsh/tools/upgrade.sh" --unattended >> "$LOG_FILE" 2>&1; then
-                log "SUCCESS" "✅ Oh My ZSH updated to latest version"
-            else
-                log "WARNING" "⚠️  Oh My ZSH update may have failed, trying git pull..."
-                # Fallback: manual git pull with progressive disclosure
-                if run_task_command "Updating Oh My ZSH" "cd '$REAL_HOME/.oh-my-zsh' && git pull origin master && cd - >/dev/null" "Pulling latest Oh My ZSH updates" "30s"; then
-                    log "SUCCESS" "✅ Oh My ZSH updated via git pull"
-                else
-                    log "WARNING" "⚠️  Oh My ZSH git pull failed"
-                fi
-            fi
+        if run_task_command "Updating Oh My ZSH" "cd '$REAL_HOME/.oh-my-zsh' && git pull origin master && cd - >/dev/null" "Pulling latest Oh My ZSH updates" "30s"; then
+            log "SUCCESS" "✅ Oh My ZSH updated successfully"
         else
-            # Fallback: manual git pull if upgrade script doesn't exist
-            log "INFO" "🔄 Updating Oh My ZSH via git pull..."
-            if run_task_command "Updating Oh My ZSH" "cd '$REAL_HOME/.oh-my-zsh' && git pull origin master && cd - >/dev/null" "Pulling latest Oh My ZSH updates" "30s"; then
-                log "SUCCESS" "✅ Oh My ZSH updated via git pull"
-            else
-                log "WARNING" "⚠️  Oh My ZSH update may have failed"
-            fi
+            log "WARNING" "⚠️  Oh My ZSH update failed - check network connection"
         fi
     fi
     
@@ -869,12 +853,13 @@ install_zsh() {
     if [ "$current_shell" != "$zsh_path" ]; then
         log "INFO" "🔄 Setting ZSH as default shell..."
 
-        # Use progressive disclosure for the chsh command
-        if run_task_command "Setting ZSH as default shell" "chsh -s '$zsh_path'" "Changing default shell to ZSH" "5s"; then
+        # Try to change shell using sudo (non-interactive approach)
+        if sudo usermod -s "$zsh_path" "$USER" 2>/dev/null; then
             log "SUCCESS" "✅ ZSH set as default shell (restart terminal to take effect)"
         else
             log "WARNING" "⚠️  Failed to set ZSH as default shell automatically"
             log "INFO" "💡 You can manually set it with: chsh -s $zsh_path"
+            log "INFO" "💡 Or run: sudo usermod -s $zsh_path $USER"
         fi
     else
         log "SUCCESS" "✅ ZSH is already the default shell"
@@ -893,14 +878,95 @@ install_zsh() {
         fi
     fi
     
-    # Add useful ZSH plugins
+    # Install essential Oh My ZSH plugins and optimizations
+    log "INFO" "🔌 Setting up essential Oh My ZSH plugins and optimizations..."
+
+    # Install zsh-autosuggestions (essential plugin #1)
+    local autosuggestions_dir="$REAL_HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    if [ ! -d "$autosuggestions_dir" ]; then
+        log "INFO" "📥 Installing zsh-autosuggestions..."
+        if git clone https://github.com/zsh-users/zsh-autosuggestions "$autosuggestions_dir" >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ zsh-autosuggestions installed"
+        else
+            log "WARNING" "⚠️  Failed to install zsh-autosuggestions"
+        fi
+    fi
+
+    # Install zsh-syntax-highlighting (essential plugin #2)
+    local syntax_highlighting_dir="$REAL_HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+    if [ ! -d "$syntax_highlighting_dir" ]; then
+        log "INFO" "📥 Installing zsh-syntax-highlighting..."
+        if git clone https://github.com/zsh-users/zsh-syntax-highlighting "$syntax_highlighting_dir" >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ zsh-syntax-highlighting installed"
+        else
+            log "WARNING" "⚠️  Failed to install zsh-syntax-highlighting"
+        fi
+    fi
+
+    # Install you-should-use plugin (productivity training)
+    local you_should_use_dir="$REAL_HOME/.oh-my-zsh/custom/plugins/you-should-use"
+    if [ ! -d "$you_should_use_dir" ]; then
+        log "INFO" "📥 Installing you-should-use plugin..."
+        if git clone https://github.com/MichaelAquilina/zsh-you-should-use "$you_should_use_dir" >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ you-should-use plugin installed"
+        else
+            log "WARNING" "⚠️  Failed to install you-should-use plugin"
+        fi
+    fi
+
+    # Configure .zshrc with essential plugins and optimizations
     local zshrc="$REAL_HOME/.zshrc"
     if [ -f "$zshrc" ]; then
-        # Update plugins in .zshrc if Oh My ZSH config exists
-        if grep -q "plugins=(git)" "$zshrc"; then
-            sed -i 's/plugins=(git)/plugins=(git npm node nvm docker docker-compose sudo history)/' "$zshrc"
-            log "SUCCESS" "✅ Enhanced ZSH plugins configuration"
+        # Create backup
+        cp "$zshrc" "$zshrc.backup-$(date +%Y%m%d-%H%M%S)"
+
+        # Update plugins with essential trinity + productivity plugins
+        if grep -q "plugins=" "$zshrc"; then
+            # Replace with optimized plugin list (syntax-highlighting MUST be last)
+            sed -i 's/plugins=(.*/plugins=(git npm node nvm docker docker-compose sudo history extract z you-should-use zsh-autosuggestions zsh-syntax-highlighting)/' "$zshrc"
+            log "SUCCESS" "✅ Updated plugins with essential trinity and productivity tools"
         fi
+
+        # Add performance optimizations to .zshrc
+        if ! grep -q "# Oh My ZSH Performance Optimizations" "$zshrc"; then
+            cat >> "$zshrc" << 'EOF'
+
+# Oh My ZSH Performance Optimizations (2025)
+# Disable magic functions for better performance
+DISABLE_MAGIC_FUNCTIONS=true
+
+# Compilation caching for faster startup
+autoload -Uz compinit
+if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
+    compinit
+else
+    compinit -C
+fi
+
+# Modern tool aliases for enhanced productivity
+if command -v eza >/dev/null 2>&1; then
+    alias ls="eza --group-directories-first --git"
+    alias ll="eza -la --group-directories-first --git"
+    alias tree="eza --tree"
+fi
+
+if command -v bat >/dev/null 2>&1; then
+    alias cat="bat --style=plain"
+    alias bathelp="bat --style=plain --language=help"
+fi
+
+if command -v rg >/dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
+fi
+
+# zsh-autosuggestions configuration
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666666"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+EOF
+            log "SUCCESS" "✅ Added performance optimizations and modern tool aliases"
+        fi
+    fi
         
         # Add NVM configuration to .zshrc if not present
         if ! grep -q "export NVM_DIR" "$zshrc"; then
@@ -932,7 +998,175 @@ alias gemini='flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- ~/.nvm/versions/nod
 EOF
             log "SUCCESS" "✅ Added Ptyxis gemini integration to .zshrc"
         fi
+}
+
+# Install modern Unix tool replacements for enhanced productivity
+install_modern_tools() {
+    log "STEP" "🔧 Installing modern Unix tool replacements..."
+
+    # Install/Update eza (modern ls replacement)
+    if command -v eza >/dev/null 2>&1; then
+        log "INFO" "📥 Updating eza (modern ls replacement)..."
+        if run_task_command "Updating eza" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y eza 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating eza for enhanced directory listings" "30s"; then
+            log "SUCCESS" "✅ eza updated successfully"
+        else
+            log "INFO" "ℹ️ eza update via apt not available or already latest"
+        fi
+    else
+        log "INFO" "📥 Installing eza (modern ls replacement)..."
+        if run_task_command "Installing eza" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt install -y eza 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Installing eza for enhanced directory listings" "30s"; then
+            log "SUCCESS" "✅ eza installed successfully"
+        else
+            log "WARNING" "⚠️  Failed to install eza via apt, trying cargo..."
+            if command -v cargo >/dev/null 2>&1; then
+                if cargo install eza >> "$LOG_FILE" 2>&1; then
+                    log "SUCCESS" "✅ eza installed via cargo"
+                else
+                    log "WARNING" "⚠️  Failed to install eza"
+                fi
+            else
+                log "WARNING" "⚠️  eza installation failed - cargo not available"
+            fi
+        fi
     fi
+
+    # Install/Update bat (modern cat replacement)
+    if command -v bat >/dev/null 2>&1; then
+        log "INFO" "📥 Updating bat (modern cat replacement)..."
+        if run_task_command "Updating bat" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y bat 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating bat for syntax-highlighted file viewing" "30s"; then
+            log "SUCCESS" "✅ bat updated successfully"
+        else
+            log "INFO" "ℹ️ bat update via apt not available or already latest"
+        fi
+    else
+        log "INFO" "📥 Installing bat (modern cat replacement)..."
+        if run_task_command "Installing bat" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt install -y bat 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Installing bat for syntax-highlighted file viewing" "30s"; then
+            log "SUCCESS" "✅ bat installed successfully"
+        else
+            log "WARNING" "⚠️  Failed to install bat"
+        fi
+    fi
+
+    # Install/Update ripgrep (modern grep replacement)
+    if command -v rg >/dev/null 2>&1; then
+        log "INFO" "📥 Updating ripgrep (modern grep replacement)..."
+        if run_task_command "Updating ripgrep" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y ripgrep 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating ripgrep for faster searching" "30s"; then
+            log "SUCCESS" "✅ ripgrep updated successfully"
+        else
+            log "INFO" "ℹ️ ripgrep update via apt not available or already latest"
+        fi
+    else
+        log "INFO" "📥 Installing ripgrep (modern grep replacement)..."
+        if run_task_command "Installing ripgrep" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt install -y ripgrep 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Installing ripgrep for faster searching" "30s"; then
+            log "SUCCESS" "✅ ripgrep installed successfully"
+        else
+            log "WARNING" "⚠️  Failed to install ripgrep"
+        fi
+    fi
+
+    # Install/Update fzf (fuzzy finder)
+    if command -v fzf >/dev/null 2>&1; then
+        log "INFO" "📥 Updating fzf (fuzzy finder)..."
+        if run_task_command "Updating fzf" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y fzf 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating fzf for fuzzy finding" "30s"; then
+            log "SUCCESS" "✅ fzf updated successfully"
+        else
+            log "INFO" "ℹ️ fzf update via apt not available or already latest"
+        fi
+    else
+        log "INFO" "📥 Installing fzf (fuzzy finder)..."
+        if run_task_command "Installing fzf" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt install -y fzf 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Installing fzf for fuzzy finding" "30s"; then
+            log "SUCCESS" "✅ fzf installed successfully"
+        else
+            log "WARNING" "⚠️  Failed to install fzf"
+        fi
+    fi
+
+    # Set up fzf configuration (run for both install and update)
+    local zshrc="$REAL_HOME/.zshrc"
+    if [ -f "$zshrc" ] && ! grep -q "# fzf configuration" "$zshrc"; then
+        cat >> "$zshrc" << 'EOF'
+
+# fzf configuration for enhanced productivity
+if command -v fzf >/dev/null 2>&1; then
+    # Key bindings
+    source /usr/share/doc/fzf/examples/key-bindings.zsh 2>/dev/null || true
+    source /usr/share/doc/fzf/examples/completion.zsh 2>/dev/null || true
+
+    # Use ripgrep for fzf if available
+    if command -v rg >/dev/null 2>&1; then
+        export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    fi
+
+    # Enhanced fzf options
+    export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+fi
+
+EOF
+        log "SUCCESS" "✅ Added fzf configuration to .zshrc"
+    fi
+
+    # Install zoxide (smart cd replacement)
+    if ! command -v zoxide >/dev/null 2>&1; then
+        log "INFO" "📥 Installing zoxide (smart cd replacement)..."
+        if curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ zoxide installed successfully"
+
+            # Add zoxide to .zshrc
+            local zshrc="$REAL_HOME/.zshrc"
+            if [ -f "$zshrc" ] && ! grep -q "eval.*zoxide init" "$zshrc"; then
+                cat >> "$zshrc" << 'EOF'
+
+# zoxide configuration for smart directory navigation
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+    # Replace cd with z for smart navigation
+    alias cd="z"
+fi
+
+EOF
+                log "SUCCESS" "✅ Added zoxide configuration to .zshrc"
+            fi
+        else
+            log "WARNING" "⚠️  Failed to install zoxide"
+        fi
+    else
+        log "SUCCESS" "✅ zoxide already installed"
+    fi
+
+    # Install/Update fd (modern find replacement)
+    if command -v fd >/dev/null 2>&1 || command -v fdfind >/dev/null 2>&1; then
+        log "INFO" "📥 Updating fd (modern find replacement)..."
+        if run_task_command "Updating fd" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y fd-find 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating fd for faster file finding" "30s"; then
+            log "SUCCESS" "✅ fd updated successfully"
+        else
+            log "INFO" "ℹ️ fd update via apt not available or already latest"
+        fi
+        # Ensure fd symlink exists if we have fdfind
+        if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+            local bin_dir="$REAL_HOME/.local/bin"
+            mkdir -p "$bin_dir"
+            ln -sf "$(which fdfind)" "$bin_dir/fd"
+            log "SUCCESS" "✅ Created fd symlink for fdfind"
+        fi
+    else
+        log "INFO" "📥 Installing fd (modern find replacement)..."
+        if run_task_command "Installing fd" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt install -y fd-find 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Installing fd for faster file finding" "30s"; then
+            log "SUCCESS" "✅ fd installed successfully"
+
+            # Create fd symlink if it was installed as fd-find
+            if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+                local bin_dir="$REAL_HOME/.local/bin"
+                mkdir -p "$bin_dir"
+                ln -sf "$(which fdfind)" "$bin_dir/fd"
+                log "SUCCESS" "✅ Created fd symlink for fdfind"
+            fi
+        else
+            log "WARNING" "⚠️  Failed to install fd"
+        fi
+    fi
+
+    log "SUCCESS" "✅ Modern Unix tools installation completed"
 }
 
 # Install system dependencies
@@ -941,14 +1175,14 @@ install_system_deps() {
         log "INFO" "⏭️  Skipping system dependencies installation"
         return 0
     fi
-    
+
     log "STEP" "🔧 Installing system dependencies..."
-    
-    # Update package list
-    sudo apt update || {
+
+    # Update package list with progressive disclosure (suppress CLI warnings)
+    if ! run_task_command "Updating package list" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Refreshing package repositories" "10-30s"; then
         log "ERROR" "Failed to update package list"
         return 1
-    }
+    fi
     
     # Install essential dependencies (check what's already installed)
     local deps=(
@@ -971,7 +1205,7 @@ install_system_deps() {
     for dep in "${deps[@]}"; do
         if dpkg -l "$dep" 2>/dev/null | grep -q "^ii"; then
             debug "✅ $dep already installed"
-            ((installed_count++))
+            installed_count=$((installed_count + 1))
         else
             debug "❌ $dep needs installation"
             missing_deps+=("$dep")
@@ -1257,9 +1491,9 @@ update_ptyxis() {
     log "STEP" "🔄 Updating existing Ptyxis installation..."
 
     # Determine current installation method and update accordingly
-    if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+    if dpkg -l 2>/dev/null | grep ptyxis | grep -q "^ii"; then
         log "INFO" "🔄 Updating Ptyxis via apt..."
-        if sudo apt update && sudo apt upgrade -y ptyxis >> "$LOG_FILE" 2>&1; then
+        if run_task_command "Updating Ptyxis" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y ptyxis 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating Ptyxis to latest version via apt" "10-30s"; then
             log "SUCCESS" "✅ Ptyxis updated via apt"
         else
             log "WARNING" "⚠️  Ptyxis apt update may have failed"
@@ -1521,8 +1755,8 @@ install_claude_code() {
     fi
 
     # Verify installation
-    if command -v claude-code >/dev/null 2>&1; then
-        local version=$(claude-code --version 2>/dev/null || echo "unknown")
+    if command -v claude >/dev/null 2>&1; then
+        local version=$(claude --version 2>/dev/null || echo "unknown")
         log "SUCCESS" "✅ Claude Code ready (version: $version)"
     else
         log "WARNING" "⚠️  Claude Code installed but not in PATH (may need shell restart)"
@@ -1554,16 +1788,16 @@ install_gemini_cli() {
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
     # Install Gemini CLI globally
-    if npm list -g @google/generative-ai-cli >/dev/null 2>&1; then
+    if npm list -g @google/gemini-cli >/dev/null 2>&1; then
         log "INFO" "🔄 Updating Gemini CLI..."
-        if npm update -g @google/generative-ai-cli >> "$LOG_FILE" 2>&1; then
+        if npm update -g @google/gemini-cli >> "$LOG_FILE" 2>&1; then
             log "SUCCESS" "✅ Gemini CLI updated"
         else
             log "WARNING" "⚠️  Gemini CLI update may have failed"
         fi
     else
         log "INFO" "📥 Installing Gemini CLI..."
-        if npm install -g @google/generative-ai-cli >> "$LOG_FILE" 2>&1; then
+        if npm install -g @google/gemini-cli >> "$LOG_FILE" 2>&1; then
             log "SUCCESS" "✅ Gemini CLI installed"
         else
             log "ERROR" "❌ Gemini CLI installation failed"
@@ -1662,7 +1896,7 @@ verify_installation() {
     # Check AI tools
     if ! $SKIP_AI; then
         # Check Claude Code
-        if command -v claude-code >/dev/null 2>&1; then
+        if command -v claude >/dev/null 2>&1; then
             log "SUCCESS" "✅ Claude Code: Available"
         else
             log "WARNING" "⚠️  Claude Code not in PATH (may need shell restart)"
@@ -1692,7 +1926,7 @@ show_final_instructions() {
         echo "4. Use Gemini in Ptyxis: gemini (after restart)"
     fi
     if ! $SKIP_AI; then
-        echo "5. Set up Claude Code: claude-code auth login"
+        echo "5. Set up Claude Code: claude auth login"
         echo "6. Set up Gemini CLI with your API key"
     fi
     echo ""
@@ -1825,6 +2059,7 @@ main() {
     # Execute installation steps
     install_system_deps
     install_zsh
+    install_modern_tools
     install_zig
     install_ghostty
 
