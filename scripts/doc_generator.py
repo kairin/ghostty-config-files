@@ -18,7 +18,7 @@ import subprocess
 import sys
 import time
 from dataclasses import dataclass, asdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 from urllib.parse import urljoin
@@ -156,6 +156,7 @@ class ConstitutionalDocumentationGenerator:
             f.write(readme_content)
 
         self.metrics.total_pages_generated += 1
+        self.metrics.total_files_processed += 1
         self.logger.info(f"✅ Generated README.md ({len(readme_content)} chars)")
 
     def _build_readme_content(self) -> str:
@@ -266,7 +267,7 @@ All branches follow constitutional naming: `YYYYMMDD-HHMMSS-type-description`
 ```bash
 # Constitutional branch creation
 DATETIME=$(date +"%Y%m%d-%H%M%S")
-BRANCH_NAME="${DATETIME}-feat-enhancement"
+BRANCH_NAME="${{DATETIME}}-feat-enhancement"
 git checkout -b "$BRANCH_NAME"
 # Work on changes
 git add .
@@ -881,7 +882,7 @@ cd ghostty-config-files
 ```bash
 # Create timestamped branch
 DATETIME=$(date +"%Y%m%d-%H%M%S")
-BRANCH_NAME="${DATETIME}-feat-your-feature"
+BRANCH_NAME="${{DATETIME}}-feat-your-feature"
 git checkout -b "$BRANCH_NAME"
 ```
 
