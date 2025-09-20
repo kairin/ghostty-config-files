@@ -28,6 +28,17 @@ GHOSTTY_CONFIG_SOURCE="$SCRIPT_DIR/configs/ghostty"
 NVM_DIR="$REAL_HOME/.nvm"
 APPS_DIR="$REAL_HOME/Apps"
 
+# Global variables for installation status and strategies
+ghostty_installed=false
+ghostty_version=""
+ghostty_config_valid=false
+ptyxis_installed=false
+ptyxis_version=""
+ptyxis_source=""
+GHOSTTY_STRATEGY=""
+PTYXIS_STRATEGY=""
+CONFIG_NEEDS_UPDATE=false
+
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
 
@@ -73,6 +84,130 @@ debug() {
         # Still log to file even if not shown
         local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
         echo "[$timestamp] [DEBUG] $*" >> "$LOG_FILE"
+    fi
+}
+
+# Progressive disclosure logging system (like Claude Code)
+declare -A active_tasks
+task_counter=0
+
+# Start a new task with progressive disclosure
+start_task() {
+    local task_name="$1"
+    local task_description="$2"
+
+    task_counter=$((task_counter + 1))
+    local task_id="task_${task_counter}"
+
+    active_tasks[$task_id]="$task_name"
+
+    # Clear previous output and show task header
+    echo -ne "\r\033[K"  # Clear current line
+    echo -e "${CYAN}▶️  $task_name${NC}"
+    if [ -n "$task_description" ]; then
+        echo -e "${BLUE}   $task_description${NC}"
+    fi
+    echo "───────────────────────────────────────"
+
+    # Store task start info
+    echo "$task_id|$task_name|$(date +%s)" > "/tmp/current_task_$task_id"
+    echo "$task_id"
+}
+
+# Stream command output in real-time
+stream_command() {
+    local task_id="$1"
+    local command="$2"
+    local description="$3"
+
+    echo -e "${YELLOW}💻 Running: ${NC}$description"
+    echo -e "${CYAN}   Command: ${NC}$command"
+    echo "───────────────────────────────────────"
+
+    # Execute command and stream output
+    local start_time=$(date +%s)
+    local temp_log="/tmp/command_output_$task_id"
+
+    # Run command with real-time output
+    if eval "$command" 2>&1 | while IFS= read -r line; do
+        echo "$line"
+        echo "$line" >> "$temp_log"
+    done; then
+        local end_time=$(date +%s)
+        local duration=$((end_time - start_time))
+        echo "───────────────────────────────────────"
+        echo -e "${GREEN}✅ Completed in ${duration}s${NC}"
+        return 0
+    else
+        local end_time=$(date +%s)
+        local duration=$((end_time - start_time))
+        echo "───────────────────────────────────────"
+        echo -e "${RED}❌ Failed after ${duration}s${NC}"
+        return 1
+    fi
+}
+
+# Complete and collapse a task
+complete_task() {
+    local task_id="$1"
+    local status="${2:-success}"
+    local summary="$3"
+
+    local task_name="${active_tasks[$task_id]}"
+
+    if [ -f "/tmp/current_task_$task_id" ]; then
+        local task_info=$(cat "/tmp/current_task_$task_id")
+        local start_time=$(echo "$task_info" | cut -d'|' -f3)
+        local end_time=$(date +%s)
+        local duration=$((end_time - start_time))
+
+        # Clear the detailed output area
+        tput cuu 10  # Move cursor up 10 lines
+        tput ed      # Clear from cursor to end of screen
+
+        # Show collapsed summary
+        if [ "$status" = "success" ]; then
+            echo -e "${GREEN}✅ $task_name${NC} ${CYAN}(${duration}s)${NC}"
+        elif [ "$status" = "warning" ]; then
+            echo -e "${YELLOW}⚠️  $task_name${NC} ${CYAN}(${duration}s)${NC}"
+        else
+            echo -e "${RED}❌ $task_name${NC} ${CYAN}(${duration}s)${NC}"
+        fi
+
+        if [ -n "$summary" ]; then
+            echo -e "${BLUE}   $summary${NC}"
+        fi
+
+        # Cleanup
+        rm -f "/tmp/current_task_$task_id"
+        rm -f "/tmp/command_output_$task_id"
+        unset active_tasks[$task_id]
+    fi
+}
+
+# Enhanced command runner with progressive disclosure
+run_task_command() {
+    local task_name="$1"
+    local command="$2"
+    local description="${3:-$command}"
+    local expected_duration="${4:-unknown}"
+
+    # Start the task
+    local task_id=$(start_task "$task_name" "$description")
+
+    # Show expected duration if provided
+    if [ "$expected_duration" != "unknown" ]; then
+        echo -e "${BLUE}   Expected duration: ~${expected_duration}${NC}"
+        echo "───────────────────────────────────────"
+    fi
+
+    # Stream the command
+    if stream_command "$task_id" "$command" "$description"; then
+        complete_task "$task_id" "success" "Completed successfully"
+        return 0
+    else
+        complete_task "$task_id" "error" "Command failed"
+        return 1
     fi
 }
 
@@ -269,11 +404,11 @@ done
 # Check installation status and versions
 check_installation_status() {
     log "STEP" "🔍 Checking current installation status..."
-    
+
     # Check Ghostty installation
-    local ghostty_installed=false
-    local ghostty_version=""
-    local ghostty_config_valid=false
+    ghostty_installed=false
+    ghostty_version=""
+    ghostty_config_valid=false
     
     if command -v ghostty >/dev/null 2>&1; then
         ghostty_installed=true
@@ -292,31 +427,62 @@ check_installation_status() {
     fi
     
     # Check Ptyxis installation (prefer official: apt, snap, then flatpak)
-    local ptyxis_installed=false
-    local ptyxis_version=""
-    local ptyxis_source=""
+    ptyxis_installed=false
+    ptyxis_version=""
+    ptyxis_source=""
+
+    debug "🔍 Starting Ptyxis detection..."
 
     # Check apt installation first (official)
+    debug "🔍 Checking apt installation: dpkg -l | grep ptyxis"
+    local apt_check_output=$(dpkg -l 2>/dev/null | grep ptyxis)
+    debug "📋 apt check output: '$apt_check_output'"
+
     if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+        debug "✅ APT check matched!"
         ptyxis_installed=true
         ptyxis_version=$(ptyxis --version 2>/dev/null | head -n1 | awk '{print $2}' || echo "unknown")
         ptyxis_source="apt"
+        debug "📋 Ptyxis version from command: '$ptyxis_version'"
         log "INFO" "✅ Ptyxis installed via apt: $ptyxis_version"
-    # Check snap installation (official)
-    elif snap list 2>/dev/null | grep -q "ptyxis"; then
-        ptyxis_installed=true
-        ptyxis_version=$(snap list ptyxis 2>/dev/null | tail -n +2 | awk '{print $2}' || echo "unknown")
-        ptyxis_source="snap"
-        log "INFO" "✅ Ptyxis installed via snap: $ptyxis_version"
-    # Check flatpak installation (fallback)
-    elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
-        ptyxis_installed=true
-        ptyxis_version=$(flatpak info app.devsuite.Ptyxis 2>/dev/null | grep "Version:" | cut -d: -f2 | xargs || echo "unknown")
-        ptyxis_source="flatpak"
-        log "INFO" "✅ Ptyxis installed via flatpak: $ptyxis_version"
     else
-        log "INFO" "❌ Ptyxis not installed"
+        debug "❌ APT check failed"
+
+        # Check snap installation (official)
+        debug "🔍 Checking snap installation: snap list | grep ptyxis"
+        local snap_check_output=$(snap list 2>/dev/null | grep ptyxis || echo "no snap output")
+        debug "📋 snap check output: '$snap_check_output'"
+
+        if snap list 2>/dev/null | grep -q "ptyxis"; then
+            debug "✅ SNAP check matched!"
+            ptyxis_installed=true
+            ptyxis_version=$(snap list ptyxis 2>/dev/null | tail -n +2 | awk '{print $2}' || echo "unknown")
+            ptyxis_source="snap"
+            debug "📋 Ptyxis version from snap: '$ptyxis_version'"
+            log "INFO" "✅ Ptyxis installed via snap: $ptyxis_version"
+        else
+            debug "❌ SNAP check failed"
+
+            # Check flatpak installation (fallback)
+            debug "🔍 Checking flatpak installation: flatpak list | grep Ptyxis"
+            local flatpak_check_output=$(flatpak list 2>/dev/null | grep Ptyxis || echo "no flatpak output")
+            debug "📋 flatpak check output: '$flatpak_check_output'"
+
+            if flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
+                debug "✅ FLATPAK check matched!"
+                ptyxis_installed=true
+                ptyxis_version=$(flatpak info app.devsuite.Ptyxis 2>/dev/null | grep "Version:" | cut -d: -f2 | xargs || echo "unknown")
+                ptyxis_source="flatpak"
+                debug "📋 Ptyxis version from flatpak: '$ptyxis_version'"
+                log "INFO" "✅ Ptyxis installed via flatpak: $ptyxis_version"
+            else
+                debug "❌ FLATPAK check failed"
+                log "INFO" "❌ Ptyxis not installed"
+            fi
+        fi
     fi
+
+    debug "📋 Final detection results: installed=$ptyxis_installed, source=$ptyxis_source, version=$ptyxis_version"
     
     # Check for available updates
     check_available_updates "$ghostty_installed" "$ptyxis_installed"
@@ -556,14 +722,17 @@ install_zsh() {
                 log "SUCCESS" "✅ Oh My ZSH updated to latest version"
             else
                 log "WARNING" "⚠️  Oh My ZSH update may have failed, trying git pull..."
-                # Fallback: manual git pull
-                cd "$REAL_HOME/.oh-my-zsh" && git pull origin master >> "$LOG_FILE" 2>&1 && cd - >/dev/null
-                log "SUCCESS" "✅ Oh My ZSH updated via git pull"
+                # Fallback: manual git pull with progressive disclosure
+                if run_task_command "Updating Oh My ZSH" "cd '$REAL_HOME/.oh-my-zsh' && git pull origin master && cd - >/dev/null" "Pulling latest Oh My ZSH updates" "30s"; then
+                    log "SUCCESS" "✅ Oh My ZSH updated via git pull"
+                else
+                    log "WARNING" "⚠️  Oh My ZSH git pull failed"
+                fi
             fi
         else
             # Fallback: manual git pull if upgrade script doesn't exist
             log "INFO" "🔄 Updating Oh My ZSH via git pull..."
-            if cd "$REAL_HOME/.oh-my-zsh" && git pull origin master >> "$LOG_FILE" 2>&1 && cd - >/dev/null; then
+            if run_task_command "Updating Oh My ZSH" "cd '$REAL_HOME/.oh-my-zsh' && git pull origin master && cd - >/dev/null" "Pulling latest Oh My ZSH updates" "30s"; then
                 log "SUCCESS" "✅ Oh My ZSH updated via git pull"
             else
                 log "WARNING" "⚠️  Oh My ZSH update may have failed"
@@ -577,7 +746,9 @@ install_zsh() {
     
     if [ "$current_shell" != "$zsh_path" ]; then
         log "INFO" "🔄 Setting ZSH as default shell..."
-        if chsh -s "$zsh_path" >> "$LOG_FILE" 2>&1; then
+
+        # Use progressive disclosure for the chsh command
+        if run_task_command "Setting ZSH as default shell" "chsh -s '$zsh_path'" "Changing default shell to ZSH" "5s"; then
             log "SUCCESS" "✅ ZSH set as default shell (restart terminal to take effect)"
         else
             log "WARNING" "⚠️  Failed to set ZSH as default shell automatically"
@@ -671,7 +842,7 @@ install_system_deps() {
     )
     
     log "INFO" "📦 Installing ${#deps[@]} essential packages..."
-    if sudo apt install -y "${deps[@]}" >> "$LOG_FILE" 2>&1; then
+    if run_task_command "Installing system dependencies" "sudo apt install -y $(echo ${deps[@]})" "Installing development tools and dependencies" "1-2 minutes"; then
         log "SUCCESS" "✅ System dependencies installed"
     else
         log "ERROR" "❌ Failed to install system dependencies"
@@ -833,16 +1004,16 @@ build_and_install_ghostty() {
         rm -rf zig-out
     fi
     
-    if zig build -Doptimize=ReleaseFast >> "$LOG_FILE" 2>&1; then
+    # Build Ghostty with progressive disclosure
+    if run_task_command "Building Ghostty" "zig build -Doptimize=ReleaseFast" "Compiling Ghostty with optimizations" "2-3 minutes"; then
         log "SUCCESS" "✅ Ghostty built successfully"
     else
         log "ERROR" "❌ Ghostty build failed"
         return 1
     fi
-    
-    # Install Ghostty
-    log "INFO" "📥 Installing Ghostty..."
-    if sudo zig build install --prefix /usr/local >> "$LOG_FILE" 2>&1; then
+
+    # Install Ghostty with progressive disclosure
+    if run_task_command "Installing Ghostty" "sudo zig build install --prefix /usr/local" "Installing Ghostty to system" "30s"; then
         log "SUCCESS" "✅ Ghostty installed to /usr/local"
     else
         log "ERROR" "❌ Ghostty installation failed"
