@@ -33,6 +33,8 @@ cd ghostty-config-files
 - **Ghostty Terminal**: Intelligent detection of snap/APT/source installations with 2025 optimizations
 - **Ptyxis Terminal**: Smart detection (apt → snap → flatpak preference order)
 - **ZSH + Oh My ZSH**: Latest versions with automatic updates and intelligent configuration preservation
+- **Essential ZSH Plugins**: zsh-autosuggestions, zsh-syntax-highlighting, you-should-use for maximum productivity
+- **Modern Unix Tools**: eza (ls), bat (cat), ripgrep (grep), fzf (fuzzy finder), zoxide (cd), fd (find) replacements
 - **uv Python Manager**: Latest version with virtual environment support and PATH management
 - **Node.js via NVM**: Latest LTS with automatic version management and dependency validation
 - **AI Tools**: Claude Code + Gemini CLI with proper dependency checking and error handling
@@ -310,5 +312,5 @@ This project operates under a Constitutional Framework ensuring:
 - **Accessibility**: WCAG 2.1 AA compliance
 
 Generated with Constitutional Documentation Generator v2.1
-Last Updated: 2025-09-21 04:15:00
-Recent Updates: Intelligent Detection System • Git-Style Session Logging • Progressive Disclosure
+Last Updated: 2025-09-21 06:10:00
+Recent Updates: Oh My ZSH Essential Plugins • Modern Unix Tools Suite • Syntax Error Resolution • Complete Script Execution Success
