@@ -1,0 +1,80 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // Constitutional requirement: TypeScript strict mode
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    // Path mapping for constitutional project structure
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/layouts/*": ["src/layouts/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/styles/*": ["src/styles/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/ui/*": ["components/ui/*"]
+    },
+
+    // Module resolution for modern web development
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    // JSX configuration for Astro compatibility
+    "jsx": "preserve",
+    "jsxImportSource": "astro",
+
+    // Modern JavaScript features
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Performance optimizations
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/typescript/tsbuildinfo",
+
+    // Type checking configuration
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+
+    // Constitutional compliance for code quality
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true
+  },
+  "include": [
+    "src/**/*",
+    "components/**/*",
+    "scripts/**/*",
+    "local-infra/**/*",
+    "tests/**/*",
+    "*.mjs",
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".venv",
+    ".astro",
+    "build",
+    "coverage"
+  ]
+}
