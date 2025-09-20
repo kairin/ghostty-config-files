@@ -16,7 +16,25 @@ NC='\033[0m' # No Color
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="/tmp/ghostty-start-logs"
-LOG_FILE="$LOG_DIR/start-$(date +%s).log"
+
+# Git-style timestamped log naming to prevent overwrites
+# Creates session-based log files following the pattern: YYYYMMDD-HHMMSS-operation-description.*
+# This ensures each run preserves its logs and avoids conflicts like git branch management
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+LOG_SESSION_ID="$DATETIME-ghostty-install"
+LOG_FILE="$LOG_DIR/$LOG_SESSION_ID.log"              # Main human-readable log
+LOG_JSON="$LOG_DIR/$LOG_SESSION_ID.json"             # Structured JSON log for parsing
+LOG_ERRORS="$LOG_DIR/$LOG_SESSION_ID-errors.log"     # Errors and warnings only
+LOG_COMMANDS="$LOG_DIR/$LOG_SESSION_ID-commands.log" # Full command outputs and results
+LOG_PERFORMANCE="$LOG_DIR/$LOG_SESSION_ID-performance.json" # Performance metrics
+
+# Log Viewing Instructions:
+# - View all session logs: ls -la /tmp/ghostty-start-logs/$LOG_SESSION_ID*
+# - Main log: cat $LOG_FILE
+# - Command details: cat $LOG_COMMANDS
+# - Errors only: cat $LOG_ERRORS
+# - Performance data: jq '.' $LOG_PERFORMANCE
+
 REAL_HOME="${SUDO_HOME:-$HOME}"
 NVM_VERSION="v0.40.1"
 NODE_VERSION="24.6.0"
@@ -32,6 +50,7 @@ APPS_DIR="$REAL_HOME/Apps"
 ghostty_installed=false
 ghostty_version=""
 ghostty_config_valid=false
+ghostty_source=""
 ptyxis_installed=false
 ptyxis_version=""
 ptyxis_source=""
@@ -65,14 +84,14 @@ log() {
     echo -e "${color}[$timestamp] [$level] $prefix $message${NC}"
 
     # Structured log file output (JSON-like for parsing)
-    echo "{\"timestamp\":\"$timestamp\",\"level\":\"$level\",\"message\":\"$message\",\"function\":\"${FUNCNAME[1]:-main}\",\"line\":\"${BASH_LINENO[1]:-0}\"}" >> "$LOG_FILE.json"
+    echo "{\"timestamp\":\"$timestamp\",\"level\":\"$level\",\"message\":\"$message\",\"function\":\"${FUNCNAME[1]:-main}\",\"line\":\"${BASH_LINENO[1]:-0}\"}" >> "$LOG_JSON"
 
     # Human-readable log file
     echo "[$timestamp] [$level] $message" >> "$LOG_FILE"
 
     # Error log file for critical issues
     if [ "$level" = "ERROR" ] || [ "$level" = "WARNING" ]; then
-        echo "[$timestamp] [$level] [${FUNCNAME[1]:-main}:${BASH_LINENO[1]:-0}] $message" >> "$LOG_DIR/errors.log"
+        echo "[$timestamp] [$level] [${FUNCNAME[1]:-main}:${BASH_LINENO[1]:-0}] $message" >> "$LOG_ERRORS"
     fi
 }
 
@@ -114,7 +133,7 @@ start_task() {
     echo "$task_id"
 }
 
-# Stream command output in real-time
+# Stream command output in real-time with comprehensive logging
 stream_command() {
     local task_id="$1"
     local command="$2"
@@ -124,58 +143,111 @@ stream_command() {
     echo -e "${CYAN}   Command: ${NC}$command"
     echo "───────────────────────────────────────"
 
-    # Execute command and stream output
-    local start_time=$(date +%s)
+    # Log command start to all relevant log files
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local start_time=$(date +%s.%N)
     local temp_log="/tmp/command_output_$task_id"
 
-    # Run command with real-time output
-    if eval "$command" 2>&1 | while IFS= read -r line; do
-        echo "$line"
-        echo "$line" >> "$temp_log"
-    done; then
-        local end_time=$(date +%s)
-        local duration=$((end_time - start_time))
+    # Log command execution to dedicated command log
+    cat >> "$LOG_COMMANDS" << EOF
+[$timestamp] [COMMAND_START] Task: $task_id | Description: $description
+[$timestamp] [COMMAND] $command
+───────────────────────────────────────
+EOF
+
+    # Run command with real-time output and comprehensive logging
+    local exit_code=0
+    {
+        echo "[$timestamp] [COMMAND_START] $description"
+        echo "[$timestamp] [COMMAND] $command"
         echo "───────────────────────────────────────"
-        echo -e "${GREEN}✅ Completed in ${duration}s${NC}"
-        return 0
-    else
-        local end_time=$(date +%s)
-        local duration=$((end_time - start_time))
+
+        # Execute command and capture all output
+        if eval "$command" 2>&1 | while IFS= read -r line; do
+            echo "$line"  # Show to user in real-time
+            echo "$line" >> "$temp_log"  # Temp storage
+            echo "[$timestamp] [OUTPUT] $line" >> "$LOG_COMMANDS"  # Log all output
+            echo "[$timestamp] [COMMAND_OUTPUT] $line" >> "$LOG_FILE"  # Main log
+        done; then
+            exit_code=0
+        else
+            exit_code=$?
+        fi
+
+        local end_time=$(date +%s.%N)
+        local duration=$(echo "$end_time - $start_time" | bc 2>/dev/null || echo "unknown")
+
         echo "───────────────────────────────────────"
-        echo -e "${RED}❌ Failed after ${duration}s${NC}"
-        return 1
-    fi
+        if [ $exit_code -eq 0 ]; then
+            echo -e "${GREEN}✅ Completed in ${duration}s${NC}"
+            echo "[$timestamp] [COMMAND_SUCCESS] Duration: ${duration}s | Exit: $exit_code" >> "$LOG_COMMANDS"
+            echo "[$timestamp] [COMMAND_SUCCESS] $description completed in ${duration}s" >> "$LOG_FILE"
+        else
+            echo -e "${RED}❌ Failed after ${duration}s${NC}"
+            echo "[$timestamp] [COMMAND_FAILED] Duration: ${duration}s | Exit: $exit_code" >> "$LOG_COMMANDS"
+            echo "[$timestamp] [COMMAND_FAILED] $description failed after ${duration}s (exit: $exit_code)" >> "$LOG_FILE"
+            echo "[$timestamp] [ERROR] [stream_command] Command failed: $command" >> "$LOG_ERRORS"
+        fi
+
+        # Add separator to logs
+        echo "" >> "$LOG_COMMANDS"
+        return $exit_code
+    }
 }
 
-# Complete and collapse a task
+# Complete and collapse a task with enhanced logging
 complete_task() {
     local task_id="$1"
     local status="${2:-success}"
     local summary="$3"
 
-    local task_name="${active_tasks[$task_id]}"
+    local task_name="${active_tasks[$task_id]:-Unknown Task}"
 
     if [ -f "/tmp/current_task_$task_id" ]; then
         local task_info=$(cat "/tmp/current_task_$task_id")
         local start_time=$(echo "$task_info" | cut -d'|' -f3)
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
+        local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 
-        # Clear the detailed output area
+        # Log task completion
+        echo "[$timestamp] [TASK_COMPLETE] $task_name | Status: $status | Duration: ${duration}s" >> "$LOG_FILE"
+        if [ -n "$summary" ]; then
+            echo "[$timestamp] [TASK_SUMMARY] $summary" >> "$LOG_FILE"
+        fi
+
+        # Clear the detailed output area (progressive collapse)
         tput cuu 10  # Move cursor up 10 lines
         tput ed      # Clear from cursor to end of screen
 
-        # Show collapsed summary
+        # Show collapsed summary with enhanced information
         if [ "$status" = "success" ]; then
             echo -e "${GREEN}✅ $task_name${NC} ${CYAN}(${duration}s)${NC}"
+            if [ -n "$summary" ]; then
+                echo -e "${BLUE}   ✓ $summary${NC}"
+            fi
         elif [ "$status" = "warning" ]; then
             echo -e "${YELLOW}⚠️  $task_name${NC} ${CYAN}(${duration}s)${NC}"
+            if [ -n "$summary" ]; then
+                echo -e "${YELLOW}   ⚠ $summary${NC}"
+            fi
         else
             echo -e "${RED}❌ $task_name${NC} ${CYAN}(${duration}s)${NC}"
+            if [ -n "$summary" ]; then
+                echo -e "${RED}   ✗ $summary${NC}"
+            fi
         fi
 
-        if [ -n "$summary" ]; then
-            echo -e "${BLUE}   $summary${NC}"
+        # Add log viewing hint for failed tasks
+        if [ "$status" = "error" ]; then
+            echo -e "${BLUE}   📋 Check logs: $LOG_FILE${NC}"
+        fi
+
+        # Copy command output to main log if it exists
+        if [ -f "/tmp/command_output_$task_id" ]; then
+            echo "[$timestamp] [TASK_OUTPUT_START] $task_name" >> "$LOG_FILE"
+            cat "/tmp/command_output_$task_id" >> "$LOG_FILE"
+            echo "[$timestamp] [TASK_OUTPUT_END] $task_name" >> "$LOG_FILE"
         fi
 
         # Cleanup
@@ -240,7 +312,7 @@ end_timer() {
 
 # System state capture
 capture_system_state() {
-    local state_file="$LOG_DIR/system_state_$(date +%s).json"
+    local state_file="$LOG_DIR/$LOG_SESSION_ID-system-state-$(date +%s).json"
     debug "Capturing system state to $state_file"
 
     cat > "$state_file" << EOF
@@ -299,7 +371,7 @@ end_performance_monitoring() {
         log "INFO" "   Memory delta: ${memory_delta}GB"
 
         # Log to structured file
-        echo "{\"timestamp\":\"$(date -Iseconds)\",\"operation\":\"$PERF_OPERATION\",\"duration\":\"$duration\",\"memory_delta\":\"$memory_delta\"}" >> "$LOG_DIR/performance.json"
+        echo "{\"timestamp\":\"$(date -Iseconds)\",\"operation\":\"$PERF_OPERATION\",\"duration\":\"$duration\",\"memory_delta\":\"$memory_delta\"}" >> "$LOG_PERFORMANCE"
 
         unset PERF_START_TIME PERF_START_MEMORY PERF_OPERATION
     fi
@@ -405,16 +477,32 @@ done
 check_installation_status() {
     log "STEP" "🔍 Checking current installation status..."
 
-    # Check Ghostty installation
+    # Check Ghostty installation with proper source detection
     ghostty_installed=false
     ghostty_version=""
     ghostty_config_valid=false
-    
+    ghostty_source=""
+
     if command -v ghostty >/dev/null 2>&1; then
         ghostty_installed=true
         ghostty_version=$(ghostty --version 2>/dev/null | head -1 || echo "unknown")
-        log "INFO" "✅ Ghostty installed: $ghostty_version"
-        
+
+        # Detect installation source
+        local ghostty_path=$(which ghostty 2>/dev/null)
+        if [[ "$ghostty_path" == "/snap/"* ]]; then
+            ghostty_source="snap"
+            log "INFO" "✅ Ghostty installed via snap: $ghostty_version"
+        elif [[ "$ghostty_path" == "/usr/local/"* ]]; then
+            ghostty_source="source"
+            log "INFO" "✅ Ghostty installed from source: $ghostty_version"
+        elif dpkg -l 2>/dev/null | grep -q "^ii.*ghostty"; then
+            ghostty_source="apt"
+            log "INFO" "✅ Ghostty installed via apt: $ghostty_version"
+        else
+            ghostty_source="unknown"
+            log "INFO" "✅ Ghostty installed (unknown source): $ghostty_version"
+        fi
+
         # Check configuration validity
         if ghostty +show-config >/dev/null 2>&1; then
             ghostty_config_valid=true
@@ -438,7 +526,7 @@ check_installation_status() {
     local apt_check_output=$(dpkg -l 2>/dev/null | grep ptyxis)
     debug "📋 apt check output: '$apt_check_output'"
 
-    if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+    if dpkg -l 2>/dev/null | grep ptyxis | grep -q "^ii"; then
         debug "✅ APT check matched!"
         ptyxis_installed=true
         ptyxis_version=$(ptyxis --version 2>/dev/null | head -n1 | awk '{print $2}' || echo "unknown")
@@ -582,17 +670,33 @@ check_available_updates() {
     
     log "INFO" "🌐 Checking for available updates..."
     
-    # Check Ghostty updates (from Git repository)
-    if $ghostty_installed && [ -d "$GHOSTTY_APP_DIR" ]; then
-        cd "$GHOSTTY_APP_DIR"
-        local current_commit=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
-        git fetch origin main >/dev/null 2>&1 || true
-        local latest_commit=$(git rev-parse origin/main 2>/dev/null || echo "unknown")
-        
-        if [ "$current_commit" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
-            log "INFO" "🆕 Ghostty update available (new commits)"
+    # Check Ghostty updates based on installation source
+    if $ghostty_installed; then
+        if [ "$ghostty_source" = "snap" ]; then
+            if snap refresh --list 2>/dev/null | grep -q "ghostty"; then
+                log "INFO" "🆕 Ghostty update available via snap"
+            else
+                log "INFO" "✅ Ghostty is up to date (snap)"
+            fi
+        elif [ "$ghostty_source" = "apt" ]; then
+            if apt list --upgradable 2>/dev/null | grep -q "ghostty"; then
+                log "INFO" "🆕 Ghostty update available via apt"
+            else
+                log "INFO" "✅ Ghostty is up to date (apt)"
+            fi
+        elif [ "$ghostty_source" = "source" ] && [ -d "$GHOSTTY_APP_DIR" ]; then
+            cd "$GHOSTTY_APP_DIR"
+            local current_commit=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+            git fetch origin main >/dev/null 2>&1 || true
+            local latest_commit=$(git rev-parse origin/main 2>/dev/null || echo "unknown")
+
+            if [ "$current_commit" != "$latest_commit" ] && [ "$latest_commit" != "unknown" ]; then
+                log "INFO" "🆕 Ghostty update available (new commits)"
+            else
+                log "INFO" "✅ Ghostty is up to date (source)"
+            fi
         else
-            log "INFO" "✅ Ghostty is up to date"
+            log "INFO" "ℹ️ Ghostty update status unknown"
         fi
     fi
     
@@ -626,31 +730,49 @@ check_available_updates() {
 # Determine the best installation strategy
 determine_install_strategy() {
     local ghostty_installed="$1"
-    local ghostty_config_valid="$2"  
+    local ghostty_config_valid="$2"
     local ptyxis_installed="$3"
-    
+
     log "INFO" "🤔 Determining installation strategy..."
-    
-    # Ghostty strategy
+
+    # Ghostty strategy based on installation source
     if $ghostty_installed; then
-        if $ghostty_config_valid; then
-            log "INFO" "📋 Ghostty: Will update existing installation"
-            GHOSTTY_STRATEGY="update"
-        else
-            log "WARNING" "📋 Ghostty: Configuration invalid, will reinstall configuration"
-            GHOSTTY_STRATEGY="reconfig"
+        if [ "$ghostty_source" = "snap" ]; then
+            if $ghostty_config_valid; then
+                log "INFO" "📋 Ghostty: Snap installation detected, will only update configuration"
+                GHOSTTY_STRATEGY="config_only"
+            else
+                log "WARNING" "📋 Ghostty: Snap installation with invalid config, will fix configuration"
+                GHOSTTY_STRATEGY="reconfig"
+            fi
+        elif [ "$ghostty_source" = "source" ] || [ "$ghostty_source" = "unknown" ]; then
+            if $ghostty_config_valid; then
+                log "INFO" "📋 Ghostty: Will update existing source installation"
+                GHOSTTY_STRATEGY="update"
+            else
+                log "WARNING" "📋 Ghostty: Configuration invalid, will reinstall configuration"
+                GHOSTTY_STRATEGY="reconfig"
+            fi
+        elif [ "$ghostty_source" = "apt" ]; then
+            if $ghostty_config_valid; then
+                log "INFO" "📋 Ghostty: APT installation detected, will only update configuration"
+                GHOSTTY_STRATEGY="config_only"
+            else
+                log "WARNING" "📋 Ghostty: APT installation with invalid config, will fix configuration"
+                GHOSTTY_STRATEGY="reconfig"
+            fi
         fi
     else
         log "INFO" "📋 Ghostty: Will perform fresh installation"
         GHOSTTY_STRATEGY="fresh"
     fi
-    
-    # Ptyxis strategy  
+
+    # Ptyxis strategy
     if $ptyxis_installed; then
         log "INFO" "📋 Ptyxis: Will update existing installation"
         PTYXIS_STRATEGY="update"
     else
-        log "INFO" "📋 Ptyxis: Will perform fresh installation"  
+        log "INFO" "📋 Ptyxis: Will perform fresh installation"
         PTYXIS_STRATEGY="fresh"
     fi
 }
@@ -828,11 +950,11 @@ install_system_deps() {
         return 1
     }
     
-    # Install essential dependencies (including ZSH)
+    # Install essential dependencies (check what's already installed)
     local deps=(
         "build-essential" "pkg-config" "gettext" "libxml2-utils" "pandoc"
         "git" "curl" "wget" "unzip" "software-properties-common" "zsh"
-        "libgtk-4-dev" "libadwaita-1-dev" "blueprint-compiler" 
+        "libgtk-4-dev" "libadwaita-1-dev" "blueprint-compiler"
         "libgtk4-layer-shell-dev" "libfreetype-dev" "libharfbuzz-dev"
         "libfontconfig-dev" "libpng-dev" "libbz2-dev" "zlib1g-dev"
         "libglib2.0-dev" "libgio-2.0-dev" "libpango1.0-dev"
@@ -840,13 +962,34 @@ install_system_deps() {
         "libgraphene-1.0-dev" "libx11-dev" "libwayland-dev"
         "libonig-dev" "libxml2-dev" "flatpak"
     )
-    
-    log "INFO" "📦 Installing ${#deps[@]} essential packages..."
-    if run_task_command "Installing system dependencies" "sudo apt install -y $(echo ${deps[@]})" "Installing development tools and dependencies" "1-2 minutes"; then
-        log "SUCCESS" "✅ System dependencies installed"
+
+    # Check which packages are missing
+    local missing_deps=()
+    local installed_count=0
+
+    log "INFO" "🔍 Checking which packages need installation..."
+    for dep in "${deps[@]}"; do
+        if dpkg -l "$dep" 2>/dev/null | grep -q "^ii"; then
+            debug "✅ $dep already installed"
+            ((installed_count++))
+        else
+            debug "❌ $dep needs installation"
+            missing_deps+=("$dep")
+        fi
+    done
+
+    log "INFO" "📊 Found ${#missing_deps[@]} packages to install, ${installed_count} already installed"
+
+    if [ ${#missing_deps[@]} -eq 0 ]; then
+        log "SUCCESS" "✅ All system dependencies already installed"
     else
-        log "ERROR" "❌ Failed to install system dependencies"
-        return 1
+        log "INFO" "📦 Installing ${#missing_deps[@]} missing packages..."
+        if run_task_command "Installing missing system dependencies" "sudo apt install -y $(echo ${missing_deps[@]})" "Installing only missing development tools and dependencies" "30s-2min"; then
+            log "SUCCESS" "✅ System dependencies installed"
+        else
+            log "ERROR" "❌ Failed to install system dependencies"
+            return 1
+        fi
     fi
     
     # Add Flathub repository if not already added
@@ -908,8 +1051,12 @@ install_ghostty() {
         "update")
             update_ghostty
             ;;
-        "reconfig") 
+        "reconfig")
             reconfigure_ghostty
+            ;;
+        "config_only")
+            log "STEP" "⚙️  Updating Ghostty configuration only (external installation detected)..."
+            install_ghostty_configuration
             ;;
         "fresh"|*)
             fresh_install_ghostty
@@ -1213,6 +1360,12 @@ install_uv() {
             log "WARNING" "⚠️  uv update may have failed"
         fi
     else
+        # Check if curl is available
+        if ! command -v curl >/dev/null 2>&1; then
+            log "ERROR" "❌ curl is required for uv installation but not found"
+            return 1
+        fi
+
         # Install uv
         log "INFO" "📥 Installing uv..."
         if curl -LsSf https://astral.sh/uv/install.sh | sh >> "$LOG_FILE" 2>&1; then
@@ -1234,6 +1387,8 @@ install_uv() {
                 echo "# uv Python package manager" >> "$shell_config"
                 echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$shell_config"
                 log "SUCCESS" "✅ Added uv to PATH in $(basename "$shell_config")"
+            else
+                log "INFO" "ℹ️ uv PATH already configured in $(basename "$shell_config")"
             fi
         fi
     done
@@ -1259,8 +1414,12 @@ install_nodejs() {
     # Install or update NVM
     if [ ! -d "$NVM_DIR" ]; then
         log "INFO" "📥 Installing NVM $NVM_VERSION..."
-        curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1
-        log "SUCCESS" "✅ NVM installed"
+        if curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ NVM installed"
+        else
+            log "ERROR" "❌ Failed to install NVM"
+            return 1
+        fi
     else
         log "INFO" "✅ NVM already present"
 
@@ -1274,8 +1433,11 @@ install_nodejs() {
 
         if [ "$current_nvm_version" != "$target_version" ]; then
             log "INFO" "🆕 NVM update available ($current_nvm_version → $target_version), updating..."
-            curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1
-            log "SUCCESS" "✅ NVM updated to $NVM_VERSION"
+            if curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1; then
+                log "SUCCESS" "✅ NVM updated to $NVM_VERSION"
+            else
+                log "WARNING" "⚠️  NVM update failed, continuing with existing version"
+            fi
         else
             log "SUCCESS" "✅ NVM is up to date ($current_nvm_version)"
         fi
@@ -1286,21 +1448,34 @@ install_nodejs() {
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     
+    # Verify NVM is working
+    if ! command -v nvm >/dev/null 2>&1; then
+        log "ERROR" "❌ NVM not available after installation"
+        return 1
+    fi
+
     # Install Node.js
     if ! command -v node >/dev/null 2>&1 || ! node --version | grep -q "v$NODE_VERSION"; then
         log "INFO" "📥 Installing Node.js $NODE_VERSION..."
-        nvm install "$NODE_VERSION" >> "$LOG_FILE" 2>&1
-        nvm use "$NODE_VERSION" >> "$LOG_FILE" 2>&1
-        nvm alias default "$NODE_VERSION" >> "$LOG_FILE" 2>&1
-        log "SUCCESS" "✅ Node.js $NODE_VERSION installed"
+        if nvm install "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
+           nvm use "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
+           nvm alias default "$NODE_VERSION" >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Node.js $NODE_VERSION installed"
+        else
+            log "ERROR" "❌ Failed to install Node.js $NODE_VERSION"
+            return 1
+        fi
     else
         log "SUCCESS" "✅ Node.js $NODE_VERSION already installed"
     fi
     
     # Update npm to latest
     log "INFO" "🔄 Updating npm to latest version..."
-    npm install -g npm@latest >> "$LOG_FILE" 2>&1
-    log "SUCCESS" "✅ npm updated to $(npm --version)"
+    if npm install -g npm@latest >> "$LOG_FILE" 2>&1; then
+        log "SUCCESS" "✅ npm updated to $(npm --version)"
+    else
+        log "WARNING" "⚠️  npm update failed, continuing with existing version"
+    fi
 }
 
 # Install Claude Code CLI
@@ -1309,28 +1484,48 @@ install_claude_code() {
         log "INFO" "⏭️  Skipping Claude Code installation"
         return 0
     fi
-    
+
     log "STEP" "🤖 Installing Claude Code CLI..."
-    
+
+    # Check if Node.js and npm are available
+    if ! command -v node >/dev/null 2>&1; then
+        log "ERROR" "❌ Node.js is required for Claude Code but not found"
+        return 1
+    fi
+
+    if ! command -v npm >/dev/null 2>&1; then
+        log "ERROR" "❌ npm is required for Claude Code but not found"
+        return 1
+    fi
+
     # Source NVM for npm access
     export NVM_DIR="$NVM_DIR"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    
+
     # Install Claude Code globally
     if npm list -g @anthropic-ai/claude-code >/dev/null 2>&1; then
         log "INFO" "🔄 Updating Claude Code..."
-        npm update -g @anthropic-ai/claude-code >> "$LOG_FILE" 2>&1
+        if npm update -g @anthropic-ai/claude-code >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Claude Code updated"
+        else
+            log "WARNING" "⚠️  Claude Code update may have failed"
+        fi
     else
         log "INFO" "📥 Installing Claude Code..."
-        npm install -g @anthropic-ai/claude-code >> "$LOG_FILE" 2>&1
+        if npm install -g @anthropic-ai/claude-code >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Claude Code installed"
+        else
+            log "ERROR" "❌ Claude Code installation failed"
+            return 1
+        fi
     fi
-    
+
     # Verify installation
     if command -v claude-code >/dev/null 2>&1; then
         local version=$(claude-code --version 2>/dev/null || echo "unknown")
-        log "SUCCESS" "✅ Claude Code installed (version: $version)"
+        log "SUCCESS" "✅ Claude Code ready (version: $version)"
     else
-        log "WARNING" "⚠️  Claude Code installed but not in PATH"
+        log "WARNING" "⚠️  Claude Code installed but not in PATH (may need shell restart)"
     fi
 }
 
@@ -1340,29 +1535,65 @@ install_gemini_cli() {
         log "INFO" "⏭️  Skipping Gemini CLI installation"
         return 0
     fi
-    
+
     log "STEP" "💎 Installing Gemini CLI..."
-    
+
+    # Check if Node.js and npm are available
+    if ! command -v node >/dev/null 2>&1; then
+        log "ERROR" "❌ Node.js is required for Gemini CLI but not found"
+        return 1
+    fi
+
+    if ! command -v npm >/dev/null 2>&1; then
+        log "ERROR" "❌ npm is required for Gemini CLI but not found"
+        return 1
+    fi
+
     # Source NVM for npm access
     export NVM_DIR="$NVM_DIR"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    
+
     # Install Gemini CLI globally
     if npm list -g @google/generative-ai-cli >/dev/null 2>&1; then
         log "INFO" "🔄 Updating Gemini CLI..."
-        npm update -g @google/generative-ai-cli >> "$LOG_FILE" 2>&1
+        if npm update -g @google/generative-ai-cli >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Gemini CLI updated"
+        else
+            log "WARNING" "⚠️  Gemini CLI update may have failed"
+        fi
     else
         log "INFO" "📥 Installing Gemini CLI..."
-        npm install -g @google/generative-ai-cli >> "$LOG_FILE" 2>&1
+        if npm install -g @google/generative-ai-cli >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Gemini CLI installed"
+        else
+            log "ERROR" "❌ Gemini CLI installation failed"
+            return 1
+        fi
     fi
-    
-    # Create symlink for easier access
-    local gemini_path="$NVM_DIR/versions/node/v$NODE_VERSION/bin/gemini"
-    if [ -f "$gemini_path" ]; then
-        sudo ln -sf "$gemini_path" /usr/local/bin/gemini 2>/dev/null || true
-        log "SUCCESS" "✅ Gemini CLI installed and linked"
+
+    # Create symlink for easier access (try to find the actual gemini binary)
+    local gemini_path=""
+    if [ -f "$NVM_DIR/versions/node/v$NODE_VERSION/bin/gemini" ]; then
+        gemini_path="$NVM_DIR/versions/node/v$NODE_VERSION/bin/gemini"
+    elif command -v gemini >/dev/null 2>&1; then
+        gemini_path=$(which gemini)
+    fi
+
+    if [ -n "$gemini_path" ] && [ -f "$gemini_path" ]; then
+        if sudo ln -sf "$gemini_path" /usr/local/bin/gemini 2>/dev/null; then
+            log "SUCCESS" "✅ Gemini CLI installed and linked to /usr/local/bin/gemini"
+        else
+            log "INFO" "ℹ️ Gemini CLI installed (system link failed, but available via npm)"
+        fi
     else
-        log "WARNING" "⚠️  Gemini CLI installation may have issues"
+        log "WARNING" "⚠️  Gemini CLI installed but binary not found"
+    fi
+
+    # Verify installation
+    if command -v gemini >/dev/null 2>&1; then
+        log "SUCCESS" "✅ Gemini CLI ready and available"
+    else
+        log "WARNING" "⚠️  Gemini CLI installed but not in PATH (may need shell restart)"
     fi
 }
 
@@ -1383,7 +1614,7 @@ verify_installation() {
     
     # Check Ptyxis (prefer official: apt, snap, then flatpak)
     if ! $SKIP_PTYXIS; then
-        if dpkg -l 2>/dev/null | grep -q "^ii.*ptyxis"; then
+        if dpkg -l 2>/dev/null | grep ptyxis | grep -q "^ii"; then
             log "SUCCESS" "✅ Ptyxis: Available via apt"
         elif snap list 2>/dev/null | grep -q "ptyxis"; then
             log "SUCCESS" "✅ Ptyxis: Available via snap"
@@ -1467,7 +1698,10 @@ show_final_instructions() {
     echo ""
     echo -e "${YELLOW}Configuration files:${NC}"
     echo "• Ghostty config: $GHOSTTY_CONFIG_DIR/"
-    echo "• Logs: $LOG_FILE"
+    echo "• Session Logs: $LOG_SESSION_ID.*"
+    echo "  - Main: $LOG_FILE"
+    echo "  - Commands: $LOG_COMMANDS"
+    echo "  - Errors: $LOG_ERRORS"
     echo ""
     if ! $SKIP_AI; then
         echo -e "${YELLOW}API Setup Required:${NC}"
@@ -1567,11 +1801,12 @@ main() {
     monitor_performance "Complete Installation"
 
     log "INFO" "🚀 Starting comprehensive installation..."
-    log "INFO" "📋 Log files:"
-    log "INFO" "   Main: $LOG_FILE"
-    log "INFO" "   JSON: $LOG_FILE.json"
-    log "INFO" "   Errors: $LOG_DIR/errors.log"
-    log "INFO" "   Performance: $LOG_DIR/performance.json"
+    log "INFO" "📋 Git-style session logs (Session: $LOG_SESSION_ID):"
+    log "INFO" "   Main Log: $LOG_FILE"
+    log "INFO" "   JSON Log: $LOG_JSON"
+    log "INFO" "   Command Log: $LOG_COMMANDS"
+    log "INFO" "   Error Log: $LOG_ERRORS"
+    log "INFO" "   Performance: $LOG_PERFORMANCE"
 
     # Capture initial system state
     capture_system_state
@@ -1625,7 +1860,8 @@ main() {
     # Final system state capture
     capture_system_state
 
-    log "INFO" "📊 Installation completed. Check $LOG_DIR for detailed logs."
+    log "INFO" "📊 Installation completed! Session logs saved as: $LOG_SESSION_ID.*"
+    log "INFO" "📋 View logs with: ls -la $LOG_DIR/$LOG_SESSION_ID*"
 }
 
 # Run main function
