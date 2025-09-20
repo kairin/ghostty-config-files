@@ -1,6 +1,41 @@
 # Ghostty Configuration with Comprehensive Terminal Tools (2025 Edition)
 
-A complete terminal environment setup featuring Ghostty terminal emulator with **2025 performance optimizations**, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and Ptyxis terminal via Flatpak.
+A complete terminal environment setup featuring Ghostty terminal emulator with **2025 performance optimizations**, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and modern web development stack with Astro.build.
+
+## 🏗️ Project Status
+
+**Implementation Progress: 24 of 58 tasks completed (41%)**
+
+### ✅ Completed Features
+- ✅ Modern web development stack (Astro.build + Tailwind CSS + shadcn/ui)
+- ✅ Local CI/CD infrastructure with zero GitHub Actions consumption
+- ✅ Constitutional compliance framework with TDD methodology
+- ✅ Performance validation framework (Lighthouse 95+ targets)
+- ✅ Context menu integration ("Open in Ghostty")
+- ✅ AI tool integration (Claude Code + Gemini CLI)
+- ✅ Complete test suite (35 properly failing tests)
+- ✅ Comprehensive logging and debugging systems
+
+### 🚧 System Installation Status
+Based on recent verification (2025-01-20):
+
+**✅ Currently Working:**
+- **Ghostty**: v1.2.0 (installed via Snap, not source build)
+- **Context Menu**: Functional "Open in Ghostty" integration
+- **Ptyxis**: v47.5 (installed via APT, not Flatpak)
+- **Node.js**: v22.13.1 via NVM (working)
+- **Claude Code CLI**: v0.12.2 (working)
+- **Gemini CLI**: v0.1.13 (working)
+- **Complete development environment**: Python, TypeScript, testing frameworks
+
+**❌ Installation Gaps:**
+- **ZSH + Oh My ZSH**: Not installed (system using bash)
+- **Zig 0.14.0**: Not installed (Ghostty via Snap instead of source)
+- **Flatpak**: Not installed (Ptyxis via APT instead)
+
+### 📋 Current Development Phase
+**Phase 3.5**: Local CI/CD Runner Implementation (5 remaining tasks)
+- Next phases include core development, monitoring, documentation, and deployment automation
 
 ## 🚀 One-Command Installation
 
@@ -8,44 +43,44 @@ A complete terminal environment setup featuring Ghostty terminal emulator with *
 ./start.sh
 ```
 
-This single command installs and configures everything you need:
-- **ZSH** - Modern shell with Oh My ZSH and enhanced plugins
-- **Ghostty** - Latest version built from source with Zig 0.14.0 + **2025 optimizations**
-- **Context Menu** - Right-click "Open in Ghostty" integration for file managers
-- **Ptyxis** - Latest version via Flatpak with proper permissions
-- **Node.js** - Latest LTS via NVM with npm
-- **Claude Code** - Latest AI assistant CLI
-- **Gemini CLI** - Google's AI assistant CLI
-- **All Dependencies** - Complete development environment
+This command manages installation and configuration:
+- **Modern Web Stack** - Astro.build + Tailwind CSS + shadcn/ui with TypeScript
+- **Local CI/CD** - Zero GitHub Actions consumption with local runners
+- **Context Menu** - Right-click "Open in Ghostty" integration (✅ working)
+- **AI Tools** - Claude Code + Gemini CLI integration (✅ working)
+- **Node.js** - Latest LTS via NVM (✅ working)
+- **Development Environment** - Python via uv, TypeScript, testing frameworks (✅ working)
+
+**Note**: Some documented installations (ZSH, Zig, Flatpak) are currently gaps in the system but core functionality works via alternative methods (Ghostty via Snap, Ptyxis via APT).
 
 ## ✨ Features
 
-### 🚀 2025 Performance Optimizations
-- **Linux CGroup Single Instance** - Dramatically faster startup and reduced memory usage
-- **Enhanced Shell Integration** - Auto-detection with cursor, sudo, title, and SSH features
-- **Memory Management** - Optimized scrollback limits and cgroup process controls
-- **Auto Theme Switching** - Light/dark mode support with Catppuccin themes
-- **Security Features** - Clipboard paste protection
+### 🚀 Modern Web Development Stack
+- **Astro.build v5.13.9** - High-performance static site generation with TypeScript strict mode
+- **Tailwind CSS v3.4.17** - Constitutional design system with CSS variables and dark mode
+- **shadcn/ui Integration** - Component-driven architecture with accessibility plugins
+- **Performance Targets** - Lighthouse 95+ scores, JavaScript <100KB, build time <30s
+- **Local CI/CD** - Zero GitHub Actions consumption with comprehensive local runners
 
 ### 📁 Right-Click Context Menu
 - **Nautilus Integration** - Right-click any folder → "Scripts" → "Open in Ghostty"
 - **Smart Path Handling** - Works with files, folders, and special characters
 - **Automatic Installation** - Fully integrated into the setup process
 
-### Modular Ghostty Configuration
-- **`configs/ghostty/theme.conf`** - Theme and appearance settings with 2025 optimizations
-- **`configs/ghostty/scroll.conf`** - Scrollback and history settings
-- **`configs/ghostty/layout.conf`** - Font, padding, and window layout settings
-- **`configs/ghostty/keybindings.conf`** - Optimized keybindings for productivity
-- **`configs/ghostty/config`** - Main configuration file with performance optimizations
+### Modern Development Infrastructure
+- **`astro.config.mjs`** - Astro configuration with GitHub Pages deployment and TypeScript strict mode
+- **`tailwind.config.mjs`** - Constitutional design system with dark mode and performance optimizations
+- **`pyproject.toml`** - uv-first Python management with ruff, black, mypy strict tooling
+- **`tsconfig.json`** - TypeScript strict mode with path mapping and performance optimizations
+- **`local-infra/runners/`** - Local CI/CD infrastructure eliminating GitHub Actions consumption
 
-### Smart Installation Management
-- **Intelligent Detection** - Automatically detects existing installations
-- **Smart Upgrade Logic** - Chooses optimal update vs reinstall strategy
-- **Version Checking** - Monitors for online updates and compatibility
-- **Configuration Validation** - Automatic backup, testing, and recovery
-- **Cross-platform compatibility** (Ubuntu/Debian focus)
-- **Comprehensive logging** - Detailed logs with error recovery
+### Constitutional Compliance Framework
+- **Test-Driven Development** - 35 properly failing tests across contract, integration, and performance
+- **uv-First Python Management** - Strict tooling with ruff, black, mypy compliance
+- **Performance Validation** - Lighthouse 95+ scores, bundle size limits, build time targets
+- **Zero GitHub Actions Consumption** - Complete local CI/CD infrastructure
+- **Branch Preservation Strategy** - Timestamped branches with constitutional merging
+- **Comprehensive logging** - Detailed logs with system state capture and debugging
 
 ### Safety Features
 - **Automatic backup** before any configuration changes
@@ -81,26 +116,25 @@ The `start.sh` script supports various options for customized installation:
 ./start.sh --verbose           # Verbose logging output
 ```
 
-## 🤖 AI Assistant Setup
+## 🤖 AI Assistant Setup (✅ Working)
 
-### Claude Code
-After installation, authenticate with:
+### Claude Code (v0.12.2)
+Already authenticated and working:
 ```bash
-claude-code auth login
+claude --version  # v0.12.2
 ```
-Get your API key from: https://console.anthropic.com
+Working with development environment integration.
 
-### Gemini CLI  
-Set up your API key:
+### Gemini CLI (v0.1.13)
+Already configured and working:
 ```bash
-export GEMINI_API_KEY="your-api-key-here"
+gemini --version  # v0.1.13
 ```
-Get your API key from: https://makersuite.google.com/app/apikey
 
-### Ptyxis with Gemini Integration
-The installation creates a seamless integration where the `gemini` command automatically launches in Ptyxis:
+### Ptyxis Integration (v47.5 via APT)
+The `gemini` command works with Ptyxis terminal integration:
 ```bash
-gemini "your prompt here"  # Automatically runs in Ptyxis terminal with proper working directory
+gemini "your prompt here"  # Runs with proper working directory context
 ```
 
 ## 🔧 Configuration Management
@@ -162,16 +196,21 @@ ghostty-config-files/
 
 ### Check Installation Status
 ```bash
-# Verify Ghostty
-ghostty --version
-ghostty +show-config
+# Verify Ghostty (Snap installation)
+snap list | grep ghostty
+ghostty --version  # v1.2.0
 
-# Verify AI tools
-claude-code --version
-gemini --version  
+# Verify AI tools (working)
+claude --version   # v0.12.2
+gemini --version   # v0.1.13
 
-# Verify Ptyxis
-flatpak list | grep Ptyxis
+# Verify Ptyxis (APT installation)
+apt list --installed | grep ptyxis
+ptyxis --version   # v47.5
+
+# Verify development environment
+uv --version       # v0.8.15
+node --version     # v22.13.1
 ```
 
 ### View Logs
@@ -189,10 +228,10 @@ tail -f /tmp/ghostty-start-logs/start-*.log
    - Check logs for specific configuration issues
    - Run `ghostty +show-config` manually to debug
 
-2. **Build Failures**:
+2. **Development Environment Issues**:
    - Ensure all dependencies are installed: `./start.sh --verbose`
-   - Check Zig version: `zig version` (should be 0.14.0)
-   - View build logs in `/tmp/ghostty-start-logs/`
+   - Check uv installation: `uv --version` (should be ≥0.8.15)
+   - Run local CI/CD validation: `./local-infra/runners/astro-build-local.sh`
 
 3. **AI Tools Not in PATH**:
    - Restart your terminal or run: `source ~/.bashrc`
@@ -202,8 +241,11 @@ tail -f /tmp/ghostty-start-logs/start-*.log
 ## 📚 Additional Resources
 
 - **AI Agent Guidelines**: [AGENTS.md](./AGENTS.md) - Complete instructions for AI assistants
+- **Development Progress**: [CHANGELOG.md](./CHANGELOG.md) - Comprehensive implementation tracking
+- **Spec-Kit Methodology**: [spec-kit/SPEC_KIT_GUIDE.md](./spec-kit/SPEC_KIT_GUIDE.md) - Constitutional development approach
 - **Claude Code Setup**: [CLAUDE.md](./CLAUDE.md) - Detailed Claude Code configuration
 - **Gemini CLI Setup**: [GEMINI.md](./GEMINI.md) - Detailed Gemini CLI configuration
+- **Astro Documentation**: https://docs.astro.build - Modern web development stack
 - **Ghostty Documentation**: https://ghostty.org/docs/config
 - **Ptyxis Documentation**: https://gitlab.gnome.org/chergert/ptyxis
 
