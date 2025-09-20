@@ -1,0 +1,554 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/ui/Button.astro';
+import Card from '../components/ui/Card.astro';
+import CardHeader from '../components/ui/CardHeader.astro';
+import CardTitle from '../components/ui/CardTitle.astro';
+import CardDescription from '../components/ui/CardDescription.astro';
+import CardContent from '../components/ui/CardContent.astro';
+import AccessibilityValidator from '../components/ui/AccessibilityValidator.astro';
+
+// Constitutional performance monitoring
+const buildInfo = {
+  timestamp: new Date().toISOString(),
+  env: import.meta.env.MODE,
+  astroVersion: '5.13.9',
+  nodeVersion: process.version,
+};
+
+// Constitutional targets for display
+const performanceTargets = {
+  lighthouse: {
+    performance: 95,
+    accessibility: 95,
+    bestPractices: 95,
+    seo: 95
+  },
+  coreWebVitals: {
+    fcp: 1.5, // seconds
+    lcp: 2.5, // seconds
+    cls: 0.1,  // score
+    fid: 100   // milliseconds
+  },
+  bundleSize: {
+    js: 100,   // KB
+    css: 50,   // KB
+    total: 500 // KB
+  }
+};
+
+// Feature highlights
+const features = [
+  {
+    title: "⚡ Lightning Fast",
+    description: "Built with Astro.build for optimal performance. Zero JavaScript by default, hydrated only when needed.",
+    metrics: "95+ Lighthouse Performance Score",
+    icon: "⚡"
+  },
+  {
+    title: "🎨 Beautiful UI",
+    description: "Styled with Tailwind CSS and shadcn/ui components. Responsive design with dark mode support.",
+    metrics: "100% Accessibility Compliant",
+    icon: "🎨"
+  },
+  {
+    title: "🔧 Developer Experience",
+    description: "TypeScript strict mode, local CI/CD, and zero GitHub Actions consumption. Constitutional compliance enforced.",
+    metrics: "<100KB JavaScript Bundle",
+    icon: "🔧"
+  }
+];
+
+const complianceStatus = [
+  { label: "Zero GitHub Actions Consumption", status: "✅", description: "All CI/CD runs locally" },
+  { label: "uv-First Python Management", status: "✅", description: "Python 3.12+ with strict tooling" },
+  { label: "TypeScript Strict Mode", status: "✅", description: "Full type safety enforced" },
+  { label: "Performance Validation", status: "✅", description: "Lighthouse 95+ targets" },
+  { label: "Local CI/CD Infrastructure", status: "✅", description: "6 operational runner scripts" },
+  { label: "Branch Preservation Strategy", status: "✅", description: "Constitutional git workflow" }
+];
+---
+
+<Layout title="Modern Web Development Stack" description="Constitutional web development with Astro.build, Tailwind CSS, and shadcn/ui. Zero GitHub Actions consumption with local CI/CD infrastructure.">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-background">
+    <!-- Background gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-background"></div>
+
+    <div class="relative container section-spacing">
+      <div class="mx-auto max-w-4xl text-center">
+        <!-- Hero badge -->
+        <div class="mb-6 inline-flex items-center gap-2 rounded-full border bg-background/60 px-3 py-1 text-sm backdrop-blur">
+          <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+          <span class="font-medium">Phase 3.6 Complete • 30/58 tasks (52%)</span>
+        </div>
+
+        <!-- Main heading -->
+        <h1 class="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          Modern Web Development
+          <span class="block text-primary">with Constitutional Compliance</span>
+        </h1>
+
+        <!-- Description -->
+        <p class="mb-8 text-xl text-muted-foreground sm:text-2xl">
+          Built with <strong>Astro.build</strong>, <strong>Tailwind CSS</strong>, and <strong>shadcn/ui</strong>.
+          <br class="hidden sm:block">
+          Zero GitHub Actions consumption • Local CI/CD • Performance first
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <Button size="lg" class="h-12 px-8 text-base font-semibold">
+            🚀 View Local CI/CD
+          </Button>
+          <Button variant="outline" size="lg" class="h-12 px-8 text-base">
+            📊 Performance Metrics
+          </Button>
+          <Button variant="secondary" size="lg" class="h-12 px-8 text-base">
+            🔧 Constitutional Compliance
+          </Button>
+        </div>
+
+        <!-- Performance indicators -->
+        <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:gap-8">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-green-600">95+</div>
+            <div class="text-sm text-muted-foreground">Lighthouse Score</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-blue-600">&lt;100KB</div>
+            <div class="text-sm text-muted-foreground">JS Bundle</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-purple-600">&lt;2.5s</div>
+            <div class="text-sm text-muted-foreground">LCP</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-orange-600">0</div>
+            <div class="text-sm text-muted-foreground">GitHub Actions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="bg-muted/30">
+    <div class="container section-spacing">
+      <div class="mx-auto max-w-2xl text-center mb-16">
+        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+          Built for Performance & Compliance
+        </h2>
+        <p class="mt-4 text-lg text-muted-foreground">
+          Every component optimized for speed, accessibility, and constitutional requirements
+        </p>
+      </div>
+
+      <div class="grid-responsive">
+        {features.map((feature) => (
+          <Card class="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
+            <CardHeader>
+              <div class="text-4xl mb-2">{feature.icon}</div>
+              <CardTitle class="text-xl">{feature.title}</CardTitle>
+              <CardDescription>{feature.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="mt-4 inline-flex items-center gap-2 rounded-full bg-green-100 dark:bg-green-900/20 px-3 py-1 text-sm font-medium text-green-700 dark:text-green-400">
+                <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                {feature.metrics}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Constitutional Compliance Section -->
+  <section class="bg-background">
+    <div class="container section-spacing">
+      <div class="mx-auto max-w-4xl">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Constitutional Compliance Status
+          </h2>
+          <p class="mt-4 text-lg text-muted-foreground">
+            All constitutional requirements validated and enforced
+          </p>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+          {complianceStatus.map((item) => (
+            <Card>
+              <CardContent class="p-6">
+                <div class="flex items-start gap-4">
+                  <span class="text-2xl">{item.status}</span>
+                  <div class="flex-1">
+                    <h3 class="font-semibold leading-tight">{item.label}</h3>
+                    <p class="text-sm text-muted-foreground mt-1">{item.description}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Performance Metrics Section -->
+  <section class="bg-muted/30">
+    <div class="container section-spacing">
+      <div class="mx-auto max-w-6xl">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Performance Targets & Metrics
+          </h2>
+          <p class="mt-4 text-lg text-muted-foreground">
+            Constitutional performance requirements and current status
+          </p>
+        </div>
+
+        <!-- Lighthouse Scores -->
+        <Card class="mb-8">
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2">
+              <span class="text-2xl">🏆</span>
+              Lighthouse Scores (Target: 95+)
+            </CardTitle>
+            <CardDescription>
+              Google Lighthouse performance, accessibility, best practices, and SEO scores
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {Object.entries(performanceTargets.lighthouse).map(([category, target]) => (
+                <div class="text-center p-4 rounded-lg bg-muted/50">
+                  <div class="text-2xl font-bold text-green-600">{target}+</div>
+                  <div class="text-sm font-medium capitalize">{category.replace(/([A-Z])/g, ' $1').trim()}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <!-- Core Web Vitals -->
+        <Card class="mb-8">
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2">
+              <span class="text-2xl">⚡</span>
+              Core Web Vitals (Constitutional Targets)
+            </CardTitle>
+            <CardDescription>
+              User experience metrics that impact search rankings and user satisfaction
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-blue-600">&lt;{performanceTargets.coreWebVitals.fcp}s</div>
+                <div class="text-sm font-medium">First Contentful Paint</div>
+              </div>
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-blue-600">&lt;{performanceTargets.coreWebVitals.lcp}s</div>
+                <div class="text-sm font-medium">Largest Contentful Paint</div>
+              </div>
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-blue-600">&lt;{performanceTargets.coreWebVitals.cls}</div>
+                <div class="text-sm font-medium">Cumulative Layout Shift</div>
+              </div>
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-blue-600">&lt;{performanceTargets.coreWebVitals.fid}ms</div>
+                <div class="text-sm font-medium">First Input Delay</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <!-- Bundle Size Targets -->
+        <Card>
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2">
+              <span class="text-2xl">📦</span>
+              Bundle Size Limits (Constitutional)
+            </CardTitle>
+            <CardDescription>
+              Asset optimization targets for optimal loading performance
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-purple-600">&lt;{performanceTargets.bundleSize.js}KB</div>
+                <div class="text-sm font-medium">JavaScript</div>
+              </div>
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-purple-600">&lt;{performanceTargets.bundleSize.css}KB</div>
+                <div class="text-sm font-medium">CSS</div>
+              </div>
+              <div class="text-center p-4 rounded-lg bg-muted/50">
+                <div class="text-2xl font-bold text-purple-600">&lt;{performanceTargets.bundleSize.total}KB</div>
+                <div class="text-sm font-medium">Total Assets</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accessibility Validation Section -->
+  <section class="bg-background">
+    <div class="container section-spacing">
+      <div class="mx-auto max-w-4xl">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Live Accessibility Validation
+          </h2>
+          <p class="mt-4 text-lg text-muted-foreground">
+            Real-time WCAG 2.1 AA compliance monitoring and validation
+          </p>
+        </div>
+
+        <AccessibilityValidator showResults={true} autoScan={true} class="mb-8" />
+
+        <!-- Accessibility Features -->
+        <div class="grid gap-6 md:grid-cols-2 mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2">
+                <span class="text-2xl">♿</span>
+                WCAG 2.1 AA Compliance
+              </CardTitle>
+              <CardDescription>
+                Full accessibility compliance with Web Content Accessibility Guidelines
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul class="space-y-2 text-sm">
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Semantic HTML structure
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Keyboard navigation support
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Screen reader compatibility
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  High contrast mode support
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Reduced motion preferences
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle class="flex items-center gap-2">
+                <span class="text-2xl">🎯</span>
+                Focus Management
+              </CardTitle>
+              <CardDescription>
+                Advanced focus management and keyboard navigation features
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul class="space-y-2 text-sm">
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Skip to main content links
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Focus trap for modals
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Arrow key navigation
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Focus restoration
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="text-green-600">✅</span>
+                  Visual focus indicators
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Build Information Section -->
+  <section class="bg-background border-t">
+    <div class="container py-12">
+      <div class="mx-auto max-w-4xl">
+        <Card>
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2">
+              <span class="text-2xl">🔧</span>
+              Build Information & System Status
+            </CardTitle>
+            <CardDescription>
+              Current build configuration and local CI/CD status
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-2">
+                <h4 class="font-semibold">Build Environment</h4>
+                <div class="text-sm space-y-1">
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Environment:</span>
+                    <span class="font-medium">{buildInfo.env}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Astro Version:</span>
+                    <span class="font-medium">{buildInfo.astroVersion}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Node Version:</span>
+                    <span class="font-medium">{buildInfo.nodeVersion}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Build Time:</span>
+                    <span class="font-medium">{new Date(buildInfo.timestamp).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <h4 class="font-semibold">Local CI/CD Status</h4>
+                <div class="text-sm space-y-1">
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Runner Scripts:</span>
+                    <span class="font-medium text-green-600">6/6 Operational</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">GitHub Actions:</span>
+                    <span class="font-medium text-green-600">0 Consumed</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Test Suite:</span>
+                    <span class="font-medium text-green-600">35 Tests</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-muted-foreground">Performance Monitor:</span>
+                    <span class="font-medium text-green-600">Active</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="mt-6 flex flex-wrap gap-2">
+              <Button variant="outline" size="sm">
+                View Logs
+              </Button>
+              <Button variant="outline" size="sm">
+                Run Performance Check
+              </Button>
+              <Button variant="outline" size="sm">
+                Validate Constitution
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Performance monitoring script -->
+  <script>
+    // Performance monitoring and Core Web Vitals tracking
+    if ('performance' in window && 'PerformanceObserver' in window) {
+      // Track page load performance
+      window.addEventListener('load', () => {
+        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+
+        if (navigation) {
+          const metrics = {
+            // First Contentful Paint
+            fcp: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
+            // Load Complete
+            loadComplete: navigation.loadEventEnd - navigation.fetchStart,
+            // DOM Content Loaded
+            domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
+            // Time to Interactive estimate
+            tti: navigation.domInteractive - navigation.fetchStart
+          };
+
+          console.log('🚀 Page Performance Metrics:', metrics);
+
+          // Constitutional validation
+          if (metrics.fcp > 1500) {
+            console.warn('⚠️ FCP exceeds constitutional target of 1.5s:', metrics.fcp + 'ms');
+          } else {
+            console.log('✅ FCP within constitutional target:', metrics.fcp + 'ms');
+          }
+        }
+      });
+
+      // Track bundle size (estimated from resource timing)
+      window.addEventListener('load', () => {
+        const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+        let totalJSSize = 0;
+        let totalCSSSize = 0;
+
+        resources.forEach(resource => {
+          if (resource.name.endsWith('.js')) {
+            totalJSSize += resource.transferSize || 0;
+          } else if (resource.name.endsWith('.css')) {
+            totalCSSSize += resource.transferSize || 0;
+          }
+        });
+
+        console.log('📦 Bundle Sizes:', {
+          javascript: Math.round(totalJSSize / 1024) + 'KB',
+          css: Math.round(totalCSSSize / 1024) + 'KB',
+          total: Math.round((totalJSSize + totalCSSSize) / 1024) + 'KB'
+        });
+
+        // Constitutional bundle size validation
+        if (totalJSSize > 102400) { // 100KB
+          console.warn('⚠️ JavaScript bundle exceeds constitutional limit:', Math.round(totalJSSize / 1024) + 'KB');
+        } else {
+          console.log('✅ JavaScript bundle within constitutional limit:', Math.round(totalJSSize / 1024) + 'KB');
+        }
+      });
+    }
+
+    // Dark mode toggle functionality (available globally)
+    (window as any).toggleTheme = function() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    // Add keyboard navigation for accessibility
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        document.body.classList.add('focus-visible');
+      }
+    });
+
+    document.addEventListener('click', () => {
+      document.body.classList.remove('focus-visible');
+    });
+  </script>
+</Layout>

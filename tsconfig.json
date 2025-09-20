@@ -32,6 +32,7 @@
     // JSX configuration for Astro compatibility
     "jsx": "preserve",
     "jsxImportSource": "astro",
+    "types": ["astro/client"],
 
     // Modern JavaScript features
     "target": "ES2022",

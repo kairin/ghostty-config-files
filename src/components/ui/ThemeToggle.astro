@@ -1,0 +1,297 @@
+---
+export interface Props {
+  class?: string;
+  showLabel?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const {
+  class: className = '',
+  showLabel = false,
+  size = 'md',
+  ...props
+} = Astro.props;
+
+// Constitutional theme toggle with accessibility
+const sizeClasses = {
+  sm: "h-8 w-8 text-xs",
+  md: "h-10 w-10 text-sm",
+  lg: "h-12 w-12 text-base"
+};
+
+const buttonClasses = [
+  "inline-flex items-center justify-center rounded-md border border-input bg-background",
+  "hover:bg-accent hover:text-accent-foreground",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "disabled:pointer-events-none disabled:opacity-50",
+  "transition-colors duration-200",
+  sizeClasses[size],
+  className
+].filter(Boolean).join(' ');
+---
+
+<div class="flex items-center gap-2">
+  <button
+    id="theme-toggle"
+    class={buttonClasses}
+    aria-label="Toggle theme"
+    aria-pressed="false"
+    data-theme-toggle
+    {...props}
+  >
+    <!-- Sun icon for light mode -->
+    <svg
+      class="theme-icon-light h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="5"></circle>
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+    </svg>
+
+    <!-- Moon icon for dark mode -->
+    <svg
+      class="theme-icon-dark absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+
+    <span class="sr-only">Toggle theme</span>
+  </button>
+
+  {showLabel && (
+    <span class="text-sm font-medium" id="theme-label">
+      <span class="theme-label-light dark:hidden">Light</span>
+      <span class="theme-label-dark hidden dark:inline">Dark</span>
+    </span>
+  )}
+</div>
+
+<script>
+  // Theme toggle functionality with constitutional compliance
+  import { getThemeProvider } from '../lib/theme.js';
+
+  class ThemeToggle {
+    private button: HTMLButtonElement | null = null;
+    private themeProvider: any = null;
+
+    constructor() {
+      this.init();
+    }
+
+    private init(): void {
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.setup());
+      } else {
+        this.setup();
+      }
+    }
+
+    private async setup(): Promise<void> {
+      this.button = document.getElementById('theme-toggle') as HTMLButtonElement;
+
+      if (!this.button) {
+        console.warn('Theme toggle button not found');
+        return;
+      }
+
+      // Initialize theme provider
+      try {
+        // Dynamic import to ensure it loads properly
+        const { getThemeProvider } = await import('../lib/theme.js');
+        this.themeProvider = getThemeProvider();
+      } catch (error) {
+        console.error('Failed to load theme provider:', error);
+        return;
+      }
+
+      // Set initial state
+      this.updateButtonState();
+
+      // Add click handler
+      this.button.addEventListener('click', this.handleToggle.bind(this));
+
+      // Listen for theme changes from other sources
+      window.addEventListener('theme-change', this.handleThemeChange.bind(this));
+
+      // Listen for system theme changes
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addEventListener('change', this.handleSystemChange.bind(this));
+
+      // Add keyboard support
+      this.button.addEventListener('keydown', this.handleKeyDown.bind(this));
+    }
+
+    private handleToggle(): void {
+      if (!this.themeProvider) return;
+
+      try {
+        this.themeProvider.toggleTheme();
+        this.updateButtonState();
+
+        // Announce to screen readers
+        const currentTheme = this.themeProvider.getResolvedTheme();
+        const message = `Switched to ${currentTheme} mode`;
+        this.announceToScreenReader(message);
+
+        // Haptic feedback for mobile devices
+        if ('vibrate' in navigator) {
+          navigator.vibrate(50);
+        }
+      } catch (error) {
+        console.error('Failed to toggle theme:', error);
+      }
+    }
+
+    private handleThemeChange(event: CustomEvent): void {
+      this.updateButtonState();
+    }
+
+    private handleSystemChange(): void {
+      if (this.themeProvider && this.themeProvider.getTheme() === 'system') {
+        this.updateButtonState();
+      }
+    }
+
+    private handleKeyDown(event: KeyboardEvent): void {
+      // Support space bar and enter for activation
+      if (event.key === ' ' || event.key === 'Enter') {
+        event.preventDefault();
+        this.handleToggle();
+      }
+    }
+
+    private updateButtonState(): void {
+      if (!this.button || !this.themeProvider) return;
+
+      const currentTheme = this.themeProvider.getResolvedTheme();
+      const isDark = currentTheme === 'dark';
+
+      // Update aria-pressed
+      this.button.setAttribute('aria-pressed', isDark.toString());
+
+      // Update aria-label for better context
+      const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+      this.button.setAttribute('aria-label', label);
+
+      // Update title for mouse users
+      this.button.title = label;
+    }
+
+    private announceToScreenReader(message: string): void {
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      announcement.textContent = message;
+
+      document.body.appendChild(announcement);
+
+      // Remove after announcement
+      setTimeout(() => {
+        if (document.body.contains(announcement)) {
+          document.body.removeChild(announcement);
+        }
+      }, 1000);
+    }
+  }
+
+  // Initialize theme toggle
+  new ThemeToggle();
+</script>
+
+<style>
+  /* Enhanced accessibility for theme toggle */
+  #theme-toggle {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Smooth icon transitions */
+  .theme-icon-light,
+  .theme-icon-dark {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    #theme-toggle {
+      border-width: 2px;
+    }
+
+    #theme-toggle:focus-visible {
+      outline: 3px solid;
+      outline-offset: 2px;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .theme-icon-light,
+    .theme-icon-dark {
+      transition: none;
+    }
+
+    #theme-toggle {
+      transition: none;
+    }
+  }
+
+  /* Focus states for keyboard navigation */
+  #theme-toggle:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Active state feedback */
+  #theme-toggle:active {
+    transform: scale(0.95);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #theme-toggle:active {
+      transform: none;
+    }
+  }
+
+  /* Ensure icons are properly positioned */
+  #theme-toggle svg {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Better visual feedback for theme state */
+  .theme-label-light,
+  .theme-label-dark {
+    transition: opacity 0.3s ease;
+  }
+
+  /* Constitutional performance optimization */
+  #theme-toggle {
+    contain: layout style paint;
+  }
+
+  /* Enhanced mobile touch targets */
+  @media (pointer: coarse) {
+    #theme-toggle {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+</style>

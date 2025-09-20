@@ -1,0 +1,36 @@
+---
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '', ...props } = Astro.props;
+
+const cardClasses = `rounded-lg border bg-card text-card-foreground shadow-sm ${className}`.trim();
+---
+
+<div class={cardClasses} {...props}>
+  <slot />
+</div>
+
+<!-- Card Header Component -->
+<style>
+  .card-header {
+    @apply flex flex-col space-y-1.5 p-6;
+  }
+
+  .card-title {
+    @apply text-2xl font-semibold leading-none tracking-tight;
+  }
+
+  .card-description {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .card-content {
+    @apply p-6 pt-0;
+  }
+
+  .card-footer {
+    @apply flex items-center p-6 pt-0;
+  }
+</style>

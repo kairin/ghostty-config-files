@@ -1,0 +1,70 @@
+---
+export interface Props {
+  for?: string;
+  required?: boolean;
+  class?: string;
+}
+
+const {
+  for: htmlFor,
+  required = false,
+  class: className = '',
+  ...props
+} = Astro.props;
+
+// Constitutional label styling with accessibility
+const labelClasses = [
+  "text-sm font-medium leading-none",
+  "peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  "data-[required]:after:content-['*'] data-[required]:after:ml-1 data-[required]:after:text-destructive",
+  className
+].filter(Boolean).join(' ');
+---
+
+<label
+  for={htmlFor}
+  class={labelClasses}
+  data-required={required ? '' : undefined}
+  {...props}
+>
+  <slot />
+  {required && <span class="ml-1 text-destructive" aria-label="required">*</span>}
+</label>
+
+<style>
+  /* Enhanced accessibility for labels */
+  label {
+    cursor: pointer;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    label {
+      font-weight: 600;
+    }
+  }
+
+  /* Constitutional accessibility patterns */
+  label[data-required]::after {
+    content: '*';
+    color: hsl(var(--destructive));
+    margin-left: 0.25rem;
+    font-weight: bold;
+    speak: literal;
+  }
+
+  /* Focus association with form controls */
+  label:has(+ input:focus-visible),
+  label:has(+ textarea:focus-visible),
+  label:has(+ select:focus-visible) {
+    color: hsl(var(--ring));
+  }
+
+  /* Disabled state styling */
+  label:has(+ input:disabled),
+  label:has(+ textarea:disabled),
+  label:has(+ select:disabled) {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+</style>
