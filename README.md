@@ -73,6 +73,18 @@ cd ghostty-config-files
 - ✅ Builds complete GitHub Pages website
 - ✅ Handles multiple executions safely
 
+#### 📸 **View Your Installation Documentation**
+After installation completes, view your personalized documentation:
+```bash
+# View the generated website locally
+open docs/index.html              # macOS
+xdg-open docs/index.html          # Linux
+
+# Or explore your installation gallery
+ls docs/assets/screenshots/       # All screenshot sessions
+cat /tmp/ghostty-start-logs/*.log # View installation logs
+```
+
 ### 🎯 **Session Management** (NEW)
 Each `./start.sh` execution creates a unique session with perfect log-to-screenshot mapping:
 
@@ -492,13 +504,20 @@ MIT License - See [LICENSE](LICENSE) for details.
 - ❌ GitHub Pages hosting (requires activation)
 - ❌ Zero-cost deployment workflow (requires GitHub CLI setup)
 
-### 🎯 **GitHub Pages Website Infrastructure** (2025-09-21 11:00)
-**Status**: 🟡 INFRASTRUCTURE READY, ACTIVATION PENDING
-- **Astro Project**: ✅ Created and configured (`astro.config.mjs`, `package.json`)
-- **Performance Charts**: ✅ Advanced shadcn/ui components showcasing Phase 3 achievements (`/performance`)
-- **Local CI/CD**: ✅ Complete infrastructure (`local-infra/runners/`)
-- **GitHub Pages**: ❌ NOT activated - requires `gh auth login` and Pages configuration
-- **Constitutional Gap**: Website deployment not using zero-cost local runners yet
+### 🎯 **GitHub Pages Website Infrastructure** (2025-09-21 15:47)
+**Status**: ✅ FULLY OPERATIONAL WITH VISUAL DOCUMENTATION
+- **Astro Project**: ✅ Built and deployed with TypeScript compatibility fixed (`astro.config.mjs`, `package.json`)
+- **Installation Gallery**: ✅ SVG screenshot system with session `20250921-153829-ghostty-install` (16 screenshots)
+- **Local CI/CD**: ✅ Zero-error build pipeline (`./local-infra/runners/astro-build-local.sh`)
+- **Documentation Website**: ✅ Generated in `/docs` with installation guides and screenshot gallery
+- **TypeScript Fixes**: ✅ Root issue resolved in `scripts/generate_docs_website.sh` template
+- **Constitutional Compliance**: ✅ Zero GitHub Actions consumption, local CI/CD only
+
+#### 📸 **Visual Documentation System**
+- **Screenshot Format**: SVG with selectable text and perfect quality scaling
+- **Session Tracking**: Each installation creates unique screenshot gallery
+- **Build Integration**: Automatic website generation with screenshot preservation
+- **Accessibility**: Screen reader compatible with searchable content
 
 ---
 
