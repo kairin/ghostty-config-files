@@ -182,7 +182,7 @@ const {
       document.addEventListener('DOMContentLoaded', async () => {
         try {
           // Dynamic import to ensure proper loading
-          const { initializeTheme } = await import('../lib/theme.js');
+          const { initializeTheme } = await import('../lib/theme');
 
           // Initialize with constitutional configuration
           initializeTheme({
@@ -194,7 +194,7 @@ const {
           });
 
           // Initialize accessibility system
-          const { initializeAccessibility } = await import('../lib/accessibility.js');
+          const { initializeAccessibility } = await import('../lib/accessibility');
           initializeAccessibility({
             announcePageChanges: true,
             enableKeyboardNavigation: true,
@@ -203,7 +203,7 @@ const {
           });
 
           // Initialize performance monitoring
-          const { initializePerformanceMonitoring } = await import('../lib/performance.js');
+          const { initializePerformanceMonitoring } = await import('../lib/performance');
           initializePerformanceMonitoring();
 
         } catch (error) {
