@@ -184,20 +184,27 @@ check_billing() {
         billing_info=$(gh api user/settings/billing/actions 2>/dev/null || echo "{}")
         echo "$billing_info" > "$LOG_DIR/billing-$(date +%s).json"
 
-        local minutes_used
-        local included_minutes
-        minutes_used=$(echo "$billing_info" | jq -r '.total_minutes_used // "unknown"' 2>/dev/null || echo "unknown")
-        included_minutes=$(echo "$billing_info" | jq -r '.included_minutes // "unknown"' 2>/dev/null || echo "unknown")
+        # Extract fields defensively; fall back to empty and then to "unknown"
+        local minutes_used_raw
+        local included_minutes_raw
+        minutes_used_raw=$(echo "$billing_info" | jq -r '.total_minutes_used // empty' 2>/dev/null || true)
+        included_minutes_raw=$(echo "$billing_info" | jq -r '.included_minutes // empty' 2>/dev/null || true)
+
+        local minutes_used="${minutes_used_raw:-unknown}"
+        local included_minutes="${included_minutes_raw:-unknown}"
 
         log "INFO" "📊 GitHub Actions usage: $minutes_used / $included_minutes minutes"
 
-        if [ "$minutes_used" != "unknown" ] && [ "$included_minutes" != "unknown" ] && [ "$minutes_used" != "null" ] && [ "$included_minutes" != "null" ]; then
+        # Only compute numeric percentage when both values are integers
+        if [[ "$minutes_used" =~ ^[0-9]+$ ]] && [[ "$included_minutes" =~ ^[0-9]+$ ]] && [ "$included_minutes" -ne 0 ]; then
             local usage_percent=$((minutes_used * 100 / included_minutes))
             if [ $usage_percent -gt 80 ]; then
                 log "WARNING" "⚠️ High GitHub Actions usage: ${usage_percent}%"
             else
                 log "SUCCESS" "✅ GitHub Actions usage within limits: ${usage_percent}%"
             fi
+        else
+            log "INFO" "ℹ️ Billing info not numeric or unavailable; skipping percentage calculation"
         fi
     else
         log "WARNING" "⚠️ Cannot check billing - GitHub CLI not available or not authenticated"
