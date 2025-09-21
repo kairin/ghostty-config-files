@@ -10,6 +10,98 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     <p class="text-xl text-gray-600 max-w-3xl mx-auto">
       Comprehensive terminal environment setup with 2025 optimizations, AI integration, and automatic SVG screenshot documentation
     </p>
+
+    <!-- Technology Stack with Logos -->
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-base">
+      <a
+        href="https://astro.build/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 hover:text-gray-900 transition-colors"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <style>.a{fill:#FF5D01;}.b{fill:#FFF;}</style>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M163.008 18.929c1.944 2.413 2.935 5.67 2.935 9.653c0 1.153-.090 2.368-.274 3.553L158.647 80.5c-.31 2.283-1.218 3.932-2.567 4.954c-1.349 1.023-3.107 1.534-5.273 1.534c-2.166 0-3.924-.511-5.273-1.534c-1.349-1.022-2.257-2.671-2.567-4.954L135.945 32.135c-.184-1.185-.274-2.4-.274-3.553c0-3.983.991-7.24 2.935-9.653C140.550 16.516 143.662 15.5 147.5 15.5s6.95 1.016 8.894 3.429z" fill="#FF5D01"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M106.157 25.211c-1.112-.703-2.536-.703-3.648 0L8.5 82.265c-1.112.703-1.112 2.297 0 3L102.509 142.319c1.112.703 2.536.703 3.648 0L200.165 85.265c1.112-.703 1.112-2.297 0-3L106.157 25.211z" fill="#FFF"/>
+        </svg>
+        <span class="font-semibold">Astro</span>
+      </a>
+
+      <a
+        href="https://tailwindcss.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 hover:text-gray-900 transition-colors"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M128 0C93.867 0 72.533 17.067 64 51.2 76.8 34.133 91.733 27.733 108.8 32c9.737 2.434 16.697 9.499 24.401 17.318C145.751 62.057 160.275 76.8 192 76.8c34.133 0 55.467-17.067 64-51.2-12.8 17.067-27.733 23.467-44.8 19.2-9.737-2.434-16.697-9.499-24.401-17.318C174.249 14.743 159.725 0 128 0ZM64 76.8C29.867 76.8 8.533 93.867 0 128c12.8-17.067 27.733-23.467 44.8-19.2 9.737 2.434 16.697 9.499 24.401 17.318C81.751 138.857 96.275 153.6 128 153.6c34.133 0 55.467-17.067 64-51.2-12.8 17.067-27.733 23.467-44.8 19.2-9.737-2.434-16.697-9.499-24.401-17.318C110.249 91.543 95.725 76.8 64 76.8Z" fill="#06B6D4"/>
+        </svg>
+        <span class="font-semibold">Tailwind CSS</span>
+      </a>
+
+      <a
+        href="https://ui.shadcn.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 hover:text-gray-900 transition-colors"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="256" height="256" rx="60" fill="#000"/>
+          <path d="m86.066 185.188 33.815-33.815-4.95-4.95-33.815 33.815a3.933 3.933 0 0 0 4.95 4.95Z" fill="#FFF"/>
+          <path d="m95.388 162.007 33.815-33.815-4.95-4.95-33.815 33.815a3.933 3.933 0 0 0 4.95 4.95Z" fill="#FFF"/>
+          <path d="m104.71 138.826 33.815-33.815-4.95-4.95-33.815 33.815a3.933 3.933 0 0 0 4.95 4.95Z" fill="#FFF"/>
+          <path d="m114.032 115.645 33.815-33.815-4.95-4.95-33.815 33.815a3.933 3.933 0 0 0 4.95 4.95Z" fill="#FFF"/>
+        </svg>
+        <span class="font-semibold">shadcn/ui</span>
+      </a>
+
+      <a
+        href="https://docs.astral.sh/uv/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 hover:text-gray-900 transition-colors"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="uv-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#DE5833;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#FAB005;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <path d="M128 16L48 80v96l80 64 80-64V80L128 16z" fill="url(#uv-gradient)"/>
+          <path d="M128 48L76 92v72l52 42 52-42V92L128 48z" fill="#FFF"/>
+          <circle cx="128" cy="128" r="24" fill="url(#uv-gradient)"/>
+        </svg>
+        <span class="font-semibold">uv</span>
+      </a>
+
+      <a
+        href="https://github.com/kairin/ghostty-config-files"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 hover:text-gray-900 transition-colors"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ghostty-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect x="32" y="32" width="192" height="192" rx="24" fill="url(#ghostty-gradient)"/>
+          <rect x="64" y="64" width="128" height="8" rx="4" fill="#FFF" opacity="0.9"/>
+          <rect x="64" y="80" width="100" height="8" rx="4" fill="#FFF" opacity="0.8"/>
+          <rect x="64" y="96" width="120" height="8" rx="4" fill="#FFF" opacity="0.9"/>
+          <rect x="64" y="112" width="90" height="8" rx="4" fill="#FFF" opacity="0.7"/>
+          <rect x="80" y="140" width="8" height="48" rx="4" fill="#FFF"/>
+          <rect x="104" y="140" width="8" height="48" rx="4" fill="#FFF"/>
+          <rect x="128" y="140" width="8" height="48" rx="4" fill="#FFF"/>
+          <rect x="152" y="140" width="8" height="48" rx="4" fill="#FFF"/>
+          <rect x="72" y="188" width="112" height="8" rx="4" fill="#FFF"/>
+        </svg>
+        <span class="font-semibold">Ghostty</span>
+      </a>
+    </div>
   </div>
 
   <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -35,6 +127,29 @@ import BaseLayout from '@layouts/BaseLayout.astro';
       <div class="text-4xl mb-4">🔧</div>
       <h3 class="text-lg font-semibold mb-2">One-Command Setup</h3>
       <p class="text-gray-600">Fresh Ubuntu installation to fully configured terminal in under 10 minutes</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+      <div class="text-4xl mb-4">📊</div>
+      <h3 class="text-lg font-semibold mb-2">Performance Dashboard</h3>
+      <p class="text-gray-600">Constitutional performance monitoring with 94% overall optimization and analytics</p>
+      <a href="/ghostty-config-files/performance/" class="inline-block mt-4 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition-colors">
+        📈 View Dashboard
+      </a>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+      <div class="text-4xl mb-4">⚡</div>
+      <h3 class="text-lg font-semibold mb-2">2025 Optimizations</h3>
+      <p class="text-gray-600">Latest Ghostty features with CGroup single-instance performance optimizations</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+      <div class="text-4xl mb-4">🛠️</div>
+      <h3 class="text-lg font-semibold mb-2">Constitutional Framework</h3>
+      <p class="text-gray-600">Performance-first architecture with comprehensive monitoring and analytics</p>
     </div>
   </div>
 
