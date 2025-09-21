@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   // GitHub Pages deployment configuration
   site: 'https://kairin.github.io',
-  base: '/ghostty-config-files',
+  // base: '/ghostty-config-files', // Commented out for local development
 
   // Integrations following constitutional requirements
   integrations: [
@@ -29,7 +29,7 @@ export default defineConfig({
     assets: '_astro',
   },
 
-  // GitHub Pages deployment - Astro builds to docs/ folder
+  // Build output directory
   outDir: './docs',
 
   // Vite configuration for performance optimization
