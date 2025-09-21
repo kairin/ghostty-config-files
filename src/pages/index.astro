@@ -7,6 +7,7 @@ import CardTitle from '../components/ui/CardTitle.astro';
 import CardDescription from '../components/ui/CardDescription.astro';
 import CardContent from '../components/ui/CardContent.astro';
 import AccessibilityValidator from '../components/ui/AccessibilityValidator.astro';
+import AstroLogo from '../components/AstroLogo.astro';
 
 // Constitutional performance monitoring
 const buildInfo = {
@@ -105,11 +106,7 @@ const complianceStatus = [
               rel="noopener noreferrer"
               class="flex items-center gap-2 hover:text-foreground transition-colors"
             >
-              <svg class="w-6 h-6" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <style>.a{fill:#FF5D01;}.b{fill:#FFF;}</style>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M163.008 18.929c1.944 2.413 2.935 5.67 2.935 9.653c0 1.153-.090 2.368-.274 3.553L158.647 80.5c-.31 2.283-1.218 3.932-2.567 4.954c-1.349 1.023-3.107 1.534-5.273 1.534c-2.166 0-3.924-.511-5.273-1.534c-1.349-1.022-2.257-2.671-2.567-4.954L135.945 32.135c-.184-1.185-.274-2.4-.274-3.553c0-3.983.991-7.24 2.935-9.653C140.550 16.516 143.662 15.5 147.5 15.5s6.95 1.016 8.894 3.429z" fill="#FF5D01"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M106.157 25.211c-1.112-.703-2.536-.703-3.648 0L8.5 82.265c-1.112.703-1.112 2.297 0 3L102.509 142.319c1.112.703 2.536.703 3.648 0L200.165 85.265c1.112-.703 1.112-2.297 0-3L106.157 25.211z" fill="#FFF"/>
-              </svg>
+              <AstroLogo size="md" />
               <span class="font-semibold">Astro</span>
             </a>
 
