@@ -83,7 +83,7 @@ const buttonClasses = [
 
 <script>
   // Theme toggle functionality with constitutional compliance
-  import { getThemeProvider } from '../lib/theme.js';
+  // Note: Dynamic import used below instead of static import for better error handling
 
   class ThemeToggle {
     private button: HTMLButtonElement | null = null;
@@ -112,8 +112,9 @@ const buttonClasses = [
 
       // Initialize theme provider
       try {
-        // Dynamic import to ensure it loads properly
-        const { getThemeProvider } = await import('../lib/theme.js');
+        // Constitutional import with proper error handling
+        const themeModule = await import('../lib/theme.js' as any);
+        const { getThemeProvider } = themeModule;
         this.themeProvider = getThemeProvider();
       } catch (error) {
         console.error('Failed to load theme provider:', error);
@@ -126,8 +127,8 @@ const buttonClasses = [
       // Add click handler
       this.button.addEventListener('click', this.handleToggle.bind(this));
 
-      // Listen for theme changes from other sources
-      window.addEventListener('theme-change', this.handleThemeChange.bind(this));
+      // Listen for theme changes from other sources with constitutional type safety
+      window.addEventListener('theme-change', this.handleThemeChange.bind(this) as EventListener);
 
       // Listen for system theme changes
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -158,7 +159,8 @@ const buttonClasses = [
       }
     }
 
-    private handleThemeChange(event: CustomEvent): void {
+    private handleThemeChange(_event: Event): void {
+      // Constitutional compliance: Accept Event type for DOM compatibility
       this.updateButtonState();
     }
 

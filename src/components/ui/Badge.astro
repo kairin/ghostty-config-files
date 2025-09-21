@@ -40,8 +40,7 @@ const badgeClasses = [
   className
 ].filter(Boolean).join(' ');
 
-// Use anchor tag if href is provided, otherwise use span
-const isInteractive = href !== undefined;
+// Constitutional compliance: href determines component type directly
 ---
 
 {href ? (
