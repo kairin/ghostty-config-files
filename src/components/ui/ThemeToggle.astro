@@ -83,11 +83,10 @@ const buttonClasses = [
 
 <script>
   // Theme toggle functionality with constitutional compliance
-  // Note: Dynamic import used below instead of static import for better error handling
+  // Simplified implementation for Astro build compatibility
 
   class ThemeToggle {
     private button: HTMLButtonElement | null = null;
-    private themeProvider: any = null;
 
     constructor() {
       this.init();
@@ -102,22 +101,11 @@ const buttonClasses = [
       }
     }
 
-    private async setup(): Promise<void> {
+    private setup(): void {
       this.button = document.getElementById('theme-toggle') as HTMLButtonElement;
 
       if (!this.button) {
         console.warn('Theme toggle button not found');
-        return;
-      }
-
-      // Initialize theme provider
-      try {
-        // Constitutional import with proper error handling
-        const themeModule = await import('../lib/theme.js' as any);
-        const { getThemeProvider } = themeModule;
-        this.themeProvider = getThemeProvider();
-      } catch (error) {
-        console.error('Failed to load theme provider:', error);
         return;
       }
 
@@ -139,15 +127,19 @@ const buttonClasses = [
     }
 
     private handleToggle(): void {
-      if (!this.themeProvider) return;
-
       try {
-        this.themeProvider.toggleTheme();
+        // Simple theme toggle for build compatibility
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        localStorage.setItem('theme', newTheme);
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(newTheme);
+
         this.updateButtonState();
 
         // Announce to screen readers
-        const currentTheme = this.themeProvider.getResolvedTheme();
-        const message = `Switched to ${currentTheme} mode`;
+        const message = `Switched to ${newTheme} mode`;
         this.announceToScreenReader(message);
 
         // Haptic feedback for mobile devices
@@ -165,9 +157,8 @@ const buttonClasses = [
     }
 
     private handleSystemChange(): void {
-      if (this.themeProvider && this.themeProvider.getTheme() === 'system') {
-        this.updateButtonState();
-      }
+      // Handle system theme changes
+      this.updateButtonState();
     }
 
     private handleKeyDown(event: KeyboardEvent): void {
@@ -179,9 +170,9 @@ const buttonClasses = [
     }
 
     private updateButtonState(): void {
-      if (!this.button || !this.themeProvider) return;
+      if (!this.button) return;
 
-      const currentTheme = this.themeProvider.getResolvedTheme();
+      const currentTheme = localStorage.getItem('theme') || 'light';
       const isDark = currentTheme === 'dark';
 
       // Update aria-pressed
