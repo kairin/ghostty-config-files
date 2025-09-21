@@ -1,0 +1,20 @@
+[project]
+name = "ghostty-docs"
+version = "1.0.0"
+description = "Ghostty Documentation Site Builder"
+requires-python = ">=3.11"
+dependencies = [
+    "jinja2>=3.1.0",
+    "markdown>=3.5.0",
+    "pyyaml>=6.0.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "black>=23.0.0",
+    "ruff>=0.1.0"
+]

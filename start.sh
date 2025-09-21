@@ -17,23 +17,44 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="/tmp/ghostty-start-logs"
 
-# Git-style timestamped log naming to prevent overwrites
-# Creates session-based log files following the pattern: YYYYMMDD-HHMMSS-operation-description.*
-# This ensures each run preserves its logs and avoids conflicts like git branch management
+# Advanced Session Tracking for Multiple Executions
+# Creates synchronized session IDs for logs and screenshots with terminal detection
+# Pattern: YYYYMMDD-HHMMSS-terminal-operation where terminal = ghostty|ptyxis|generic
 DATETIME=$(date +"%Y%m%d-%H%M%S")
-LOG_SESSION_ID="$DATETIME-ghostty-install"
-LOG_FILE="$LOG_DIR/$LOG_SESSION_ID.log"              # Main human-readable log
-LOG_JSON="$LOG_DIR/$LOG_SESSION_ID.json"             # Structured JSON log for parsing
-LOG_ERRORS="$LOG_DIR/$LOG_SESSION_ID-errors.log"     # Errors and warnings only
-LOG_COMMANDS="$LOG_DIR/$LOG_SESSION_ID-commands.log" # Full command outputs and results
-LOG_PERFORMANCE="$LOG_DIR/$LOG_SESSION_ID-performance.json" # Performance metrics
 
-# Log Viewing Instructions:
-# - View all session logs: ls -la /tmp/ghostty-start-logs/$LOG_SESSION_ID*
-# - Main log: cat $LOG_FILE
-# - Command details: cat $LOG_COMMANDS
-# - Errors only: cat $LOG_ERRORS
-# - Performance data: jq '.' $LOG_PERFORMANCE
+# Detect current terminal environment for session naming
+DETECTED_TERMINAL="generic"
+if [ -n "${GHOSTTY_RESOURCES_DIR:-}" ] || [ "${TERM_PROGRAM:-}" = "ghostty" ]; then
+    DETECTED_TERMINAL="ghostty"
+elif [ -n "${PTYXIS_VERSION:-}" ] || [ "${TERM_PROGRAM:-}" = "ptyxis" ] || pstree -p $$ 2>/dev/null | grep -q ptyxis; then
+    DETECTED_TERMINAL="ptyxis"
+elif [ -n "${GNOME_TERMINAL_SCREEN:-}" ]; then
+    DETECTED_TERMINAL="gnome-terminal"
+elif [ -n "${KONSOLE_VERSION:-}" ]; then
+    DETECTED_TERMINAL="konsole"
+fi
+
+# Enhanced session ID with terminal detection
+LOG_SESSION_ID="$DATETIME-$DETECTED_TERMINAL-install"
+
+# Synchronized log and screenshot session structure
+LOG_FILE="$LOG_DIR/$LOG_SESSION_ID.log"                    # Main human-readable log
+LOG_JSON="$LOG_DIR/$LOG_SESSION_ID.json"                   # Structured JSON log for parsing
+LOG_ERRORS="$LOG_DIR/$LOG_SESSION_ID-errors.log"           # Errors and warnings only
+LOG_COMMANDS="$LOG_DIR/$LOG_SESSION_ID-commands.log"       # Full command outputs and results
+LOG_PERFORMANCE="$LOG_DIR/$LOG_SESSION_ID-performance.json" # Performance metrics
+LOG_SESSION_MANIFEST="$LOG_DIR/$LOG_SESSION_ID-manifest.json" # Complete session tracking
+
+# Screenshot session directory (synchronized with logs)
+SCREENSHOT_SESSION_DIR="$SCRIPT_DIR/docs/assets/screenshots/$LOG_SESSION_ID"
+SCREENSHOT_METADATA="$SCREENSHOT_SESSION_DIR/metadata.json"
+
+# Session Management Instructions:
+# - View all sessions: ls -la /tmp/ghostty-start-logs/
+# - View session logs: ls -la /tmp/ghostty-start-logs/$LOG_SESSION_ID*
+# - View session screenshots: ls -la docs/assets/screenshots/$LOG_SESSION_ID/
+# - Session manifest: jq '.' $LOG_SESSION_MANIFEST
+# - Screenshot metadata: jq '.' $SCREENSHOT_METADATA
 
 REAL_HOME="${SUDO_HOME:-$HOME}"
 NVM_VERSION="v0.40.1"
@@ -103,6 +124,387 @@ debug() {
         # Still log to file even if not shown
         local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
         echo "[$timestamp] [DEBUG] $*" >> "$LOG_FILE"
+    fi
+}
+
+# SVG Screenshot capture integration - FULLY AUTOMATIC
+SVG_CAPTURE_SCRIPT="$SCRIPT_DIR/scripts/svg_screenshot_capture.sh"
+ENABLE_SCREENSHOTS="true"  # Always enabled, no user configuration needed
+CURRENT_STAGE=""
+
+# Auto-detect if running in a GUI environment for screenshots
+if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
+    ENABLE_SCREENSHOTS="false"
+    debug "No GUI display detected, disabling screenshots"
+fi
+
+# Function to capture SVG screenshot at key stages - SYNCHRONIZED WITH LOGS
+capture_stage_screenshot() {
+    local stage_name="$1"
+    local description="${2:-$stage_name}"
+    local delay="${3:-2}"
+
+    # Set current stage for other functions to use
+    export CURRENT_STAGE="$stage_name"
+
+    # Track this stage in session manifest
+    track_stage "$stage_name" "installation"
+
+    # Always attempt screenshot capture if GUI is available
+    if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
+        debug "📸 Auto-capturing screenshot for stage: $stage_name (session: $LOG_SESSION_ID)"
+
+        # Ensure synchronized directories exist
+        mkdir -p "$LOG_DIR" "$SCREENSHOT_SESSION_DIR"
+
+        # Run screenshot capture in background to not slow down installation
+        (
+            # Pass synchronized environment variables
+            export SCREENSHOT_TOOLS_VENV="${SCREENSHOT_TOOLS_VENV:-}"
+            export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-}"
+            export LOG_SESSION_ID="$LOG_SESSION_ID"
+            export LOG_FILE="$LOG_FILE"
+            export CURRENT_STAGE="$stage_name"
+            export DETECTED_TERMINAL="$DETECTED_TERMINAL"
+            export SCREENSHOT_SESSION_DIR="$SCREENSHOT_SESSION_DIR"
+
+            # Use synchronized screenshot session directory
+            "$SVG_CAPTURE_SCRIPT" capture "$stage_name" "$description" auto "$delay" >/dev/null 2>&1 || \
+            debug "Screenshot capture failed for stage: $stage_name (continuing installation)"
+        ) &
+
+        # Store PID for cleanup later
+        echo $! >> "$LOG_DIR/$LOG_SESSION_ID-screenshot-pids.log" 2>/dev/null || true
+    else
+        debug "Screenshot capture disabled (no GUI or script not found)"
+        # Still track the stage even without screenshot
+        track_stage "$stage_name" "installation-no-screenshot"
+    fi
+}
+
+# Function to create process diagram
+create_installation_diagram() {
+    local stages_json='[
+        "System Check",
+        "Dependencies",
+        "Zig Installation",
+        "Ghostty Build",
+        "Configuration",
+        "Context Menu",
+        "Verification"
+    ]'
+
+    if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
+        log "INFO" "📊 Creating installation process diagram"
+        "$SVG_CAPTURE_SCRIPT" diagram "Ghostty Installation Process" "$stages_json" || \
+        log "WARNING" "Process diagram creation failed"
+    fi
+}
+
+# Function to setup screenshot dependencies using uv - FULLY AUTOMATIC
+setup_screenshot_dependencies() {
+    if [ "$ENABLE_SCREENSHOTS" = "false" ]; then
+        debug "Screenshot capture disabled (no GUI), skipping dependency setup"
+        return 0
+    fi
+
+    debug "📸 Auto-setting up SVG screenshot dependencies..."
+
+    # Ensure uv is available and in PATH
+    if ! command -v uv >/dev/null 2>&1; then
+        log "WARNING" "uv not found, installing screenshot tools via system packages only"
+        install_system_screenshot_tools
+        return $?
+    fi
+
+    # Create uv project for screenshot tools if it doesn't exist
+    local screenshot_tools_dir="$SCRIPT_DIR/.screenshot-tools"
+    if [ ! -d "$screenshot_tools_dir" ]; then
+        mkdir -p "$screenshot_tools_dir"
+        cd "$screenshot_tools_dir"
+
+        # Initialize uv project for screenshot tools
+        cat > pyproject.toml << 'EOF'
+[project]
+name = "ghostty-screenshot-tools"
+version = "1.0.0"
+description = "SVG screenshot capture tools for Ghostty installation documentation"
+requires-python = ">=3.9"
+dependencies = [
+    "termtosvg>=1.1.0",
+    "asciinema>=2.4.0",
+    "svg-term>=1.0.0",
+    "jinja2>=3.1.0",
+    "pillow>=10.0.0",
+    "cairosvg>=2.7.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = []
+EOF
+
+        # Create .python-version
+        echo "3.11" > .python-version
+
+        debug "🐍 Created uv project for screenshot tools"
+        cd "$SCRIPT_DIR"
+    fi
+
+    # Install Python dependencies via uv silently
+    cd "$screenshot_tools_dir"
+    debug "📦 Installing Python screenshot tools via uv..."
+
+    if uv sync >> "$LOG_FILE" 2>&1; then
+        debug "✅ Python screenshot tools installed via uv"
+
+        # Make uv environment available for screenshot script
+        export UV_PROJECT_ENVIRONMENT="$screenshot_tools_dir/.venv"
+        export SCREENSHOT_TOOLS_VENV="$screenshot_tools_dir/.venv"
+
+        # Test that tools are available silently
+        if uv run python -c "import termtosvg" >> "$LOG_FILE" 2>&1; then
+            debug "✅ termtosvg available in uv environment"
+        else
+            debug "⚠️ termtosvg import failed, will use fallback methods"
+        fi
+    else
+        debug "⚠️ uv sync failed, falling back to system tools"
+        install_system_screenshot_tools
+    fi
+
+    cd "$SCRIPT_DIR"
+
+    # Install system-level screenshot tools as backup silently
+    install_system_screenshot_tools
+
+    debug "📸 Screenshot dependencies setup complete"
+}
+
+# Function to install system screenshot tools - SILENT
+install_system_screenshot_tools() {
+    debug "📦 Installing system screenshot tools..."
+
+    local tools_to_install=()
+
+    # Check for gnome-screenshot
+    if ! command -v gnome-screenshot >/dev/null 2>&1; then
+        tools_to_install+=("gnome-screenshot")
+    fi
+
+    # Check for scrot
+    if ! command -v scrot >/dev/null 2>&1; then
+        tools_to_install+=("scrot")
+    fi
+
+    # Check for ImageMagick
+    if ! command -v convert >/dev/null 2>&1; then
+        tools_to_install+=("imagemagick")
+    fi
+
+    # Check for SVG tools
+    if ! command -v rsvg-convert >/dev/null 2>&1; then
+        tools_to_install+=("librsvg2-bin")
+    fi
+
+    if [ ${#tools_to_install[@]} -gt 0 ]; then
+        debug "🔧 Installing system tools: ${tools_to_install[*]}"
+
+        if command -v apt >/dev/null 2>&1; then
+            if sudo apt update >> "$LOG_FILE" 2>&1 && \
+               sudo apt install -y "${tools_to_install[@]}" >> "$LOG_FILE" 2>&1; then
+                debug "✅ System screenshot tools installed"
+            else
+                debug "⚠️ Some system screenshot tools may have failed to install"
+            fi
+        else
+            debug "⚠️ apt not available, system screenshot tools not installed"
+        fi
+    else
+        debug "ℹ️ All system screenshot tools already available"
+    fi
+}
+
+# Function to finalize documentation - FULLY AUTOMATIC
+finalize_installation_docs() {
+    if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
+        log "INFO" "📚 Generating installation documentation and website"
+
+        # Wait for any remaining screenshot captures
+        if [ -f "$LOG_DIR/$LOG_SESSION_ID-screenshot-pids.log" ]; then
+            while read -r pid; do
+                if kill -0 "$pid" 2>/dev/null; then
+                    wait "$pid" 2>/dev/null || true
+                fi
+            done < "$LOG_DIR/$LOG_SESSION_ID-screenshot-pids.log"
+            rm -f "$LOG_DIR/$LOG_SESSION_ID-screenshot-pids.log"
+        fi
+
+        # Generate complete documentation with uv environment
+        if [ -n "${SCREENSHOT_TOOLS_VENV:-}" ] && [ -d "$SCREENSHOT_TOOLS_VENV" ]; then
+            export UV_PROJECT_ENVIRONMENT="$SCREENSHOT_TOOLS_VENV"
+        fi
+
+        # Generate SVG screenshot documentation
+        "$SVG_CAPTURE_SCRIPT" generate-docs >/dev/null 2>&1 || \
+        debug "SVG documentation generation failed"
+
+        # Generate Astro.build website automatically
+        if [ -f "$SCRIPT_DIR/generate_docs_website.sh" ]; then
+            debug "🌐 Building Astro.build documentation website..."
+
+            # Ensure Node.js is available for Astro build
+            if command -v node >/dev/null 2>&1; then
+                if "$SCRIPT_DIR/generate_docs_website.sh" build >> "$LOG_FILE" 2>&1; then
+                    log "SUCCESS" "📖 Documentation website built successfully"
+                    log "INFO" "🌐 Website available in docs/ directory for GitHub Pages"
+                else
+                    debug "Astro build failed, basic documentation still available"
+                fi
+            else
+                debug "Node.js not available, skipping Astro build"
+            fi
+        fi
+
+        log "SUCCESS" "📸 Screenshot gallery and documentation complete"
+        log "INFO" "📁 Screenshots: docs/assets/screenshots/$LOG_SESSION_ID/"
+        log "INFO" "📄 View logs: ls -la $LOG_DIR/$LOG_SESSION_ID*"
+    fi
+}
+
+# Session Management and Cross-Execution Tracking
+init_session_tracking() {
+    log "INFO" "🔄 Initializing session tracking: $LOG_SESSION_ID"
+
+    # Ensure all directories exist
+    mkdir -p "$LOG_DIR" "$SCREENSHOT_SESSION_DIR"
+
+    # Create comprehensive session manifest
+    cat > "$LOG_SESSION_MANIFEST" << EOF
+{
+  "session_id": "$LOG_SESSION_ID",
+  "datetime": "$DATETIME",
+  "terminal_detected": "$DETECTED_TERMINAL",
+  "session_type": "install",
+  "created": "$(date -Iseconds)",
+  "machine_info": {
+    "hostname": "$(hostname)",
+    "user": "$(whoami)",
+    "os": "$(lsb_release -d 2>/dev/null | cut -f2 || echo 'Linux')",
+    "kernel": "$(uname -r)",
+    "shell": "$SHELL",
+    "term": "${TERM:-unknown}",
+    "display": "${DISPLAY:-none}",
+    "wayland": "${WAYLAND_DISPLAY:-none}"
+  },
+  "terminal_environment": {
+    "detected_terminal": "$DETECTED_TERMINAL",
+    "term_program": "${TERM_PROGRAM:-unknown}",
+    "ghostty_resources": "${GHOSTTY_RESOURCES_DIR:-none}",
+    "ptyxis_version": "${PTYXIS_VERSION:-none}",
+    "gnome_terminal": "${GNOME_TERMINAL_SCREEN:-none}",
+    "konsole_version": "${KONSOLE_VERSION:-none}"
+  },
+  "paths": {
+    "log_dir": "$LOG_DIR",
+    "screenshot_dir": "$SCREENSHOT_SESSION_DIR",
+    "project_root": "$SCRIPT_DIR"
+  },
+  "files": {
+    "main_log": "$LOG_FILE",
+    "json_log": "$LOG_JSON",
+    "error_log": "$LOG_ERRORS",
+    "command_log": "$LOG_COMMANDS",
+    "performance_log": "$LOG_PERFORMANCE",
+    "screenshot_metadata": "$SCREENSHOT_METADATA"
+  },
+  "status": {
+    "started": "$(date -Iseconds)",
+    "completed": null,
+    "screenshots_enabled": $ENABLE_SCREENSHOTS,
+    "gui_available": $([ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ] && echo "true" || echo "false"),
+    "uv_available": $(command -v uv >/dev/null 2>&1 && echo "true" || echo "false")
+  },
+  "stages": [],
+  "statistics": {
+    "total_stages": 0,
+    "screenshots_captured": 0,
+    "errors_encountered": 0,
+    "duration_seconds": 0
+  }
+}
+EOF
+
+    log "SUCCESS" "📋 Session manifest created: $LOG_SESSION_MANIFEST"
+    log "INFO" "🏷️  Session type: $DETECTED_TERMINAL terminal installation"
+}
+
+# Add stage tracking to session manifest
+track_stage() {
+    local stage_name="$1"
+    local stage_type="${2:-installation}"
+    local timestamp="$(date -Iseconds)"
+
+    if [ -f "$LOG_SESSION_MANIFEST" ]; then
+        local temp_manifest=$(mktemp)
+        jq --arg stage "$stage_name" \
+           --arg type "$stage_type" \
+           --arg timestamp "$timestamp" \
+           '.stages += [{
+             "name": $stage,
+             "type": $type,
+             "timestamp": $timestamp,
+             "screenshot_expected": true
+           }] | .statistics.total_stages = (.stages | length)' \
+           "$LOG_SESSION_MANIFEST" > "$temp_manifest"
+
+        mv "$temp_manifest" "$LOG_SESSION_MANIFEST"
+        debug "📊 Tracked stage: $stage_name"
+    fi
+}
+
+# Finalize session tracking
+finalize_session_tracking() {
+    if [ -f "$LOG_SESSION_MANIFEST" ]; then
+        local temp_manifest=$(mktemp)
+        local end_time="$(date -Iseconds)"
+        local start_time=$(jq -r '.status.started' "$LOG_SESSION_MANIFEST")
+        local duration=0
+
+        if [ "$start_time" != "null" ]; then
+            local start_epoch=$(date -d "$start_time" +%s)
+            local end_epoch=$(date -d "$end_time" +%s)
+            duration=$((end_epoch - start_epoch))
+        fi
+
+        # Count screenshots if directory exists
+        local screenshots_count=0
+        if [ -d "$SCREENSHOT_SESSION_DIR" ]; then
+            screenshots_count=$(find "$SCREENSHOT_SESSION_DIR" -name "*.svg" 2>/dev/null | wc -l)
+        fi
+
+        # Count errors
+        local errors_count=0
+        if [ -f "$LOG_ERRORS" ]; then
+            errors_count=$(wc -l < "$LOG_ERRORS" 2>/dev/null || echo "0")
+        fi
+
+        jq --arg end_time "$end_time" \
+           --arg duration "$duration" \
+           --arg screenshots "$screenshots_count" \
+           --arg errors "$errors_count" \
+           '.status.completed = $end_time |
+            .statistics.duration_seconds = ($duration | tonumber) |
+            .statistics.screenshots_captured = ($screenshots | tonumber) |
+            .statistics.errors_encountered = ($errors | tonumber)' \
+           "$LOG_SESSION_MANIFEST" > "$temp_manifest"
+
+        mv "$temp_manifest" "$LOG_SESSION_MANIFEST"
+
+        log "SUCCESS" "📊 Session completed: $duration seconds, $screenshots_count screenshots, $errors_count errors"
     fi
 }
 
@@ -2031,16 +2433,26 @@ main() {
     echo -e "${CYAN}========================================${NC}"
     echo ""
 
+    # Initialize comprehensive session tracking
+    init_session_tracking
+
     # Start performance monitoring for entire operation
     monitor_performance "Complete Installation"
 
-    log "INFO" "🚀 Starting comprehensive installation..."
-    log "INFO" "📋 Git-style session logs (Session: $LOG_SESSION_ID):"
-    log "INFO" "   Main Log: $LOG_FILE"
-    log "INFO" "   JSON Log: $LOG_JSON"
-    log "INFO" "   Command Log: $LOG_COMMANDS"
-    log "INFO" "   Error Log: $LOG_ERRORS"
-    log "INFO" "   Performance: $LOG_PERFORMANCE"
+    log "INFO" "🚀 Starting comprehensive installation in $DETECTED_TERMINAL terminal..."
+    log "INFO" "📋 Session tracking (ID: $LOG_SESSION_ID):"
+    log "INFO" "   📄 Logs: $LOG_DIR/$LOG_SESSION_ID.*"
+    log "INFO" "   📸 Screenshots: docs/assets/screenshots/$LOG_SESSION_ID/"
+    log "INFO" "   📊 Manifest: $LOG_SESSION_MANIFEST"
+
+    # Initialize SVG screenshot system
+    if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
+        "$SVG_CAPTURE_SCRIPT" setup
+        create_installation_diagram
+    fi
+
+    # Capture initial desktop state
+    capture_stage_screenshot "Initial Desktop" "Clean Ubuntu desktop before Ghostty installation" 3
 
     # Capture initial system state
     capture_system_state
@@ -2055,34 +2467,62 @@ main() {
     
     # Check current installation status and determine strategies
     check_installation_status
-    
+    capture_stage_screenshot "System Check" "Installation status check and strategy determination" 2
+
     # Execute installation steps
     install_system_deps
+    capture_stage_screenshot "Dependencies" "System dependencies installation completed" 2
+
     install_zsh
+    capture_stage_screenshot "ZSH Setup" "ZSH and Oh My ZSH configuration" 2
+
     install_modern_tools
+    capture_stage_screenshot "Modern Tools" "Development tools and utilities installation" 2
+
     install_zig
+    capture_stage_screenshot "Zig Compiler" "Zig compiler installation and setup" 2
+
     install_ghostty
+    capture_stage_screenshot "Ghostty Build" "Ghostty terminal compilation from source" 3
 
     # Smart configuration update (always run to ensure latest optimizations)
     if $CONFIG_NEEDS_UPDATE || [ "$GHOSTTY_STRATEGY" = "fresh" ] || [ "$GHOSTTY_STRATEGY" = "reconfig" ]; then
         update_ghostty_config
     fi
+    capture_stage_screenshot "Configuration" "Ghostty configuration files and optimization setup" 2
 
     install_context_menu
+    capture_stage_screenshot "Context Menu" "Right-click context menu integration" 2
+
     install_ptyxis
+    capture_stage_screenshot "Ptyxis Terminal" "Secondary terminal installation for comparison" 2
+
     install_uv
+    capture_stage_screenshot "UV Package Manager" "Python uv package manager setup" 2
+
+    # Setup screenshot dependencies after uv is available
+    setup_screenshot_dependencies
+
     install_nodejs
+    capture_stage_screenshot "Node.js Setup" "Node.js and NVM installation" 2
+
     install_claude_code
+    capture_stage_screenshot "Claude Code" "Claude Code CLI installation and configuration" 2
+
     install_gemini_cli
+    capture_stage_screenshot "Gemini CLI" "Google Gemini CLI setup and integration" 2
     
     # Verify everything
     start_timer
     if verify_installation; then
         end_timer "Installation verification"
+        capture_stage_screenshot "Verification" "Installation verification and testing" 2
         log "SUCCESS" "🎉 All installations completed successfully!"
         show_final_instructions
+        capture_stage_screenshot "Completion" "Final installation summary and instructions" 3
     else
         log "WARNING" "⚠️  Some installations may need attention. Check the log for details."
+        capture_stage_screenshot "Warning State" "Installation completed with warnings" 2
         echo "Log files:"
         echo "  Main: $LOG_FILE"
         echo "  Errors: $LOG_DIR/errors.log"
@@ -2095,8 +2535,18 @@ main() {
     # Final system state capture
     capture_system_state
 
-    log "INFO" "📊 Installation completed! Session logs saved as: $LOG_SESSION_ID.*"
-    log "INFO" "📋 View logs with: ls -la $LOG_DIR/$LOG_SESSION_ID*"
+    # Finalize documentation and assets
+    finalize_installation_docs
+
+    # Finalize session tracking with statistics
+    finalize_session_tracking
+
+    log "INFO" "📊 Installation completed! Session: $LOG_SESSION_ID"
+    log "INFO" "📋 Complete session data:"
+    log "INFO" "   📄 Logs: ls -la $LOG_DIR/$LOG_SESSION_ID*"
+    log "INFO" "   📸 Screenshots: ls -la docs/assets/screenshots/$LOG_SESSION_ID/"
+    log "INFO" "   📊 Manifest: jq '.' $LOG_SESSION_MANIFEST"
+    log "INFO" "🏷️  Terminal used: $DETECTED_TERMINAL"
 }
 
 # Run main function
