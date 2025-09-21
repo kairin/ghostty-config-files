@@ -42,8 +42,25 @@ export default defineConfig({
           const fs = await import('fs');
           const path = await import('path');
           const nojekyllPath = path.join('./docs', '.nojekyll');
+
+          // Ensure docs directory exists
+          if (!fs.existsSync('./docs')) {
+            console.warn('⚠️ WARNING: docs directory not found for .nojekyll creation');
+            return;
+          }
+
+          // Create .nojekyll file
           fs.writeFileSync(nojekyllPath, '');
           console.log('✅ Created .nojekyll file for GitHub Pages');
+
+          // Verify _astro directory exists (critical for asset loading)
+          const astroDir = path.join('./docs', '_astro');
+          if (fs.existsSync(astroDir)) {
+            const files = fs.readdirSync(astroDir);
+            console.log(`✅ _astro directory confirmed (${files.length} files)`);
+          } else {
+            console.warn('⚠️ WARNING: _astro directory not found - assets may not load');
+          }
         }
       }
     ],
