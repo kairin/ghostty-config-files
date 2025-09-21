@@ -34,6 +34,19 @@ export default defineConfig({
 
   // Vite configuration for performance optimization
   vite: {
+    plugins: [
+      // Automatically create .nojekyll file for GitHub Pages
+      {
+        name: 'create-nojekyll',
+        async writeBundle() {
+          const fs = await import('fs');
+          const path = await import('path');
+          const nojekyllPath = path.join('./docs', '.nojekyll');
+          fs.writeFileSync(nojekyllPath, '');
+          console.log('✅ Created .nojekyll file for GitHub Pages');
+        }
+      }
+    ],
     build: {
       // Constitutional requirement: JavaScript bundles <100KB
       rollupOptions: {
