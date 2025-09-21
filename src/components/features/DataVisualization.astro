@@ -68,8 +68,8 @@ const sampleData = {
   }
 };
 
-const vizData = data || sampleData[type] || sampleData.performance;
-const vizId = `viz-${Math.random().toString(36).substr(2, 9)}`;
+const vizData = data || sampleData[type as keyof typeof sampleData] || sampleData.performance;
+const vizId = `viz-${Math.random().toString(36).slice(2, 11)}`;
 ---
 
 <div class={`data-visualization ${className || ''}`}>
@@ -94,32 +94,35 @@ const vizId = `viz-${Math.random().toString(36).substr(2, 9)}`;
           </p>
 
           <div class="score-grid">
-            {Object.entries(vizData.lighthouse || {}).map(([metric, score]) => (
-              <div class="score-card">
-                <div class="score-circle" data-score={score}>
-                  <svg width="80" height="80" viewBox="0 0 80 80" class="score-svg">
-                    <circle cx="40" cy="40" r="35" fill="none" stroke="hsl(var(--muted))" stroke-width="6" />
-                    <circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      stroke={score >= 95 ? "hsl(var(--success))" : score >= 85 ? "hsl(var(--warning))" : "hsl(var(--destructive))"}
-                      stroke-width="6"
-                      stroke-dasharray={`${2 * Math.PI * 35}`}
-                      stroke-dashoffset={`${2 * Math.PI * 35 * (1 - score / 100)}`}
-                      stroke-linecap="round"
-                      class="score-progress"
-                    />
-                  </svg>
-                  <div class="score-value">
-                    <span class="score-number">{score}</span>
-                    <span class="score-unit">%</span>
+            {Object.entries(vizData.lighthouse || {}).map(([metric, score]) => {
+              const numScore = Number(score);
+              return (
+                <div class="score-card">
+                  <div class="score-circle" data-score={numScore}>
+                    <svg width="80" height="80" viewBox="0 0 80 80" class="score-svg">
+                      <circle cx="40" cy="40" r="35" fill="none" stroke="hsl(var(--muted))" stroke-width="6" />
+                      <circle
+                        cx="40"
+                        cy="40"
+                        r="35"
+                        fill="none"
+                        stroke={numScore >= 95 ? "hsl(var(--success))" : numScore >= 85 ? "hsl(var(--warning))" : "hsl(var(--destructive))"}
+                        stroke-width="6"
+                        stroke-dasharray={`${2 * Math.PI * 35}`}
+                        stroke-dashoffset={`${2 * Math.PI * 35 * (1 - numScore / 100)}`}
+                        stroke-linecap="round"
+                        class="score-progress"
+                      />
+                    </svg>
+                    <div class="score-value">
+                      <span class="score-number">{numScore}</span>
+                      <span class="score-unit">%</span>
+                    </div>
                   </div>
+                  <div class="score-label">{metric.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</div>
                 </div>
-                <div class="score-label">{metric.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -203,35 +206,38 @@ const vizId = `viz-${Math.random().toString(36).substr(2, 9)}`;
 
         <!-- Constitutional Principles -->
         <div class="principles-grid">
-          {Object.entries(vizData.constitutional || {}).map(([principle, score]) => (
-            <div class="principle-card">
-              <div class="principle-header">
-                <div class="principle-icon">
-                  {principle === 'uvFirst' && '🐍'}
-                  {principle === 'staticSite' && '⚡'}
-                  {principle === 'localCiCd' && '🏛️'}
-                  {principle === 'componentUi' && '🎨'}
-                  {principle === 'zeroCost' && '💰'}
-                </div>
-                <div class="principle-score">
-                  <span class="score-value">{score}%</span>
-                  <div class="score-indicator" data-score={score}>
-                    {score >= 95 ? '✅' : score >= 80 ? '⚠️' : '❌'}
+          {Object.entries(vizData.constitutional || {}).map(([principle, score]) => {
+            const numScore = Number(score);
+            return (
+              <div class="principle-card">
+                <div class="principle-header">
+                  <div class="principle-icon">
+                    {principle === 'uvFirst' && '🐍'}
+                    {principle === 'staticSite' && '⚡'}
+                    {principle === 'localCiCd' && '🏛️'}
+                    {principle === 'componentUi' && '🎨'}
+                    {principle === 'zeroCost' && '💰'}
+                  </div>
+                  <div class="principle-score">
+                    <span class="score-value">{numScore}%</span>
+                    <div class="score-indicator" data-score={numScore}>
+                      {numScore >= 95 ? '✅' : numScore >= 80 ? '⚠️' : '❌'}
+                    </div>
                   </div>
                 </div>
+                <div class="principle-label">
+                  {principle === 'uvFirst' && 'uv-First Python'}
+                  {principle === 'staticSite' && 'Static Site Excellence'}
+                  {principle === 'localCiCd' && 'Local CI/CD First'}
+                  {principle === 'componentUi' && 'Component-Driven UI'}
+                  {principle === 'zeroCost' && 'Zero-Cost Deployment'}
+                </div>
+                <div class="principle-bar">
+                  <div class="principle-progress" style={`width: ${numScore}%`}></div>
+                </div>
               </div>
-              <div class="principle-label">
-                {principle === 'uvFirst' && 'uv-First Python'}
-                {principle === 'staticSite' && 'Static Site Excellence'}
-                {principle === 'localCiCd' && 'Local CI/CD First'}
-                {principle === 'componentUi' && 'Component-Driven UI'}
-                {principle === 'zeroCost' && 'Zero-Cost Deployment'}
-              </div>
-              <div class="principle-bar">
-                <div class="principle-progress" style={`width: ${score}%`}></div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <!-- Compliance Summary -->
@@ -417,14 +423,17 @@ const vizId = `viz-${Math.random().toString(36).substr(2, 9)}`;
             </tr>
           </thead>
           <tbody>
-            {Object.entries(vizData.lighthouse || {}).map(([metric, score]) => (
-              <tr>
-                <td>{metric.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</td>
-                <td>{score}%</td>
-                <td>≥95%</td>
-                <td>{score >= 95 ? '✅ Pass' : '⚠️ Needs Improvement'}</td>
-              </tr>
-            ))}
+            {Object.entries(vizData.lighthouse || {}).map(([metric, score]) => {
+              const numScore = Number(score);
+              return (
+                <tr>
+                  <td>{metric.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</td>
+                  <td>{numScore}%</td>
+                  <td>≥95%</td>
+                  <td>{numScore >= 95 ? '✅ Pass' : '⚠️ Needs Improvement'}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
@@ -440,19 +449,22 @@ const vizId = `viz-${Math.random().toString(36).substr(2, 9)}`;
             </tr>
           </thead>
           <tbody>
-            {Object.entries(vizData.constitutional || {}).map(([principle, score]) => (
-              <tr>
-                <td>
-                  {principle === 'uvFirst' && 'uv-First Python Management'}
-                  {principle === 'staticSite' && 'Static Site Generation Excellence'}
-                  {principle === 'localCiCd' && 'Local CI/CD First'}
-                  {principle === 'componentUi' && 'Component-Driven UI Architecture'}
-                  {principle === 'zeroCost' && 'Zero-Cost Deployment Excellence'}
-                </td>
-                <td>{score}%</td>
-                <td>{score >= 95 ? '✅ Compliant' : score >= 80 ? '⚠️ Partial' : '❌ Non-Compliant'}</td>
-              </tr>
-            ))}
+            {Object.entries(vizData.constitutional || {}).map(([principle, score]) => {
+              const numScore = Number(score);
+              return (
+                <tr>
+                  <td>
+                    {principle === 'uvFirst' && 'uv-First Python Management'}
+                    {principle === 'staticSite' && 'Static Site Generation Excellence'}
+                    {principle === 'localCiCd' && 'Local CI/CD First'}
+                    {principle === 'componentUi' && 'Component-Driven UI Architecture'}
+                    {principle === 'zeroCost' && 'Zero-Cost Deployment Excellence'}
+                  </td>
+                  <td>{numScore}%</td>
+                  <td>{numScore >= 95 ? '✅ Compliant' : numScore >= 80 ? '⚠️ Partial' : '❌ Non-Compliant'}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
@@ -924,9 +936,10 @@ const vizId = `viz-${Math.random().toString(36).substr(2, 9)}`;
         element.setAttribute('tabindex', '0');
         element.setAttribute('role', 'button');
 
-        element.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
+        element.addEventListener('keydown', (e: Event) => {
+          const keyboardEvent = e as KeyboardEvent;
+          if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+            keyboardEvent.preventDefault();
             this.showDetailedInfo(element as HTMLElement);
           }
         });

@@ -38,14 +38,16 @@ const defaultSteps = {
       title: "Welcome to Constitutional Framework",
       content: "This tutorial will guide you through the key features and concepts of our constitutional web development framework.",
       target: ".hero-section",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     },
     {
       id: "navigation",
       title: "Navigation Overview",
       content: "Use the main navigation to access documentation, components, guides, and tools. All sections follow constitutional principles.",
       target: "nav[role='navigation']",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     },
     {
       id: "search",
@@ -60,14 +62,16 @@ const defaultSteps = {
       title: "Documentation Structure",
       content: "Documentation is organized by constitutional principles: Performance, Accessibility, Compliance, and Implementation guides.",
       target: ".documentation-links",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     },
     {
       id: "constitutional_compliance",
       title: "Constitutional Compliance",
       content: "Monitor compliance with our five core principles: Zero GitHub Actions, Performance Excellence, User Preservation, Branch Preservation, and Local Validation.",
       target: ".compliance-dashboard",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     }
   ],
   components: [
@@ -76,7 +80,8 @@ const defaultSteps = {
       title: "Component Library",
       content: "Our component library is built with shadcn/ui and Astro for optimal performance and accessibility.",
       target: ".component-showcase",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     },
     {
       id: "theme_toggle",
@@ -91,7 +96,8 @@ const defaultSteps = {
       title: "Accessibility Features",
       content: "All components meet WCAG 2.1 AA standards with full keyboard navigation, screen reader support, and proper contrast ratios.",
       target: ".accessibility-validator",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     }
   ],
   performance: [
@@ -100,21 +106,24 @@ const defaultSteps = {
       title: "Performance Excellence",
       content: "The framework maintains constitutional performance targets: Lighthouse 95+, <100KB JS, <2.5s LCP.",
       target: ".performance-metrics",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     },
     {
       id: "core_web_vitals",
       title: "Core Web Vitals",
       content: "Monitor First Contentful Paint, Largest Contentful Paint, Cumulative Layout Shift, and First Input Delay in real-time.",
       target: ".core-vitals",
-      action: "highlight"
+      action: "highlight",
+      validation: undefined
     },
     {
       id: "optimization_tools",
       title: "Optimization Tools",
       content: "Use the built-in performance monitoring and optimization tools to maintain constitutional compliance.",
       target: ".optimization-tools",
-      action: "interact"
+      action: "interact",
+      validation: undefined
     }
   ]
 };
@@ -788,6 +797,8 @@ const stepCount = tutorialSteps.length;
 
     private markValidationComplete() {
       const currentStepEl = this.steps[this.currentStep];
+      if (!currentStepEl) return;
+
       const validationEl = currentStepEl.querySelector('.step-validation');
 
       if (validationEl) {

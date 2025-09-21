@@ -658,6 +658,11 @@ const isCompliant = complianceScore >= 100;
 
 <script>
 class AccessibilityFeatures {
+  preferences: Map<string, any>;
+  features: Map<string, any>;
+  announcements: HTMLElement | null;
+  alerts: HTMLElement | null;
+
   constructor() {
     this.preferences = new Map();
     this.features = new Map();
@@ -667,7 +672,7 @@ class AccessibilityFeatures {
     this.init();
   }
 
-  init() {
+  init(): void {
     // Only initialize if JavaScript is available (progressive enhancement)
     if (typeof window === 'undefined') return;
 
@@ -682,64 +687,69 @@ class AccessibilityFeatures {
     this.announce('Accessibility features initialized and ready');
   }
 
-  setupAnnouncementRegions() {
+  setupAnnouncementRegions(): void {
     this.announcements = document.getElementById('accessibility-announcements');
     this.alerts = document.getElementById('accessibility-alerts');
   }
 
-  setupPreferences() {
+  setupPreferences(): void {
     const preferenceInputs = document.querySelectorAll('.preference-checkbox, .preference-select');
 
-    preferenceInputs.forEach(input => {
-      const preference = input.dataset.preference;
-      let value;
+    preferenceInputs.forEach((input) => {
+      const htmlInput = input as HTMLInputElement | HTMLSelectElement;
+      const preference = htmlInput.dataset.preference;
+      let value: boolean | string;
 
-      if (input.type === 'checkbox') {
-        value = input.checked;
+      if ((htmlInput as HTMLInputElement).type === 'checkbox') {
+        value = (htmlInput as HTMLInputElement).checked;
       } else {
-        value = input.value;
+        value = htmlInput.value;
       }
 
-      this.preferences.set(preference, value);
+      this.preferences.set(preference!, value);
 
       // Handle preference changes
-      input.addEventListener('change', (e) => {
-        const newValue = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        this.updatePreference(preference, newValue);
+      htmlInput.addEventListener('change', (e: Event) => {
+        const target = e.target as HTMLInputElement | HTMLSelectElement;
+        const newValue = (target as HTMLInputElement).type === 'checkbox' ?
+          (target as HTMLInputElement).checked : target.value;
+        this.updatePreference(preference!, newValue);
       });
     });
   }
 
-  setupFeatureToggles() {
+  setupFeatureToggles(): void {
     const featureToggles = document.querySelectorAll('.feature-checkbox');
 
-    featureToggles.forEach(toggle => {
-      const featureId = toggle.dataset.feature;
-      const card = toggle.closest('.feature-card');
+    featureToggles.forEach((toggle) => {
+      const htmlToggle = toggle as HTMLInputElement;
+      const featureId = htmlToggle.dataset.feature;
+      const card = htmlToggle.closest('.feature-card') as HTMLElement;
 
-      this.features.set(featureId, {
-        enabled: toggle.checked,
+      this.features.set(featureId!, {
+        enabled: htmlToggle.checked,
         element: card,
-        toggle: toggle,
-        required: toggle.disabled
+        toggle: htmlToggle,
+        required: htmlToggle.disabled
       });
 
-      if (!toggle.disabled) {
-        toggle.addEventListener('change', (e) => {
-          this.toggleFeature(featureId, e.target.checked);
+      if (!htmlToggle.disabled) {
+        htmlToggle.addEventListener('change', (e: Event) => {
+          const target = e.target as HTMLInputElement;
+          this.toggleFeature(featureId!, target.checked);
         });
       }
     });
   }
 
-  setupKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
+  setupKeyboardShortcuts(): void {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
       // Alt + N: Focus navigation
       if (e.altKey && e.key === 'n') {
         e.preventDefault();
         const nav = document.querySelector('nav') || document.querySelector('[role="navigation"]');
         if (nav) {
-          const firstLink = nav.querySelector('a, button');
+          const firstLink = nav.querySelector('a, button') as HTMLElement;
           if (firstLink) firstLink.focus();
         }
         this.announce('Focused main navigation');
@@ -748,7 +758,7 @@ class AccessibilityFeatures {
       // Ctrl + K: Focus search
       if (e.ctrlKey && e.key === 'k') {
         e.preventDefault();
-        const search = document.querySelector('input[type="search"], input[placeholder*="search" i]');
+        const search = document.querySelector('input[type="search"], input[placeholder*="search" i]') as HTMLInputElement;
         if (search) {
           search.focus();
           this.announce('Focused search field');
@@ -775,18 +785,19 @@ class AccessibilityFeatures {
     });
   }
 
-  setupFeatureTesting() {
+  setupFeatureTesting(): void {
     const testButtons = document.querySelectorAll('.test-feature-btn');
 
-    testButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const featureId = e.target.dataset.feature;
+    testButtons.forEach((button) => {
+      const htmlButton = button as HTMLButtonElement;
+      htmlButton.addEventListener('click', () => {
+        const featureId = htmlButton.dataset.feature!;
         this.testFeature(featureId);
       });
     });
   }
 
-  detectUserPreferences() {
+  detectUserPreferences(): void {
     // Detect system preferences
     if (window.matchMedia) {
       // Detect reduced motion preference
@@ -827,7 +838,7 @@ class AccessibilityFeatures {
     }
   }
 
-  applyAccessibilityEnhancements() {
+  applyAccessibilityEnhancements(): void {
     // Apply enhanced focus indicators
     this.enhanceFocusIndicators();
 
@@ -841,55 +852,58 @@ class AccessibilityFeatures {
     this.addLandmarkRoles();
   }
 
-  enhanceFocusIndicators() {
+  enhanceFocusIndicators(): void {
     const focusableElements = document.querySelectorAll(
       'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
     );
 
-    focusableElements.forEach(element => {
-      element.addEventListener('focus', () => {
-        element.classList.add('enhanced-focus');
+    focusableElements.forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      htmlElement.addEventListener('focus', () => {
+        htmlElement.classList.add('enhanced-focus');
       });
 
-      element.addEventListener('blur', () => {
-        element.classList.remove('enhanced-focus');
+      htmlElement.addEventListener('blur', () => {
+        htmlElement.classList.remove('enhanced-focus');
       });
     });
   }
 
-  setupLiveRegions() {
+  setupLiveRegions(): void {
     // Add aria-live to dynamic content areas
     const dynamicElements = document.querySelectorAll(
       '[data-dynamic], .status-log, .test-output'
     );
 
-    dynamicElements.forEach(element => {
-      if (!element.getAttribute('aria-live')) {
-        element.setAttribute('aria-live', 'polite');
+    dynamicElements.forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      if (!htmlElement.getAttribute('aria-live')) {
+        htmlElement.setAttribute('aria-live', 'polite');
       }
     });
   }
 
-  enhanceFormAccessibility() {
+  enhanceFormAccessibility(): void {
     const inputs = document.querySelectorAll('input, textarea, select');
 
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
+      const htmlInput = input as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
       // Add required indicators
-      if (input.required && !input.getAttribute('aria-required')) {
-        input.setAttribute('aria-required', 'true');
+      if ((htmlInput as HTMLInputElement).required && !htmlInput.getAttribute('aria-required')) {
+        htmlInput.setAttribute('aria-required', 'true');
       }
 
       // Add describedby for help text
-      const helpText = input.parentElement.querySelector('.help-text, .description');
-      if (helpText && !input.getAttribute('aria-describedby')) {
-        const helpId = helpText.id || `help-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const helpText = htmlInput.parentElement?.querySelector('.help-text, .description') as HTMLElement;
+      if (helpText && !htmlInput.getAttribute('aria-describedby')) {
+        const helpId = helpText.id || `help-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
         helpText.id = helpId;
-        input.setAttribute('aria-describedby', helpId);
+        htmlInput.setAttribute('aria-describedby', helpId);
       }
     });
   }
 
-  addLandmarkRoles() {
+  addLandmarkRoles(): void {
     // Add main role if missing
     const main = document.querySelector('main');
     if (!main && !document.querySelector('[role="main"]')) {
@@ -910,7 +924,7 @@ class AccessibilityFeatures {
     }
   }
 
-  updatePreference(preference, value) {
+  updatePreference(preference: string, value: any): void {
     this.preferences.set(preference, value);
 
     // Apply preference to UI
@@ -945,7 +959,7 @@ class AccessibilityFeatures {
     localStorage.setItem('accessibility-preferences', JSON.stringify(Object.fromEntries(this.preferences)));
   }
 
-  toggleFeature(featureId, enabled) {
+  toggleFeature(featureId: string, enabled: boolean): void {
     const feature = this.features.get(featureId);
     if (!feature || feature.required) return;
 
@@ -965,7 +979,7 @@ class AccessibilityFeatures {
     this.announce(`${featureId} feature ${enabled ? 'enabled' : 'disabled'}`);
   }
 
-  testFeature(featureId) {
+  testFeature(featureId: string): void {
     const feature = this.features.get(featureId);
     if (!feature) return;
 
@@ -997,7 +1011,7 @@ class AccessibilityFeatures {
     }, 1500);
   }
 
-  runFeatureTest(featureId) {
+  runFeatureTest(featureId: string): { success: boolean; message: string } {
     switch (featureId) {
       case 'skip-navigation':
         const skipLinks = document.querySelectorAll('.skip-link');
@@ -1035,9 +1049,9 @@ class AccessibilityFeatures {
     }
   }
 
-  toggleHighContrast() {
+  toggleHighContrast(): void {
     const current = this.preferences.get('highContrast') || false;
-    const checkbox = document.getElementById('high-contrast');
+    const checkbox = document.getElementById('high-contrast') as HTMLInputElement;
 
     if (checkbox) {
       checkbox.checked = !current;
@@ -1045,24 +1059,24 @@ class AccessibilityFeatures {
     }
   }
 
-  toggleFocusMode() {
+  toggleFocusMode(): void {
     document.body.classList.toggle('focus-mode');
     const isFocusMode = document.body.classList.contains('focus-mode');
 
     this.announce(`Focus mode ${isFocusMode ? 'enabled' : 'disabled'}`);
   }
 
-  showKeyboardHelp() {
+  showKeyboardHelp(): void {
     this.announce('Keyboard shortcuts: Alt+N for navigation, Ctrl+K for search, F1 for help, Ctrl+Alt+H for high contrast, Ctrl+Alt+F for focus mode');
   }
 
-  announce(message) {
+  announce(message: string): void {
     if (this.announcements) {
       this.announcements.textContent = message;
     }
   }
 
-  alert(message) {
+  alert(message: string): void {
     if (this.alerts) {
       this.alerts.textContent = message;
     }

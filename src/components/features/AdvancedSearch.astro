@@ -32,9 +32,9 @@ const {
 } = Astro.props;
 
 // Generate unique IDs for accessibility
-const searchId = `search-${Math.random().toString(36).substr(2, 9)}`;
-const categoryId = `category-${Math.random().toString(36).substr(2, 9)}`;
-const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
+const searchId = `search-${Math.random().toString(36).slice(2, 11)}`;
+const categoryId = `category-${Math.random().toString(36).slice(2, 11)}`;
+const sortId = `sort-${Math.random().toString(36).slice(2, 11)}`;
 ---
 
 <div class={`advanced-search ${className || ''}`} role="search">
@@ -426,33 +426,35 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
 <script>
   // Progressive enhancement for advanced search functionality
   class AdvancedSearch {
-    private form: HTMLFormElement;
-    private searchInput: HTMLInputElement;
-    private advancedToggle: HTMLButtonElement;
-    private advancedOptions: HTMLElement;
-    private resultsContainer: HTMLElement;
-    private statsContainer: HTMLElement;
+    private form: HTMLFormElement | null = null;
+    private searchInput: HTMLInputElement | null = null;
+    private advancedToggle: HTMLButtonElement | null = null;
+    private advancedOptions: HTMLElement | null = null;
+    private resultsContainer: HTMLElement | null = null;
+    private statsContainer: HTMLElement | null = null;
     private searchData: any[] = [];
 
     constructor() {
       this.init();
     }
 
-    private init() {
-      this.form = document.querySelector('.search-form') as HTMLFormElement;
-      this.searchInput = document.querySelector('.search-input') as HTMLInputElement;
-      this.advancedToggle = document.querySelector('[data-toggle="advanced-options"]') as HTMLButtonElement;
-      this.advancedOptions = document.getElementById('advanced-options') as HTMLElement;
-      this.resultsContainer = document.getElementById('search-results') as HTMLElement;
-      this.statsContainer = document.getElementById('search-stats') as HTMLElement;
+    private init(): void {
+      this.form = document.querySelector('.search-form') as HTMLFormElement | null;
+      this.searchInput = document.querySelector('.search-input') as HTMLInputElement | null;
+      this.advancedToggle = document.querySelector('[data-toggle="advanced-options"]') as HTMLButtonElement | null;
+      this.advancedOptions = document.getElementById('advanced-options') as HTMLElement | null;
+      this.resultsContainer = document.getElementById('search-results') as HTMLElement | null;
+      this.statsContainer = document.getElementById('search-stats') as HTMLElement | null;
 
-      if (!this.form || !this.searchInput) return;
+      if (!this.form || !this.searchInput || !this.resultsContainer || !this.statsContainer) return;
 
       this.setupEventListeners();
       this.loadSearchIndex();
     }
 
-    private setupEventListeners() {
+    private setupEventListeners(): void {
+      if (!this.form || !this.searchInput) return;
+
       // Form submission
       this.form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -464,9 +466,9 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       this.searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
         searchTimeout = window.setTimeout(() => {
-          if (this.searchInput.value.length >= 3) {
+          if (this.searchInput && this.searchInput.value.length >= 3) {
             this.performSearch();
-          } else if (this.searchInput.value.length === 0) {
+          } else if (this.searchInput && this.searchInput.value.length === 0) {
             this.clearResults();
           }
         }, 300);
@@ -484,7 +486,7 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
         link.addEventListener('click', (e) => {
           const target = e.target as HTMLElement;
           const searchTerm = target.getAttribute('data-search');
-          if (searchTerm) {
+          if (searchTerm && this.searchInput) {
             this.searchInput.value = searchTerm;
             this.performSearch();
           }
@@ -498,13 +500,13 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
 
       // Filter changes
       this.form.addEventListener('change', () => {
-        if (this.searchInput.value) {
+        if (this.searchInput && this.searchInput.value) {
           this.performSearch();
         }
       });
     }
 
-    private async loadSearchIndex() {
+    private async loadSearchIndex(): Promise<void> {
       try {
         // In a real implementation, this would load from a search index
         // For now, we'll simulate with local data
@@ -514,7 +516,7 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       }
     }
 
-    private async generateSearchIndex() {
+    private async generateSearchIndex(): Promise<any[]> {
       // Simulate loading search data
       // In production, this would be generated from documentation files
       return [
@@ -566,7 +568,9 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       ];
     }
 
-    private performSearch() {
+    private performSearch(): void {
+      if (!this.form) return;
+
       const startTime = performance.now();
       const formData = new FormData(this.form);
       const query = formData.get('q') as string;
@@ -609,8 +613,8 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
         // Tags filter
         if (tags) {
           const searchTags = tags.toLowerCase().split(',').map(t => t.trim());
-          const hasMatchingTag = searchTags.some(tag =>
-            item.tags.some(itemTag => itemTag.toLowerCase().includes(tag))
+          const hasMatchingTag = searchTags.some((tag: string) =>
+            item.tags.some((itemTag: string) => itemTag.toLowerCase().includes(tag))
           );
           if (!hasMatchingTag) return false;
         }
@@ -625,7 +629,7 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       this.renderResults(results, query, performance.now() - startTime);
     }
 
-    private sortResults(results: any[], sortBy: string, query: string) {
+    private sortResults(results: any[], sortBy: string, query: string): any[] {
       switch (sortBy) {
         case 'date':
           return results.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
@@ -662,7 +666,9 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       return score;
     }
 
-    private renderResults(results: any[], query: string, searchTime: number) {
+    private renderResults(results: any[], query: string, searchTime: number): void {
+      if (!this.statsContainer || !this.resultsContainer) return;
+
       // Show stats
       this.statsContainer.hidden = false;
       const resultsCount = document.getElementById('results-count');
@@ -716,7 +722,7 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       return text.replace(regex, '<mark>$1</mark>');
     }
 
-    private announceResults(count: number) {
+    private announceResults(count: number): void {
       const announcement = `${count} search results found`;
       const announcer = document.createElement('div');
       announcer.setAttribute('aria-live', 'polite');
@@ -728,13 +734,17 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       setTimeout(() => document.body.removeChild(announcer), 1000);
     }
 
-    private toggleAdvancedOptions() {
+    private toggleAdvancedOptions(): void {
+      if (!this.advancedToggle || !this.advancedOptions) return;
+
       const isExpanded = this.advancedToggle.getAttribute('aria-expanded') === 'true';
       this.advancedToggle.setAttribute('aria-expanded', (!isExpanded).toString());
       this.advancedOptions.hidden = isExpanded;
     }
 
-    private clearResults() {
+    private clearResults(): void {
+      if (!this.resultsContainer || !this.statsContainer) return;
+
       this.resultsContainer.innerHTML = `
         <div class="search-placeholder">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="search-icon" aria-hidden="true">
@@ -747,19 +757,21 @@ const sortId = `sort-${Math.random().toString(36).substr(2, 9)}`;
       this.statsContainer.hidden = true;
     }
 
-    private clearFilters() {
+    private clearFilters(): void {
+      if (!this.form || !this.searchInput || !this.advancedToggle || !this.advancedOptions) return;
+
       const form = this.form;
       // Reset all form elements except search input
       const elements = form.elements;
       for (let i = 0; i < elements.length; i++) {
-        const element = elements[i] as HTMLFormElement;
+        const element = elements[i] as HTMLInputElement | HTMLSelectElement | HTMLButtonElement;
         if (element !== this.searchInput) {
-          if (element.type === 'checkbox' || element.type === 'radio') {
-            element.checked = false;
+          if ((element as HTMLInputElement).type === 'checkbox' || (element as HTMLInputElement).type === 'radio') {
+            (element as HTMLInputElement).checked = false;
           } else if (element.tagName === 'SELECT') {
-            element.selectedIndex = 0;
-          } else if (element.type !== 'submit' && element.type !== 'button') {
-            element.value = '';
+            (element as HTMLSelectElement).selectedIndex = 0;
+          } else if ((element as HTMLInputElement).type !== 'submit' && (element as HTMLInputElement).type !== 'button') {
+            (element as HTMLInputElement).value = '';
           }
         }
       }

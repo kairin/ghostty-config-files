@@ -1,16 +1,22 @@
 <!--
 Sync Impact Report:
-- Version change: 1.0.1 → 1.1.0
+- Version change: 1.1.0 → 1.2.0
 - Modified principles:
   * I. uv-First Python Management → I. Terminal Excellence Foundation (expanded scope)
   * II. Static Site Generation Excellence → II. AI-Assisted Productivity (rewritten)
   * III. Local CI/CD First → III. Performance-First Architecture (enhanced)
   * IV. Component-Driven UI → IV. Team Collaboration Excellence (expanded)
   * V. Zero-Cost Deployment → V. Constitutional Preservation (enhanced)
+  * VI. ROOT CAUSE ANALYSIS MANDATE (NEW CRITICAL PRINCIPLE)
 - Added sections:
   * Advanced Terminal Productivity Success Criteria
   * Critical Mandates (Phase-based implementation)
   * Constitutional Violations (FORBIDDEN)
+  * Error Handling Violations (CRITICAL)
+  * Constitutional Error Handling Principles (VI. Root Cause Analysis Mandate)
+  * Direct Problem Resolution Requirements
+  * Forbidden Quick-Fix Patterns
+  * Mandatory Resolution Process
   * Implementation Phases with dependencies
 - Removed sections: None (all foundation preserved)
 - Templates requiring updates:
@@ -144,6 +150,33 @@ All advanced features SHALL maintain zero GitHub Actions consumption and constit
 - ❌ **Compliance Regression**: Reducing overall constitutional compliance score
 - ❌ **Local Validation Bypass**: Deploying advanced features without local validation
 
+### Error Handling Violations (CRITICAL)
+- ❌ **Workaround Solutions**: Creating scripts or bypasses instead of fixing root causes
+- ❌ **Error Masking**: Suppressing errors without understanding underlying problems
+- ❌ **Quick Fixes**: Band-aid solutions that don't address fundamental issues
+- ❌ **Symptom Treatment**: Addressing surface problems while ignoring core defects
+
+## VI. Root Cause Analysis Mandate (CRITICAL)
+
+**RULE**: Fix root causes directly. NO workarounds, bypasses, or quick fixes.
+
+**FORBIDDEN**:
+- `@ts-ignore`, `--no-check`, error suppression
+- Creating scripts to bypass broken functionality
+- Tool switching instead of fixing configuration
+- Any solution that masks the underlying problem
+
+**REQUIRED PROCESS**:
+1. Identify the actual root cause
+2. Fix the root cause directly
+3. Validate the fix works
+4. Document the solution
+
+**EXAMPLES**:
+- TypeScript errors → Fix type declarations, NOT disable checking
+- Build failures → Fix configuration, NOT create alternative build
+- 250+ TypeScript errors → Fix each error properly, NOT bypass with `--no-check`
+
 ## Implementation Phases
 
 ### Phase 1: AI Integration Foundation (READY FOR IMPLEMENTATION)
@@ -180,4 +213,4 @@ For detailed implementation guidance, refer to `spec-kit/SPEC_KIT_INDEX.md` and 
 ### Version Control
 This constitution follows semantic versioning: MAJOR for breaking changes to core principles, MINOR for new principles or significant expansions, PATCH for clarifications and refinements.
 
-**Version**: 1.1.0 | **Ratified**: 2025-01-20 | **Last Amended**: 2025-09-21
+**Version**: 1.2.0 | **Ratified**: 2025-01-20 | **Last Amended**: 2025-09-21
