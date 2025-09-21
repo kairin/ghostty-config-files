@@ -13,6 +13,10 @@ const {
   description = "Constitutional compliance web application with performance optimization",
   showThemeToggle = true
 } = Astro.props;
+
+// Ensure BASE_URL has trailing slash for correct asset paths on GitHub Pages
+const baseUrlRaw = import.meta.env.BASE_URL || '/';
+const base = baseUrlRaw.endsWith('/') ? baseUrlRaw : baseUrlRaw + '/';
 ---
 
 <!DOCTYPE html>
@@ -27,9 +31,9 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Favicon and app icons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate icon" href="/favicon.ico" />
+    <!-- Favicon and app icons (use base URL) -->
+    <link rel="icon" type="image/svg+xml" href={base + 'favicon.svg'} />
+    <link rel="alternate icon" href={base + 'favicon.ico'} />
 
     <!-- SEO and social media meta tags -->
     <meta property="og:title" content={title} />
