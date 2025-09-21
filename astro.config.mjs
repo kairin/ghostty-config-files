@@ -11,8 +11,8 @@ export default defineConfig({
   // Integrations following constitutional requirements
   integrations: [
     tailwind({
-      // Disable base styles to use custom shadcn/ui styles
-      applyBaseStyles: false,
+      // Enable base styles for CSS custom properties
+      applyBaseStyles: true,
     }),
   ],
 
