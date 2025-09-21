@@ -1,0 +1,12 @@
+title: Ghostty Configuration Files
+description: Comprehensive terminal environment setup with 2025 optimizations
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - AGENTS.md
+  - CLAUDE.md
+  - GEMINI.md
