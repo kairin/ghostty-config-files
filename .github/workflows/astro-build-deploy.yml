@@ -1,15 +1,12 @@
-name: Constitutional Astro Build and Deploy (DISABLED - LOCAL CI/CD ONLY)
+name: Constitutional Astro Build and Deploy
 
-# CONSTITUTIONAL REQUIREMENT: Zero GitHub Actions consumption
-# This workflow is DISABLED to enforce local CI/CD execution
-# Use: ./local-infra/runners/gh-workflow-local.sh all
+# GitHub-hosted deployment for reliability
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
-    inputs:
-      force_enable:
-        description: 'Emergency override (violates constitutional requirements)'
-        required: true
-        default: 'never'
 
 permissions:
   contents: read
@@ -23,7 +20,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.force_enable == 'constitutional-override-emergency' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

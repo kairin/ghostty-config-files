@@ -1,11 +1,13 @@
 name: Astro GitHub Pages (Self-Hosted)
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
+    inputs:
+      enable_self_hosted:
+        description: 'Enable self-hosted runner (requires configured runner)'
+        required: true
+        default: 'false'
+        type: boolean
 
 # Set permissions for GitHub Pages deployment
 permissions:
@@ -29,15 +31,9 @@ jobs:
   # Build job using self-hosted runner with proper labeling per GitHub documentation
   build:
     name: Build Astro Site
-    # Use cumulative labels to ensure runner has all required capabilities:
-    # - self-hosted: Use self-hosted infrastructure
-    # - linux: Linux operating system
-    # - x64: x64 architecture
-    # - astro: Custom label for Astro build capability
-    # - nodejs: Custom label for Node.js environment
-    # - ghostty-config: Custom label for this specific project
     runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
     timeout-minutes: 10
+    if: github.event.inputs.enable_self_hosted == 'true'
 
     steps:
       - name: Checkout repository
@@ -127,8 +123,7 @@ jobs:
   # Deploy job - runs after successful build
   deploy:
     name: Deploy to GitHub Pages
-    # Only deploy on push to main branch (not PRs)
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event.inputs.enable_self_hosted == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -149,11 +144,10 @@ jobs:
   # Quality gates and reporting (runs in parallel with deploy)
   quality-gate:
     name: Quality Gate & Reporting
-    # Use same runner configuration as build for consistency
     runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
     needs: build
     timeout-minutes: 5
-    if: always() # Run even if build has warnings
+    if: github.event.inputs.enable_self_hosted == 'true' && always()
 
     steps:
       - name: Download build artifacts
@@ -226,10 +220,9 @@ jobs:
   # Cleanup job (optional, runs after deploy)
   cleanup:
     name: Cleanup Build Artifacts
-    # Use same runner configuration as build for consistency
     runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
     needs: [deploy, quality-gate]
-    if: always() && github.ref == 'refs/heads/main'
+    if: github.event.inputs.enable_self_hosted == 'true' && always()
     timeout-minutes: 2
 
     steps:
