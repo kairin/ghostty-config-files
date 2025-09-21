@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from '../components/ui/ThemeToggle.astro';
+import '../styles/globals.css';
 
 export interface Props {
   title: string;
@@ -122,10 +123,7 @@ const {
       </div>
     </footer>
 
-    <!-- Global styles import -->
-    <style is:global>
-      @import "../styles/globals.css";
-    </style>
+    <!-- Global styles imported in frontmatter -->
 
     <!-- Theme detection and initialization -->
     <script>
