@@ -1,0 +1,49 @@
+title: Ghostty Configuration Files
+description: Comprehensive terminal environment setup with 2025 optimizations and AI integration
+theme: jekyll-theme-minimal
+baseurl: "/ghostty-config-files"
+url: "https://USERNAME.github.io"
+
+# Enable plugins
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-default-layout
+
+# Configure relative links
+relative_links:
+  enabled: true
+  collections: true
+
+# Default layouts
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# Include assets
+include:
+  - assets/
+
+# Exclude development files
+exclude:
+  - node_modules/
+  - .git/
+  - .gitignore
+  - local-infra/
+  - scripts/
+  - configs/
+
+# Markdown configuration
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true

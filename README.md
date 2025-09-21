@@ -2,12 +2,20 @@
 
 > 🏛️ **Constitutional Compliance**: Zero GitHub Actions consumption • Local CI/CD only • Performance validated • User customization preserved
 
-## 🚀 **Latest Implementation (2025-09-21 16:18)**
+## 🚀 **Latest Implementation (2025-09-21 16:22)**
 
-### ⚡ **NEW: Comprehensive Tech Stack Upgrade v3.1.0**
-**Branch**: `main` | **Status**: ✅ COMPLETE | **Performance**: 3.5x faster builds
+### ⚡ **NEW: Installation Session & Visual Documentation v3.1.1**
+**Session**: `20250921-162207-ghostty-install` | **Status**: ✅ COMPLETE | **Screenshots**: 16 SVG captures
 
-#### **🆕 Major Technology Upgrades**
+#### **📸 Latest Session Visual Assets**
+- **Process Diagram**: [`docs/assets/diagrams/20250921-162207/diagram_20250921-162207_Ghostty_Installation_Process.svg`](docs/assets/diagrams/20250921-162207/diagram_20250921-162207_Ghostty_Installation_Process.svg)
+- **Complete Screenshot Gallery**: 16 installation stages captured as SVG with PNG thumbnails
+  - System Check → Dependencies → ZSH Setup → Modern Tools → Configuration
+  - Context Menu → Ptyxis Terminal → uv Package Manager → Node.js → AI Tools
+  - Verification → Completion with real-time performance metrics
+- **Session Logs**: `/tmp/ghostty-start-logs/20250921-162207-ghostty-install.*` (comprehensive tracking)
+
+#### **🆕 Major Technology Upgrades (v3.1.0)**
 - **Tailwind CSS v4.1.13**: Latest architecture with 3.5x faster builds
 - **Astro v5.13.9**: Latest stable with enhanced performance
 - **shadcn/ui CLI 3.0**: Modern component management system
@@ -101,21 +109,32 @@ Each `./start.sh` execution creates a unique session with perfect log-to-screens
 **Session ID Format**: `YYYYMMDD-HHMMSS-TERMINAL-install`
 
 ```bash
-# Example sessions:
-20250921-143000-ghostty-install  # Run in Ghostty terminal
-20250921-150000-ptyxis-install   # Run in Ptyxis terminal
+# Latest session (example):
+20250921-162207-ghostty-install  # Most recent: 61 seconds, 16 screenshots, 0 errors
+
+# Previous sessions:
+20250921-153829-ghostty-install  # Earlier session: 65 seconds, 16 screenshots
+20250921-143000-ghostty-install  # Historical reference
 
 # Manage sessions:
 ./scripts/session_manager.sh list      # View all sessions
-./scripts/session_manager.sh show <id> # Detailed session info
+./scripts/session_manager.sh show 20250921-162207-ghostty-install # Detailed session info
 ./scripts/session_manager.sh compare   # Compare executions
 ./scripts/session_manager.sh cleanup   # Clean old sessions
 ```
 
-### 📁 **Asset Organization**
+### 📁 **Asset Organization (Latest Session)**
 ```
-/tmp/ghostty-start-logs/20250921-143000-ghostty-install.*  # All logs
-docs/assets/screenshots/20250921-143000-ghostty-install/   # All SVG screenshots
+# Latest session assets:
+/tmp/ghostty-start-logs/20250921-162207-ghostty-install.*  # All logs (46KB total)
+docs/assets/screenshots/20250921-162207-ghostty-install/   # 16 SVG screenshots + metadata
+docs/assets/diagrams/20250921-162207/                     # Process flow diagram
+
+# Asset details:
+20250921-162207-ghostty-install.log                       # Main log (22.2KB)
+20250921-162207-ghostty-install.json                      # Structured data (18.3KB)
+20250921-162207-ghostty-install-commands.log              # Command outputs (9.4KB)
+20250921-162207-ghostty-install-manifest.json             # Session metadata (4.3KB)
 ```
 
 ### 🏛️ **Advanced Installation Features**
