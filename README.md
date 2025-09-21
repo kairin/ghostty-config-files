@@ -8,7 +8,7 @@
 **Session**: `20250921-162207-ghostty-install` | **Status**: ✅ COMPLETE | **Screenshots**: 16 SVG captures
 
 #### **📸 Latest Session Visual Assets**
-- **Process Diagram**: [`docs/assets/diagrams/20250921-162207/diagram_20250921-162207_Ghostty_Installation_Process.svg`](docs/assets/diagrams/20250921-162207/diagram_20250921-162207_Ghostty_Installation_Process.svg)
+- **Process Diagram**: [`documentations/assets/diagrams/20250921-164227/diagram_20250921-164227_Ghostty_Installation_Process.svg`](documentations/assets/diagrams/20250921-164227/diagram_20250921-164227_Ghostty_Installation_Process.svg)
 - **Complete Screenshot Gallery**: 16 installation stages captured as SVG with PNG thumbnails
   - System Check → Dependencies → ZSH Setup → Modern Tools → Configuration
   - Context Menu → Ptyxis Terminal → uv Package Manager → Node.js → AI Tools
@@ -44,7 +44,7 @@
 #### **📁 Asset Organization (NEW)**
 ```
 /tmp/ghostty-start-logs/20250921-153000-ghostty-install.*  # All logs
-docs/assets/screenshots/20250921-153000-ghostty-install/   # All SVG screenshots
+documentations/assets/screenshots/20250921-153000-ghostty-install/   # All SVG screenshots
 ```
 
 ---
@@ -91,17 +91,23 @@ cd ghostty-config-files
 - ✅ Builds complete GitHub Pages website
 - ✅ Handles multiple executions safely
 
-#### 📸 **View Your Installation Documentation**
-After installation completes, view your personalized documentation:
-```bash
-# View the generated website locally
-open docs/index.html              # macOS
-xdg-open docs/index.html          # Linux
+#### 🌐 **Astro Web Application + Documentation**
+After installation, access both the modern web dashboard and reference materials:
 
-# Or explore your installation gallery
-ls docs/assets/screenshots/       # All screenshot sessions
-cat /tmp/ghostty-start-logs/*.log # View installation logs
+```bash
+# 🚀 Astro Web Application (GitHub Pages)
+open docs/index.html              # macOS - Performance dashboard & CI/CD status
+xdg-open docs/index.html          # Linux - Real-time metrics & constitutional compliance
+
+# 📚 Installation Documentation (Reference Materials)
+open documentations/installation.md          # Step-by-step installation guide
+ls documentations/assets/screenshots/        # All screenshot sessions (SVG + PNG)
+cat /tmp/ghostty-start-logs/*.log           # Complete installation logs
 ```
+
+#### 🚨 **CRITICAL: Documentation Structure (v3.2.0)**
+- **`docs/`** → **Astro web application** (GitHub Pages deployment)
+- **`documentations/`** → **Installation guides, screenshots, manuals** (reference materials)
 
 ### 🎯 **Session Management** (NEW)
 Each `./start.sh` execution creates a unique session with perfect log-to-screenshot mapping:
@@ -127,8 +133,8 @@ Each `./start.sh` execution creates a unique session with perfect log-to-screens
 ```
 # Latest session assets:
 /tmp/ghostty-start-logs/20250921-162207-ghostty-install.*  # All logs (46KB total)
-docs/assets/screenshots/20250921-162207-ghostty-install/   # 16 SVG screenshots + metadata
-docs/assets/diagrams/20250921-162207/                     # Process flow diagram
+documentations/assets/screenshots/20250921-164227-ghostty-install/   # 16 SVG screenshots + metadata
+documentations/assets/diagrams/20250921-164227/                     # Process flow diagram
 
 # Asset details:
 20250921-162207-ghostty-install.log                       # Main log (22.2KB)
@@ -366,15 +372,19 @@ gh api user/settings/billing/actions | jq '.total_paid_minutes_used'
 ## 📚 Documentation
 
 ### Core Documentation
-- [Constitutional Requirements](docs/constitutional/README.md)
-- [Performance Guide](docs/performance/README.md)
-- [API Documentation](docs/api/README.md)
-- [Development Guide](docs/guides/development.md)
+- [Constitutional Requirements](documentations/constitutional/README.md)
+- [Performance Guide](documentations/performance/README.md)
+- [API Documentation](documentations/api/README.md)
+- [Development Guide](documentations/guides/development.md)
 
 ### Generated Documentation
-- [Component Documentation](docs/api/components/)
-- [Script Documentation](docs/api/scripts/)
-- [Performance Reports](docs/performance/)
+- [Component Documentation](documentations/api/components/)
+- [Script Documentation](documentations/api/scripts/)
+- [Performance Reports](documentations/performance/)
+
+### 🚨 CRITICAL: Documentation Structure
+- **`docs/`** - **Astro.build web application** → GitHub Pages deployment
+- **`documentations/`** - **Installation guides, screenshots, manuals** → reference materials
 
 ## 🔧 Troubleshooting
 

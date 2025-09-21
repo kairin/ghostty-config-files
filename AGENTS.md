@@ -343,32 +343,33 @@ EOF
 #!/bin/bash
 
 setup_github_pages() {
-    echo "📄 Setting up zero-cost GitHub Pages..."
+    echo "📄 Setting up zero-cost GitHub Pages with Astro..."
 
-    # Create documentation directory
-    mkdir -p docs/
+    # Ensure Astro build output directory exists
+    if [ ! -d "docs/" ]; then
+        echo "❌ docs/ directory not found. Run Astro build first:"
+        echo "   npx astro build"
+        return 1
+    fi
 
-    # Copy README as index
-    cp README.md docs/index.md
-
-    # Create simple GitHub Pages config
-    cat > docs/_config.yml << EOF
-title: Ghostty Configuration Files
-description: Comprehensive terminal environment setup with 2025 optimizations
-theme: jekyll-theme-minimal
-plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: true
-EOF
-
-    # Test local Jekyll build (if available)
-    if command -v jekyll >/dev/null 2>&1; then
-        cd docs && jekyll build --destination _site_test
-        echo "✅ Local Jekyll build successful"
+    # Configure GitHub Pages to serve from docs/ folder
+    if command -v gh >/dev/null 2>&1; then
+        echo "🔧 Configuring GitHub Pages deployment..."
+        gh api repos/:owner/:repo --method PATCH \
+            --field source[branch]=main \
+            --field source[path]="/docs"
+        echo "✅ GitHub Pages configured to serve from docs/ folder"
     else
-        echo "ℹ️ Jekyll not available, skipping local build test"
+        echo "ℹ️ GitHub CLI not available, configure Pages manually:"
+        echo "   Settings → Pages → Source: Deploy from a branch → main → /docs"
+    fi
+
+    # Verify Astro build output
+    if [ -f "docs/index.html" ]; then
+        echo "✅ Astro build output verified in docs/"
+    else
+        echo "❌ No index.html found in docs/. Run: npx astro build"
+        return 1
     fi
 }
 ```
@@ -380,7 +381,7 @@ EOF
 ### Requirements
 - **Complete Logs**: Save entire conversation from start to finish
 - **Exclude Sensitive Data**: Remove API keys, passwords, personal information
-- **Storage Location**: `docs/development/conversation_logs/`
+- **Storage Location**: `documentations/development/conversation_logs/`
 - **Naming Convention**: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
 - **System State**: Capture before/after system states for debugging
 - **CI/CD Logs**: Include local workflow execution logs
@@ -388,14 +389,14 @@ EOF
 ### Example Workflow
 ```bash
 # After completing work, save conversation log and system state
-mkdir -p docs/development/conversation_logs/
-cp /path/to/conversation.md docs/development/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
+mkdir -p documentations/development/conversation_logs/
+cp /path/to/conversation.md documentations/development/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
 
 # Capture system state and CI/CD logs
-cp /tmp/ghostty-start-logs/system_state_*.json docs/development/system_states/
-cp ./local-infra/logs/* docs/development/ci_cd_logs/
+cp /tmp/ghostty-start-logs/system_state_*.json documentations/development/system_states/
+cp ./local-infra/logs/* documentations/development/ci_cd_logs/
 
-git add docs/development/
+git add documentations/development/
 git commit -m "Add conversation log, system state, and CI/CD logs for local infrastructure setup"
 ```
 
@@ -467,6 +468,10 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 - [README.md](README.md) - User documentation and quick start guide
 - [CLAUDE.md](CLAUDE.md) - Claude Code integration details (symlink to this file)
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration details (symlink to this file)
+
+### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
+- **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (DO NOT manually edit)
+- **`documentations/`** - **All other documentation** → installation guides, screenshots, manuals, specs
 
 ### 🎯 Spec-Kit Development Guides
 For implementing modern web development stacks with local CI/CD:

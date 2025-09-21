@@ -3,8 +3,8 @@
     "bradlc.vscode-tailwindcss"
     ,"editorconfig.editorconfig"
     ,"esbenp.prettier-vscode"
-    ,"formulahendry.auto-rename-tag"
-    ,"github.codespaces"
+    ,
+    "github.codespaces"
     ,"github.copilot"
     ,"github.copilot-chat"
     ,"github.remotehub"
