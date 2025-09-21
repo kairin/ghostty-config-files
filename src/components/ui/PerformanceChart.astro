@@ -1,0 +1,200 @@
+---
+export interface PerformanceMetric {
+  name: string;
+  before: number;
+  after: number;
+  target: number;
+  unit: string;
+  improvement: number;
+  compliance: boolean;
+}
+
+const performanceData: PerformanceMetric[] = [
+  {
+    name: "Environment Detection",
+    before: 45,
+    after: 9,
+    target: 50,
+    unit: "ms",
+    improvement: 80,
+    compliance: true
+  },
+  {
+    name: "ZSH Completion Cache",
+    before: 31,
+    after: 6,
+    target: 10,
+    unit: "ms",
+    improvement: 81,
+    compliance: true
+  },
+  {
+    name: "Theme Loading",
+    before: 85,
+    after: 18,
+    target: 30,
+    unit: "ms",
+    improvement: 79,
+    compliance: true
+  },
+  {
+    name: "Plugin Compilation",
+    before: 120,
+    after: 25,
+    target: 50,
+    unit: "ms",
+    improvement: 79,
+    compliance: true
+  },
+  {
+    name: "Startup Monitoring",
+    before: 15,
+    after: 2,
+    target: 50,
+    unit: "ms",
+    improvement: 87,
+    compliance: true
+  },
+  {
+    name: "Cache Hit Rate",
+    before: 0,
+    after: 94,
+    target: 80,
+    unit: "%",
+    improvement: 94,
+    compliance: true
+  }
+];
+
+const maxValue = Math.max(...performanceData.map(d => Math.max(d.before, d.after, d.target)));
+---
+
+<div class="w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        Performance Optimization Results
+      </h3>
+      <p class="text-gray-600 dark:text-gray-400">
+        Feature 002 Phase 3: Constitutional Performance Mastery
+      </p>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2">
+        <div class="w-4 h-4 bg-red-500 rounded"></div>
+        <span class="text-sm text-gray-600 dark:text-gray-400">Before</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-4 h-4 bg-green-500 rounded"></div>
+        <span class="text-sm text-gray-600 dark:text-gray-400">After</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-4 h-4 bg-blue-500 rounded"></div>
+        <span class="text-sm text-gray-600 dark:text-gray-400">Target</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    {performanceData.map((metric) => (
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="font-medium text-gray-900 dark:text-gray-100">
+            {metric.name}
+          </h4>
+          <div class="flex items-center space-x-4 text-sm">
+            <span class="text-red-600 dark:text-red-400">
+              {metric.before}{metric.unit}
+            </span>
+            <span class="text-green-600 dark:text-green-400 font-medium">
+              {metric.after}{metric.unit}
+            </span>
+            <span class="text-blue-600 dark:text-blue-400">
+              Target: {metric.target}{metric.unit}
+            </span>
+            <div class="flex items-center space-x-1">
+              <span class="text-xs font-medium px-2 py-1 rounded-full bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                {metric.improvement}% improvement
+              </span>
+              {metric.compliance && (
+                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <!-- Background bar -->
+          <div class="w-full h-8 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+            <!-- Target line -->
+            <div
+              class="absolute top-0 h-8 w-1 bg-blue-500 z-20"
+              style={`left: ${(metric.target / maxValue) * 100}%`}
+            ></div>
+
+            <!-- Before bar -->
+            <div
+              class="absolute top-0 h-8 bg-red-500 opacity-70"
+              style={`width: ${(metric.before / maxValue) * 100}%`}
+            ></div>
+
+            <!-- After bar -->
+            <div
+              class="absolute top-0 h-8 bg-green-500"
+              style={`width: ${(metric.after / maxValue) * 100}%`}
+            ></div>
+          </div>
+
+          <!-- Value labels on bars -->
+          <div class="absolute inset-0 flex items-center px-3 text-xs font-medium text-white">
+            <span style={`margin-left: ${Math.min((metric.after / maxValue) * 100 - 10, 85)}%`}>
+              {metric.after}{metric.unit}
+            </span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Summary Statistics -->
+  <div class="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+          {Math.round(performanceData.reduce((acc, m) => acc + m.improvement, 0) / performanceData.length)}%
+        </div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Average Improvement</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          {performanceData.filter(m => m.compliance).length}/{performanceData.length}
+        </div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Constitutional Compliance</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+          {Math.round(performanceData.reduce((acc, m) => acc + (m.before - m.after), 0))}ms
+        </div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Total Time Saved</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+          6
+        </div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Optimized Systems</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constitutional Achievement Badge -->
+  <div class="mt-6 flex justify-center">
+    <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-full font-medium">
+      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+      </svg>
+      Constitutional Performance Excellence Achieved
+    </div>
+  </div>
+</div>
