@@ -196,7 +196,7 @@ const complianceStatus = [
 
         <!-- CTA Buttons -->
         <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Button id="local-cicd-btn" size="lg" class="h-12 px-8 text-base font-semibold">
+          <Button data-id="local-cicd-btn" size="lg" class="h-12 px-8 text-base font-semibold">
             🚀 View Local CI/CD
           </Button>
           <a href="/ghostty-config-files/dashboard">
@@ -204,7 +204,7 @@ const complianceStatus = [
               📊 Performance Dashboard
             </Button>
           </a>
-          <Button id="constitutional-compliance-btn" variant="secondary" size="lg" class="h-12 px-8 text-base">
+          <Button data-id="constitutional-compliance-btn" variant="secondary" size="lg" class="h-12 px-8 text-base">
             🔧 Constitutional Compliance
           </Button>
         </div>
@@ -643,7 +643,7 @@ const complianceStatus = [
     }
 
     // Add keyboard navigation for accessibility
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === 'Tab') {
         document.body.classList.add('focus-visible');
       }
@@ -656,17 +656,18 @@ const complianceStatus = [
     // Interactive button handlers
     document.addEventListener('DOMContentLoaded', () => {
       // Local CI/CD button handler
-      const localCicdBtn = document.getElementById('local-cicd-btn');
+      const localCicdBtn = document.querySelector('[data-id="local-cicd-btn"]') as HTMLButtonElement;
       if (localCicdBtn) {
         localCicdBtn.addEventListener('click', async () => {
           try {
             // Update button state
-            const originalText = localCicdBtn.textContent;
+            // const originalText = localCicdBtn.textContent;
             localCicdBtn.textContent = '🔄 Running Local CI/CD...';
             localCicdBtn.setAttribute('disabled', 'true');
 
             // Show modal or run CI/CD process
-            const response = await showLocalCicdModal();
+            // const response = await showLocalCicdModal();
+            await showLocalCicdModal();
 
             // Announce to screen readers
             announceToScreenReader('Local CI/CD workflow triggered');
@@ -676,19 +677,21 @@ const complianceStatus = [
             announceToScreenReader('Local CI/CD workflow failed');
           } finally {
             // Reset button
-            localCicdBtn.textContent = '🚀 View Local CI/CD';
-            localCicdBtn.removeAttribute('disabled');
+            if (localCicdBtn) {
+              localCicdBtn.textContent = '🚀 View Local CI/CD';
+              localCicdBtn.removeAttribute('disabled');
+            }
           }
         });
       }
 
       // Constitutional Compliance button handler
-      const complianceBtn = document.getElementById('constitutional-compliance-btn');
+      const complianceBtn = document.querySelector('[data-id="constitutional-compliance-btn"]') as HTMLButtonElement;
       if (complianceBtn) {
         complianceBtn.addEventListener('click', async () => {
           try {
             // Update button state
-            const originalText = complianceBtn.textContent;
+            // const originalText = complianceBtn.textContent;
             complianceBtn.textContent = '🔍 Checking Compliance...';
             complianceBtn.setAttribute('disabled', 'true');
 
@@ -706,15 +709,17 @@ const complianceStatus = [
             announceToScreenReader('Constitutional compliance check failed');
           } finally {
             // Reset button
-            complianceBtn.textContent = '🔧 Constitutional Compliance';
-            complianceBtn.removeAttribute('disabled');
+            if (complianceBtn) {
+              complianceBtn.textContent = '🔧 Constitutional Compliance';
+              complianceBtn.removeAttribute('disabled');
+            }
           }
         });
       }
     });
 
     // Helper function for screen reader announcements
-    function announceToScreenReader(message) {
+    function announceToScreenReader(message: string) {
       const announcement = document.createElement('div');
       announcement.setAttribute('aria-live', 'polite');
       announcement.setAttribute('aria-atomic', 'true');
@@ -730,11 +735,11 @@ const complianceStatus = [
     }
 
     // Execute actual local CI/CD commands
-    async function executeLocalCicdCommand(actionType) {
+    async function executeLocalCicdCommand(actionType: string) {
       const startTime = Date.now();
 
       // Command mapping to actual local CI/CD scripts
-      const commands = {
+      const commands: Record<string, string> = {
         validate: 'ghostty +show-config',
         performance: './local-infra/runners/performance-monitor.sh --test',
         build: 'npx astro build --dry-run || echo "Build simulation completed"',
@@ -810,7 +815,7 @@ const complianceStatus = [
         const actualDuration = `${Math.round(endTime - startTime)}ms`;
 
         throw {
-          message: error.message || 'Command execution failed',
+          message: (error as Error).message || 'Command execution failed',
           duration: actualDuration,
           command: command,
           exitCode: 1
@@ -877,7 +882,7 @@ const complianceStatus = [
           resolve(true);
         });
 
-        overlay.addEventListener('click', (e) => {
+        overlay.addEventListener('click', (e: Event) => {
           if (e.target === overlay) {
             document.body.removeChild(overlay);
             resolve(true);
@@ -889,30 +894,36 @@ const complianceStatus = [
         actions.forEach(action => {
           action.addEventListener('click', async () => {
             const actionType = action.getAttribute('data-action');
-            const output = modal.querySelector('#cicd-output');
-            output?.classList.remove('hidden');
-            output.innerHTML = `<div class="text-blue-600">🔄 Running ${actionType} workflow...</div>`;
+            const output = modal.querySelector('#cicd-output') as HTMLElement;
+            if (output) {
+              output.classList.remove('hidden');
+              output.innerHTML = `<div class="text-blue-600">🔄 Running ${actionType} workflow...</div>`;
+            }
 
             try {
               // Execute real CI/CD commands
-              const result = await executeLocalCicdCommand(actionType);
-              output.innerHTML = `
-                <div class="text-green-600">✅ ${actionType} workflow completed successfully!</div>
-                <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
-                  Duration: ${result.duration} | Status: ${result.status}
-                </div>
-                ${result.output ? `<pre class="mt-2 text-xs bg-gray-800 text-green-400 p-2 rounded overflow-x-auto">${result.output}</pre>` : ''}
-              `;
+              const result = await executeLocalCicdCommand(actionType!);
+              if (output) {
+                output.innerHTML = `
+                  <div class="text-green-600">✅ ${actionType} workflow completed successfully!</div>
+                  <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                    Duration: ${result.duration} | Status: ${result.status}
+                  </div>
+                  ${result.output ? `<pre class="mt-2 text-xs bg-gray-800 text-green-400 p-2 rounded overflow-x-auto">${result.output}</pre>` : ''}
+                `;
+              }
 
               // Announce completion to screen readers
               announceToScreenReader(`${actionType} workflow completed successfully`);
 
             } catch (error) {
               console.error(`${actionType} workflow failed:`, error);
-              output.innerHTML = `
-                <div class="text-red-600">❌ ${actionType} workflow failed</div>
-                <div class="mt-2 text-xs text-red-400">${error.message || 'Unknown error occurred'}</div>
-              `;
+              if (output) {
+                output.innerHTML = `
+                  <div class="text-red-600">❌ ${actionType} workflow failed</div>
+                  <div class="mt-2 text-xs text-red-400">${(error as Error).message || 'Unknown error occurred'}</div>
+                `;
+              }
 
               // Announce failure to screen readers
               announceToScreenReader(`${actionType} workflow failed`);
@@ -921,7 +932,7 @@ const complianceStatus = [
         });
 
         // Escape key handler
-        const handleEscape = (e) => {
+        const handleEscape = (e: KeyboardEvent) => {
           if (e.key === 'Escape') {
             document.body.removeChild(overlay);
             document.removeEventListener('keydown', handleEscape);
@@ -980,7 +991,7 @@ const complianceStatus = [
         return {
           score: 0,
           checks: [
-            { name: 'Compliance Check Failed', status: 'failed', details: error.message || 'Unknown error' }
+            { name: 'Compliance Check Failed', status: 'failed', details: (error as Error).message || 'Unknown error' }
           ],
           duration: `${Date.now() - startTime}ms`,
           timestamp: new Date().toISOString()
@@ -1037,7 +1048,7 @@ const complianceStatus = [
 
           // First Contentful Paint check
           const fcpEntries = performance.getEntriesByName('first-contentful-paint');
-          if (fcpEntries.length > 0 && fcpEntries[0].startTime > 1500) {
+          if (fcpEntries.length > 0 && fcpEntries[0]?.startTime && fcpEntries[0].startTime > 1500) {
             performanceScore -= 5;
           }
         }
@@ -1058,8 +1069,8 @@ const complianceStatus = [
       await new Promise(resolve => setTimeout(resolve, 250));
 
       // Check if local CI/CD infrastructure is accessible
-      const hasLocalInfra = window.location.pathname.includes('ghostty-config-files') ||
-                           document.querySelector('[href*="local-infra"]') !== null;
+      // const hasLocalInfra = window.location.pathname.includes('ghostty-config-files') ||
+      //                      document.querySelector('[href*="local-infra"]') !== null;
 
       return {
         name: 'Local CI/CD Infrastructure',
@@ -1074,7 +1085,7 @@ const complianceStatus = [
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // Check branch preservation strategy
-      const currentBranch = window.location.search.includes('branch=') ? 'feature-branch' : 'main';
+      // const currentBranch = window.location.search.includes('branch=') ? 'feature-branch' : 'main';
 
       return {
         name: 'Branch Preservation Strategy',
@@ -1111,7 +1122,7 @@ const complianceStatus = [
     }
 
     // Compliance modal function
-    function showComplianceModal(report) {
+    function showComplianceModal(report: any) {
       // Create modal overlay
       const overlay = document.createElement('div');
       overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
@@ -1120,7 +1131,7 @@ const complianceStatus = [
       const modal = document.createElement('div');
       modal.className = 'bg-white dark:bg-gray-950 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-auto shadow-2xl';
 
-      const checksHtml = report.checks.map(check => `
+      const checksHtml = report.checks.map((check: any) => `
         <div class="flex items-center justify-between p-3 border rounded-lg">
           <div>
             <div class="font-medium">${check.name}</div>
@@ -1167,14 +1178,14 @@ const complianceStatus = [
         });
       });
 
-      overlay.addEventListener('click', (e) => {
+      overlay.addEventListener('click', (e: Event) => {
         if (e.target === overlay) {
           document.body.removeChild(overlay);
         }
       });
 
       // Escape key handler
-      const handleEscape = (e) => {
+      const handleEscape = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
           document.body.removeChild(overlay);
           document.removeEventListener('keydown', handleEscape);
