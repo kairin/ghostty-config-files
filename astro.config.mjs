@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   // GitHub Pages deployment configuration
   site: 'https://kairin.github.io',
-  // base: '/ghostty-config-files', // Commented out for local development
+  base: '/ghostty-config-files',
 
   // Integrations following constitutional requirements
   integrations: [
