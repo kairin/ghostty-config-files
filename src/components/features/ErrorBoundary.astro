@@ -24,7 +24,7 @@ const {
 } = Astro.props;
 
 // Generate unique ID for error boundary
-const boundaryId = `error-boundary-${Math.random().toString(36).substr(2, 9)}`;
+const boundaryId = `error-boundary-${Math.random().toString(36).slice(2, 11)}`;
 ---
 
 <div
@@ -797,7 +797,7 @@ const boundaryId = `error-boundary-${Math.random().toString(36).substr(2, 9)}`;
       return false;
     }
 
-    private handleError(error: Error, event?: any) {
+    private handleError(error: Error, event?: ErrorEvent | PromiseRejectionEvent) {
       this.errorCount++;
 
       console.error('Error boundary caught error:', error);
@@ -812,7 +812,11 @@ const boundaryId = `error-boundary-${Math.random().toString(36).substr(2, 9)}`;
         level: this.errorLevel,
         count: this.errorCount,
         userAgent: navigator.userAgent,
-        url: window.location.href
+        url: window.location.href,
+        eventType: event?.type || 'unknown',
+        filename: (event as ErrorEvent)?.filename || 'unknown',
+        lineno: (event as ErrorEvent)?.lineno || 0,
+        colno: (event as ErrorEvent)?.colno || 0
       };
 
       // Update error display
@@ -881,6 +885,11 @@ const boundaryId = `error-boundary-${Math.random().toString(36).substr(2, 9)}`;
     }
 
     private retryComponent() {
+      if (!this.retryEnabled) {
+        this.showNotification('Retry is disabled for this component.', 'warning');
+        return;
+      }
+
       if (this.errorCount >= this.maxRetries) {
         this.showNotification('Maximum retry attempts reached. Please reload the page.', 'warning');
         return;
@@ -1018,7 +1027,7 @@ const boundaryId = `error-boundary-${Math.random().toString(36).substr(2, 9)}`;
     }
 
     private generateErrorId(): string {
-      return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      return `err_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     }
 
     private announceError(errorInfo: any) {

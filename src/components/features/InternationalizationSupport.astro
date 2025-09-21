@@ -359,16 +359,39 @@ const {
   class: className = ''
 } = Astro.props;
 
-// Get current locale configuration
-const currentLocaleConfig = supportedLocales.find(locale => locale.code === currentLocale) || supportedLocales[0];
+// Get current locale configuration with constitutional fallback
+const defaultLocaleConfig: LocaleConfig = {
+  code: 'en-US',
+  name: 'English (US)',
+  nativeName: 'English',
+  direction: 'ltr',
+  region: 'Americas',
+  flag: '🇺🇸'
+};
+
+const currentLocaleConfig = supportedLocales.find(locale => locale.code === currentLocale) ||
+                           supportedLocales[0] ||
+                           defaultLocaleConfig;
 const isRTL = currentLocaleConfig.direction === 'rtl';
 
-// Get current translations
-const currentTranslations = translations[currentLocale] || translations['en-US'];
+// Get current translations with constitutional fallback
+const defaultTranslations: Record<string, string> = {
+  'i18n.currentLanguage': 'Current Language',
+  'i18n.translated': 'translated',
+  'i18n.switchLanguage': 'Switch Language',
+  'i18n.selectLanguage': 'Select Language'
+};
+
+const currentTranslations = translations[currentLocale] ||
+                           translations['en-US'] ||
+                           defaultTranslations;
 
 // Translation helper function
 function t(key: string, params?: Record<string, string>): string {
-  let translation = currentTranslations[key] || translations['en-US'][key] || key;
+  let translation = currentTranslations[key] ||
+                   (translations['en-US'] && translations['en-US'][key]) ||
+                   defaultTranslations[key] ||
+                   key;
 
   // Replace parameters
   if (params) {
