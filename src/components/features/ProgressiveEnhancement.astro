@@ -86,7 +86,7 @@ const {
       fallback: 'CSS-only transitions'
     }
   ],
-  enableAnalytics = false,
+  // enableAnalytics removed - constitutional compliance (unused)
   performanceThresholds = {
     js: 100, // KB
     css: 50, // KB
@@ -431,10 +431,15 @@ const isPerformanceCompliant =
 
 <script>
 class ProgressiveEnhancement {
+  // Constitutional property declarations
+  private features: Map<string, any>;
+  private statusLog: Array<string>;
+  private statusLogElement: HTMLElement | null;
+
   constructor() {
     this.features = new Map();
-    this.performanceMonitor = null;
     this.statusLog = [];
+    this.statusLogElement = null;
 
     this.init();
   }
@@ -456,20 +461,26 @@ class ProgressiveEnhancement {
     const toggles = document.querySelectorAll('.feature-checkbox');
 
     toggles.forEach(toggle => {
-      const featureId = toggle.dataset.feature;
+      // Constitutional type safety for dataset access
+      const toggleElement = toggle as HTMLElement;
+      const featureId = toggleElement.dataset?.feature;
       const card = toggle.closest('.feature-card');
 
-      // Set initial state
-      this.features.set(featureId, {
-        enabled: toggle.checked,
-        element: card,
-        toggle: toggle
-      });
+      // Set initial state with constitutional null safety
+      if (featureId) {
+        const toggleInput = toggle as HTMLInputElement;
+        this.features.set(featureId, {
+          enabled: toggleInput.checked,
+          element: card,
+          toggle: toggle
+        });
 
-      // Handle toggle changes
-      toggle.addEventListener('change', (e) => {
-        this.toggleFeature(featureId, e.target.checked);
-      });
+        // Handle toggle changes
+        toggle.addEventListener('change', (e) => {
+          const target = e.target as HTMLInputElement;
+          this.toggleFeature(featureId, target.checked);
+        });
+      }
     });
   }
 
@@ -478,19 +489,25 @@ class ProgressiveEnhancement {
 
     testButtons.forEach(button => {
       button.addEventListener('click', (e) => {
-        const featureId = e.target.dataset.feature;
-        this.testFeature(featureId);
+        // Constitutional type safety for dataset access
+        const target = e.target as HTMLElement;
+        const featureId = target.dataset?.feature;
+        if (featureId) {
+          this.testFeature(featureId);
+        }
       });
     });
   }
 
   setupPerformanceMonitoring() {
     if ('PerformanceObserver' in window) {
-      // Monitor LCP
+      // Monitor LCP with constitutional null safety
       const lcpObserver = new PerformanceObserver((entryList) => {
         const entries = entryList.getEntries();
         const lastEntry = entries[entries.length - 1];
-        this.updatePerformanceMetric('lcp', lastEntry.startTime / 1000);
+        if (lastEntry && 'startTime' in lastEntry) {
+          this.updatePerformanceMetric('lcp', lastEntry.startTime / 1000);
+        }
       });
 
       try {
@@ -499,12 +516,14 @@ class ProgressiveEnhancement {
         console.warn('LCP monitoring not supported');
       }
 
-      // Monitor CLS
+      // Monitor CLS with constitutional type safety
       const clsObserver = new PerformanceObserver((entryList) => {
         let clsValue = 0;
         entryList.getEntries().forEach(entry => {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
+          // Constitutional type casting for layout shift entries
+          const layoutShift = entry as any;
+          if (layoutShift.hadRecentInput !== undefined && !layoutShift.hadRecentInput) {
+            clsValue += layoutShift.value || 0;
           }
         });
         this.updatePerformanceMetric('cls', clsValue);
@@ -519,7 +538,7 @@ class ProgressiveEnhancement {
   }
 
   setupLiveUpdates() {
-    const statusLog = document.querySelector('.status-log');
+    const statusLog = document.querySelector('.status-log') as HTMLElement;
     if (statusLog) {
       this.statusLogElement = statusLog;
     }
@@ -532,16 +551,18 @@ class ProgressiveEnhancement {
     const runAllBtn = document.querySelector('.run-all-tests-btn');
 
     if (jsTestInput && testOutput) {
-      // Real-time enhancement testing
+      // Real-time enhancement testing with constitutional type safety
       jsTestInput.addEventListener('input', (e) => {
-        const value = e.target.value;
-        this.demonstrateEnhancement(value, testOutput);
+        const target = e.target as HTMLInputElement;
+        const value = target.value;
+        this.demonstrateEnhancement(value, testOutput as HTMLElement);
       });
 
-      // Clear button
+      // Clear button with constitutional type safety
       if (clearBtn) {
         clearBtn.addEventListener('click', () => {
-          jsTestInput.value = '';
+          const inputElement = jsTestInput as HTMLInputElement;
+          inputElement.value = '';
           testOutput.textContent = 'Type in the field above to see real-time JavaScript enhancements in action';
         });
       }
@@ -554,15 +575,19 @@ class ProgressiveEnhancement {
     }
   }
 
-  toggleFeature(featureId, enabled) {
+  toggleFeature(featureId: string, enabled: boolean): void {
     const feature = this.features.get(featureId);
     if (!feature) return;
 
     feature.enabled = enabled;
-    feature.element.dataset.enabled = enabled;
-
-    // Visual feedback
-    feature.element.style.opacity = enabled ? '1' : '0.7';
+    // Constitutional type safety for element access
+    const featureElement = feature.element as HTMLElement;
+    if (featureElement.dataset) {
+      featureElement.dataset.enabled = String(enabled);
+    }
+    if (featureElement.style) {
+      featureElement.style.opacity = enabled ? '1' : '0.7';
+    }
 
     this.log(`Feature "${featureId}" ${enabled ? 'enabled' : 'disabled'}`);
 
@@ -570,12 +595,14 @@ class ProgressiveEnhancement {
     this.announceToScreenReader(`${featureId} feature ${enabled ? 'enabled' : 'disabled'}`);
   }
 
-  testFeature(featureId) {
+  testFeature(featureId: string): void {
     const feature = this.features.get(featureId);
     if (!feature) return;
 
-    const button = feature.element.querySelector('.test-feature-btn');
-    const originalText = button.textContent;
+    const button = feature.element.querySelector('.test-feature-btn') as HTMLButtonElement;
+    if (!button) return;
+
+    const originalText = button.textContent || 'Test Feature';
 
     // Visual feedback
     button.textContent = 'Testing...';
@@ -586,7 +613,10 @@ class ProgressiveEnhancement {
       const success = Math.random() > 0.1; // 90% success rate
 
       button.textContent = success ? 'Test Passed ✓' : 'Test Failed ✗';
-      button.className = button.className.replace(/bg-\w+-\d+/, success ? 'bg-green-600' : 'bg-red-600');
+      // Constitutional class name handling
+      if (button.className) {
+        button.className = button.className.replace(/bg-\w+-\d+/, success ? 'bg-green-600' : 'bg-red-600');
+      }
 
       this.log(`Feature test for "${featureId}": ${success ? 'PASSED' : 'FAILED'}`);
 
@@ -594,12 +624,15 @@ class ProgressiveEnhancement {
       setTimeout(() => {
         button.textContent = originalText;
         button.disabled = false;
-        button.className = button.className.replace(/bg-\w+-\d+/, 'bg-blue-600');
+        // Constitutional class name handling
+        if (button.className) {
+          button.className = button.className.replace(/bg-\w+-\d+/, 'bg-blue-600');
+        }
       }, 2000);
     }, 1000);
   }
 
-  demonstrateEnhancement(input, output) {
+  demonstrateEnhancement(input: string, output: HTMLElement): void {
     if (!input.trim()) {
       output.textContent = 'Type in the field above to see real-time JavaScript enhancements in action';
       return;
@@ -619,15 +652,17 @@ class ProgressiveEnhancement {
     ).join('');
   }
 
-  runAllTests() {
-    const button = document.querySelector('.run-all-tests-btn');
+  runAllTests(): void {
+    const button = document.querySelector('.run-all-tests-btn') as HTMLButtonElement;
+    if (!button) return;
+
     button.textContent = 'Running Tests...';
     button.disabled = true;
 
     let completed = 0;
     const total = this.features.size;
 
-    this.features.forEach((feature, featureId) => {
+    this.features.forEach((_, featureId) => {
       setTimeout(() => {
         this.testFeature(featureId);
         completed++;
@@ -635,12 +670,18 @@ class ProgressiveEnhancement {
         if (completed === total) {
           setTimeout(() => {
             button.textContent = 'All Tests Complete ✓';
-            button.className = button.className.replace(/bg-\w+-\d+/, 'bg-green-600');
+            // Constitutional class name handling
+            if (button.className) {
+              button.className = button.className.replace(/bg-\w+-\d+/, 'bg-green-600');
+            }
 
             setTimeout(() => {
               button.textContent = 'Run All Enhancement Tests';
               button.disabled = false;
-              button.className = button.className.replace(/bg-\w+-\d+/, 'bg-green-600');
+              // Constitutional class name handling
+              if (button.className) {
+                button.className = button.className.replace(/bg-\w+-\d+/, 'bg-green-600');
+              }
             }, 3000);
           }, 1000);
         }
@@ -648,14 +689,14 @@ class ProgressiveEnhancement {
     });
   }
 
-  updatePerformanceMetric(metric, value) {
-    const metricElement = document.querySelector(`[data-metric="${metric}"]`);
+  updatePerformanceMetric(metric: string, value: number): void {
+    const metricElement = document.querySelector(`[data-metric="${metric}"]`) as HTMLElement;
     if (metricElement) {
       metricElement.textContent = `${value.toFixed(2)}${metric === 'lcp' ? 's' : ''}`;
     }
   }
 
-  log(message) {
+  log(message: string): void {
     const timestamp = new Date().toLocaleTimeString();
     const logEntry = `[${timestamp}] ${message}`;
 
@@ -671,15 +712,18 @@ class ProgressiveEnhancement {
       // Scroll to bottom
       this.statusLogElement.scrollTop = this.statusLogElement.scrollHeight;
 
-      // Limit log entries
+      // Limit log entries with constitutional null safety
       const entries = this.statusLogElement.children;
       if (entries.length > 50) {
-        entries[0].remove();
+        const firstEntry = entries[0];
+        if (firstEntry) {
+          firstEntry.remove();
+        }
       }
     }
   }
 
-  announceToScreenReader(message) {
+  announceToScreenReader(message: string): void {
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', 'polite');
     announcement.setAttribute('aria-atomic', 'true');
@@ -689,7 +733,10 @@ class ProgressiveEnhancement {
     document.body.appendChild(announcement);
 
     setTimeout(() => {
-      document.body.removeChild(announcement);
+      // Constitutional null safety
+      if (announcement.parentNode) {
+        document.body.removeChild(announcement);
+      }
     }, 1000);
   }
 }

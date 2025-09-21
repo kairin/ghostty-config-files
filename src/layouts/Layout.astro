@@ -147,7 +147,7 @@ const {
           return 'light';
         };
 
-        const resolveTheme = (theme) => {
+        const resolveTheme = (theme: string | null): string => {
           if (theme === 'system') {
             return getSystemTheme();
           }
@@ -171,9 +171,9 @@ const {
           // Ignore storage errors
         }
 
-        // Set theme color meta tag
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) {
+        // Set theme color meta tag with constitutional type safety
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement;
+        if (themeColorMeta && 'content' in themeColorMeta) {
           themeColorMeta.content = resolvedTheme === 'dark' ? '#09090b' : '#ffffff';
         }
       })();

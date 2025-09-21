@@ -105,12 +105,12 @@ const containerClasses = [
 
 <script>
   // Accessibility validation functionality
-  import { accessibilityValidation, colorContrast } from '../lib/accessibility.js';
+  // Note: Dynamic import used below instead of static import for better error handling
 
   class AccessibilityValidator {
     private container: HTMLElement | null = null;
     private autoScan: boolean = true;
-    private lastScanResults: any = null;
+    // Removed unused lastScanResults property - constitutional compliance
 
     constructor() {
       this.init();
@@ -178,7 +178,7 @@ const containerClasses = [
 
         // Run comprehensive accessibility scan
         const results = await this.performAccessibilityScan();
-        this.lastScanResults = results;
+        // Constitutional compliance: results processed directly without storage
 
         // Update UI with results
         this.updateResults(results);
