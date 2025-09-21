@@ -8,7 +8,10 @@ import CardContent from '../components/ui/CardContent.astro';
 import Button from '../components/ui/Button.astro';
 import Badge from '../components/ui/Badge.astro';
 
-// Dashboard data
+// Real performance data (will be replaced by client-side collection)
+import { performanceCollector } from '../lib/performance-collector.ts';
+
+// Initial static data for SSR, will be updated client-side
 const dashboardData = {
   performance: {
     overall: 94,
@@ -315,26 +318,38 @@ const getStatusColor = (status: string) => {
                       <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                         <span>0{metric.unit}</span>
                         <span>Target: {metric.target}{metric.unit}</span>
-                        <span>{Math.max(metric.before, metric.target)}{metric.unit}</span>
+                        <span>{Math.max(metric.before, metric.after, metric.target)}{metric.unit}</span>
                       </div>
                       <div class="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                         <!-- Background track -->
                         <div class="relative h-full">
-                          <!-- Before bar (red) -->
-                          <div
-                            class="absolute top-0 left-0 h-full bg-red-400 opacity-60 rounded-full"
-                            style={`width: ${(metric.before / Math.max(metric.before, metric.target)) * 100}%`}
-                          ></div>
-                          <!-- After bar (green) -->
-                          <div
-                            class="absolute top-0 left-0 h-full bg-green-500 rounded-full"
-                            style={`width: ${(metric.after / Math.max(metric.before, metric.target)) * 100}%`}
-                          ></div>
-                          <!-- Target line -->
-                          <div
-                            class="absolute top-0 h-full w-0.5 bg-blue-500"
-                            style={`left: ${(metric.target / Math.max(metric.before, metric.target)) * 100}%`}
-                          ></div>
+                          <!-- Calculate max value for proper scaling -->
+                          {(() => {
+                            const maxValue = Math.max(metric.before, metric.after, metric.target);
+                            const beforeWidth = Math.min((metric.before / maxValue) * 100, 100);
+                            const afterWidth = Math.min((metric.after / maxValue) * 100, 100);
+                            const targetPosition = Math.min((metric.target / maxValue) * 100, 100);
+
+                            return (
+                              <>
+                                {/* Before bar (red) */}
+                                <div
+                                  class="absolute top-0 left-0 h-full bg-red-400 opacity-60 rounded-full"
+                                  style={`width: ${beforeWidth}%`}
+                                ></div>
+                                {/* After bar (green) */}
+                                <div
+                                  class="absolute top-0 left-0 h-full bg-green-500 rounded-full"
+                                  style={`width: ${afterWidth}%`}
+                                ></div>
+                                {/* Target line */}
+                                <div
+                                  class="absolute top-0 h-full w-0.5 bg-blue-500"
+                                  style={`left: ${targetPosition}%`}
+                                ></div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                       <div class="flex items-center justify-between text-xs mt-1">
@@ -585,3 +600,329 @@ const getStatusColor = (status: string) => {
     background: rgb(75 85 99);
   }
 </style>
+
+<script>
+  // Real-time performance data collection and dashboard updates
+  // Constitutional compliance: Live metrics with error handling
+
+  import { performanceCollector } from '../lib/performance-collector.ts';
+
+  class DashboardManager {
+    private updateInterval: number | null = null;
+    private isCollecting: boolean = false;
+    private readonly UPDATE_INTERVAL = 30000; // 30 seconds
+
+    constructor() {
+      this.init();
+    }
+
+    private async init(): Promise<void> {
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.setup());
+      } else {
+        this.setup();
+      }
+    }
+
+    private async setup(): Promise<void> {
+      try {
+        // Initial data collection
+        await this.updateDashboardData();
+
+        // Set up periodic updates
+        this.startPeriodicUpdates();
+
+        // Add refresh button functionality
+        this.setupRefreshButton();
+
+        console.log('✅ Dashboard real-time data collection initialized');
+      } catch (error) {
+        console.warn('Failed to initialize dashboard data collection:', error);
+      }
+    }
+
+    private async updateDashboardData(): Promise<void> {
+      if (this.isCollecting) return;
+
+      this.isCollecting = true;
+
+      try {
+        // Show loading state
+        this.showLoadingState();
+
+        // Collect real performance data
+        const performanceData = await performanceCollector.collectRealTimeData();
+
+        // Update dashboard UI with real data
+        await this.updateUI(performanceData);
+
+        // Update data source indicator
+        this.updateDataSourceIndicator(performanceData.dataSource);
+
+        // Announce update to screen readers
+        this.announceUpdate(performanceData);
+
+      } catch (error) {
+        console.error('Failed to update dashboard data:', error);
+        this.showError('Failed to collect performance data');
+      } finally {
+        this.isCollecting = false;
+        this.hideLoadingState();
+      }
+    }
+
+    private async updateUI(data: any): Promise<void> {
+      // Update key metrics cards
+      this.updateMetricCard('overall-performance', data.overall, '%');
+      this.updateMetricCard('average-improvement', data.improvement, '%');
+      this.updateMetricCard('compliance-score', data.compliance, '%');
+      this.updateMetricCard('optimized-systems', data.systems, '');
+
+      // Update performance metrics chart
+      await this.updateMetricsChart(data.metrics);
+
+      // Update recent activity
+      this.updateRecentActivity(performanceCollector.getRecentActivity());
+
+      // Update last updated timestamp
+      this.updateTimestamp(data.lastUpdated);
+    }
+
+    private updateMetricCard(id: string, value: number, unit: string): void {
+      // Update performance metric cards based on element content
+      const cards = document.querySelectorAll('.grid .rounded-lg');
+      cards.forEach(card => {
+        const valueElement = card.querySelector('.text-3xl');
+        const labelElement = card.querySelector('.text-sm');
+
+        if (valueElement && labelElement) {
+          const label = labelElement.textContent?.toLowerCase() || '';
+
+          if (id === 'overall-performance' && label.includes('overall performance')) {
+            valueElement.textContent = `${value}${unit}`;
+          } else if (id === 'average-improvement' && label.includes('average improvement')) {
+            valueElement.textContent = `${value}${unit}`;
+          } else if (id === 'compliance-score' && label.includes('constitutional compliance')) {
+            valueElement.textContent = `${value}${unit}`;
+          } else if (id === 'optimized-systems' && label.includes('optimized systems')) {
+            valueElement.textContent = `${value}`;
+          }
+        }
+      });
+    }
+
+    private async updateMetricsChart(metrics: any[]): Promise<void> {
+      // Update the metrics chart with real data
+      const chartContainer = document.querySelector('.space-y-6');
+      if (!chartContainer) return;
+
+      // Clear existing metrics
+      chartContainer.innerHTML = '';
+
+      // Add updated metrics
+      metrics.forEach(metric => {
+        const metricElement = this.createMetricElement(metric);
+        chartContainer.appendChild(metricElement);
+      });
+    }
+
+    private createMetricElement(metric: any): HTMLElement {
+      const metricDiv = document.createElement('div');
+      metricDiv.className = 'space-y-2';
+
+      const maxValue = Math.max(metric.before, metric.after, metric.target);
+      const beforeWidth = Math.min((metric.before / maxValue) * 100, 100);
+      const afterWidth = Math.min((metric.after / maxValue) * 100, 100);
+      const targetPosition = Math.min((metric.target / maxValue) * 100, 100);
+
+      metricDiv.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+            ${metric.name}
+          </span>
+          <div class="flex items-center space-x-2">
+            <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">
+              ${metric.improvement}% better
+            </span>
+            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <span>0${metric.unit}</span>
+            <span>Target: ${metric.target}${metric.unit}</span>
+            <span>${maxValue}${metric.unit}</span>
+          </div>
+          <div class="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+            <div class="relative h-full">
+              <div class="absolute top-0 left-0 h-full bg-red-400 opacity-60 rounded-full" style="width: ${beforeWidth}%"></div>
+              <div class="absolute top-0 left-0 h-full bg-green-500 rounded-full" style="width: ${afterWidth}%"></div>
+              <div class="absolute top-0 h-full w-0.5 bg-blue-500" style="left: ${targetPosition}%"></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-xs mt-1">
+            <span class="text-red-600 dark:text-red-400">Before: ${metric.before}${metric.unit}</span>
+            <span class="text-green-600 dark:text-green-400 font-medium">After: ${metric.after}${metric.unit}</span>
+          </div>
+        </div>
+      `;
+
+      return metricDiv;
+    }
+
+    private updateRecentActivity(activities: any[]): void {
+      const activityContainer = document.querySelector('.space-y-4');
+      if (!activityContainer) return;
+
+      // Find the recent activity section by looking for activity items
+      const cards = document.querySelectorAll('.rounded-lg');
+      cards.forEach(card => {
+        const title = card.querySelector('h3');
+        if (title?.textContent?.includes('Recent Activity')) {
+          const activityList = card.querySelector('.space-y-4');
+          if (activityList) {
+            activityList.innerHTML = '';
+
+            activities.forEach(activity => {
+              const activityElement = document.createElement('div');
+              activityElement.className = 'flex items-start space-x-3';
+              activityElement.innerHTML = `
+                <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-900 dark:text-gray-100">
+                    ${activity.action}
+                  </p>
+                  <div class="flex items-center justify-between mt-1">
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                      ${activity.time}
+                    </p>
+                    <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold">
+                      ${activity.metric}
+                    </span>
+                  </div>
+                </div>
+              `;
+              activityList.appendChild(activityElement);
+            });
+          }
+        }
+      });
+    }
+
+    private updateTimestamp(timestamp: string): void {
+      // Update or create last updated indicator
+      let timestampElement = document.getElementById('last-updated');
+      if (!timestampElement) {
+        timestampElement = document.createElement('div');
+        timestampElement.id = 'last-updated';
+        timestampElement.className = 'text-xs text-gray-500 dark:text-gray-400 text-center mt-4';
+        document.querySelector('.max-w-7xl')?.appendChild(timestampElement);
+      }
+
+      timestampElement.textContent = `Last updated: ${new Date(timestamp).toLocaleString()}`;
+    }
+
+    private updateDataSourceIndicator(source: string): void {
+      // Update the "Live Monitoring" badge to show data source
+      const badge = document.querySelector('[class*="badge"]');
+      if (badge) {
+        const sourceText = source === 'live' ? 'Live Data' :
+                         source === 'cached' ? 'Cached Data' :
+                         'Fallback Data';
+        badge.textContent = sourceText;
+      }
+    }
+
+    private showLoadingState(): void {
+      // Add loading indicators to metrics
+      const refreshButtons = document.querySelectorAll('[class*="refresh"]');
+      refreshButtons.forEach(btn => {
+        if (btn.textContent) {
+          btn.textContent = '🔄 Updating...';
+          (btn as HTMLButtonElement).disabled = true;
+        }
+      });
+    }
+
+    private hideLoadingState(): void {
+      // Remove loading indicators
+      const refreshButtons = document.querySelectorAll('[class*="refresh"]');
+      refreshButtons.forEach(btn => {
+        if (btn.textContent?.includes('Updating')) {
+          btn.textContent = 'Refresh Metrics';
+          (btn as HTMLButtonElement).disabled = false;
+        }
+      });
+    }
+
+    private showError(message: string): void {
+      // Show error message to user
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+      errorDiv.textContent = message;
+
+      document.body.appendChild(errorDiv);
+
+      setTimeout(() => {
+        if (document.body.contains(errorDiv)) {
+          document.body.removeChild(errorDiv);
+        }
+      }, 5000);
+    }
+
+    private setupRefreshButton(): void {
+      // Add click handlers to refresh buttons
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(btn => {
+        if (btn.textContent?.includes('Refresh')) {
+          btn.addEventListener('click', () => this.updateDashboardData());
+        }
+      });
+    }
+
+    private startPeriodicUpdates(): void {
+      this.updateInterval = window.setInterval(() => {
+        this.updateDashboardData();
+      }, this.UPDATE_INTERVAL);
+    }
+
+    private stopPeriodicUpdates(): void {
+      if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+        this.updateInterval = null;
+      }
+    }
+
+    private announceUpdate(data: any): void {
+      const message = `Dashboard updated. Overall performance: ${data.overall}%. Data source: ${data.dataSource}.`;
+
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      announcement.textContent = message;
+
+      document.body.appendChild(announcement);
+
+      setTimeout(() => {
+        if (document.body.contains(announcement)) {
+          document.body.removeChild(announcement);
+        }
+      }, 1000);
+    }
+
+    // Cleanup method
+    public destroy(): void {
+      this.stopPeriodicUpdates();
+    }
+  }
+
+  // Initialize dashboard manager
+  const dashboardManager = new DashboardManager();
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    dashboardManager.destroy();
+  });
+</script>
