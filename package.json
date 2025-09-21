@@ -9,8 +9,10 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-  "build": "astro check && astro build",
-  "postbuild": "cp public/favicon.* docs/ || true",
+    "clean-docs": "rm -rf ./docs/* || true",
+    "prebuild": "npm run clean-docs",
+    "build": "astro check && astro build",
+    "postbuild": "cp public/favicon.* docs/ || true",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
