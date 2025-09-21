@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* Tailwind v4 Custom Theme Variables */
+@theme {
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* Ghostty Color Palette */
+  --color-ghostty-50: #f0f9ff;
+  --color-ghostty-500: #0ea5e9;
+  --color-ghostty-900: #0c4a6e;
+
+  /* shadcn/ui Design System Colors */
+  --color-background: 0 0% 100%;
+  --color-foreground: 240 10% 3.9%;
+  --color-card: 0 0% 100%;
+  --color-card-foreground: 240 10% 3.9%;
+  --color-popover: 0 0% 100%;
+  --color-popover-foreground: 240 10% 3.9%;
+  --color-primary: 240 9% 3.9%;
+  --color-primary-foreground: 0 0% 98%;
+  --color-secondary: 240 4.8% 95.9%;
+  --color-secondary-foreground: 240 5.9% 10%;
+  --color-muted: 240 4.8% 95.9%;
+  --color-muted-foreground: 240 3.8% 46.1%;
+  --color-accent: 240 4.8% 95.9%;
+  --color-accent-foreground: 240 5.9% 10%;
+  --color-destructive: 0 84.2% 60.2%;
+  --color-destructive-foreground: 0 0% 98%;
+  --color-border: 240 5.9% 90%;
+  --color-input: 240 5.9% 90%;
+  --color-ring: 240 5.9% 10%;
+
+  /* Additional custom properties for v4 */
+  --breakpoint-xs: 475px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* Dark mode colors */
+.dark {
+  --color-background: 240 10% 3.9%;
+  --color-foreground: 0 0% 98%;
+  --color-card: 240 10% 3.9%;
+  --color-card-foreground: 0 0% 98%;
+  --color-popover: 240 10% 3.9%;
+  --color-popover-foreground: 0 0% 98%;
+  --color-primary: 0 0% 98%;
+  --color-primary-foreground: 240 5.9% 10%;
+  --color-secondary: 240 3.7% 15.9%;
+  --color-secondary-foreground: 0 0% 98%;
+  --color-muted: 240 3.7% 15.9%;
+  --color-muted-foreground: 240 5% 64.9%;
+  --color-accent: 240 3.7% 15.9%;
+  --color-accent-foreground: 0 0% 98%;
+  --color-destructive: 0 62.8% 30.6%;
+  --color-destructive-foreground: 0 0% 98%;
+  --color-border: 240 3.7% 15.9%;
+  --color-input: 240 3.7% 15.9%;
+  --color-ring: 240 4.9% 83.9%;
+}
+
+/* Global base styles */
+html {
+  font-family: system-ui, sans-serif;
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+/* Custom utility classes for Ghostty theme */
+.text-ghostty-50 { color: var(--color-ghostty-50); }
+.text-ghostty-500 { color: var(--color-ghostty-500); }
+.text-ghostty-900 { color: var(--color-ghostty-900); }
+
+.bg-ghostty-50 { background-color: var(--color-ghostty-50); }
+.bg-ghostty-500 { background-color: var(--color-ghostty-500); }
+.bg-ghostty-900 { background-color: var(--color-ghostty-900); }
+
+.border-ghostty-50 { border-color: var(--color-ghostty-50); }
+.border-ghostty-500 { border-color: var(--color-ghostty-500); }
+.border-ghostty-900 { border-color: var(--color-ghostty-900); }
+
+.hover\:text-ghostty-500:hover { color: var(--color-ghostty-500); }
+.hover\:text-ghostty-600:hover { color: #0284c7; }
+.hover\:text-ghostty-700:hover { color: #0369a1; }
+
+.hover\:bg-ghostty-500:hover { background-color: var(--color-ghostty-500); }
+.hover\:bg-ghostty-600:hover { background-color: #0284c7; }
+.hover\:bg-ghostty-700:hover { background-color: #0369a1; }
