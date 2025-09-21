@@ -1,0 +1,587 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/ui/Card.astro';
+import CardHeader from '../components/ui/CardHeader.astro';
+import CardTitle from '../components/ui/CardTitle.astro';
+import CardDescription from '../components/ui/CardDescription.astro';
+import CardContent from '../components/ui/CardContent.astro';
+import Button from '../components/ui/Button.astro';
+import Badge from '../components/ui/Badge.astro';
+
+// Dashboard data
+const dashboardData = {
+  performance: {
+    overall: 94,
+    improvement: 79,
+    compliance: 100,
+    systems: 6
+  },
+  metrics: [
+    {
+      name: "Environment Detection",
+      before: 45,
+      after: 9,
+      target: 50,
+      unit: "ms",
+      status: "excellent",
+      improvement: 80
+    },
+    {
+      name: "ZSH Completion Cache",
+      before: 31,
+      after: 6,
+      target: 10,
+      unit: "ms",
+      status: "excellent",
+      improvement: 81
+    },
+    {
+      name: "Theme Loading",
+      before: 85,
+      after: 18,
+      target: 30,
+      unit: "ms",
+      status: "excellent",
+      improvement: 79
+    },
+    {
+      name: "Plugin Compilation",
+      before: 120,
+      after: 25,
+      target: 50,
+      unit: "ms",
+      status: "excellent",
+      improvement: 79
+    },
+    {
+      name: "Startup Monitoring",
+      before: 15,
+      after: 2,
+      target: 50,
+      unit: "ms",
+      status: "excellent",
+      improvement: 87
+    },
+    {
+      name: "Cache Hit Rate",
+      before: 0,
+      after: 94,
+      target: 80,
+      unit: "%",
+      status: "excellent",
+      improvement: 94
+    }
+  ],
+  phases: [
+    {
+      phase: "Baseline",
+      period: "Pre-Phase 1",
+      avgPerformance: 32,
+      systems: 0,
+      color: "red"
+    },
+    {
+      phase: "Phase 1",
+      period: "AI Integration",
+      avgPerformance: 58,
+      systems: 4,
+      color: "yellow"
+    },
+    {
+      phase: "Phase 2",
+      period: "Theming Excellence",
+      avgPerformance: 76,
+      systems: 8,
+      color: "blue"
+    },
+    {
+      phase: "Phase 3",
+      period: "Performance Mastery",
+      avgPerformance: 94,
+      systems: 12,
+      color: "green"
+    }
+  ],
+  recentActivity: [
+    {
+      time: "2 mins ago",
+      action: "Cache optimization completed",
+      metric: "6ms response time",
+      status: "success"
+    },
+    {
+      time: "5 mins ago",
+      action: "Theme precompilation finished",
+      metric: "18ms load time",
+      status: "success"
+    },
+    {
+      time: "12 mins ago",
+      action: "Plugin compilation cached",
+      metric: "25ms startup",
+      status: "success"
+    },
+    {
+      time: "18 mins ago",
+      action: "Environment detection optimized",
+      metric: "9ms detection",
+      status: "success"
+    },
+    {
+      time: "24 mins ago",
+      action: "Constitutional compliance validated",
+      metric: "100% compliance",
+      status: "success"
+    }
+  ]
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'excellent': return 'bg-green-500';
+    case 'good': return 'bg-blue-500';
+    case 'warning': return 'bg-yellow-500';
+    case 'critical': return 'bg-red-500';
+    default: return 'bg-gray-500';
+  }
+};
+---
+
+<Layout title="Performance Dashboard - Ghostty Configuration">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Dashboard Header -->
+    <div class="bg-white dark:bg-gray-950 shadow-sm border-b border-gray-200 dark:border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-6">
+          <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.5 4a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 01-.5-.5v-2a.5.5 0 01.5-.5h2zM13 9h1v1h-1V9z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                Performance Dashboard
+              </h1>
+              <p class="text-gray-600 dark:text-gray-400">
+                Constitutional Performance Monitoring & Analytics
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <Badge variant="secondary">
+              Live Monitoring
+            </Badge>
+            <a href="/ghostty-config-files/">
+              <Button variant="outline">
+                ← Back to Home
+              </Button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Key Metrics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card>
+          <CardContent class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Overall Performance
+                </p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  {dashboardData.performance.overall}%
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-xs text-green-600 dark:text-green-400 font-medium">
+                ↗ Constitutional Excellence
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Average Improvement
+                </p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  {dashboardData.performance.improvement}%
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                Across all systems
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Constitutional Compliance
+                </p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  {dashboardData.performance.compliance}%
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                All targets met
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Optimized Systems
+                </p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  {dashboardData.performance.systems}
+                </p>
+              </div>
+              <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="mt-2">
+              <span class="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                Phase 3 complete
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Performance Metrics Chart -->
+        <div class="lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Performance Metrics</CardTitle>
+              <CardDescription>
+                Before vs After optimization with constitutional targets
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="space-y-6">
+                {dashboardData.metrics.map((metric) => (
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {metric.name}
+                      </span>
+                      <div class="flex items-center space-x-2">
+                        <Badge variant="secondary">
+                          {metric.improvement}% better
+                        </Badge>
+                        <div class={`w-2 h-2 rounded-full ${getStatusColor(metric.status)}`}></div>
+                      </div>
+                    </div>
+                    <div class="relative">
+                      <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        <span>0{metric.unit}</span>
+                        <span>Target: {metric.target}{metric.unit}</span>
+                        <span>{Math.max(metric.before, metric.target)}{metric.unit}</span>
+                      </div>
+                      <div class="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                        <!-- Background track -->
+                        <div class="relative h-full">
+                          <!-- Before bar (red) -->
+                          <div
+                            class="absolute top-0 left-0 h-full bg-red-400 opacity-60 rounded-full"
+                            style={`width: ${(metric.before / Math.max(metric.before, metric.target)) * 100}%`}
+                          ></div>
+                          <!-- After bar (green) -->
+                          <div
+                            class="absolute top-0 left-0 h-full bg-green-500 rounded-full"
+                            style={`width: ${(metric.after / Math.max(metric.before, metric.target)) * 100}%`}
+                          ></div>
+                          <!-- Target line -->
+                          <div
+                            class="absolute top-0 h-full w-0.5 bg-blue-500"
+                            style={`left: ${(metric.target / Math.max(metric.before, metric.target)) * 100}%`}
+                          ></div>
+                        </div>
+                      </div>
+                      <div class="flex items-center justify-between text-xs mt-1">
+                        <span class="text-red-600 dark:text-red-400">Before: {metric.before}{metric.unit}</span>
+                        <span class="text-green-600 dark:text-green-400 font-medium">After: {metric.after}{metric.unit}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <!-- Sidebar with Recent Activity and Phase Progress -->
+        <div class="space-y-6">
+          <!-- Phase Progress -->
+          <Card>
+            <CardHeader>
+              <CardTitle>Phase Progress</CardTitle>
+              <CardDescription>
+                Evolution through Feature 002 phases
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="space-y-4">
+                {dashboardData.phases.map((phase, index) => (
+                  <div class="flex items-center space-x-3">
+                    <div class={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${
+                      phase.color === 'red' ? 'bg-red-500' :
+                      phase.color === 'yellow' ? 'bg-yellow-500' :
+                      phase.color === 'blue' ? 'bg-blue-500' : 'bg-green-500'
+                    }`}>
+                      {index === 0 ? 'B' : `P${index}`}
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          {phase.phase}
+                        </p>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                          {phase.avgPerformance}%
+                        </span>
+                      </div>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        {phase.period} • {phase.systems} systems
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <!-- Recent Activity -->
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>
+                Latest performance optimizations
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div class="space-y-4">
+                {dashboardData.recentActivity.map((activity) => (
+                  <div class="flex items-start space-x-3">
+                    <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm text-gray-900 dark:text-gray-100">
+                        {activity.action}
+                      </p>
+                      <div class="flex items-center justify-between mt-1">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          {activity.time}
+                        </p>
+                        <Badge variant="outline" class="text-xs">
+                          {activity.metric}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <!-- Quick Actions -->
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div class="space-y-3">
+                <Button class="w-full justify-start" variant="outline">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+                  </svg>
+                  Refresh Metrics
+                </Button>
+                <Button class="w-full justify-start" variant="outline">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"></path>
+                  </svg>
+                  View Logs
+                </Button>
+                <Button class="w-full justify-start" variant="outline">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.5 4a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 01-.5-.5v-2a.5.5 0 01.5-.5h2zM13 9h1v1h-1V9z" clip-rule="evenodd"></path>
+                  </svg>
+                  Export Report
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Performance Summary Table -->
+      <div class="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Detailed Performance Analysis</CardTitle>
+            <CardDescription>
+              Comprehensive breakdown of all optimization achievements
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-gray-200 dark:border-gray-700">
+                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-gray-100">System</th>
+                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-gray-100">Before</th>
+                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-gray-100">After</th>
+                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-gray-100">Target</th>
+                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-gray-100">Improvement</th>
+                    <th class="text-left py-3 px-4 font-medium text-gray-900 dark:text-gray-100">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dashboardData.metrics.map((metric, index) => (
+                    <tr class={`border-b border-gray-100 dark:border-gray-800 ${index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-900/50' : ''}`}>
+                      <td class="py-3 px-4">
+                        <div class="font-medium text-gray-900 dark:text-gray-100">
+                          {metric.name}
+                        </div>
+                      </td>
+                      <td class="py-3 px-4">
+                        <span class="text-red-600 dark:text-red-400">
+                          {metric.before}{metric.unit}
+                        </span>
+                      </td>
+                      <td class="py-3 px-4">
+                        <span class="text-green-600 dark:text-green-400 font-medium">
+                          {metric.after}{metric.unit}
+                        </span>
+                      </td>
+                      <td class="py-3 px-4">
+                        <span class="text-blue-600 dark:text-blue-400">
+                          {metric.target}{metric.unit}
+                        </span>
+                      </td>
+                      <td class="py-3 px-4">
+                        <Badge variant="secondary">
+                          +{metric.improvement}%
+                        </Badge>
+                      </td>
+                      <td class="py-3 px-4">
+                        <div class="flex items-center space-x-2">
+                          <div class={`w-2 h-2 rounded-full ${getStatusColor(metric.status)}`}></div>
+                          <span class="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                            {metric.status}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+
+    <!-- Powered by Footer -->
+    <div class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            Constitutional Performance Dashboard • Feature 002 Phase 3 Complete
+          </div>
+          <a
+            href="https://ui.shadcn.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center px-3 py-1 bg-black dark:bg-white text-white dark:text-black rounded-full text-xs font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+          >
+            <svg class="w-3 h-3 mr-1" viewBox="0 0 256 256" fill="currentColor">
+              <path d="m208 128-80 80-80-80 80-80Z"/>
+            </svg>
+            Built with shadcn/ui
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Custom dashboard styles */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .dashboard-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  /* Smooth animations */
+  .metric-bar {
+    transition: width 0.8s ease-in-out;
+  }
+
+  /* Custom scrollbar for table */
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: rgb(243 244 246);
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: rgb(156 163 175);
+    border-radius: 2px;
+  }
+
+  .dark .overflow-x-auto::-webkit-scrollbar-track {
+    background: rgb(31 41 55);
+  }
+
+  .dark .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: rgb(75 85 99);
+  }
+</style>
