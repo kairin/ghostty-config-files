@@ -57,6 +57,25 @@ git push origin main
 # NEVER: git branch -d "$BRANCH_NAME"
 ```
 
+### 🚨 CRITICAL: GitHub Pages Infrastructure (MANDATORY)
+- **`.nojekyll` File**: ABSOLUTELY CRITICAL for GitHub Pages deployment
+- **Location**: `docs/.nojekyll` (empty file, no content needed)
+- **Purpose**: Disables Jekyll processing to allow `_astro/` directory assets
+- **Impact**: Without this file, ALL CSS/JS assets return 404 errors
+- **WARNING**: This file is ESSENTIAL - never remove during cleanup operations
+- **Alternative**: No alternative - this file is required for Astro + GitHub Pages
+
+#### Jekyll Cleanup Protection (MANDATORY)
+```bash
+# BEFORE removing ANY Jekyll-related files, verify this file exists:
+ls -la docs/.nojekyll
+
+# If missing, recreate immediately:
+touch docs/.nojekyll
+git add docs/.nojekyll
+git commit -m "CRITICAL: Restore .nojekyll for GitHub Pages asset loading"
+```
+
 ### 🚨 CRITICAL: Local CI/CD Requirements
 
 #### Pre-Deployment Verification (MANDATORY)
@@ -403,6 +422,7 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 ## ⚠️ ABSOLUTE PROHIBITIONS
 
 ### DO NOT
+- **NEVER REMOVE `docs/.nojekyll`** - This breaks ALL CSS/JS loading on GitHub Pages
 - Delete branches without explicit user permission
 - Use GitHub Actions for anything that consumes minutes
 - Skip local CI/CD validation before GitHub deployment
@@ -410,6 +430,7 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 - Apply configuration changes without backup
 - Commit sensitive data (API keys, passwords, personal information)
 - Bypass the intelligent update system for configuration changes
+- Remove Jekyll-related files without verifying `.nojekyll` preservation
 
 ### DO NOT BYPASS
 - Branch preservation requirements
