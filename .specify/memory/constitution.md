@@ -75,9 +75,10 @@ All advanced features SHALL maintain zero GitHub Actions consumption and constit
 
 ### Foundation Preservation (MANDATORY)
 - **uv-First Python**: ALL Python operations via uv exclusively (≥ 0.4.0)
-- **Astro.build Excellence**: Static site generation with TypeScript strict mode (≥ 4.0)
+- **Astro.build Excellence**: Static site generation with TypeScript strict mode (≥ 4.0) → builds to `docs/` for GitHub Pages
 - **shadcn/ui + Tailwind**: Component-driven UI with accessibility compliance
-- **GitHub Pages**: Zero-cost deployment with branch preservation strategy
+- **GitHub Pages**: Zero-cost deployment with branch preservation strategy → served from `docs/` folder
+- **Documentation Structure**: `docs/` = Astro.build output ONLY, `documentations/` = all other documentation
 
 ## Advanced Terminal Productivity Success Criteria
 

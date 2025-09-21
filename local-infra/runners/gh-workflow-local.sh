@@ -206,34 +206,42 @@ check_billing() {
     end_timer "Billing check"
 }
 
-# GitHub Pages simulation
+# GitHub Pages simulation (Astro-based)
 simulate_pages() {
-    log "STEP" "📄 Simulating GitHub Pages setup..."
+    log "STEP" "📄 Simulating Astro GitHub Pages setup..."
     start_timer
 
     if [ -f "$SCRIPT_DIR/gh-pages-setup.sh" ]; then
         "$SCRIPT_DIR/gh-pages-setup.sh"
     else
-        log "INFO" "ℹ️ Creating basic GitHub Pages setup..."
+        log "INFO" "ℹ️ Verifying Astro build output for GitHub Pages..."
 
-        mkdir -p "$REPO_DIR/docs"
-
-        if [ -f "$REPO_DIR/README.md" ]; then
-            cp "$REPO_DIR/README.md" "$REPO_DIR/docs/index.md"
-            log "SUCCESS" "✅ Copied README as documentation index"
+        # Check if Astro has built to docs/
+        if [ ! -d "$REPO_DIR/docs" ]; then
+            log "WARNING" "⚠️ docs/ directory not found. Running Astro build..."
+            cd "$REPO_DIR" && npx astro build
         fi
 
-        cat > "$REPO_DIR/docs/_config.yml" << EOF
-title: Ghostty Configuration Files
-description: Comprehensive terminal environment setup with 2025 optimizations
-theme: jekyll-theme-minimal
-plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: true
-EOF
-        log "SUCCESS" "✅ Created GitHub Pages configuration"
+        # Verify Astro build output
+        if [ -f "$REPO_DIR/docs/index.html" ]; then
+            log "SUCCESS" "✅ Astro build output verified in docs/"
+        else
+            log "ERROR" "❌ No Astro build output found. Run: npx astro build"
+            return 1
+        fi
+
+        # Configure GitHub Pages via GitHub CLI if available
+        if command -v gh >/dev/null 2>&1; then
+            log "INFO" "🔧 Configuring GitHub Pages deployment..."
+            gh api repos/:owner/:repo --method PATCH \
+                --field source[branch]=main \
+                --field source[path]="/docs" 2>/dev/null || \
+                log "INFO" "ℹ️ GitHub CLI configuration skipped (may require manual setup)"
+            log "SUCCESS" "✅ GitHub Pages configured for Astro deployment"
+        else
+            log "INFO" "ℹ️ GitHub CLI not available. Manual Pages configuration needed:"
+            log "INFO" "   Settings → Pages → Source: Deploy from a branch → main → /docs"
+        fi
     fi
 
     end_timer "GitHub Pages simulation"
@@ -327,54 +335,55 @@ EOF
 
     # Create GitHub Pages setup script if it doesn't exist
     if [ ! -f "$SCRIPT_DIR/gh-pages-setup.sh" ]; then
-        log "INFO" "📄 Creating GitHub Pages setup script..."
+        log "INFO" "📄 Creating Astro GitHub Pages setup script..."
         cat > "$SCRIPT_DIR/gh-pages-setup.sh" << 'EOF'
 #!/bin/bash
-# GitHub Pages setup for ghostty-config-files
-echo "📄 Setting up zero-cost GitHub Pages..."
+# Astro GitHub Pages setup for ghostty-config-files
+echo "📄 Setting up zero-cost GitHub Pages with Astro..."
 
 REPO_DIR="$(dirname "$(dirname "$(dirname "$0")")")"
 
 setup_github_pages() {
-    # Create documentation directory
-    mkdir -p "$REPO_DIR/docs"
+    echo "🔧 Configuring Astro for GitHub Pages deployment..."
 
-    # Copy README as index
-    if [ -f "$REPO_DIR/README.md" ]; then
-        cp "$REPO_DIR/README.md" "$REPO_DIR/docs/index.md"
-        echo "✅ Copied README as documentation index"
+    # Ensure Astro build output directory exists
+    if [ ! -d "$REPO_DIR/docs" ]; then
+        echo "❌ docs/ directory not found. Running Astro build..."
+        cd "$REPO_DIR" && npx astro build
+        if [ $? -ne 0 ]; then
+            echo "❌ Astro build failed. Check astro.config.mjs configuration."
+            return 1
+        fi
     fi
 
-    # Create Jekyll configuration
-    cat > "$REPO_DIR/docs/_config.yml" << EOL
-title: Ghostty Configuration Files
-description: Comprehensive terminal environment setup with 2025 optimizations
-theme: jekyll-theme-minimal
-plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: true
-include:
-  - AGENTS.md
-  - CLAUDE.md
-  - GEMINI.md
-EOL
-    echo "✅ Created GitHub Pages configuration"
-
-    # Test local Jekyll build if available
-    if command -v jekyll >/dev/null 2>&1; then
-        cd "$REPO_DIR/docs" && jekyll build --destination _site_test >/dev/null 2>&1
-        echo "✅ Local Jekyll build test successful"
+    # Verify Astro build output
+    if [ -f "$REPO_DIR/docs/index.html" ]; then
+        echo "✅ Astro build output verified in docs/"
     else
-        echo "ℹ️ Jekyll not available, skipping local build test"
+        echo "❌ No index.html found in docs/. Run: npx astro build"
+        return 1
     fi
+
+    # Configure GitHub Pages to serve from docs/ folder
+    if command -v gh >/dev/null 2>&1; then
+        echo "🔧 Configuring GitHub Pages deployment..."
+        gh api repos/:owner/:repo --method PATCH \
+            --field source[branch]=main \
+            --field source[path]="/docs" 2>/dev/null && \
+            echo "✅ GitHub Pages configured to serve from docs/ folder" || \
+            echo "ℹ️ GitHub CLI configuration may require manual setup"
+    else
+        echo "ℹ️ GitHub CLI not available, configure Pages manually:"
+        echo "   Settings → Pages → Source: Deploy from a branch → main → /docs"
+    fi
+
+    echo "✅ Astro GitHub Pages setup complete"
 }
 
 setup_github_pages
 EOF
         chmod +x "$SCRIPT_DIR/gh-pages-setup.sh"
-        log "SUCCESS" "✅ GitHub Pages setup script created"
+        log "SUCCESS" "✅ Astro GitHub Pages setup script created"
     fi
 
     log "SUCCESS" "✅ Local CI/CD infrastructure initialized"

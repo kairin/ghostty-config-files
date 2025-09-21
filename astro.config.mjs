@@ -29,6 +29,9 @@ export default defineConfig({
     assets: '_astro',
   },
 
+  // GitHub Pages deployment - Astro builds to docs/ folder
+  outDir: './docs',
+
   // Vite configuration for performance optimization
   vite: {
     build: {

@@ -1,9 +1,15 @@
-name: Deploy Astro to GitHub Pages
+name: Deploy Astro to GitHub Pages (DISABLED - LOCAL CI/CD ONLY)
 
+# CONSTITUTIONAL REQUIREMENT: Zero GitHub Actions consumption
+# This workflow is DISABLED to enforce local CI/CD execution
+# Use: ./local-infra/runners/astro-build-local.sh
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+    inputs:
+      force_enable:
+        description: 'Emergency override (violates constitutional requirements)'
+        required: true
+        default: 'never'
 
 permissions:
   contents: read
@@ -17,6 +23,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.force_enable == 'constitutional-override-emergency' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,18 +33,16 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: 'docs-site/package-lock.json'
+          cache-dependency-path: 'package-lock.json'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./docs-site
 
       - name: Build Astro site
         run: npm run build
-        working-directory: ./docs-site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

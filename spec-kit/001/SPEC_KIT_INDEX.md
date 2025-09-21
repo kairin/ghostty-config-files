@@ -147,9 +147,9 @@ git checkout -b "$BRANCH_NAME"
 
 ### **Related Documentation**
 - [Original Comprehensive Guide](SPEC_KIT_GUIDE.md) - Complete reference document
-- [Project README](../README.md) - User documentation and quick start
-- [CLAUDE Integration](../CLAUDE.md) - Claude Code integration details
-- [AGENTS Instructions](../AGENTS.md) - Complete AI assistant guidelines
+- [Project README](../../README.md) - User documentation and quick start
+- [CLAUDE Integration](../../CLAUDE.md) - Claude Code integration details
+- [AGENTS Instructions](../../AGENTS.md) - Complete AI assistant guidelines
 
 ### **Tools and Dependencies**
 - [uv Documentation](https://docs.astral.sh/uv/)

@@ -711,7 +711,7 @@ class PerformanceMonitor:
                 console.print(f"❌ {issue}")
 
             console.print("\n[bold yellow]Recommendations:[/bold yellow]")
-            console.print("• Review performance optimization guide in docs/")
+            console.print("• Review performance optimization guide in documentations/")
             console.print("• Run performance profiling to identify bottlenecks")
             console.print("• Consider code splitting and lazy loading")
             console.print("• Optimize images and assets")

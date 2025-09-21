@@ -127,6 +127,37 @@ debug() {
     fi
 }
 
+# Enhanced command execution with debug mode support
+run_command() {
+    local description="$1"
+    local command="$2"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+    if $DEBUG_MODE; then
+        log "INFO" "🔧 $description"
+        log "DEBUG" "Command: $command"
+        echo "[$timestamp] [COMMAND_FULL] $command" >> "$LOG_COMMANDS"
+        echo "[$timestamp] [COMMAND_START] $description" >> "$LOG_COMMANDS"
+
+        # Show command and all output in debug mode
+        echo -e "${YELLOW}► Running: $command${NC}"
+        eval "$command" 2>&1 | tee -a "$LOG_COMMANDS" | sed 's/^/   /'
+        local exit_code=${PIPESTATUS[0]}
+
+        echo "[$timestamp] [COMMAND_EXIT] Exit code: $exit_code" >> "$LOG_COMMANDS"
+        if [[ $exit_code -eq 0 ]]; then
+            log "SUCCESS" "✅ $description"
+        else
+            log "ERROR" "❌ $description failed (exit: $exit_code)"
+        fi
+        return $exit_code
+    else
+        # Original behavior - hide output
+        eval "$command" >> "$LOG_FILE" 2>&1
+        return $?
+    fi
+}
+
 # SVG Screenshot capture integration - FULLY AUTOMATIC
 SVG_CAPTURE_SCRIPT="$SCRIPT_DIR/scripts/svg_screenshot_capture.sh"
 ENABLE_SCREENSHOTS="true"  # Always enabled, no user configuration needed
@@ -138,11 +169,164 @@ if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
     debug "No GUI display detected, disabling screenshots"
 fi
 
+# Display stage-specific summary information for screenshots
+display_stage_summary() {
+    local stage_name="$1"
+
+    case "$stage_name" in
+        "Initial Desktop")
+            echo "🖥️  Clean Ubuntu desktop environment"
+            echo "🎯 Target: Install Ghostty terminal with modern tools"
+            echo "📦 Components: Ghostty, ZSH, Node.js, Claude Code, Gemini CLI"
+            ;;
+        "System Check")
+            echo "🔍 Checking existing installations..."
+            if command -v ghostty >/dev/null 2>&1; then
+                echo "✅ Ghostty: $(ghostty --version 2>/dev/null || echo 'Installed')"
+            else
+                echo "❌ Ghostty: Not installed"
+            fi
+            if command -v zsh >/dev/null 2>&1; then
+                echo "✅ ZSH: $(zsh --version | cut -d' ' -f2)"
+            else
+                echo "❌ ZSH: Not installed"
+            fi
+            ;;
+        "Dependencies")
+            echo "📦 Installing system dependencies..."
+            echo "🔧 Build tools, libraries, and development packages"
+            echo "📋 Status: $(dpkg -l 2>/dev/null | grep -c "^ii") packages installed"
+            ;;
+        "ZSH Setup")
+            echo "🐚 ZSH Shell Configuration"
+            if [ -d "$HOME/.oh-my-zsh" ]; then
+                echo "✅ Oh My ZSH: Installed"
+            fi
+            if [ -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
+                echo "✅ Powerlevel10k: Installed"
+            fi
+            echo "🎨 Theme: Modern terminal with git integration"
+            ;;
+        "Modern Tools")
+            echo "⚡ Modern Unix Tool Replacements"
+            command -v eza >/dev/null 2>&1 && echo "✅ eza: $(eza --version | head -1)"
+            command -v bat >/dev/null 2>&1 && echo "✅ bat: $(bat --version | cut -d' ' -f2)"
+            command -v rg >/dev/null 2>&1 && echo "✅ ripgrep: $(rg --version | head -1)"
+            command -v fzf >/dev/null 2>&1 && echo "✅ fzf: $(fzf --version)"
+            ;;
+        "Zig Compiler")
+            echo "⚡ Zig Programming Language"
+            if command -v zig >/dev/null 2>&1; then
+                echo "✅ Zig: $(zig version)"
+                echo "🎯 Purpose: Required for building Ghostty from source"
+            else
+                echo "📥 Installing Zig 0.14.0..."
+            fi
+            ;;
+        "Ghostty Build")
+            echo "🏗️  Ghostty Terminal Compilation"
+            if command -v ghostty >/dev/null 2>&1; then
+                echo "✅ Ghostty: $(ghostty --version 2>/dev/null || echo 'Installed')"
+            else
+                echo "🔨 Building Ghostty from source with Zig..."
+            fi
+            echo "⚡ Optimizations: ReleaseFast build for performance"
+            ;;
+        "Configuration")
+            echo "⚙️  Ghostty Configuration Setup"
+            echo "📁 Config: ~/.config/ghostty/"
+            echo "🎨 Themes: Catppuccin with auto light/dark switching"
+            echo "⚡ Performance: 2025 optimizations enabled"
+            ;;
+        "Context Menu")
+            echo "🖱️  Right-click Integration"
+            echo "📂 Nautilus: 'Open in Ghostty' context menu"
+            echo "🎯 Quick access from any folder"
+            ;;
+        "Ptyxis Terminal")
+            echo "🔄 Secondary Terminal (Comparison)"
+            if command -v ptyxis >/dev/null 2>&1; then
+                echo "✅ Ptyxis: $(ptyxis --version 2>/dev/null | head -1 || echo 'Installed')"
+            fi
+            echo "🤖 Integrated with Gemini CLI"
+            ;;
+        "UV Package Manager")
+            echo "🐍 Python Package Management"
+            if command -v uv >/dev/null 2>&1; then
+                echo "✅ uv: $(uv --version)"
+            fi
+            echo "⚡ Ultra-fast Python package installer and resolver"
+            ;;
+        "Node.js Setup")
+            echo "📦 Node.js and NPM"
+            if command -v node >/dev/null 2>&1; then
+                echo "✅ Node.js: $(node --version)"
+                echo "✅ NPM: $(npm --version)"
+            fi
+            echo "🎯 Required for AI CLI tools"
+            ;;
+        "Claude Code")
+            echo "🤖 Claude Code CLI"
+            if command -v claude >/dev/null 2>&1; then
+                echo "✅ Claude: $(claude --version)"
+            fi
+            echo "💡 Anthropic's AI assistant for code"
+            ;;
+        "Gemini CLI")
+            echo "💎 Google Gemini CLI"
+            if command -v gemini >/dev/null 2>&1; then
+                echo "✅ Gemini: Available"
+            fi
+            echo "🔗 Integrated with Ptyxis terminal"
+            ;;
+        "Verification")
+            echo "✅ Installation Verification"
+            echo "🔍 Testing all components..."
+            echo "📊 Performance check and final validation"
+            ;;
+        "Completion")
+            echo "🎉 Installation Complete!"
+            echo "✅ All tools installed and configured"
+            echo ""
+            echo "📊 Final Status:"
+            command -v ghostty >/dev/null 2>&1 && echo "  ✅ Ghostty: $(ghostty --version 2>/dev/null || echo 'Ready')"
+            command -v zsh >/dev/null 2>&1 && echo "  ✅ ZSH: Default shell with Powerlevel10k"
+            command -v claude >/dev/null 2>&1 && echo "  ✅ Claude Code: $(claude --version 2>/dev/null || echo 'Ready')"
+            command -v node >/dev/null 2>&1 && echo "  ✅ Node.js: $(node --version 2>/dev/null)"
+            echo ""
+            echo "📁 Session: $LOG_SESSION_ID"
+            if [ -f "$LOG_SESSION_MANIFEST" ]; then
+                local duration=$(jq -r '.status.completed // empty' "$LOG_SESSION_MANIFEST" 2>/dev/null | head -1)
+                local screenshots=$(jq -r '.statistics.screenshots_captured // empty' "$LOG_SESSION_MANIFEST" 2>/dev/null)
+                [ -n "$duration" ] && echo "⏱️  Session completed: $(date -d "$duration" '+%H:%M:%S' 2>/dev/null || echo 'Recently')"
+                [ -n "$screenshots" ] && echo "📸 Screenshots: $screenshots captured"
+            fi
+            echo "🚀 Shell restart will activate new configuration"
+            ;;
+        "Shell Restart")
+            echo "🔄 Activating New Shell Environment"
+            echo "✅ Installation completed successfully"
+            echo ""
+            echo "🐚 New Configuration:"
+            echo "  ✅ ZSH with Oh My ZSH framework"
+            echo "  ✅ Powerlevel10k theme with git integration"
+            echo "  ✅ Modern tools (eza, bat, ripgrep, fzf)"
+            echo "  ✅ AI tools (Claude Code, Gemini CLI)"
+            echo ""
+            echo "⚡ Restarting shell to activate configuration..."
+            echo "🎯 Next: New shell prompt with enhanced features"
+            ;;
+        *)
+            echo "🔧 Installation step: $stage_name"
+            ;;
+    esac
+}
+
 # Function to capture SVG screenshot at key stages - SYNCHRONIZED WITH LOGS
 capture_stage_screenshot() {
     local stage_name="$1"
     local description="${2:-$stage_name}"
-    local delay="${3:-2}"
+    local pause_duration="${3:-3}"
 
     # Set current stage for other functions to use
     export CURRENT_STAGE="$stage_name"
@@ -152,29 +336,64 @@ capture_stage_screenshot() {
 
     # Always attempt screenshot capture if GUI is available
     if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
-        debug "📸 Auto-capturing screenshot for stage: $stage_name (session: $LOG_SESSION_ID)"
+
+        # Add a visual separator to show what just completed
+        echo ""
+        echo -e "${GREEN}📸 Capturing screenshot of: $stage_name${NC}"
+        echo -e "${BLUE}📋 $description${NC}"
+        echo -e "${CYAN}💡 This will capture the current installation results${NC}"
+        echo ""
+
+        # Brief announcement countdown
+        echo -e "${YELLOW}📸 Screenshot in ${pause_duration} seconds... Press any key to skip${NC}"
+        local skipped=false
+        for i in $(seq $pause_duration -1 1); do
+            echo -ne "\r${YELLOW}📸 Screenshot in $i seconds... Press any key to skip ${NC}"
+
+            # Check if user pressed a key (non-blocking)
+            if read -t 1 -n 1; then
+                skipped=true
+                break
+            fi
+        done
+
+        if $skipped; then
+            echo -ne "\r${GREEN}📸 Capturing screenshot now!                     ${NC}\n"
+        else
+            echo -ne "\r${GREEN}📸 Capturing screenshot now!                     ${NC}\n"
+        fi
 
         # Ensure synchronized directories exist
         mkdir -p "$LOG_DIR" "$SCREENSHOT_SESSION_DIR"
 
-        # Run screenshot capture in background to not slow down installation
-        (
-            # Pass synchronized environment variables
-            export SCREENSHOT_TOOLS_VENV="${SCREENSHOT_TOOLS_VENV:-}"
-            export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-}"
-            export LOG_SESSION_ID="$LOG_SESSION_ID"
-            export LOG_FILE="$LOG_FILE"
-            export CURRENT_STAGE="$stage_name"
-            export DETECTED_TERMINAL="$DETECTED_TERMINAL"
-            export SCREENSHOT_SESSION_DIR="$SCREENSHOT_SESSION_DIR"
+        # Capture screenshot synchronously (captures current terminal state)
+        export SCREENSHOT_TOOLS_VENV="${SCREENSHOT_TOOLS_VENV:-}"
+        export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-}"
+        export LOG_SESSION_ID="$LOG_SESSION_ID"
+        export LOG_FILE="$LOG_FILE"
+        export CURRENT_STAGE="$stage_name"
+        export DETECTED_TERMINAL="$DETECTED_TERMINAL"
+        export SCREENSHOT_SESSION_DIR="$SCREENSHOT_SESSION_DIR"
 
-            # Use synchronized screenshot session directory
-            "$SVG_CAPTURE_SCRIPT" capture "$stage_name" "$description" auto "$delay" >/dev/null 2>&1 || \
-            debug "Screenshot capture failed for stage: $stage_name (continuing installation)"
-        ) &
+        # Synchronous screenshot capture
+        if "$SVG_CAPTURE_SCRIPT" capture "$stage_name" "$description" auto "1" >/dev/null 2>&1; then
+            echo -e "${GREEN}✅ Screenshot captured for: $stage_name${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Screenshot failed for: $stage_name (continuing...)${NC}"
+        fi
 
-        # Store PID for cleanup later
-        echo $! >> "$LOG_DIR/$LOG_SESSION_ID-screenshot-pids.log" 2>/dev/null || true
+        # Brief pause to let user see the confirmation
+        sleep 1
+
+        # NOW clear the screen after screenshot is taken (except for very first one)
+        if [ "$stage_name" != "Initial Desktop" ]; then
+            echo ""
+            echo -e "${CYAN}🧹 Clearing screen for next installation stage...${NC}"
+            sleep 1
+            clear
+        fi
+
+        debug "📸 Screenshot captured for stage: $stage_name (session: $LOG_SESSION_ID)"
     else
         debug "Screenshot capture disabled (no GUI or script not found)"
         # Still track the stage even without screenshot
@@ -530,8 +749,10 @@ start_task() {
     fi
     echo "───────────────────────────────────────"
 
-    # Store task start info
-    echo "$task_id|$task_name|$(date +%s)" > "/tmp/current_task_$task_id"
+    # Store task start info with safe filename
+    local safe_task_id=$(echo "$task_id" | tr -cd '[:alnum:]' | cut -c1-20)
+    local task_file="/tmp/task_${safe_task_id}_$$"
+    echo "$task_id|$task_name|$(date +%s)" > "$task_file"
     echo "$task_id"
 }
 
@@ -548,7 +769,9 @@ stream_command() {
     # Log command start to all relevant log files
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     local start_time=$(date +%s.%N)
-    local temp_log="/tmp/command_output_$task_id"
+    # Use short, safe filename to prevent "File name too long" errors
+    local safe_task_id=$(echo "$task_id" | tr -cd '[:alnum:]' | cut -c1-20)
+    local temp_log="/tmp/cmd_${safe_task_id}_$$"
 
     # Log command execution to dedicated command log
     cat >> "$LOG_COMMANDS" << EOF
@@ -605,8 +828,11 @@ complete_task() {
 
     local task_name="${active_tasks[$task_id]:-Unknown Task}"
 
-    if [ -f "/tmp/current_task_$task_id" ]; then
-        local task_info=$(cat "/tmp/current_task_$task_id")
+    # Use safe filename for task tracking
+    local safe_task_id=$(echo "$task_id" | tr -cd '[:alnum:]' | cut -c1-20)
+    local task_file="/tmp/task_${safe_task_id}_$$"
+    if [ -f "$task_file" ]; then
+        local task_info=$(cat "$task_file")
         local start_time=$(echo "$task_info" | cut -d'|' -f3)
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
@@ -644,15 +870,16 @@ complete_task() {
         echo ""  # Add space after completion
 
         # Copy command output to main log if it exists
-        if [ -f "/tmp/command_output_$task_id" ]; then
+        local temp_log="/tmp/cmd_${safe_task_id}_$$"
+        if [ -f "$temp_log" ]; then
             echo "[$timestamp] [TASK_OUTPUT_START] $task_name" >> "$LOG_FILE"
-            cat "/tmp/command_output_$task_id" >> "$LOG_FILE"
+            cat "$temp_log" >> "$LOG_FILE"
             echo "[$timestamp] [TASK_OUTPUT_END] $task_name" >> "$LOG_FILE"
         fi
 
-        # Cleanup
-        rm -f "/tmp/current_task_$task_id"
-        rm -f "/tmp/command_output_$task_id"
+        # Cleanup using safe filenames
+        rm -f "$task_file"
+        rm -f "$temp_log"
         unset active_tasks[$task_id]
     fi
 }
@@ -824,6 +1051,7 @@ show_help() {
     echo "  --skip-ai      Skip AI tools (Claude Code, Gemini CLI)"
     echo "  --skip-ptyxis  Skip Ptyxis installation"
     echo "  --verbose      Enable verbose logging"
+    echo "  --debug        Enable full debug mode (shows all commands and outputs)"
     echo ""
     echo "Examples:"
     echo "  ./start.sh                    # Full installation"
@@ -838,6 +1066,7 @@ SKIP_NODE=false
 SKIP_AI=false
 SKIP_PTYXIS=false
 VERBOSE=false
+DEBUG_MODE=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -863,6 +1092,12 @@ while [[ $# -gt 0 ]]; do
             ;;
         --verbose)
             VERBOSE=true
+            shift
+            ;;
+        --debug)
+            DEBUG_MODE=true
+            VERBOSE=true
+            set -x  # Enable bash debug mode
             shift
             ;;
         *)
@@ -1316,6 +1551,36 @@ install_zsh() {
         fi
     fi
 
+    # Install Powerlevel10k theme for enhanced terminal productivity
+    local p10k_dir="$REAL_HOME/.oh-my-zsh/custom/themes/powerlevel10k"
+    if [ ! -d "$p10k_dir" ]; then
+        log "INFO" "📥 Installing Powerlevel10k theme..."
+        if git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$p10k_dir" >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Powerlevel10k theme installed"
+        else
+            log "WARNING" "⚠️  Failed to install Powerlevel10k theme"
+        fi
+    else
+        log "INFO" "✅ Powerlevel10k theme already installed"
+    fi
+
+    # Create Powerlevel10k configuration file
+    local p10k_config="$REAL_HOME/.p10k.zsh"
+    if [ ! -f "$p10k_config" ] && [ -d "$p10k_dir" ]; then
+        log "INFO" "⚙️  Creating Powerlevel10k configuration..."
+        if [ -f "$p10k_dir/config/p10k-lean.zsh" ]; then
+            cp "$p10k_dir/config/p10k-lean.zsh" "$p10k_config"
+            log "SUCCESS" "✅ Powerlevel10k configuration created (lean style)"
+        else
+            log "WARNING" "⚠️  Powerlevel10k config template not found"
+        fi
+    elif [ -f "$p10k_config" ]; then
+        log "INFO" "✅ Powerlevel10k configuration already exists"
+    fi
+
+    # Configure Powerlevel10k theme integration
+    log "INFO" "🎨 Configuring Powerlevel10k theme integration..."
+
     # Configure .zshrc with essential plugins and optimizations
     local zshrc="$REAL_HOME/.zshrc"
     if [ -f "$zshrc" ]; then
@@ -1325,8 +1590,45 @@ install_zsh() {
         # Update plugins with essential trinity + productivity plugins
         if grep -q "plugins=" "$zshrc"; then
             # Replace with optimized plugin list (syntax-highlighting MUST be last)
-            sed -i 's/plugins=(.*/plugins=(git npm node nvm docker docker-compose sudo history extract z you-should-use zsh-autosuggestions zsh-syntax-highlighting)/' "$zshrc"
+            sed -i 's/plugins=([^)]*)/plugins=(git npm node nvm docker docker-compose sudo history extract z you-should-use zsh-autosuggestions zsh-syntax-highlighting)/' "$zshrc"
             log "SUCCESS" "✅ Updated plugins with essential trinity and productivity tools"
+        fi
+
+        # Set Powerlevel10k as the ZSH theme
+        if [ -d "$p10k_dir" ]; then
+            if grep -q "ZSH_THEME=" "$zshrc"; then
+                sed -i 's/ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$zshrc"
+                log "SUCCESS" "✅ Updated ZSH theme to Powerlevel10k"
+            else
+                echo 'ZSH_THEME="powerlevel10k/powerlevel10k"' >> "$zshrc"
+                log "SUCCESS" "✅ Set ZSH theme to Powerlevel10k"
+            fi
+
+            # Add Powerlevel10k instant prompt (must be near top of .zshrc)
+            if ! grep -q "p10k-instant-prompt" "$zshrc"; then
+                # Find the line after the Oh My ZSH path export
+                local insert_line=$(grep -n "export ZSH=" "$zshrc" | head -1 | cut -d: -f1)
+                if [ -n "$insert_line" ]; then
+                    # Insert instant prompt configuration after ZSH path
+                    sed -i "${insert_line}a\\
+\\
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.\\
+# Initialization code that may require console input (password prompts, [y/n]\\
+# confirmations, etc.) must go above this block; everything else may go below.\\
+if [[ -r \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\" ]]; then\\
+  source \"\${XDG_CACHE_HOME:-\$HOME/.cache}/p10k-instant-prompt-\${(%):-%n}.zsh\"\\
+fi" "$zshrc"
+                    log "SUCCESS" "✅ Added Powerlevel10k instant prompt configuration"
+                fi
+            fi
+
+            # Add p10k config sourcing at the end
+            if ! grep -q "source.*\.p10k\.zsh" "$zshrc" && [ -f "$p10k_config" ]; then
+                echo "" >> "$zshrc"
+                echo "# To customize prompt, run \`p10k configure\` or edit ~/.p10k.zsh." >> "$zshrc"
+                echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> "$zshrc"
+                log "SUCCESS" "✅ Added Powerlevel10k configuration sourcing"
+            fi
         fi
 
         # Add performance optimizations to .zshrc
@@ -1597,6 +1899,8 @@ install_system_deps() {
         "libgdk-pixbuf-2.0-dev" "libcairo2-dev" "libvulkan-dev"
         "libgraphene-1.0-dev" "libx11-dev" "libwayland-dev"
         "libonig-dev" "libxml2-dev" "flatpak"
+        "xdotool" "scrot" "imagemagick" "gnome-screenshot"
+        "eza" "bat" "ripgrep" "fzf" "fd-find"
     )
 
     # Check which packages are missing
@@ -2139,16 +2443,16 @@ install_claude_code() {
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
     # Install Claude Code globally
-    if npm list -g @anthropic-ai/claude-code >/dev/null 2>&1; then
+    if npm list -g claude-code >/dev/null 2>&1; then
         log "INFO" "🔄 Updating Claude Code..."
-        if npm update -g @anthropic-ai/claude-code >> "$LOG_FILE" 2>&1; then
+        if npm update -g claude-code >> "$LOG_FILE" 2>&1; then
             log "SUCCESS" "✅ Claude Code updated"
         else
             log "WARNING" "⚠️  Claude Code update may have failed"
         fi
     else
         log "INFO" "📥 Installing Claude Code..."
-        if npm install -g @anthropic-ai/claude-code >> "$LOG_FILE" 2>&1; then
+        if npm install -g claude-code >> "$LOG_FILE" 2>&1; then
             log "SUCCESS" "✅ Claude Code installed"
         else
             log "ERROR" "❌ Claude Code installation failed"
@@ -2320,12 +2624,24 @@ show_final_instructions() {
     echo ""
     echo -e "${GREEN}🎉 Installation Complete!${NC}"
     echo ""
+    echo -e "${CYAN}Environment Ready:${NC}"
+    echo "✅ ZSH with Oh My ZSH and Powerlevel10k theme"
+    echo "✅ Modern Unix tools (eza, bat, ripgrep, fzf, etc.)"
+    echo "✅ Ghostty terminal with optimized configuration"
+    if ! $SKIP_PTYXIS; then
+        echo "✅ Ptyxis terminal with Gemini CLI integration"
+    fi
+    if ! $SKIP_AI; then
+        echo "✅ Claude Code CLI and Gemini CLI"
+    fi
+    echo "✅ Complete screenshot and documentation system"
+    echo ""
     echo -e "${CYAN}Next steps:${NC}"
-    echo "1. Restart your terminal to activate ZSH and new environment"
+    echo "1. The script will automatically restart your shell in 3 seconds"
     echo "2. Test Ghostty: ghostty"
     if ! $SKIP_PTYXIS; then
         echo "3. Test Ptyxis: flatpak run app.devsuite.Ptyxis"
-        echo "4. Use Gemini in Ptyxis: gemini (after restart)"
+        echo "4. Use Gemini in Ptyxis: gemini"
     fi
     if ! $SKIP_AI; then
         echo "5. Set up Claude Code: claude auth login"
@@ -2426,6 +2742,37 @@ EOF
     log "INFO" "💡 Right-click any folder and select 'Scripts' > 'Open in Ghostty'"
 }
 
+# Restart shell environment to activate new configuration
+restart_shell_environment() {
+    echo ""
+    echo -e "${GREEN}🔄 Restarting shell environment...${NC}"
+    echo ""
+
+    # Give user a moment to read the completion message
+    for i in 3 2 1; do
+        echo -ne "\r🔄 Shell restart in ${i} seconds... Press Ctrl+C to cancel"
+        sleep 1
+    done
+    echo ""
+
+    log "INFO" "🔄 Restarting shell with new configuration..."
+
+    # Take final screenshot showing shell restart preparation
+    if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
+        capture_stage_screenshot "Shell Restart" "Activating new ZSH configuration with Powerlevel10k" 2
+    fi
+
+    # Source the new .zshrc first to ensure it's valid
+    if [ -f "$REAL_HOME/.zshrc" ]; then
+        log "INFO" "📋 Sourcing updated .zshrc configuration..."
+        # Use exec to replace current shell process with new ZSH
+        exec zsh -l
+    else
+        log "WARNING" "⚠️  .zshrc not found, manual shell restart recommended"
+        echo "Please run: exec zsh"
+    fi
+}
+
 # Main execution
 main() {
     echo -e "${CYAN}========================================${NC}"
@@ -2452,7 +2799,7 @@ main() {
     fi
 
     # Capture initial desktop state
-    capture_stage_screenshot "Initial Desktop" "Clean Ubuntu desktop before Ghostty installation" 3
+    capture_stage_screenshot "Initial Desktop" "Clean Ubuntu desktop before Ghostty installation" 4
 
     # Capture initial system state
     capture_system_state
@@ -2467,29 +2814,29 @@ main() {
     
     # Check current installation status and determine strategies
     check_installation_status
-    capture_stage_screenshot "System Check" "Installation status check and strategy determination" 2
+    capture_stage_screenshot "System Check" "Installation status check and strategy determination" 3
 
     # Execute installation steps
     install_system_deps
-    capture_stage_screenshot "Dependencies" "System dependencies installation completed" 2
+    capture_stage_screenshot "Dependencies" "System dependencies installation completed" 3
 
     install_zsh
-    capture_stage_screenshot "ZSH Setup" "ZSH and Oh My ZSH configuration" 2
+    capture_stage_screenshot "ZSH Setup" "ZSH and Oh My ZSH configuration" 3
 
     install_modern_tools
-    capture_stage_screenshot "Modern Tools" "Development tools and utilities installation" 2
+    capture_stage_screenshot "Modern Tools" "Development tools and utilities installation" 3
 
     install_zig
-    capture_stage_screenshot "Zig Compiler" "Zig compiler installation and setup" 2
+    capture_stage_screenshot "Zig Compiler" "Zig compiler installation and setup" 3
 
     install_ghostty
-    capture_stage_screenshot "Ghostty Build" "Ghostty terminal compilation from source" 3
+    capture_stage_screenshot "Ghostty Build" "Ghostty terminal compilation from source" 4
 
     # Smart configuration update (always run to ensure latest optimizations)
     if $CONFIG_NEEDS_UPDATE || [ "$GHOSTTY_STRATEGY" = "fresh" ] || [ "$GHOSTTY_STRATEGY" = "reconfig" ]; then
         update_ghostty_config
     fi
-    capture_stage_screenshot "Configuration" "Ghostty configuration files and optimization setup" 2
+    capture_stage_screenshot "Configuration" "Ghostty configuration files and optimization setup" 3
 
     install_context_menu
     capture_stage_screenshot "Context Menu" "Right-click context menu integration" 2
@@ -2519,7 +2866,6 @@ main() {
         capture_stage_screenshot "Verification" "Installation verification and testing" 2
         log "SUCCESS" "🎉 All installations completed successfully!"
         show_final_instructions
-        capture_stage_screenshot "Completion" "Final installation summary and instructions" 3
     else
         log "WARNING" "⚠️  Some installations may need attention. Check the log for details."
         capture_stage_screenshot "Warning State" "Installation completed with warnings" 2
@@ -2547,6 +2893,12 @@ main() {
     log "INFO" "   📸 Screenshots: ls -la docs/assets/screenshots/$LOG_SESSION_ID/"
     log "INFO" "   📊 Manifest: jq '.' $LOG_SESSION_MANIFEST"
     log "INFO" "🏷️  Terminal used: $DETECTED_TERMINAL"
+
+    # Capture final completion state with all information displayed
+    capture_stage_screenshot "Completion" "Complete installation with performance metrics and session data" 4
+
+    # Automatic shell restart to activate new configuration
+    restart_shell_environment
 }
 
 # Run main function

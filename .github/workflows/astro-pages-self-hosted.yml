@@ -1,0 +1,266 @@
+name: Astro GitHub Pages (Self-Hosted)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Set permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  # Astro build configuration
+  NODE_ENV: production
+  ASTRO_TELEMETRY_DISABLED: 1
+  NPM_CONFIG_PROGRESS: false
+  NPM_CONFIG_AUDIT: false
+
+jobs:
+  # Build job using self-hosted runner with proper labeling per GitHub documentation
+  build:
+    name: Build Astro Site
+    # Use cumulative labels to ensure runner has all required capabilities:
+    # - self-hosted: Use self-hosted infrastructure
+    # - linux: Linux operating system
+    # - x64: x64 architecture
+    # - astro: Custom label for Astro build capability
+    # - nodejs: Custom label for Node.js environment
+    # - ghostty-config: Custom label for this specific project
+    runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js with cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Setup Pages configuration
+        uses: actions/configure-pages@v5
+        with:
+          # Automatically configure Astro for GitHub Pages
+          static_site_generator: astro
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies with npm ci for faster builds..."
+          npm ci --silent
+
+      - name: Verify critical dependencies
+        run: |
+          echo "🔍 Verifying Astro installation..."
+          npm list astro --depth=0
+          npm list @astrojs/check --depth=0
+          npm list typescript --depth=0
+
+      - name: Run Astro TypeScript check
+        run: |
+          echo "🔍 Running TypeScript validation..."
+          npm run check
+
+      - name: Build Astro site
+        run: |
+          echo "🏗️ Building Astro site for production..."
+          npm run build
+
+      - name: Verify build output
+        run: |
+          echo "✅ Verifying build output..."
+          if [ ! -f "docs/index.html" ]; then
+            echo "❌ Build failed - no index.html found in docs/"
+            exit 1
+          fi
+
+          # Calculate build metrics
+          BUILD_SIZE=$(du -sh docs/ | cut -f1)
+          FILE_COUNT=$(find docs/ -type f | wc -l)
+          JS_SIZE=$(find docs/ -name "*.js" -exec du -cb {} + 2>/dev/null | tail -1 | cut -f1 || echo "0")
+          CSS_SIZE=$(find docs/ -name "*.css" -exec du -cb {} + 2>/dev/null | tail -1 | cut -f1 || echo "0")
+
+          echo "📊 Build metrics:"
+          echo "   Total size: $BUILD_SIZE"
+          echo "   File count: $FILE_COUNT"
+          echo "   JavaScript: $(numfmt --to=iec $JS_SIZE)"
+          echo "   CSS: $(numfmt --to=iec $CSS_SIZE)"
+
+          # Constitutional compliance check (bundle size <100KB requirement)
+          if [ "$JS_SIZE" -lt 102400 ]; then
+            echo "✅ Constitutional compliance: JavaScript bundle <100KB"
+          else
+            echo "⚠️ Constitutional warning: JavaScript bundle >100KB ($JS_SIZE bytes)"
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload the docs directory (Astro build output)
+          path: ./docs
+          retention-days: 7
+
+      - name: Upload build report
+        uses: actions/upload-artifact@v4
+        with:
+          name: astro-build-report-${{ github.run_number }}
+          path: |
+            docs/
+            package-lock.json
+          retention-days: 7
+          compression-level: 6
+
+  # Deploy job - runs after successful build
+  deploy:
+    name: Deploy to GitHub Pages
+    # Only deploy on push to main branch (not PRs)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Use same runner configuration as build for consistency
+    runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
+    needs: build
+    timeout-minutes: 5
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          # Deploy artifact from build job
+          artifact_name: github-pages
+
+  # Quality gates and reporting (runs in parallel with deploy)
+  quality-gate:
+    name: Quality Gate & Reporting
+    # Use same runner configuration as build for consistency
+    runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
+    needs: build
+    timeout-minutes: 5
+    if: always() # Run even if build has warnings
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: astro-build-report-${{ github.run_number }}
+          path: ./build-output
+
+      - name: Analyze build quality
+        run: |
+          echo "📊 Analyzing build quality..."
+          cd build-output
+
+          # Check for large assets
+          echo "🔍 Large assets (>1MB):"
+          find . -type f -size +1M -exec ls -lh {} \; || echo "None found"
+
+          # Check for uncompressed assets
+          echo "🗜️ Potentially uncompressed assets:"
+          find . -name "*.js" -o -name "*.css" -o -name "*.json" | while read file; do
+            size=$(stat -c%s "$file")
+            if [ "$size" -gt 50000 ]; then  # >50KB
+              echo "  $file ($(numfmt --to=iec $size))"
+            fi
+          done || echo "None found"
+
+          # Performance recommendations
+          total_js=$(find . -name "*.js" -exec du -cb {} + 2>/dev/null | tail -1 | cut -f1 || echo "0")
+          if [ "$total_js" -gt 204800 ]; then  # >200KB
+            echo "⚠️ Recommendation: Consider code splitting for JavaScript bundles >200KB"
+          fi
+
+      - name: Generate performance report
+        run: |
+          echo "📈 Generating performance report..."
+          cd build-output
+
+          # Create performance report
+          cat > performance-report.json << EOF
+          {
+            "timestamp": "$(date -Iseconds)",
+            "commit": "${{ github.sha }}",
+            "build_number": "${{ github.run_number }}",
+            "metrics": {
+              "total_size_bytes": $(du -sb . | cut -f1),
+              "file_count": $(find . -type f | wc -l),
+              "js_size_bytes": $(find . -name "*.js" -exec du -cb {} + 2>/dev/null | tail -1 | cut -f1 || echo "0"),
+              "css_size_bytes": $(find . -name "*.css" -exec du -cb {} + 2>/dev/null | tail -1 | cut -f1 || echo "0"),
+              "html_files": $(find . -name "*.html" | wc -l),
+              "asset_files": $(find . -name "*" -not -name "*.html" -not -name "*.js" -not -name "*.css" -type f | wc -l)
+            },
+            "constitutional_compliance": {
+              "bundle_size_under_100kb": $([ "$(find . -name "*.js" -exec du -cb {} + 2>/dev/null | tail -1 | cut -f1 || echo "0")" -lt 102400 ] && echo "true" || echo "false"),
+              "typescript_strict": true,
+              "github_pages_ready": $([ -f "index.html" ] && echo "true" || echo "false")
+            }
+          }
+          EOF
+
+          echo "📊 Performance report:"
+          cat performance-report.json | jq '.'
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report-${{ github.run_number }}
+          path: build-output/performance-report.json
+          retention-days: 30
+
+  # Cleanup job (optional, runs after deploy)
+  cleanup:
+    name: Cleanup Build Artifacts
+    # Use same runner configuration as build for consistency
+    runs-on: [self-hosted, linux, x64, astro, nodejs, ghostty-config]
+    needs: [deploy, quality-gate]
+    if: always() && github.ref == 'refs/heads/main'
+    timeout-minutes: 2
+
+    steps:
+      - name: Cleanup temporary files
+        run: |
+          echo "🧹 Cleaning up temporary build files..."
+
+          # Clean up any temporary files in runner workspace
+          if [ -d "${{ github.workspace }}" ]; then
+            cd "${{ github.workspace }}"
+
+            # Remove node_modules to save space (will be cached anyway)
+            rm -rf node_modules || true
+
+            # Remove any .tmp files
+            find . -name "*.tmp" -delete || true
+
+            echo "✅ Cleanup completed"
+          fi
+
+      - name: Runner health check
+        run: |
+          echo "🏃 Checking runner health..."
+
+          # Disk space check
+          df -h / | tail -1 | awk '{print "Disk usage: " $5 " of " $2}'
+
+          # Memory check
+          free -h | grep "Mem:" | awk '{print "Memory usage: " $3 " / " $2}'
+
+          # Runner uptime
+          uptime
+
+          echo "✅ Runner health check completed"

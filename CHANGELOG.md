@@ -2,6 +2,44 @@
 
 All notable changes to the Ghostty Configuration Files project are documented in this file.
 
+## [3.2.0] - 2025-09-21 - CRITICAL: Documentation Structure Reorganization + Astro GitHub Pages 🏗️
+
+### 🚨 **BREAKING CHANGE: Documentation Structure Completely Reorganized**
+**Implementation Date**: 2025-09-21 19:44 | **Status**: ✅ COMPLETE | **Breaking**: Old docs/ folder structure
+
+#### **✅ New Documentation Architecture (CONSTITUTIONAL REQUIREMENT)**
+- **`docs/`** - **Astro.build web application ONLY** → GitHub Pages deployment
+- **`documentations/`** - **All reference materials** → installation guides, screenshots, manuals, specs
+
+#### **✅ Astro + GitHub Pages Configuration Complete**
+- **Astro Build Output**: Now builds directly to `docs/` folder for GitHub Pages
+- **GitHub Pages Source**: Configured to serve from `main` branch `/docs` folder
+- **Zero Jekyll Conflicts**: Removed Jekyll `_config.yml`, pure Astro static deployment
+- **Constitutional Compliance**: Zero GitHub Actions consumption maintained
+
+#### **✅ Documentation Structure Migration Complete**
+- **Old `docs/` folder** → Renamed to `documentations/` with all assets preserved
+- **Installation guides** → `documentations/installation.md` with working SVG links
+- **Screenshot galleries** → `documentations/screenshots.md` with verified asset paths
+- **Process diagrams** → `documentations/assets/diagrams/` with proper references
+- **All cross-references** → Updated and verified working
+
+#### **✅ Constitutional Documents Updated**
+- **`constitution.md`** → Added documentation structure requirements
+- **`AGENTS.md`** → Added critical documentation rules and warnings
+- **`README.md`** → Updated all references to new structure
+
+#### **✅ Astro Web Application Features**
+- **Performance Dashboard** → Real-time CI/CD status and metrics
+- **Constitutional Compliance** → Zero GitHub Actions consumption tracking
+- **Bundle Optimization** → JavaScript <100KB, CSS optimized
+- **Accessibility** → WCAG 2.1 AA compliance with focus management
+
+#### **⚠️ MIGRATION REQUIRED**
+- **Old references to `docs/`** → Must be updated to `documentations/` for reference materials
+- **Astro web app** → Access via GitHub Pages at https://kairin.github.io/ghostty-config-files/
+- **Asset links** → All updated to `documentations/assets/` structure
+
 ## [3.1.1] - 2025-09-21 - Installation Session & Visual Documentation Update 📸
 
 ### 📋 **Latest Installation Session Completed**
@@ -16,8 +54,8 @@ All notable changes to the Ghostty Configuration Files project are documented in
 - **Context Menu**: Right-click "Open in Ghostty" integration verified and operational
 
 #### **📸 Visual Documentation Assets (Latest Session)**
-- **Process Diagram**: `docs/assets/diagrams/20250921-162207/diagram_20250921-162207_Ghostty_Installation_Process.svg`
-- **Installation Screenshots**: 16 complete SVG screenshots in `docs/assets/screenshots/20250921-162207-ghostty-install/`
+- **Process Diagram**: `documentations/assets/diagrams/20250921-164227/diagram_20250921-164227_Ghostty_Installation_Process.svg`
+- **Installation Screenshots**: 16 complete SVG screenshots in `documentations/assets/screenshots/20250921-164227-ghostty-install/`
   - System Check, Dependencies, ZSH Setup, Modern Tools, Configuration, Context Menu Integration
   - Ptyxis Terminal, uv Package Manager, Node.js Setup, Claude Code, Gemini CLI, Verification, Completion
 - **Session Logs**: Complete session tracking in `/tmp/ghostty-start-logs/20250921-162207-ghostty-install.*`

@@ -36,7 +36,7 @@ fi
 # Metadata and index files
 SCREENSHOT_METADATA="$SESSION_SCREENSHOTS_DIR/metadata.json"
 ASSETS_INDEX="$ASSETS_BASE_DIR/index.json"
-GITHUB_PAGES_CONFIG="$PROJECT_ROOT/docs/_config.yml"
+# GitHub Pages now handled by Astro build (docs/ directory)
 
 # Screenshot counter for ordering
 SCREENSHOT_COUNTER_FILE="$SESSION_SCREENSHOTS_DIR/.counter"
@@ -109,67 +109,26 @@ init_assets_index() {
   "github_pages": {
     "enabled": true,
     "base_url": "/ghostty-config-files",
-    "theme": "jekyll-theme-minimal"
+    "framework": "astro-build",
+    "build_output": "docs/"
   }
 }
 EOF
     fi
 }
 
-# Setup GitHub Pages configuration
-setup_github_pages_config() {
-    if [ ! -f "$GITHUB_PAGES_CONFIG" ]; then
-        cat > "$GITHUB_PAGES_CONFIG" << EOF
-title: Ghostty Configuration Files
-description: Comprehensive terminal environment setup with 2025 optimizations and AI integration
-theme: jekyll-theme-minimal
-baseurl: "/ghostty-config-files"
-url: "https://USERNAME.github.io"
-
-# Enable plugins
-plugins:
-  - jekyll-relative-links
-  - jekyll-optional-front-matter
-  - jekyll-readme-index
-  - jekyll-default-layout
-
-# Configure relative links
-relative_links:
-  enabled: true
-  collections: true
-
-# Default layouts
-defaults:
-  - scope:
-      path: ""
-      type: "pages"
-    values:
-      layout: "default"
-
-# Include assets
-include:
-  - assets/
-
-# Exclude development files
-exclude:
-  - node_modules/
-  - .git/
-  - .gitignore
-  - local-infra/
-  - scripts/
-  - configs/
-
-# Markdown configuration
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    css_class: 'highlight'
-    span:
-      line_numbers: false
-    block:
-      line_numbers: true
-EOF
+# Setup Astro configuration verification
+setup_astro_config_check() {
+    # Verify Astro configuration for GitHub Pages
+    if [ -f "astro.config.mjs" ]; then
+        if grep -q 'outDir.*docs' astro.config.mjs; then
+            echo "✅ Astro configured for GitHub Pages deployment"
+        else
+            echo "⚠️ Warning: Astro may not be configured to build to docs/ folder"
+            echo "   Check astro.config.mjs: outDir should be './docs'"
+        fi
+    else
+        echo "ℹ️ No astro.config.mjs found - using default Astro configuration"
     fi
 }
 
@@ -177,7 +136,7 @@ EOF
 capture_terminal_as_svg() {
     local stage_name="$1"
     local description="${2:-$stage_name}"
-    local capture_mode="${3:-auto}"  # auto, window, full
+    local capture_mode="${3:-window}"  # window, auto, full
     local delay="${4:-2}"
 
     # Get current counter and increment
@@ -188,8 +147,10 @@ capture_terminal_as_svg() {
     # Generate filename with proper ordering
     local timestamp=$(date +"%Y%m%d-%H%M%S")
     local safe_stage_name=$(echo "$stage_name" | tr ' ' '_' | tr -cd 'a-zA-Z0-9_-')
-    local filename="terminal_$(printf "%03d" "$counter")_${timestamp}_${safe_stage_name}.svg"
-    local output_file="$SESSION_SCREENSHOTS_DIR/$filename"
+    local svg_filename="terminal_$(printf "%03d" "$counter")_${timestamp}_${safe_stage_name}.svg"
+    local png_filename="terminal_$(printf "%03d" "$counter")_${timestamp}_${safe_stage_name}.png"
+    local svg_output_file="$SESSION_SCREENSHOTS_DIR/$svg_filename"
+    local png_output_file="$SESSION_SCREENSHOTS_DIR/$png_filename"
 
     echo -e "${BLUE}🎨 Capturing SVG screenshot for stage: $stage_name${NC}"
 
@@ -199,45 +160,72 @@ capture_terminal_as_svg() {
         sleep "$delay"
     fi
 
+    # Capture both SVG and PNG versions
+    local svg_success=false
+    local png_success=false
+
     # Capture terminal content as SVG
-    if capture_terminal_svg "$output_file" "$capture_mode"; then
+    if capture_terminal_svg "$svg_output_file" "$capture_mode"; then
         # Verify SVG was created and is valid
-        if [ -f "$output_file" ] && [ -s "$output_file" ]; then
+        if [ -f "$svg_output_file" ] && [ -s "$svg_output_file" ]; then
             # Get file size and validate SVG structure
-            local file_size=$(stat -c%s "$output_file" 2>/dev/null || echo "0")
+            local svg_file_size=$(stat -c%s "$svg_output_file" 2>/dev/null || echo "0")
 
             # Basic SVG validation
-            if grep -q "<svg" "$output_file" && grep -q "</svg>" "$output_file"; then
-                echo -e "${GREEN}✅ SVG screenshot captured: $filename${NC}"
+            if grep -q "<svg" "$svg_output_file" && grep -q "</svg>" "$svg_output_file"; then
+                echo -e "${GREEN}✅ SVG screenshot captured: $svg_filename${NC}"
+                svg_success=true
 
-                # Update metadata
-                update_screenshot_metadata "$stage_name" "$description" "$filename" "$counter" "$file_size" "svg-terminal"
+                # Update metadata for SVG
+                update_screenshot_metadata "$stage_name" "$description" "$svg_filename" "$counter" "$svg_file_size" "svg-terminal"
 
-                # Generate thumbnail PNG for GitHub previews
-                generate_svg_thumbnail "$output_file"
-
-                echo -e "   📁 Location: $output_file"
-                echo -e "   📊 Size: ${file_size} bytes"
+                echo -e "   📁 SVG Location: $svg_output_file"
+                echo -e "   📊 SVG Size: ${svg_file_size} bytes"
                 echo -e "   🖼️  Format: SVG with preserved text elements"
-                return 0
             else
                 echo -e "${YELLOW}⚠️  Generated file is not valid SVG, attempting fallback...${NC}"
-                rm -f "$output_file"
+                rm -f "$svg_output_file"
             fi
         fi
     fi
 
-    # Fallback to PNG with SVG conversion
-    echo -e "${YELLOW}📸 Falling back to PNG capture with SVG conversion...${NC}"
-    if capture_png_and_convert_svg "$output_file" "$capture_mode"; then
-        local file_size=$(stat -c%s "$output_file" 2>/dev/null || echo "0")
-        update_screenshot_metadata "$stage_name" "$description" "$filename" "$counter" "$file_size" "svg-converted"
-        echo -e "${GREEN}✅ SVG screenshot created via conversion: $filename${NC}"
+    # Always attempt PNG capture for full terminal window
+    echo -e "${BLUE}📸 Capturing PNG screenshot for full terminal window...${NC}"
+    if capture_png_screenshot "$png_output_file" "$capture_mode"; then
+        if [ -f "$png_output_file" ] && [ -s "$png_output_file" ]; then
+            local png_file_size=$(stat -c%s "$png_output_file" 2>/dev/null || echo "0")
+            echo -e "${GREEN}✅ PNG screenshot captured: $png_filename${NC}"
+            png_success=true
+
+            # Update metadata for PNG
+            update_screenshot_metadata "$stage_name" "$description (PNG)" "$png_filename" "$counter" "$png_file_size" "png-terminal"
+
+            echo -e "   📁 PNG Location: $png_output_file"
+            echo -e "   📊 PNG Size: ${png_file_size} bytes"
+            echo -e "   🖼️  Format: PNG full terminal window"
+        fi
+    fi
+
+    # Return success if either format was captured successfully
+    if [ "$svg_success" = true ] || [ "$png_success" = true ]; then
         return 0
     fi
 
-    echo -e "${YELLOW}⚠️  Failed to capture SVG screenshot for: $stage_name${NC}"
-    return 1
+    # Fallback to PNG with SVG conversion if both failed
+    if [ "$svg_success" = false ] && [ "$png_success" = false ]; then
+        echo -e "${YELLOW}📸 Falling back to PNG capture with SVG conversion...${NC}"
+        if capture_png_and_convert_svg "$svg_output_file" "$capture_mode"; then
+            local file_size=$(stat -c%s "$svg_output_file" 2>/dev/null || echo "0")
+            update_screenshot_metadata "$stage_name" "$description" "$svg_filename" "$counter" "$file_size" "svg-converted"
+            echo -e "${GREEN}✅ SVG screenshot created via conversion: $svg_filename${NC}"
+            return 0
+        fi
+
+        echo -e "${YELLOW}⚠️  Failed to capture any screenshot for: $stage_name${NC}"
+        return 1
+    fi
+
+    return 0
 }
 
 # Native SVG terminal capture using terminal-to-svg tools
@@ -531,19 +519,77 @@ capture_png_screenshot() {
     local output_file="$1"
     local capture_mode="$2"
 
-    # Try different screenshot tools
+    echo -e "${BLUE}📸 Attempting terminal window capture...${NC}"
+
+    # Try to get the active window ID (terminal window)
+    local window_id=""
+    if command -v xdotool >/dev/null 2>&1; then
+        window_id=$(xdotool getactivewindow 2>/dev/null)
+        echo -e "${CYAN}🎯 Active window ID: $window_id${NC}"
+    fi
+
+    # Priority 1: gnome-screenshot with window selection
     if command -v gnome-screenshot >/dev/null 2>&1; then
-        gnome-screenshot -f "$output_file" 2>/dev/null && return 0
+        echo -e "${CYAN}🔧 Using gnome-screenshot for window capture...${NC}"
+        if [ "$capture_mode" = "window" ] || [ -n "$window_id" ]; then
+            # Capture active window only
+            if gnome-screenshot -w -f "$output_file" 2>/dev/null; then
+                echo -e "${GREEN}✅ Terminal window captured with gnome-screenshot${NC}"
+                return 0
+            fi
+        fi
+        # Fallback to full screen if window capture fails
+        if gnome-screenshot -f "$output_file" 2>/dev/null; then
+            echo -e "${YELLOW}⚠️  Full screen captured (window capture failed)${NC}"
+            return 0
+        fi
     fi
 
+    # Priority 2: scrot with window selection
     if command -v scrot >/dev/null 2>&1; then
-        scrot "$output_file" 2>/dev/null && return 0
+        echo -e "${CYAN}🔧 Using scrot for window capture...${NC}"
+        if [ "$capture_mode" = "window" ] || [ -n "$window_id" ]; then
+            # Interactive window selection with 3 second delay
+            if scrot -s -d 3 "$output_file" 2>/dev/null; then
+                echo -e "${GREEN}✅ Terminal window captured with scrot (interactive)${NC}"
+                return 0
+            fi
+            # Try focused window if available
+            if scrot -u "$output_file" 2>/dev/null; then
+                echo -e "${GREEN}✅ Focused window captured with scrot${NC}"
+                return 0
+            fi
+        fi
+        # Fallback to full screen
+        if scrot "$output_file" 2>/dev/null; then
+            echo -e "${YELLOW}⚠️  Full screen captured with scrot${NC}"
+            return 0
+        fi
     fi
 
+    # Priority 3: ImageMagick import with window selection
     if command -v import >/dev/null 2>&1; then
-        import -window root "$output_file" 2>/dev/null && return 0
+        echo -e "${CYAN}🔧 Using ImageMagick import for window capture...${NC}"
+        if [ -n "$window_id" ]; then
+            # Capture specific window by ID
+            if import -window "$window_id" "$output_file" 2>/dev/null; then
+                echo -e "${GREEN}✅ Terminal window captured with import (window ID)${NC}"
+                return 0
+            fi
+        fi
+        # Interactive window selection
+        if import "$output_file" 2>/dev/null; then
+            echo -e "${GREEN}✅ Window captured with import (interactive)${NC}"
+            return 0
+        fi
+        # Fallback to root window
+        if import -window root "$output_file" 2>/dev/null; then
+            echo -e "${YELLOW}⚠️  Full screen captured with import${NC}"
+            return 0
+        fi
     fi
 
+    echo -e "${RED}❌ All screenshot methods failed${NC}"
     return 1
 }
 
@@ -610,6 +656,12 @@ update_screenshot_metadata() {
     local file_size="$5"
     local method="$6"
 
+    # Determine format from filename extension
+    local format="svg"
+    if [[ "$filename" == *.png ]]; then
+        format="png"
+    fi
+
     local temp_metadata=$(mktemp)
 
     jq --arg stage "$stage" \
@@ -619,6 +671,7 @@ update_screenshot_metadata() {
        --arg counter "$counter" \
        --arg size "$file_size" \
        --arg method "$method" \
+       --arg format "$format" \
        '.assets.screenshots += [{
          "stage": $stage,
          "description": $desc,
@@ -627,7 +680,7 @@ update_screenshot_metadata() {
          "timestamp": $timestamp,
          "file_size_bytes": ($size | tonumber),
          "capture_method": $method,
-         "format": "svg",
+         "format": $format,
          "github_path": "./screenshots/'$CURRENT_SESSION_ID'/\($file)",
          "pages_url": "/docs/assets/screenshots/'$CURRENT_SESSION_ID'/\($file)"
        }] | .counts.total_screenshots = (.assets.screenshots | length)' \
@@ -1006,7 +1059,7 @@ main() {
     # Initialize session and directories
     init_session_metadata
     init_assets_index
-    setup_github_pages_config
+    setup_astro_config_check
 
     case "${1:-help}" in
         "capture")
@@ -1033,7 +1086,7 @@ main() {
             install_svg_tools
             init_session_metadata
             init_assets_index
-            setup_github_pages_config
+            setup_astro_config_check
             echo -e "${GREEN}✅ SVG screenshot system ready${NC}"
             ;;
         "help"|*)
@@ -1081,7 +1134,7 @@ Asset Organization:
   docs/screenshots.md                           - Screenshots gallery
 
 GitHub Pages:
-  Automatically generates documentation with proper Jekyll configuration
+  Automatically generates documentation with Astro build configuration
   for seamless GitHub Pages deployment with SVG asset support.
 
 EOF

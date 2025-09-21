@@ -290,15 +290,15 @@ gh api user/settings/billing/actions | jq '.total_paid_minutes_used'
 ## 📚 Documentation
 
 ### Core Documentation
-- [Constitutional Requirements](docs/constitutional/README.md)
-- [Performance Guide](docs/performance/README.md)
-- [API Documentation](docs/api/README.md)
-- [Development Guide](docs/guides/development.md)
+- [Constitutional Requirements](documentations/constitutional/README.md)
+- [Performance Guide](documentations/performance/README.md)
+- [API Documentation](documentations/api/README.md)
+- [Development Guide](documentations/guides/development.md)
 
 ### Generated Documentation
-- [Component Documentation](docs/api/components/)
-- [Script Documentation](docs/api/scripts/)
-- [Performance Reports](docs/performance/)
+- [Component Documentation](documentations/api/components/)
+- [Script Documentation](documentations/api/scripts/)
+- [Performance Reports](documentations/performance/)
 
 ## 🔧 Troubleshooting
 
@@ -708,7 +708,7 @@ python scripts/performance_monitor.py --url http://localhost:4321
 ### Performance Reports
 Performance reports are automatically generated and stored in:
 - `local-infra/logs/performance-*.json` - System performance metrics
-- `docs/performance/reports/` - Historical performance data
+- `documentations/performance/reports/` - Historical performance data
 - `local-infra/logs/benchmark-*.json` - Benchmark results
 
 ## Optimization Strategies
@@ -983,7 +983,7 @@ python scripts/constitutional_automation.py --test
 All operations generate detailed logs:
 - `local-infra/logs/` - CI/CD and workflow logs
 - `/tmp/ghostty-start-logs/` - System installation and update logs
-- `docs/development/` - Development and debugging information
+- `documentations/development/` - Development and debugging information
 
 ### Performance Debugging
 ```bash
