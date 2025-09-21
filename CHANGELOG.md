@@ -2,6 +2,47 @@
 
 All notable changes to the Ghostty Configuration Files project are documented in this file.
 
+## [3.1.1] - 2025-09-21 - Installation Session & Visual Documentation Update 📸
+
+### 📋 **Latest Installation Session Completed**
+**Session ID**: `20250921-162207-ghostty-install` | **Duration**: 61 seconds | **Screenshots**: 16 | **Status**: ✅ SUCCESSFUL
+
+#### **✅ Installation Verification Results**
+- **Terminal Environment**: Ghostty 1.2.0 (snap) successfully updated and configured with 2025 optimizations
+- **AI Integration**: Claude Code 1.0.120 and Gemini CLI fully operational with latest features
+- **Development Tools**: ZSH with Oh My ZSH, modern Unix replacements (eza 0.20.24, bat 0.25.0, ripgrep 14.1.1, fzf 0.60.3, fd 10.2.0)
+- **Python Environment**: uv 0.8.19 package manager with latest virtual environment features
+- **Node.js Stack**: v24.6.0 with npm 11.6.0 for enhanced AI CLI tools integration
+- **Context Menu**: Right-click "Open in Ghostty" integration verified and operational
+
+#### **📸 Visual Documentation Assets (Latest Session)**
+- **Process Diagram**: `docs/assets/diagrams/20250921-162207/diagram_20250921-162207_Ghostty_Installation_Process.svg`
+- **Installation Screenshots**: 16 complete SVG screenshots in `docs/assets/screenshots/20250921-162207-ghostty-install/`
+  - System Check, Dependencies, ZSH Setup, Modern Tools, Configuration, Context Menu Integration
+  - Ptyxis Terminal, uv Package Manager, Node.js Setup, Claude Code, Gemini CLI, Verification, Completion
+- **Session Logs**: Complete session tracking in `/tmp/ghostty-start-logs/20250921-162207-ghostty-install.*`
+  - Main log: `20250921-162207-ghostty-install.log` (22.2KB comprehensive)
+  - Commands: `20250921-162207-ghostty-install-commands.log` (9.4KB detailed)
+  - JSON data: `20250921-162207-ghostty-install.json` (18.3KB structured)
+  - Manifest: `20250921-162207-ghostty-install-manifest.json` (4.3KB metadata)
+
+#### **🚀 Performance Metrics (2025 Optimizations)**
+- **Installation Speed**: 61.4 seconds total for complete environment setup
+- **Memory Efficiency**: +0.15GB delta during installation process
+- **System Compatibility**: Ubuntu 25.04 with Linux kernel 6.14.0-29-generic
+- **Zero Failures**: All 2025 performance optimizations applied successfully
+- **Screenshot Capture**: 16 high-quality SVG screenshots with PNG thumbnails
+
+#### **🔧 Latest Tool Versions (Updated 2025-09-21)**
+- **Ghostty**: v1.2.0 with linux-cgroup single-instance optimization
+- **uv**: v0.8.19 (Python package manager)
+- **Claude Code**: v1.0.120 (latest CLI features)
+- **eza**: v0.20.24 (modern ls replacement)
+- **bat**: v0.25.0 (syntax-highlighted cat)
+- **ripgrep**: v14.1.1 (fast search)
+- **fzf**: v0.60.3 (fuzzy finder)
+- **fd**: v10.2.0 (modern find)
+
 ## [3.1.0] - 2025-09-21 - MAJOR TECH STACK UPGRADE: Latest 2025 Versions 🚀
 
 ### ⚡ **Comprehensive Technology Stack Upgrade ✅ COMPLETE**
