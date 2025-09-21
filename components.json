@@ -4,18 +4,13 @@
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.mjs",
-    "css": "src/styles/globals.css",
+    "config": "docs-site/tailwind.config.mjs",
+    "css": "docs-site/src/styles/global.css",
     "baseColor": "slate",
-    "cssVariables": true,
-    "prefix": ""
+    "cssVariables": true
   },
   "aliases": {
-    "components": "components/ui",
-    "utils": "src/lib/utils"
-  },
-  "iconLibrary": "lucide-react",
-  "experimental": {
-    "optimizeBundle": true
+    "components": "docs-site/src/components/ui",
+    "utils": "docs-site/src/lib/utils"
   }
 }

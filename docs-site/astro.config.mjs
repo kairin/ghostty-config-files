@@ -1,23 +1,23 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
+import tailwind from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://kairin.github.io',
   base: '/ghostty-config-files',
   integrations: [
-    tailwind(),
     sitemap()
   ],
+  vite: {
+    plugins: [tailwind()],
+    optimizeDeps: {
+      exclude: ['@tailwindcss/vite']
+    }
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
       wrap: true
-    }
-  },
-  vite: {
-    optimizeDeps: {
-      exclude: ['@astrojs/tailwind']
     }
   },
   output: 'static',
