@@ -1,0 +1,107 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Comprehensive terminal environment setup with 2025 optimizations and AI integration" } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+
+    <title>{title}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-gray-50 text-gray-900">
+    <header class="bg-white shadow-sm border-b">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <a href="/" class="text-xl font-bold text-ghostty-900">
+              🚀 Ghostty Config
+            </a>
+          </div>
+          <div class="flex items-center space-x-8">
+            <a href="/" class="text-gray-700 hover:text-ghostty-500 transition-colors">Home</a>
+            <a href="/installation/" class="text-gray-700 hover:text-ghostty-500 transition-colors">Installation</a>
+            <a href="/screenshots/" class="text-gray-700 hover:text-ghostty-500 transition-colors">Screenshots</a>
+            <a href="https://github.com/USERNAME/ghostty-config-files" class="text-gray-700 hover:text-ghostty-500 transition-colors">GitHub</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <slot />
+    </main>
+
+    <footer class="bg-white border-t mt-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="text-center text-gray-600">
+          <p>📸 Screenshots captured as SVG for perfect quality and accessibility</p>
+          <p class="mt-2">Built with <a href="https://astro.build" class="text-ghostty-500 hover:text-ghostty-700">Astro.build</a> • Deployed on GitHub Pages</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Screenshot modal functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const screenshots = document.querySelectorAll('.screenshot-container img, .screenshot-container svg');
+
+        screenshots.forEach(img => {
+          img.style.cursor = 'zoom-in';
+          img.addEventListener('click', function() {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 cursor-zoom-out';
+
+            const modalImage = this.cloneNode(true);
+            modalImage.className = 'max-w-[90vw] max-h-[90vh] object-contain';
+
+            modal.appendChild(modalImage);
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', () => {
+              document.body.removeChild(modal);
+            });
+
+            // Close on escape
+            const closeOnEscape = (e) => {
+              if (e.key === 'Escape') {
+                document.body.removeChild(modal);
+                document.removeEventListener('keydown', closeOnEscape);
+              }
+            };
+            document.addEventListener('keydown', closeOnEscape);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

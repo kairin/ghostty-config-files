@@ -1,0 +1,112 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Screenshots Gallery - Ghostty Configuration Files">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-4xl font-bold mb-8">📸 Screenshots Gallery</h1>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">🎯 Why SVG Screenshots?</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="text-center">
+          <div class="text-2xl mb-2">📝</div>
+          <h3 class="font-semibold">Text Preservation</h3>
+          <p class="text-sm text-gray-600">All terminal text remains selectable and searchable</p>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl mb-2">🎨</div>
+          <h3 class="font-semibold">Perfect Quality</h3>
+          <p class="text-sm text-gray-600">Vector graphics scale without quality loss</p>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl mb-2">♿</div>
+          <h3 class="font-semibold">Accessibility</h3>
+          <p class="text-sm text-gray-600">Screen readers can access all text content</p>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl mb-2">🔍</div>
+          <h3 class="font-semibold">Searchable</h3>
+          <p class="text-sm text-gray-600">Find specific commands or output in screenshots</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">🔧 Manual Screenshot Capture</h2>
+      <p class="text-gray-600 mb-4">You can also capture screenshots manually during your installation:</p>
+      <pre class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto"><code># Capture a single screenshot
+./scripts/svg_screenshot_capture.sh capture "Stage Name" "Description"
+
+# Capture both screenshot and terminal state
+./scripts/svg_screenshot_capture.sh both "Build Process" "Zig compilation in progress"
+
+# Generate documentation after manual captures
+./scripts/svg_screenshot_capture.sh generate-docs</code></pre>
+    </div>
+
+    <div id="gallery-container" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">📋 Installation Screenshots</h2>
+      <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 text-center">
+        <p class="text-yellow-800">
+          📸 Screenshots will appear here after running the installation script.<br>
+          <strong>Run <code>./start.sh</code> to generate your installation gallery!</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="/installation/" class="inline-block bg-ghostty-500 text-white px-6 py-3 rounded-lg hover:bg-ghostty-600 transition-colors">
+        🚀 Start Installation
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.gallery-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.screenshot-container {
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: zoom-in;
+}
+
+.screenshot-container img,
+.screenshot-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    padding: 1rem;
+  }
+}
+</style>

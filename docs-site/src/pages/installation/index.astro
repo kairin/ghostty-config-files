@@ -1,0 +1,99 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Installation Guide - Ghostty Configuration Files">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold mb-8">🔧 Installation Guide</h1>
+
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+      <p class="text-blue-800">
+        This guide shows the complete installation process with screenshots captured at each stage.
+        All screenshots are in SVG format, preserving text quality and accessibility.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">📋 Installation Stages</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+          <span>System Check & Strategy</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+          <span>Dependencies Installation</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">3</span>
+          <span>ZSH & Oh My ZSH Setup</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">4</span>
+          <span>Modern Development Tools</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">5</span>
+          <span>Zig Compiler Installation</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">6</span>
+          <span>Ghostty Compilation</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">7</span>
+          <span>Configuration & Optimization</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="bg-ghostty-500 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">8</span>
+          <span>AI Tools Integration</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">🚀 Quick Start</h2>
+      <pre class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto"><code># Clone the repository
+git clone https://github.com/YOUR_USERNAME/ghostty-config-files.git
+cd ghostty-config-files
+
+# Run the installation script
+./start.sh
+
+# Screenshots will be automatically captured to:
+# docs/assets/screenshots/YYYYMMDD-HHMMSS/</code></pre>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-semibold mb-4">⚙️ Configuration Options</h2>
+      <p class="text-gray-600 mb-4">Control the installation behavior with environment variables:</p>
+      <pre class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto"><code># Disable screenshot capture
+ENABLE_SCREENSHOTS=false ./start.sh
+
+# Skip certain components
+SKIP_DEPS=true SKIP_PTYXIS=true ./start.sh
+
+# Verbose output
+VERBOSE=true ./start.sh</code></pre>
+    </div>
+
+    <div id="screenshots-gallery" class="mb-8">
+      <h2 class="text-2xl font-semibold mb-4">📸 Installation Screenshots</h2>
+      <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4">
+        <p class="text-yellow-800">
+          📸 Screenshots will appear here after running the installation script.<br>
+          <strong>Run <code>./start.sh</code> to generate your installation gallery!</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="/screenshots/" class="inline-block bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors mr-4">
+        📸 View Screenshots Gallery
+      </a>
+      <a href="https://github.com/USERNAME/ghostty-config-files" class="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+        💻 GitHub Repository
+      </a>
+    </div>
+  </div>
+</BaseLayout>
