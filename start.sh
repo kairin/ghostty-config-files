@@ -1710,11 +1710,18 @@ install_modern_tools() {
 
     # Install/Update eza (modern ls replacement)
     if command -v eza >/dev/null 2>&1; then
-        log "INFO" "📥 Updating eza (modern ls replacement)..."
-        if run_task_command "Updating eza" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y eza 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating eza for enhanced directory listings" "30s"; then
-            log "SUCCESS" "✅ eza updated successfully"
+        # Check if update is available
+        log "INFO" "🔍 Checking for eza updates..."
+        sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' > /dev/null
+        if apt list --upgradable 2>/dev/null | grep -q "^eza/"; then
+            log "INFO" "📥 Updating eza (modern ls replacement)..."
+            if run_task_command "Updating eza" "sudo apt upgrade -y eza 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating eza for enhanced directory listings" "30s"; then
+                log "SUCCESS" "✅ eza updated successfully"
+            else
+                log "INFO" "ℹ️ eza update failed, but already installed"
+            fi
         else
-            log "INFO" "ℹ️ eza update via apt not available or already latest"
+            log "INFO" "✅ eza is already at the latest version"
         fi
     else
         log "INFO" "📥 Installing eza (modern ls replacement)..."
@@ -1736,11 +1743,18 @@ install_modern_tools() {
 
     # Install/Update bat (modern cat replacement)
     if command -v bat >/dev/null 2>&1; then
-        log "INFO" "📥 Updating bat (modern cat replacement)..."
-        if run_task_command "Updating bat" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y bat 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating bat for syntax-highlighted file viewing" "30s"; then
-            log "SUCCESS" "✅ bat updated successfully"
+        # Check if update is available
+        log "INFO" "🔍 Checking for bat updates..."
+        sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' > /dev/null
+        if apt list --upgradable 2>/dev/null | grep -q "^bat/"; then
+            log "INFO" "📥 Updating bat (modern cat replacement)..."
+            if run_task_command "Updating bat" "sudo apt upgrade -y bat 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating bat for syntax-highlighted file viewing" "30s"; then
+                log "SUCCESS" "✅ bat updated successfully"
+            else
+                log "INFO" "ℹ️ bat update failed, but already installed"
+            fi
         else
-            log "INFO" "ℹ️ bat update via apt not available or already latest"
+            log "INFO" "✅ bat is already at the latest version"
         fi
     else
         log "INFO" "📥 Installing bat (modern cat replacement)..."
@@ -1753,11 +1767,18 @@ install_modern_tools() {
 
     # Install/Update ripgrep (modern grep replacement)
     if command -v rg >/dev/null 2>&1; then
-        log "INFO" "📥 Updating ripgrep (modern grep replacement)..."
-        if run_task_command "Updating ripgrep" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' && sudo apt upgrade -y ripgrep 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating ripgrep for faster searching" "30s"; then
-            log "SUCCESS" "✅ ripgrep updated successfully"
+        # Check if update is available
+        log "INFO" "🔍 Checking for ripgrep updates..."
+        sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface' > /dev/null
+        if apt list --upgradable 2>/dev/null | grep -q "^ripgrep/"; then
+            log "INFO" "📥 Updating ripgrep (modern grep replacement)..."
+            if run_task_command "Updating ripgrep" "sudo apt upgrade -y ripgrep 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Updating ripgrep for faster searching" "30s"; then
+                log "SUCCESS" "✅ ripgrep updated successfully"
+            else
+                log "INFO" "ℹ️ ripgrep update failed, but already installed"
+            fi
         else
-            log "INFO" "ℹ️ ripgrep update via apt not available or already latest"
+            log "INFO" "✅ ripgrep is already at the latest version"
         fi
     else
         log "INFO" "📥 Installing ripgrep (modern grep replacement)..."
@@ -2007,14 +2028,29 @@ install_ghostty() {
 # Fresh Ghostty installation
 fresh_install_ghostty() {
     log "STEP" "👻 Fresh installation of Ghostty terminal emulator..."
-    
+
+    # First try to install via snap (preferred method)
+    if command -v snap >/dev/null 2>&1; then
+        log "INFO" "📦 Installing Ghostty via snap (recommended)..."
+        if sudo snap install ghostty --classic >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Ghostty installed successfully via snap"
+            install_ghostty_configuration
+            return 0
+        else
+            log "WARNING" "⚠️  Snap installation failed, falling back to building from source"
+        fi
+    fi
+
+    # Fallback to building from source only if snap fails
+    log "INFO" "🔨 Building Ghostty from source (fallback method)..."
+
     # Clone Ghostty repository
     if [ ! -d "$GHOSTTY_APP_DIR" ]; then
         log "INFO" "📥 Cloning Ghostty repository..."
         git clone https://github.com/ghostty-org/ghostty.git "$GHOSTTY_APP_DIR" >> "$LOG_FILE" 2>&1
         log "SUCCESS" "✅ Ghostty repository cloned"
     fi
-    
+
     build_and_install_ghostty
     install_ghostty_configuration
 }
@@ -2543,25 +2579,41 @@ verify_installation() {
     
     local status=0
     
-    # Check Ghostty
-    if command -v ghostty >/dev/null 2>&1; then
+    # Check Ghostty - verify it actually works
+    if command -v ghostty >/dev/null 2>&1 && ghostty --version >/dev/null 2>&1; then
         local version=$(ghostty --version 2>/dev/null | head -1)
         log "SUCCESS" "✅ Ghostty: $version"
     else
-        log "ERROR" "❌ Ghostty not found"
+        log "ERROR" "❌ Ghostty not found or not functioning properly"
         status=1
     fi
     
     # Check Ptyxis (prefer official: apt, snap, then flatpak)
     if ! $SKIP_PTYXIS; then
-        if dpkg -l 2>/dev/null | grep ptyxis | grep -q "^ii"; then
-            log "SUCCESS" "✅ Ptyxis: Available via apt"
-        elif snap list 2>/dev/null | grep -q "ptyxis"; then
-            log "SUCCESS" "✅ Ptyxis: Available via snap"
-        elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
-            log "SUCCESS" "✅ Ptyxis: Available via flatpak"
-        else
-            log "ERROR" "❌ Ptyxis not found"
+        local ptyxis_found=false
+        local ptyxis_source=""
+
+        # Check if Ptyxis actually works
+        if command -v ptyxis >/dev/null 2>&1 && ptyxis --version >/dev/null 2>&1; then
+            local ptyxis_version=$(ptyxis --version 2>/dev/null | head -1)
+
+            # Determine installation source
+            if dpkg -l 2>/dev/null | grep ptyxis | grep -q "^ii"; then
+                ptyxis_source="apt"
+            elif snap list 2>/dev/null | grep -q "ptyxis"; then
+                ptyxis_source="snap"
+            elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
+                ptyxis_source="flatpak"
+            else
+                ptyxis_source="unknown"
+            fi
+
+            log "SUCCESS" "✅ Ptyxis: $ptyxis_version (via $ptyxis_source)"
+            ptyxis_found=true
+        fi
+
+        if ! $ptyxis_found; then
+            log "ERROR" "❌ Ptyxis not found or not functioning"
             status=1
         fi
     fi
@@ -2602,17 +2654,41 @@ verify_installation() {
     # Check AI tools
     if ! $SKIP_AI; then
         # Check Claude Code
-        if command -v claude >/dev/null 2>&1; then
-            log "SUCCESS" "✅ Claude Code: Available"
+        if command -v claude >/dev/null 2>&1 && claude --version >/dev/null 2>&1; then
+            local claude_version=$(claude --version 2>/dev/null | head -1)
+            log "SUCCESS" "✅ Claude Code: $claude_version"
         else
-            log "WARNING" "⚠️  Claude Code not in PATH (may need shell restart)"
+            log "WARNING" "⚠️  Claude Code not in PATH or not functioning (may need shell restart)"
         fi
-        
-        # Check Gemini CLI
-        if command -v gemini >/dev/null 2>&1; then
-            log "SUCCESS" "✅ Gemini CLI: Available"
+
+        # Check Gemini CLI - try multiple locations
+        local gemini_found=false
+        local gemini_version=""
+
+        # Try direct command
+        if command -v gemini >/dev/null 2>&1 && gemini --version >/dev/null 2>&1; then
+            gemini_version=$(gemini --version 2>/dev/null)
+            gemini_found=true
+        # Try /usr/local/bin/gemini
+        elif [ -x "/usr/local/bin/gemini" ] && /usr/local/bin/gemini --version >/dev/null 2>&1; then
+            gemini_version=$(/usr/local/bin/gemini --version 2>/dev/null)
+            gemini_found=true
+        # Try NVM paths dynamically
         else
-            log "WARNING" "⚠️  Gemini CLI not in PATH (may need shell restart)"
+            # Find gemini in any NVM node version
+            for node_path in "$HOME"/.nvm/versions/node/*/bin/gemini; do
+                if [ -x "$node_path" ] && "$node_path" --version >/dev/null 2>&1; then
+                    gemini_version=$("$node_path" --version 2>/dev/null)
+                    gemini_found=true
+                    break
+                fi
+            done
+        fi
+
+        if $gemini_found; then
+            log "SUCCESS" "✅ Gemini CLI: v$gemini_version"
+        else
+            log "WARNING" "⚠️  Gemini CLI not found or not functioning (may need shell restart)"
         fi
     fi
     
