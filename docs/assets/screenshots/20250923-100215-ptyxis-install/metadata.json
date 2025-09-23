@@ -1,0 +1,47 @@
+{
+  "session_id": "20250923-100215-ptyxis-install",
+  "created": "2025-09-23T10:02:15+08:00",
+  "project": "ghostty-config-files",
+  "description": "Ghostty terminal installation and configuration screenshots",
+  "assets": {
+    "screenshots": [
+      {
+        "stage": "Initial Desktop",
+        "description": "Clean Ubuntu desktop before Ghostty installation",
+        "filename": "terminal_001_20250923-100215_Initial_Desktop.svg",
+        "counter": 1,
+        "timestamp": "2025-09-23T10:02:16+08:00",
+        "file_size_bytes": 2573,
+        "capture_method": "svg-terminal",
+        "format": "svg",
+        "github_path": "./screenshots/20250923-100215-ptyxis-install/terminal_001_20250923-100215_Initial_Desktop.svg",
+        "pages_url": "/docs/assets/screenshots/20250923-100215-ptyxis-install/terminal_001_20250923-100215_Initial_Desktop.svg"
+      },
+      {
+        "stage": "Initial Desktop",
+        "description": "Clean Ubuntu desktop before Ghostty installation (PNG)",
+        "filename": "terminal_001_20250923-100215_Initial_Desktop.png",
+        "counter": 1,
+        "timestamp": "2025-09-23T10:02:17+08:00",
+        "file_size_bytes": 2164090,
+        "capture_method": "png-terminal",
+        "format": "png",
+        "github_path": "./screenshots/20250923-100215-ptyxis-install/terminal_001_20250923-100215_Initial_Desktop.png",
+        "pages_url": "/docs/assets/screenshots/20250923-100215-ptyxis-install/terminal_001_20250923-100215_Initial_Desktop.png"
+      }
+    ],
+    "diagrams": [],
+    "terminal_states": []
+  },
+  "counts": {
+    "total_screenshots": 2,
+    "total_diagrams": 0,
+    "total_states": 0
+  },
+  "github_pages": {
+    "base_url": "/ghostty-config-files",
+    "assets_path": "/docs/assets",
+    "relative_screenshots": "./screenshots/20250923-100215-ptyxis-install",
+    "relative_diagrams": "./diagrams/20250923-100215-ptyxis-install"
+  }
+}

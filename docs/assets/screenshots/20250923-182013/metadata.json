@@ -1,0 +1,30 @@
+{
+  "session_id": "20250923-182013",
+  "created": "2025-09-23T18:20:13+08:00",
+  "project": "ghostty-config-files",
+  "description": "Ghostty terminal installation and configuration screenshots",
+  "assets": {
+    "screenshots": [],
+    "diagrams": [
+      {
+        "name": "Ghostty Installation Process",
+        "filename": "diagram_20250923-182013_Ghostty_Installation_Process.svg",
+        "timestamp": "2025-09-23T18:20:13+08:00",
+        "github_path": "./diagrams/20250923-182013/diagram_20250923-182013_Ghostty_Installation_Process.svg",
+        "pages_url": "/docs/assets/diagrams/20250923-182013/diagram_20250923-182013_Ghostty_Installation_Process.svg"
+      }
+    ],
+    "terminal_states": []
+  },
+  "counts": {
+    "total_screenshots": 0,
+    "total_diagrams": 1,
+    "total_states": 0
+  },
+  "github_pages": {
+    "base_url": "/ghostty-config-files",
+    "assets_path": "/docs/assets",
+    "relative_screenshots": "./screenshots/20250923-182013",
+    "relative_diagrams": "./diagrams/20250923-182013"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "session_id": "20250923-095014",
+  "created": "2025-09-23T09:50:14+08:00",
+  "project": "ghostty-config-files",
+  "description": "Ghostty terminal installation and configuration screenshots",
+  "assets": {
+    "screenshots": [],
+    "diagrams": [],
+    "terminal_states": []
+  },
+  "counts": {
+    "total_screenshots": 0,
+    "total_diagrams": 0,
+    "total_states": 0
+  },
+  "github_pages": {
+    "base_url": "/ghostty-config-files",
+    "assets_path": "/docs/assets",
+    "relative_screenshots": "./screenshots/20250923-095014",
+    "relative_diagrams": "./diagrams/20250923-095014"
+  }
+}

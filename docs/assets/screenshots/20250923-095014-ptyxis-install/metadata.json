@@ -1,0 +1,119 @@
+{
+  "session_id": "20250923-095014-ptyxis-install",
+  "created": "2025-09-23T09:50:44+08:00",
+  "project": "ghostty-config-files",
+  "description": "Ghostty terminal installation and configuration screenshots",
+  "assets": {
+    "screenshots": [
+      {
+        "stage": "Initial Desktop",
+        "description": "Clean Ubuntu desktop before Ghostty installation",
+        "filename": "terminal_001_20250923-095044_Initial_Desktop.svg",
+        "counter": 1,
+        "timestamp": "2025-09-23T09:50:45+08:00",
+        "file_size_bytes": 2573,
+        "capture_method": "svg-terminal",
+        "format": "svg",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_001_20250923-095044_Initial_Desktop.svg",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_001_20250923-095044_Initial_Desktop.svg"
+      },
+      {
+        "stage": "Initial Desktop",
+        "description": "Clean Ubuntu desktop before Ghostty installation (PNG)",
+        "filename": "terminal_001_20250923-095044_Initial_Desktop.png",
+        "counter": 1,
+        "timestamp": "2025-09-23T09:50:46+08:00",
+        "file_size_bytes": 1219159,
+        "capture_method": "png-terminal",
+        "format": "png",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_001_20250923-095044_Initial_Desktop.png",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_001_20250923-095044_Initial_Desktop.png"
+      },
+      {
+        "stage": "System Check",
+        "description": "Installation status check and strategy determination",
+        "filename": "terminal_002_20250923-095050_System_Check.svg",
+        "counter": 2,
+        "timestamp": "2025-09-23T09:50:52+08:00",
+        "file_size_bytes": 2458,
+        "capture_method": "svg-terminal",
+        "format": "svg",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_002_20250923-095050_System_Check.svg",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_002_20250923-095050_System_Check.svg"
+      },
+      {
+        "stage": "System Check",
+        "description": "Installation status check and strategy determination (PNG)",
+        "filename": "terminal_002_20250923-095050_System_Check.png",
+        "counter": 2,
+        "timestamp": "2025-09-23T09:50:53+08:00",
+        "file_size_bytes": 1205365,
+        "capture_method": "png-terminal",
+        "format": "png",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_002_20250923-095050_System_Check.png",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_002_20250923-095050_System_Check.png"
+      },
+      {
+        "stage": "Dependencies",
+        "description": "System dependencies installation completed",
+        "filename": "terminal_003_20250923-095526_Dependencies.svg",
+        "counter": 3,
+        "timestamp": "2025-09-23T09:55:27+08:00",
+        "file_size_bytes": 2479,
+        "capture_method": "svg-terminal",
+        "format": "svg",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_003_20250923-095526_Dependencies.svg",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_003_20250923-095526_Dependencies.svg"
+      },
+      {
+        "stage": "Dependencies",
+        "description": "System dependencies installation completed (PNG)",
+        "filename": "terminal_003_20250923-095526_Dependencies.png",
+        "counter": 3,
+        "timestamp": "2025-09-23T09:55:29+08:00",
+        "file_size_bytes": 2318947,
+        "capture_method": "png-terminal",
+        "format": "png",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_003_20250923-095526_Dependencies.png",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_003_20250923-095526_Dependencies.png"
+      },
+      {
+        "stage": "ZSH Setup",
+        "description": "ZSH and Oh My ZSH configuration",
+        "filename": "terminal_004_20250923-095537_ZSH_Setup.svg",
+        "counter": 4,
+        "timestamp": "2025-09-23T09:55:38+08:00",
+        "file_size_bytes": 2501,
+        "capture_method": "svg-terminal",
+        "format": "svg",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_004_20250923-095537_ZSH_Setup.svg",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_004_20250923-095537_ZSH_Setup.svg"
+      },
+      {
+        "stage": "ZSH Setup",
+        "description": "ZSH and Oh My ZSH configuration (PNG)",
+        "filename": "terminal_004_20250923-095537_ZSH_Setup.png",
+        "counter": 4,
+        "timestamp": "2025-09-23T09:55:39+08:00",
+        "file_size_bytes": 2346732,
+        "capture_method": "png-terminal",
+        "format": "png",
+        "github_path": "./screenshots/20250923-095014-ptyxis-install/terminal_004_20250923-095537_ZSH_Setup.png",
+        "pages_url": "/docs/assets/screenshots/20250923-095014-ptyxis-install/terminal_004_20250923-095537_ZSH_Setup.png"
+      }
+    ],
+    "diagrams": [],
+    "terminal_states": []
+  },
+  "counts": {
+    "total_screenshots": 8,
+    "total_diagrams": 0,
+    "total_states": 0
+  },
+  "github_pages": {
+    "base_url": "/ghostty-config-files",
+    "assets_path": "/docs/assets",
+    "relative_screenshots": "./screenshots/20250923-095014-ptyxis-install",
+    "relative_diagrams": "./diagrams/20250923-095014-ptyxis-install"
+  }
+}
