@@ -30,6 +30,10 @@ clipboard-paste-protection = true
 gtk-tabs-location = top
 window-new-tab-position = end
 
+# Cursor configuration
+cursor-style = block
+cursor-style-blink = true
+
 # =============================================================================
 # MODULAR CONFIGURATION
 # =============================================================================
