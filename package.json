@@ -42,7 +42,7 @@
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.544.0",
+    "lucide-react": "^0.545.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.2"
@@ -52,6 +52,6 @@
     "@types/react-dom": "^19.1.9",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "shadcn": "^3.3.1"
+    "shadcn": "^3.4.0"
   }
 }
