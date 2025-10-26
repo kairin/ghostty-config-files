@@ -605,43 +605,17 @@ const getStatusColor = (status: string) => {
   // Real-time performance data collection and dashboard updates
   // Constitutional compliance: Live metrics with error handling
 
-  /**
-   * @class DashboardManager
-   * @summary Manages the dynamic functionality of the performance dashboard.
-   * @description This class is responsible for fetching real-time performance data, updating the UI with the latest metrics, and handling user interactions like refreshing the data. It is designed to be progressively enhanced, meaning the dashboard will still be functional without this script.
-   */
+  import { performanceCollector } from '../lib/performance-collector.ts';
+
   class DashboardManager {
-    /**
-     * @property {number | null} updateInterval - The interval ID for periodic data fetching.
-     * @private
-     */
     private updateInterval: number | null = null;
-    /**
-     * @property {boolean} isCollecting - A flag to prevent concurrent data fetching.
-     * @private
-     */
     private isCollecting: boolean = false;
-    /**
-     * @property {number} UPDATE_INTERVAL - The interval in milliseconds for periodic updates.
-     * @private
-     * @readonly
-     */
     private readonly UPDATE_INTERVAL = 30000; // 30 seconds
 
-    /**
-     * @constructor
-     * @description Initializes the DashboardManager.
-     */
     constructor() {
       this.init();
     }
 
-    /**
-     * @method init
-     * @summary Initializes the dashboard manager.
-     * @description Waits for the DOM to be ready and then calls the setup method.
-     * @private
-     */
     private async init(): Promise<void> {
       // Wait for DOM to be ready
       if (document.readyState === 'loading') {
@@ -651,12 +625,6 @@ const getStatusColor = (status: string) => {
       }
     }
 
-    /**
-     * @method setup
-     * @summary Sets up the dashboard's dynamic functionality.
-     * @description Fetches initial data, starts periodic updates, and sets up event listeners.
-     * @private
-     */
     private async setup(): Promise<void> {
       try {
         // Initial data collection
@@ -674,12 +642,6 @@ const getStatusColor = (status: string) => {
       }
     }
 
-    /**
-     * @method updateDashboardData
-     * @summary Fetches and updates the dashboard with the latest performance data.
-     * @description This method coordinates the data fetching, UI updating, and error handling for the dashboard.
-     * @private
-     */
     private async updateDashboardData(): Promise<void> {
       if (this.isCollecting) return;
 
@@ -690,15 +652,7 @@ const getStatusColor = (status: string) => {
         this.showLoadingState();
 
         // Collect real performance data
-        const performanceData: any = await new Promise(resolve => setTimeout(() => resolve({
-          overall: 95,
-          improvement: 80,
-          compliance: 100,
-          systems: 6,
-          metrics: [],
-          dataSource: 'live',
-          lastUpdated: new Date().toISOString()
-        }), 1000));
+        const performanceData = await performanceCollector.collectRealTimeData();
 
         // Update dashboard UI with real data
         await this.updateUI(performanceData);
@@ -718,12 +672,6 @@ const getStatusColor = (status: string) => {
       }
     }
 
-    /**
-     * @method updateUI
-     * @summary Updates the dashboard's UI with new data.
-     * @param {any} data - The performance data to display.
-     * @private
-     */
     private async updateUI(data: any): Promise<void> {
       // Update key metrics cards
       this.updateMetricCard('overall-performance', data.overall, '%');
@@ -735,20 +683,12 @@ const getStatusColor = (status: string) => {
       await this.updateMetricsChart(data.metrics);
 
       // Update recent activity
-      this.updateRecentActivity([]);
+      this.updateRecentActivity(performanceCollector.getRecentActivity());
 
       // Update last updated timestamp
       this.updateTimestamp(data.lastUpdated);
     }
 
-    /**
-     * @method updateMetricCard
-     * @summary Updates a single metric card in the UI.
-     * @param {string} id - The identifier for the metric card to update.
-     * @param {number} value - The new value to display.
-     * @param {string} unit - The unit for the new value.
-     * @private
-     */
     private updateMetricCard(id: string, value: number, unit: string): void {
       // Update performance metric cards based on element content
       const cards = document.querySelectorAll('.grid .rounded-lg');
@@ -772,12 +712,6 @@ const getStatusColor = (status: string) => {
       });
     }
 
-    /**
-     * @method updateMetricsChart
-     * @summary Updates the performance metrics chart with new data.
-     * @param {any[]} metrics - An array of metric objects to display.
-     * @private
-     */
     private async updateMetricsChart(metrics: any[]): Promise<void> {
       // Update the metrics chart with real data
       const chartContainer = document.querySelector('.space-y-6');
@@ -793,13 +727,6 @@ const getStatusColor = (status: string) => {
       });
     }
 
-    /**
-     * @method createMetricElement
-     * @summary Creates an HTML element for a single metric in the chart.
-     * @param {any} metric - The metric data to render.
-     * @returns {HTMLElement} The HTML element for the metric.
-     * @private
-     */
     private createMetricElement(metric: any): HTMLElement {
       const metricDiv = document.createElement('div');
       metricDiv.className = 'space-y-2';
@@ -844,12 +771,6 @@ const getStatusColor = (status: string) => {
       return metricDiv;
     }
 
-    /**
-     * @method updateRecentActivity
-     * @summary Updates the recent activity feed with new data.
-     * @param {any[]} activities - An array of activity objects to display.
-     * @private
-     */
     private updateRecentActivity(activities: any[]): void {
       const activityContainer = document.querySelector('.space-y-4');
       if (!activityContainer) return;
@@ -889,12 +810,6 @@ const getStatusColor = (status: string) => {
       });
     }
 
-    /**
-     * @method updateTimestamp
-     * @summary Updates the 'last updated' timestamp in the UI.
-     * @param {string} timestamp - The ISO string of the last update time.
-     * @private
-     */
     private updateTimestamp(timestamp: string): void {
       // Update or create last updated indicator
       let timestampElement = document.getElementById('last-updated');
@@ -908,12 +823,6 @@ const getStatusColor = (status: string) => {
       timestampElement.textContent = `Last updated: ${new Date(timestamp).toLocaleString()}`;
     }
 
-    /**
-     * @method updateDataSourceIndicator
-     * @summary Updates the data source indicator in the UI.
-     * @param {string} source - The source of the data (e.g., 'live', 'cached').
-     * @private
-     */
     private updateDataSourceIndicator(source: string): void {
       // Update the "Live Monitoring" badge to show data source
       const badge = document.querySelector('[class*="badge"]');
@@ -925,11 +834,6 @@ const getStatusColor = (status: string) => {
       }
     }
 
-    /**
-     * @method showLoadingState
-     * @summary Displays loading indicators in the UI.
-     * @private
-     */
     private showLoadingState(): void {
       // Add loading indicators to metrics
       const refreshButtons = document.querySelectorAll('[class*="refresh"]');
@@ -941,11 +845,6 @@ const getStatusColor = (status: string) => {
       });
     }
 
-    /**
-     * @method hideLoadingState
-     * @summary Hides loading indicators in the UI.
-     * @private
-     */
     private hideLoadingState(): void {
       // Remove loading indicators
       const refreshButtons = document.querySelectorAll('[class*="refresh"]');
@@ -957,12 +856,6 @@ const getStatusColor = (status: string) => {
       });
     }
 
-    /**
-     * @method showError
-     * @summary Displays an error message to the user.
-     * @param {string} message - The error message to display.
-     * @private
-     */
     private showError(message: string): void {
       // Show error message to user
       const errorDiv = document.createElement('div');
@@ -978,11 +871,6 @@ const getStatusColor = (status: string) => {
       }, 5000);
     }
 
-    /**
-     * @method setupRefreshButton
-     * @summary Sets up the event listener for the refresh button.
-     * @private
-     */
     private setupRefreshButton(): void {
       // Add click handlers to refresh buttons
       const buttons = document.querySelectorAll('button');
@@ -993,22 +881,12 @@ const getStatusColor = (status: string) => {
       });
     }
 
-    /**
-     * @method startPeriodicUpdates
-     * @summary Starts the periodic fetching of new data.
-     * @private
-     */
     private startPeriodicUpdates(): void {
       this.updateInterval = window.setInterval(() => {
         this.updateDashboardData();
       }, this.UPDATE_INTERVAL);
     }
 
-    /**
-     * @method stopPeriodicUpdates
-     * @summary Stops the periodic fetching of new data.
-     * @private
-     */
     private stopPeriodicUpdates(): void {
       if (this.updateInterval) {
         clearInterval(this.updateInterval);
@@ -1016,12 +894,6 @@ const getStatusColor = (status: string) => {
       }
     }
 
-    /**
-     * @method announceUpdate
-     * @summary Announces updates to screen readers.
-     * @param {any} data - The data to announce.
-     * @private
-     */
     private announceUpdate(data: any): void {
       const message = `Dashboard updated. Overall performance: ${data.overall}%. Data source: ${data.dataSource}.`;
 
@@ -1040,11 +912,7 @@ const getStatusColor = (status: string) => {
       }, 1000);
     }
 
-    /**
-     * @method destroy
-     * @summary Cleans up the DashboardManager instance.
-     * @description Stops the periodic updates to prevent memory leaks.
-     */
+    // Cleanup method
     public destroy(): void {
       this.stopPeriodicUpdates();
     }
