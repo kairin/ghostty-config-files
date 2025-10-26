@@ -8,16 +8,13 @@ linux-cgroup = single-instance
 linux-cgroup-memory-limit = 2147483648
 linux-cgroup-processes-limit = 1000
 
+# GTK configuration removed - gtk-adwaita is not a valid option
+
 # =============================================================================
 # SHELL INTEGRATION (Enhanced for 2025)
 # =============================================================================
 shell-integration = detect
 shell-integration-features = cursor,sudo,title,ssh-env
-
-# =============================================================================
-# MEMORY MANAGEMENT
-# =============================================================================
-scrollback-limit = 10000
 
 # =============================================================================
 # SECURITY
@@ -41,3 +38,4 @@ config-file = theme.conf
 config-file = scroll.conf
 config-file = layout.conf
 config-file = keybindings.conf
+keybind = shift+enter=text:\x1b\r
