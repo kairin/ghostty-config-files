@@ -55,24 +55,24 @@
 
 ### Module Templates & Validation Tools (T001-T006)
 
-- [ ] T001 [P] Create bash module template in scripts/.module-template.sh with BASH_SOURCE guard, header format, function structure per bash-module-interface contract
-- [ ] T002 [P] Create unit test template in local-infra/tests/unit/.test-template.sh with mock setup, assertion helpers, cleanup patterns
-- [ ] T003 Create module contract validation script in scripts/validate_module_contract.sh that checks header completeness, ShellCheck compliance, function documentation
-- [ ] T004 [P] Create dependency cycle detection script in scripts/validate_module_deps.sh that parses module headers and performs topological sort
-- [ ] T005 [P] Create test helper functions in local-infra/tests/unit/test_functions.sh for assertions, mocking, PATH overrides
-- [ ] T006 Integrate validation scripts into local-infra/runners/validate-modules.sh for comprehensive module validation
+- [X] T001 [P] Create bash module template in scripts/.module-template.sh with BASH_SOURCE guard, header format, function structure per bash-module-interface contract
+- [X] T002 [P] Create unit test template in local-infra/tests/unit/.test-template.sh with mock setup, assertion helpers, cleanup patterns
+- [X] T003 Create module contract validation script in scripts/validate_module_contract.sh that checks header completeness, ShellCheck compliance, function documentation
+- [X] T004 [P] Create dependency cycle detection script in scripts/validate_module_deps.sh that parses module headers and performs topological sort
+- [X] T005 [P] Create test helper functions in local-infra/tests/unit/test_functions.sh for assertions, mocking, PATH overrides
+- [X] T006 Integrate validation scripts into local-infra/runners/validate-modules.sh for comprehensive module validation
 
 ### .nojekyll Protection System (T007-T010)
 
-- [ ] T007 [P] Create public/.nojekyll file for Astro automatic copy to build output (primary protection layer)
-- [ ] T008 [P] Create pre-commit git hook in .git/hooks/pre-commit to validate .nojekyll exists in build output before allowing commits
-- [ ] T009 [P] Update .gitignore to add docs-dist/ exclusion preventing accidental commit of build artifacts
-- [ ] T010 Verify Vite plugin automation in astro.config.mjs creates .nojekyll (secondary protection layer already implemented)
+- [X] T007 [P] Create public/.nojekyll file for Astro automatic copy to build output (primary protection layer)
+- [X] T008 [P] Create pre-commit git hook in .git/hooks/pre-commit to validate .nojekyll exists in build output before allowing commits
+- [X] T009 [P] Update .gitignore to add docs-dist/ exclusion preventing accidental commit of build artifacts
+- [X] T010 Verify Vite plugin automation in astro.config.mjs creates .nojekyll (secondary protection layer already implemented)
 
 ### Testing Framework Setup (T011-T012)
 
-- [ ] T011 Create ShellCheck validation runner in local-infra/tests/validation/run_shellcheck.sh for static analysis of all modules
-- [ ] T012 [P] Update local-infra/runners/test-runner-local.sh to support unit test discovery and execution with timing validation
+- [X] T011 Create ShellCheck validation runner in local-infra/tests/validation/run_shellcheck.sh for static analysis of all modules
+- [X] T012 [P] Update local-infra/runners/test-runner-local.sh to support unit test discovery and execution with timing validation
 
 ---
 
@@ -84,10 +84,10 @@
 
 ### Common Utilities (T013-T016)
 
-- [ ] T013 [P] Create common utility functions in scripts/common.sh for path resolution, logging, error handling
-- [ ] T014 [P] Create progress reporting functions in scripts/progress.sh for standardized output (🔄 Starting, ✅ Completed, ❌ Failed)
-- [ ] T015 [P] Create backup utility functions in scripts/backup_utils.sh for timestamped configuration backups before changes
-- [ ] T016 [P] Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh validating all utility functions
+- [X] T013 [P] Create common utility functions in scripts/common.sh for path resolution, logging, error handling
+- [X] T014 [P] Create progress reporting functions in scripts/progress.sh for standardized output (🔄 Starting, ✅ Completed, ❌ Failed)
+- [X] T015 [P] Create backup utility functions in scripts/backup_utils.sh for timestamped configuration backups before changes
+- [X] T016 [P] Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh validating all utility functions
 
 ---
 
@@ -106,10 +106,10 @@
 
 ### manage.sh Core Implementation (T017-T020)
 
-- [ ] T017 [US1] Create manage.sh skeleton in /home/kkk/Apps/ghostty-config-files/manage.sh with argument parsing, help display, command routing
-- [ ] T018 [US1] Implement global options in manage.sh (--help, --version, --verbose, --quiet, --dry-run) per manage-sh-cli contract
-- [ ] T019 [US1] Create environment variable support in manage.sh (MANAGE_DEBUG, MANAGE_NO_COLOR, MANAGE_LOG_FILE, MANAGE_BACKUP_DIR)
-- [ ] T020 [US1] Implement error handling and cleanup in manage.sh with trap ERR for graceful failure handling
+- [X] T017 [US1] Create manage.sh skeleton in /home/kkk/Apps/ghostty-config-files/manage.sh with argument parsing, help display, command routing
+- [X] T018 [US1] Implement global options in manage.sh (--help, --version, --verbose, --quiet, --dry-run) per manage-sh-cli contract
+- [X] T019 [US1] Create environment variable support in manage.sh (MANAGE_DEBUG, MANAGE_NO_COLOR, MANAGE_LOG_FILE, MANAGE_BACKUP_DIR)
+- [X] T020 [US1] Implement error handling and cleanup in manage.sh with trap ERR for graceful failure handling
 
 ### Install Command (T021-T023)
 
