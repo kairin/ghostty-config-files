@@ -55,24 +55,24 @@
 
 ### Module Templates & Validation Tools (T001-T006)
 
-- [ ] T001 [P] Create bash module template in scripts/.module-template.sh with BASH_SOURCE guard, header format, function structure per bash-module-interface contract
-- [ ] T002 [P] Create unit test template in local-infra/tests/unit/.test-template.sh with mock setup, assertion helpers, cleanup patterns
-- [ ] T003 Create module contract validation script in scripts/validate_module_contract.sh that checks header completeness, ShellCheck compliance, function documentation
-- [ ] T004 [P] Create dependency cycle detection script in scripts/validate_module_deps.sh that parses module headers and performs topological sort
-- [ ] T005 [P] Create test helper functions in local-infra/tests/unit/test_functions.sh for assertions, mocking, PATH overrides
-- [ ] T006 Integrate validation scripts into local-infra/runners/validate-modules.sh for comprehensive module validation
+- [X] T001 [P] Create bash module template in scripts/.module-template.sh with BASH_SOURCE guard, header format, function structure per bash-module-interface contract
+- [X] T002 [P] Create unit test template in local-infra/tests/unit/.test-template.sh with mock setup, assertion helpers, cleanup patterns
+- [X] T003 Create module contract validation script in scripts/validate_module_contract.sh that checks header completeness, ShellCheck compliance, function documentation
+- [X] T004 [P] Create dependency cycle detection script in scripts/validate_module_deps.sh that parses module headers and performs topological sort
+- [X] T005 [P] Create test helper functions in local-infra/tests/unit/test_functions.sh for assertions, mocking, PATH overrides
+- [X] T006 Integrate validation scripts into local-infra/runners/validate-modules.sh for comprehensive module validation
 
 ### .nojekyll Protection System (T007-T010)
 
-- [ ] T007 [P] Create public/.nojekyll file for Astro automatic copy to build output (primary protection layer)
-- [ ] T008 [P] Create pre-commit git hook in .git/hooks/pre-commit to validate .nojekyll exists in build output before allowing commits
-- [ ] T009 [P] Update .gitignore to add docs-dist/ exclusion preventing accidental commit of build artifacts
-- [ ] T010 Verify Vite plugin automation in astro.config.mjs creates .nojekyll (secondary protection layer already implemented)
+- [X] T007 [P] Create public/.nojekyll file for Astro automatic copy to build output (primary protection layer)
+- [X] T008 [P] Create pre-commit git hook in .git/hooks/pre-commit to validate .nojekyll exists in build output before allowing commits
+- [X] T009 [P] Update .gitignore to add docs-dist/ exclusion preventing accidental commit of build artifacts
+- [X] T010 Verify Vite plugin automation in astro.config.mjs creates .nojekyll (secondary protection layer already implemented)
 
 ### Testing Framework Setup (T011-T012)
 
-- [ ] T011 Create ShellCheck validation runner in local-infra/tests/validation/run_shellcheck.sh for static analysis of all modules
-- [ ] T012 [P] Update local-infra/runners/test-runner-local.sh to support unit test discovery and execution with timing validation
+- [X] T011 Create ShellCheck validation runner in local-infra/tests/validation/run_shellcheck.sh for static analysis of all modules
+- [X] T012 [P] Update local-infra/runners/test-runner-local.sh to support unit test discovery and execution with timing validation
 
 ---
 

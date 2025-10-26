@@ -463,6 +463,69 @@ run_accessibility_tests() {
     fi
 }
 
+# Bash unit tests
+run_bash_unit_tests() {
+    log "TEST" "Running bash unit tests..."
+
+    local unit_tests_dir="${PROJECT_ROOT}/local-infra/tests/unit"
+
+    # Check if unit tests directory exists
+    if [[ ! -d "$unit_tests_dir" ]]; then
+        track_test_result "Bash Unit Tests Directory" "SKIP" "Directory not found"
+        return
+    fi
+
+    # Find all test files (exclude templates)
+    local test_files
+    mapfile -t test_files < <(find "$unit_tests_dir" -maxdepth 1 -type f -name "test_*.sh" ! -name ".*" 2>/dev/null || true)
+
+    if [[ ${#test_files[@]} -eq 0 ]]; then
+        track_test_result "Bash Unit Tests Found" "SKIP" "No test files to run"
+        return
+    fi
+
+    log "INFO" "Found ${#test_files[@]} unit test file(s)"
+
+    # Run each test file
+    for test_file in "${test_files[@]}"; do
+        local test_name=$(basename "$test_file" .sh)
+
+        # Verify test file is executable
+        if [[ ! -x "$test_file" ]]; then
+            track_test_result "Unit Test: $test_name" "FAIL" "Not executable"
+            continue
+        fi
+
+        # Run test with timing validation (constitutional requirement: <10s per module per SC-007)
+        local start_time=$(date +%s%3N)
+
+        set +e
+        local test_output
+        test_output=$(timeout 15 "$test_file" 2>&1)
+        local test_exit_code=$?
+        set -e
+
+        local end_time=$(date +%s%3N)
+        local execution_time=$((end_time - start_time))
+        local execution_time_seconds=$((execution_time / 1000))
+
+        # Check results
+        if [[ $test_exit_code -eq 0 ]]; then
+            # Test passed - check timing
+            if [[ $execution_time -le 10000 ]]; then
+                track_test_result "Unit Test: $test_name" "PASS" "${execution_time}ms"
+            else
+                track_test_result "Unit Test: $test_name" "FAIL" "${execution_time}ms > 10000ms (constitutional violation)"
+                CONSTITUTIONAL_VIOLATIONS=$((CONSTITUTIONAL_VIOLATIONS + 1))
+            fi
+        elif [[ $test_exit_code -eq 124 ]]; then
+            track_test_result "Unit Test: $test_name" "FAIL" "Timeout (>15s)"
+        else
+            track_test_result "Unit Test: $test_name" "FAIL" "Exit code $test_exit_code"
+        fi
+    done
+}
+
 # Security tests
 run_security_tests() {
     log "TEST" "Running security tests..."
@@ -591,6 +654,7 @@ run_test_suite() {
     case "${test_categories}" in
         "all")
             test_constitutional_compliance
+            run_bash_unit_tests
             run_python_tests
             run_nodejs_tests
             test_local_cicd
@@ -600,6 +664,9 @@ run_test_suite() {
             ;;
         "constitutional")
             test_constitutional_compliance
+            ;;
+        "bash"|"unit")
+            run_bash_unit_tests
             ;;
         "python")
             run_python_tests
@@ -621,7 +688,7 @@ run_test_suite() {
             ;;
         *)
             log "ERROR" "Unknown test category: ${test_categories}"
-            log "INFO" "Available categories: all, constitutional, python, nodejs, cicd, performance, accessibility, security"
+            log "INFO" "Available categories: all, constitutional, bash, python, nodejs, cicd, performance, accessibility, security"
             return 1
             ;;
     esac
@@ -640,6 +707,7 @@ USAGE:
 TEST CATEGORIES:
     all             - Run all test categories (default)
     constitutional  - Constitutional compliance tests
+    bash, unit      - Bash unit tests with timing validation (<10s per test)
     python          - Python syntax, linting, and execution tests
     nodejs          - Node.js, TypeScript, and Astro tests
     cicd            - Local CI/CD infrastructure tests
