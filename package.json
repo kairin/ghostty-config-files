@@ -17,7 +17,7 @@
     "astro": "astro",
     "check": "astro check",
     "sync": "astro sync",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "astro check"
   },
   "repository": {
     "type": "git",
