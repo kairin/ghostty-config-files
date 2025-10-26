@@ -1,4 +1,13 @@
 ---
+/**
+ * @component Badge
+ * @summary A styled badge component for displaying status indicators or labels.
+ * @description This component renders a small, styled badge that can be used to highlight information. It supports different variants for different contexts, such as success, warning, or destructive states. It can also be rendered as a link if an `href` prop is provided.
+ * @property {'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' | 'info'} [variant='default'] - The visual style of the badge.
+ * @property {'default' | 'sm' | 'lg'} [size='default'] - The size of the badge.
+ * @property {string} [class] - Additional CSS classes to apply to the badge.
+ * @property {string} [href] - If provided, the badge will be rendered as an anchor (`<a>`) tag with this URL.
+ */
 export interface Props {
   variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' | 'info';
   size?: 'default' | 'sm' | 'lg';

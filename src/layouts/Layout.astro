@@ -2,6 +2,14 @@
 import ThemeToggle from '../components/ui/ThemeToggle.astro';
 import '../styles/globals.css';
 
+/**
+ * @component Layout
+ * @summary The main layout component for all pages.
+ * @description This component provides the basic HTML structure, including the `<head>` and `<body>` tags, as well as a common header and footer. It also includes the theme toggle functionality and basic performance monitoring.
+ * @property {string} title - The title of the page.
+ * @property {string} [description="Constitutional compliance web application with performance optimization"] - The meta description of the page.
+ * @property {boolean} [showThemeToggle=true] - If true, the theme toggle button is displayed in the header.
+ */
 export interface Props {
   title: string;
   description?: string;

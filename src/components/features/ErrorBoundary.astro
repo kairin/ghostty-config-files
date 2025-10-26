@@ -5,6 +5,17 @@
  * Features: Error recovery, fallback UI, progressive enhancement
  */
 
+/**
+ * @component ErrorBoundary
+ * @summary A component to catch and handle errors within its child components gracefully.
+ * @description This component provides a fallback UI when an error is caught, preventing a full page crash. It is progressively enhanced to handle client-side errors and offers features like error reporting and retry mechanisms. It includes several fallback UI options to suit different contexts.
+ * @property {string} [fallbackComponent='default'] - The type of fallback UI to display. Options: 'default', 'minimal', 'detailed', 'constitutional'.
+ * @property {'critical' | 'warning' | 'info'} [errorLevel='warning'] - The severity level of the error, which can influence the fallback UI and reporting.
+ * @property {boolean} [showDetails=false] - Whether to show detailed technical error information in the fallback UI.
+ * @property {boolean} [reportErrors=true] - Whether to enable the error reporting functionality.
+ * @property {boolean} [retryEnabled=true] - Whether to provide a retry mechanism to re-render the component.
+ * @property {string} [class] - Additional CSS classes to be applied to the component's root element.
+ */
 interface Props {
   fallbackComponent?: string;
   errorLevel?: 'critical' | 'warning' | 'info';

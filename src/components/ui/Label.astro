@@ -1,4 +1,12 @@
 ---
+/**
+ * @component Label
+ * @summary A styled label component for form elements.
+ * @description This component renders an HTML `<label>` element with styling that complements the form inputs. It includes an optional indicator for required fields to improve form usability and accessibility.
+ * @property {string} [for] - The ID of the form element that this label is associated with.
+ * @property {boolean} [required=false] - If true, a required field indicator (an asterisk) will be displayed next to the label.
+ * @property {string} [class] - Additional CSS classes to apply to the label element.
+ */
 export interface Props {
   for?: string;
   required?: boolean;

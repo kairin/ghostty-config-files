@@ -9,6 +9,36 @@
 // 4. Performance First - Accessibility features must not impact speed
 // 5. User Control - Customizable to individual needs
 
+/**
+ * @typedef {object} Feature
+ * @property {string} id - The unique identifier for the feature.
+ * @property {string} name - The display name of the feature.
+ * @property {string} description - A brief description of the feature's purpose.
+ * @property {'A' | 'AA' | 'AAA'} wcagLevel - The WCAG 2.1 conformance level this feature addresses.
+ * @property {'visual' | 'auditory' | 'motor' | 'cognitive'} category - The category of accessibility the feature falls into.
+ * @property {boolean} [enabled=false] - Whether the feature is currently enabled.
+ * @property {boolean} [required=false] - Whether the feature is mandatory for compliance.
+ */
+
+/**
+ * @typedef {object} UserPreferences
+ * @property {boolean} [reduceMotion=false] - User preference for reduced motion.
+ * @property {boolean} [highContrast=false] - User preference for high contrast mode.
+ * @property {boolean} [largeText=false] - User preference for larger text sizes.
+ * @property {boolean} [screenReader=false] - Indicates if the user is likely using a screen reader.
+ * @property {boolean} [keyboardOnly=false] - User preference for keyboard-only navigation enhancements.
+ * @property {'none' | 'protanopia' | 'deuteranopia' | 'tritanopia'} [colorBlindness='none'] - The type of color blindness to accommodate.
+ */
+
+/**
+ * @component AccessibilityFeatures
+ * @summary A comprehensive component for managing and displaying advanced accessibility features.
+ * @description This component provides a UI for users to control accessibility settings, displays compliance status, and includes client-side scripting to apply preferences dynamically. It adheres to WCAG 2.1 AA/AAA standards and constitutional compliance for performance and user control.
+ * @property {Feature[]} [features] - An array of accessibility features to be managed by the component. Defaults to a predefined list.
+ * @property {UserPreferences} [userPreferences] - An object representing the user's current accessibility preferences.
+ * @property {boolean} [constitutionalMode=true] - A flag to enable or disable constitutional compliance mode, affecting which features are mandatory.
+ * @property {string} [class] - Additional CSS classes to be applied to the component's root element.
+ */
 interface Props {
   features?: Array<{
     id: string;

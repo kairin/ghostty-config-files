@@ -1,4 +1,23 @@
 ---
+/**
+ * @component Input
+ * @summary A styled, accessible input field component.
+ * @description This component renders a standard HTML `<input>` element with pre-applied styling for consistency across the application. It supports various input types and accessibility attributes.
+ * @property {'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url'} [type='text'] - The type of the input field.
+ * @property {string} [placeholder] - Placeholder text for the input.
+ * @property {string} [value] - The initial value of the input.
+ * @property {boolean} [disabled=false] - If true, the input is disabled.
+ * @property {boolean} [required=false] - If true, the input is required for form submission.
+ * @property {boolean} [readonly=false] - If true, the input's value cannot be changed.
+ * @property {string} [class] - Additional CSS classes to apply to the input element.
+ * @property {string} [id] - The ID of the input element.
+ * @property {string} [name] - The name of the input element.
+ * @property {string} [autocomplete] - The autocomplete behavior for the input.
+ * @property {string} [aria-describedby] - The ID of the element that describes the input.
+ * @property {boolean} [aria-invalid] - Indicates that the input has an error.
+ * @property {string} [aria-label] - A label for the input, for accessibility.
+ * @property {string} [aria-labelledby] - The ID of the element that labels the input.
+ */
 export interface Props {
   type?: 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
   placeholder?: string;

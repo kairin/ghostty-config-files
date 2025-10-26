@@ -5,6 +5,16 @@
  * Features: Performance metrics, compliance dashboards, accessibility-first
  */
 
+/**
+ * @component DataVisualization
+ * @summary A component for rendering various types of data visualizations.
+ * @description This component can display different kinds of dashboards and metrics, such as performance scores, compliance status, project metrics, and timelines. It is designed with progressive enhancement and accessibility in mind, providing a data table as an alternative for screen readers.
+ * @property {'performance' | 'compliance' | 'metrics' | 'timeline'} [type='performance'] - The type of visualization to render.
+ * @property {any} [data] - The data object to be visualized. If not provided, sample data for the specified `type` will be used.
+ * @property {string} [title] - The main title for the visualization container.
+ * @property {string} [description] - A short description displayed below the title.
+ * @property {string} [class] - Additional CSS classes to be applied to the component's root element.
+ */
 interface Props {
   type?: 'performance' | 'compliance' | 'metrics' | 'timeline';
   data?: any;

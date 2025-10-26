@@ -5,6 +5,27 @@
  * Features: Step-by-step onboarding, accessibility-first, keyboard navigation
  */
 
+/**
+ * @typedef {object} TutorialStep
+ * @property {string} id - A unique identifier for the tutorial step.
+ * @property {string} title - The title of the step, displayed in the tutorial modal.
+ * @property {string} content - The main instructional content for the step, which can include HTML.
+ * @property {string} [target] - A CSS selector for an element on the page to highlight or interact with.
+ * @property {string} [action] - The type of action for the step, e.g., 'highlight' or 'interact'.
+ * @property {string} [validation] - A string identifying the validation needed to complete the step.
+ */
+
+/**
+ * @component InteractiveTutorial
+ * @summary A component for creating guided, step-by-step interactive tutorials.
+ * @description This component provides a modal-based tutorial experience that can highlight elements on the page, prompt for user interaction, and validate actions. It is progressively enhanced and fully keyboard accessible.
+ * @property {string} tutorialId - A unique identifier for this tutorial, used for saving progress.
+ * @property {string} [title="Getting Started Tutorial"] - The main title of the tutorial.
+ * @property {string} [description="Learn how to use the constitutional framework effectively"] - A brief description of the tutorial's purpose.
+ * @property {TutorialStep[]} [steps] - An array of step objects that define the tutorial's content and flow. If not provided, default steps for the given `tutorialId` are used.
+ * @property {boolean} [autoStart=false] - If true, the tutorial will start automatically when the component loads.
+ * @property {string} [class] - Additional CSS classes to be applied to the component's root element.
+ */
 interface Props {
   tutorialId: string;
   title?: string;

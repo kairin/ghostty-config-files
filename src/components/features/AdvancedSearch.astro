@@ -5,6 +5,15 @@
  * Features: Multi-criteria search, filtering, sorting, accessibility
  */
 
+/**
+ * @component AdvancedSearch
+ * @summary A progressively enhanced search component with multi-criteria filtering and sorting.
+ * @description This component provides a comprehensive search interface that works without JavaScript but is enhanced with client-side functionality for a better user experience. It includes features like real-time search, advanced filtering, and dynamic result rendering.
+ * @property {string} [searchPlaceholder="Search documentation, guides, and components..."] - The placeholder text for the main search input field.
+ * @property {Array<{id: string, label: string}>} [categories] - A list of categories for the search filter dropdown. Defaults to a predefined list.
+ * @property {Array<{value: string, label: string}>} [sortOptions] - A list of options for the sort dropdown. Defaults to a predefined list.
+ * @property {string} [class] - Additional CSS classes to be applied to the component's root element.
+ */
 interface Props {
   searchPlaceholder?: string;
   categories?: Array<{id: string; label: string}>;

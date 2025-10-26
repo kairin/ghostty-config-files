@@ -1,4 +1,11 @@
 ---
+/**
+ * @component AstroLogo
+ * @summary Displays the Astro logo, adapting to the current color theme.
+ * @description This component renders the Astro logo and automatically switches between the light and dark versions based on the active theme. It uses `<img>` tags with appropriate `src` attributes for each theme.
+ * @property {string} [class] - Additional CSS classes to apply to the logo container.
+ * @property {'sm' | 'md' | 'lg'} [size='md'] - The size of the logo.
+ */
 export interface Props {
   class?: string;
   size?: 'sm' | 'md' | 'lg';

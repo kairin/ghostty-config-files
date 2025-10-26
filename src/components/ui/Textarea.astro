@@ -1,4 +1,26 @@
 ---
+/**
+ * @component Textarea
+ * @summary A styled, multi-line text input component.
+ * @description This component renders a standard HTML `<textarea>` element with pre-applied styling. It supports resizing and is designed to be accessible and consistent with other form elements in the application.
+ * @property {string} [placeholder] - Placeholder text for the textarea.
+ * @property {string} [value] - The initial value of the textarea.
+ * @property {boolean} [disabled=false] - If true, the textarea is disabled.
+ * @property {boolean} [required=false] - If true, the textarea is required for form submission.
+ * @property {boolean} [readonly=false] - If true, the textarea's value cannot be changed.
+ * @property {number} [rows=3] - The number of visible text lines for the textarea.
+ * @property {number} [cols] - The visible width of the text control.
+ * @property {number} [maxlength] - The maximum number of characters allowed in the textarea.
+ * @property {number} [minlength] - The minimum number of characters required in the textarea.
+ * @property {string} [class] - Additional CSS classes to apply to the textarea element.
+ * @property {string} [id] - The ID of the textarea element.
+ * @property {string} [name] - The name of the textarea element.
+ * @property {string} [aria-describedby] - The ID of the element that describes the textarea.
+ * @property {boolean} [aria-invalid] - Indicates that the textarea has an error.
+ * @property {string} [aria-label] - A label for the textarea, for accessibility.
+ * @property {string} [aria-labelledby] - The ID of the element that labels the textarea.
+ * @property {'none' | 'both' | 'horizontal' | 'vertical'} [resize='vertical'] - Controls the resize behavior of the textarea.
+ */
 export interface Props {
   placeholder?: string;
   value?: string;

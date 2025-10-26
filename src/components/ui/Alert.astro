@@ -1,4 +1,12 @@
 ---
+/**
+ * @component Alert
+ * @summary A styled alert component to display important messages to the user.
+ * @description This component renders a styled box with an icon and a message, suitable for conveying information, warnings, errors, or success notifications. It is designed with accessibility in mind, using appropriate ARIA roles.
+ * @property {'default' | 'destructive' | 'warning' | 'success' | 'info'} [variant='default'] - The variant of the alert, which determines its color scheme and icon.
+ * @property {string} [class] - Additional CSS classes to be applied to the alert's root element.
+ * @property {'alert' | 'status' | 'none'} [role='alert'] - The ARIA role of the alert, which affects how it is announced by screen readers. 'alert' is for urgent messages, and 'status' is for advisory information.
+ */
 export interface Props {
   variant?: 'default' | 'destructive' | 'warning' | 'success' | 'info';
   class?: string;
