@@ -1,217 +1,259 @@
-<!--
-Sync Impact Report:
-- Version change: 1.1.0 → 1.2.0
-- Modified principles:
-  * I. uv-First Python Management → I. Terminal Excellence Foundation (expanded scope)
-  * II. Static Site Generation Excellence → II. AI-Assisted Productivity (rewritten)
-  * III. Local CI/CD First → III. Performance-First Architecture (enhanced)
-  * IV. Component-Driven UI → IV. Team Collaboration Excellence (expanded)
-  * V. Zero-Cost Deployment → V. Constitutional Preservation (enhanced)
-  * VI. ROOT CAUSE ANALYSIS MANDATE (NEW CRITICAL PRINCIPLE)
-- Added sections:
-  * Advanced Terminal Productivity Success Criteria
-  * Critical Mandates (Phase-based implementation)
-  * Constitutional Violations (FORBIDDEN)
-  * Error Handling Violations (CRITICAL)
-  * Constitutional Error Handling Principles (VI. Root Cause Analysis Mandate)
-  * Direct Problem Resolution Requirements
-  * Forbidden Quick-Fix Patterns
-  * Mandatory Resolution Process
-  * Implementation Phases with dependencies
-- Removed sections: None (all foundation preserved)
-- Templates requiring updates:
-  ✅ constitution.md (this file - updated to v1.1.0)
-  ✅ plan-template.md (verified - supports advanced productivity features)
-  ✅ tasks-template.md (verified - task categories support terminal/AI features)
-  ✅ spec-template.md (verified - general purpose, no updates needed)
-- Follow-up TODOs: None
-- Foundation Status: PRESERVED ✅ (uv + Astro + GitHub Pages stack maintained)
--->
+# Ghostty Configuration Files - Project Constitution
 
-# Advanced Terminal Productivity Constitution
+<!--
+Sync Impact Report (2025-10-27):
+  Version: 1.0.0 (Initial constitution ratification)
+  Derived from: AGENTS.md (project root, single source of truth)
+
+  Principles Extracted:
+    I. Branch Preservation & Git Strategy
+    II. GitHub Pages Infrastructure Protection
+    III. Local CI/CD First
+    IV. Agent File Integrity (CRITICAL: symlink requirement)
+    V. LLM Conversation Logging
+    VI. Zero-Cost Operations
+
+  Template Sync Status:
+    ✅ plan-template.md: Constitution Check section aligned
+    ✅ spec-template.md: Requirements validation aligned
+    ✅ tasks-template.md: Task categorization aligned
+    ✅ commands/*.md: Agent-specific references verified
+
+  Critical Fixes Applied:
+    ✅ CLAUDE.md converted from regular file to symlink → AGENTS.md
+    ✅ AGENTS.md updated with Active Technologies and Recent Changes sections
+    ✅ GEMINI.md symlink verified (already correct)
+
+  Follow-up Actions Required:
+    - Update specs/001-repo-structure-refactor/spec.md FR-011 to clarify AGENTS.md remains intact
+    - Update specs/001-repo-structure-refactor/tasks.md T034 to specify content COPY (not split) to docs-source/
+-->
 
 ## Core Principles
 
-### I. Terminal Excellence Foundation (NON-NEGOTIABLE)
-ALL advanced productivity features SHALL enhance the proven terminal foundation without regression. Foundation preservation is mandatory: Oh My ZSH plugins and modern tools SHALL remain operational. Performance enhancement targets: Terminal startup SHALL achieve <50ms (vs current ~200ms). AI integration SHALL reduce lookup time by 30-50%. Theme excellence SHALL maintain instant rendering and rich information. Zero disruption: All enhancements SHALL be non-breaking additions to existing functionality.
+### I. Branch Preservation & Git Strategy (NON-NEGOTIABLE)
 
-### II. AI-Assisted Productivity Excellence (NON-NEGOTIABLE)
-AI assistance SHALL be seamlessly integrated with local fallbacks and multi-provider support. Multi-Provider Support: OpenAI, Anthropic Claude, Google Gemini integration with failover. Context awareness: AI SHALL understand current directory, Git state, and command history. Local fallbacks: All AI features SHALL degrade gracefully when services unavailable. Privacy protection: No command history SHALL be transmitted without explicit consent. Performance mandate: AI suggestions SHALL appear within 500ms or fallback to local.
+**NEVER DELETE BRANCHES** without explicit user permission. All branches contain valuable configuration history. Branches must be merged to main but preserved after merge.
 
-### III. Performance-First Architecture (NON-NEGOTIABLE)
-Advanced features SHALL exceed performance targets while maintaining constitutional compliance. Startup performance: <50ms shell startup with intelligent caching and lazy loading. Memory efficiency: <150MB total memory footprint including all advanced features. Intelligent caching: Compilation and completion caching with performance monitoring. Lazy loading: Expensive tools deferred until needed with instant activation. Local CI/CD First: ALL workflows MUST be simulated locally before any push/sync operations.
+**Branch Naming Format** (MANDATORY): `YYYYMMDD-HHMMSS-type-short-description`
 
-### IV. Team Collaboration Excellence (NON-NEGOTIABLE)
-Advanced features SHALL support team environments with configuration management and sharing. Configuration templates: Shared team standards with individual customization preservation. Environment sync: Consistent setups across development, staging, production environments. Secret management: Encrypted dotfile management with chezmoi integration. Documentation integration: Auto-generated setup guides and troubleshooting. Zero lock-in: All team features SHALL work with standard tools and processes.
+**Git Workflow**:
+```bash
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+BRANCH_NAME="${DATETIME}-feat-description"
+git checkout -b "$BRANCH_NAME"
+git add .
+git commit -m "Descriptive message
 
-### V. Constitutional Preservation (NON-NEGOTIABLE)
-All advanced features SHALL maintain zero GitHub Actions consumption and constitutional compliance. Local-first development: All productivity tools execute locally with optional cloud integration. Branch preservation: Constitutional naming maintained (YYYYMMDD-HHMMSS-feat-description). User customization: Advanced features SHALL preserve existing user configurations. Performance monitoring: Constitutional targets continuously validated. Rollback capability: Instant rollback to foundation state if advanced features fail.
+🤖 Generated with [Claude Code](https://claude.ai/code)
+Co-Authored-By: Claude <noreply@anthropic.com>"
+git push -u origin "$BRANCH_NAME"
+git checkout main
+git merge "$BRANCH_NAME" --no-ff
+git push origin main
+# NEVER: git branch -d "$BRANCH_NAME"
+```
 
-## Critical Advanced Productivity Mandates
+**Rationale**: Branch preservation maintains complete development history for configuration debugging, regression analysis, and architectural decision archaeology. The datetime-based naming provides chronological ordering and prevents naming conflicts in multi-developer scenarios.
 
-### AI Integration Mandates (Phase 1)
-1. **Multi-Provider Support**: MUST integrate OpenAI, Anthropic, and Google with unified interface
-2. **Context Awareness**: MUST understand current directory, Git state, and command history
-3. **Local Fallbacks**: MUST degrade gracefully when AI services unavailable
-4. **Privacy Protection**: MUST obtain explicit consent before transmitting command history
+### II. GitHub Pages Infrastructure Protection (NON-NEGOTIABLE)
 
-### Advanced Theming Mandates (Phase 2)
-1. **Performance Requirements**: MUST maintain instant rendering with rich information display
-2. **Adaptive Intelligence**: MUST detect SSH, local, Docker environments and adapt accordingly
-3. **Theme Compatibility**: MUST support both Powerlevel10k and Starship alternatives
-4. **Startup Monitoring**: MUST track and optimize shell startup times continuously
+**`.nojekyll` File is ABSOLUTELY CRITICAL**. This file MUST exist in the Astro build output directory to disable Jekyll processing and allow `_astro/` directory assets to load correctly.
 
-### Performance Optimization Mandates (Phase 3)
-1. **Startup Performance**: MUST achieve <50ms shell startup time through intelligent optimization
-2. **Memory Efficiency**: MUST maintain <150MB total footprint including all advanced features
-3. **Caching Intelligence**: MUST implement compilation and completion caching with monitoring
-4. **Lazy Loading**: MUST defer expensive tool initialization until needed
+**Location**: `docs/.nojekyll` (empty file, no content needed)
 
-### Team Collaboration Mandates (Phase 4)
-1. **Configuration Management**: MUST integrate chezmoi for secure dotfile management
-2. **Template System**: MUST support shared standards with individual customization
-3. **Documentation Automation**: MUST generate setup guides and troubleshooting automatically
-4. **Sync Capabilities**: MUST support consistent setups across multiple environments
+**Impact Without This File**: ALL CSS/JS assets return 404 errors, breaking the entire site.
 
-### Foundation Preservation (MANDATORY)
-- **uv-First Python**: ALL Python operations via uv exclusively (≥ 0.4.0)
-- **Astro.build Excellence**: Static site generation with TypeScript strict mode (≥ 4.0) → builds to `docs/` for GitHub Pages
-- **shadcn/ui + Tailwind**: Component-driven UI with accessibility compliance
-- **GitHub Pages**: Zero-cost deployment with branch preservation strategy → served from `docs/` folder
-- **Documentation Structure**: `docs/` = Astro.build output ONLY, `documentations/` = all other documentation
+**Protection Protocol**:
+- Primary: Astro `public/` directory (automatic copy to build output)
+- Secondary: Vite plugin automation (implemented in astro.config.mjs)
+- Tertiary: Post-build validation scripts
+- Quaternary: Pre-commit git hooks
 
-## Advanced Terminal Productivity Success Criteria
+**Rationale**: GitHub Pages defaults to Jekyll processing which ignores directories starting with underscore. Astro outputs assets to `_astro/`, requiring Jekyll to be disabled via `.nojekyll` file. This is a GitHub Pages technical requirement with no alternative solution.
 
-### Foundation Success (COMPLETED ✅)
-- ✅ Oh My ZSH essential plugin trinity operational (zsh-autosuggestions, zsh-syntax-highlighting, you-should-use)
-- ✅ Modern Unix tools suite with update-first philosophy (eza, bat, ripgrep, fzf, zoxide, fd)
-- ✅ Intelligent installation logic with 44% performance improvement
-- ✅ Constitutional compliance framework with 99.6% score
-- ✅ uv + Astro + GitHub Pages stack foundation preserved
+### III. Local CI/CD First (MANDATORY)
 
-### AI Integration Success (Phase 1)
-- ✅ Multi-provider AI integration (OpenAI, Anthropic, Google) with unified interface
-- ✅ Natural language to command translation reducing lookup time by 30-50%
-- ✅ Context awareness understanding directory, Git state, and command history
-- ✅ Local fallbacks ensuring functionality without external dependencies
+**EVERY configuration change MUST complete local validation BEFORE any GitHub deployment**. This ensures zero GitHub Actions consumption and prevents production failures.
 
-### Advanced Theming Success (Phase 2)
-- ✅ Powerlevel10k or Starship deployment with instant rendering
-- ✅ Adaptive theme switching based on environment detection
-- ✅ Startup time optimization achieving <50ms target
-- ✅ Rich information display maintaining performance
+**Pre-Deployment Verification Steps**:
+1. Run local workflow: `./local-infra/runners/gh-workflow-local.sh local`
+2. Verify build success: `./local-infra/runners/gh-workflow-local.sh status`
+3. Test configuration: `ghostty +show-config && ./scripts/check_updates.sh`
+4. Only then proceed with git workflow
 
-### Performance Optimization Success (Phase 3)
-- ✅ Shell startup time reduced to <50ms through intelligent caching
-- ✅ Memory footprint optimized to <150MB including all features
-- ✅ Lazy loading implemented for expensive tool initialization
-- ✅ Continuous performance monitoring and alerting operational
+**Local Workflow Tools**:
+- `./local-infra/runners/gh-workflow-local.sh` - Local GitHub Actions simulation
+- `./local-infra/runners/gh-pages-setup.sh` - Zero-cost Pages configuration
+- Commands: `local`, `status`, `trigger`, `pages`, `all`
 
-### Team Collaboration Success (Phase 4)
-- ✅ Configuration management via chezmoi with secure dotfile handling
-- ✅ Template system supporting shared standards with individual customization
-- ✅ Auto-generated documentation and troubleshooting guides
-- ✅ Multi-environment sync capabilities (development, staging, production)
+**Rationale**: Local CI/CD validation prevents consuming GitHub Actions minutes (staying within free tier), enables rapid iteration without network latency, and catches configuration errors before they reach production. Performance target: <2 minutes for complete local workflow execution.
 
-### Constitutional Preservation Standards (MANDATORY)
-- Zero GitHub Actions consumption maintained throughout all phases
-- Branch preservation with timestamped naming (YYYYMMDD-HHMMSS-feat-description)
-- Local CI/CD validation before any deployment
-- Performance targets: <50ms startup, <150MB memory, 30-50% productivity improvement
+### IV. Agent File Integrity (CRITICAL SYMLINK REQUIREMENT)
 
-## Constitutional Violations (FORBIDDEN)
+**Single Source of Truth**: `AGENTS.md` is the authoritative LLM instructions file containing all non-negotiable requirements.
 
-### Terminal Excellence Violations
-- ❌ **Foundation Regression**: Breaking existing Oh My ZSH plugins or modern tools
-- ❌ **Performance Degradation**: Startup time exceeding 50ms or memory exceeding 150MB
-- ❌ **User Disruption**: Advanced features disrupting existing terminal workflows
-- ❌ **Configuration Loss**: Losing user customizations during feature implementation
+**Symlink Structure** (MANDATORY):
+- `AGENTS.md` - Regular file (single source of truth)
+- `CLAUDE.md` - Symlink to AGENTS.md (Claude Code integration)
+- `GEMINI.md` - Symlink to AGENTS.md (Gemini CLI integration)
 
-### AI Integration Violations
-- ❌ **Privacy Breach**: Transmitting command history without explicit user consent
-- ❌ **Single Provider Lock-in**: Dependency on single AI provider without fallbacks
-- ❌ **Performance Impact**: AI features causing startup delays exceeding 500ms
-- ❌ **Context Leakage**: Exposing sensitive directory or Git information inappropriately
+**NEVER**:
+- Split AGENTS.md into multiple files without maintaining symlink integrity
+- Convert AGENTS.md symlinks to regular files
+- Create agent-specific divergent instructions
 
-### Performance Architecture Violations
-- ❌ **Memory Bloat**: Total memory footprint exceeding 150MB including all features
-- ❌ **Startup Regression**: Shell startup time exceeding 50ms target
-- ❌ **Caching Failures**: Intelligent caching not reducing completion times
-- ❌ **Resource Waste**: Unnecessary background processes or excessive CPU usage
+**Documentation Migration**:
+- Content may be COPIED from AGENTS.md to docs-source/ for Astro site
+- AGENTS.md remains intact as single source
+- Symlinks continue pointing to AGENTS.md (not to docs-source/)
 
-### Team Collaboration Violations
-- ❌ **Vendor Lock-in**: Team features requiring proprietary tools or services
-- ❌ **Security Weaknesses**: Insecure handling of team configurations or secrets
-- ❌ **Documentation Gaps**: Missing or outdated auto-generated documentation
-- ❌ **Environment Inconsistencies**: Different behavior across development environments
+**Rationale**: Symlink structure ensures all AI assistants (Claude, Gemini, future additions) receive identical instructions, preventing configuration drift and contradictory guidance. Single source of truth simplifies updates and guarantees consistency.
 
-### Constitutional Preservation Violations
-- ❌ **GitHub Actions Usage**: ANY consumption beyond baseline for advanced features
-- ❌ **Branch Deletion**: Deleting implementation branches without explicit approval
-- ❌ **Compliance Regression**: Reducing overall constitutional compliance score
-- ❌ **Local Validation Bypass**: Deploying advanced features without local validation
+### V. LLM Conversation Logging (MANDATORY)
 
-### Error Handling Violations (CRITICAL)
-- ❌ **Workaround Solutions**: Creating scripts or bypasses instead of fixing root causes
-- ❌ **Error Masking**: Suppressing errors without understanding underlying problems
-- ❌ **Quick Fixes**: Band-aid solutions that don't address fundamental issues
-- ❌ **Symptom Treatment**: Addressing surface problems while ignoring core defects
+**All AI assistants working on this repository MUST save complete conversation logs** with system state snapshots for debugging and continuity.
 
-## VI. Root Cause Analysis Mandate (CRITICAL)
+**Requirements**:
+- Complete logs: Save entire conversation from start to finish
+- Exclude sensitive data: Remove API keys, passwords, personal information
+- Storage location: `documentations/development/conversation_logs/`
+- Naming convention: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
+- System state: Capture before/after system states
+- CI/CD logs: Include local workflow execution logs
 
-**RULE**: Fix root causes directly. NO workarounds, bypasses, or quick fixes.
+**Rationale**: Conversation logs provide debugging context for configuration issues, enable session continuity across interruptions, and document architectural decisions for future reference. System state snapshots facilitate root cause analysis and regression debugging.
 
-**FORBIDDEN**:
-- `@ts-ignore`, `--no-check`, error suppression
-- Creating scripts to bypass broken functionality
-- Tool switching instead of fixing configuration
-- Any solution that masks the underlying problem
+### VI. Zero-Cost Operations (MANDATORY)
 
-**REQUIRED PROCESS**:
-1. Identify the actual root cause
-2. Fix the root cause directly
-3. Validate the fix works
-4. Document the solution
+**No GitHub Actions minutes consumed for routine operations**. All CI/CD workflows execute locally before any GitHub interaction.
 
-**EXAMPLES**:
-- TypeScript errors → Fix type declarations, NOT disable checking
-- Build failures → Fix configuration, NOT create alternative build
-- 250+ TypeScript errors → Fix each error properly, NOT bypass with `--no-check`
+**Cost Monitoring**:
+```bash
+# Check usage
+gh api user/settings/billing/actions
 
-## Implementation Phases
+# Monitor workflows
+gh run list --limit 10 --json status,conclusion,name,createdAt
 
-### Phase 1: AI Integration Foundation (READY FOR IMPLEMENTATION)
-**Target**: Multi-provider AI assistance with local fallbacks and context awareness
-**Foundation**: ✅ Terminal infrastructure, Oh My ZSH plugins, modern tools operational
-**Constitutional Requirements**: Zero GitHub Actions, <500ms AI response, privacy protection
+# Verify compliance
+./local-infra/runners/gh-pages-setup.sh
+```
 
-### Phase 2: Advanced Theming Excellence (DEPENDENT ON PHASE 1)
-**Target**: Powerlevel10k/Starship with adaptive environment detection
-**Foundation**: ✅ Performance optimization framework, theme management system ready
-**Constitutional Requirements**: Instant rendering, <50ms startup impact, environment adaptation
+**Performance Targets**:
+- Startup time: <500ms for new Ghostty instance (CGroup optimization)
+- Memory usage: <100MB baseline with optimized scrollback
+- CI/CD performance: <2 minutes for complete local workflow
+- Configuration validity: 100% successful validation rate
 
-### Phase 3: Performance Optimization Mastery (DEPENDENT ON PHASES 1-2)
-**Target**: <50ms startup, intelligent caching, lazy loading implementation
-**Foundation**: ✅ Baseline performance metrics, monitoring infrastructure ready
-**Constitutional Requirements**: <150MB memory, continuous monitoring, intelligent optimization
+**Rationale**: Free tier GitHub Actions provides 2,000 minutes/month. Local-first approach prevents accidental consumption, enables offline development, and provides immediate feedback without network dependency.
 
-### Phase 4: Team Collaboration Excellence (DEPENDENT ON PHASES 1-3)
-**Target**: Configuration management, templates, documentation automation
-**Foundation**: ✅ Individual productivity features proven, ready for team scaling
-**Constitutional Requirements**: Zero vendor lock-in, secure handling, environment consistency
+## Additional Constraints
+
+### Technology Stack (NON-NEGOTIABLE)
+
+**Terminal Environment**:
+- Ghostty: Latest from source (Zig 0.14.0) with 2025 optimizations
+- ZSH: Oh My ZSH with productivity plugins
+- Context Menu: Nautilus integration
+
+**AI Integration**:
+- Claude Code: Latest CLI via npm
+- Gemini CLI: Google's AI assistant with Ptyxis integration
+- Node.js: Latest LTS via NVM
+
+**Local CI/CD**:
+- GitHub CLI: For workflow simulation and API access
+- Local Runners: Shell-based workflow execution
+- Performance Monitoring: System state and timing analysis
+
+### Documentation Structure (CONSTITUTIONAL REQUIREMENT)
+
+- `docs/` - Astro.build output ONLY → GitHub Pages deployment (DO NOT manually edit)
+- `documentations/` - All other documentation → installation guides, screenshots, manuals, specs
+- `specs/` - Feature specifications with planning artifacts
+
+### Directory Nesting Limit
+
+Maximum 2 levels of nesting from repository root to maintain simplicity for configuration projects. Top-level directories limited to 4-5 to prevent organizational complexity.
+
+## Quality Gates
+
+### Before Every Configuration Change
+
+1. **Local CI/CD Execution**: Run `./local-infra/runners/gh-workflow-local.sh all`
+2. **Configuration Validation**: Run `ghostty +show-config` to ensure validity
+3. **Performance Testing**: Execute `./local-infra/runners/performance-monitor.sh`
+4. **Backup Creation**: Automatic timestamped backup of existing configuration
+5. **User Preservation**: Extract and preserve user customizations
+6. **Documentation**: Update relevant docs if adding features
+7. **Conversation Log**: Save complete AI conversation log with system state
+
+### Validation Criteria
+
+- Local CI/CD workflows execute successfully
+- Configuration validates without errors via `ghostty +show-config`
+- All 2025 performance optimizations present and functional
+- User customizations preserved and functional
+- Context menu integration works correctly
+- GitHub Actions usage remains within free tier limits
+- All logging systems capture complete information
+
+## Absolute Prohibitions
+
+### DO NOT
+
+- **NEVER REMOVE `docs/.nojekyll`** - This breaks ALL CSS/JS loading on GitHub Pages
+- Delete branches without explicit user permission
+- Use GitHub Actions for anything that consumes minutes
+- Skip local CI/CD validation before GitHub deployment
+- Ignore existing user customizations during updates
+- Apply configuration changes without backup
+- Commit sensitive data (API keys, passwords, personal information)
+- Bypass the intelligent update system for configuration changes
+- Remove Jekyll-related files without verifying `.nojekyll` preservation
+- Convert CLAUDE.md or GEMINI.md from symlinks to regular files
+
+### DO NOT BYPASS
+
+- Branch preservation requirements
+- Local CI/CD execution requirements
+- Zero-cost operation constraints
+- Configuration validation steps
+- User customization preservation
+- Logging and debugging requirements
+- Agent file symlink integrity
 
 ## Governance
 
 ### Amendment Process
-Constitution amendments require documentation of changes, approval rationale, and migration plan for existing implementations. All changes must maintain backward compatibility with existing local CI/CD infrastructure and branch preservation policies. Advanced terminal productivity features must preserve the foundation stack (uv + Astro + GitHub Pages).
 
-### Compliance Verification
-All pull requests and reviews must verify compliance with these principles. Local CI/CD execution logs must be reviewed for zero GitHub Actions consumption. Performance metrics must meet specified targets before deployment approval. Foundation preservation validation required for all advanced features.
+1. **Proposal**: Document proposed constitutional change with rationale
+2. **Impact Analysis**: Assess impact on existing workflows, templates, and artifacts
+3. **Template Sync**: Update plan-template.md, spec-template.md, tasks-template.md
+4. **Version Increment**: Semantic versioning (MAJOR.MINOR.PATCH)
+5. **Propagation**: Update dependent documentation (README, quickstart, agent files)
+6. **Validation**: Run full local CI/CD to verify no breakage
+7. **Ratification**: Merge via standard git workflow with constitution amendment commit message
 
-### Implementation Reference
-For detailed implementation guidance, refer to `spec-kit/SPEC_KIT_INDEX.md` and `spec-kit/002/1-spec-kit-constitution.md` which contain the complete constitution prompts and execution instructions for establishing advanced terminal productivity principles in practice.
+### Versioning Policy
 
-### Version Control
-This constitution follows semantic versioning: MAJOR for breaking changes to core principles, MINOR for new principles or significant expansions, PATCH for clarifications and refinements.
+- **MAJOR**: Backward incompatible principle removals or redefinitions
+- **MINOR**: New principle/section added or materially expanded guidance
+- **PATCH**: Clarifications, wording, typo fixes, non-semantic refinements
 
-**Version**: 1.2.0 | **Ratified**: 2025-01-20 | **Last Amended**: 2025-09-21
+### Compliance Review
+
+All PRs/reviews must verify constitutional compliance before merge. Complexity additions must be justified in spec.md "Complexity Tracking" section. Use AGENTS.md (project root) for runtime development guidance.
+
+### Supersedence
+
+This constitution supersedes all other practices except explicit project requirements in spec.md files. When conflicts arise, constitutional principles take precedence unless explicitly justified in "Complexity Tracking" section of the spec.
+
+---
+
+**Version**: 1.0.0
+**Ratified**: 2025-10-27
+**Last Amended**: 2025-10-27
+**Authority**: AGENTS.md (single source of truth)
+**Status**: ACTIVE - MANDATORY COMPLIANCE
