@@ -9,6 +9,33 @@
 // 4. Performance first - <100KB JS bundles, <2.5s LCP
 // 5. Accessibility first - WCAG 2.1 AA compliance
 
+/**
+ * @typedef {object} EnhancementFeature
+ * @property {string} id - A unique identifier for the feature.
+ * @property {string} name - The display name of the feature.
+ * @property {string} description - A brief description of the feature and its enhancement.
+ * @property {'html' | 'css' | 'js'} baseline - The technology providing the core functionality without JavaScript.
+ * @property {'css' | 'js' | 'wasm' | 'service-worker'} enhancement - The technology used to enhance the baseline experience.
+ * @property {'critical' | 'important' | 'nice-to-have'} priority - The importance of the enhancement.
+ * @property {string} [fallback] - A description of the fallback behavior when the enhancement is not available.
+ */
+
+/**
+ * @typedef {object} PerformanceThresholds
+ * @property {number} js - The maximum allowed JavaScript bundle size in KB.
+ * @property {number} css - The maximum allowed CSS bundle size in KB.
+ * @property {number} lcp - The maximum allowed Largest Contentful Paint time in seconds.
+ */
+
+/**
+ * @component ProgressiveEnhancement
+ * @summary A dashboard for monitoring and managing progressive enhancement features.
+ * @description This component displays performance metrics, lists all progressive enhancement features with their statuses, and provides tools for testing. It ensures adherence to constitutional principles like zero JavaScript by default and graceful degradation.
+ * @property {EnhancementFeature[]} [features] - An array of objects describing the progressive enhancement features.
+ * @property {PerformanceThresholds} [performanceThresholds] - An object defining the performance targets.
+ * @property {boolean} [constitutionalMode=true] - Enables or disables the display of the constitutional compliance section.
+ * @property {string} [class] - Additional CSS classes for the root element.
+ */
 interface Props {
   features?: Array<{
     id: string;

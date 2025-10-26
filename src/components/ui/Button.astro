@@ -1,4 +1,15 @@
 ---
+/**
+ * @component Button
+ * @summary A versatile button component that can be rendered as a button or a link.
+ * @description This component provides a styled button with multiple visual variants and sizes. It can function as a standard HTML button or as an anchor tag if an `href` prop is provided, making it flexible for various use cases like form submissions, navigation, and actions.
+ * @property {'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'success' | 'warning' | 'info'} [variant='default'] - The visual style of the button.
+ * @property {'default' | 'sm' | 'lg' | 'icon'} [size='default'] - The size of the button. 'icon' is for buttons that only contain an icon.
+ * @property {string} [class] - Additional CSS classes to apply to the button.
+ * @property {string} [href] - If provided, the button will be rendered as an anchor (`<a>`) tag with this URL.
+ * @property {boolean} [disabled=false] - If true, the button will be disabled and non-interactive.
+ * @property {'button' | 'submit' | 'reset'} [type='button'] - The type attribute for the button, used when it's not a link.
+ */
 export interface Props {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'success' | 'warning' | 'info';
   size?: 'default' | 'sm' | 'lg' | 'icon';

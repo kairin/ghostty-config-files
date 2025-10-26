@@ -9,7 +9,7 @@
 // 4. Progressive enhancement - Works without JavaScript
 // 5. Local storage - All translations stored locally
 
-interface LocaleConfig {
+export interface LocaleConfig {
   code: string;
   name: string;
   nativeName: string;
@@ -18,7 +18,18 @@ interface LocaleConfig {
   flag: string;
 }
 
-
+/**
+ * @component InternationalizationSupport
+ * @summary A comprehensive component for managing and displaying multi-language support.
+ * @description This component provides a language selector, displays translation status, and demonstrates locale-specific formatting for dates and numbers. It adheres to constitutional compliance by keeping all translations local and ensuring high performance.
+ * @property {string} [currentLocale='en-US'] - The currently active locale.
+ * @property {LocaleConfig[]} [supportedLocales] - An array of locale configurations for all supported languages.
+ * @property {Record<string, Record<string, string>>} [translations] - An object containing translation key-value pairs for all supported locales.
+ * @property {boolean} [constitutionalMode=true] - Enables or disables the display of constitutional compliance checks.
+ * @property {boolean} [enableRTL=true] - Enables or disables support for right-to-left languages.
+ * @property {boolean} [enablePluralRules=true] - This property is deprecated and no longer used.
+ * @property {string} [class] - Additional CSS classes for the root element.
+ */
 interface Props {
   currentLocale?: string;
   supportedLocales?: LocaleConfig[];

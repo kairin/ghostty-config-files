@@ -1,4 +1,12 @@
 ---
+/**
+ * @component ThemeToggle
+ * @summary A button for toggling between light and dark color themes.
+ * @description This component renders a button with sun and moon icons that allows the user to switch the color theme of the site. It uses client-side JavaScript to manage the theme preference in local storage and applies the theme to the `<html>` element.
+ * @property {string} [class] - Additional CSS classes to apply to the button.
+ * @property {boolean} [showLabel=false] - If true, a text label indicating the current theme ("Light" or "Dark") is displayed next to the button.
+ * @property {'sm' | 'md' | 'lg'} [size='md'] - The size of the toggle button.
+ */
 export interface Props {
   class?: string;
   showLabel?: boolean;

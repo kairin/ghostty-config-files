@@ -1,4 +1,12 @@
 ---
+/**
+ * @component AccessibilityValidator
+ * @summary A UI component for performing and displaying accessibility validation checks.
+ * @description This component provides a user interface to run an on-demand accessibility scan of the current page. It can be configured to show detailed results and to run automatically on page load. The component is progressively enhanced with client-side JavaScript to perform the checks.
+ * @property {boolean} [showResults=false] - If true, the accessibility validation results are displayed within the component.
+ * @property {boolean} [autoScan=true] - If true, an accessibility scan is automatically performed when the page loads.
+ * @property {string} [class] - Additional CSS classes to be applied to the component's root element.
+ */
 export interface Props {
   showResults?: boolean;
   autoScan?: boolean;
