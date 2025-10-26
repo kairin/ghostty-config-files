@@ -318,7 +318,7 @@ This document defines the entities (configuration artifacts, scripts, and docume
 |-----------|------|----------|------------------|-------------|
 | path | string | Yes | Absolute path | Full directory path |
 | structure_type | enum | Yes | `top-level | feature | generated` | Type of directory |
-| nesting_level | integer | Yes | 0-2 | Depth from repository root (constitutional limit: 2) |
+| nesting_level | integer | Yes | 0-2 | Depth from parent directory: 0=parent dir itself, 1=first subdirectory level, 2=second subdirectory level (constitutional limit: maximum 2 levels deep per FR-005) |
 | purpose | string | Yes | Max 200 chars | What this directory contains |
 | git_tracked | boolean | Yes | - | Whether contents should be in git |
 | protected | boolean | Yes | - | Whether can be modified during refactoring |

@@ -79,13 +79,13 @@ As a maintainer extending repository functionality, I want scripts broken into l
 - **FR-002**: manage.sh MUST support subcommands: install, docs (generate|build|dev), screenshots (capture|generate-gallery), update, validate
 - **FR-003**: manage.sh MUST display contextual help when invoked with --help or invalid arguments
 - **FR-004**: System MUST maintain backward compatibility by keeping start.sh as a wrapper to `manage.sh install`
-- **FR-005**: All source documentation MUST reside in a single docs-source/ top-level directory with shallow nesting (maximum 2 levels deep)
-- **FR-006**: Generated documentation MUST output only to docs-dist directory
+- **FR-005**: All source documentation MUST reside in a single docs-source/ top-level directory with shallow nesting (maximum 2 levels deep from docs-source/, where docs-source/=level 0, docs-source/user-guide/=level 1, docs-source/user-guide/installation.md=level 2)
+- **FR-006**: Generated documentation MUST output only to docs-dist directory. The .nojekyll file MUST be created during Astro build process (via public/ directory or build script) and MUST NOT be git tracked (generated artifact only)
 - **FR-007**: docs-dist directory MUST be added to .gitignore to prevent accidental commits of build artifacts
 - **FR-008**: Monolithic start.sh script MUST be refactored into fine-grained modules (10+ modules) in a flat scripts/ directory (avoiding scripts/modules/ subdirectory to reduce nesting)
 - **FR-009**: Each module MUST handle a single, highly specific sub-task (e.g., install_node.sh, install_zig.sh, build_ghostty.sh, setup_zsh.sh, configure_theme.sh as separate files)
 - **FR-010**: Modules MUST be sourceable and testable independently of manage.sh orchestration, with each module completing in under 10 seconds when tested in isolation
-- **FR-011**: AI guidelines (currently in AGENTS.md) MUST be split into modular files within docs-source/ maintaining shallow nesting (e.g., docs-source/ai-guidelines/)
+- **FR-011**: AI guidelines content from AGENTS.md MUST be copied into modular files within docs-source/ai-guidelines/ maintaining shallow nesting. AGENTS.md remains intact as single source of truth with CLAUDE.md and GEMINI.md as symlinks per constitutional requirement (Principle IV: Agent File Integrity)
 - **FR-012**: Astro site MUST include both user-facing documentation (installation, usage, configuration) and developer documentation (AI guidelines, architecture, contributing) with clear navigation between sections
 - **FR-013**: Migration MUST follow incremental per-component approach: migrate one script module at a time, one doc section at a time, building manage.sh gradually
 - **FR-014**: Each migration increment MUST be independently testable and deployable without breaking existing functionality
@@ -97,11 +97,11 @@ As a maintainer extending repository functionality, I want scripts broken into l
 
 ### Assumptions
 
-- Repository structure limited to 4-5 top-level directories with maximum 2 levels of nesting to maintain simplicity for a config project
+- Repository structure follows nesting limits defined in FR-005 (maximum 2 levels deep) to maintain simplicity for a config project
 - Existing workflow structures (spec-kit/, local-infra/, .specify/) remain unchanged and functional during migration
 - New simplified structure coexists with existing structures without requiring immediate consolidation
 - Incremental migration allows partial completion states where some modules are migrated while others remain in start.sh
-- Each migration increment can be validated independently before proceeding to next component
+- Each migration increment can be validated independently before proceeding to next component. One complete increment is defined as: (1) module created with proper contract compliance, (2) unit test written and passing in <10s, and (3) module integrated into manage.sh with proper error handling
 - The docs directory will be renamed or repurposed, not deleted (to preserve GitHub Pages configuration if needed)
 - Existing custom modifications to start.sh by users are minimal (script warns about migration)
 - Shell environment is bash-compatible for module sourcing

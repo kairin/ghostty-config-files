@@ -137,6 +137,7 @@
 
 - [ ] T031 [US1] Implement manage.sh validate command with --type (all, config, performance, dependencies) and --fix options
 - [ ] T032 [US1] Integrate all validation checks into validate command (ghostty config syntax, ZSH config, performance metrics, dependency checking)
+- [ ] T032.1 [P] [US1] Test edge case: manage.sh called with invalid subcommand displays help and exits with non-zero status per edge case requirement (spec.md:66)
 
 ---
 
@@ -156,7 +157,7 @@
 ### Documentation Structure Creation (T033-T037)
 
 - [ ] T033 [P] [US2] Create docs-source directory structure with user-guide/, ai-guidelines/, developer/ subdirectories
-- [ ] T034 [P] [US2] Split CLAUDE.md into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md)
+- [ ] T034 [P] [US2] Copy AGENTS.md content into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md) while maintaining AGENTS.md as single source. Verify CLAUDE.md and GEMINI.md remain as symlinks to AGENTS.md
 - [ ] T035 [P] [US2] Create user documentation in docs-source/user-guide/ (installation.md, configuration.md, usage.md)
 - [ ] T036 [P] [US2] Create developer documentation in docs-source/developer/ (architecture.md, contributing.md, testing.md)
 - [ ] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
@@ -166,7 +167,7 @@
 - [ ] T038 [US2] Configure Astro content collections in src/content/config.ts for docs-source/ directory structure
 - [ ] T039 [P] [US2] Create Astro layout components in src/layouts/ for user docs and developer docs with distinct styling
 - [ ] T040 [P] [US2] Implement navigation component in src/components/Navigation.astro with clear separation between user and developer sections
-- [ ] T041 [P] [US2] Configure Astro build output to docs-dist/ in astro.config.mjs ensuring .nojekyll creation
+- [ ] T041 [P] [US2] Configure Astro build output to docs-dist/ in astro.config.mjs. Create .nojekyll file in public/ directory for automatic copy to build output (primary protection layer per FR-006). Verify existing Vite plugin also creates .nojekyll (secondary layer)
 - [ ] T042 [US2] Create Astro pages in src/pages/ that render content from docs-source/ collections
 
 ### Documentation Build Integration (T043-T046)
@@ -225,6 +226,7 @@
 - [ ] T064 [US3] Implement module sourcing in manage.sh using relative paths from SCRIPTS_DIR
 - [ ] T065 [US3] Add module failure handling to manage.sh with specific exit codes per module error type
 - [ ] T066 [US3] Create start.sh wrapper calling manage.sh install for backward compatibility
+- [ ] T066.1 [P] [US3] Test edge case: partial migration rollback scenario where module migration fails and system recovers using backup per edge case requirement (spec.md:68, spec.md:72)
 - [ ] T067 [US3] Test all modules can be sourced independently without side effects using BASH_SOURCE guard
 - [ ] T068 [US3] Validate no circular dependencies exist using scripts/validate_module_deps.sh
 
