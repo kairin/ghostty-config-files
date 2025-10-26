@@ -84,10 +84,10 @@
 
 ### Common Utilities (T013-T016)
 
-- [ ] T013 [P] Create common utility functions in scripts/common.sh for path resolution, logging, error handling
-- [ ] T014 [P] Create progress reporting functions in scripts/progress.sh for standardized output (🔄 Starting, ✅ Completed, ❌ Failed)
-- [ ] T015 [P] Create backup utility functions in scripts/backup_utils.sh for timestamped configuration backups before changes
-- [ ] T016 [P] Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh validating all utility functions
+- [X] T013 [P] Create common utility functions in scripts/common.sh for path resolution, logging, error handling
+- [X] T014 [P] Create progress reporting functions in scripts/progress.sh for standardized output (🔄 Starting, ✅ Completed, ❌ Failed)
+- [X] T015 [P] Create backup utility functions in scripts/backup_utils.sh for timestamped configuration backups before changes
+- [X] T016 [P] Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh validating all utility functions
 
 ---
 
@@ -106,10 +106,10 @@
 
 ### manage.sh Core Implementation (T017-T020)
 
-- [ ] T017 [US1] Create manage.sh skeleton in /home/kkk/Apps/ghostty-config-files/manage.sh with argument parsing, help display, command routing
-- [ ] T018 [US1] Implement global options in manage.sh (--help, --version, --verbose, --quiet, --dry-run) per manage-sh-cli contract
-- [ ] T019 [US1] Create environment variable support in manage.sh (MANAGE_DEBUG, MANAGE_NO_COLOR, MANAGE_LOG_FILE, MANAGE_BACKUP_DIR)
-- [ ] T020 [US1] Implement error handling and cleanup in manage.sh with trap ERR for graceful failure handling
+- [X] T017 [US1] Create manage.sh skeleton in /home/kkk/Apps/ghostty-config-files/manage.sh with argument parsing, help display, command routing
+- [X] T018 [US1] Implement global options in manage.sh (--help, --version, --verbose, --quiet, --dry-run) per manage-sh-cli contract
+- [X] T019 [US1] Create environment variable support in manage.sh (MANAGE_DEBUG, MANAGE_NO_COLOR, MANAGE_LOG_FILE, MANAGE_BACKUP_DIR)
+- [X] T020 [US1] Implement error handling and cleanup in manage.sh with trap ERR for graceful failure handling
 
 ### Install Command (T021-T023)
 
