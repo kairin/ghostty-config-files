@@ -119,24 +119,24 @@
 
 ### Docs Command (T024-T026)
 
-- [ ] T024 [P] [US1] Implement manage.sh docs build subcommand calling Astro build with --clean and --output-dir options
-- [ ] T025 [P] [US1] Implement manage.sh docs dev subcommand starting Astro dev server with --port and --host options
-- [ ] T026 [P] [US1] Implement manage.sh docs generate subcommand for screenshot and API documentation generation
+- [X] T024 [P] [US1] Implement manage.sh docs build subcommand calling Astro build with --clean and --output-dir options
+- [X] T025 [P] [US1] Implement manage.sh docs dev subcommand starting Astro dev server with --port and --host options
+- [X] T026 [P] [US1] Implement manage.sh docs generate subcommand for screenshot and API documentation generation
 
 ### Screenshots Command (T027-T028)
 
-- [ ] T027 [P] [US1] Implement manage.sh screenshots capture subcommand accepting category, name, description arguments
-- [ ] T028 [P] [US1] Implement manage.sh screenshots generate-gallery subcommand creating HTML gallery from captured images
+- [X] T027 [P] [US1] Implement manage.sh screenshots capture subcommand accepting category, name, description arguments
+- [X] T028 [P] [US1] Implement manage.sh screenshots generate-gallery subcommand creating HTML gallery from captured images
 
 ### Update Command (T029-T030)
 
-- [ ] T029 [US1] Implement manage.sh update command with --check-only, --force, --component options for selective updates
-- [ ] T030 [US1] Add user customization preservation to update command extracting settings before update and reapplying after
+- [X] T029 [US1] Implement manage.sh update command with --check-only, --force, --component options for selective updates
+- [X] T030 [US1] Add user customization preservation to update command extracting settings before update and reapplying after
 
 ### Validate Command (T031-T032)
 
-- [ ] T031 [US1] Implement manage.sh validate command with --type (all, config, performance, dependencies) and --fix options
-- [ ] T032 [US1] Integrate all validation checks into validate command (ghostty config syntax, ZSH config, performance metrics, dependency checking)
+- [X] T031 [US1] Implement manage.sh validate command with --type (all, config, performance, dependencies) and --fix options
+- [X] T032 [US1] Integrate all validation checks into validate command (ghostty config syntax, ZSH config, performance metrics, dependency checking)
 - [ ] T032.1 [P] [US1] Test edge case: manage.sh called with invalid subcommand displays help and exits with non-zero status per edge case requirement (spec.md:66)
 
 ---
@@ -156,10 +156,10 @@
 
 ### Documentation Structure Creation (T033-T037)
 
-- [ ] T033 [P] [US2] Create docs-source directory structure with user-guide/, ai-guidelines/, developer/ subdirectories
-- [ ] T034 [P] [US2] Copy AGENTS.md content into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md) while maintaining AGENTS.md as single source. Verify CLAUDE.md and GEMINI.md remain as symlinks to AGENTS.md
-- [ ] T035 [P] [US2] Create user documentation in docs-source/user-guide/ (installation.md, configuration.md, usage.md)
-- [ ] T036 [P] [US2] Create developer documentation in docs-source/developer/ (architecture.md, contributing.md, testing.md)
+- [X] T033 [P] [US2] Create docs-source directory structure with user-guide/, ai-guidelines/, developer/ subdirectories
+- [X] T034 [P] [US2] Copy AGENTS.md content into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md) while maintaining AGENTS.md as single source. Verify CLAUDE.md and GEMINI.md remain as symlinks to AGENTS.md
+- [X] T035 [P] [US2] Create user documentation in docs-source/user-guide/ (installation.md, configuration.md, usage.md)
+- [X] T036 [P] [US2] Create developer documentation in docs-source/developer/ (architecture.md, contributing.md, testing.md)
 - [ ] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
 
 ### Astro Site Configuration (T038-T042)
