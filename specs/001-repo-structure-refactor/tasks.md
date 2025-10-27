@@ -113,9 +113,9 @@
 
 ### Install Command (T021-T023)
 
-- [ ] T021 [US1] Implement manage.sh install command with options (--skip-node, --skip-zig, --skip-ghostty, --skip-zsh, --skip-theme, --skip-context-menu, --force)
-- [ ] T022 [US1] Add progress tracking to install command showing step counter (e.g., "[1/6] Installing Node.js...")
-- [ ] T023 [US1] Implement install command rollback on failure with automatic backup restoration
+- [X] T021 [US1] Implement manage.sh install command with options (--skip-node, --skip-zig, --skip-ghostty, --skip-zsh, --skip-theme, --skip-context-menu, --force)
+- [X] T022 [US1] Add progress tracking to install command showing step counter (e.g., "[1/6] Installing Node.js...")
+- [X] T023 [US1] Implement install command rollback on failure with automatic backup restoration
 
 ### Docs Command (T024-T026)
 
@@ -137,7 +137,7 @@
 
 - [X] T031 [US1] Implement manage.sh validate command with --type (all, config, performance, dependencies) and --fix options
 - [X] T032 [US1] Integrate all validation checks into validate command (ghostty config syntax, ZSH config, performance metrics, dependency checking)
-- [ ] T032.1 [P] [US1] Test edge case: manage.sh called with invalid subcommand displays help and exits with non-zero status per edge case requirement (spec.md:66)
+- [X] T032.1 [P] [US1] Test edge case: manage.sh called with invalid subcommand displays help and exits with non-zero status per edge case requirement (spec.md:66)
 
 ---
 
