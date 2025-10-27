@@ -1,4 +1,12 @@
-# Configuration Guide
+---
+title: "Configuration Guide"
+description: "Comprehensive guide to configuring and customizing Ghostty terminal"
+pubDate: 2025-10-27
+author: "Ghostty Configuration Files Team"
+tags: ["configuration", "customization", "settings"]
+order: 2
+---
+
 
 This guide explains how to customize your Ghostty terminal configuration and manage settings.
 

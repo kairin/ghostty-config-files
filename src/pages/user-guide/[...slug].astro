@@ -1,0 +1,33 @@
+---
+/**
+ * User Guide Dynamic Route
+ *
+ * Renders all user guide documentation pages from docs-source/user-guide/
+ * Uses content collections and UserDocsLayout for consistent styling.
+ */
+
+import { getCollection } from 'astro:content';
+import UserDocsLayout from '../../layouts/UserDocsLayout.astro';
+import Navigation from '../../components/Navigation.astro';
+
+export async function getStaticPaths() {
+  const userGuideEntries = await getCollection('user-guide');
+
+  return userGuideEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<UserDocsLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  author={entry.data.author}
+>
+  <Navigation />
+  <Content />
+</UserDocsLayout>
