@@ -1,3 +1,13 @@
+---
+title: "Testing Guide"
+description: "Testing strategy and execution for Ghostty Configuration Files"
+pubDate: 2025-10-27
+author: "Development Team"
+tags: ["development", "testing", "quality"]
+techStack: ["Bash 5.x+", "ShellCheck", "Pytest"]
+difficulty: "intermediate"
+---
+
 # Testing Guide
 
 This guide explains the testing strategy for the Ghostty Configuration Files repository.

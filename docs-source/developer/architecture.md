@@ -1,3 +1,13 @@
+---
+title: "Architecture Overview"
+description: "System architecture and design patterns for Ghostty Configuration Files"
+pubDate: 2025-10-27
+author: "Development Team"
+tags: ["development", "architecture", "design"]
+techStack: ["Bash 5.x+", "Node.js LTS", "Astro.build"]
+difficulty: "intermediate"
+---
+
 # Architecture Overview
 
 This document describes the architecture of the Ghostty Configuration Files repository.

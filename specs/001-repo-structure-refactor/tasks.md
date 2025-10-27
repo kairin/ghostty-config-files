@@ -160,22 +160,22 @@
 - [X] T034 [P] [US2] Copy AGENTS.md content into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md) while maintaining AGENTS.md as single source. Verify CLAUDE.md and GEMINI.md remain as symlinks to AGENTS.md
 - [X] T035 [P] [US2] Create user documentation in docs-source/user-guide/ (installation.md, configuration.md, usage.md)
 - [X] T036 [P] [US2] Create developer documentation in docs-source/developer/ (architecture.md, contributing.md, testing.md)
-- [ ] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
+- [X] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
 
 ### Astro Site Configuration (T038-T042)
 
-- [ ] T038 [US2] Configure Astro content collections in src/content/config.ts for docs-source/ directory structure
-- [ ] T039 [P] [US2] Create Astro layout components in src/layouts/ for user docs and developer docs with distinct styling
-- [ ] T040 [P] [US2] Implement navigation component in src/components/Navigation.astro with clear separation between user and developer sections
-- [ ] T041 [P] [US2] Configure Astro build output to docs-dist/ in astro.config.mjs. Create .nojekyll file in public/ directory for automatic copy to build output (primary protection layer per FR-006). Verify existing Vite plugin also creates .nojekyll (secondary layer)
-- [ ] T042 [US2] Create Astro pages in src/pages/ that render content from docs-source/ collections
+- [X] T038 [US2] Configure Astro content collections in src/content/config.ts for docs-source/ directory structure
+- [X] T039 [P] [US2] Create Astro layout components in src/layouts/ for user docs and developer docs with distinct styling
+- [X] T040 [P] [US2] Implement navigation component in src/components/Navigation.astro with clear separation between user and developer sections
+- [X] T041 [P] [US2] Configure Astro build output to docs-dist/ in astro.config.mjs. Create .nojekyll file in public/ directory for automatic copy to build output (primary protection layer per FR-006). Verify existing Vite plugin also creates .nojekyll (secondary layer)
+- [X] T042 [US2] Create Astro pages in src/pages/ that render content from docs-source/ collections
 
 ### Documentation Build Integration (T043-T046)
 
-- [ ] T043 [US2] Test documentation build workflow: docs-source/ → Astro → docs-dist/ with .nojekyll verification
-- [ ] T044 [P] [US2] Verify .nojekyll exists in docs-dist/ after build using all 4 protection layers
-- [ ] T045 [P] [US2] Test git status shows no docs-dist/ changes after fresh build (gitignore working)
-- [ ] T046 [US2] Validate Astro site navigation provides access to all sections within 2 clicks from homepage
+- [X] T043 [US2] Test documentation build workflow: docs-source/ → Astro → docs-dist/ with .nojekyll verification
+- [X] T044 [P] [US2] Verify .nojekyll exists in docs-dist/ after build using all 4 protection layers
+- [X] T045 [P] [US2] Test git status shows no docs-dist/ changes after fresh build (gitignore working)
+- [X] T046 [US2] Validate Astro site navigation provides access to all sections within 2 clicks from homepage
 
 ---
 

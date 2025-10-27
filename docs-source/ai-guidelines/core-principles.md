@@ -1,4 +1,13 @@
-# Core Principles - AI Assistant Guidelines
+---
+title: "Core Principles"
+description: "AI assistant guidelines for core-principles"
+pubDate: 2025-10-27
+author: "AI Integration Team"
+tags: ["ai", "guidelines"]
+targetAudience: "all"
+constitutional: true
+---
+
 
 > **Note**: This is a modular extract from [AGENTS.md](../../AGENTS.md) for documentation purposes. AGENTS.md remains the single source of truth.
 

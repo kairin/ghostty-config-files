@@ -1,3 +1,13 @@
+---
+title: "Contributing Guide"
+description: "How to contribute to the Ghostty Configuration Files project"
+pubDate: 2025-10-27
+author: "Development Team"
+tags: ["development", "contributing", "guidelines"]
+techStack: ["Bash 5.x+", "Node.js LTS", "Astro.build"]
+difficulty: "beginner"
+---
+
 # Contributing Guide
 
 Thank you for considering contributing to the Ghostty Configuration Files project!

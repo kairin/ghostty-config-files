@@ -1,0 +1,35 @@
+---
+/**
+ * Developer Documentation Dynamic Route
+ *
+ * Renders all developer documentation pages from docs-source/developer/
+ * Uses content collections and DeveloperDocsLayout for technical styling.
+ */
+
+import { getCollection } from 'astro:content';
+import DeveloperDocsLayout from '../../layouts/DeveloperDocsLayout.astro';
+import Navigation from '../../components/Navigation.astro';
+
+export async function getStaticPaths() {
+  const developerEntries = await getCollection('developer');
+
+  return developerEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const techStack = entry.data.techStack || [];
+---
+
+<DeveloperDocsLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  author={entry.data.author}
+  techStack={techStack}
+>
+  <Navigation />
+  <Content />
+</DeveloperDocsLayout>

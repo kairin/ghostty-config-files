@@ -33,6 +33,33 @@ This repository contains a comprehensive terminal environment setup featuring th
 
 This script will install all necessary dependencies, configure your terminal, and set up the Astro website.
 
+### Using manage.sh
+
+The repository includes a unified management interface:
+
+```bash
+# Install complete environment
+./manage.sh install
+
+# Update all components
+./manage.sh update
+
+# Validate system
+./manage.sh validate
+
+# Build documentation
+./manage.sh docs build
+
+# Start documentation dev server
+./manage.sh docs dev
+
+# Get help
+./manage.sh --help
+./manage.sh <command> --help
+```
+
+For detailed usage, see [docs-source/user-guide/usage.md](docs-source/user-guide/usage.md).
+
 ### Running the Website
 
 After the installation is complete, you can run the website locally:
@@ -45,14 +72,20 @@ This will start a development server, and you can view the website at `http://lo
 
 ## Project Structure
 
+-   `manage.sh`: Unified management interface for all repository operations
 -   `src/`: Contains the source code for the Astro website.
     -   `components/`: Reusable Astro components.
     -   `layouts/`: Layout components for pages.
     -   `pages/`: The pages of the website.
 -   `configs/`: Configuration files for Ghostty, ZSH, and other tools.
--   `scripts/`: Utility scripts for installation, updates, and other tasks.
--   `documentations/`: Additional documentation and assets.
--   `docs/`: The build output of the Astro website.
+-   `scripts/`: Modular utility scripts for installation, configuration, and validation.
+-   `docs-source/`: **Editable documentation source** (git-tracked)
+    -   `user-guide/`: User documentation (installation, configuration, usage)
+    -   `ai-guidelines/`: AI assistant guidelines (modular extracts from AGENTS.md)
+    -   `developer/`: Developer documentation (architecture, contributing, testing)
+-   `docs/`: **Documentation build output** (Astro static site, gitignored)
+-   `documentations/`: Screenshots, conversation logs, and additional assets.
+-   `local-infra/`: Local CI/CD infrastructure for zero-cost testing and validation.
 
 ## Development
 
@@ -74,9 +107,29 @@ npm run build
 
 The output will be generated in the `docs/` directory.
 
+## Documentation
+
+### For Users
+- **[Installation Guide](docs-source/user-guide/installation.md)** - Complete setup instructions
+- **[Configuration Guide](docs-source/user-guide/configuration.md)** - Customize your environment
+- **[Usage Guide](docs-source/user-guide/usage.md)** - manage.sh command reference
+
+### For Developers
+- **[Architecture Overview](docs-source/developer/architecture.md)** - System design and patterns
+- **[Contributing Guide](docs-source/developer/contributing.md)** - How to contribute
+- **[Testing Guide](docs-source/developer/testing.md)** - Testing strategies
+
+### For AI Assistants
+- **[Core Principles](docs-source/ai-guidelines/core-principles.md)** - Project requirements
+- **[Git Strategy](docs-source/ai-guidelines/git-strategy.md)** - Branch management
+- **[CI/CD Requirements](docs-source/ai-guidelines/ci-cd-requirements.md)** - Local CI/CD
+- **[Development Commands](docs-source/ai-guidelines/development-commands.md)** - Quick reference
+
+**Note**: Edit documentation in `docs-source/`, not `docs/` (which is auto-generated).
+
 ## Contributing
 
-Contributions are welcome! Please follow the project's coding conventions and open a pull request with your changes.
+Contributions are welcome! Please read the [Contributing Guide](docs-source/developer/contributing.md) and follow the project's coding conventions before opening a pull request.
 
 ## License
 
