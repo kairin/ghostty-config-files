@@ -160,7 +160,7 @@
 - [X] T034 [P] [US2] Copy AGENTS.md content into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md) while maintaining AGENTS.md as single source. Verify CLAUDE.md and GEMINI.md remain as symlinks to AGENTS.md
 - [X] T035 [P] [US2] Create user documentation in docs-source/user-guide/ (installation.md, configuration.md, usage.md)
 - [X] T036 [P] [US2] Create developer documentation in docs-source/developer/ (architecture.md, contributing.md, testing.md)
-- [ ] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
+- [X] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
 
 ### Astro Site Configuration (T038-T042)
 
