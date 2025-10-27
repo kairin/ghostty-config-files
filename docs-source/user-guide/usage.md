@@ -1,4 +1,12 @@
-# Usage Guide
+---
+title: "Usage Guide"
+description: "Daily usage guide for manage.sh command reference and workflows"
+pubDate: 2025-10-27
+author: "Ghostty Configuration Files Team"
+tags: ["usage", "commands", "workflows"]
+order: 3
+---
+
 
 Learn how to use the Ghostty Configuration Files repository and the `manage.sh` unified management interface.
 

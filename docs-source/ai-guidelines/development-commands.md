@@ -1,4 +1,13 @@
-# Development Commands - Quick Reference
+---
+title: "Development Commands"
+description: "AI assistant guidelines for development-commands"
+pubDate: 2025-10-27
+author: "AI Integration Team"
+tags: ["ai", "guidelines"]
+targetAudience: "all"
+constitutional: true
+---
+
 
 > **Note**: This is a modular extract from [AGENTS.md](../../AGENTS.md) for documentation purposes. AGENTS.md remains the single source of truth.
 

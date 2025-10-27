@@ -1,4 +1,13 @@
-# CI/CD Requirements - Local-First Development
+---
+title: "Ci Cd Requirements"
+description: "AI assistant guidelines for ci-cd-requirements"
+pubDate: 2025-10-27
+author: "AI Integration Team"
+tags: ["ai", "guidelines"]
+targetAudience: "all"
+constitutional: true
+---
+
 
 > **Note**: This is a modular extract from [AGENTS.md](../../AGENTS.md) for documentation purposes. AGENTS.md remains the single source of truth.
 

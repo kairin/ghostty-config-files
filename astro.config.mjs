@@ -29,32 +29,33 @@ export default defineConfig({
     assets: '_astro',
   },
 
-  // Build output directory
-  outDir: './docs',
+  // Build output directory (changed from ./docs to ./docs-dist per Feature 001)
+  outDir: './docs-dist',
 
   // Vite configuration for performance optimization
   vite: {
     plugins: [
-      // Automatically create .nojekyll file for GitHub Pages
+      // Automatically create .nojekyll file for GitHub Pages (Secondary Protection Layer)
+      // Primary layer: public/.nojekyll (auto-copied by Astro)
       {
         name: 'create-nojekyll',
         async writeBundle() {
           const fs = await import('fs');
           const path = await import('path');
-          const nojekyllPath = path.join('./docs', '.nojekyll');
+          const nojekyllPath = path.join('./docs-dist', '.nojekyll');
 
-          // Ensure docs directory exists
-          if (!fs.existsSync('./docs')) {
-            console.warn('⚠️ WARNING: docs directory not found for .nojekyll creation');
+          // Ensure docs-dist directory exists
+          if (!fs.existsSync('./docs-dist')) {
+            console.warn('⚠️ WARNING: docs-dist directory not found for .nojekyll creation');
             return;
           }
 
-          // Create .nojekyll file
+          // Create .nojekyll file (redundant protection - also in public/)
           fs.writeFileSync(nojekyllPath, '');
-          console.log('✅ Created .nojekyll file for GitHub Pages');
+          console.log('✅ Created .nojekyll file for GitHub Pages (Secondary Layer)');
 
           // Verify _astro directory exists (critical for asset loading)
-          const astroDir = path.join('./docs', '_astro');
+          const astroDir = path.join('./docs-dist', '_astro');
           if (fs.existsSync(astroDir)) {
             const files = fs.readdirSync(astroDir);
             console.log(`✅ _astro directory confirmed (${files.length} files)`);

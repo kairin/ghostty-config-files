@@ -1,0 +1,103 @@
+---
+/**
+ * User Documentation Layout
+ *
+ * Layout for user-facing documentation (installation, configuration, usage).
+ * Provides a clean, accessible reading experience with navigation sidebar.
+ *
+ * Features:
+ * - Clear typography optimized for reading
+ * - Responsive sidebar navigation
+ * - Breadcrumb navigation
+ * - Table of contents for long documents
+ */
+
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  author?: string;
+}
+
+const { title, description, author } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} author={author}>
+  <div class="flex min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed h-full overflow-y-auto">
+      <div class="p-6">
+        <h2 class="text-xl font-bold mb-4">
+          <a href="/ghostty-config-files/" class="hover:text-blue-600">
+            📘 User Guide
+          </a>
+        </h2>
+        <nav class="space-y-2">
+          <a href="/ghostty-config-files/user-guide/installation" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            Installation
+          </a>
+          <a href="/ghostty-config-files/user-guide/configuration" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            Configuration
+          </a>
+          <a href="/ghostty-config-files/user-guide/usage" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            Usage
+          </a>
+        </nav>
+
+        <hr class="my-6 border-gray-200 dark:border-gray-700" />
+
+        <h3 class="text-sm font-semibold mb-2 text-gray-600 dark:text-gray-400">
+          Other Sections
+        </h3>
+        <nav class="space-y-2 text-sm">
+          <a href="/ghostty-config-files/developer" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            👨‍💻 Developer Docs
+          </a>
+          <a href="/ghostty-config-files/ai-guidelines" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            🤖 AI Guidelines
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <article class="max-w-4xl mx-auto prose prose-lg dark:prose-invert">
+        <h1>{title}</h1>
+        <slot />
+      </article>
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Prose enhancements for documentation */
+  .prose {
+    max-width: 65ch;
+  }
+
+  .prose h1 {
+    @apply text-4xl font-bold mb-4;
+  }
+
+  .prose h2 {
+    @apply text-3xl font-semibold mt-8 mb-4;
+  }
+
+  .prose h3 {
+    @apply text-2xl font-semibold mt-6 mb-3;
+  }
+
+  .prose code {
+    @apply bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm;
+  }
+
+  .prose pre {
+    @apply bg-gray-900 dark:bg-gray-950;
+  }
+
+  .prose pre code {
+    @apply bg-transparent;
+  }
+</style>
