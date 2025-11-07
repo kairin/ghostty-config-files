@@ -2158,7 +2158,28 @@ install_ghostty_configuration() {
             log "WARNING" "⚠️  $config_file not found in $GHOSTTY_CONFIG_SOURCE"
         fi
     done
-    
+
+    # Deploy dircolors configuration (XDG-compliant location)
+    if [ -f "$GHOSTTY_CONFIG_SOURCE/dircolors" ]; then
+        mkdir -p "$REAL_HOME/.config"
+        cp "$GHOSTTY_CONFIG_SOURCE/dircolors" "$REAL_HOME/.config/dircolors"
+        log "SUCCESS" "✅ Deployed dircolors configuration to ~/.config/dircolors"
+
+        # Ensure shell configs load dircolors (XDG-compliant)
+        for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
+            if [ -f "$shell_config" ]; then
+                if ! grep -q 'XDG_CONFIG_HOME.*dircolors' "$shell_config" 2>/dev/null; then
+                    echo '' >> "$shell_config"
+                    echo '# XDG-compliant dircolors configuration' >> "$shell_config"
+                    echo 'eval "$(dircolors ${XDG_CONFIG_HOME:-$HOME/.config}/dircolors)"' >> "$shell_config"
+                    log "SUCCESS" "✅ Added dircolors to $(basename $shell_config)"
+                fi
+            fi
+        done
+    else
+        log "WARNING" "⚠️  dircolors not found in $GHOSTTY_CONFIG_SOURCE"
+    fi
+
     # Validate configuration
     if ghostty +show-config >/dev/null 2>&1; then
         log "SUCCESS" "✅ Ghostty configuration is valid"

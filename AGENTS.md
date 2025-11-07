@@ -150,7 +150,8 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 │   │   ├── theme.conf         # Auto-switching themes (dark/light)
 │   │   ├── scroll.conf        # Scrollback settings
 │   │   ├── layout.conf        # Font, padding, layout (2025 optimized)
-│   │   └── keybindings.conf   # Productivity keybindings
+│   │   ├── keybindings.conf   # Productivity keybindings
+│   │   └── dircolors          # LS_COLORS configuration (XDG-compliant)
 │   └── workspace/             # Development workspace files
 │       └── ghostty.code-workspace # VS Code workspace
 ├── scripts/                   # Utility and automation scripts
@@ -190,6 +191,65 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 - **Performance Monitoring**: System state and timing analysis
 - **Zero-Cost Strategy**: All CI/CD runs locally before GitHub
 
+**Directory Color Configuration**:
+- **XDG Compliance**: Follows XDG Base Directory Specification
+- **Location**: `~/.config/dircolors` (not `~/.dircolors` in home directory)
+- **Deployment**: Automatic via `start.sh` installation script
+- **Shell Integration**: Auto-configured for bash and zsh
+
+### 🎨 Directory Colors & Readability (XDG-Compliant)
+
+The repository includes a carefully configured `dircolors` file that solves common readability issues with directory listings, particularly for world-writable directories.
+
+#### Problem Solved
+Default LS_COLORS often render certain directories (like `Desktop`, `Templates`, `.password-store`, `.keras`) with unreadable color combinations:
+- **World-writable directories** (`drwxrwxrwx`): Blue text on green background (nearly impossible to read)
+- **Standard directories**: Bold blue text (can be difficult to read on some terminal backgrounds)
+
+#### Solution Implementation
+**Location**: `configs/ghostty/dircolors` (deployed to `~/.config/dircolors`)
+
+**Key Color Customizations**:
+```bash
+DIR 01;33                    # Directories: Bold yellow (highly readable)
+OTHER_WRITABLE 30;43         # World-writable: Black on yellow (clear contrast)
+STICKY_OTHER_WRITABLE 30;42  # Sticky+writable: Black on green
+```
+
+**XDG Base Directory Compliance**:
+- **Traditional approach** (❌): `~/.dircolors` (clutters home directory)
+- **XDG-compliant** (✅): `~/.config/dircolors` (organized, follows standards)
+- **Reference**: [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir/latest/)
+
+#### Automatic Deployment
+
+The `start.sh` script automatically:
+1. Copies `configs/ghostty/dircolors` to `~/.config/dircolors`
+2. Adds XDG-compliant dircolors loading to `.bashrc` and `.zshrc`:
+   ```bash
+   eval "$(dircolors ${XDG_CONFIG_HOME:-$HOME/.config}/dircolors)"
+   ```
+3. Preserves existing customizations (idempotent updates)
+
+#### Manual Testing
+```bash
+# Apply dircolors configuration immediately
+eval "$(dircolors ${XDG_CONFIG_HOME:-$HOME/.config}/dircolors)"
+
+# Test with directory listing
+ls -la ~
+
+# Verify world-writable directories are readable
+# (Desktop, Templates, etc. should show black on yellow)
+```
+
+#### Benefits
+- ✅ **XDG Standards Compliance**: Keeps home directory clean
+- ✅ **Automatic Deployment**: One-command installation via `start.sh`
+- ✅ **Enhanced Readability**: World-writable directories clearly visible
+- ✅ **Shell Agnostic**: Works with bash, zsh, and other POSIX shells
+- ✅ **Preservation**: User customizations maintained during updates
+
 ## 📊 Core Functionality
 
 ### Primary Goals
@@ -199,6 +259,7 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 4. **Intelligent Updates**: Smart detection and preservation of user customizations
 5. **Local CI/CD**: Complete workflow execution without GitHub Actions costs
 6. **AI Tool Integration**: Seamless Claude Code and Gemini CLI setup
+7. **Enhanced Readability**: XDG-compliant dircolors for readable directory listings
 
 ### Local CI/CD Workflows
 ```
