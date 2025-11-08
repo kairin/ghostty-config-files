@@ -169,13 +169,29 @@ gh run list --limit 10 --json status,conclusion,name,createdAt
 
 ### Documentation Structure (CONSTITUTIONAL REQUIREMENT)
 
+**Centralized Documentation Hierarchy** (as of 2025-11-09):
 - `docs/` - Astro.build output ONLY → GitHub Pages deployment (DO NOT manually edit)
-- `documentations/` - All other documentation → installation guides, screenshots, manuals, specs
-- `specs/` - Feature specifications with planning artifacts
+- `docs-source/` - Astro source files for documentation site
+- `documentations/` - Centralized documentation hub:
+  - `user/` - End-user documentation (installation, configuration, troubleshooting)
+  - `developer/` - Developer documentation (architecture, analysis)
+  - `specifications/` - Active feature specifications with planning artifacts
+  - `archive/` - Historical/obsolete documentation (preserved for reference)
+- `spec-kit/guides/` - Spec-kit methodology guides (how-to for using spec-kit commands)
 
 ### Directory Nesting Limit
 
 Maximum 2 levels of nesting from repository root to maintain simplicity for configuration projects. Top-level directories limited to 4-5 to prevent organizational complexity.
+
+### Removed Features (as of 2025-11-09)
+
+**Screenshot Functionality**: All screenshot capture and gallery generation features have been permanently removed due to:
+- Installation hangs during screenshot capture
+- Unnecessary complexity for terminal configuration project
+- No user-facing benefit
+- Removed artifacts include: `.screenshot-tools/`, `docs/assets/screenshots/`, `docs/assets/diagrams/`, screenshot scripts, and related tests
+
+**Impact**: Any feature specifications referencing screenshot commands (capture, generate-gallery) should be updated to remove these requirements.
 
 ## Quality Gates
 
@@ -252,8 +268,9 @@ This constitution supersedes all other practices except explicit project require
 
 ---
 
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Ratified**: 2025-10-27
-**Last Amended**: 2025-10-27
+**Last Amended**: 2025-11-09
+**Amendment Summary**: Updated documentation structure to reflect centralized hierarchy (documentations/user/, developer/, specifications/, archive/). Removed screenshot functionality. Updated specs/ path to documentations/specifications/.
 **Authority**: AGENTS.md (single source of truth)
 **Status**: ACTIVE - MANDATORY COMPLIANCE
