@@ -140,6 +140,7 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 ```
 /home/kkk/Apps/ghostty-config-files/
 ├── start.sh                    # 🚀 Primary installation & update script
+├── manage.sh                   # 🎛️ Unified management interface (Phase 3)
 ├── AGENTS.md                   # This file - LLM instructions (single source of truth)
 ├── CLAUDE.md                   # Claude Code integration (symlink to AGENTS.md)
 ├── GEMINI.md                   # Gemini CLI integration (symlink to AGENTS.md)
@@ -154,19 +155,44 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 │   │   └── dircolors          # LS_COLORS configuration (XDG-compliant)
 │   └── workspace/             # Development workspace files
 │       └── ghostty.code-workspace # VS Code workspace
-├── scripts/                   # Utility and automation scripts
+├── scripts/                   # Modular utility and automation scripts
+│   ├── .module-template.sh    # Module template (Phase 1)
+│   ├── common.sh              # Common utilities (Phase 2)
+│   ├── progress.sh            # Progress reporting (Phase 2)
+│   ├── backup_utils.sh        # Backup utilities (Phase 2)
+│   ├── install_node.sh        # Node.js installation module (Phase 5 - COMPLETE)
 │   ├── check_updates.sh       # Intelligent update detection
 │   ├── install_context_menu.sh # Right-click integration
 │   ├── install_ghostty_config.sh # Configuration installer
 │   ├── update_ghostty.sh      # Ghostty version management
 │   ├── fix_config.sh          # Configuration repair tools
 │   └── agent_functions.sh     # AI assistant helper functions
+├── documentations/            # Centralized documentation hub (as of 2025-11-09)
+│   ├── user/                  # End-user documentation
+│   │   ├── installation/      # Installation guides
+│   │   ├── configuration/     # Configuration guides
+│   │   └── troubleshooting/   # Troubleshooting guides
+│   ├── developer/             # Developer documentation
+│   │   ├── architecture/      # System architecture
+│   │   └── analysis/          # Technical analysis
+│   ├── specifications/        # Active feature specifications
+│   │   ├── 001-repo-structure-refactor/  # Spec 001: Repository refactoring
+│   │   ├── 002-advanced-terminal-productivity/  # Spec 002
+│   │   └── 004-modern-web-development/  # Spec 004
+│   └── archive/               # Historical/obsolete documentation
 └── local-infra/              # Zero-cost local infrastructure
     ├── runners/              # Local CI/CD scripts
     │   ├── gh-workflow-local.sh    # Local GitHub Actions simulation
     │   ├── gh-pages-setup.sh       # GitHub Pages local testing
     │   ├── test-runner.sh          # Local test execution
     │   └── performance-monitor.sh   # Performance tracking
+    ├── tests/                # Testing infrastructure
+    │   ├── unit/             # Unit tests
+    │   │   ├── .test-template.sh      # Test template (Phase 1)
+    │   │   ├── test_functions.sh      # Test assertions (Phase 1)
+    │   │   ├── test_install_node.sh   # install_node.sh tests (Phase 5)
+    │   │   └── test_common_utils.sh   # Common utilities tests (Phase 2)
+    │   └── validation/       # Validation scripts
     ├── logs/                 # Local CI/CD logs
     └── config/               # CI/CD configuration files
         ├── workflows/        # Local workflow definitions
@@ -552,8 +578,13 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration details (symlink to this file)
 
 ### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
-- **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (DO NOT manually edit)
-- **`documentations/`** - **All other documentation** → installation guides, screenshots, manuals, specs
+- **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
+- **`docs-source/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
+- **`documentations/`** - **Centralized documentation hub** (as of 2025-11-09):
+  - `user/` - End-user documentation (installation, configuration, troubleshooting)
+  - `developer/` - Developer documentation (architecture, analysis)
+  - `specifications/` - Active feature specifications with planning artifacts (Spec 001, 002, 004)
+  - `archive/` - Historical/obsolete documentation (preserved for reference)
 
 ### 🎯 Spec-Kit Development Guides
 For implementing modern web development stacks with local CI/CD:
