@@ -100,23 +100,20 @@
 # Calls: npx astro dev
 
 # T026: docs generate
-./manage.sh docs generate [--screenshots] [--api-docs]
-# Calls: screenshot and API doc generation scripts
+./manage.sh docs generate [--api-docs]
+# Calls: API doc generation scripts
 ```
 
-#### T027-T028: Screenshots Commands
-**Status**: ⚠️ Stubs implemented, needs implementation modules
+#### T027-T028: Screenshots Commands ❌ REMOVED
+**Status**: ❌ **REMOVED as of 2025-11-09**
 
-**Required Implementation**:
-```bash
-# T027: screenshots capture
-./manage.sh screenshots capture <category> <name> <description>
-# Creates: documentations/screenshots/<category>/<name>.png
+**Removal Rationale**:
+- Screenshot functionality caused installation hangs
+- Added unnecessary complexity to terminal configuration project
+- No user-facing benefit
+- 28 files (2,474 lines) removed including all screenshot infrastructure
 
-# T028: screenshots generate-gallery
-./manage.sh screenshots generate-gallery
-# Creates: HTML gallery from all screenshots
-```
+**Impact**: These commands are no longer part of manage.sh specification
 
 ####T029-T030: Update Commands
 **Status**: ⚠️ Stubs implemented, needs component modules
@@ -229,7 +226,7 @@ fi
 **Tasks**:
 1. ✅ T021-T023: Install command (STUB COMPLETE)
 2. ⚠️ T024-T026: Docs commands (needs Astro integration)
-3. ⚠️ T027-T028: Screenshots commands (needs implementation)
+3. ❌ T027-T028: Screenshots commands (REMOVED - see above)
 4. ⚠️ T029-T030: Update commands (needs implementation)
 5. ⚠️ T031-T032: Validate commands (needs implementation)
 

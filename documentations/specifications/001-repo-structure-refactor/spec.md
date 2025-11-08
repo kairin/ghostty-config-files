@@ -13,15 +13,14 @@ As a developer working on the Ghostty configuration repository, I want a single,
 
 **Why this priority**: This provides immediate value by simplifying the developer experience. A unified interface reduces cognitive load, improves discoverability, and establishes a foundation for future improvements. It delivers measurable productivity gains from day one.
 
-**Independent Test**: Can be fully tested by running `./manage.sh <command>` for each subcommand (install, docs, screenshots, update, validate) and verifying each operation completes successfully without referencing other scripts.
+**Independent Test**: Can be fully tested by running `./manage.sh <command>` for each subcommand (install, docs, update, validate) and verifying each operation completes successfully without referencing other scripts.
 
 **Acceptance Scenarios**:
 
 1. **Given** a fresh clone of the repository, **When** I run `./manage.sh --help`, **Then** I see a clear list of all available commands with descriptions
 2. **Given** I need to install the terminal environment, **When** I run `./manage.sh install`, **Then** the system performs the complete installation without requiring additional script calls
 3. **Given** I want to build documentation, **When** I run `./manage.sh docs build`, **Then** the Astro site builds successfully in the docs-dist directory
-4. **Given** I need to capture a screenshot, **When** I run `./manage.sh screenshots capture setup "Initial setup"`, **Then** the screenshot is captured and stored correctly
-5. **Given** I want to validate my changes, **When** I run `./manage.sh validate`, **Then** all validation checks (config, performance, tests) execute and report results
+4. **Given** I want to validate my changes, **When** I run `./manage.sh validate`, **Then** all validation checks (config, performance, tests) execute and report results
 
 ---
 
@@ -76,7 +75,8 @@ As a maintainer extending repository functionality, I want scripts broken into l
 ### Functional Requirements
 
 - **FR-001**: System MUST provide a single `manage.sh` entry point for all management operations
-- **FR-002**: manage.sh MUST support subcommands: install, docs (generate|build|dev), screenshots (capture|generate-gallery), update, validate
+- **FR-002**: manage.sh MUST support subcommands: install, docs (generate|build|dev), update, validate
+- **FR-002-NOTE**: Screenshot functionality (capture|generate-gallery) has been permanently removed as of 2025-11-09 due to installation hangs and unnecessary complexity
 - **FR-003**: manage.sh MUST display contextual help when invoked with --help or invalid arguments
 - **FR-004**: System MUST maintain backward compatibility by keeping start.sh as a wrapper to `manage.sh install`
 - **FR-005**: All source documentation MUST reside in a single docs-source/ top-level directory with shallow nesting (maximum 2 levels deep from docs-source/, where docs-source/=level 0, docs-source/user-guide/=level 1, docs-source/user-guide/installation.md=level 2)
@@ -133,3 +133,42 @@ As a maintainer extending repository functionality, I want scripts broken into l
 - Q: Handling Existing Complex Structures - How should spec-kit/, local-infra/, .specify/ be handled? → A: Preserve all - Keep existing structures unchanged, only add new simplified structure alongside
 - Q: Script Module Granularity - What level of granularity for script modules? → A: Fine-grained (10+ modules) - Highly specific modules for each sub-task (e.g., separate install_node.sh, install_zig.sh, build_ghostty.sh)
 - Q: Migration Strategy and Rollout - What migration approach balances safety with progress? → A: Incremental per-component - Migrate one script module at a time, one doc section at a time, building manage.sh gradually
+
+## Current Reality (as of 2025-11-09)
+
+### Completed Changes
+
+1. **Documentation Centralization** ✅
+   - Implemented centralized `documentations/` structure with clear categorization:
+     - `user/` - Installation guides, troubleshooting
+     - `developer/` - Architecture, analysis
+     - `specifications/` - All feature specs (moved from `specs/`)
+     - `archive/` - Historical documentation
+   - Consolidated `spec-kit/001/` → `spec-kit/guides/` (methodology guides)
+   - Removed obsolete screenshot-based documentation
+
+2. **Screenshot Functionality Removal** ✅
+   - Removed all screenshot capture infrastructure (`.screenshot-tools/`, scripts, tests)
+   - Deleted 28 files (2,474 lines) related to screenshots
+   - Updated start.sh to remove screenshot code (ENABLE_SCREENSHOTS="false")
+   - Rationale: Installation hangs, unnecessary complexity, no user benefit
+
+3. **File Organization** ✅
+   - Reduced root directory clutter by 40% (22→14 files)
+   - Moved lighthouse performance reports to `documentations/performance/lighthouse-reports/`
+   - Created comprehensive documentation: INSTALLATION_BREAKDOWN.md (62 packages), FILE_ORGANIZATION_ANALYSIS.md
+
+### Alignment with Original Spec
+
+**Status**: Spec 001 is **24% complete** with Phase 1-3 Core infrastructure in place:
+- ✅ Phase 1: Module templates, validation, testing framework
+- ✅ Phase 2: Foundational utilities (common.sh, progress.sh, backup_utils.sh)
+- ✅ Phase 3 Core: manage.sh with command stubs
+- ⚠️  Phase 3 Commands: Functional stubs implemented but awaiting Phase 5 modules
+- ⚠️  Phase 4: Documentation restructure (partially complete via centralization)
+- ⚠️  Phase 5: Modular scripts (pending - start.sh still monolithic)
+
+**Next Steps**:
+- Update tasks.md to remove screenshot-related tasks (T027-T028)
+- Complete Phase 4 documentation restructure (align with centralized structure)
+- Begin Phase 5 modular script implementation (break down start.sh)
