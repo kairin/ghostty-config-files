@@ -1685,6 +1685,36 @@ EOF
             log "SUCCESS" "✅ Added NVM configuration to .zshrc"
         fi
         
+        # Add Ghostty shell integration to .zshrc (CRITICAL for autocompletion)
+        if ! grep -q "GHOSTTY_RESOURCES_DIR.*ghostty-integration" "$zshrc"; then
+            # Find the line after "source $ZSH/oh-my-zsh.sh"
+            if grep -q "source.*oh-my-zsh.sh" "$zshrc"; then
+                # Add ghostty integration right after oh-my-zsh is loaded
+                sed -i '/source.*oh-my-zsh.sh/a\
+\
+# Ghostty shell integration (CRITICAL for proper terminal behavior)\
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then\
+  autoload -Uz -- "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration\
+  ghostty-integration\
+fi' "$zshrc"
+                log "SUCCESS" "✅ Added Ghostty shell integration to .zshrc"
+            else
+                # If oh-my-zsh.sh sourcing not found, add at the end
+                cat >> "$zshrc" << 'EOF'
+
+# Ghostty shell integration (CRITICAL for proper terminal behavior)
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+  autoload -Uz -- "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+  ghostty-integration
+fi
+
+EOF
+                log "SUCCESS" "✅ Added Ghostty shell integration to .zshrc"
+            fi
+        else
+            log "SUCCESS" "✅ Ghostty shell integration already configured in .zshrc"
+        fi
+
         # Add Gemini alias to .zshrc (handle conflicts)
         if grep -q "flatpak run app.devsuite.Ptyxis.*gemini" "$zshrc"; then
             log "SUCCESS" "✅ Ptyxis gemini integration already configured in .zshrc"
@@ -1693,7 +1723,7 @@ EOF
                 log "INFO" "🔄 Updating existing gemini alias in .zshrc"
                 sed -i '/alias gemini=/s/^/# (replaced by Ptyxis integration) /' "$zshrc"
             fi
-            
+
             cat >> "$zshrc" << 'EOF'
 
 # Gemini CLI integration with Ptyxis
