@@ -14,7 +14,7 @@ linux-cgroup-processes-limit = 1000
 # SHELL INTEGRATION (Enhanced for 2025)
 # =============================================================================
 shell-integration = detect
-shell-integration-features = cursor,sudo,title,ssh-env
+shell-integration-features = sudo,title,ssh-env
 
 # =============================================================================
 # SECURITY
@@ -26,10 +26,6 @@ clipboard-paste-protection = true
 # =============================================================================
 gtk-tabs-location = top
 window-new-tab-position = end
-
-# Cursor configuration
-cursor-style = block
-cursor-style-blink = true
 
 # =============================================================================
 # MODULAR CONFIGURATION
