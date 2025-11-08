@@ -1,6 +1,6 @@
 # Tasks: Repository Structure Refactoring
 
-**Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/specs/001-repo-structure-refactor/`
+**Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/documentations/specifications/001-repo-structure-refactor/`
 **Prerequisites**: plan.md (✅), spec.md (✅), research.md (✅), data-model.md (✅), contracts/ (✅), quickstart.md (✅)
 **Feature Branch**: `001-repo-structure-refactor`
 
@@ -41,7 +41,7 @@
 - **Scripts**: `scripts/` (modular bash modules)
 - **Templates**: `scripts/.module-template.sh`, `local-infra/tests/unit/.test-template.sh`
 - **Documentation Source**: `docs-source/` (markdown files to edit)
-- **Documentation Build**: `docs-dist/` (Astro output, gitignored)
+- **Documentation Build**: `docs/` (Astro output, committed for GitHub Pages)
 - **Tests**: `local-infra/tests/unit/`, `local-infra/tests/contract/`
 - **Validation**: `scripts/validate_module_*.sh`
 
@@ -100,8 +100,7 @@
 **Acceptance Criteria**:
 - manage.sh --help displays clear command list
 - manage.sh install performs complete installation
-- manage.sh docs build creates documentation in docs-dist/
-- manage.sh screenshots capture saves screenshots correctly
+- manage.sh docs build creates documentation in docs/
 - manage.sh validate runs all validation checks
 
 ### manage.sh Core Implementation (T017-T020)
@@ -121,12 +120,14 @@
 
 - [X] T024 [P] [US1] Implement manage.sh docs build subcommand calling Astro build with --clean and --output-dir options
 - [X] T025 [P] [US1] Implement manage.sh docs dev subcommand starting Astro dev server with --port and --host options
-- [X] T026 [P] [US1] Implement manage.sh docs generate subcommand for screenshot and API documentation generation
+- [X] T026 [P] [US1] Implement manage.sh docs generate subcommand for API documentation generation
 
-### Screenshots Command (T027-T028)
+### Screenshots Command (T027-T028) ❌ REMOVED
 
-- [X] T027 [P] [US1] Implement manage.sh screenshots capture subcommand accepting category, name, description arguments
-- [X] T028 [P] [US1] Implement manage.sh screenshots generate-gallery subcommand creating HTML gallery from captured images
+**Status**: ❌ **REMOVED as of 2025-11-09** - Screenshot functionality permanently removed due to installation hangs and unnecessary complexity
+
+- [-] T027 [REMOVED] [US1] Implement manage.sh screenshots capture subcommand accepting category, name, description arguments
+- [-] T028 [REMOVED] [US1] Implement manage.sh screenshots generate-gallery subcommand creating HTML gallery from captured images
 
 ### Update Command (T029-T030)
 
@@ -145,12 +146,11 @@
 
 **User Story**: As a repository contributor, I want documentation source files clearly separated from generated build artifacts so that I can easily find and edit documentation without confusion.
 
-**Independent Test**: Verify all source docs in docs-source/, generated content only in docs-dist/ (gitignored), documentation builds successfully from source, git status never shows docs-dist/ after builds.
+**Independent Test**: Verify all source docs in docs-source/, generated content only in docs/ (committed for GitHub Pages), documentation builds successfully from source.
 
 **Acceptance Criteria**:
 - All editable docs in docs-source/ directory
-- Build artifacts only in docs-dist/ (gitignored)
-- git status never shows docs-dist/ after builds
+- Build artifacts only in docs/ (committed for GitHub Pages deployment)
 - AI guidelines split into modular files
 - Astro site navigates between user and developer docs within 2 clicks
 
@@ -217,7 +217,7 @@
 
 - [ ] T059 [P] [US3] Create scripts/backup_config.sh module for timestamped configuration backups before changes
 - [ ] T060 [P] [US3] Create scripts/update_components.sh module for intelligent component updates preserving user customizations
-- [ ] T061 [P] [US3] Create scripts/generate_docs.sh module for documentation generation and screenshot management
+- [ ] T061 [P] [US3] Create scripts/generate_docs.sh module for documentation generation
 - [ ] T062 [P] [US3] Write unit tests in local-infra/tests/unit/test_integration_modules.sh for backup_config, update_components, generate_docs modules
 
 ### Module Integration & Orchestration (T063-T068)
@@ -333,15 +333,15 @@ Task: "Create backup utility functions in scripts/backup_utils.sh"
 Task: "Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh"
 ```
 
-### Phase 3: manage.sh Commands (6 parallel tasks)
+### Phase 3: manage.sh Commands (4 parallel tasks)
 ```bash
-# Launch T024, T025, T026, T027, T028, T029 together (after T017-T020):
+# Launch T024, T025, T026, T029 together (after T017-T020):
 Task: "[US1] Implement manage.sh docs build subcommand"
 Task: "[US1] Implement manage.sh docs dev subcommand"
 Task: "[US1] Implement manage.sh docs generate subcommand"
-Task: "[US1] Implement manage.sh screenshots capture subcommand"
-Task: "[US1] Implement manage.sh screenshots generate-gallery subcommand"
 Task: "[US1] Implement manage.sh update command"
+
+# Note: T027-T028 (screenshot commands) removed as of 2025-11-09
 ```
 
 ### Phase 4: Documentation Structure (4 parallel tasks)

@@ -72,20 +72,29 @@ This will start a development server, and you can view the website at `http://lo
 
 ## Project Structure
 
--   `manage.sh`: Unified management interface for all repository operations
+-   `manage.sh`: Unified management interface for all repository operations (Phase 3)
 -   `src/`: Contains the source code for the Astro website.
     -   `components/`: Reusable Astro components.
     -   `layouts/`: Layout components for pages.
     -   `pages/`: The pages of the website.
 -   `configs/`: Configuration files for Ghostty, ZSH, and other tools.
 -   `scripts/`: Modular utility scripts for installation, configuration, and validation.
+    -   `install_node.sh`: Node.js installation module (Phase 5 - first extracted module)
+    -   `common.sh`, `progress.sh`, `backup_utils.sh`: Shared utilities (Phase 2)
+    -   `.module-template.sh`: Template for creating new modules (Phase 1)
 -   `docs-source/`: **Editable documentation source** (git-tracked)
     -   `user-guide/`: User documentation (installation, configuration, usage)
     -   `ai-guidelines/`: AI assistant guidelines (modular extracts from AGENTS.md)
     -   `developer/`: Developer documentation (architecture, contributing, testing)
--   `docs/`: **Documentation build output** (Astro static site, gitignored)
--   `documentations/`: Screenshots, conversation logs, and additional assets.
+-   `docs/`: **Documentation build output** (Astro static site, **committed for GitHub Pages**)
+-   `documentations/`: **Centralized documentation hub** (as of 2025-11-09)
+    -   `user/`: End-user documentation (installation guides, configuration, troubleshooting)
+    -   `developer/`: Developer documentation (architecture, analysis)
+    -   `specifications/`: Active feature specifications (Spec 001, 002, 004)
+    -   `archive/`: Historical/obsolete documentation
 -   `local-infra/`: Local CI/CD infrastructure for zero-cost testing and validation.
+    -   `tests/unit/`: Unit tests for modular scripts (Phase 1, 5)
+    -   `runners/`: Local CI/CD execution scripts
 
 ## Development
 
