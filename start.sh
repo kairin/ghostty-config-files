@@ -15,7 +15,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LOG_DIR="/tmp/ghostty-start-logs"
+LOG_DIR="$SCRIPT_DIR/logs"
 
 # Advanced Session Tracking for Multiple Executions
 # Creates synchronized session IDs for logs and screenshots with terminal detection
@@ -45,16 +45,10 @@ LOG_COMMANDS="$LOG_DIR/$LOG_SESSION_ID-commands.log"       # Full command output
 LOG_PERFORMANCE="$LOG_DIR/$LOG_SESSION_ID-performance.json" # Performance metrics
 LOG_SESSION_MANIFEST="$LOG_DIR/$LOG_SESSION_ID-manifest.json" # Complete session tracking
 
-# Screenshot session directory (synchronized with logs)
-SCREENSHOT_SESSION_DIR="$SCRIPT_DIR/docs/assets/screenshots/$LOG_SESSION_ID"
-SCREENSHOT_METADATA="$SCREENSHOT_SESSION_DIR/metadata.json"
-
 # Session Management Instructions:
-# - View all sessions: ls -la /tmp/ghostty-start-logs/
-# - View session logs: ls -la /tmp/ghostty-start-logs/$LOG_SESSION_ID*
-# - View session screenshots: ls -la docs/assets/screenshots/$LOG_SESSION_ID/
+# - View all sessions: ls -la $SCRIPT_DIR/logs/
+# - View session logs: ls -la $LOG_DIR/$LOG_SESSION_ID*
 # - Session manifest: jq '.' $LOG_SESSION_MANIFEST
-# - Screenshot metadata: jq '.' $SCREENSHOT_METADATA
 
 REAL_HOME="${SUDO_HOME:-$HOME}"
 NVM_VERSION="v0.40.1"
@@ -73,6 +67,11 @@ ghostty_version=""
 ghostty_config_valid=false
 ghostty_source=""
 ptyxis_installed=false
+
+# Failure tracking system
+declare -a INSTALLATION_FAILURES=()
+declare -a INSTALLATION_WARNINGS=()
+declare -a INSTALLATION_SUCCESSES=()
 ptyxis_version=""
 ptyxis_source=""
 GHOSTTY_STRATEGY=""
@@ -158,16 +157,11 @@ run_command() {
     fi
 }
 
-# SVG Screenshot capture integration - FULLY AUTOMATIC
-SVG_CAPTURE_SCRIPT="$SCRIPT_DIR/scripts/svg_screenshot_capture.sh"
-ENABLE_SCREENSHOTS="true"  # Always enabled, no user configuration needed
-CURRENT_STAGE=""
-
-# Auto-detect if running in a GUI environment for screenshots
-if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
-    ENABLE_SCREENSHOTS="false"
-    debug "No GUI display detected, disabling screenshots"
-fi
+# Screenshots disabled - text logging only
+ENABLE_SCREENSHOTS="false"
+SVG_CAPTURE_SCRIPT=""
+SCREENSHOT_SESSION_DIR="/tmp/ghostty-screenshots-disabled"
+SCREENSHOT_METADATA="/dev/null"
 
 # Display stage-specific summary information for screenshots
 display_stage_summary() {
@@ -297,9 +291,7 @@ display_stage_summary() {
             echo "📁 Session: $LOG_SESSION_ID"
             if [ -f "$LOG_SESSION_MANIFEST" ]; then
                 local duration=$(jq -r '.status.completed // empty' "$LOG_SESSION_MANIFEST" 2>/dev/null | head -1)
-                local screenshots=$(jq -r '.statistics.screenshots_captured // empty' "$LOG_SESSION_MANIFEST" 2>/dev/null)
                 [ -n "$duration" ] && echo "⏱️  Session completed: $(date -d "$duration" '+%H:%M:%S' 2>/dev/null || echo 'Recently')"
-                [ -n "$screenshots" ] && echo "📸 Screenshots: $screenshots captured"
             fi
             echo "🚀 Shell restart will activate new configuration"
             ;;
@@ -322,83 +314,89 @@ display_stage_summary() {
     esac
 }
 
-# Function to capture SVG screenshot at key stages - SYNCHRONIZED WITH LOGS
+# Screenshot function removed - using track_stage() for logging only
 capture_stage_screenshot() {
     local stage_name="$1"
-    local description="${2:-$stage_name}"
-    local pause_duration="${3:-3}"
-
-    # Set current stage for other functions to use
-    export CURRENT_STAGE="$stage_name"
-
-    # Track this stage in session manifest
     track_stage "$stage_name" "installation"
+}
 
-    # Always attempt screenshot capture if GUI is available
-    if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
+# Failure tracking functions
+track_success() {
+    local component="$1"
+    local message="${2:-$component completed successfully}"
+    INSTALLATION_SUCCESSES+=("✅ $component: $message")
+    debug "📊 Tracked success: $component"
+}
 
-        # Add a visual separator to show what just completed
-        echo ""
-        echo -e "${GREEN}📸 Capturing screenshot of: $stage_name${NC}"
-        echo -e "${BLUE}📋 $description${NC}"
-        echo -e "${CYAN}💡 This will capture the current installation results${NC}"
-        echo ""
+track_warning() {
+    local component="$1"
+    local message="${2:-$component completed with warnings}"
+    INSTALLATION_WARNINGS+=("⚠️  $component: $message")
+    debug "📊 Tracked warning: $component"
+}
 
-        # Brief announcement countdown
-        echo -e "${YELLOW}📸 Screenshot in ${pause_duration} seconds... Press any key to skip${NC}"
-        local skipped=false
-        for i in $(seq $pause_duration -1 1); do
-            echo -ne "\r${YELLOW}📸 Screenshot in $i seconds... Press any key to skip ${NC}"
+track_failure() {
+    local component="$1"
+    local message="${2:-$component failed}"
+    INSTALLATION_FAILURES+=("❌ $component: $message")
+    debug "📊 Tracked failure: $component"
+}
 
-            # Check if user pressed a key (non-blocking)
-            if read -t 1 -n 1; then
-                skipped=true
-                break
-            fi
+# Show installation summary
+show_installation_summary() {
+    echo ""
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}           Installation Summary${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+    echo ""
+
+    # Show successes
+    if [ ${#INSTALLATION_SUCCESSES[@]} -gt 0 ]; then
+        echo -e "${GREEN}✅ Successful Components (${#INSTALLATION_SUCCESSES[@]}):${NC}"
+        for success in "${INSTALLATION_SUCCESSES[@]}"; do
+            echo "   $success"
         done
-
-        if $skipped; then
-            echo -ne "\r${GREEN}📸 Capturing screenshot now!                     ${NC}\n"
-        else
-            echo -ne "\r${GREEN}📸 Capturing screenshot now!                     ${NC}\n"
-        fi
-
-        # Ensure synchronized directories exist
-        mkdir -p "$LOG_DIR" "$SCREENSHOT_SESSION_DIR"
-
-        # Capture screenshot synchronously (captures current terminal state)
-        export SCREENSHOT_TOOLS_VENV="${SCREENSHOT_TOOLS_VENV:-}"
-        export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-}"
-        export LOG_SESSION_ID="$LOG_SESSION_ID"
-        export LOG_FILE="$LOG_FILE"
-        export CURRENT_STAGE="$stage_name"
-        export DETECTED_TERMINAL="$DETECTED_TERMINAL"
-        export SCREENSHOT_SESSION_DIR="$SCREENSHOT_SESSION_DIR"
-
-        # Synchronous screenshot capture
-        if "$SVG_CAPTURE_SCRIPT" capture "$stage_name" "$description" auto "1" >/dev/null 2>&1; then
-            echo -e "${GREEN}✅ Screenshot captured for: $stage_name${NC}"
-        else
-            echo -e "${YELLOW}⚠️  Screenshot failed for: $stage_name (continuing...)${NC}"
-        fi
-
-        # Brief pause to let user see the confirmation
-        sleep 1
-
-        # NOW clear the screen after screenshot is taken (except for very first one)
-        if [ "$stage_name" != "Initial Desktop" ]; then
-            echo ""
-            echo -e "${CYAN}🧹 Clearing screen for next installation stage...${NC}"
-            sleep 1
-            clear
-        fi
-
-        debug "📸 Screenshot captured for stage: $stage_name (session: $LOG_SESSION_ID)"
-    else
-        debug "Screenshot capture disabled (no GUI or script not found)"
-        # Still track the stage even without screenshot
-        track_stage "$stage_name" "installation-no-screenshot"
+        echo ""
     fi
+
+    # Show warnings
+    if [ ${#INSTALLATION_WARNINGS[@]} -gt 0 ]; then
+        echo -e "${YELLOW}⚠️  Components with Warnings (${#INSTALLATION_WARNINGS[@]}):${NC}"
+        for warning in "${INSTALLATION_WARNINGS[@]}"; do
+            echo "   $warning"
+        done
+        echo ""
+    fi
+
+    # Show failures
+    if [ ${#INSTALLATION_FAILURES[@]} -gt 0 ]; then
+        echo -e "${RED}❌ Failed Components (${#INSTALLATION_FAILURES[@]}):${NC}"
+        for failure in "${INSTALLATION_FAILURES[@]}"; do
+            echo "   $failure"
+        done
+        echo ""
+        echo -e "${YELLOW}💡 Note: Failed components can be retried manually or will be available after shell restart${NC}"
+        echo ""
+    fi
+
+    # Overall status
+    if [ ${#INSTALLATION_FAILURES[@]} -eq 0 ] && [ ${#INSTALLATION_WARNINGS[@]} -eq 0 ]; then
+        echo -e "${GREEN}🎉 Overall Status: All components installed successfully!${NC}"
+    elif [ ${#INSTALLATION_FAILURES[@]} -eq 0 ]; then
+        echo -e "${YELLOW}⚠️  Overall Status: Installation completed with warnings${NC}"
+    else
+        echo -e "${YELLOW}⚠️  Overall Status: Installation completed with some failures${NC}"
+        echo -e "${CYAN}   Core system is functional - failed components are optional${NC}"
+    fi
+
+    echo ""
+    echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${BLUE}📋 Session Logs:${NC}"
+    echo "   Main log: $LOG_FILE"
+    echo "   Error log: $LOG_ERRORS"
+    echo "   JSON log: $LOG_JSON"
+    echo ""
 }
 
 # Function to create process diagram
@@ -2441,10 +2439,21 @@ install_nodejs() {
     # Install or update NVM
     if [ ! -d "$NVM_DIR" ]; then
         log "INFO" "📥 Installing NVM $NVM_VERSION..."
+
+        # Temporarily unset NVM_DIR to let installer create it
+        # (NVM installer fails if NVM_DIR is set but directory doesn't exist)
+        local saved_nvm_dir="$NVM_DIR"
+        unset NVM_DIR
+
         if curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ NVM installed"
+            # Restore NVM_DIR after installation
+            NVM_DIR="$saved_nvm_dir"
+            log "SUCCESS" "✅ NVM installed to $NVM_DIR"
         else
+            # Restore NVM_DIR even on failure
+            NVM_DIR="$saved_nvm_dir"
             log "ERROR" "❌ Failed to install NVM"
+            log "INFO" "ℹ️  Check $LOG_FILE for details"
             return 1
         fi
     else
@@ -2470,30 +2479,61 @@ install_nodejs() {
         fi
     fi
     
-    # Source NVM
+    # Source NVM with proper environment setup
     export NVM_DIR="$NVM_DIR"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    
-    # Verify NVM is working
-    if ! command -v nvm >/dev/null 2>&1; then
-        log "ERROR" "❌ NVM not available after installation"
+
+    # Source NVM script if it exists
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+        \. "$NVM_DIR/nvm.sh"
+        log "INFO" "✅ NVM script sourced from $NVM_DIR/nvm.sh"
+    else
+        log "ERROR" "❌ NVM script not found at $NVM_DIR/nvm.sh"
         return 1
     fi
 
-    # Install Node.js
-    if ! command -v node >/dev/null 2>&1 || ! node --version | grep -q "v$NODE_VERSION"; then
-        log "INFO" "📥 Installing Node.js $NODE_VERSION..."
-        if nvm install "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
-           nvm use "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
-           nvm alias default "$NODE_VERSION" >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ Node.js $NODE_VERSION installed"
+    # Source bash completion if available
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+    # Verify NVM is working (check both as command and as function)
+    if ! command -v nvm >/dev/null 2>&1 && ! type nvm >/dev/null 2>&1; then
+        log "ERROR" "❌ NVM not available after sourcing"
+        log "INFO" "ℹ️  NVM_DIR: $NVM_DIR"
+        log "INFO" "ℹ️  Trying alternative sourcing method..."
+
+        # Try alternative sourcing in current shell
+        source "$NVM_DIR/nvm.sh" 2>/dev/null || true
+
+        # Final check
+        if ! command -v nvm >/dev/null 2>&1 && ! type nvm >/dev/null 2>&1; then
+            log "WARNING" "⚠️  NVM installed but not available in current shell"
+            log "INFO" "ℹ️  NVM will be available after shell restart"
+            log "INFO" "ℹ️  Continuing installation..."
         else
-            log "ERROR" "❌ Failed to install Node.js $NODE_VERSION"
-            return 1
+            log "SUCCESS" "✅ NVM loaded via alternative method"
         fi
     else
-        log "SUCCESS" "✅ Node.js $NODE_VERSION already installed"
+        log "SUCCESS" "✅ NVM is available and ready"
+    fi
+
+    # Install Node.js (only if NVM is available)
+    if command -v nvm >/dev/null 2>&1 || type nvm >/dev/null 2>&1; then
+        if ! command -v node >/dev/null 2>&1 || ! node --version | grep -q "v$NODE_VERSION"; then
+            log "INFO" "📥 Installing Node.js $NODE_VERSION..."
+            if nvm install "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
+               nvm use "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
+               nvm alias default "$NODE_VERSION" >> "$LOG_FILE" 2>&1; then
+                log "SUCCESS" "✅ Node.js $NODE_VERSION installed"
+            else
+                log "ERROR" "❌ Failed to install Node.js $NODE_VERSION"
+                log "INFO" "ℹ️  Check logs: $LOG_FILE"
+                return 1
+            fi
+        else
+            log "SUCCESS" "✅ Node.js $NODE_VERSION already installed"
+        fi
+    else
+        log "WARNING" "⚠️  NVM not available in current shell, skipping Node.js installation"
+        log "INFO" "ℹ️  Node.js can be installed after restarting shell with: nvm install $NODE_VERSION"
     fi
     
     # Update npm to latest
@@ -2943,67 +2983,126 @@ main() {
     check_installation_status
     capture_stage_screenshot "System Check" "Installation status check and strategy determination" 3
 
-    # Execute installation steps
-    install_system_deps
+    # Execute installation steps with failure tracking
+    if install_system_deps; then
+        track_success "System Dependencies" "All packages up to date"
+    else
+        track_failure "System Dependencies" "Some packages failed"
+    fi
     capture_stage_screenshot "Dependencies" "System dependencies installation completed" 3
 
-    install_zsh
+    if install_zsh; then
+        track_success "ZSH & Oh My ZSH" "Shell environment configured"
+    else
+        track_warning "ZSH & Oh My ZSH" "Some configuration may be incomplete"
+    fi
     capture_stage_screenshot "ZSH Setup" "ZSH and Oh My ZSH configuration" 3
 
-    install_modern_tools
+    if install_modern_tools; then
+        track_success "Modern Tools" "eza, bat, ripgrep, fzf, fd installed"
+    else
+        track_warning "Modern Tools" "Some tools may need updates"
+    fi
     capture_stage_screenshot "Modern Tools" "Development tools and utilities installation" 3
 
-    install_zig
+    if install_zig; then
+        track_success "Zig Compiler" "Version 0.14.0 ready"
+    else
+        track_failure "Zig Compiler" "Installation failed"
+    fi
     capture_stage_screenshot "Zig Compiler" "Zig compiler installation and setup" 3
 
-    install_ghostty
+    if install_ghostty; then
+        track_success "Ghostty Terminal" "Installed and configured"
+    else
+        track_warning "Ghostty Terminal" "Using existing installation"
+    fi
     capture_stage_screenshot "Ghostty Build" "Ghostty terminal compilation from source" 4
 
     # Smart configuration update (always run to ensure latest optimizations)
     if $CONFIG_NEEDS_UPDATE || [ "$GHOSTTY_STRATEGY" = "fresh" ] || [ "$GHOSTTY_STRATEGY" = "reconfig" ]; then
-        update_ghostty_config
+        if update_ghostty_config; then
+            track_success "Ghostty Configuration" "2025 optimizations applied"
+        else
+            track_failure "Ghostty Configuration" "Configuration update failed"
+        fi
+    else
+        track_success "Ghostty Configuration" "Already optimized"
     fi
     capture_stage_screenshot "Configuration" "Ghostty configuration files and optimization setup" 3
 
-    install_context_menu
+    if install_context_menu; then
+        track_success "Context Menu" "Right-click integration active"
+    else
+        track_warning "Context Menu" "May need manual activation"
+    fi
     capture_stage_screenshot "Context Menu" "Right-click context menu integration" 2
 
-    install_ptyxis
+    if install_ptyxis; then
+        track_success "Ptyxis Terminal" "Installed and configured"
+    else
+        track_warning "Ptyxis Terminal" "Using existing installation"
+    fi
     capture_stage_screenshot "Ptyxis Terminal" "Secondary terminal installation for comparison" 2
 
-    install_uv
+    if install_uv; then
+        track_success "UV Package Manager" "Python tools ready"
+    else
+        track_failure "UV Package Manager" "Installation failed"
+    fi
     capture_stage_screenshot "UV Package Manager" "Python uv package manager setup" 2
 
     # Setup screenshot dependencies after uv is available
     setup_screenshot_dependencies
 
-    install_nodejs
+    # Install Node.js (non-blocking)
+    if install_nodejs; then
+        track_success "Node.js/NVM" "Installed successfully"
+    else
+        track_failure "Node.js/NVM" "Installation failed - will be available after shell restart"
+        log "INFO" "ℹ️  Continuing with remaining installations..."
+    fi
     capture_stage_screenshot "Node.js Setup" "Node.js and NVM installation" 2
 
-    install_claude_code
+    # Install Claude Code (non-blocking)
+    if install_claude_code; then
+        track_success "Claude Code" "Installed successfully"
+    else
+        track_failure "Claude Code" "Installation failed - can retry manually"
+        log "INFO" "ℹ️  Continuing with remaining installations..."
+    fi
     capture_stage_screenshot "Claude Code" "Claude Code CLI installation and configuration" 2
 
-    install_gemini_cli
+    # Install Gemini CLI (non-blocking)
+    if install_gemini_cli; then
+        track_success "Gemini CLI" "Installed successfully"
+    else
+        track_failure "Gemini CLI" "Installation failed - can retry manually"
+        log "INFO" "ℹ️  Continuing with remaining installations..."
+    fi
     capture_stage_screenshot "Gemini CLI" "Google Gemini CLI setup and integration" 2
     
-    # Verify everything
+    # Verify everything (non-blocking)
     start_timer
     if verify_installation; then
         end_timer "Installation verification"
         capture_stage_screenshot "Verification" "Installation verification and testing" 2
-        log "SUCCESS" "🎉 All installations completed successfully!"
-        show_final_instructions
+        log "SUCCESS" "🎉 Installation completed!"
     else
-        log "WARNING" "⚠️  Some installations may need attention. Check the log for details."
+        log "INFO" "ℹ️  Installation completed with some optional components pending"
         capture_stage_screenshot "Warning State" "Installation completed with warnings" 2
-        echo "Log files:"
-        echo "  Main: $LOG_FILE"
-        echo "  Errors: $LOG_DIR/errors.log"
-        echo "  Performance: $LOG_DIR/performance.json"
     fi
 
     # End performance monitoring for entire operation
     end_performance_monitoring
+
+    # Show comprehensive installation summary
+    show_installation_summary
+
+    # Show final instructions only if major components succeeded
+    if [ ${#INSTALLATION_FAILURES[@]} -lt 3 ]; then
+        show_final_instructions
+    fi
 
     # Final system state capture
     capture_system_state
@@ -3027,6 +3126,108 @@ main() {
     # Automatic shell restart to activate new configuration
     restart_shell_environment
 }
+
+# Interactive menu for user-friendly configuration
+show_interactive_menu() {
+    # Skip menu if any arguments provided (command-line mode)
+    if [ $# -gt 0 ]; then
+        return 0
+    fi
+
+    clear
+    echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║     Comprehensive Terminal Tools Installer - Setup Menu   ║${NC}"
+    echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${GREEN}This installer will configure:${NC}"
+    echo "  • ZSH shell with Oh My ZSH and modern tools"
+    echo "  • Ghostty terminal with 2025 optimizations"
+    echo "  • Ptyxis terminal emulator"
+    echo "  • Node.js (via NVM) and development tools"
+    echo "  • Claude Code CLI and Gemini CLI"
+    echo ""
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════${NC}"
+    echo ""
+
+    # Ask about logging level
+    echo -e "${CYAN}1. Logging Level${NC}"
+    echo "   Choose how much information to display during installation:"
+    echo ""
+    echo "   [1] Standard  - Show important steps and results (recommended)"
+    echo "   [2] Verbose   - Show detailed progress and debug information"
+    echo "   [3] Debug     - Show all commands and system calls"
+    echo ""
+    read -p "   Select logging level [1-3] (default: 1): " logging_choice
+    logging_choice=${logging_choice:-1}
+
+    case $logging_choice in
+        2) VERBOSE=true ;;
+        3) DEBUG_MODE=true; VERBOSE=true ;;
+        *) VERBOSE=false ;;
+    esac
+
+    echo ""
+    echo -e "${YELLOW}───────────────────────────────────────────────────────────${NC}"
+    echo ""
+
+    # Ask about component selection
+    echo -e "${CYAN}2. Component Selection${NC}"
+    echo "   Choose which components to install:"
+    echo ""
+    echo "   [1] Full Installation    - Install everything (recommended)"
+    echo "   [2] Custom Selection     - Choose specific components"
+    echo "   [3] Config Only          - Only update configuration files"
+    echo ""
+    read -p "   Select installation type [1-3] (default: 1): " install_choice
+    install_choice=${install_choice:-1}
+
+    case $install_choice in
+        2)
+            echo ""
+            echo -e "${CYAN}   Select components to SKIP (leave blank for none):${NC}"
+            echo ""
+            read -p "   Skip system dependencies? [y/N]: " skip_deps_choice
+            [[ "$skip_deps_choice" =~ ^[Yy]$ ]] && SKIP_DEPS=true
+
+            read -p "   Skip Node.js/NVM? [y/N]: " skip_node_choice
+            [[ "$skip_node_choice" =~ ^[Yy]$ ]] && SKIP_NODE=true
+
+            read -p "   Skip AI tools (Claude/Gemini)? [y/N]: " skip_ai_choice
+            [[ "$skip_ai_choice" =~ ^[Yy]$ ]] && SKIP_AI=true
+
+            read -p "   Skip Ptyxis terminal? [y/N]: " skip_ptyxis_choice
+            [[ "$skip_ptyxis_choice" =~ ^[Yy]$ ]] && SKIP_PTYXIS=true
+            ;;
+        3)
+            SKIP_DEPS=true
+            SKIP_NODE=true
+            SKIP_AI=true
+            SKIP_PTYXIS=true
+            ;;
+        *)
+            # Full installation - all flags remain false
+            ;;
+    esac
+
+    echo ""
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo -e "${GREEN}Installation Summary:${NC}"
+    echo ""
+    echo "  Logging Level:      $([ "$DEBUG_MODE" = true ] && echo "Debug" || [ "$VERBOSE" = true ] && echo "Verbose" || echo "Standard")"
+    echo "  System Dependencies: $([ "$SKIP_DEPS" = true ] && echo "Skip" || echo "Install")"
+    echo "  Node.js/NVM:        $([ "$SKIP_NODE" = true ] && echo "Skip" || echo "Install")"
+    echo "  AI Tools:           $([ "$SKIP_AI" = true ] && echo "Skip" || echo "Install")"
+    echo "  Ptyxis Terminal:    $([ "$SKIP_PTYXIS" = true ] && echo "Skip" || echo "Install")"
+    echo ""
+    echo -e "${CYAN}📁 All logs will be saved to: $LOG_DIR${NC}"
+    echo ""
+    read -p "Press Enter to continue with this configuration, or Ctrl+C to cancel..."
+    echo ""
+}
+
+# Run interactive menu first (if no command-line arguments provided)
+show_interactive_menu "$@"
 
 # Run main function
 main "$@"

@@ -41,7 +41,9 @@ dist/
 *.tsbuildinfo
 
 # Logs
-logs
+logs/*.log
+logs/*.json
+!logs/.gitkeep
 *.log
 
 # Runtime data
@@ -145,3 +147,8 @@ local-infra/cache/
 # User customizations (preserve during updates)
 configs/custom/
 user-config/
+# Backup files (added by migration)
+backups/
+
+# Lighthouse performance reports
+documentations/performance/lighthouse-reports/*.json
