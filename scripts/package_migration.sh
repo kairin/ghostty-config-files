@@ -200,14 +200,145 @@ cmd_audit() {
 }
 
 # Function: cmd_health
-# Purpose: Handle health check command
+# Purpose: Handle health check command (T035)
 # Args: $@ - Command-line arguments
-# Returns: 0 on success, non-zero on failure
-# Side Effects: Executes health checks
+# Returns: 0 if all checks pass, 1 if critical failure, 2 if warnings
+# Side Effects: Executes health checks via migration_health_checks.sh
 cmd_health() {
-    log_event ERROR "Health check command not yet implemented"
-    echo "The 'health' command will be available in Phase 4 (User Story 2)" >&2
-    return 1
+    local check_type="all"
+    local auto_fix="false"
+    local output_format="text"
+    local apt_package=""
+    local snap_package=""
+
+    # Parse health-specific options
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --check)
+                check_type="$2"
+                shift 2
+                ;;
+            --fix)
+                auto_fix="true"
+                shift
+                ;;
+            --json)
+                output_format="json"
+                shift
+                ;;
+            --package)
+                apt_package="$2"
+                snap_package="${3:-$2}"
+                shift 2
+                [[ -n "${3:-}" ]] && shift
+                ;;
+            --help|-h)
+                show_help
+                return 0
+                ;;
+            *)
+                log_event ERROR "Unknown health option: $1"
+                echo "Use '$PROG_NAME health --help' for usage information" >&2
+                return 2
+                ;;
+        esac
+    done
+
+    # Log to stderr if JSON output to keep stdout clean
+    if [[ "$output_format" == "json" ]]; then
+        log_event INFO "Running health checks (type: $check_type, auto-fix: $auto_fix)" >&2
+    else
+        log_event INFO "Running health checks (type: $check_type, auto-fix: $auto_fix)"
+    fi
+
+    # Execute health checks via migration_health_checks.sh
+    local health_script="$SCRIPT_DIR/migration_health_checks.sh"
+
+    if [[ ! -x "$health_script" ]]; then
+        log_event ERROR "Health check script not found or not executable: $health_script"
+        return 3
+    fi
+
+    # Build command arguments
+    local health_args=()
+
+    case "$check_type" in
+        disk|disk-space)
+            health_args+=("disk-space")
+            [[ -n "$apt_package" ]] && health_args+=("$apt_package" "$snap_package")
+            ;;
+        network|net)
+            health_args+=("network")
+            ;;
+        snapd|daemon)
+            health_args+=("snapd")
+            [[ "$auto_fix" == "true" ]] && health_args+=("auto-fix")
+            ;;
+        conflicts)
+            if [[ -z "$apt_package" ]]; then
+                log_event ERROR "Conflicts check requires --package option"
+                echo "Use: $PROG_NAME health --check conflicts --package <name>" >&2
+                return 2
+            fi
+            health_args+=("conflicts" "$apt_package" "$snap_package")
+            ;;
+        all|aggregate)
+            health_args+=("all")
+            [[ -n "$apt_package" ]] && health_args+=("$apt_package" "$snap_package")
+            [[ "$auto_fix" == "true" ]] && health_args+=("auto-fix")
+            ;;
+        *)
+            log_event ERROR "Invalid check type: $check_type"
+            echo "Valid types: disk, network, snapd, conflicts, all" >&2
+            return 2
+            ;;
+    esac
+
+    # Execute health checks and capture both stdout and exit code
+    local result
+    local exit_code
+    result=$("$health_script" "${health_args[@]}" 2>&1)
+    exit_code=$?
+
+    # Extract JSON array from result (filter out log lines)
+    # JSON array starts with '[{' and ends with '}]'
+    local json_result
+    json_result=$(echo "$result" | sed -n '/^\[{/,/^}]$/p')
+
+    if [[ -z "$json_result" ]]; then
+        # No JSON found, output raw result
+        echo "$result" >&2
+        return $exit_code
+    fi
+
+    # Format output based on requested format
+    if [[ "$output_format" == "json" ]]; then
+        echo "$json_result"
+    else
+        # Pretty-print JSON results for text format
+        if command -v jq >/dev/null 2>&1; then
+            echo "======================================================================"
+            echo "  Health Check Results"
+            echo "======================================================================"
+            echo ""
+            echo "$json_result" | jq -r '.[] | "[\(.status | ascii_upcase)] \(.check_name)\n  Status: \(.measured_value)\n  Message: \(.message)" + (if .remediation != null then "\n  Remediation: \(.remediation)" else "" end) + "\n"'
+            echo "======================================================================"
+
+            # Summary
+            local total=$(echo "$json_result" | jq '. | length')
+            local passed=$(echo "$json_result" | jq '[.[] | select(.status == "pass")] | length')
+            local failed=$(echo "$json_result" | jq '[.[] | select(.status == "fail")] | length')
+            local warnings=$(echo "$json_result" | jq '[.[] | select(.status == "warning")] | length')
+
+            echo "Summary: $passed passed, $warnings warnings, $failed failed (total: $total)"
+            echo "======================================================================"
+        else
+            # Fallback if jq not available
+            echo "$json_result"
+        fi
+    fi
+
+    return $exit_code
 }
 
 # Function: cmd_migrate
