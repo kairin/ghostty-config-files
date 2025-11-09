@@ -58,6 +58,36 @@ assert_not_equals() {
     fi
 }
 
+# Assert condition is true
+# Usage: assert_true <condition> [message]
+assert_true() {
+    local condition="$1"
+    local message="${2:-Condition should be true}"
+
+    if [[ "$condition" == "true" ]] || [[ "$condition" == "0" ]] || [[ -n "$condition" && "$condition" != "false" ]]; then
+        return 0
+    else
+        echo "  ❌ ASSERTION FAILED: $message" >&2
+        echo "     Condition: '$condition'" >&2
+        return 1
+    fi
+}
+
+# Assert condition is false
+# Usage: assert_false <condition> [message]
+assert_false() {
+    local condition="$1"
+    local message="${2:-Condition should be false}"
+
+    if [[ "$condition" == "false" ]] || [[ "$condition" == "1" ]] || [[ -z "$condition" ]]; then
+        return 0
+    else
+        echo "  ❌ ASSERTION FAILED: $message" >&2
+        echo "     Condition: '$condition'" >&2
+        return 1
+    fi
+}
+
 # Assert string contains substring
 # Usage: assert_contains <haystack> <needle> [message]
 assert_contains() {
