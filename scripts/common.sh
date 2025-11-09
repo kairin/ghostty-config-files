@@ -313,3 +313,117 @@ Example:
 EOF
     exit 0
 fi
+
+# ============================================================
+# PACKAGE MIGRATION SPECIFIC UTILITIES
+# ============================================================
+
+# Error codes (per contracts/cli-interface.md)
+readonly E001="snapd daemon not running"
+readonly E002="Insufficient disk space"
+readonly E003="Network timeout (snap store)"
+readonly E004="Package not found"
+readonly E005="Backup corrupted"
+readonly E006="Permission denied"
+readonly E007="Dependency conflict"
+readonly E008="No snap alternative found"
+
+# Error handling for migration
+error_exit() {
+    local error_code="$1"
+    local error_message="$2"
+    local exit_code="${3:-1}"
+
+    log_error "[$error_code] $error_message"
+    exit "$exit_code"
+}
+
+error_warn() {
+    local error_code="$1"
+    local error_message="$2"
+
+    log_warn "[$error_code] $error_message"
+}
+
+# JSON utilities (using jq)
+json_parse() {
+    local json_file="$1"
+    local jq_filter="$2"
+
+    if [ ! -f "$json_file" ]; then
+        log_error "JSON file not found: $json_file"
+        return 1
+    fi
+
+    jq -r "$jq_filter" "$json_file" 2>/dev/null || {
+        log_error "Failed to parse JSON file: $json_file"
+        return 1
+    }
+}
+
+json_validate() {
+    local json_string="$1"
+
+    echo "$json_string" | jq empty >/dev/null 2>&1
+    return $?
+}
+
+json_get_field() {
+    local json_string="$1"
+    local field_path="$2"
+
+    echo "$json_string" | jq -r "$field_path" 2>/dev/null
+}
+
+# Configuration loader
+load_config() {
+    local config_file="${1:-$HOME/.config/package-migration/config.json}"
+
+    if [ ! -f "$config_file" ]; then
+        log_warn "Config file not found: $config_file, using defaults"
+        return 1
+    fi
+
+    # Export configuration as environment variables with MIGRATION_ prefix
+    export MIGRATION_BACKUP_DIR=$(json_parse "$config_file" '.backup.directory' 2>/dev/null || echo "$HOME/.config/package-migration/backups")
+    export MIGRATION_RETENTION_DAYS=$(json_parse "$config_file" '.backup.retention_days' 2>/dev/null || echo "30")
+    export MIGRATION_CACHE_ENABLED=$(json_parse "$config_file" '.cache.enabled' 2>/dev/null || echo "true")
+    export MIGRATION_CACHE_TTL=$(json_parse "$config_file" '.cache.ttl_seconds' 2>/dev/null || echo "3600")
+    export MIGRATION_BATCH_SIZE=$(json_parse "$config_file" '.migration.batch_size' 2>/dev/null || echo "10")
+    export MIGRATION_PRIORITY_THRESHOLD=$(json_parse "$config_file" '.migration.priority_threshold' 2>/dev/null || echo "500")
+    export MIGRATION_DISK_MIN_GB=$(json_parse "$config_file" '.health_checks.disk_space_minimum_gb' 2>/dev/null || echo "10")
+    export MIGRATION_NETWORK_TIMEOUT=$(json_parse "$config_file" '.health_checks.network_timeout_seconds' 2>/dev/null || echo "30")
+    export MIGRATION_LOG_DIR=$(json_parse "$config_file" '.logging.directory' 2>/dev/null || echo "/tmp/ghostty-start-logs")
+
+    log_info "Configuration loaded from $config_file"
+    return 0
+}
+
+# Expand tilde in paths
+expand_path() {
+    local path="$1"
+    path="${path/#\~/$HOME}"
+    echo "$path"
+}
+
+# Check if command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Validate required tools
+validate_dependencies() {
+    local missing_tools=()
+
+    for tool in jq dpkg-query apt-cache systemctl snap; do
+        if ! command_exists "$tool"; then
+            missing_tools+=("$tool")
+        fi
+    done
+
+    if [ ${#missing_tools[@]} -gt 0 ]; then
+        error_exit "E006" "Missing required tools: ${missing_tools[*]}" 1
+    fi
+
+    log_info "All required tools are available"
+}

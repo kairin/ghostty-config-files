@@ -11,7 +11,7 @@ Advanced Terminal Productivity Suite extends the proven terminal foundation with
 **Primary Dependencies**: zsh-codex, powerlevel10k/starship, chezmoi, gh copilot, OpenAI/Anthropic/Google APIs
 **Storage**: Configuration files (~/.config/), encrypted secrets, local caches
 **Testing**: Shell integration tests, performance benchmarks, constitutional compliance validation
-**Target Platform**: Linux Ubuntu 25.04+ with Ghostty terminal, uv-first Python management
+**Target Platform**: Linux Ubuntu 25.10+ with Ghostty terminal, uv-first Python management
 **Project Type**: terminal - terminal productivity enhancement system
 **Performance Goals**: <50ms shell startup (from ~200ms), 30-50% command lookup reduction, <150MB memory
 **Constraints**: Zero GitHub Actions consumption, preserve existing foundation, local-first execution
@@ -50,7 +50,7 @@ Advanced Terminal Productivity Suite extends the proven terminal foundation with
 
 ### Installation & Dependency Management Compliance ✅
 - **Installation Tracking**: PASS - Comprehensive registry tracks all tools, versions, and methods
-- **uv-First Python**: PASS - Mandatory uv usage for all Python dependencies with Ubuntu 25.04 system Python 3.12
+- **uv-First Python**: PASS - Mandatory uv usage for all Python dependencies with Ubuntu 25.10 system Python 3.12
 - **Update Management**: PASS - Automated detection and safe update strategies with rollback
 - **Dependency Resolution**: PASS - Conflict detection and resolution for all tool dependencies
 - **Version Consistency**: PASS - Ensures latest versions with compatibility validation
@@ -142,7 +142,7 @@ Using Task tool for comprehensive research to resolve all technical unknowns and
 - **Theme Management**: Adaptive theming, performance monitoring, environment detection
 - **Performance Monitor**: Startup profiling, cache management, lazy loading system
 - **Installation Registry**: Tool tracking, version management, update strategies, dependency resolution
-- **Python Environment**: uv-first management, Ubuntu 25.04 system Python 3.12, virtual environments
+- **Python Environment**: uv-first management, Ubuntu 25.10 system Python 3.12, virtual environments
 - **Team Configuration**: Template system, secret management, environment sync
 
 ### Contract Generation Strategy

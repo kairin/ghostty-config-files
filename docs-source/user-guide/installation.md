@@ -1,6 +1,6 @@
 ---
 title: "Installation Guide"
-description: "Complete installation guide for Ghostty Configuration Files on Ubuntu 25.04+"
+description: "Complete installation guide for Ghostty Configuration Files on Ubuntu 25.10+"
 pubDate: 2025-10-27
 author: "Ghostty Configuration Files Team"
 tags: ["installation", "setup", "quickstart"]
@@ -9,7 +9,7 @@ order: 1
 
 # Installation Guide
 
-Welcome to the Ghostty Configuration Files installation guide. This guide will walk you through installing and setting up your complete Ghostty terminal environment on Ubuntu 25.04+.
+Welcome to the Ghostty Configuration Files installation guide. This guide will walk you through installing and setting up your complete Ghostty terminal environment on Ubuntu 25.10+.
 
 ## Quick Start
 
@@ -31,9 +31,9 @@ This will install:
 ## Prerequisites
 
 ### System Requirements
-- **OS**: Ubuntu 25.04+ (or compatible Debian-based distribution)
+- **OS**: Ubuntu 25.10+ (or compatible Debian-based distribution)
 - **Architecture**: x86_64 (amd64)
-- **Shell**: Bash 5.x+ (default on Ubuntu 25.04)
+- **Shell**: ZSH (configured by installation), Bash 5.x+ (for scripts)
 - **Disk Space**: ~2GB for full installation
 - **Memory**: 2GB+ RAM recommended
 

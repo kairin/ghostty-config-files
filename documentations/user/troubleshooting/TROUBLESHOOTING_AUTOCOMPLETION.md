@@ -215,7 +215,7 @@ echo $fpath | tr ' ' '\n' | grep plugins
 
 ## Tested Environment
 
-- **OS**: Ubuntu 25.04
+- **OS**: Ubuntu 25.10
 - **Ghostty**: 1.2.0+ (snap installation)
 - **Zsh**: 5.9
 - **Oh My Zsh**: Latest (2024+)

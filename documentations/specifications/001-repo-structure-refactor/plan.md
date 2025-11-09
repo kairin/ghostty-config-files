@@ -11,7 +11,7 @@ This feature refactors the Ghostty Configuration Files repository structure to i
 
 ## Technical Context
 
-**Language/Version**: Bash 5.x+ (Ubuntu 25.04 default shell), Node.js LTS (for Astro.build documentation site)
+**Language/Version**: ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site)
 **Primary Dependencies**:
 - Ghostty terminal emulator (built from source with Zig 0.14.0)
 - Astro.build >=4.0 (static site generation for documentation)
@@ -21,7 +21,7 @@ This feature refactors the Ghostty Configuration Files repository structure to i
 
 **Storage**: File-based configuration and documentation (no database)
 **Testing**: NEEDS CLARIFICATION - Current testing approach for bash scripts and validation strategy
-**Target Platform**: Ubuntu 25.04+ (Linux x86_64) with bash-compatible shells
+**Target Platform**: Ubuntu 25.10+ (Linux x86_64) with bash-compatible shells
 **Project Type**: Configuration management / Infrastructure as Code (script-based automation)
 **Performance Goals**:
 - manage.sh command execution <2 seconds for help display
@@ -53,7 +53,7 @@ This feature refactors the Ghostty Configuration Files repository structure to i
 | **Branch Preservation** | ✅ PASS | Current branch `001-repo-structure-refactor` follows naming convention. No branch deletion planned. |
 | **Local CI/CD First** | ✅ PASS | All changes will be validated with `./local-infra/runners/gh-workflow-local.sh` before GitHub operations. |
 | **Zero GitHub Actions Consumption** | ✅ PASS | No GitHub Actions triggers planned. All CI/CD runs locally. |
-| **Documentation Structure** | ⚠️ REQUIRES ATTENTION | Plan changes `docs/` → `docs-dist/` + new `docs-source/`. Must preserve `.nojekyll` file. See Complexity Tracking. |
+| **Documentation Structure** | ✅ ESTABLISHED | Constitutional reality: `docs/` = committed build output (with .nojekyll), `docs-source/` = editable source. No migration needed. |
 | **Preserve Existing Structures** | ✅ PASS | spec-kit/, local-infra/, .specify/ remain unchanged per FR-015. |
 | **Configuration Backup** | ✅ PASS | Incremental migration with automatic backups before each change. |
 | **Logging Requirements** | ✅ PASS | Conversation log will be saved per LLM Conversation Logging requirements. |
@@ -65,10 +65,10 @@ This feature refactors the Ghostty Configuration Files repository structure to i
 - No branch deletion in scope
 - Merge to main without deletion planned
 
-**GATE 2 - GitHub Pages Infrastructure**: ⚠️ REQUIRES DESIGN ATTENTION
-- **CRITICAL**: Must preserve `docs/.nojekyll` during restructure
-- Must handle docs/ → docs-dist/ migration carefully
-- See Complexity Tracking for justification
+**GATE 2 - GitHub Pages Infrastructure**: ✅ ESTABLISHED
+- **CRITICAL**: `docs/.nojekyll` exists and is committed (constitutional requirement)
+- docs/ contains committed Astro build output (no migration needed)
+- See CLAUDE.md:60-76 for .nojekyll requirements
 
 **GATE 3 - Local CI/CD**: ✅ PASS
 - All script changes will be validated locally first
@@ -210,7 +210,7 @@ specs/[###-feature]/
 │   ├── check_updates.sh       # PRESERVE: Keep as-is
 │   ├── install_*.sh           # PRESERVE: Keep existing
 │   └── [NEW MODULES]          # ADD: 10+ new modular scripts
-├── docs/                       # MIGRATE: → docs-dist/ (build output)
+├── docs/                       # ESTABLISHED: Committed Astro build output (with .nojekyll)
 ├── local-infra/                # PRESERVE: No changes
 ├── spec-kit/                   # PRESERVE: No changes
 └── .specify/                   # PRESERVE: No changes
@@ -249,8 +249,8 @@ specs/[###-feature]/
 │       ├── architecture.md
 │       ├── contributing.md
 │       └── testing.md
-├── docs-dist/                  # NEW: Astro build output (gitignored)
-│   └── .nojekyll              # CRITICAL: Must exist for GitHub Pages
+├── docs/                       # ESTABLISHED: Committed Astro build output
+│   └── .nojekyll              # CRITICAL: Must exist and be committed for GitHub Pages
 ├── local-infra/                # UNCHANGED
 ├── spec-kit/                   # UNCHANGED
 └── .specify/                   # UNCHANGED
@@ -260,7 +260,7 @@ specs/[###-feature]/
 This is a **configuration management project** that uses scripts for automation and Astro for documentation. The structure follows a hybrid approach:
 1. Top-level remains flat with key entry points (manage.sh, start.sh)
 2. scripts/ directory expands with fine-grained modules (flat structure, no scripts/modules/ subdirectory)
-3. Documentation separates source (docs-source/) from generated content (docs-dist/)
+3. Documentation separates source (docs-source/) from committed build output (docs/)
 4. Existing spec-kit/, local-infra/, .specify/ structures preserved unchanged per constitutional requirements
 
 ## Complexity Tracking
@@ -269,8 +269,8 @@ This is a **configuration management project** that uses scripts for automation 
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| Documentation Structure Change (docs/ → docs-dist/) | Current docs/ mixes Astro source with build output, causing confusion about which files to edit. GitHub Pages requires build output in specific location. | Keeping current docs/ structure would perpetuate confusion between source and generated files. Using separate docs-source/ makes intent explicit and prevents accidental editing of generated content. |
-| `.nojekyll` Preservation Required | GitHub Pages requires `.nojekyll` in build output directory to serve Astro's `_astro/` assets correctly. Without it, all CSS/JS returns 404. | This is non-negotiable per constitutional requirement. No simpler alternative exists - it's a GitHub Pages technical requirement. Must be preserved during migration. |
+| Documentation Structure (docs-source/ + docs/) | ✅ NO VIOLATION - Constitutional reality established: docs/ = committed build output, docs-source/ = editable source per CLAUDE.md:580-587 | N/A - Already compliant with constitution |
+| `.nojekyll` Committed Requirement | ✅ NO VIOLATION - Constitutional requirement: docs/.nojekyll must be committed for GitHub Pages (CLAUDE.md:60-76). Without it, all CSS/JS returns 404. | N/A - Already established and committed |
 | 10+ Script Modules vs Fewer Large Modules | Fine-grained modules (install_node.sh, install_zig.sh, etc.) enable <10s isolated testing and precise debugging. Larger modules would take longer to test and harder to maintain. | Creating 3-5 larger modules would improve module count but violate FR-007 requirement for "highly specific sub-tasks" and SC-007 requirement for "<10 second" independent testing. Fine granularity is the feature requirement. |
 
 **Justification Summary**:

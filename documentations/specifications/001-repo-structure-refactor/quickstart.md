@@ -14,8 +14,8 @@ This guide walks through implementing the repository structure refactoring featu
 
 ### System Requirements
 
-- Ubuntu 25.04+ (or compatible Linux distribution)
-- Bash 5.x+
+- Ubuntu 25.10+ (or compatible Linux distribution)
+- ZSH
 - Node.js LTS (for Astro documentation builds)
 - Git 2.30+
 - ShellCheck (for script validation)
