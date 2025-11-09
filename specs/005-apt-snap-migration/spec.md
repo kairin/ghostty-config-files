@@ -66,7 +66,7 @@ As a system administrator, I want to migrate all eligible apt packages to snap/A
   → System detects feature disparity via capability comparison and flags package as "requires manual review" rather than auto-migrating
 
 - How does the system handle packages with multiple snap providers (e.g., Chromium available from multiple publishers)?
-  → System prioritizes official/verified publishers, presents alternatives for user selection, and validates publisher trust scores
+  → System ONLY accepts snaps from official/verified publishers. If multiple verified publishers exist, select the one marked as official upstream maintainer. Non-verified alternatives are rejected and package is flagged for manual review
 
 - What happens when disk space is insufficient for both apt and snap versions during migration?
   → Pre-migration checks detect space requirements, calculate total needed space (old + new + buffer), and abort if insufficient with clear error message
@@ -91,23 +91,23 @@ As a system administrator, I want to migrate all eligible apt packages to snap/A
 ### Functional Requirements
 
 - **FR-001**: System MUST dynamically detect Ubuntu version and validate App Center/snapd compatibility without hardcoded version strings
-- **FR-002**: System MUST audit all apt-installed packages including name, version, installation method, dependency tree, and configuration file locations
+- **FR-002**: System MUST audit all apt-installed packages including name, version, installation method, full dependency tree (unlimited depth traversal), and configuration file locations
 - **FR-003**: System MUST identify snap/App Center alternatives for each apt package by querying snap store API and validating package equivalence
 - **FR-004**: System MUST perform pre-migration health checks including disk space calculation, network connectivity, snapd daemon status, and essential service identification
 - **FR-005**: System MUST analyze dependency impact before uninstalling any apt package, identifying reverse dependencies and ensuring complete migration paths exist
 - **FR-006**: System MUST create timestamped, reversible backups of package state including .deb files, configuration files, dependency metadata, and systemd service definitions before any modifications
 - **FR-007**: System MUST uninstall apt packages safely using dependency-aware removal that preserves configurations and checks for orphaned dependencies
-- **FR-008**: System MUST verify snap alternative functional equivalence by comparing command availability, version compatibility, feature parity, and configuration migration requirements
+- **FR-008**: System MUST verify snap alternative functional equivalence by comparing command availability, version compatibility, feature parity (executable presence + critical command-line flags support via command + flags comparison method), and configuration migration requirements
 - **FR-009**: System MUST implement rollback mechanism that restores exact previous state including apt package reinstallation, configuration restoration, and dependency graph reconstruction
 - **FR-010**: System MUST migrate packages in dependency-safe order (leaf packages first, then dependencies, non-critical before system-critical)
 - **FR-011**: System MUST validate essential services after migration by checking systemd service status, boot process integrity, and package conflict resolution
-- **FR-012**: System MUST support dry-run mode showing planned migration actions without executing changes
+- **FR-012**: System MUST support dry-run mode where health checks execute for real (disk space, network, snapd status) while migration operations (backup, uninstall, install) are simulated with detailed action predictions
 - **FR-013**: System MUST log all migration actions with timestamps, success/failure status, package details, and rollback instructions
 - **FR-014**: System MUST detect and flag system-critical packages (boot dependencies, init system, kernel modules, display servers) requiring manual review
 - **FR-015**: System MUST preserve custom package configurations during migration and validate configuration compatibility with snap alternatives
-- **FR-016**: System MUST verify snap publisher trust and prefer official/verified sources over third-party publishers
+- **FR-016**: System MUST verify snap publisher trust and ONLY accept official/verified publishers (identified by verified/starred validation status from snapd API), rejecting all non-verified alternatives to ensure security (packages without verified alternatives flagged for manual review)
 - **FR-017**: System MUST handle packages from PPAs by checking official snap equivalents and preserving PPA configurations for rollback
-- **FR-018**: System MUST calculate total disk space requirements including both apt and snap versions during transition, plus buffer for rollback data
+- **FR-018**: System MUST calculate total disk space requirements including both apt and snap versions during transition, plus 20% overhead buffer (calculated as (apt_size + snap_size) * 1.20) for rollback data, metadata, and logs
 - **FR-019**: System MUST provide detailed migration reports showing successful migrations, failed attempts, packages requiring manual review, and rollback actions taken
 
 ### Assumptions
@@ -151,4 +151,10 @@ As a system administrator, I want to migrate all eligible apt packages to snap/A
 
 ## Clarifications
 
-*(No clarifications needed - specification is complete and testable as written. All requirements have clear acceptance criteria, measurable success criteria, and documented edge case handling.)*
+### Session 2025-11-09
+
+- Q: FR-002 requires auditing the "dependency tree" for all packages. How deep should the dependency tree collection go to balance completeness with performance? → A: Full depth (unlimited) - Traverse entire dependency graph regardless of depth
+- Q: FR-008 requires verifying "feature parity" between apt and snap packages. How should the system determine if features match? → A: Command + critical flags comparison - Verify all executables exist and support same primary command-line flags
+- Q: FR-018 requires calculating disk space including "buffer for rollback data." How much additional buffer space should be reserved? → A: 20% overhead - Standard safety margin for backup operations
+- Q: FR-016 requires verifying snap publisher trust. How should the system prioritize publishers when multiple snap alternatives exist? → A: Official publisher only - Reject all non-verified alternatives (strict but may block valid migrations)
+- Q: FR-012 requires dry-run mode to show "planned migration actions without executing changes." Which operations should actually execute vs simulate? → A: Health checks execute, migrations simulate - Pre-checks run for real, package operations predicted

@@ -18,11 +18,11 @@ This document contains actionable implementation tasks organized by user story p
 |-------|-----------|------------|----------------|------------------|
 | Phase 1 | Setup | 5 | 3 | Project structure validates |
 | Phase 2 | Foundational | 8 | 5 | Common utilities testable |
-| Phase 3 | US1 - Audit (P1) | 12 | 8 | Audit reports generated without errors |
-| Phase 4 | US2 - Test Migration (P2) | 15 | 9 | Single package migrates and rolls back successfully |
+| Phase 3 | US1 - Audit (P1) | 13 | 9 | Audit reports generated without errors |
+| Phase 4 | US2 - Test Migration (P2) | 16 | 10 | Single package migrates and rolls back successfully |
 | Phase 5 | US3 - System-Wide (P3) | 10 | 6 | Batch migration completes with zero breakage |
-| Phase 6 | Polish | 6 | 4 | Documentation complete, cleanup working |
-| **Total** | | **56** | **35** | |
+| Phase 6 | Polish | 7 | 5 | Documentation complete, cleanup working |
+| **Total** | | **78** | **38** | |
 
 ---
 
@@ -74,6 +74,8 @@ This provides immediate value by:
 
 **Duration**: ~4 hours
 
+**Status**: 87.5% complete (7/8 tasks done - T013 unit tests pending)
+
 **Independent Test**: All common utilities execute without errors, test framework validates module template compliance
 
 ### Tasks
@@ -120,6 +122,7 @@ This provides immediate value by:
 - [ ] T018 [P] [US1] Implement snapd API client in `scripts/audit_packages.sh`: query snapd REST API via Unix socket per research.md section 2
 - [ ] T019 [P] [US1] Implement snap search logic in `scripts/audit_packages.sh`: match apt packages to snap alternatives (exact, alias, fuzzy matching)
 - [ ] T020 [P] [US1] Implement publisher verification in `scripts/audit_packages.sh`: extract publisher validation status (verified/starred/unverified), prioritize verified
+- [ ] T020a [P] [US1] Implement snap publisher trust score calculation in `scripts/audit_packages.sh`: validate publisher status (verified/starred/unverified), implement trust scoring algorithm, reject unverified publishers per FR-016 requirements
 
 #### Equivalence Scoring & Risk Assessment
 
@@ -180,6 +183,7 @@ This provides immediate value by:
 - [ ] T036 [P] [US2] Implement .deb download in `scripts/migration_backup.sh`: use apt-get download, verify integrity with dpkg --verify
 - [ ] T037 [P] [US2] Implement config backup in `scripts/migration_backup.sh`: rsync configuration files to backup directory preserving permissions
 - [ ] T038 [P] [US2] Implement service state capture in `scripts/migration_backup.sh`: record systemd service enabled/active status
+- [ ] T038a [US2] Implement PPA metadata backup in `scripts/migration_backup.sh`: detect PPA sources from /etc/apt/sources.list.d/, preserve PPA configurations, store PPA GPG keys for rollback per FR-017
 - [ ] T039 [US2] Implement backup metadata generation in `scripts/migration_backup.sh`: create MigrationBackup JSON with checksums per data-model.md
 - [ ] T040 [US2] Implement backup command in `scripts/package_migration.sh`: parse --all, --output-dir, --label options, delegate to migration_backup.sh
 
@@ -279,6 +283,7 @@ This provides immediate value by:
 - [ ] T073 [P] Integrate with local CI/CD at `local-infra/runners/gh-workflow-local.sh`: add migrate-validate workflow stage per plan.md
 - [ ] T074 Update README.md with package migration feature section, link to user documentation and quickstart guide
 - [ ] T075 Create example configuration file at `configs/package-migration/config.example.json` with commented settings and best practices
+- [ ] T075a Write dry-run accuracy validation test in `local-infra/tests/validation/validate_dry_run_accuracy.sh`: compare dry-run predictions vs actual execution results, measure >98% accuracy per SC-010, document discrepancies
 
 ---
 

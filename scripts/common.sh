@@ -144,6 +144,74 @@ log_debug() {
     return 0
 }
 
+# Function: log_event
+# Purpose: Structured logging with severity levels (DEBUG|INFO|WARNING|ERROR|CRITICAL)
+# Args: $1=severity (DEBUG|INFO|WARNING|ERROR|CRITICAL), $2=message, $3=context (optional JSON)
+# Returns: 0 always
+# Side Effects: Prints structured JSON log to stderr (if LOG_JSON=1) or formatted text
+log_event() {
+    local severity="$1"
+    local message="$2"
+    local context="${3:-}"
+    local timestamp
+    timestamp="$(date -Iseconds)"
+
+    # Validate severity level
+    case "$severity" in
+        DEBUG|INFO|WARNING|ERROR|CRITICAL) ;;
+        *)
+            echo "[ERROR] [$(date '+%Y-%m-%d %H:%M:%S')] Invalid severity level: $severity" >&2
+            return 1
+            ;;
+    esac
+
+    # Skip DEBUG messages unless debug mode enabled
+    if [[ "$severity" == "DEBUG" ]] && [[ "${DEBUG:-0}" != "1" ]] && [[ "${MANAGE_DEBUG:-0}" != "1" ]]; then
+        return 0
+    fi
+
+    # Structured JSON logging (if enabled)
+    if [[ "${LOG_JSON:-0}" == "1" ]]; then
+        local json_log="{\"timestamp\":\"$timestamp\",\"severity\":\"$severity\",\"message\":\"$message\""
+
+        # Add context if provided
+        if [[ -n "$context" ]]; then
+            json_log="$json_log,\"context\":$context"
+        fi
+
+        json_log="$json_log}"
+
+        # Log to JSON file if LOG_FILE is set
+        if [[ -n "${LOG_FILE:-}" ]]; then
+            echo "$json_log" >> "$LOG_FILE"
+        else
+            echo "$json_log" >&2
+        fi
+    else
+        # Human-readable text logging
+        local prefix
+        case "$severity" in
+            DEBUG)    prefix="[DEBUG]   " ;;
+            INFO)     prefix="[INFO]    " ;;
+            WARNING)  prefix="[WARNING] " ;;
+            ERROR)    prefix="[ERROR]   " ;;
+            CRITICAL) prefix="[CRITICAL]" ;;
+        esac
+
+        local formatted_time
+        formatted_time="$(date '+%Y-%m-%d %H:%M:%S')"
+
+        # ERROR and CRITICAL go to stderr, others to stdout
+        if [[ "$severity" == "ERROR" ]] || [[ "$severity" == "CRITICAL" ]]; then
+            echo "$prefix [$formatted_time] $message" >&2
+        else
+            echo "$prefix [$formatted_time] $message"
+        fi
+    fi
+
+    return 0
+}
+
 # Function: die
 # Purpose: Print error message and exit with specified code
 # Args: $1=error_message, $2=exit_code (optional, defaults to 1)
