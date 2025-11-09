@@ -1,0 +1,515 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Daily usage guide for manage.sh command reference and workflows"><meta name="author" content="Ghostty Configuration Files Team"><meta name="generator" content="Astro v5.14.5"><!-- Canonical URL for SEO --><link rel="canonical" href="https://kairin.github.io/ghostty-config-files/user-guide/usage/"><!-- Favicon --><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://kairin.github.io/ghostty-config-files/user-guide/usage/"><meta property="og:title" content="Usage Guide"><meta property="og:description" content="Daily usage guide for manage.sh command reference and workflows"><!-- Twitter --><meta property="twitter:card" content="summary"><meta property="twitter:url" content="https://kairin.github.io/ghostty-config-files/user-guide/usage/"><meta property="twitter:title" content="Usage Guide"><meta property="twitter:description" content="Daily usage guide for manage.sh command reference and workflows"><title>Usage Guide | Ghostty Configuration Files</title><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.BV9tJUQ0.css">
+<style>html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;scroll-behavior:smooth}body{line-height:1.6}pre{padding:1rem;border-radius:.5rem;overflow-x:auto}code{font-family:Courier New,Courier,monospace}a{color:#3b82f6;text-decoration:none}a:hover{text-decoration:underline}
+.prose[data-astro-cid-thuxdmgm]{max-width:65ch}.prose[data-astro-cid-thuxdmgm] h1[data-astro-cid-thuxdmgm]{margin-bottom:1rem;font-size:2.25rem;line-height:2.5rem;font-weight:700}.prose[data-astro-cid-thuxdmgm] h2[data-astro-cid-thuxdmgm]{margin-top:2rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:600}.prose[data-astro-cid-thuxdmgm] h3[data-astro-cid-thuxdmgm]{margin-top:1.5rem;margin-bottom:.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.prose[data-astro-cid-thuxdmgm] code[data-astro-cid-thuxdmgm]{border-radius:.25rem;--tw-bg-opacity: 1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1));padding:.125rem .375rem;font-size:.875rem;line-height:1.25rem}.prose[data-astro-cid-thuxdmgm] code[data-astro-cid-thuxdmgm]:is(.dark *){--tw-bg-opacity: 1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-thuxdmgm] pre[data-astro-cid-thuxdmgm]{--tw-bg-opacity: 1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-thuxdmgm] pre[data-astro-cid-thuxdmgm]:is(.dark *){--tw-bg-opacity: 1;background-color:rgb(3 7 18 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-thuxdmgm] pre[data-astro-cid-thuxdmgm] code[data-astro-cid-thuxdmgm]{background-color:transparent}
+nav[data-astro-cid-pux6a34n] a[data-astro-cid-pux6a34n]{transition:all .2s ease}.group[data-astro-cid-pux6a34n]:hover .group-hover\:opacity-100[data-astro-cid-pux6a34n]{opacity:1;visibility:visible}
+</style></head> <body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">  <div class="flex min-h-screen" data-astro-cid-thuxdmgm> <!-- Sidebar Navigation --> <aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed h-full overflow-y-auto" data-astro-cid-thuxdmgm> <div class="p-6" data-astro-cid-thuxdmgm> <h2 class="text-xl font-bold mb-4" data-astro-cid-thuxdmgm> <a href="/ghostty-config-files/" class="hover:text-blue-600" data-astro-cid-thuxdmgm>
+📘 User Guide
+</a> </h2> <nav class="space-y-2" data-astro-cid-thuxdmgm> <a href="/ghostty-config-files/user-guide/installation" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+Installation
+</a> <a href="/ghostty-config-files/user-guide/configuration" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+Configuration
+</a> <a href="/ghostty-config-files/user-guide/usage" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+Usage
+</a> </nav> <hr class="my-6 border-gray-200 dark:border-gray-700" data-astro-cid-thuxdmgm> <h3 class="text-sm font-semibold mb-2 text-gray-600 dark:text-gray-400" data-astro-cid-thuxdmgm>
+Other Sections
+</h3> <nav class="space-y-2 text-sm" data-astro-cid-thuxdmgm> <a href="/ghostty-config-files/developer" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+👨‍💻 Developer Docs
+</a> <a href="/ghostty-config-files/ai-guidelines" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+🤖 AI Guidelines
+</a> </nav> </div> </aside> <!-- Main Content --> <main class="flex-1 ml-64 p-8" data-astro-cid-thuxdmgm> <article class="max-w-4xl mx-auto prose prose-lg dark:prose-invert" data-astro-cid-thuxdmgm> <h1 data-astro-cid-thuxdmgm>Usage Guide</h1>  <nav class="bg-white dark:bg-gray-800 shadow-md" data-astro-cid-pux6a34n> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-astro-cid-pux6a34n> <div class="flex justify-between h-16" data-astro-cid-pux6a34n> <!-- Logo and Home Link --> <div class="flex items-center" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/" class="flex items-center space-x-2 text-xl font-bold hover:text-blue-600" data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👻</span> <span data-astro-cid-pux6a34n>Ghostty Config</span> </a> </div> <!-- Main Navigation --> <div class="hidden md:flex items-center space-x-8" data-astro-cid-pux6a34n> <div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Installation, configuration, and usage </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide/installation" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                      block px-3 py-2 rounded-md text-sm
+                      bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+                    " data-astro-cid-pux6a34n> Usage </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Architecture, contributing, and testing </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer/architecture" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Testing </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Guidelines for AI assistants </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </div> <!-- Mobile Menu Button --> <div class="md:hidden flex items-center" data-astro-cid-pux6a34n> <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle mobile menu" data-astro-cid-pux6a34n> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-pux6a34n> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" data-astro-cid-pux6a34n></path> </svg> </button> </div> </div> </div> <!-- Mobile Menu --> <div id="mobile-menu" class="hidden md:hidden" data-astro-cid-pux6a34n> <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 dark:bg-gray-900" data-astro-cid-pux6a34n> <div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <a href="/ghostty-config-files/user-guide/installation" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400
+              " data-astro-cid-pux6a34n> Usage </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <a href="/ghostty-config-files/developer/architecture" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Testing </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </nav> <script type="module">const e=document.getElementById("mobile-menu-button"),t=document.getElementById("mobile-menu");e&&t&&e.addEventListener("click",()=>{t.classList.toggle("hidden")});</script>  <p>Learn how to use the Ghostty Configuration Files repository and the <code>manage.sh</code> unified management interface.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#quick-reference">Quick Reference</a></li>
+<li><a href="#managesh-commands">manage.sh Commands</a></li>
+<li><a href="#daily-workflows">Daily Workflows</a></li>
+<li><a href="#advanced-usage">Advanced Usage</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+<h2 id="quick-reference">Quick Reference</h2>
+<h3 id="most-common-commands">Most Common Commands</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install complete environment</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Update all components</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate system</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Build documentation</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Get help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">comman</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span><span style="color:#79B8FF"> --help</span></span></code></pre>
+<h3 id="global-options">Global Options</h3>
+<p>All commands support these global options:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">--help,</span><span style="color:#79B8FF"> -h</span><span style="color:#6A737D">       # Show help</span></span>
+<span class="line"><span style="color:#B392F0">--version,</span><span style="color:#79B8FF"> -v</span><span style="color:#6A737D">    # Show version</span></span>
+<span class="line"><span style="color:#B392F0">--verbose</span><span style="color:#6A737D">        # Enable verbose output</span></span>
+<span class="line"><span style="color:#B392F0">--quiet,</span><span style="color:#79B8FF"> -q</span><span style="color:#6A737D">      # Suppress non-essential output</span></span>
+<span class="line"><span style="color:#B392F0">--dry-run</span><span style="color:#6A737D">        # Show what would be done without executing</span></span></code></pre>
+<h2 id="managesh-commands">manage.sh Commands</h2>
+<h3 id="install-command">Install Command</h3>
+<p>Install the complete Ghostty terminal environment.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Basic usage</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Skip specific components</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-node</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-zig</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-ghostty</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-zsh</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-theme</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-context-menu</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Combine multiple skips</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-node</span><span style="color:#79B8FF"> --skip-zig</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Force reinstallation</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --force</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Dry run (preview only)</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --dry-run</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Get help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --help</span></span></code></pre>
+<p><strong>Installation Steps</strong>:</p>
+<ol>
+<li>[1/6] Installing Node.js (LTS via NVM)</li>
+<li>[2/6] Installing Zig compiler (0.14.0)</li>
+<li>[3/6] Building Ghostty from source</li>
+<li>[4/6] Setting up ZSH with Oh My ZSH</li>
+<li>[5/6] Configuring Catppuccin theme</li>
+<li>[6/6] Installing context menu integration</li>
+</ol>
+<h3 id="update-command">Update Command</h3>
+<p>Update repository components with user customization preservation.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for available updates</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --check-only</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Update all components</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Update specific component</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --component</span><span style="color:#9ECBFF"> ghostty</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --component</span><span style="color:#9ECBFF"> zsh</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --component</span><span style="color:#9ECBFF"> docs</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Force update even if no changes detected</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --force</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Dry run</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --dry-run</span></span></code></pre>
+<p><strong>Update Features</strong>:</p>
+<ul>
+<li>Automatic backup before changes</li>
+<li>User customization preservation</li>
+<li>Automatic rollback on failure</li>
+<li>Selective component updates</li>
+</ul>
+<h3 id="validate-command">Validate Command</h3>
+<p>Run validation checks on configurations and dependencies.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Validate everything</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate specific type</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> config</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> performance</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> dependencies</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate and auto-fix issues</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --fix</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Dry run</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --dry-run</span></span></code></pre>
+<p><strong>Validation Types</strong>:</p>
+<ul>
+<li><code>all</code> - Run all validation checks (default)</li>
+<li><code>config</code> - Validate Ghostty and ZSH configurations</li>
+<li><code>performance</code> - Check performance metrics</li>
+<li><code>dependencies</code> - Verify all dependencies are installed</li>
+</ul>
+<h3 id="docs-commands">Docs Commands</h3>
+<p>Manage documentation site (Astro-based).</p>
+<h4 id="build-documentation">Build Documentation</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Standard build</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Clean build (remove old output)</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Build to custom directory</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --output-dir</span><span style="color:#9ECBFF"> public/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Dry run</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --dry-run</span></span></code></pre>
+<h4 id="development-server">Development Server</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Start dev server (default port 4321)</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Custom port</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span><span style="color:#79B8FF"> --port</span><span style="color:#79B8FF"> 3000</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Expose to network</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span><span style="color:#79B8FF"> --host</span><span style="color:#79B8FF"> 0.0.0.0</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Combine options</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span><span style="color:#79B8FF"> --port</span><span style="color:#79B8FF"> 3000</span><span style="color:#79B8FF"> --host</span><span style="color:#79B8FF"> 0.0.0.0</span></span></code></pre>
+<h4 id="generate-documentation">Generate Documentation</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Generate screenshots and API docs</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> generate</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Generate screenshots only</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> generate</span><span style="color:#79B8FF"> --screenshots</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Generate API docs only</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> generate</span><span style="color:#79B8FF"> --api-docs</span></span></code></pre>
+<h3 id="screenshots-commands">Screenshots Commands</h3>
+<p>Capture and manage documentation screenshots.</p>
+<h4 id="capture-screenshots">Capture Screenshots</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Capture screenshot</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> capture</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">categor</span><span style="color:#E1E4E8">y</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">nam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#9ECBFF"> "&#x3C;description>"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Example: Terminal screenshot</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> capture</span><span style="color:#9ECBFF"> terminal</span><span style="color:#9ECBFF"> "dark-mode"</span><span style="color:#9ECBFF"> "Terminal with dark theme enabled"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Example: Configuration screenshot</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> capture</span><span style="color:#9ECBFF"> config</span><span style="color:#9ECBFF"> "keybindings"</span><span style="color:#9ECBFF"> "Custom keybinding configuration"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Example: UI screenshot</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> capture</span><span style="color:#9ECBFF"> ui</span><span style="color:#9ECBFF"> "context-menu"</span><span style="color:#9ECBFF"> "Right-click context menu in Nautilus"</span></span></code></pre>
+<p><strong>Screenshot Storage</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>documentations/screenshots/</span></span>
+<span class="line"><span>├── terminal/</span></span>
+<span class="line"><span>│   ├── dark-mode.png</span></span>
+<span class="line"><span>│   └── dark-mode.png.meta</span></span>
+<span class="line"><span>├── config/</span></span>
+<span class="line"><span>│   ├── keybindings.png</span></span>
+<span class="line"><span>│   └── keybindings.png.meta</span></span>
+<span class="line"><span>└── ui/</span></span>
+<span class="line"><span>    ├── context-menu.png</span></span>
+<span class="line"><span>    └── context-menu.png.meta</span></span></code></pre>
+<h4 id="generate-screenshot-gallery">Generate Screenshot Gallery</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Generate HTML gallery</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> generate-gallery</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Custom output file</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> generate-gallery</span><span style="color:#79B8FF"> --output</span><span style="color:#9ECBFF"> docs/screenshots.html</span></span></code></pre>
+<p>The gallery is generated at <code>documentations/screenshots/gallery.html</code> with:</p>
+<ul>
+<li>Organized by category</li>
+<li>Responsive grid layout</li>
+<li>Dark theme (GitHub style)</li>
+<li>Metadata display</li>
+</ul>
+<h3 id="help--version">Help &#x26; Version</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Global help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Command-specific help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Show version</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#79B8FF"> --version</span></span></code></pre>
+<h2 id="daily-workflows">Daily Workflows</h2>
+<h3 id="morning-setup">Morning Setup</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for updates</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --check-only</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Apply updates if available</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate system</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span></code></pre>
+<h3 id="development-session">Development Session</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Start documentation dev server</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># In another terminal, make changes to docs-source/</span></span>
+<span class="line"><span style="color:#6A737D"># Browser auto-reloads at http://localhost:4321</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># When done, build for production</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span></span></code></pre>
+<h3 id="adding-documentation">Adding Documentation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Edit source files in docs-source/</span></span>
+<span class="line"><span style="color:#B392F0">vim</span><span style="color:#9ECBFF"> docs-source/user-guide/new-feature.md</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Test locally</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Build</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Commit changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> docs-source/</span><span style="color:#9ECBFF"> docs/</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "docs: Add new feature documentation"</span></span></code></pre>
+<h3 id="capturing-screenshots">Capturing Screenshots</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Prepare the screen (terminal, config, etc.)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Capture screenshot</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> capture</span><span style="color:#9ECBFF"> category</span><span style="color:#9ECBFF"> "name"</span><span style="color:#9ECBFF"> "Description of screenshot"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Generate gallery</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> generate-gallery</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Commit</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> documentations/screenshots/</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "docs: Add screenshots for new feature"</span></span></code></pre>
+<h3 id="configuration-changes">Configuration Changes</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Validate current config</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Make changes to ~/.config/ghostty/config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Validate again</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Test changes</span></span>
+<span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#6A737D"> # Launch new instance</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 5. If satisfied, update repository config</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ~/.config/ghostty/config</span><span style="color:#9ECBFF"> configs/ghostty/config</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> configs/ghostty/config</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "config: Update Ghostty configuration"</span></span></code></pre>
+<h2 id="advanced-usage">Advanced Usage</h2>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>Control <code>manage.sh</code> behavior with environment variables:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Enable debug logging</span></span>
+<span class="line"><span style="color:#E1E4E8">MANAGE_DEBUG</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1</span><span style="color:#B392F0"> ./manage.sh</span><span style="color:#9ECBFF"> install</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Disable colored output</span></span>
+<span class="line"><span style="color:#E1E4E8">MANAGE_NO_COLOR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1</span><span style="color:#B392F0"> ./manage.sh</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Custom log file</span></span>
+<span class="line"><span style="color:#E1E4E8">MANAGE_LOG_FILE</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">/tmp/manage.log</span><span style="color:#B392F0"> ./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Custom backup directory</span></span>
+<span class="line"><span style="color:#E1E4E8">MANAGE_BACKUP_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">/backups</span><span style="color:#B392F0"> ./manage.sh</span><span style="color:#9ECBFF"> update</span></span></code></pre>
+<h3 id="combining-options">Combining Options</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verbose dry-run of update</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --verbose</span><span style="color:#79B8FF"> --dry-run</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Force update with verbose output</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --force</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Quiet validation with auto-fix</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --quiet</span><span style="color:#79B8FF"> --fix</span></span></code></pre>
+<h3 id="scripting-with-managesh">Scripting with manage.sh</h3>
+<p>Use <code>manage.sh</code> in automated scripts:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Automated update script</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Checking for updates..."</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> ./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --check-only</span><span style="color:#79B8FF"> --quiet</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Updates available, applying..."</span></span>
+<span class="line"><span style="color:#B392F0">    ./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --quiet</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Validating system..."</span></span>
+<span class="line"><span style="color:#B392F0">    ./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --quiet</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Rebuilding documentation..."</span></span>
+<span class="line"><span style="color:#B392F0">    ./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span><span style="color:#79B8FF"> --quiet</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h3 id="exit-codes">Exit Codes</h3>
+<p><code>manage.sh</code> follows standard exit code conventions:</p>
+<ul>
+<li><code>0</code> - Success</li>
+<li><code>1</code> - General failure</li>
+<li><code>2</code> - Invalid arguments</li>
+</ul>
+<p>Use in scripts:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check exit code</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> ./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Validation passed"</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Validation failed with exit code: </span><span style="color:#79B8FF">$?</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h3 id="parallel-commands">Parallel Commands</h3>
+<p>Some commands can be run in parallel:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Build docs and generate screenshots simultaneously</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span><span style="color:#E1E4E8"> &#x26;</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> screenshots</span><span style="color:#9ECBFF"> generate-gallery</span><span style="color:#E1E4E8"> &#x26;</span></span>
+<span class="line"><span style="color:#79B8FF">wait</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Both operations complete"</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="command-not-found">Command Not Found</h3>
+<p><strong>Issue</strong>: <code>./manage.sh: command not found</code></p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Make executable</span></span>
+<span class="line"><span style="color:#B392F0">chmod</span><span style="color:#9ECBFF"> +x</span><span style="color:#9ECBFF"> manage.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Or run with bash</span></span>
+<span class="line"><span style="color:#B392F0">bash</span><span style="color:#9ECBFF"> manage.sh</span><span style="color:#79B8FF"> --help</span></span></code></pre>
+<h3 id="permission-denied">Permission Denied</h3>
+<p><strong>Issue</strong>: <code>Permission denied</code> errors during installation</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Some operations require sudo (Ghostty binary installation)</span></span>
+<span class="line"><span style="color:#6A737D"># The script will prompt when needed</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># For backup/config operations, ensure ownership:</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chown</span><span style="color:#79B8FF"> -R</span><span style="color:#E1E4E8"> $USER</span><span style="color:#9ECBFF">:</span><span style="color:#E1E4E8">$USER </span><span style="color:#9ECBFF">~/.config/ghostty</span></span></code></pre>
+<h3 id="updates-not-applying">Updates Not Applying</h3>
+<p><strong>Issue</strong>: <code>./manage.sh update</code> doesn’t apply changes</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for actual changes</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --check-only</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Force update if needed</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --force</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check for conflicts</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> config</span></span></code></pre>
+<h3 id="dry-run-shows-errors">Dry Run Shows Errors</h3>
+<p><strong>Issue</strong>: <code>--dry-run</code> shows potential errors</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run without dry-run in verbose mode</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check specific error</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> dependencies</span></span></code></pre>
+<h3 id="documentation-build-fails">Documentation Build Fails</h3>
+<p><strong>Issue</strong>: <code>./manage.sh docs build</code> fails</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check Node.js installation</span></span>
+<span class="line"><span style="color:#B392F0">node</span><span style="color:#79B8FF"> --version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Reinstall dependencies</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Try clean build</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span><span style="color:#79B8FF"> --verbose</span></span></code></pre>
+<h2 id="tips--best-practices">Tips &#x26; Best Practices</h2>
+<h3 id="regular-maintenance">Regular Maintenance</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Weekly routine</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --check-only</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span></span></code></pre>
+<h3 id="before-major-changes">Before Major Changes</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Create backup</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --dry-run</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> ~/.config/ghostty</span><span style="color:#9ECBFF"> ~/.config/ghostty.backup-</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%Y%m%d</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Make changes</span></span>
+<span class="line"><span style="color:#6A737D"># ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span></code></pre>
+<h3 id="performance-optimization">Performance Optimization</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check performance baseline</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> performance</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Make configuration changes</span></span>
+<span class="line"><span style="color:#6A737D"># ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Compare performance</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> performance</span></span></code></pre>
+<h3 id="safe-experimentation">Safe Experimentation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Use dry-run to preview</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --dry-run</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test in stages</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-ghostty</span><span style="color:#6A737D">  # Test everything except Ghostty</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-node</span><span style="color:#79B8FF"> --skip-zig</span><span style="color:#6A737D">  # Only Ghostty and configs</span></span></code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong><a href="configuration.md">Configuration Guide</a></strong> - Customize your setup</li>
+<li><strong><a href="installation.md">Installation Guide</a></strong> - Initial setup reference</li>
+<li><strong><a href="../developer/architecture.md">Developer Guide</a></strong> - Contribute to the project</li>
+</ul>
+<h2 id="getting-help">Getting Help</h2>
+<p>If you encounter issues:</p>
+<ol>
+<li>Check this usage guide</li>
+<li>Run <code>./manage.sh &#x3C;command> --help</code></li>
+<li>Check <a href="#troubleshooting">troubleshooting section</a></li>
+<li>Run <code>./manage.sh validate</code> for diagnostics</li>
+<li>Report issues on GitHub</li>
+</ol>  </article> </main> </div>  </body></html> 

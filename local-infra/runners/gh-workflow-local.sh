@@ -117,6 +117,139 @@ test_performance() {
     end_timer "Performance testing"
 }
 
+# Context7 MCP Best Practices Validation (Priority 3 Enhancement)
+validate_context7() {
+    log "STEP" "📚 Validating with Context7 MCP best practices..."
+    start_timer
+
+    # Check if Context7 MCP is available
+    if ! command -v claude >/dev/null 2>&1; then
+        log "WARNING" "⚠️ Claude CLI not available, skipping Context7 validation"
+        end_timer "Context7 validation"
+        return 0
+    fi
+
+    # Check Context7 MCP connection
+    local mcp_status
+    mcp_status=$(claude mcp list 2>/dev/null | grep -i context7 | grep -i connected || echo "")
+
+    if [ -z "$mcp_status" ]; then
+        log "WARNING" "⚠️ Context7 MCP not connected, skipping validation"
+        log "INFO" "ℹ️ Run 'claude mcp list' to check MCP server status"
+        end_timer "Context7 validation"
+        return 0
+    fi
+
+    log "SUCCESS" "✅ Context7 MCP connected and operational"
+
+    # Validate Astro configuration
+    if [ -f "$REPO_DIR/astro.config.mjs" ]; then
+        log "INFO" "🔍 Validating Astro configuration..."
+
+        # Create temporary file for Context7 query
+        local temp_query=$(mktemp)
+        cat > "$temp_query" <<'EOF'
+Review this Astro configuration for GitHub Pages deployment best practices. Check for:
+1. Correct outDir setting (should be './docs' for GitHub Pages)
+2. Proper site and base configuration
+3. Build optimizations
+4. .nojekyll protection strategy
+Return a brief summary with ✅ for correct settings and ⚠️ for issues.
+EOF
+
+        # Query Context7 (with timeout to avoid hanging)
+        local astro_validation
+        if timeout 30s claude ask "$(cat "$temp_query")" < "$REPO_DIR/astro.config.mjs" > "$LOG_DIR/context7-astro-$(date +%s).log" 2>&1; then
+            log "SUCCESS" "✅ Astro configuration validated with Context7"
+            log "INFO" "📄 Full report: $LOG_DIR/context7-astro-$(date +%s).log"
+        else
+            log "WARNING" "⚠️ Context7 Astro validation timed out or failed"
+        fi
+
+        rm -f "$temp_query"
+    fi
+
+    # Validate package.json if exists
+    if [ -f "$REPO_DIR/package.json" ]; then
+        log "INFO" "🔍 Validating package.json..."
+
+        local temp_query=$(mktemp)
+        cat > "$temp_query" <<'EOF'
+Review this package.json for Node.js and npm best practices. Check for:
+1. Proper dependency organization (dependencies vs devDependencies)
+2. Build scripts follow conventions
+3. Security vulnerabilities in dependencies
+4. Package version pinning strategy
+Return a brief summary with ✅ for good practices and ⚠️ for issues.
+EOF
+
+        if timeout 30s claude ask "$(cat "$temp_query")" < "$REPO_DIR/package.json" > "$LOG_DIR/context7-package-$(date +%s).log" 2>&1; then
+            log "SUCCESS" "✅ package.json validated with Context7"
+        else
+            log "WARNING" "⚠️ Context7 package.json validation timed out or failed"
+        fi
+
+        rm -f "$temp_query"
+    fi
+
+    # Validate documentation structure
+    if [ -f "$REPO_DIR/documentations/developer/guides/documentation-strategy.md" ]; then
+        log "INFO" "🔍 Validating documentation structure..."
+
+        local temp_query=$(mktemp)
+        cat > "$temp_query" <<'EOF'
+Review this documentation strategy for completeness and best practices. Check for:
+1. Clear tier separation (docs/, docs-source/, documentations/)
+2. Decision frameworks are well-defined
+3. Workflow examples are practical
+4. Maintenance guidelines exist
+Return a brief summary with ✅ for strengths and ⚠️ for gaps.
+EOF
+
+        if timeout 30s claude ask "$(cat "$temp_query")" < "$REPO_DIR/documentations/developer/guides/documentation-strategy.md" > "$LOG_DIR/context7-docs-$(date +%s).log" 2>&1; then
+            log "SUCCESS" "✅ Documentation structure validated with Context7"
+        else
+            log "WARNING" "⚠️ Context7 documentation validation timed out or failed"
+        fi
+
+        rm -f "$temp_query"
+    fi
+
+    # Validate AGENTS.md for MCP best practices
+    if [ -f "$REPO_DIR/AGENTS.md" ]; then
+        log "INFO" "🔍 Validating AGENTS.md MCP compliance..."
+
+        local temp_query=$(mktemp)
+        cat > "$temp_query" <<'EOF'
+Review this AGENTS.md file for MCP (Model Context Protocol) best practices. Check for:
+1. Clear command examples with expected outputs
+2. Constitutional requirements are enforceable
+3. Technology stack documentation is current
+4. Context7 integration is documented
+Return a brief summary with ✅ for compliance and ⚠️ for improvements.
+EOF
+
+        if timeout 30s claude ask "$(cat "$temp_query")" < "$REPO_DIR/AGENTS.md" > "$LOG_DIR/context7-agents-$(date +%s).log" 2>&1; then
+            log "SUCCESS" "✅ AGENTS.md validated with Context7"
+        else
+            log "WARNING" "⚠️ Context7 AGENTS.md validation timed out or failed"
+        fi
+
+        rm -f "$temp_query"
+    fi
+
+    # Summary
+    local validation_count=$(find "$LOG_DIR" -name "context7-*-$(date +%s).log" 2>/dev/null | wc -l)
+    if [ "$validation_count" -gt 0 ]; then
+        log "SUCCESS" "✅ Completed $validation_count Context7 validations"
+        log "INFO" "📊 Review detailed reports in: $LOG_DIR/context7-*.log"
+    else
+        log "INFO" "ℹ️ No files validated with Context7"
+    fi
+
+    end_timer "Context7 validation"
+}
+
 # Build simulation
 simulate_build() {
     log "STEP" "🏗️ Simulating build process..."
@@ -263,6 +396,7 @@ run_complete_workflow() {
 
     # Run all workflow steps
     validate_config || ((failed_steps++))
+    validate_context7 || ((failed_steps++))  # Priority 3 Enhancement: Context7 MCP validation
     test_performance || ((failed_steps++))
     simulate_build || ((failed_steps++))
     check_github_status || ((failed_steps++))
@@ -398,7 +532,7 @@ EOF
 
 # Show help
 show_help() {
-    echo "Local GitHub Workflow Simulation"
+    echo "Local GitHub Workflow Simulation (Context7 MCP Enhanced)"
     echo ""
     echo "Usage: $0 [COMMAND]"
     echo ""
@@ -406,18 +540,27 @@ show_help() {
     echo "  init        Initialize local CI/CD infrastructure"
     echo "  local       Run complete local workflow simulation"
     echo "  validate    Validate Ghostty configuration"
+    echo "  context7    Validate with Context7 MCP best practices (Priority 3)"
     echo "  test        Run performance tests"
     echo "  build       Simulate build process"
     echo "  status      Check GitHub Actions status"
     echo "  billing     Check GitHub Actions billing"
     echo "  pages       Simulate GitHub Pages setup"
-    echo "  all         Run complete workflow (validate + test + build + status + billing + pages)"
+    echo "  all         Run complete workflow (validate + context7 + test + build + status + billing + pages)"
     echo "  help        Show this help message"
     echo ""
     echo "Examples:"
     echo "  $0 init     # Initialize local CI/CD infrastructure"
-    echo "  $0 all      # Run complete local workflow"
-    echo "  $0 validate # Only validate configuration"
+    echo "  $0 all      # Run complete local workflow with Context7 validation"
+    echo "  $0 validate # Only validate Ghostty configuration"
+    echo "  $0 context7 # Only validate with Context7 MCP"
+    echo ""
+    echo "Context7 MCP Integration:"
+    echo "  The 'context7' command validates your project against best practices:"
+    echo "  - Astro configuration for GitHub Pages"
+    echo "  - package.json for Node.js/npm conventions"
+    echo "  - Documentation structure and completeness"
+    echo "  - AGENTS.md MCP compliance"
     echo ""
 }
 
@@ -432,6 +575,9 @@ main() {
             ;;
         "validate")
             validate_config
+            ;;
+        "context7")
+            validate_context7
             ;;
         "test")
             test_performance

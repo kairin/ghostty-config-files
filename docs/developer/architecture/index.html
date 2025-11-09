@@ -1,0 +1,458 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="System architecture and design patterns for Ghostty Configuration Files"><meta name="author" content="Development Team"><meta name="generator" content="Astro v5.14.5"><!-- Canonical URL for SEO --><link rel="canonical" href="https://kairin.github.io/ghostty-config-files/developer/architecture/"><!-- Favicon --><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://kairin.github.io/ghostty-config-files/developer/architecture/"><meta property="og:title" content="Architecture Overview"><meta property="og:description" content="System architecture and design patterns for Ghostty Configuration Files"><!-- Twitter --><meta property="twitter:card" content="summary"><meta property="twitter:url" content="https://kairin.github.io/ghostty-config-files/developer/architecture/"><meta property="twitter:title" content="Architecture Overview"><meta property="twitter:description" content="System architecture and design patterns for Ghostty Configuration Files"><title>Architecture Overview | Ghostty Configuration Files</title><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.BV9tJUQ0.css">
+<style>html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;scroll-behavior:smooth}body{line-height:1.6}pre{padding:1rem;border-radius:.5rem;overflow-x:auto}code{font-family:Courier New,Courier,monospace}a{color:#3b82f6;text-decoration:none}a:hover{text-decoration:underline}
+.prose[data-astro-cid-qcdoy3ig]{max-width:75ch}.prose[data-astro-cid-qcdoy3ig] h1[data-astro-cid-qcdoy3ig]{margin-bottom:1rem;font-size:2.25rem;line-height:2.5rem;font-weight:700;--tw-text-opacity: 1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] h2[data-astro-cid-qcdoy3ig]{margin-top:2rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:600;--tw-text-opacity: 1;color:rgb(134 239 172 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] h3[data-astro-cid-qcdoy3ig]{margin-top:1.5rem;margin-bottom:.75rem;font-size:1.5rem;line-height:2rem;font-weight:600;--tw-text-opacity: 1;color:rgb(187 247 208 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] code[data-astro-cid-qcdoy3ig]{border-radius:.25rem;--tw-bg-opacity: 1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1));padding:.125rem .375rem;font-family:JetBrains Mono,ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:.875rem;line-height:1.25rem;--tw-text-opacity: 1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] pre[data-astro-cid-qcdoy3ig]{border-width:1px;--tw-border-opacity: 1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1));--tw-bg-opacity: 1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] pre[data-astro-cid-qcdoy3ig] code[data-astro-cid-qcdoy3ig]{background-color:transparent;--tw-text-opacity: 1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] a[data-astro-cid-qcdoy3ig]{--tw-text-opacity: 1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] a[data-astro-cid-qcdoy3ig]:hover{--tw-text-opacity: 1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}
+nav[data-astro-cid-pux6a34n] a[data-astro-cid-pux6a34n]{transition:all .2s ease}.group[data-astro-cid-pux6a34n]:hover .group-hover\:opacity-100[data-astro-cid-pux6a34n]{opacity:1;visibility:visible}
+</style></head> <body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">  <div class="flex min-h-screen" data-astro-cid-qcdoy3ig> <!-- Sidebar Navigation --> <aside class="w-64 bg-gray-900 dark:bg-black text-gray-100 border-r border-gray-800 fixed h-full overflow-y-auto" data-astro-cid-qcdoy3ig> <div class="p-6" data-astro-cid-qcdoy3ig> <h2 class="text-xl font-bold mb-4" data-astro-cid-qcdoy3ig> <a href="/ghostty-config-files/developer" class="hover:text-green-400" data-astro-cid-qcdoy3ig>
+👨‍💻 Developer
+</a> </h2> <nav class="space-y-2" data-astro-cid-qcdoy3ig> <a href="/ghostty-config-files/developer/architecture" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+Architecture
+</a> <a href="/ghostty-config-files/developer/contributing" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+Contributing
+</a> <a href="/ghostty-config-files/developer/testing" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+Testing
+</a> </nav>  <hr class="my-6 border-gray-800" data-astro-cid-qcdoy3ig> <h3 class="text-sm font-semibold mb-2 text-gray-400" data-astro-cid-qcdoy3ig>
+Tech Stack
+</h3> <div class="flex flex-wrap gap-2" data-astro-cid-qcdoy3ig> <span class="text-xs bg-gray-800 px-2 py-1 rounded" data-astro-cid-qcdoy3ig> Bash 5.x+ </span><span class="text-xs bg-gray-800 px-2 py-1 rounded" data-astro-cid-qcdoy3ig> Node.js LTS </span><span class="text-xs bg-gray-800 px-2 py-1 rounded" data-astro-cid-qcdoy3ig> Astro.build </span> </div>  <hr class="my-6 border-gray-800" data-astro-cid-qcdoy3ig> <h3 class="text-sm font-semibold mb-2 text-gray-400" data-astro-cid-qcdoy3ig>
+Other Sections
+</h3> <nav class="space-y-2 text-sm" data-astro-cid-qcdoy3ig> <a href="/ghostty-config-files/user-guide" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+📘 User Guide
+</a> <a href="/ghostty-config-files/ai-guidelines" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+🤖 AI Guidelines
+</a> </nav> </div> </aside> <!-- Main Content --> <main class="flex-1 ml-64 p-8 bg-gray-950 text-gray-100" data-astro-cid-qcdoy3ig> <article class="max-w-4xl mx-auto prose prose-lg prose-invert" data-astro-cid-qcdoy3ig> <h1 data-astro-cid-qcdoy3ig>Architecture Overview</h1>  <nav class="bg-white dark:bg-gray-800 shadow-md" data-astro-cid-pux6a34n> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-astro-cid-pux6a34n> <div class="flex justify-between h-16" data-astro-cid-pux6a34n> <!-- Logo and Home Link --> <div class="flex items-center" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/" class="flex items-center space-x-2 text-xl font-bold hover:text-blue-600" data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👻</span> <span data-astro-cid-pux6a34n>Ghostty Config</span> </a> </div> <!-- Main Navigation --> <div class="hidden md:flex items-center space-x-8" data-astro-cid-pux6a34n> <div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Installation, configuration, and usage </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide/installation" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Usage </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Architecture, contributing, and testing </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer/architecture" class="
+                      block px-3 py-2 rounded-md text-sm
+                      bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+                    " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Testing </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Guidelines for AI assistants </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </div> <!-- Mobile Menu Button --> <div class="md:hidden flex items-center" data-astro-cid-pux6a34n> <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle mobile menu" data-astro-cid-pux6a34n> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-pux6a34n> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" data-astro-cid-pux6a34n></path> </svg> </button> </div> </div> </div> <!-- Mobile Menu --> <div id="mobile-menu" class="hidden md:hidden" data-astro-cid-pux6a34n> <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 dark:bg-gray-900" data-astro-cid-pux6a34n> <div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <a href="/ghostty-config-files/user-guide/installation" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Usage </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <a href="/ghostty-config-files/developer/architecture" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400
+              " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Testing </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </nav> <script type="module">const e=document.getElementById("mobile-menu-button"),t=document.getElementById("mobile-menu");e&&t&&e.addEventListener("click",()=>{t.classList.toggle("hidden")});</script>  <h1 id="architecture-overview">Architecture Overview</h1>
+<p>This document describes the architecture of the Ghostty Configuration Files repository.</p>
+<h2 id="system-architecture">System Architecture</h2>
+<h3 id="high-level-structure">High-Level Structure</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Ghostty Configuration Files Repository</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── Installation Layer (start.sh, manage.sh)</span></span>
+<span class="line"><span>├── Modular Scripts Layer (scripts/*)</span></span>
+<span class="line"><span>├── Configuration Layer (configs/*)</span></span>
+<span class="line"><span>├── Documentation Layer (docs-source/, docs/)</span></span>
+<span class="line"><span>├── Local CI/CD Layer (local-infra/*)</span></span>
+<span class="line"><span>└── Spec-Kit Layer (.specify/*, spec-kit/*)</span></span></code></pre>
+<h3 id="component-diagram">Component Diagram</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│                    manage.sh (Unified Entry Point)           │</span></span>
+<span class="line"><span>│  Commands: install, docs, screenshots, update, validate      │</span></span>
+<span class="line"><span>└────────────────────┬────────────────────────────────────────┘</span></span>
+<span class="line"><span>                     │</span></span>
+<span class="line"><span>        ┌────────────┴────────────┐</span></span>
+<span class="line"><span>        │                         │</span></span>
+<span class="line"><span>┌───────▼──────┐          ┌──────▼───────┐</span></span>
+<span class="line"><span>│   Scripts    │          │   Configs    │</span></span>
+<span class="line"><span>│   Layer      │          │   Layer      │</span></span>
+<span class="line"><span>│              │          │              │</span></span>
+<span class="line"><span>│ • common.sh  │          │ • ghostty/   │</span></span>
+<span class="line"><span>│ • progress.sh│          │ • workspace/ │</span></span>
+<span class="line"><span>│ • backup_utils│         │              │</span></span>
+<span class="line"><span>│ • install_*.sh│         │              │</span></span>
+<span class="line"><span>│ • config_*.sh│          │              │</span></span>
+<span class="line"><span>│ • validate_*│          │              │</span></span>
+<span class="line"><span>└──────────────┘          └──────────────┘</span></span>
+<span class="line"><span>        │                         │</span></span>
+<span class="line"><span>        └────────────┬────────────┘</span></span>
+<span class="line"><span>                     │</span></span>
+<span class="line"><span>          ┌──────────▼──────────┐</span></span>
+<span class="line"><span>          │   Local CI/CD       │</span></span>
+<span class="line"><span>          │                     │</span></span>
+<span class="line"><span>          │ • gh-workflow-local │</span></span>
+<span class="line"><span>          │ • test-runner      │</span></span>
+<span class="line"><span>          │ • performance-monitor│</span></span>
+<span class="line"><span>          └─────────────────────┘</span></span></code></pre>
+<h2 id="directory-structure">Directory Structure</h2>
+<h3 id="top-level-organization">Top-Level Organization</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/home/kkk/Apps/ghostty-config-files/</span></span>
+<span class="line"><span>├── manage.sh                # Unified management interface</span></span>
+<span class="line"><span>├── start.sh                 # Legacy installation script</span></span>
+<span class="line"><span>├── AGENTS.md                # LLM instructions (single source)</span></span>
+<span class="line"><span>├── CLAUDE.md → AGENTS.md    # Symlink</span></span>
+<span class="line"><span>├── GEMINI.md → AGENTS.md    # Symlink</span></span>
+<span class="line"><span>├── README.md                # User-facing documentation</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── configs/                 # Configuration files</span></span>
+<span class="line"><span>│   ├── ghostty/            # Ghostty terminal config</span></span>
+<span class="line"><span>│   └── workspace/          # Development workspace</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── scripts/                # Modular utility scripts</span></span>
+<span class="line"><span>│   ├── common.sh           # Common utilities</span></span>
+<span class="line"><span>│   ├── progress.sh         # Progress reporting</span></span>
+<span class="line"><span>│   ├── backup_utils.sh     # Backup/restore</span></span>
+<span class="line"><span>│   ├── install_*.sh        # Installation modules</span></span>
+<span class="line"><span>│   ├── config_*.sh         # Configuration modules</span></span>
+<span class="line"><span>│   └── validate_*.sh       # Validation modules</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── docs-source/            # Documentation source (editable)</span></span>
+<span class="line"><span>│   ├── user-guide/         # User documentation</span></span>
+<span class="line"><span>│   ├── ai-guidelines/      # AI assistant guidelines</span></span>
+<span class="line"><span>│   └── developer/          # Developer documentation</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── docs/                   # Documentation build output (gitignored)</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── local-infra/            # Local CI/CD infrastructure</span></span>
+<span class="line"><span>│   ├── runners/            # CI/CD scripts</span></span>
+<span class="line"><span>│   ├── tests/              # Test suites</span></span>
+<span class="line"><span>│   └── logs/               # CI/CD logs</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── .specify/               # Spec-Kit implementation</span></span>
+<span class="line"><span>│   ├── templates/          # Spec-Kit templates</span></span>
+<span class="line"><span>│   └── scripts/            # Spec-Kit scripts</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>└── specs/                  # Feature specifications</span></span>
+<span class="line"><span>    └── 001-repo-structure-refactor/</span></span></code></pre>
+<h3 id="module-organization">Module Organization</h3>
+<h4 id="scripts-module-architecture">Scripts Module Architecture</h4>
+<p>Each script module follows a consistent pattern:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6A737D"># Module: &#x3C;name>.sh</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: &#x3C;description></span></span>
+<span class="line"><span style="color:#6A737D"># Dependencies: &#x3C;list></span></span>
+<span class="line"><span style="color:#6A737D"># Modules Required: &#x3C;list></span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes: &#x3C;definitions></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Module-level guard</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}"</span><span style="color:#F97583"> !=</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">${0}</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#E1E4E8">    SOURCED_FOR_TESTING</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source dependencies</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")/common.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Public functions (module API)</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> public_function</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Implementation</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Private functions (internal)</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> _private_function</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Implementation</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Main execution (skip if sourced)</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">SOURCED_FOR_TESTING</span><span style="color:#9ECBFF">}"</span><span style="color:#F97583"> -eq</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">    # CLI entry point</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h2 id="key-components">Key Components</h2>
+<h3 id="1-managesh---unified-entry-point">1. manage.sh - Unified Entry Point</h3>
+<p><strong>Purpose</strong>: Single command-line interface for all repository operations</p>
+<p><strong>Architecture</strong>:</p>
+<ul>
+<li>Argument parsing with global options</li>
+<li>Command routing to specialized handlers</li>
+<li>Error handling with trap mechanisms</li>
+<li>Environment variable support</li>
+<li>Comprehensive help system</li>
+</ul>
+<p><strong>Key Functions</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">()                    </span><span style="color:#6A737D"># Entry point</span></span>
+<span class="line"><span style="color:#B392F0">load_environment_config</span><span style="color:#E1E4E8">() # Environment setup</span></span>
+<span class="line"><span style="color:#B392F0">parse_global_options</span><span style="color:#E1E4E8">()    </span><span style="color:#6A737D"># Option parsing</span></span>
+<span class="line"><span style="color:#B392F0">route_command</span><span style="color:#E1E4E8">()           </span><span style="color:#6A737D"># Command routing</span></span>
+<span class="line"><span style="color:#B392F0">cmd_install</span><span style="color:#E1E4E8">()            </span><span style="color:#6A737D"># Install command handler</span></span>
+<span class="line"><span style="color:#B392F0">cmd_docs</span><span style="color:#E1E4E8">()               </span><span style="color:#6A737D"># Docs command handler</span></span>
+<span class="line"><span style="color:#B392F0">cmd_screenshots</span><span style="color:#E1E4E8">()        </span><span style="color:#6A737D"># Screenshots command handler</span></span>
+<span class="line"><span style="color:#B392F0">cmd_update</span><span style="color:#E1E4E8">()             </span><span style="color:#6A737D"># Update command handler</span></span>
+<span class="line"><span style="color:#B392F0">cmd_validate</span><span style="color:#E1E4E8">()           </span><span style="color:#6A737D"># Validate command handler</span></span></code></pre>
+<h3 id="2-scripts-layer---modular-utilities">2. Scripts Layer - Modular Utilities</h3>
+<p><strong>Purpose</strong>: Reusable, testable utility modules</p>
+<p><strong>Core Modules</strong>:</p>
+<ul>
+<li><code>common.sh</code> - Path resolution, logging, error handling</li>
+<li><code>progress.sh</code> - Progress reporting, spinners, summaries</li>
+<li><code>backup_utils.sh</code> - Backup/restore with verification</li>
+</ul>
+<p><strong>Installation Modules</strong>:</p>
+<ul>
+<li><code>install_node.sh</code> - Node.js via NVM</li>
+<li><code>install_zig.sh</code> - Zig compiler</li>
+<li><code>build_ghostty.sh</code> - Ghostty from source</li>
+</ul>
+<p><strong>Configuration Modules</strong>:</p>
+<ul>
+<li><code>setup_zsh.sh</code> - ZSH environment</li>
+<li><code>configure_theme.sh</code> - Catppuccin themes</li>
+<li><code>install_context_menu.sh</code> - Nautilus integration</li>
+</ul>
+<p><strong>Validation Modules</strong>:</p>
+<ul>
+<li><code>validate_config.sh</code> - Configuration syntax</li>
+<li><code>performance_check.sh</code> - Performance metrics</li>
+<li><code>dependency_check.sh</code> - System dependencies</li>
+</ul>
+<h3 id="3-configuration-layer">3. Configuration Layer</h3>
+<p><strong>Purpose</strong>: Modular configuration management</p>
+<p><strong>Structure</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>configs/ghostty/</span></span>
+<span class="line"><span>├── config              # Main config (includes others)</span></span>
+<span class="line"><span>├── theme.conf          # Theme settings</span></span>
+<span class="line"><span>├── scroll.conf         # Scrollback settings</span></span>
+<span class="line"><span>├── layout.conf         # Font/layout</span></span>
+<span class="line"><span>└── keybindings.conf    # Keybindings</span></span></code></pre>
+<h3 id="4-documentation-layer">4. Documentation Layer</h3>
+<p><strong>Purpose</strong>: Dual-structure documentation (source + build)</p>
+<p><strong>Source</strong> (<code>docs-source/</code>):</p>
+<ul>
+<li>Markdown files (git-tracked)</li>
+<li>Organized by audience (user/developer/AI)</li>
+<li>Content collections for Astro</li>
+</ul>
+<p><strong>Build Output</strong> (<code>docs/</code>):</p>
+<ul>
+<li>Astro static site</li>
+<li>Gitignored (generated)</li>
+<li>Contains <code>.nojekyll</code> (constitutional requirement)</li>
+</ul>
+<h3 id="5-local-cicd-layer">5. Local CI/CD Layer</h3>
+<p><strong>Purpose</strong>: Zero-cost local continuous integration</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li><code>gh-workflow-local.sh</code> - GitHub Actions simulation</li>
+<li><code>gh-pages-setup.sh</code> - Zero-cost Pages configuration</li>
+<li><code>test-runner.sh</code> - Test execution</li>
+<li><code>performance-monitor.sh</code> - Performance tracking</li>
+</ul>
+<h2 id="design-patterns">Design Patterns</h2>
+<h3 id="module-pattern">Module Pattern</h3>
+<p>All bash modules follow this pattern:</p>
+<ol>
+<li><strong>Guard Clause</strong>: Detect if sourced vs executed</li>
+<li><strong>Dependency Loading</strong>: Source required modules</li>
+<li><strong>Public API</strong>: Exported functions with documentation</li>
+<li><strong>Private Helpers</strong>: Internal functions with <code>_</code> prefix</li>
+<li><strong>Main Execution</strong>: CLI entry point if not sourced</li>
+</ol>
+<h3 id="error-handling-pattern">Error Handling Pattern</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Set strict mode</span></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Trap errors</span></span>
+<span class="line"><span style="color:#79B8FF">trap</span><span style="color:#9ECBFF"> 'handle_error $? $LINENO "$BASH_COMMAND"'</span><span style="color:#9ECBFF"> ERR</span></span>
+<span class="line"><span style="color:#79B8FF">trap</span><span style="color:#9ECBFF"> cleanup_on_exit</span><span style="color:#9ECBFF"> EXIT</span></span>
+<span class="line"><span style="color:#79B8FF">trap</span><span style="color:#9ECBFF"> handle_interrupt</span><span style="color:#9ECBFF"> INT</span><span style="color:#9ECBFF"> TERM</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Cleanup function</span></span>
+<span class="line"><span style="color:#B392F0">cleanup_on_exit</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Cleanup temporary resources</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="progress-reporting-pattern">Progress Reporting Pattern</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">show_progress</span><span style="color:#9ECBFF"> "start"</span><span style="color:#9ECBFF"> "Operation description"</span></span>
+<span class="line"><span style="color:#B392F0">show_step</span><span style="color:#79B8FF"> 1</span><span style="color:#79B8FF"> 5</span><span style="color:#9ECBFF"> "Step 1: Doing something"</span></span>
+<span class="line"><span style="color:#6A737D"># ... operation ...</span></span>
+<span class="line"><span style="color:#B392F0">show_progress</span><span style="color:#9ECBFF"> "success"</span><span style="color:#9ECBFF"> "Operation completed"</span></span></code></pre>
+<h3 id="backup-before-modify-pattern">Backup Before Modify Pattern</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Create backup before changes</span></span>
+<span class="line"><span style="color:#E1E4E8">backup_path</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">create_backup</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$config_file</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Make changes</span></span>
+<span class="line"><span style="color:#B392F0">modify_config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify changes</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> !</span><span style="color:#B392F0"> validate_config</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">    # Restore on failure</span></span>
+<span class="line"><span style="color:#B392F0">    restore_backup</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$backup_path</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h2 id="data-flow">Data Flow</h2>
+<h3 id="installation-flow">Installation Flow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User Command: ./manage.sh install</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ▼</span></span>
+<span class="line"><span>parse_global_options()</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ▼</span></span>
+<span class="line"><span>route_command("install")</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ▼</span></span>
+<span class="line"><span>cmd_install()</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ├─► validate dependencies</span></span>
+<span class="line"><span>       ├─► create backup</span></span>
+<span class="line"><span>       ├─► install Node.js (install_node.sh)</span></span>
+<span class="line"><span>       ├─► install Zig (install_zig.sh)</span></span>
+<span class="line"><span>       ├─► build Ghostty (build_ghostty.sh)</span></span>
+<span class="line"><span>       ├─► setup ZSH (setup_zsh.sh)</span></span>
+<span class="line"><span>       ├─► configure theme (configure_theme.sh)</span></span>
+<span class="line"><span>       └─► install context menu (install_context_menu.sh)</span></span>
+<span class="line"><span>              │</span></span>
+<span class="line"><span>              ▼</span></span>
+<span class="line"><span>        show_summary()</span></span>
+<span class="line"><span>              │</span></span>
+<span class="line"><span>              ▼</span></span>
+<span class="line"><span>         exit 0/1</span></span></code></pre>
+<h3 id="update-flow-with-rollback">Update Flow with Rollback</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User Command: ./manage.sh update</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ▼</span></span>
+<span class="line"><span>create_backup()</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ▼</span></span>
+<span class="line"><span>extract_user_customizations()</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ▼</span></span>
+<span class="line"><span>apply_updates()</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ├─► SUCCESS ─► reapply_customizations()</span></span>
+<span class="line"><span>       │                     │</span></span>
+<span class="line"><span>       │                     ▼</span></span>
+<span class="line"><span>       │              show_progress "success"</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       └─► FAILURE ─► restore_backup()</span></span>
+<span class="line"><span>                             │</span></span>
+<span class="line"><span>                             ▼</span></span>
+<span class="line"><span>                      show_progress "error"</span></span></code></pre>
+<h2 id="testing-architecture">Testing Architecture</h2>
+<h3 id="test-organization">Test Organization</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>local-infra/tests/</span></span>
+<span class="line"><span>├── unit/                    # Unit tests</span></span>
+<span class="line"><span>│   ├── test_functions.sh   # Test helpers</span></span>
+<span class="line"><span>│   ├── test_common_utils.sh # Common module tests</span></span>
+<span class="line"><span>│   └── test_*.sh           # Module-specific tests</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── integration/            # Integration tests</span></span>
+<span class="line"><span>│   └── test_install_workflow.sh</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>└── validation/            # Static analysis</span></span>
+<span class="line"><span>    └── run_shellcheck.sh</span></span></code></pre>
+<h3 id="test-execution-flow">Test Execution Flow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>./local-infra/runners/test-runner.sh</span></span>
+<span class="line"><span>       │</span></span>
+<span class="line"><span>       ├─► Run ShellCheck (static analysis)</span></span>
+<span class="line"><span>       ├─► Run unit tests (&#x3C;10s per module)</span></span>
+<span class="line"><span>       └─► Run integration tests</span></span>
+<span class="line"><span>              │</span></span>
+<span class="line"><span>              ▼</span></span>
+<span class="line"><span>        Generate test report</span></span></code></pre>
+<h2 id="performance-considerations">Performance Considerations</h2>
+<h3 id="startup-performance">Startup Performance</h3>
+<ul>
+<li><strong>Target</strong>: &#x3C;500ms for script initialization</li>
+<li><strong>Optimization</strong>: Lazy loading of modules</li>
+<li><strong>Measurement</strong>: <code>time ./manage.sh --version</code></li>
+</ul>
+<h3 id="module-loading">Module Loading</h3>
+<ul>
+<li><strong>Pattern</strong>: Source on demand, not at startup</li>
+<li><strong>Caching</strong>: Avoid re-sourcing already loaded modules</li>
+<li><strong>Dependencies</strong>: Minimize dependency chains</li>
+</ul>
+<h3 id="configuration-loading">Configuration Loading</h3>
+<ul>
+<li><strong>Strategy</strong>: Parse once, cache results</li>
+<li><strong>Validation</strong>: Async validation for non-critical checks</li>
+<li><strong>Reporting</strong>: Batch progress updates</li>
+</ul>
+<h2 id="security-considerations">Security Considerations</h2>
+<h3 id="input-validation">Input Validation</h3>
+<ul>
+<li>All user inputs validated before use</li>
+<li>Path traversal prevention</li>
+<li>Command injection prevention via proper quoting</li>
+</ul>
+<h3 id="credential-handling">Credential Handling</h3>
+<ul>
+<li>Never commit secrets</li>
+<li>Use environment variables for sensitive data</li>
+<li>Automatic detection and warning for potential leaks</li>
+</ul>
+<h3 id="safe-defaults">Safe Defaults</h3>
+<ul>
+<li>Dry-run mode by default for destructive operations</li>
+<li>Confirmation prompts for major changes</li>
+<li>Automatic backups before modifications</li>
+</ul>
+<h2 id="future-architecture">Future Architecture</h2>
+<h3 id="planned-improvements">Planned Improvements</h3>
+<ol>
+<li><strong>Module Dependency Graph</strong>: Automated dependency resolution</li>
+<li><strong>Plugin System</strong>: External module loading</li>
+<li><strong>Configuration Validation Schema</strong>: JSON schema for config validation</li>
+<li><strong>Parallel Execution</strong>: Run independent tasks concurrently</li>
+<li><strong>Telemetry</strong>: Optional usage analytics (local only)</li>
+</ol>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="contributing.md">Contributing Guide</a> - How to contribute</li>
+<li><a href="testing.md">Testing Guide</a> - Testing strategies</li>
+<li><a href="../ai-guidelines/core-principles.md">AI Guidelines</a> - For AI assistants</li>
+</ul>  </article> </main> </div>  </body></html> 
