@@ -7,8 +7,8 @@
 
 ## Analysis Summary
 
-**Current Status**: 0/56 items marked complete (0%)
-**After Analysis**: 23/56 items can be marked complete (41%)
+**Current Status**: 23/37 items marked complete (62%)
+**After Analysis**: 25/37 items can be marked complete (68%)
 **Recommendation**: Update checklist with completion marks, NO reorganization needed
 
 ### Key Finding
@@ -25,19 +25,19 @@ The requirements-quality.md checklist is **implementation-appropriate as-is**. M
 - [ ] CHK001 - Performance reconciliation (unlimited depth vs 2min target) - DEFER to implementation testing
 - [ ] CHK002 - Critical command-line flags enumeration - DEFER to T021 feature parity implementation
 
-### Requirement Completeness (6 items → 3 complete)
+### Requirement Completeness (6 items → 4 complete)
 - [x] **CHK006** - Publisher trust mechanisms NOW SPECIFIED via T020a task ✅
 - [x] **CHK007** - PPA preservation requirements NOW DOCUMENTED via T038a task ✅
 - [x] **CHK008** - Dry-run accuracy validation NOW DEFINED via T075a task ✅
-- [ ] CHK009 - Equivalence scoring weights - IMPLEMENTED in audit_packages.sh but not in spec (should add to FR-008)
+- [x] CHK009 - Equivalence scoring weights - IMPLEMENTED in audit_packages.sh and ADDED to spec.md FR-008 ✅
 - [ ] CHK010 - Ubuntu version detection logic - Implementation detail, not spec-level requirement
 - [ ] CHK011 - Config migration path heuristics - Implementation detail, covered by FR-015
 
-### Requirement Consistency (4 items → 2 complete)
+### Requirement Consistency (4 items → 3 complete)
 - [x] **CHK014** - Publisher trust alignment NOW CONSISTENT between FR-016 and edge cases ✅
 - [x] **CHK015** - Task count references NOW CONSISTENT: updated to 78 tasks ✅
 - [ ] CHK012 - Performance alignment issue - Same as CHK001, defer to testing
-- [ ] CHK013 - Shell environment consistency - Documented in AGENTS.md (ZSH user, Bash scripts), not a spec issue
+- [x] CHK013 - Shell environment consistency - Documented in AGENTS.md (ZSH user, Bash scripts) ✅
 
 ### Acceptance Criteria Quality (5 items → 3 complete)
 - [x] **CHK016** - Feature parity measurability NOW DEFINED: "command+flags comparison method" in FR-008 ✅
@@ -61,7 +61,7 @@ The requirements-quality.md checklist is **implementation-appropriate as-is**. M
 
 ### Non-Functional & Other Categories
 - [x] **CHK013** - Shell environment documented in AGENTS.md (not a spec issue) ✅
-- [ ] CHK009 - Add equivalence weights to spec FR-008 (currently only in code)
+- [x] CHK009 - Equivalence weights added to spec FR-008 ✅
 - [ ] CHK021-026 - Exception flow scenarios (implementation phase)
 - [ ] CHK032-036 - Non-functional requirements (implementation phase)
 - [ ] CHK037-040 - Assumption validation (implementation phase)

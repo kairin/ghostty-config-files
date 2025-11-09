@@ -40,18 +40,26 @@ while [ $i -le $# ]; do
             fi
             BRANCH_NUMBER="$next_arg"
             ;;
-        --help|-h) 
+        --help|-h)
             echo "Usage: $0 [--json] [--short-name <name>] [--number N] <feature_description>"
             echo ""
             echo "Options:"
             echo "  --json              Output in JSON format"
             echo "  --short-name <name> Provide a custom short name (2-4 words) for the branch"
-            echo "  --number N          Specify branch number manually (overrides auto-detection)"
+            echo "  --number N          Specify branch number manually (for spec directory naming only)"
             echo "  --help, -h          Show this help message"
+            echo ""
+            echo "Branch Naming"
+            echo "  New branches follow constitutional format: YYYYMMDD-HHMMSS-type-description"
+            echo "  Example: 20251109-182345-feat-authentication-system"
+            echo "  Types: feat, fix, docs, refactor, test, chore"
             echo ""
             echo "Examples:"
             echo "  $0 'Add user authentication system' --short-name 'user-auth'"
             echo "  $0 'Implement OAuth2 integration for API' --number 5"
+            echo ""
+            echo "Note: --number parameter controls spec directory numbering (specs/005-name/)"
+            echo "      but branch names use datetime-based format per constitutional requirements"
             exit 0
             ;;
         *) 
@@ -189,7 +197,12 @@ else
     BRANCH_SUFFIX=$(generate_branch_name "$FEATURE_DESCRIPTION")
 fi
 
-# Determine branch number
+# Generate constitutional datetime-based branch name (YYYYMMDD-HHMMSS-type-description)
+# This replaces the old sequential numbering approach (001-name, 002-name, etc.)
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+FEATURE_TYPE="feat"  # Default to 'feat' type
+
+# Determine feature number for legacy spec directory naming (separate from branch name)
 if [ -z "$BRANCH_NUMBER" ]; then
     if [ "$HAS_GIT" = true ]; then
         # Check existing branches on remotes
@@ -210,8 +223,10 @@ if [ -z "$BRANCH_NUMBER" ]; then
     fi
 fi
 
+# Constitutional branch name format: YYYYMMDD-HHMMSS-type-description
+# Example: 20251109-182345-feat-apt-snap-migration
 FEATURE_NUM=$(printf "%03d" "$BRANCH_NUMBER")
-BRANCH_NAME="${FEATURE_NUM}-${BRANCH_SUFFIX}"
+BRANCH_NAME="${DATETIME}-${FEATURE_TYPE}-${BRANCH_SUFFIX}"
 
 # GitHub enforces a 244-byte limit on branch names
 # Validate and truncate if necessary

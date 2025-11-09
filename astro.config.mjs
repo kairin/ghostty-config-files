@@ -29,8 +29,8 @@ export default defineConfig({
     assets: '_astro',
   },
 
-  // Build output directory (changed from ./docs to ./docs-dist per Feature 001)
-  outDir: './docs-dist',
+  // Build output directory (GitHub Pages serves from ./docs/)
+  outDir: './docs',
 
   // Vite configuration for performance optimization
   vite: {
@@ -42,11 +42,11 @@ export default defineConfig({
         async writeBundle() {
           const fs = await import('fs');
           const path = await import('path');
-          const nojekyllPath = path.join('./docs-dist', '.nojekyll');
+          const nojekyllPath = path.join('./docs', '.nojekyll');
 
-          // Ensure docs-dist directory exists
-          if (!fs.existsSync('./docs-dist')) {
-            console.warn('⚠️ WARNING: docs-dist directory not found for .nojekyll creation');
+          // Ensure docs directory exists
+          if (!fs.existsSync('./docs')) {
+            console.warn('⚠️ WARNING: docs directory not found for .nojekyll creation');
             return;
           }
 
@@ -55,7 +55,7 @@ export default defineConfig({
           console.log('✅ Created .nojekyll file for GitHub Pages (Secondary Layer)');
 
           // Verify _astro directory exists (critical for asset loading)
-          const astroDir = path.join('./docs-dist', '_astro');
+          const astroDir = path.join('./docs', '_astro');
           if (fs.existsSync(astroDir)) {
             const files = fs.readdirSync(astroDir);
             console.log(`✅ _astro directory confirmed (${files.length} files)`);

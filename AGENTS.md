@@ -23,6 +23,104 @@
 - **Node.js**: Latest LTS via NVM for AI tool integration
 - **Dependencies**: Smart detection and minimal installation footprint
 
+### 🚨 CRITICAL: Context7 MCP Integration & Documentation Synchronization
+
+Context7 MCP (Model Context Protocol) server provides up-to-date documentation and best practices synchronization for all technologies used in this project.
+
+#### Installation & Configuration (MANDATORY)
+```bash
+# Verify Context7 MCP server is installed
+claude mcp list | grep context7
+
+# If not installed, configure in Claude Code settings
+# The MCP server connects to https://mcp.context7.com/mcp
+# Requires GitHub PAT in .env file (already configured)
+```
+
+#### Health Check Commands (MANDATORY)
+```bash
+# Check MCP server connection status
+claude mcp list
+
+# Query Context7 for project-specific documentation
+# Example: Get latest Astro.build best practices
+claude ask "What are the latest Astro.build GitHub Pages deployment best practices?"
+
+# Example: Verify Ghostty configuration recommendations
+claude ask "What are the recommended Ghostty terminal performance optimizations for 2025?"
+
+# Example: Check Node.js + npm best practices
+claude ask "What are the latest Node.js LTS and npm package management best practices?"
+```
+
+#### Integration with Local CI/CD (RECOMMENDED)
+```bash
+# Add Context7 documentation validation to local workflow
+# File: ./local-infra/runners/gh-workflow-local.sh
+
+# Query Context7 for technology-specific best practices during builds
+context7_validate() {
+    echo "📚 Validating against Context7 best practices..."
+
+    # Check Astro configuration
+    claude ask "Review this Astro config for GitHub Pages deployment best practices" < astro.config.mjs
+
+    # Verify package.json follows npm conventions
+    claude ask "Review this package.json for Node.js best practices" < package.json
+}
+```
+
+#### Documentation Synchronization Strategy
+**Three-Tier Documentation System** (Context7-Aligned):
+
+1. **Tier 1: Astro Build Output** (`docs/`)
+   - Purpose: GitHub Pages deployment (committed)
+   - Source: Auto-generated from `docs-source/`
+   - Context7 Validation: Build configuration, performance targets
+
+2. **Tier 2: Editable Source** (`docs-source/`)
+   - Purpose: Human-editable markdown documentation
+   - Structure: `user-guide/`, `ai-guidelines/`, `developer/`
+   - Context7 Validation: Documentation completeness, best practices
+
+3. **Tier 3: Centralized Hub** (`documentations/`)
+   - Purpose: Comprehensive documentation repository
+   - Structure: `user/`, `developer/`, `specifications/`, `archive/`
+   - Context7 Validation: Cross-artifact consistency
+
+#### Context7 Query Examples for This Project
+```bash
+# Technology Stack Queries
+claude ask "Latest Astro 5.x + Tailwind CSS 3.4 + shadcn/ui best practices"
+claude ask "Ghostty terminal emulator performance optimization techniques"
+claude ask "Node.js LTS package management with npm best practices"
+claude ask "GitHub CLI workflow automation and API integration"
+
+# Architecture & Patterns Queries
+claude ask "Static site generation with Astro for GitHub Pages deployment"
+claude ask "Local CI/CD implementation without GitHub Actions costs"
+claude ask "XDG Base Directory Specification compliance for Linux applications"
+
+# Security & Performance Queries
+claude ask "GitHub Pages security best practices for Astro deployments"
+claude ask "Terminal emulator performance benchmarking and optimization"
+claude ask "Zero-cost DevOps strategies for personal projects"
+```
+
+#### Benefits of Context7 Integration
+- ✅ **Always Up-to-Date**: Latest documentation from official sources
+- ✅ **Best Practices Validation**: Automated compliance checking
+- ✅ **Cross-Technology Insights**: Consistent patterns across tech stack
+- ✅ **Documentation Quality**: Ensures AGENTS.md follows MCP standards
+- ✅ **Reduced Drift**: Configuration stays aligned with latest recommendations
+- ✅ **AI Assistant Alignment**: Claude Code, Gemini CLI use same documentation source
+
+#### Constitutional Compliance
+- **MANDATORY**: Query Context7 before major configuration changes
+- **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
+- **BEST PRACTICE**: Document Context7 queries in conversation logs
+- **REQUIREMENT**: Keep AGENTS.md synchronized with Context7 best practices
+
 ### 🚨 CRITICAL: Branch Management & Git Strategy
 
 #### Branch Preservation (MANDATORY)
@@ -209,6 +307,7 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 **AI Integration**:
 - **Claude Code**: Latest CLI via npm for code assistance
 - **Gemini CLI**: Google's AI assistant with Ptyxis integration
+- **Context7 MCP**: Up-to-date documentation server for best practices synchronization
 - **Node.js**: Latest LTS via NVM for tool compatibility
 
 **Local CI/CD**:

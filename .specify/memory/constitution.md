@@ -1,8 +1,8 @@
 # Ghostty Configuration Files - Project Constitution
 
 <!--
-Sync Impact Report (2025-10-27):
-  Version: 1.0.0 (Initial constitution ratification)
+Sync Impact Report (2025-11-09):
+  Version: 1.1.1 (Spec-kit branch naming compliance fix)
   Derived from: AGENTS.md (project root, single source of truth)
 
   Principles Extracted:
@@ -19,14 +19,25 @@ Sync Impact Report (2025-10-27):
     ✅ tasks-template.md: Task categorization aligned
     ✅ commands/*.md: Agent-specific references verified
 
-  Critical Fixes Applied:
-    ✅ CLAUDE.md converted from regular file to symlink → AGENTS.md
+  Critical Fixes Applied (2025-11-09):
+    ✅ CLAUDE.md converted from regular file to symlink → AGENTS.md (2025-10-27)
     ✅ AGENTS.md updated with Active Technologies and Recent Changes sections
     ✅ GEMINI.md symlink verified (already correct)
+    ✅ Fixed .specify/scripts/bash/create-new-feature.sh to generate YYYYMMDD-HHMMSS-type-description format
+    ✅ Updated create-new-feature.sh help text to document constitutional branch naming
+    ✅ Updated create-new-feature.sh branch generation logic to use datetime prefix
+
+  Branch Naming Compliance Fix (2025-11-09):
+    Problem: spec-kit create-new-feature.sh was generating non-compliant branch names (001-name, 002-name, etc.)
+    Solution: Updated to generate constitutional datetime-based names (YYYYMMDD-HHMMSS-type-description)
+    Impact: All future features created via /speckit.specify will use compliant naming
+    Legacy: Existing non-compliant branches (005-apt-snap-migration, 002-advanced-terminal-productivity, etc.)
+            remain in place for historical reference. Can be archived if needed.
 
   Follow-up Actions Required:
     - Update specs/001-repo-structure-refactor/spec.md FR-011 to clarify AGENTS.md remains intact
     - Update specs/001-repo-structure-refactor/tasks.md T034 to specify content COPY (not split) to docs-source/
+    - Document spec-kit branch naming change in AGENTS.md Section: "Spec-Kit Integration"
 -->
 
 ## Core Principles

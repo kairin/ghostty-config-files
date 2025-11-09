@@ -14,7 +14,7 @@
 export interface Props {
   title: string;
   description: string;
-  author?: string;
+  author?: string | undefined;
 }
 
 const { title, description, author } = Astro.props;
