@@ -348,9 +348,50 @@ run_audit() {
     if [[ "$output_format" == "json" ]]; then
         echo "$packages"
     else
-        # Text format (TODO: implement pretty table formatting)
-        echo "$packages" | jq -r '.[] | "\(.name)\t\(.version)\t\(.install_method)"'
+        # Text format with pretty table
+        format_text_report "$packages"
     fi
+
+    return 0
+}
+
+# Function: format_text_report
+# Purpose: Format audit results as human-readable table
+# Args: $1=packages_json
+# Returns: 0 on success
+# Side Effects: Prints formatted table to stdout
+format_text_report() {
+    local packages_json="$1"
+
+    # Extract package count
+    local package_count
+    package_count=$(echo "$packages_json" | jq 'length')
+
+    # Print header
+    echo "======================================================================"
+    echo "  Package Migration Audit Report"
+    echo "======================================================================"
+    echo ""
+    echo "Total Packages Found: $package_count"
+    echo ""
+
+    # Print table header
+    printf "%-30s %-20s %-15s %-10s\n" "PACKAGE" "VERSION" "METHOD" "SIZE (KB)"
+    printf "%-30s %-20s %-15s %-10s\n" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 20 | tr ' ' '-')" "$(printf '%*s' 15 | tr ' ' '-')" "$(printf '%*s' 10 | tr ' ' '-')"
+
+    # Print table rows
+    echo "$packages_json" | jq -r '.[] | "\(.name)|\(.version)|\(.install_method)|\(.size_kb)"' | while IFS='|' read -r name version method size; do
+        printf "%-30s %-20s %-15s %10s\n" \
+            "${name:0:29}" \
+            "${version:0:19}" \
+            "${method}" \
+            "${size}"
+    done
+
+    echo ""
+    echo "======================================================================"
+    echo "Run with --json flag for machine-readable output"
+    echo "======================================================================"
 
     return 0
 }
