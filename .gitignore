@@ -152,3 +152,17 @@ backups/
 
 # Lighthouse performance reports
 documentations/performance/lighthouse-reports/*.json
+
+# Package Migration System (005-apt-snap-migration)
+# User configuration and runtime data
+.config/package-migration/
+~/.config/package-migration/
+# Migration backups (excluded from version control per constitution)
+~/.config/package-migration/backups/
+# Audit cache
+~/.config/package-migration/audit-cache.json
+# Migration state
+~/.config/package-migration/migration-state.json
+# Temporary migration logs
+/tmp/ghostty-start-logs/migration-*.log
+/tmp/ghostty-start-logs/migration-*.log.json

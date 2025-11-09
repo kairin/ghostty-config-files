@@ -27,7 +27,7 @@ After researching bash testing frameworks (BATS, shunit2, ShellSpec, Bach) and a
    - Zero GitHub Actions consumption
 
 4. **Minimal New Dependencies**:
-   - ShellCheck already widely available on Ubuntu 25.04+
+   - ShellCheck already widely available on Ubuntu 25.10+
    - No need to install and learn new testing frameworks (BATS, shunit2)
    - Reuses existing pytest infrastructure for integration tests
    - Custom bash functions are lightweight and fast
@@ -269,7 +269,7 @@ run_shellcheck_validation() {
 
 **ShellCheck Configuration**:
 - Minimum severity: `warning` (ignore style-only issues)
-- Target shell: `bash` (Ubuntu 25.04 default)
+- Target shell: `bash` (Ubuntu 25.10 default)
 - Exclusions:
   - SC2034: Unused variables (common in sourced modules)
   - SC2154: Variables referenced but not assigned (may come from parent)

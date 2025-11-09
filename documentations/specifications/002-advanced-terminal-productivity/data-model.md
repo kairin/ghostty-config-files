@@ -341,7 +341,7 @@ Audit Trail → Privacy Level → Context Filtering → AI Processing → Encryp
 # ~/.config/terminal-ai/python-config.yaml
 python_management:
   strategy: "uv_first"
-  system_python: "/usr/bin/python3.12"  # Ubuntu 25.04 system Python
+  system_python: "/usr/bin/python3.12"  # Ubuntu 25.10 system Python
   uv_binary: "~/.local/bin/uv"
   default_python: "3.12"
 
@@ -499,7 +499,7 @@ update_strategies:
 
 # Constitutional requirement: uv-first Python management
 setup_python_environment() {
-    echo "🐍 Setting up uv-first Python environment for Ubuntu 25.04"
+    echo "🐍 Setting up uv-first Python environment for Ubuntu 25.10"
 
     # Ensure system Python 3.12 is available
     if ! command -v python3.12 &>/dev/null; then
@@ -536,7 +536,7 @@ python_installation_rules:
     enforcement: "strict"
 
   - name: "system_python_base"
-    description: "Use Ubuntu 25.04 system Python 3.12 as base"
+    description: "Use Ubuntu 25.10 system Python 3.12 as base"
     rule: "uv venv --python python3.12 --system-site-packages"
     enforcement: "mandatory"
 

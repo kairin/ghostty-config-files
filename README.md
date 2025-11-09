@@ -15,7 +15,7 @@ This repository contains a comprehensive terminal environment setup featuring th
 
 ### Prerequisites
 
-- Ubuntu 25.04 or a compatible Linux distribution.
+- Ubuntu 25.10 (Questing) or a compatible Linux distribution.
 - Git installed on your system.
 
 ### Installation

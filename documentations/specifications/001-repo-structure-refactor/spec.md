@@ -19,7 +19,7 @@ As a developer working on the Ghostty configuration repository, I want a single,
 
 1. **Given** a fresh clone of the repository, **When** I run `./manage.sh --help`, **Then** I see a clear list of all available commands with descriptions
 2. **Given** I need to install the terminal environment, **When** I run `./manage.sh install`, **Then** the system performs the complete installation without requiring additional script calls
-3. **Given** I want to build documentation, **When** I run `./manage.sh docs build`, **Then** the Astro site builds successfully in the docs-dist directory
+3. **Given** I want to build documentation, **When** I run `./manage.sh docs build`, **Then** the Astro site builds successfully in the docs/ directory
 4. **Given** I want to validate my changes, **When** I run `./manage.sh validate`, **Then** all validation checks (config, performance, tests) execute and report results
 
 ---
@@ -30,15 +30,15 @@ As a repository contributor, I want documentation source files clearly separated
 
 **Why this priority**: This directly addresses maintainability issues that cause confusion and potential data loss. While not as immediately impactful as the unified interface, it prevents ongoing frustration and errors.
 
-**Independent Test**: Can be fully tested by verifying that all source documentation lives in designated source directories, generated content lives only in docs-dist (gitignored), and documentation builds successfully from source.
+**Independent Test**: Can be fully tested by verifying that all source documentation lives in designated source directories, generated content lives in docs/ (committed for GitHub Pages deployment), and documentation builds successfully from source.
 
 **Acceptance Scenarios**:
 
 1. **Given** I want to edit documentation, **When** I look in the repository, **Then** I find all source docs in clear source directories (not mixed with generated content)
-2. **Given** I build the documentation site, **When** the build completes, **Then** all generated artifacts appear only in the docs-dist directory
-3. **Given** I check git status after a doc build, **When** I run `git status`, **Then** the docs-dist directory does not appear (because it's gitignored)
-4. **Given** I need to find AI guidelines, **When** I navigate the docs, **Then** I find modular, well-organized files instead of monolithic AGENTS.md
-5. **Given** the repository is cloned fresh, **When** I look for build artifacts, **Then** docs-dist does not exist until I explicitly build
+2. **Given** I build the documentation site, **When** the build completes, **Then** all generated artifacts appear only in the docs/ directory
+3. **Given** I check git status after a doc build, **When** I run `git status`, **Then** the docs/ directory contains committed Astro build output (including the critical .nojekyll file)
+4. **Given** I need to find AI guidelines, **When** I navigate the docs, **Then** I find modular, well-organized files in addition to AGENTS.md (which remains intact as single source of truth)
+5. **Given** the repository is cloned fresh, **When** I look for build artifacts, **Then** docs/ directory exists with committed GitHub Pages output
 
 ---
 
@@ -64,7 +64,7 @@ As a maintainer extending repository functionality, I want scripts broken into l
 
 - What happens when manage.sh is called with an invalid subcommand? (Should display help and exit with non-zero status)
 - How does the system handle partial migrations where some modules are migrated while others remain in start.sh? (manage.sh detects and routes to appropriate implementation, logging which are legacy vs new)
-- What happens if docs-dist directory exists but is not gitignored? (Migration script should add to .gitignore)
+- What happens if docs/ directory's .nojekyll file is accidentally removed? (Build process automatically recreates it via public/ directory copy during Astro build)
 - How are existing start.sh users transitioned during incremental migration? (Keep start.sh as a wrapper that calls manage.sh, which transparently uses available modules or falls back to legacy code)
 - What happens when modular scripts have circular dependencies? (Design should prevent this; validation check included)
 - How does incremental migration handle partially migrated documentation sections? (Astro site includes links to both new docs-source/ content and legacy locations until migration complete)
@@ -80,8 +80,8 @@ As a maintainer extending repository functionality, I want scripts broken into l
 - **FR-003**: manage.sh MUST display contextual help when invoked with --help or invalid arguments
 - **FR-004**: System MUST maintain backward compatibility by keeping start.sh as a wrapper to `manage.sh install`
 - **FR-005**: All source documentation MUST reside in a single docs-source/ top-level directory with shallow nesting (maximum 2 levels deep from docs-source/, where docs-source/=level 0, docs-source/user-guide/=level 1, docs-source/user-guide/installation.md=level 2)
-- **FR-006**: Generated documentation MUST output only to docs-dist directory. The .nojekyll file MUST be created during Astro build process (via public/ directory or build script) and MUST NOT be git tracked (generated artifact only)
-- **FR-007**: docs-dist directory MUST be added to .gitignore to prevent accidental commits of build artifacts
+- **FR-006**: Generated documentation MUST output to docs/ directory for GitHub Pages deployment. The .nojekyll file MUST be created during Astro build (via public/ directory automatic copy) and MUST be committed as part of docs/ build output to disable Jekyll processing on GitHub Pages
+- **FR-007**: docs/ directory contains committed Astro build output for GitHub Pages. The docs/.nojekyll file MUST exist to disable Jekyll processing (without this file, ALL CSS/JS assets return 404 errors)
 - **FR-008**: Monolithic start.sh script MUST be refactored into fine-grained modules (10+ modules) in a flat scripts/ directory (avoiding scripts/modules/ subdirectory to reduce nesting)
 - **FR-009**: Each module MUST handle a single, highly specific sub-task (e.g., install_node.sh, install_zig.sh, build_ghostty.sh, setup_zsh.sh, configure_theme.sh as separate files)
 - **FR-010**: Modules MUST be sourceable and testable independently of manage.sh orchestration, with each module completing in under 10 seconds when tested in isolation
@@ -102,10 +102,10 @@ As a maintainer extending repository functionality, I want scripts broken into l
 - New simplified structure coexists with existing structures without requiring immediate consolidation
 - Incremental migration allows partial completion states where some modules are migrated while others remain in start.sh
 - Each migration increment can be validated independently before proceeding to next component. One complete increment is defined as: (1) module created with proper contract compliance, (2) unit test written and passing in <10s, and (3) module integrated into manage.sh with proper error handling
-- The docs directory will be renamed or repurposed, not deleted (to preserve GitHub Pages configuration if needed)
+- docs/ directory already exists as committed GitHub Pages deployment with critical .nojekyll file (no renaming needed)
 - Existing custom modifications to start.sh by users are minimal (script warns about migration)
 - Shell environment is bash-compatible for module sourcing
-- GitHub Pages deployment can be reconfigured to use docs-dist if needed
+- Astro build process automatically maintains docs/.nojekyll via public/ directory copy mechanism
 
 ## Success Criteria *(mandatory)*
 
@@ -113,14 +113,14 @@ As a maintainer extending repository functionality, I want scripts broken into l
 
 - **SC-001**: Developers can execute any management task using `./manage.sh <command>` without referencing other scripts
 - **SC-002**: New contributors find and edit documentation source files on first attempt without confusion
-- **SC-003**: Generated build artifacts (docs-dist) never appear in git status after fresh builds
-- **SC-004**: Time to locate and modify specific functionality (e.g., ZSH setup logic) reduces by 50%
+- **SC-003**: Generated build artifacts in docs/ are properly committed with .nojekyll file present after fresh builds
+- **SC-004**: Time to locate and modify specific functionality (e.g., ZSH setup logic) reduces by 50% (baseline: measure time via grep/manual search in monolithic start.sh before Phase 5, then verify 50% reduction using modular scripts/ after Phase 5 completion)
 - **SC-005**: manage.sh --help output displays all available commands and options in under 2 seconds
 - **SC-006**: All existing automation (installation, updates, documentation builds) continues working without regression
 - **SC-007**: Each of the 10+ fine-grained modules can be tested independently in under 10 seconds, enabling rapid isolated testing and debugging
-- **SC-008**: Repository size (excluding generated docs) remains constant or decreases (no bloat from reorganization)
+- **SC-008**: Repository size remains manageable with committed docs/ output (no unnecessary bloat from reorganization)
 - **SC-009**: Zero data loss during migration (all existing scripts backed up before modification)
-- **SC-010**: Documentation builds complete in same or better time compared to current process
+- **SC-010**: Documentation builds complete in same or better time compared to current process (baseline: measure Astro build time before Phase 4 implementation, target ≤baseline after Phase 4 completion)
 - **SC-011**: Astro site provides clear navigation between user documentation and developer AI guidelines, each accessible within 2 clicks from home page
 - **SC-012**: Each incremental migration step (individual module or doc section) can be completed, tested, and validated independently within a single development session
 
@@ -139,11 +139,13 @@ As a maintainer extending repository functionality, I want scripts broken into l
 ### Completed Changes
 
 1. **Documentation Centralization** ✅
-   - Implemented centralized `documentations/` structure with clear categorization:
-     - `user/` - Installation guides, troubleshooting
-     - `developer/` - Architecture, analysis
-     - `specifications/` - All feature specs (moved from `specs/`)
-     - `archive/` - Historical documentation
+   - Implemented centralized `documentations/` hub structure per CLAUDE.md:170-182:
+     - `documentations/user/` - End-user documentation (installation, configuration, troubleshooting)
+     - `documentations/developer/` - Developer documentation (architecture, analysis)
+     - `documentations/specifications/` - Active feature specifications with planning artifacts
+       - This spec lives in `documentations/specifications/001-repo-structure-refactor/`
+       - Includes Spec 001, 002 (advanced-terminal-productivity), 004 (modern-web-development)
+     - `documentations/archive/` - Historical/obsolete documentation (preserved for reference)
    - Consolidated `spec-kit/001/` → `spec-kit/guides/` (methodology guides)
    - Removed obsolete screenshot-based documentation
 
@@ -158,6 +160,12 @@ As a maintainer extending repository functionality, I want scripts broken into l
    - Moved lighthouse performance reports to `documentations/performance/lighthouse-reports/`
    - Created comprehensive documentation: INSTALLATION_BREAKDOWN.md (62 packages), FILE_ORGANIZATION_ANALYSIS.md
 
+4. **GitHub Pages Documentation Structure** ✅
+   - Established `docs/` as committed Astro build output per CLAUDE.md:580-587
+   - `docs-source/` contains editable markdown documentation (user-guide/, ai-guidelines/, developer/)
+   - Critical `docs/.nojekyll` file committed to prevent CSS/JS 404 errors (CLAUDE.md:60-76)
+   - Astro build automatically maintains .nojekyll via public/ directory copy mechanism
+
 ### Alignment with Original Spec
 
 **Status**: Spec 001 is **24% complete** with Phase 1-3 Core infrastructure in place:
@@ -167,8 +175,28 @@ As a maintainer extending repository functionality, I want scripts broken into l
 - ⚠️  Phase 3 Commands: Functional stubs implemented but awaiting Phase 5 modules
 - ⚠️  Phase 4: Documentation restructure (partially complete via centralization)
 - ⚠️  Phase 5: Modular scripts (pending - start.sh still monolithic)
+  - **Note**: `scripts/install_node.sh` was created as Phase 5 proof-of-concept (completed 2025-11-09) with full unit tests. This demonstrates the module pattern but full Phase 5 integration (T047-T068) including remaining modules and manage.sh orchestration is still pending
 
-**Next Steps**:
-- Update tasks.md to remove screenshot-related tasks (T027-T028)
-- Complete Phase 4 documentation restructure (align with centralized structure)
-- Begin Phase 5 modular script implementation (break down start.sh)
+**Outstanding Tasks** (Single Source: tasks.md):
+
+**Immediate Priority** (Phase 5 - Modular Script Architecture):
+- T047-T050: Core installation modules (install_zig.sh, build_ghostty.sh + tests)
+  - Note: install_node.sh already complete, serves as reference pattern
+- T051-T054: Configuration modules (setup_zsh.sh, configure_theme.sh, install_context_menu.sh + tests)
+- T055-T058: Validation modules (validate_config.sh, performance_check.sh, dependency_check.sh + tests)
+- T059-T062: Integration modules (backup_config.sh, update_components.sh, generate_docs.sh + tests)
+- T063-T068: Module integration & orchestration into manage.sh
+
+**Medium Priority** (Phase 6 - Integration Testing):
+- T069-T076: Contract validation, integration testing, complete workflow validation
+
+**Final Priority** (Phase 7 - Polish & Documentation):
+- T077-T084: Documentation finalization, performance metrics, conversation logging, deployment
+
+**Completed Phases**:
+- ✅ Phase 1 (T001-T012): Setup & validation infrastructure
+- ✅ Phase 2 (T013-T016): Foundational utilities
+- ✅ Phase 3 (T017-T032): Unified management interface (manage.sh)
+- ✅ Phase 4 (T033-T046): Documentation structure (docs-source/ + docs/)
+
+**Total Progress**: 46/84 tasks complete (55%)

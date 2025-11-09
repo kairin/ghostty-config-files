@@ -67,7 +67,7 @@ All notable changes to the Ghostty Configuration Files project are documented in
 #### **🚀 Performance Metrics (2025 Optimizations)**
 - **Installation Speed**: 61.4 seconds total for complete environment setup
 - **Memory Efficiency**: +0.15GB delta during installation process
-- **System Compatibility**: Ubuntu 25.04 with Linux kernel 6.14.0-29-generic
+- **System Compatibility**: Ubuntu 25.10 with Linux kernel 6.14.0-29-generic
 - **Zero Failures**: All 2025 performance optimizations applied successfully
 - **Screenshot Capture**: 16 high-quality SVG screenshots with PNG thumbnails
 
@@ -174,7 +174,7 @@ All notable changes to the Ghostty Configuration Files project are documented in
 #### **📊 Performance Metrics**
 - **Installation Speed**: 61.4 seconds total with 16 screenshot captures
 - **Memory Efficiency**: +0.13GB delta during installation process
-- **System Compatibility**: Ubuntu 25.04 with Linux kernel 6.14.0-29-generic
+- **System Compatibility**: Ubuntu 25.10 with Linux kernel 6.14.0-29-generic
 - **Zero Failures**: All components installed and verified successfully
 
 ## [3.0.0] - 2025-09-21 - MAJOR UPDATE: Session Management & Visual Documentation System 🆕
@@ -186,7 +186,7 @@ All notable changes to the Ghostty Configuration Files project are documented in
 - **Session ID System**: Unique session IDs with format `YYYYMMDD-HHMMSS-TERMINAL-install`
   - Automatic terminal detection (Ghostty, Ptyxis, GNOME Terminal, KDE Konsole)
   - Perfect log-to-screenshot mapping across multiple executions
-  - Ubuntu 25.04 compatibility with latest terminal versions
+  - Ubuntu 25.10 compatibility with latest terminal versions
 - **Session Manifest**: Complete metadata tracking for each installation run
   - Machine info, terminal environment, timing statistics
   - Stage tracking with screenshot correlation
@@ -255,7 +255,7 @@ All notable changes to the Ghostty Configuration Files project are documented in
 ```
 
 ### 📊 **Technical Implementation Details**
-- **Session Detection**: Advanced terminal environment detection for Ubuntu 25.04
+- **Session Detection**: Advanced terminal environment detection for Ubuntu 25.10
 - **Asset Synchronization**: Perfect log-to-screenshot mapping with session IDs
 - **Virtual Environment**: Automatic uv-based Python environment for screenshot tools
 - **Documentation Pipeline**: Automatic Astro.build website generation with all sessions
@@ -555,7 +555,7 @@ All notable changes to the Ghostty Configuration Files project are documented in
 
 ### 🆕 **New Installation & Dependency Management System**
 - **Comprehensive Installation Tracking**: Registry tracks all tools, versions, installation methods, and update strategies
-- **uv-First Python Management**: Mandatory uv usage with Ubuntu 25.04 system Python 3.12 as base
+- **uv-First Python Management**: Mandatory uv usage with Ubuntu 25.10 system Python 3.12 as base
 - **Dependency Resolution**: Conflict detection and resolution for all tool dependencies
 - **Update Management**: Automated detection with safe update strategies and rollback capabilities
 - **Constitutional Compliance**: Installation rules enforce constitutional requirements

@@ -718,12 +718,14 @@ gh api user/settings/billing/actions | jq '{total_minutes_used, included_minutes
 **Version**: 2.0-2025-LocalCI
 **Last Updated**: 2025-09-19
 **Status**: ACTIVE - MANDATORY COMPLIANCE
-**Target**: Ubuntu 25.04+ with Ghostty 1.2.0+ and zero-cost local CI/CD
+**Target**: Ubuntu 25.10 (Questing) with Ghostty 1.2.0+ and zero-cost local CI/CD
 **Review**: Required before any major configuration changes
 
 ## Active Technologies
-- Bash 5.x+ (Ubuntu 25.04 default shell), Node.js LTS (for Astro.build documentation site) (001-repo-structure-refactor)
+- ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site) (001-repo-structure-refactor)
 - File-based configuration and documentation (no database) (001-repo-structure-refactor)
+- ZSH (Ubuntu 25.10 default shell) + apt/dpkg (package management), snapd (snap installation), systemd (service management), jq (JSON processing), GitHub CLI (workflow integration) (005-apt-snap-migration)
+- File-based logs in `/tmp/ghostty-start-logs/` and `./local-infra/logs/`, backup storage in `~/.config/package-migration/backups/`, JSON state files for migration tracking (005-apt-snap-migration)
 
 ## Recent Changes
-- 001-repo-structure-refactor: Added Bash 5.x+ (Ubuntu 25.04 default shell), Node.js LTS (for Astro.build documentation site)
+- 001-repo-structure-refactor: Added ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site)

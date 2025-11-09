@@ -18,7 +18,7 @@
    → ✅ Setup: Templates, validation tools, testing framework
    → ✅ Foundational: Common utilities, helper functions
    → ✅ US1 (P1): manage.sh CLI with all subcommands
-   → ✅ US2 (P2): Documentation restructure (docs-source/ + docs-dist/)
+   → ✅ US2 (P2): Documentation restructure (docs-source/ + docs/ committed output)
    → ✅ US3 (P3): Modular scripts (10+ fine-grained modules)
    → ✅ Polish: Integration testing, performance validation, documentation
 4. Apply task rules:
@@ -64,9 +64,9 @@
 
 ### .nojekyll Protection System (T007-T010)
 
-- [X] T007 [P] Create public/.nojekyll file for Astro automatic copy to build output (primary protection layer)
-- [X] T008 [P] Create pre-commit git hook in .git/hooks/pre-commit to validate .nojekyll exists in build output before allowing commits
-- [X] T009 [P] Update .gitignore to add docs-dist/ exclusion preventing accidental commit of build artifacts
+- [X] T007 [P] Create public/.nojekyll file for Astro automatic copy to docs/ build output (primary protection layer)
+- [X] T008 [P] Create pre-commit git hook in .git/hooks/pre-commit to validate .nojekyll exists in docs/ output before allowing commits
+- [X] T009 [P] Verify .gitignore does NOT exclude docs/ directory (build output must be committed for GitHub Pages)
 - [X] T010 Verify Vite plugin automation in astro.config.mjs creates .nojekyll (secondary protection layer already implemented)
 
 ### Testing Framework Setup (T011-T012)
@@ -160,21 +160,21 @@
 - [X] T034 [P] [US2] Copy AGENTS.md content into modular files in docs-source/ai-guidelines/ (core-principles.md, git-strategy.md, ci-cd-requirements.md, development-commands.md) while maintaining AGENTS.md as single source. Verify CLAUDE.md and GEMINI.md remain as symlinks to AGENTS.md
 - [X] T035 [P] [US2] Create user documentation in docs-source/user-guide/ (installation.md, configuration.md, usage.md)
 - [X] T036 [P] [US2] Create developer documentation in docs-source/developer/ (architecture.md, contributing.md, testing.md)
-- [X] T037 Update README.md to reference docs-source/ for editable documentation and docs-dist/ for build output
+- [X] T037 Update README.md to reference docs-source/ for editable documentation and docs/ for committed build output
 
 ### Astro Site Configuration (T038-T042)
 
 - [X] T038 [US2] Configure Astro content collections in src/content/config.ts for docs-source/ directory structure
 - [X] T039 [P] [US2] Create Astro layout components in src/layouts/ for user docs and developer docs with distinct styling
 - [X] T040 [P] [US2] Implement navigation component in src/components/Navigation.astro with clear separation between user and developer sections
-- [X] T041 [P] [US2] Configure Astro build output to docs-dist/ in astro.config.mjs. Create .nojekyll file in public/ directory for automatic copy to build output (primary protection layer per FR-006). Verify existing Vite plugin also creates .nojekyll (secondary layer)
+- [X] T041 [P] [US2] Configure Astro build output to docs/ in astro.config.mjs. Create .nojekyll file in public/ directory for automatic copy to build output (primary protection layer per FR-006). Verify existing Vite plugin also creates .nojekyll (secondary layer)
 - [X] T042 [US2] Create Astro pages in src/pages/ that render content from docs-source/ collections
 
 ### Documentation Build Integration (T043-T046)
 
-- [X] T043 [US2] Test documentation build workflow: docs-source/ → Astro → docs-dist/ with .nojekyll verification
-- [X] T044 [P] [US2] Verify .nojekyll exists in docs-dist/ after build using all 4 protection layers
-- [X] T045 [P] [US2] Test git status shows no docs-dist/ changes after fresh build (gitignore working)
+- [X] T043 [US2] Test documentation build workflow: docs-source/ → Astro → docs/ with .nojekyll verification
+- [X] T044 [P] [US2] Verify .nojekyll exists in docs/ after build using all 4 protection layers
+- [X] T045 [P] [US2] Test git status shows docs/ committed with .nojekyll file (build output committed for GitHub Pages)
 - [X] T046 [US2] Validate Astro site navigation provides access to all sections within 2 clicks from homepage
 
 ---
@@ -321,7 +321,7 @@ Task: "Create unit test template in local-infra/tests/unit/.test-template.sh"
 Task: "Create dependency cycle detection script in scripts/validate_module_deps.sh"
 Task: "Create test helper functions in local-infra/tests/unit/test_functions.sh"
 Task: "Create public/.nojekyll file for Astro automatic copy"
-Task: "Update .gitignore to add docs-dist/ exclusion"
+Task: "Verify .gitignore does NOT exclude docs/ directory (build output must be committed)"
 ```
 
 ### Phase 2: Foundational Utilities (4 parallel tasks)
@@ -465,12 +465,12 @@ After Phase 1-2 (Foundation) complete:
 |-------------------|---------------|-------------------|
 | SC-001: Execute any task via manage.sh | T017-T032 | Run ./manage.sh <command> for each subcommand |
 | SC-002: Find docs on first attempt | T033-T046 | Navigate docs-source/ and find target files |
-| SC-003: docs-dist never in git status | T007-T010, T043-T046 | Build docs and run git status |
+| SC-003: docs/ properly committed with .nojekyll | T007-T010, T043-T046 | Build docs and verify committed output |
 | SC-004: 50% faster to locate functionality | T047-T068 | Measure time to find specific module vs current |
 | SC-005: Help displays in <2 seconds | T018, T072 | Time ./manage.sh --help execution |
 | SC-006: Existing automation continues working | T066, T073-T076 | Run complete installation workflow |
 | SC-007: Module tests <10 seconds | T050, T054, T058, T062 | Time each unit test file execution |
-| SC-008: Repository size constant/decreases | T082 | Measure repo size before/after (excluding docs-dist) |
+| SC-008: Repository size remains manageable | T082 | Measure repo size before/after (with committed docs/) |
 | SC-009: Zero data loss during migration | T015, T059, T075 | Verify backups created before changes |
 | SC-010: Docs build time maintained/improved | T043, T082 | Measure Astro build time vs baseline |
 | SC-011: Docs navigation <2 clicks | T040, T046 | Test navigation from homepage to any section |
