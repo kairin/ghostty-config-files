@@ -66,13 +66,13 @@ As a system administrator, I want to migrate all eligible apt packages to snap/A
   → System detects feature disparity via capability comparison and flags package as "requires manual review" rather than auto-migrating
 
 - How does the system handle packages with multiple snap providers (e.g., Chromium available from multiple publishers)?
-  → System ONLY accepts snaps from official/verified publishers. If multiple verified publishers exist, select the one marked as official upstream maintainer. Non-verified alternatives are rejected and package is flagged for manual review
+  → See FR-016 for publisher verification requirements (official/verified publishers only)
 
 - What happens when disk space is insufficient for both apt and snap versions during migration?
-  → Pre-migration checks detect space requirements, calculate total needed space (old + new + buffer), and abort if insufficient with clear error message
+  → See FR-018 for disk space calculation requirements (20% overhead buffer for rollback data)
 
 - How are packages with custom apt repository configurations (PPAs) handled?
-  → System identifies PPA-sourced packages, checks if official snap equivalents exist, and preserves PPA configurations in case of rollback
+  → See FR-017 for PPA handling requirements (preserve configurations for rollback)
 
 - What happens if snapd itself is not installed or is outdated?
   → Pre-flight checks verify snapd installation, auto-install if missing (with permission), and upgrade to required version before any migrations
@@ -97,7 +97,7 @@ As a system administrator, I want to migrate all eligible apt packages to snap/A
 - **FR-005**: System MUST analyze dependency impact before uninstalling any apt package, identifying reverse dependencies and ensuring complete migration paths exist
 - **FR-006**: System MUST create timestamped, reversible backups of package state including .deb files, configuration files, dependency metadata, and systemd service definitions before any modifications
 - **FR-007**: System MUST uninstall apt packages safely using dependency-aware removal that preserves configurations and checks for orphaned dependencies
-- **FR-008**: System MUST verify snap alternative functional equivalence by comparing command availability, version compatibility, feature parity (executable presence + critical command-line flags support via command + flags comparison method), and configuration migration requirements. Equivalence scoring uses weighted algorithm: name matching (20%), version compatibility (30%), feature parity (30%), configuration compatibility (20%) with total score 0-100 where ≥70 indicates acceptable equivalence
+- **FR-008**: System MUST verify snap alternative functional equivalence by comparing command availability, version compatibility, feature parity (executable presence + critical command-line flags support via command + flags comparison method), and configuration migration requirements. Critical flags are defined as: (1) flags documented in `--help` output under "Common Options" or equivalent section, (2) flags required for primary use case (e.g., `--version`, `--config`, `--output`, `--help`), (3) flags detected in existing system scripts via grep analysis of `/usr/local/bin`, `/usr/bin`, and user home directory scripts. Equivalence scoring uses weighted algorithm: name matching (20%), version compatibility (30%), feature parity (30%), configuration compatibility (20%) with total score 0-100 calculated as floating-point, rounded to nearest integer using standard rounding (≥0.5 rounds up), where score ≥70 indicates acceptable equivalence
 - **FR-009**: System MUST implement rollback mechanism that restores exact previous state including apt package reinstallation, configuration restoration, and dependency graph reconstruction
 - **FR-010**: System MUST migrate packages in dependency-safe order (leaf packages first, then dependencies, non-critical before system-critical)
 - **FR-011**: System MUST validate essential services after migration by checking systemd service status, boot process integrity, and package conflict resolution
@@ -138,7 +138,7 @@ As a system administrator, I want to migrate all eligible apt packages to snap/A
 - **SC-009**: Migration process logs sufficient detail to enable manual troubleshooting and rollback for any failed package
 - **SC-010**: Dry-run mode accurately predicts migration actions with >98% accuracy compared to actual execution
 - **SC-011**: Dependency analysis correctly identifies all reverse dependencies preventing 100% of "broken package" states
-- **SC-012**: Migration performance handles typical desktop package sets (50-100 packages) in under 30 minutes including all safety checks
+- **SC-012**: Migration performance handles typical desktop migration batch (50-100 packages eligible for migration from total installed base of 100-300 packages per FR-002) in under 30 minutes including all safety checks
 
 ### Key Entities *(if data involved)*
 

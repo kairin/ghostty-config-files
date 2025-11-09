@@ -18,11 +18,11 @@ This document contains actionable implementation tasks organized by user story p
 |-------|-----------|------------|--------|------------------|
 | Phase 1 | Setup | 5/5 | ✅ Complete | Project structure validates |
 | Phase 2 | Foundational | 7/8 | 🟡 87.5% | Common utilities testable (T013 pending) |
-| Phase 3 | US1 - Audit (P1) | 13/13 | ✅ Complete | Audit reports generated without errors |
-| Phase 4 | US2 - Test Migration (P2) | 0/16 | ⚪ Not Started | Single package migrates and rolls back successfully |
+| Phase 3 | US1 - Audit (P1) | 16/16 | ✅ Complete | Audit reports generated without errors |
+| Phase 4 | US2 - Test Migration (P2) | 0/17 | ⚪ Not Started | Single package migrates and rolls back successfully |
 | Phase 5 | US3 - System-Wide (P3) | 0/10 | ⚪ Not Started | Batch migration completes with zero breakage |
 | Phase 6 | Polish | 0/7 | ⚪ Not Started | Documentation complete, cleanup working |
-| **Total** | | **25/78** (32%) | **MVP Complete** | |
+| **Total** | | **28/78** (36%) | **MVP Complete** | |
 
 ---
 
@@ -87,7 +87,7 @@ This provides immediate value by:
 - [X] T010 [P] Create configuration loader in `scripts/common.sh`: load config.json with environment variable overrides, validate schema
 - [X] T011 Create test helper functions in `local-infra/tests/unit/test_functions.sh`: assertions for Bash tests (assert_equals, assert_file_exists, assert_json_valid)
 - [X] T012 [P] Create test fixtures directory at `local-infra/tests/fixtures/` with sample JSON files (package-state.json, audit-results.json)
-- [ ] T013 Write unit tests for common utilities at `local-infra/tests/unit/test_common_utils.sh` validating error handling, JSON operations, logging
+- [ ] T013 Write unit tests for common utilities at `local-infra/tests/unit/test_common_utils.sh` validating error handling, JSON operations, logging (NOTE: Optional test coverage task - does not block Phase 3+ implementation but required for production readiness)
 
 ---
 
@@ -99,13 +99,19 @@ This provides immediate value by:
 
 **Duration**: ~8 hours
 
-**Status**: ✅ COMPLETE (13/13 tasks done)
+**Status**: ✅ COMPLETE (16/16 tasks done)
 
 **Independent Test**: Running `./scripts/package_migration.sh audit` produces accurate report showing installed apt packages, snap alternatives, equivalence scores, risk levels, and migration priorities without making any system modifications
 
 **Test Results**:
 - Unit Tests: 9/9 passed (`test_audit_packages.sh`)
 - Integration Tests: 7/7 passed (`test_audit_workflow.sh`)
+
+**Local CI/CD Validation Checkpoint** (per Constitution Principle III):
+- ✅ Unit tests executed locally: `./local-infra/tests/unit/test_audit_packages.sh`
+- ✅ Integration tests executed locally: `./local-infra/tests/integration/test_audit_workflow.sh`
+- ✅ All tests passed without errors (9/9 unit + 7/7 integration = 16/16 total)
+- ✅ Zero GitHub Actions consumption - all validation local
 
 ### Acceptance Criteria (from spec.md)
 
@@ -118,23 +124,22 @@ This provides immediate value by:
 
 #### Package Detection & Analysis
 
-- [ ] T014 [P] [US1] Implement package detection in `scripts/audit_packages.sh`: query installed packages via dpkg-query, extract metadata (name, version, size, arch)
-- [ ] T015 [P] [US1] Implement dependency analysis in `scripts/audit_packages.sh`: build dependency graph using dpkg-query and apt-cache rdepends per research.md
-- [ ] T016 [P] [US1] Implement essential service detection in `scripts/audit_packages.sh`: identify boot dependencies and systemd essential services per research.md section 4.4
-- [ ] T017 [US1] Implement configuration file detection in `scripts/audit_packages.sh`: parse dpkg conffile list, validate paths exist
+- [X] T014 [P] [US1] Implement package detection in `scripts/audit_packages.sh`: query installed packages via dpkg-query, extract metadata (name, version, size, arch)
+- [X] T015 [P] [US1] Implement dependency analysis in `scripts/audit_packages.sh`: build dependency graph using dpkg-query and apt-cache rdepends per research.md
+- [X] T016 [P] [US1] Implement essential service detection in `scripts/audit_packages.sh`: identify boot dependencies and systemd essential services per research.md section 4.4
+- [X] T017 [US1] Implement configuration file detection in `scripts/audit_packages.sh`: parse dpkg conffile list, validate paths exist
 
 #### Snap Alternative Discovery
 
-- [ ] T018 [P] [US1] Implement snapd API client in `scripts/audit_packages.sh`: query snapd REST API via Unix socket per research.md section 2
-- [ ] T019 [P] [US1] Implement snap search logic in `scripts/audit_packages.sh`: match apt packages to snap alternatives (exact, alias, fuzzy matching)
-- [ ] T020 [P] [US1] Implement publisher verification in `scripts/audit_packages.sh`: extract publisher validation status (verified/starred/unverified), prioritize verified
-- [ ] T020a [P] [US1] Implement snap publisher trust score calculation in `scripts/audit_packages.sh`: validate publisher status (verified/starred/unverified), implement trust scoring algorithm, reject unverified publishers per FR-016 requirements
+- [X] T018 [P] [US1] Implement snapd API client in `scripts/audit_packages.sh`: query snapd REST API via Unix socket per research.md section 2
+- [X] T019 [P] [US1] Implement snap search logic in `scripts/audit_packages.sh`: match apt packages to snap alternatives (exact, alias, fuzzy matching)
+- [X] T020 [P] [US1] Implement publisher verification and trust scoring in `scripts/audit_packages.sh`: extract publisher validation status (verified/starred/unverified), calculate trust score, reject unverified publishers per FR-016 requirements, prioritize official/verified publishers
 
 #### Equivalence Scoring & Risk Assessment
 
-- [ ] T021 [US1] Implement equivalence scoring in `scripts/audit_packages.sh`: calculate weighted score (name match 20%, version 30%, feature parity 30%, config compatibility 20%)
-- [ ] T022 [US1] Implement risk level calculation in `scripts/audit_packages.sh`: determine risk based on essential services, reverse dependencies, boot dependencies
-- [ ] T023 [US1] Implement migration priority algorithm in `scripts/audit_packages.sh`: score based on equivalence, risk level (inverse), dependency order
+- [X] T021 [US1] Implement equivalence scoring in `scripts/audit_packages.sh`: calculate weighted score (name match 20%, version 30%, feature parity 30%, config compatibility 20%)
+- [X] T022 [US1] Implement risk level calculation in `scripts/audit_packages.sh`: determine risk based on essential services, reverse dependencies, boot dependencies
+- [X] T023 [US1] Implement migration priority algorithm in `scripts/audit_packages.sh`: score based on equivalence, risk level (inverse), dependency order
 
 #### Reporting & Output
 
@@ -200,6 +205,7 @@ This provides immediate value by:
 - [ ] T043 [US2] Implement config migration in `scripts/package_migration.sh`: copy configs to snap-specific paths per research.md section 5
 - [ ] T044 [US2] Implement functional verification in `scripts/package_migration.sh`: test command availability, version check, basic functionality
 - [ ] T045 [US2] Implement migration logging in `scripts/package_migration.sh`: create MigrationLogEntry for each operation per data-model.md
+- [ ] T045a [US2] Implement audit and health check logging in `scripts/audit_packages.sh` and `scripts/migration_health_checks.sh`: create MigrationLogEntry for audit/health check operations (action types: audit, health_check) with outcome and error details per data-model.md and FR-013
 - [ ] T046 [US2] Implement migrate command in `scripts/package_migration.sh`: orchestrate health checks → backup → migrate → verify, support --dry-run
 
 #### Rollback System

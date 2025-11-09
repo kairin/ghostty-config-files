@@ -166,3 +166,4 @@ documentations/performance/lighthouse-reports/*.json
 # Temporary migration logs
 /tmp/ghostty-start-logs/migration-*.log
 /tmp/ghostty-start-logs/migration-*.log.json
+.mcp.json
