@@ -916,9 +916,121 @@ cmd_migrate() {
 # Returns: 0 on success, non-zero on failure
 # Side Effects: Performs rollback
 cmd_rollback() {
-    log_event ERROR "Rollback command not yet implemented"
-    echo "The 'rollback' command will be available in Phase 4 (User Story 2)" >&2
-    return 1
+    # T052: Implement rollback command - parse backup-id, --all, --verify-only options, delegate to migration_rollback.sh
+
+    local backup_id=""
+    local package_name=""
+    local rollback_all=false
+    local verify_only=false
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --all)
+                rollback_all=true
+                shift
+                ;;
+            --verify-only)
+                verify_only=true
+                shift
+                ;;
+            --help|-h)
+                cat <<EOF
+Usage: $PROG_NAME rollback <backup-id> [package] [options]
+
+Rollback a migration to restore apt packages from backup.
+
+ARGUMENTS:
+    backup-id          Backup identifier (YYYYMMDD-HHMMSS format)
+    package            Package name to rollback (optional with --all)
+
+OPTIONS:
+    --all              Rollback all packages from the backup
+    --verify-only      Only verify backup integrity, don't perform rollback
+    --help, -h         Show this help message
+
+EXAMPLES:
+    # Rollback a single package
+    $PROG_NAME rollback 20251109-143000 firefox
+
+    # Rollback all packages from a backup
+    $PROG_NAME rollback 20251109-143000 --all
+
+    # Verify backup integrity only
+    $PROG_NAME rollback 20251109-143000 --verify-only
+
+    # List available backups
+    ls -1 ~/.config/package-migration/backups/
+
+EXIT CODES:
+    0    Rollback successful
+    1    Rollback failed
+    2    Invalid arguments
+
+EOF
+                return 0
+                ;;
+            -*)
+                log_event ERROR "Unknown option: $1"
+                echo "Use '$PROG_NAME rollback --help' for usage information" >&2
+                return 2
+                ;;
+            *)
+                if [[ -z "$backup_id" ]]; then
+                    backup_id="$1"
+                elif [[ -z "$package_name" ]]; then
+                    package_name="$1"
+                else
+                    log_event ERROR "Too many arguments"
+                    echo "Use '$PROG_NAME rollback --help' for usage information" >&2
+                    return 2
+                fi
+                shift
+                ;;
+        esac
+    done
+
+    # Validate arguments
+    if [[ -z "$backup_id" ]]; then
+        log_event ERROR "Backup ID required for rollback"
+        echo "Use '$PROG_NAME rollback --help' for usage information" >&2
+        return 2
+    fi
+
+    if [[ "$rollback_all" == false ]] && [[ -z "$package_name" ]] && [[ "$verify_only" == false ]]; then
+        log_event ERROR "Package name required (or use --all for batch rollback)"
+        echo "Use '$PROG_NAME rollback --help' for usage information" >&2
+        return 2
+    fi
+
+    # Delegate to migration_rollback.sh
+    local rollback_script="$SCRIPT_DIR/migration_rollback.sh"
+
+    if [[ ! -x "$rollback_script" ]]; then
+        log_event ERROR "Rollback script not found or not executable: $rollback_script"
+        return 3
+    fi
+
+    log_event INFO "Starting rollback operation for backup: $backup_id"
+
+    # Build command based on options
+    if [[ "$verify_only" == true ]]; then
+        # Verify backup only
+        "$rollback_script" verify "$backup_id"
+        return $?
+    elif [[ "$rollback_all" == true ]]; then
+        # Rollback all packages
+        if [[ "$verify_only" == true ]]; then
+            "$rollback_script" rollback-all "$backup_id" --verify-only
+        else
+            "$rollback_script" rollback-all "$backup_id"
+        fi
+        return $?
+    else
+        # Rollback single package
+        "$rollback_script" rollback "$backup_id" "$package_name"
+        return $?
+    fi
 }
 
 # Function: cmd_status
