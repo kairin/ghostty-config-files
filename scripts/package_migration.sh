@@ -61,6 +61,7 @@ Package Migration System - Safely migrate apt packages to snap equivalents
 COMMANDS:
     audit       Audit installed packages and identify snap alternatives
     health      Run pre-migration health checks
+    backup      Create backup of package(s) before migration
     migrate     Migrate packages from apt to snap
     rollback    Rollback a migration to restore apt packages
     status      Show current migration status
@@ -90,6 +91,19 @@ HEALTH COMMAND:
         --check <type>      Run specific check: disk|network|snapd|conflicts|all
         --fix               Attempt to fix detected issues
         --json              Output results in JSON format
+
+BACKUP COMMAND:
+    $PROG_NAME backup <package> [options]
+
+    OPTIONS:
+        --output-dir <dir>  Custom backup directory (default: ~/.config/package-migration/backups)
+        --label <text>      Add custom label to backup metadata
+        --json              Output backup metadata in JSON format
+
+    EXAMPLES:
+        $PROG_NAME backup firefox
+        $PROG_NAME backup firefox --output-dir /mnt/backups
+        $PROG_NAME backup firefox --label "before-update" --json
 
 MIGRATE COMMAND:
     $PROG_NAME migrate <package> [options]
@@ -341,6 +355,138 @@ cmd_health() {
     return $exit_code
 }
 
+# Function: cmd_backup
+# Purpose: Handle backup command (T040)
+# Args: $@ - Command-line arguments
+# Returns: 0 on success, non-zero on failure
+# Side Effects: Creates backup via migration_backup.sh
+cmd_backup() {
+    local package_name=""
+    local output_dir=""
+    local label=""
+    local output_format="text"
+
+    # Parse backup-specific options
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --output-dir)
+                output_dir="$2"
+                shift 2
+                ;;
+            --label)
+                label="$2"
+                shift 2
+                ;;
+            --json)
+                output_format="json"
+                shift
+                ;;
+            --help|-h)
+                show_help
+                return 0
+                ;;
+            -*)
+                log_event ERROR "Unknown backup option: $1"
+                echo "Use '$PROG_NAME backup --help' for usage information" >&2
+                return 2
+                ;;
+            *)
+                if [[ -z "$package_name" ]]; then
+                    package_name="$1"
+                    shift
+                else
+                    log_event ERROR "Multiple package names not supported"
+                    echo "Backup one package at a time: $PROG_NAME backup <package>" >&2
+                    return 2
+                fi
+                ;;
+        esac
+    done
+
+    # Validate package name provided
+    if [[ -z "$package_name" ]]; then
+        log_event ERROR "Package name required for backup"
+        echo "Usage: $PROG_NAME backup <package> [options]" >&2
+        return 2
+    fi
+
+    # Log to stderr if JSON output to keep stdout clean
+    if [[ "$output_format" == "json" ]]; then
+        log_event INFO "Creating backup for package: $package_name" >&2
+    else
+        log_event INFO "Creating backup for package: $package_name"
+    fi
+
+    # Execute backup via migration_backup.sh
+    local backup_script="$SCRIPT_DIR/migration_backup.sh"
+
+    if [[ ! -x "$backup_script" ]]; then
+        log_event ERROR "Backup script not found or not executable: $backup_script"
+        return 3
+    fi
+
+    # Override backup base directory if specified
+    if [[ -n "$output_dir" ]]; then
+        export BACKUP_BASE_DIR="$output_dir"
+    fi
+
+    # Create backup
+    local backup_id
+    if backup_id=$("$backup_script" backup "$package_name" 2>&1); then
+        local exit_code=$?
+
+        # Extract backup ID from output (last line)
+        backup_id=$(echo "$backup_id" | tail -1 | grep -E '^[0-9]{8}-[0-9]{6}$')
+
+        if [[ -z "$backup_id" ]]; then
+            log_event ERROR "Failed to extract backup ID from backup script output"
+            return 1
+        fi
+
+        # Get backup metadata
+        local metadata
+        metadata=$("$backup_script" get "$backup_id" 2>/dev/null)
+
+        if [[ -z "$metadata" ]]; then
+            log_event ERROR "Failed to retrieve backup metadata for: $backup_id"
+            return 1
+        fi
+
+        # Add custom label if provided
+        if [[ -n "$label" ]]; then
+            metadata=$(echo "$metadata" | jq --arg label "$label" '. + {label: $label}')
+        fi
+
+        # Format output
+        if [[ "$output_format" == "json" ]]; then
+            echo "$metadata"
+        else
+            echo "======================================================================"
+            echo "  Backup Created Successfully"
+            echo "======================================================================"
+            echo ""
+            echo "Backup ID: $backup_id"
+            echo "Package: $(echo "$metadata" | jq -r '.packages[0].name')"
+            echo "Version: $(echo "$metadata" | jq -r '.packages[0].version')"
+            echo "Backup Directory: $(echo "$metadata" | jq -r '.backup_directory')"
+            echo "Total Size: $(echo "$metadata" | jq -r '.total_size' | numfmt --to=iec-i --suffix=B)"
+            echo "Retention Until: $(echo "$metadata" | jq -r '.retention_until')"
+            if [[ -n "$label" ]]; then
+                echo "Label: $label"
+            fi
+            echo ""
+            echo "Use '$PROG_NAME rollback $backup_id' to restore this backup"
+            echo "======================================================================"
+        fi
+
+        return 0
+    else
+        local exit_code=$?
+        log_event ERROR "Backup creation failed for package: $package_name"
+        return $exit_code
+    fi
+}
+
 # Function: cmd_migrate
 # Purpose: Handle migration command
 # Args: $@ - Command-line arguments
@@ -433,6 +579,10 @@ if [[ "${PM_SOURCED_FOR_TESTING}" -eq 0 ]]; then
             ;;
         health)
             cmd_health "$@"
+            exit $?
+            ;;
+        backup)
+            cmd_backup "$@"
             exit $?
             ;;
         migrate)
