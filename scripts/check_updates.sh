@@ -32,6 +32,27 @@ log() {
     echo -e "${color}[$level] $message${NC}"
 }
 
+# Cleanup function (called on EXIT)
+cleanup() {
+    local exit_code=$?
+
+    # Only log if there are actual cleanup tasks
+    if [ -n "${CLEANUP_NEEDED:-}" ]; then
+        log "INFO" "🧹 Cleaning up..."
+
+        # Clean up any temporary backup files older than 30 days
+        if [ -d "$CONFIG_DIR" ]; then
+            find "$CONFIG_DIR" -name "config.backup-*" -type f -mtime +30 -delete 2>/dev/null || true
+        fi
+    fi
+
+    # Exit with original code
+    exit $exit_code
+}
+
+# Set trap for cleanup on exit
+trap cleanup EXIT
+
 # Check if repo needs updates
 check_repo_updates() {
     cd "$REPO_DIR"
@@ -128,6 +149,7 @@ apply_config_updates() {
         local backup_file="$CONFIG_DIR/config.backup-$(date +%Y%m%d-%H%M%S)"
         cp "$CONFIG_DIR/config" "$backup_file"
         log "SUCCESS" "✅ Backed up existing config to: $(basename "$backup_file")"
+        CLEANUP_NEEDED=1  # Signal cleanup to run
     fi
 
     # Copy new configurations

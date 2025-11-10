@@ -41,6 +41,31 @@ log() {
     echo "[$timestamp] [$level] $message" >> "$LOG_DIR/workflow-$(date +%s).log"
 }
 
+# Cleanup function (called on EXIT)
+cleanup() {
+    local exit_code=$?
+
+    # Only perform cleanup if needed
+    if [ -n "${CLEANUP_NEEDED:-}" ]; then
+        log "INFO" "🧹 Cleaning up temporary files..."
+
+        # Remove temporary Context7 query files
+        find /tmp -name "tmp.*" -user "$(whoami)" -mmin -60 -type f -delete 2>/dev/null || true
+
+        # Clean up old log files (older than 7 days)
+        if [ -d "$LOG_DIR" ]; then
+            find "$LOG_DIR" -name "*.log" -type f -mtime +7 -delete 2>/dev/null || true
+            find "$LOG_DIR" -name "*.json" -type f -mtime +7 -delete 2>/dev/null || true
+        fi
+    fi
+
+    # Exit with original code
+    exit $exit_code
+}
+
+# Set trap for cleanup on exit
+trap cleanup EXIT
+
 # Performance timing
 start_timer() {
     TIMER_START=$(date +%s)
@@ -100,6 +125,70 @@ validate_config() {
         log "WARNING" "⚠️ Ghostty not found, skipping configuration validation"
     fi
 
+    # ShellCheck validation (Context7 Best Practice)
+    log "INFO" "🔍 Running ShellCheck validation on shell scripts..."
+    if command -v shellcheck >/dev/null 2>&1; then
+        local shellcheck_log="$LOG_DIR/shellcheck-$(date +%s).log"
+        local total_scripts=0
+        local passed_scripts=0
+        local failed_scripts=0
+
+        # Find all shell scripts in repository
+        while IFS= read -r script_file; do
+            total_scripts=$((total_scripts + 1))
+
+            if shellcheck "$script_file" >> "$shellcheck_log" 2>&1; then
+                passed_scripts=$((passed_scripts + 1))
+            else
+                failed_scripts=$((failed_scripts + 1))
+                log "WARNING" "⚠️ ShellCheck issues found in: $(basename "$script_file")"
+            fi
+        done < <(find "$REPO_DIR/scripts" "$REPO_DIR/local-infra" -name "*.sh" -type f 2>/dev/null)
+
+        if [ $failed_scripts -eq 0 ]; then
+            log "SUCCESS" "✅ All $total_scripts shell scripts passed ShellCheck validation"
+        else
+            log "WARNING" "⚠️ ShellCheck found issues in $failed_scripts/$total_scripts scripts"
+            log "INFO" "📄 Detailed report: $shellcheck_log"
+        fi
+    else
+        log "WARNING" "⚠️ ShellCheck not installed, skipping validation"
+        log "INFO" "💡 Install with: sudo apt-get install shellcheck"
+    fi
+
+    # npm audit security check (Context7 Best Practice)
+    if [ -f "$REPO_DIR/package.json" ]; then
+        log "INFO" "🔒 Running npm security audit..."
+
+        if command -v npm >/dev/null 2>&1; then
+            local npm_audit_log="$LOG_DIR/npm-audit-$(date +%s).log"
+
+            # Run npm audit and capture results
+            if npm audit --production --json > "$npm_audit_log" 2>&1; then
+                log "SUCCESS" "✅ npm audit passed - no vulnerabilities found"
+            else
+                # Parse audit results
+                local vulnerabilities
+                vulnerabilities=$(jq -r '.metadata.vulnerabilities | to_entries[] | "\(.key): \(.value)"' "$npm_audit_log" 2>/dev/null || echo "unknown")
+
+                if [ "$vulnerabilities" != "unknown" ] && [ -n "$vulnerabilities" ]; then
+                    log "WARNING" "⚠️ npm audit found security vulnerabilities:"
+                    echo "$vulnerabilities" | while read -r vuln_line; do
+                        log "WARNING" "  - $vuln_line"
+                    done
+                    log "INFO" "📄 Detailed report: $npm_audit_log"
+                    log "INFO" "💡 Fix with: npm audit fix"
+                else
+                    log "INFO" "ℹ️ npm audit completed (check log for details)"
+                fi
+            fi
+        else
+            log "WARNING" "⚠️ npm not found, skipping security audit"
+        fi
+    else
+        log "INFO" "ℹ️ No package.json found, skipping npm audit"
+    fi
+
     end_timer "Configuration validation"
 }
 
@@ -148,6 +237,7 @@ validate_context7() {
 
         # Create temporary file for Context7 query
         local temp_query=$(mktemp)
+        CLEANUP_NEEDED=1  # Signal cleanup to run
         cat > "$temp_query" <<'EOF'
 Review this Astro configuration for GitHub Pages deployment best practices. Check for:
 1. Correct outDir setting (should be './docs' for GitHub Pages)
