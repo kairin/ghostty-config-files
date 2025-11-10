@@ -48,26 +48,26 @@ Terminal enhancement system extending existing ghostty-config-files structure:
 - [x] T003 [P] Validate constitutional compliance baseline in tests/advanced-terminal/test_constitutional_compliance.sh
 
 ### Multi-Provider AI Integration Setup (T004-T006)
-- [x] T004 Create AI provider configuration system in ~/.config/terminal-ai/providers.conf
-- [x] T005 [P] Implement encrypted API key storage in ~/.config/terminal-ai/setup-keys.sh
-- [x] T006 [P] Install zsh-codex with multi-provider support in ~/.oh-my-zsh/custom/plugins/zsh-codex/
+- [ ] T004 Create AI provider configuration system in ~/.config/terminal-ai/providers.conf
+- [ ] T005 [P] Implement encrypted API key storage in ~/.config/terminal-ai/setup-keys.sh
+- [ ] T006 [P] Install zsh-codex with multi-provider support in ~/.oh-my-zsh/custom/plugins/zsh-codex/
 
 ### Context Awareness & Privacy (T007-T009)
-- [x] T007 [P] Implement context awareness engine in ~/.oh-my-zsh/custom/plugins/zsh-codex/context-engine.zsh
-- [x] T008 [P] Create explicit consent mechanism in ~/.config/terminal-ai/consent-manager.sh
-- [x] T009 [P] Implement local command history analysis in ~/.config/terminal-ai/history-analyzer.sh
+- [ ] T007 [P] Implement context awareness engine in ~/.oh-my-zsh/custom/plugins/zsh-codex/context-engine.zsh
+- [ ] T008 [P] Create explicit consent mechanism in ~/.config/terminal-ai/consent-manager.sh
+- [ ] T009 [P] Implement local command history analysis in ~/.config/terminal-ai/history-analyzer.sh
 
 ### Local Fallback & Performance (T010-T012)
-- [x] T010 [P] Implement local fallback system in ~/.oh-my-zsh/custom/plugins/zsh-codex/local-fallback.zsh
-- [x] T011 Create AI response time monitoring in ~/.config/terminal-ai/performance-monitor.sh
-- [x] T012 [P] Implement error handling and graceful degradation in ~/.oh-my-zsh/custom/plugins/zsh-codex/error-handling.zsh
+- [ ] T010 [P] Implement local fallback system in ~/.oh-my-zsh/custom/plugins/zsh-codex/local-fallback.zsh
+- [ ] T011 Create AI response time monitoring in ~/.config/terminal-ai/performance-monitor.sh
+- [ ] T012 [P] Implement error handling and graceful degradation in ~/.oh-my-zsh/custom/plugins/zsh-codex/error-handling.zsh
 
 ## Phase 2: Advanced Theming Excellence (T013-T024)
 
 ### Theme System Installation (T013-T015)
 - [x] T013 Install Powerlevel10k with instant prompt and installation tracking in ~/.oh-my-zsh/custom/themes/powerlevel10k/
-- [x] T014 [P] Configure Starship alternative with update management in ~/.config/starship.toml
-- [x] T015 Create adaptive theme switching system with dependency tracking in ~/.config/theme-switcher.sh
+- [ ] T014 [P] Configure Starship alternative with update management in ~/.config/starship.toml
+- [ ] T015 Create adaptive theme switching system with dependency tracking in ~/.config/theme-switcher.sh
 
 ### Environment Detection (T016-T019)
 - [x] T016 [P] Implement SSH session detection in scripts/advanced-terminal/environment-detection.sh

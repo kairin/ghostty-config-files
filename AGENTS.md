@@ -825,6 +825,7 @@ gh api user/settings/billing/actions | jq '{total_minutes_used, included_minutes
 - File-based configuration and documentation (no database) (001-repo-structure-refactor)
 - ZSH (Ubuntu 25.10 default shell) + apt/dpkg (package management), snapd (snap installation), systemd (service management), jq (JSON processing), GitHub CLI (workflow integration) (005-apt-snap-migration)
 - File-based logs in `/tmp/ghostty-start-logs/` and `./local-infra/logs/`, backup storage in `~/.config/package-migration/backups/`, JSON state files for migration tracking (005-apt-snap-migration)
+- Bash 5.x+ with YAML/Markdown processing (yq/jq), spec archive system (20251111-042534-feat-task-archive-consolidation)
 
 ## Recent Changes
 - 001-repo-structure-refactor: Added ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site)
