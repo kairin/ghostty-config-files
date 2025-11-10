@@ -20,6 +20,33 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh"
 
 # ============================================================
+# CLEANUP HANDLER
+# ============================================================
+
+# Cleanup function (called on EXIT)
+cleanup() {
+    local exit_code=$?
+
+    # Only perform cleanup if needed
+    if [ -n "${CLEANUP_NEEDED:-}" ]; then
+        log_info "🧹 Cleaning up..."
+
+        # Remove temporary NVM installation artifacts if present
+        if [ -n "${NVM_INSTALL_TEMP:-}" ] && [ -d "$NVM_INSTALL_TEMP" ]; then
+            rm -rf "$NVM_INSTALL_TEMP" 2>/dev/null || true
+        fi
+    fi
+
+    # Exit with original code
+    exit $exit_code
+}
+
+# Set trap for cleanup on exit (only if not sourced for testing)
+if [[ "${SOURCED_FOR_TESTING}" -eq 0 ]]; then
+    trap cleanup EXIT
+fi
+
+# ============================================================
 # MODULE CONFIGURATION
 # ============================================================
 
