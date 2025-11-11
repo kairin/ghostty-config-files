@@ -25,288 +25,70 @@
 
 ### 🚨 CRITICAL: Context7 MCP Integration & Documentation Synchronization
 
-Context7 MCP (Model Context Protocol) server provides up-to-date documentation and best practices synchronization for all technologies used in this project.
+**Purpose**: Up-to-date documentation and best practices for all project technologies.
 
-#### Installation & Configuration (MANDATORY)
+**Quick Setup:**
 ```bash
-# Step 1: Configure environment variables
-# Copy .env.example to .env and add your Context7 API key
-cp .env.example .env
-# Edit .env and set: CONTEXT7_API_KEY=ctx7sk-your-api-key-here
+# 1. Configure environment
+cp .env.example .env  # Add CONTEXT7_API_KEY=ctx7sk-your-api-key
 
-# Step 2: Project-level MCP configuration
-# The .mcp.json file is pre-configured to use environment variables
-# It will be loaded automatically when Claude Code starts
-
-# Step 3: Verify configuration
+# 2. Verify configuration
 ./scripts/check_context7_health.sh
 
-# Step 4: Restart Claude Code to load MCP servers
-# Exit current session and start a new one:
-# exit
-# claude
-
-# Context7 MCP Server Details:
-# - Type: HTTP MCP Server
-# - URL: https://mcp.context7.com/mcp
-# - Configuration: .mcp.json (project-level, uses ${CONTEXT7_API_KEY})
-# - Global Config: ~/.claude.json (user-level fallback)
+# 3. Restart Claude Code to load MCP servers
+exit && claude
 ```
 
-#### Health Check Commands (MANDATORY)
-```bash
-# Run automated health check
-./scripts/check_context7_health.sh
+**Health Check:** `./scripts/check_context7_health.sh`
 
-# Manual verification steps:
-# 1. Check environment configuration
-source .env && echo "API Key configured: ${CONTEXT7_API_KEY:0:12}..."
+**Available Tools:**
+- `mcp__context7__resolve-library-id` - Find library IDs for documentation queries
+- `mcp__context7__get-library-docs` - Retrieve up-to-date library documentation
 
-# 2. Verify MCP configuration
-cat .mcp.json  # Should use ${CONTEXT7_API_KEY} placeholder
-
-# 3. Test Context7 connectivity (after restart)
-# Within Claude Code conversation, Context7 MCP tools are available:
-# - mcp__context7__resolve-library-id: Find library IDs
-# - mcp__context7__get-library-docs: Retrieve documentation
-
-# Example usage within Claude Code:
-# "Can you use Context7 to get the latest Astro.build best practices?"
-# "Use Context7 to check Ghostty terminal optimization recommendations"
-```
-
-#### Integration with Local CI/CD (RECOMMENDED)
-```bash
-# Add Context7 documentation validation to local workflow
-# File: ./local-infra/runners/gh-workflow-local.sh
-
-# Query Context7 for technology-specific best practices during builds
-context7_validate() {
-    echo "📚 Validating against Context7 best practices..."
-
-    # Check Astro configuration
-    claude ask "Review this Astro config for GitHub Pages deployment best practices" < astro.config.mjs
-
-    # Verify package.json follows npm conventions
-    claude ask "Review this package.json for Node.js best practices" < package.json
-}
-```
-
-#### Documentation Synchronization Strategy
-**Three-Tier Documentation System** (Context7-Aligned):
-
-1. **Tier 1: Astro Build Output** (`docs/`)
-   - Purpose: GitHub Pages deployment (committed)
-   - Source: Auto-generated from `docs-source/`
-   - Context7 Validation: Build configuration, performance targets
-
-2. **Tier 2: Editable Source** (`docs-source/`)
-   - Purpose: Human-editable markdown documentation
-   - Structure: `user-guide/`, `ai-guidelines/`, `developer/`
-   - Context7 Validation: Documentation completeness, best practices
-
-3. **Tier 3: Centralized Hub** (`documentations/`)
-   - Purpose: Comprehensive documentation repository
-   - Structure: `user/`, `developer/`, `specifications/`, `archive/`
-   - Context7 Validation: Cross-artifact consistency
-
-#### Context7 Query Examples for This Project
-```bash
-# Technology Stack Queries
-claude ask "Latest Astro 5.x + Tailwind CSS 3.4 + shadcn/ui best practices"
-claude ask "Ghostty terminal emulator performance optimization techniques"
-claude ask "Node.js LTS package management with npm best practices"
-claude ask "GitHub CLI workflow automation and API integration"
-
-# Architecture & Patterns Queries
-claude ask "Static site generation with Astro for GitHub Pages deployment"
-claude ask "Local CI/CD implementation without GitHub Actions costs"
-claude ask "XDG Base Directory Specification compliance for Linux applications"
-
-# Security & Performance Queries
-claude ask "GitHub Pages security best practices for Astro deployments"
-claude ask "Terminal emulator performance benchmarking and optimization"
-claude ask "Zero-cost DevOps strategies for personal projects"
-```
-
-#### Benefits of Context7 Integration
-- ✅ **Always Up-to-Date**: Latest documentation from official sources
-- ✅ **Best Practices Validation**: Automated compliance checking
-- ✅ **Cross-Technology Insights**: Consistent patterns across tech stack
-- ✅ **Documentation Quality**: Ensures AGENTS.md follows MCP standards
-- ✅ **Reduced Drift**: Configuration stays aligned with latest recommendations
-- ✅ **AI Assistant Alignment**: Claude Code, Gemini CLI use same documentation source
-
-#### Constitutional Compliance
+**Constitutional Compliance:**
 - **MANDATORY**: Query Context7 before major configuration changes
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 - **BEST PRACTICE**: Document Context7 queries in conversation logs
-- **REQUIREMENT**: Keep AGENTS.md synchronized with Context7 best practices
+
+**Complete Setup Guide:** [CONTEXT7_SETUP.md](CONTEXT7_SETUP.md) - Installation, configuration, troubleshooting, examples
 
 ### 🚨 CRITICAL: GitHub MCP Integration & Repository Operations
 
-GitHub MCP (Model Context Protocol) server provides direct integration with GitHub API, enabling Claude Code to perform repository operations, manage issues, create pull requests, and search across GitHub.
+**Purpose**: Direct GitHub API integration for repository operations, issues, PRs, and search.
 
-#### Installation & Configuration (COMPLETED ✅)
+**Quick Setup:**
 ```bash
-# GitHub MCP is already configured and ready to use!
-# Configuration files:
-# - .mcp.json: MCP server configuration (stdio via npx)
-# - .env: GITHUB_TOKEN from GitHub CLI (gh auth token)
-
-# Verify GitHub MCP health
-./scripts/check_github_mcp_health.sh
-
-# GitHub MCP Server Details:
-# - Type: stdio MCP Server (spawned via npx)
-# - Package: @modelcontextprotocol/server-github
-# - Authentication: GITHUB_PERSONAL_ACCESS_TOKEN from .env
-# - Token Source: GitHub CLI (gh auth token)
-# - Required Scopes: repo, read:org, admin:public_key, gist
-```
-
-#### Health Check Commands (MANDATORY)
-```bash
-# Run automated GitHub MCP health check
-./scripts/check_github_mcp_health.sh
-
-# Manual verification steps:
-# 1. Check GitHub CLI authentication
+# 1. Verify GitHub CLI authentication
 gh auth status
 
-# 2. Verify environment configuration
-source .env && echo "GitHub Token: ${GITHUB_TOKEN:0:12}..."
+# 2. Run health check
+./scripts/check_github_mcp_health.sh
 
-# 3. Test GitHub MCP connectivity (after restart)
-# Within Claude Code conversation:
-# "Can you list issues in this repository?"
-# "Show me recent pull requests"
-# "Create a branch for the new feature"
+# 3. Restart Claude Code to load MCP servers
+exit && claude
 ```
 
-#### GitHub MCP Capabilities
-**Repository Operations:**
-- List, create, and manage repositories
-- Fork repositories
-- Get repository metadata and statistics
+**Health Check:** `./scripts/check_github_mcp_health.sh`
 
-**Issue Management:**
-- Create, read, update, and search issues
-- Add labels, assignees, and milestones
-- Comment on issues
+**Core Capabilities:**
+- **Repository Operations**: List, create, manage repositories
+- **Issue Management**: Create, update, search issues
+- **Pull Request Operations**: Create, review, merge PRs
+- **Branch Management**: Create, list, delete branches
+- **File Operations**: Read, create, update repository files
+- **Search Operations**: Search repos, issues, PRs, code
 
-**Pull Request Operations:**
-- List, create, and manage pull requests
-- Review PRs and add comments
-- Merge pull requests
-- Get PR diffs and status
-
-**Branch Management:**
-- List, create, and delete branches
-- Get branch protection status
-- Compare branches
-
-**File Operations:**
-- Read file contents from any branch/commit
-- Create, update, and delete files
-- Get file history and blame information
-
-**Search Operations:**
-- Search repositories, issues, and pull requests
-- Filter by labels, assignees, status, etc.
-- Full-text search across code
-
-#### Integration with Local CI/CD (RECOMMENDED)
-```bash
-# GitHub MCP enhances local CI/CD workflows
-# File: ./local-infra/runners/gh-workflow-local.sh
-
-# Automated issue creation for failed tests
-github_mcp_ci_integration() {
-    echo "🔗 Integrating GitHub MCP with local CI/CD..."
-
-    # Claude Code can now automatically:
-    # - Create issues for test failures
-    # - Update PR status with build results
-    # - Comment on PRs with performance metrics
-    # - Create commits and push to branches
-}
-```
-
-#### Usage Examples (Within Claude Code)
-```bash
-# Repository queries
-"Can you list all open issues in this repository?"
-"Show me the most recent pull requests"
-"What branches exist in this repository?"
-
-# Issue management
-"Create an issue for the performance bug we just discussed"
-"Update issue #42 to add the 'bug' label"
-"Show me all issues assigned to me"
-
-# Pull request operations
-"Create a PR from the current branch to main"
-"Show me the diff for PR #15"
-"List all approved PRs waiting for merge"
-
-# Branch operations
-"Create a feature branch called '2025-perf-optimization'"
-"Show me branches that haven't been updated in 30 days"
-
-# File operations
-"Show me the contents of README.md from the main branch"
-"Update the installation instructions in docs/setup.md"
-
-# Search operations
-"Find all repositories in my organization using TypeScript"
-"Search for issues mentioning 'performance optimization'"
-```
-
-#### GitHub CLI Integration
-GitHub MCP leverages existing GitHub CLI authentication:
-
-```bash
-# GitHub CLI provides token automatically
-gh auth status
-# Output:
-# ✓ Logged in to github.com account kairin
-# - Token scopes: 'admin:public_key', 'gist', 'read:org', 'repo'
-
-# Token is automatically used by GitHub MCP
-# No separate authentication needed!
-
-# Refresh token if expired
-gh auth refresh
-```
-
-#### Constitutional Compliance
+**Constitutional Compliance:**
 - **MANDATORY**: Use GitHub MCP for all repository operations (no manual gh CLI)
 - **RECOMMENDED**: GitHub MCP operations follow branch preservation strategy
-- **BEST PRACTICE**: Create issues for significant changes via GitHub MCP
-- **REQUIREMENT**: GitHub MCP respects branch naming conventions (YYYYMMDD-HHMMSS-type-description)
+- **REQUIREMENT**: Respect branch naming conventions (YYYYMMDD-HHMMSS-type-description)
 
-#### Security & Best Practices
-- ✅ **Token Security**: Token stored in .env (not committed)
-- ✅ **Scope Minimization**: Only necessary scopes enabled
-- ✅ **CLI Integration**: Leverages existing gh CLI authentication
-- ✅ **Automatic Refresh**: Token refreshes via gh CLI
-- ✅ **Rate Limiting**: GitHub MCP handles rate limits automatically
-- ✅ **Error Handling**: Graceful fallback for API errors
+**Security:**
+- ✅ Token stored in .env (not committed)
+- ✅ Leverages existing gh CLI authentication
+- ✅ Token auto-refreshes via gh CLI
 
-#### Benefits of GitHub MCP Integration
-- ✅ **Direct API Access**: No need for manual gh CLI commands
-- ✅ **Automated Workflows**: Claude can manage repositories autonomously
-- ✅ **Issue Tracking**: Automatic issue creation and management
-- ✅ **PR Management**: Complete PR lifecycle from Claude Code
-- ✅ **Branch Operations**: Seamless branch creation and management
-- ✅ **Search Integration**: GitHub-wide search from conversations
-- ✅ **Zero GitHub Actions Cost**: All operations via API (no workflow minutes)
-
-#### Documentation
-- **Setup Guide**: [GITHUB_MCP_SETUP.md](GITHUB_MCP_SETUP.md) - Complete installation and usage guide
-- **Health Check**: `/home/kkk/Apps/ghostty-config-files/scripts/check_github_mcp_health.sh`
-- **Configuration**: `.mcp.json` and `.env` files
+**Complete Setup Guide:** [GITHUB_MCP_SETUP.md](GITHUB_MCP_SETUP.md) - Installation, configuration, usage examples, troubleshooting
 
 ### 🚨 CRITICAL: Branch Management & Git Strategy
 
@@ -422,67 +204,21 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 ## 🏗️ System Architecture
 
 ### Directory Structure (MANDATORY)
+
+**Essential Structure**:
 ```
 /home/kkk/Apps/ghostty-config-files/
-├── start.sh                    # 🚀 Primary installation & update script
-├── manage.sh                   # 🎛️ Unified management interface (Phase 3)
-├── AGENTS.md                   # This file - LLM instructions (single source of truth)
-├── CLAUDE.md                   # Claude Code integration (symlink to AGENTS.md)
-├── GEMINI.md                   # Gemini CLI integration (symlink to AGENTS.md)
-├── README.md                   # User documentation & quick start
-├── configs/                    # Modular configuration files
-│   ├── ghostty/               # Ghostty terminal configuration
-│   │   ├── config             # Main config with 2025 optimizations
-│   │   ├── theme.conf         # Auto-switching themes (dark/light)
-│   │   ├── scroll.conf        # Scrollback settings
-│   │   ├── layout.conf        # Font, padding, layout (2025 optimized)
-│   │   ├── keybindings.conf   # Productivity keybindings
-│   │   └── dircolors          # LS_COLORS configuration (XDG-compliant)
-│   └── workspace/             # Development workspace files
-│       └── ghostty.code-workspace # VS Code workspace
-├── scripts/                   # Modular utility and automation scripts
-│   ├── .module-template.sh    # Module template (Phase 1)
-│   ├── common.sh              # Common utilities (Phase 2)
-│   ├── progress.sh            # Progress reporting (Phase 2)
-│   ├── backup_utils.sh        # Backup utilities (Phase 2)
-│   ├── install_node.sh        # Node.js installation module (Phase 5 - COMPLETE)
-│   ├── check_updates.sh       # Intelligent update detection
-│   ├── install_context_menu.sh # Right-click integration
-│   ├── install_ghostty_config.sh # Configuration installer
-│   ├── update_ghostty.sh      # Ghostty version management
-│   ├── fix_config.sh          # Configuration repair tools
-│   └── agent_functions.sh     # AI assistant helper functions
-├── documentations/            # Centralized documentation hub (as of 2025-11-09)
-│   ├── user/                  # End-user documentation
-│   │   ├── installation/      # Installation guides
-│   │   ├── configuration/     # Configuration guides
-│   │   └── troubleshooting/   # Troubleshooting guides
-│   ├── developer/             # Developer documentation
-│   │   ├── architecture/      # System architecture
-│   │   └── analysis/          # Technical analysis
-│   ├── specifications/        # Active feature specifications
-│   │   ├── 001-repo-structure-refactor/  # Spec 001: Repository refactoring
-│   │   ├── 002-advanced-terminal-productivity/  # Spec 002
-│   │   └── 004-modern-web-development/  # Spec 004
-│   └── archive/               # Historical/obsolete documentation
-└── local-infra/              # Zero-cost local infrastructure
-    ├── runners/              # Local CI/CD scripts
-    │   ├── gh-workflow-local.sh    # Local GitHub Actions simulation
-    │   ├── gh-pages-setup.sh       # GitHub Pages local testing
-    │   ├── test-runner.sh          # Local test execution
-    │   └── performance-monitor.sh   # Performance tracking
-    ├── tests/                # Testing infrastructure
-    │   ├── unit/             # Unit tests
-    │   │   ├── .test-template.sh      # Test template (Phase 1)
-    │   │   ├── test_functions.sh      # Test assertions (Phase 1)
-    │   │   ├── test_install_node.sh   # install_node.sh tests (Phase 5)
-    │   │   └── test_common_utils.sh   # Common utilities tests (Phase 2)
-    │   └── validation/       # Validation scripts
-    ├── logs/                 # Local CI/CD logs
-    └── config/               # CI/CD configuration files
-        ├── workflows/        # Local workflow definitions
-        └── test-suites/      # Test configuration
+├── start.sh, manage.sh         # Installation & management scripts
+├── AGENTS.md                   # AI assistant instructions (single source of truth)
+├── CLAUDE.md, GEMINI.md        # AI integration (symlinks to AGENTS.md)
+├── README.md                   # User documentation
+├── configs/                    # Ghostty config, themes, dircolors, workspace
+├── scripts/                    # Utility scripts (installation, updates, health checks)
+├── documentations/             # Centralized docs (user/, developer/, specifications/, archive/)
+└── local-infra/               # Local CI/CD (runners/, tests/, logs/, config/)
 ```
+
+**Complete Structure**: See [DIRECTORY_STRUCTURE.md](documentations/developer/architecture/DIRECTORY_STRUCTURE.md) for detailed directory tree with file descriptions, design patterns, and naming conventions.
 
 ### Technology Stack (NON-NEGOTIABLE)
 
@@ -654,117 +390,92 @@ ghostty +show-config                    # Validate current configuration
 ## 🔄 Local CI/CD Implementation
 
 ### GitHub CLI Integration
+
+**Script**: `local-infra/runners/gh-workflow-local.sh`
+
+The gh-workflow-local.sh script provides comprehensive local CI/CD capabilities with zero GitHub Actions cost. It includes configuration validation, performance testing, workflow status monitoring, and billing checks.
+
+**Usage**:
 ```bash
-# File: local-infra/runners/gh-workflow-local.sh
-#!/bin/bash
+# Run complete local workflow
+./local-infra/runners/gh-workflow-local.sh all
 
-# GitHub CLI-based local workflow simulation
-case "$1" in
-    "local")
-        # Simulate GitHub Actions locally
-        echo "🚀 Running local GitHub Actions simulation..."
+# Individual operations
+./local-infra/runners/gh-workflow-local.sh local      # Simulate GitHub Actions locally
+./local-infra/runners/gh-workflow-local.sh status    # Check workflow status
+./local-infra/runners/gh-workflow-local.sh billing   # Monitor Actions usage
+./local-infra/runners/gh-workflow-local.sh pages     # Local Pages simulation
 
-        # Configuration validation
-        ghostty +show-config || exit 1
-
-        # Performance testing
-        ./local-infra/runners/performance-monitor.sh --test
-
-        # Build simulation
-        ./start.sh --verbose --dry-run
-        ;;
-
-    "status")
-        # Check workflow status using gh CLI
-        gh run list --limit 5 --json status,conclusion,name,createdAt
-        ;;
-
-    "billing")
-        # Monitor GitHub Actions usage
-        gh api user/settings/billing/actions | jq '.total_minutes_used, .included_minutes'
-        ;;
-
-    "pages")
-        # Local GitHub Pages simulation
-        ./local-infra/runners/gh-pages-setup.sh
-        ;;
-
-    "all")
-        # Complete local workflow
-        $0 local && $0 status && $0 billing
-        ;;
-esac
+# Get help
+./local-infra/runners/gh-workflow-local.sh --help
 ```
+
+**Features**:
+- Robust error handling with `set -euo pipefail`
+- Structured logging with timestamps and color-coded output
+- Performance timing for all operations
+- Automatic cleanup with trap handlers
+- 2025 Ghostty optimization validation
+- GitHub Actions cost monitoring
 
 ### Performance Monitoring
+
+**Script**: `local-infra/runners/performance-monitor.sh`
+
+Monitors Ghostty terminal performance, tracks 2025 optimizations, and generates comprehensive performance reports.
+
+**Usage**:
 ```bash
-# File: local-infra/runners/performance-monitor.sh
-#!/bin/bash
+# Run performance test
+./local-infra/runners/performance-monitor.sh --test
 
-monitor_ghostty_performance() {
-    echo "📊 Monitoring Ghostty performance..."
+# Establish baseline
+./local-infra/runners/performance-monitor.sh --baseline
 
-    # Startup time measurement
-    startup_time=$(time (ghostty --version) 2>&1 | grep real | awk '{print $2}')
+# Generate weekly report
+./local-infra/runners/performance-monitor.sh --weekly-report
 
-    # Memory usage measurement
-    memory_usage=$(ps aux | grep ghostty | awk '{sum+=$6} END {print sum/1024}')
-
-    # Configuration load time
-    config_time=$(time (ghostty +show-config) 2>&1 | grep real | awk '{print $2}')
-
-    # Store results in JSON
-    cat > "./local-infra/logs/performance-$(date +%s).json" << EOF
-{
-    "timestamp": "$(date -Iseconds)",
-    "startup_time": "$startup_time",
-    "memory_usage_mb": "$memory_usage",
-    "config_load_time": "$config_time",
-    "optimizations": {
-        "cgroup_single_instance": $(grep -q "linux-cgroup.*single-instance" ~/.config/ghostty/config && echo "true" || echo "false"),
-        "shell_integration_detect": $(grep -q "shell-integration.*detect" ~/.config/ghostty/config && echo "true" || echo "false")
-    }
-}
-EOF
-}
+# Get help
+./local-infra/runners/performance-monitor.sh --help
 ```
+
+**Metrics Collected**:
+- Startup time measurement
+- Configuration load time
+- CGroup single-instance optimization status
+- Shell integration detection status
+- System information (hostname, kernel, uptime)
+
+**Output**: Performance data saved to `./local-infra/logs/performance-*.json`
 
 ### Zero-Cost GitHub Pages Setup
+
+**Script**: `local-infra/runners/gh-pages-setup.sh`
+
+Configures zero-cost GitHub Pages deployment with Astro.build, including critical `.nojekyll` file validation.
+
+**Usage**:
 ```bash
-# File: local-infra/runners/gh-pages-setup.sh
-#!/bin/bash
+# Complete setup (verify, build, configure)
+./local-infra/runners/gh-pages-setup.sh
 
-setup_github_pages() {
-    echo "📄 Setting up zero-cost GitHub Pages with Astro..."
+# Individual operations
+./local-infra/runners/gh-pages-setup.sh --verify      # Verify build and .nojekyll
+./local-infra/runners/gh-pages-setup.sh --build       # Run Astro build
+./local-infra/runners/gh-pages-setup.sh --configure   # Configure GitHub Pages
 
-    # Ensure Astro build output directory exists
-    if [ ! -d "docs/" ]; then
-        echo "❌ docs/ directory not found. Run Astro build first:"
-        echo "   npx astro build"
-        return 1
-    fi
-
-    # Configure GitHub Pages to serve from docs/ folder
-    if command -v gh >/dev/null 2>&1; then
-        echo "🔧 Configuring GitHub Pages deployment..."
-        gh api repos/:owner/:repo --method PATCH \
-            --field source[branch]=main \
-            --field source[path]="/docs"
-        echo "✅ GitHub Pages configured to serve from docs/ folder"
-    else
-        echo "ℹ️ GitHub CLI not available, configure Pages manually:"
-        echo "   Settings → Pages → Source: Deploy from a branch → main → /docs"
-    fi
-
-    # Verify Astro build output
-    if [ -f "docs/index.html" ]; then
-        echo "✅ Astro build output verified in docs/"
-    else
-        echo "❌ No index.html found in docs/. Run: npx astro build"
-        return 1
-    fi
-}
+# Get help
+./local-infra/runners/gh-pages-setup.sh --help
 ```
+
+**Critical Validations**:
+- ✅ `.nojekyll` file existence (REQUIRED for Astro + GitHub Pages)
+- ✅ Astro build output verification (`docs/index.html`)
+- ✅ Asset directory verification (`docs/_astro/`)
+- ✅ GitHub Pages configuration via GitHub CLI
+- ✅ Manual setup instructions fallback
+
+**Note**: The `.nojekyll` file is CRITICAL - without it, ALL CSS/JS assets will return 404 errors on GitHub Pages.
 
 ## 🚨 LLM Conversation Logging (MANDATORY)
 
@@ -873,69 +584,13 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
   - `archive/` - Historical/obsolete documentation (preserved for reference)
 
 ### 🎯 Spec-Kit Development Guides
-For implementing modern web development stacks with local CI/CD:
-- **[Spec-Kit Index](spec-kit/SPEC_KIT_INDEX.md)** - Complete navigation and overview for uv + Astro + GitHub Pages stack
-- **[Comprehensive Guide](spec-kit/SPEC_KIT_GUIDE.md)** - Original detailed implementation document
-- **Individual Command Guides**:
-  - [1. Constitution](spec-kit/1-spec-kit-constitution.md) - Establish project principles
-  - [2. Specify](spec-kit/2-spec-kit-specify.md) - Create technical specifications
-  - [3. Plan](spec-kit/3-spec-kit-plan.md) - Create implementation plans
-  - [4. Tasks](spec-kit/4-spec-kit-tasks.md) - Generate actionable tasks
-  - [5. Implement](spec-kit/5-spec-kit-implement.md) - Execute implementation
-
-**Key Features**: uv-first Python management, Astro.build static sites, Tailwind CSS + shadcn/ui, mandatory local CI/CD, zero-cost GitHub Pages deployment.
+For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](spec-kit/SPEC_KIT_INDEX.md)** - Complete navigation, commands (/constitution, /specify, /plan, /tasks, /implement), and implementation guides.
 
 ## 🌐 Modern Web Development Stack Integration
 
-### Feature 001: Modern Web Development Stack
-**Implementation Status**: Planning Phase Complete, Ready for Tasks Generation
-**Location**: `specs/001-modern-web-development/`
-**Branch**: `001-modern-web-development`
+**Feature 001**: uv + Astro.build + Tailwind CSS + shadcn/ui stack with zero-cost GitHub Pages deployment. **Planning Complete** - Ready for `/tasks` command.
 
-**Core Stack Components**:
-- **uv (≥0.4.0)**: Exclusive Python dependency management with virtual environment integration
-- **Astro.build (≥4.0)**: Static site generation with TypeScript strict mode and islands architecture
-- **Tailwind CSS (≥3.4)**: Utility-first CSS framework with design system optimization
-- **shadcn/ui**: Copy-paste component library with Radix UI primitives and accessibility compliance
-- **Local CI/CD Infrastructure**: Zero GitHub Actions consumption with complete workflow simulation
-
-**Performance Targets**:
-- Lighthouse scores 95+ across all metrics (Performance, Accessibility, Best Practices, SEO)
-- Core Web Vitals: FCP <1.5s, LCP <2.5s, CLS <0.1
-- JavaScript bundle size <100KB for initial load
-- Build time <30 seconds locally with hot reload <1 second
-
-**Local CI/CD Requirements**:
-```bash
-# Modern web stack local workflow
-./local-infra/runners/astro-build-local.sh       # Astro build simulation
-./local-infra/runners/performance-monitor.sh     # Core Web Vitals monitoring
-./local-infra/runners/gh-workflow-local.sh all   # Complete validation
-```
-
-**Constitutional Compliance**:
-- ✅ uv-First Python Management: Exclusive use of uv for all Python operations
-- ✅ Static Site Generation Excellence: Astro.build with performance optimization
-- ✅ Local CI/CD First: Mandatory local validation before GitHub deployment
-- ✅ Component-Driven UI: shadcn/ui with accessibility requirements
-- ✅ Zero-Cost Deployment: GitHub Pages with branch preservation
-
-**Development Workflow Integration**:
-```bash
-# Spec-kit workflow commands for modern web development
-/.specify/scripts/bash/create-new-feature.sh    # Feature specification
-# Available commands: /constitution, /specify, /plan, /tasks, /implement
-
-# Project structure follows constitutional requirements
-project-root/
-├── .venv/                  # uv managed Python environment
-├── src/                    # Astro source files
-├── components/             # shadcn/ui components
-├── local-infra/            # Local CI/CD infrastructure
-└── [config files]          # Constitutional configuration files
-```
-
-**Next Steps**: Execute `/tasks` command to generate implementation tasks following Phase 2 planning approach.
+**Complete Specification**: [OVERVIEW.md](documentations/specifications/004-modern-web-development/OVERVIEW.md) - Core stack, performance targets, CI/CD requirements, constitutional compliance, implementation phases.
 
 ### Support Commands
 ```bash
