@@ -213,15 +213,15 @@ ghostty +show-config
 ## Spec-Kit Development Guides
 
 For implementing modern web development stacks with local CI/CD:
-- **[Spec-Kit Index](../../spec-kit/SPEC_KIT_INDEX.md)** - Complete navigation and overview
-- **[Comprehensive Guide](../../spec-kit/SPEC_KIT_GUIDE.md)** - Original detailed implementation
+- **[Spec-Kit Index](../../spec-kit/guides/SPEC_KIT_INDEX.md)** - Complete navigation and overview
+- **[Comprehensive Guide](../../spec-kit/guides/SPEC_KIT_GUIDE.md)** - Original detailed implementation
 
 **Individual Command Guides**:
-1. [Constitution](../../spec-kit/1-spec-kit-constitution.md) - Establish project principles
-2. [Specify](../../spec-kit/2-spec-kit-specify.md) - Create technical specifications
-3. [Plan](../../spec-kit/3-spec-kit-plan.md) - Create implementation plans
-4. [Tasks](../../spec-kit/4-spec-kit-tasks.md) - Generate actionable tasks
-5. [Implement](../../spec-kit/5-spec-kit-implement.md) - Execute implementation
+1. [Constitution](../../spec-kit/guides/1-spec-kit-constitution.md) - Establish project principles
+2. [Specify](../../spec-kit/guides/2-spec-kit-specify.md) - Create technical specifications
+3. [Plan](../../spec-kit/guides/3-spec-kit-plan.md) - Create implementation plans
+4. [Tasks](../../spec-kit/guides/4-spec-kit-tasks.md) - Generate actionable tasks
+5. [Implement](../../spec-kit/guides/5-spec-kit-implement.md) - Execute implementation
 
 **Key Features**: uv-first Python management, Astro.build static sites, Tailwind CSS + shadcn/ui, mandatory local CI/CD, zero-cost GitHub Pages deployment.
 
