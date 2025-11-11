@@ -54,11 +54,93 @@ linux-cgroup = single-instance
 shell-integration = detect
 shell-integration-features = cursor,sudo,title
 
-# Memory management
-scrollback-limit = 100000
+# Memory management (unlimited scrollback)
+scrollback-limit = 999999999
 ```
 
 **Do not disable these** - they are required for optimal performance.
+
+### Scrollback Buffer Configuration
+
+The repository configures **unlimited scrollback** (effectively) for complete terminal history retention.
+
+**Current Setting**: 999,999,999 lines (~1 billion lines)
+
+#### Choosing Your Scrollback Limit
+
+> Use this decision tree to choose an appropriate scrollback limit based on your use case and available system resources. The CGroup single-instance optimization protects against excessive memory consumption even with unlimited scrollback.
+
+```mermaid
+flowchart TD
+    Start([Choose scrollback limit]) --> Usage{Primary<br/>use case?}
+
+    Usage -->|General terminal use| Conservative[Conservative: 10,000 lines<br/>~1-2MB memory]
+    Usage -->|Development & debugging| Large[Large: 100,000 lines<br/>~10-20MB memory]
+    Usage -->|Long-running sessions| Unlimited[Unlimited: 999,999,999 lines<br/>~100GB max theoretical]
+
+    Conservative --> CheckRAM1{System RAM<br/>available?}
+    Large --> CheckRAM2{System RAM<br/>available?}
+    Unlimited --> CheckRAM3{System RAM<br/>available?}
+
+    CheckRAM1 -->|< 4GB| Use10K[Use 10,000<br/>scrollback-limit = 10000]
+    CheckRAM1 -->|≥ 4GB| Use100K[Upgrade to 100,000<br/>scrollback-limit = 100000]
+
+    CheckRAM2 -->|< 8GB| Use100K
+    CheckRAM2 -->|≥ 8GB| UseUnlimited[Use unlimited<br/>scrollback-limit = 999999999]
+
+    CheckRAM3 -->|< 16GB| Warn[⚠️ Consider 100,000<br/>Unlimited may impact performance]
+    CheckRAM3 -->|≥ 16GB| UseUnlimited
+
+    Use10K --> Apply[Edit: ~/.config/ghostty/scroll.conf]
+    Use100K --> Apply
+    UseUnlimited --> Apply
+    Warn --> Apply
+
+    Apply --> Restart[Restart Ghostty]
+    Restart --> Verify[Test scrollback<br/>Generate long output]
+
+    Verify --> Complete([✅ Scrollback configured])
+
+    style Start fill:#e1f5fe
+    style Complete fill:#c8e6c9
+    style Warn fill:#ffcdd2
+    style Usage fill:#fff9c4
+```
+
+**Location**: `~/.config/ghostty/scroll.conf`
+
+**Why 999999999 instead of -1**:
+- Ghostty does not support `-1` for unlimited scrollback
+- 999,999,999 lines is effectively unlimited for practical use
+- Provides ~1 billion lines of terminal history
+
+**Memory Considerations**:
+- Each line consumes ~100-200 bytes of memory
+- Full buffer usage (~100GB) is unlikely in normal use
+- CGroup single-instance optimization manages memory efficiently
+- Constitutional limit: <100MB baseline memory usage maintained
+
+**Performance Impact**:
+- Negligible impact due to Ghostty's efficient memory management
+- linux-cgroup settings prevent excessive memory consumption
+- Scroll performance remains optimal even with large buffers
+
+**Customization**:
+
+Edit `~/.config/ghostty/scroll.conf` to change:
+
+```bash
+# Conservative (default for most terminals): 10,000 lines
+scrollback-limit = 10000
+
+# Large (debugging sessions): 100,000 lines
+scrollback-limit = 100000
+
+# Unlimited (this repository's default): ~1 billion lines
+scrollback-limit = 999999999
+```
+
+**Restart Required**: Changes take effect on next Ghostty window launch.
 
 ### Theme Configuration
 
@@ -302,6 +384,43 @@ You can freely customize:
 These will NOT be overwritten during updates.
 
 ## Configuration Validation
+
+> Configuration validation follows a multi-stage process ensuring syntax correctness, semantic compatibility, performance compliance, and constitutional adherence to 2025 optimization requirements.
+
+```mermaid
+flowchart TD
+    Start([User modifies config]) --> Syntax[Syntax Validation<br/>ghostty +show-config]
+
+    Syntax -->|Valid| Semantic[Semantic Validation<br/>Option compatibility check]
+    Syntax -->|Errors| ShowSyntax[Display syntax errors<br/>Line numbers & descriptions]
+    ShowSyntax --> Fix1[Fix syntax issues]
+    Fix1 --> Syntax
+
+    Semantic -->|Valid| Performance[Performance Validation<br/>./manage.sh validate --type performance]
+    Semantic -->|Warnings| ShowWarnings[Display warnings<br/>Conflicting options]
+    ShowWarnings --> Fix2[Resolve conflicts]
+    Fix2 --> Semantic
+
+    Performance -->|Pass| Constitutional[Constitutional Compliance<br/>2025 optimizations present?]
+    Performance -->|Fail| ShowPerf[Performance issues<br/>Startup time, memory]
+    ShowPerf --> Fix3[Optimize settings]
+    Fix3 --> Performance
+
+    Constitutional -->|✅ Compliant| Apply[Apply configuration<br/>Restart Ghostty]
+    Constitutional -->|❌ Missing| ShowConst[Missing requirements<br/>linux-cgroup, shell-integration]
+    ShowConst --> Fix4[Add constitutional settings]
+    Fix4 --> Constitutional
+
+    Apply --> Verify[Verify in running terminal]
+    Verify --> Complete([✅ Configuration active])
+
+    style Start fill:#e1f5fe
+    style Complete fill:#c8e6c9
+    style ShowSyntax fill:#ffcdd2
+    style ShowPerf fill:#ffcdd2
+    style ShowConst fill:#ff5252,color:#fff
+    style Constitutional fill:#fff9c4
+```
 
 ### Syntax Validation
 

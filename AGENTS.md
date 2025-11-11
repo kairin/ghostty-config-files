@@ -13,15 +13,25 @@
 ### 🚨 CRITICAL: Ghostty Performance & Optimization (2025)
 - **Linux CGroup Single-Instance**: MANDATORY for performance (`linux-cgroup = single-instance`)
 - **Enhanced Shell Integration**: Auto-detection with advanced features
-- **Memory Management**: Optimized scrollback limits and process controls
+- **Memory Management**: Unlimited scrollback (999999999 lines) with CGroup protection
 - **Auto Theme Switching**: Light/dark mode support with Catppuccin themes
 - **Security Features**: Clipboard paste protection enabled
 
 ### 🚨 CRITICAL: Package Management & Dependencies
 - **Ghostty**: Built from source with Zig 0.14.0 (latest stable)
 - **ZSH**: Oh My ZSH with enhanced plugins for productivity
-- **Node.js**: Latest LTS via NVM for AI tool integration
+- **Node.js**: Latest LTS via NVM for AI tool integration (with system Node.js fallback)
 - **Dependencies**: Smart detection and minimal installation footprint
+
+### 🚨 CRITICAL: Installation Prerequisites
+- **Passwordless Sudo**: MANDATORY for automated installation
+  - Required for: apt package installation, system configuration
+  - Security scope: Limited to `/usr/bin/apt` only (not unrestricted)
+  - Configuration: `sudo visudo` → Add `username ALL=(ALL) NOPASSWD: /usr/bin/apt`
+  - Alternative: Manual installation with interactive password prompts (not recommended)
+  - Test: `sudo -n apt update` should run without password prompt
+- **Impact**: Installation script will EXIT immediately if passwordless sudo not configured
+- **Rationale**: Enables automated daily updates and zero-configuration installation experience
 
 ### 🚨 CRITICAL: Context7 MCP Integration & Documentation Synchronization
 
@@ -124,6 +134,45 @@ git push origin main
 # NEVER: git branch -d "$BRANCH_NAME"
 ```
 
+#### Constitutional Branch Workflow
+
+> This workflow diagram illustrates the MANDATORY constitutional branch management strategy. Every branch represents valuable configuration history and must never be deleted without explicit user permission.
+
+```mermaid
+flowchart TD
+    Start([New feature/fix needed]) --> CreateBranch[Create timestamped branch<br/>YYYYMMDD-HHMMSS-type-description]
+    CreateBranch --> LocalCICD{Run local CI/CD<br/>./local-infra/runners/gh-workflow-local.sh all}
+
+    LocalCICD -->|Fails| FixIssues[Fix validation errors]
+    FixIssues --> LocalCICD
+    LocalCICD -->|Success| Checkout[git checkout -b BRANCH_NAME]
+
+    Checkout --> MakeChanges[Make code changes]
+    MakeChanges --> Validate[Validate: ghostty +show-config]
+    Validate --> Commit[git add .<br/>git commit -m 'message']
+
+    Commit --> Push[git push -u origin BRANCH_NAME]
+    Push --> CheckoutMain[git checkout main]
+    CheckoutMain --> Merge[git merge BRANCH_NAME --no-ff]
+
+    Merge --> PushMain[git push origin main]
+    PushMain --> Preserve{⚠️ NEVER DELETE BRANCH<br/>Preservation MANDATORY}
+
+    Preserve -->|Correct| Keep[✅ Branch preserved<br/>Complete history maintained]
+    Preserve -->|❌ Attempted deletion| Warn[🚨 CONSTITUTIONAL VIOLATION<br/>Stop immediately]
+
+    Keep --> Complete([✅ Workflow complete<br/>Branch preserved])
+    Warn --> RollBack[Restore branch from remote]
+    RollBack --> Complete
+
+    style Start fill:#e1f5fe
+    style Complete fill:#c8e6c9
+    style Preserve fill:#ffcdd2
+    style Warn fill:#ff5252,color:#fff
+    style LocalCICD fill:#fff9c4
+    style Keep fill:#81c784
+```
+
 ### 🚨 CRITICAL: GitHub Pages Infrastructure (MANDATORY)
 - **`.nojekyll` File**: ABSOLUTELY CRITICAL for GitHub Pages deployment
 - **Location**: `docs/.nojekyll` (empty file, no content needed)
@@ -163,6 +212,53 @@ DATETIME=$(date +"%Y%m%d-%H%M%S")
 BRANCH_NAME="${DATETIME}-config-optimization"
 git checkout -b "$BRANCH_NAME"
 # ... rest of workflow
+```
+
+#### Local CI/CD Pipeline Stages
+
+> **MANDATORY WORKFLOW**: Every configuration change must complete all 7 local CI/CD stages before GitHub deployment. This ensures zero GitHub Actions consumption and maintains constitutional compliance.
+
+```mermaid
+flowchart LR
+    Start([Code change]) --> Stage1[01: Validate Config<br/>ghostty +show-config]
+
+    Stage1 -->|Pass| Stage2[02: Test Performance<br/>CGroup, shell integration]
+    Stage1 -->|Fail| Fix1[Fix configuration]
+    Fix1 --> Stage1
+
+    Stage2 -->|Pass| Stage3[03: Check Compatibility<br/>Cross-system validation]
+    Stage2 -->|Fail| Fix2[Fix performance issues]
+    Fix2 --> Stage2
+
+    Stage3 -->|Pass| Stage4[04: Simulate Workflows<br/>GitHub Actions local]
+    Stage3 -->|Fail| Fix3[Fix compatibility]
+    Fix3 --> Stage3
+
+    Stage4 -->|Pass| Stage5[05: Generate Docs<br/>Update & validate]
+    Stage4 -->|Fail| Fix4[Fix workflow issues]
+    Fix4 --> Stage4
+
+    Stage5 -->|Pass| Stage6[06: Package Release<br/>Prepare artifacts]
+    Stage5 -->|Fail| Fix5[Fix documentation]
+    Fix5 --> Stage5
+
+    Stage6 -->|Pass| Stage7[07: Deploy Pages<br/>Local build & test]
+    Stage6 -->|Fail| Fix6[Fix packaging]
+    Fix6 --> Stage6
+
+    Stage7 -->|Pass| Deploy{Zero GitHub<br/>Actions cost?}
+    Stage7 -->|Fail| Fix7[Fix deployment]
+    Fix7 --> Stage7
+
+    Deploy -->|✅ Yes| Complete([✅ DEPLOY TO GITHUB])
+    Deploy -->|❌ No| Warn[🚨 STOP: Consuming Actions minutes]
+    Warn --> Review[Review local-infra/logs/]
+    Review --> Fix7
+
+    style Start fill:#e1f5fe
+    style Complete fill:#c8e6c9
+    style Warn fill:#ff5252,color:#fff
+    style Deploy fill:#fff9c4
 ```
 
 #### Local Workflow Tools (MANDATORY)
@@ -308,6 +404,7 @@ ls -la ~
 5. **Local CI/CD**: Complete workflow execution without GitHub Actions costs
 6. **AI Tool Integration**: Seamless Claude Code and Gemini CLI setup
 7. **Enhanced Readability**: XDG-compliant dircolors for readable directory listings
+8. **Automated Daily Updates**: System-wide updates run automatically at 9:00 AM daily
 
 ### Local CI/CD Workflows
 ```
@@ -372,6 +469,39 @@ gh repo set-default
 # Local CI/CD for updates
 ./local-infra/runners/gh-workflow-local.sh update     # Update workflow
 ```
+
+### Daily Automated Updates
+```bash
+# Run updates manually anytime
+update-all                              # Execute all system updates now
+
+# View update logs and status
+update-logs                             # Latest update summary
+update-logs-full                        # Complete detailed log
+update-logs-errors                      # Errors only
+ls -la /tmp/daily-updates-logs/         # All log files
+
+# Configuration and scheduling
+crontab -l                              # View current schedule (default: 9:00 AM)
+crontab -e                              # Edit schedule
+
+# Passwordless sudo setup (for fully automated apt updates)
+sudo EDITOR=nano visudo                 # Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/apt
+```
+
+**What Gets Updated Daily:**
+- System packages (apt: GitHub CLI, all system packages, autoremove)
+- Oh My Zsh framework and plugins
+- npm package manager and all global packages
+- Claude CLI (@anthropic-ai/claude-code)
+- Gemini CLI (@google/gemini-cli)
+- GitHub Copilot CLI (@github/copilot)
+
+**Automatic Features:**
+- Runs daily at 9:00 AM via cron
+- Full output logging to /tmp/daily-updates-logs/
+- Terminal startup notifications (once per day)
+- Passwordless execution (with proper sudoers configuration)
 
 ### Testing & Validation
 ```bash

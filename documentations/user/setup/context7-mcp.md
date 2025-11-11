@@ -4,6 +4,59 @@
 
 Context7 MCP (Model Context Protocol) server provides up-to-date documentation and best practices for all technologies in this project. This guide explains how to configure and use Context7 with Claude Code CLI.
 
+### MCP Architecture
+
+> **CRITICAL**: The red-highlighted shell configuration (`.zshrc`) is essential. Environment variables MUST be exported to the shell environment using `set -a; source .env; set +a` for Claude Code to access them via `${VARIABLE_NAME}` syntax.
+
+```mermaid
+graph TD
+    subgraph "Claude Code CLI"
+        A[User Conversation]
+        B[MCP Client]
+    end
+
+    subgraph "Local Environment"
+        C[.mcp.json Configuration]
+        D[.env Environment Variables]
+        E[~/.zshrc Shell Config]
+    end
+
+    subgraph "MCP Servers"
+        F[Context7 MCP Server<br/>HTTP: mcp.context7.com]
+        G[GitHub MCP Server<br/>stdio: npx @modelcontextprotocol/server-github]
+    end
+
+    subgraph "External APIs"
+        H[Context7 API<br/>Documentation & Best Practices]
+        I[GitHub API<br/>Repository Operations]
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E -->|Exports CONTEXT7_API_KEY| F
+    E -->|Exports GITHUB_TOKEN| G
+
+    F -->|Authenticated requests| H
+    G -->|GitHub CLI token| I
+
+    H -->|Up-to-date docs| F
+    I -->|Repo data| G
+
+    F -->|MCP tools available| B
+    G -->|MCP tools available| B
+
+    style A fill:#e1f5fe
+    style H fill:#c8e6c9
+    style I fill:#c8e6c9
+    style D fill:#fff9c4
+    style E fill:#ffcdd2
+
+    classDef critical fill:#ff5252,color:#fff
+    class E critical
+```
+
 ## 📋 Prerequisites
 
 - Claude Code CLI installed and authenticated

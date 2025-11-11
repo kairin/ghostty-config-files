@@ -4,19 +4,88 @@ This repository contains a comprehensive terminal environment setup featuring th
 
 ## Features
 
-- **Ghostty Terminal**: Pre-configured for performance and aesthetics.
+- **Ghostty Terminal**: Pre-configured for performance and aesthetics with 2025 optimizations.
+  - **Performance**: linux-cgroup single-instance for optimal responsiveness
+  - **Unlimited History**: 999,999,999 lines of scrollback (~1 billion lines)
+  - **Memory Management**: CGroup limits prevent excessive memory consumption
+  - **Shell Integration**: Auto-detection with advanced features
 - **ZSH + Oh My ZSH**: A powerful shell with useful plugins.
 - **Modern Unix Tools**: `eza`, `bat`, `ripgrep`, `fzf`, `zoxide`, and `fd`.
-- **AI Integration**: Claude Code and Gemini CLI are integrated into the terminal.
+- **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js LTS via NVM, with system Node.js fallback).
 - **Context Menu**: "Open in Ghostty" right-click option in your file manager.
+- **Automated Daily Updates**: System-wide updates run automatically every day at 9:00 AM.
 - **Astro-Based Website**: A documentation and dashboard website built with Astro.
 
 ## Getting Started
+
+### Installation Workflow
+
+> The installation process follows a structured workflow with automatic dependency detection and fallback strategies. Passwordless sudo configuration is required for automated installation.
+
+```mermaid
+flowchart TD
+    Start([User wants Ghostty setup]) --> CheckSudo{Passwordless<br/>sudo configured?}
+
+    CheckSudo -->|No| ConfigSudo[Configure passwordless sudo<br/>sudo visudo]
+    CheckSudo -->|Yes| CloneRepo[Clone repository<br/>git clone ghostty-config-files]
+    ConfigSudo --> TestSudo{Test: sudo -n apt update}
+    TestSudo -->|Fails| ShowError[❌ Show setup instructions]
+    TestSudo -->|Success| CloneRepo
+
+    CloneRepo --> RunInstall[Run: ./start.sh]
+    RunInstall --> CheckDeps{All dependencies<br/>available?}
+
+    CheckDeps -->|Missing| InstallDeps[Install: Zig, Git, build tools]
+    CheckDeps -->|Present| BuildGhostty[Build Ghostty from source]
+    InstallDeps --> BuildGhostty
+
+    BuildGhostty --> ConfigZsh[Setup ZSH + Oh My ZSH]
+    ConfigZsh --> InstallNode{Node.js<br/>installation}
+
+    InstallNode -->|NVM success| InstallAI[Install AI tools<br/>Claude, Gemini]
+    InstallNode -->|NVM fails| SystemNode[Fallback: system Node.js]
+    SystemNode --> InstallAI
+
+    InstallAI --> ConfigContext[Setup context menu<br/>Right-click integration]
+    ConfigContext --> DailyUpdates[Configure daily updates<br/>9:00 AM cron]
+    DailyUpdates --> Complete([✅ Installation Complete<br/>Restart terminal])
+
+    ShowError --> Manual[Manual installation<br/>with interactive sudo]
+    Manual --> CloneRepo
+
+    style Start fill:#e1f5fe
+    style Complete fill:#c8e6c9
+    style ShowError fill:#ffcdd2
+    style CheckSudo fill:#fff9c4
+    style InstallNode fill:#fff9c4
+```
 
 ### Prerequisites
 
 - Ubuntu 25.10 (Questing) or a compatible Linux distribution.
 - Git installed on your system.
+- **Passwordless sudo configured for apt commands** (Required for automated installation)
+
+#### Configure Passwordless Sudo (One-time setup)
+
+Before running the installation, configure passwordless sudo to enable automated package installation:
+
+```bash
+sudo EDITOR=nano visudo
+# Add this line at the end (replace 'yourusername' with your actual username):
+yourusername ALL=(ALL) NOPASSWD: /usr/bin/apt
+# Save: Ctrl+O, Enter | Exit: Ctrl+X
+```
+
+**Why This is Required:**
+- The installation script requires non-interactive sudo access
+- Enables automated daily updates without password prompts
+- Only grants sudo access to `/usr/bin/apt` (not unrestricted sudo)
+
+**Test Configuration:**
+```bash
+sudo -n apt update  # Should run without password prompt
+```
 
 ### Installation
 
@@ -59,6 +128,59 @@ The repository includes a unified management interface:
 ```
 
 For detailed usage, see [docs-source/user-guide/usage.md](docs-source/user-guide/usage.md).
+
+### Daily Automated Updates
+
+The installation automatically sets up a daily update system that keeps your entire development environment current.
+
+**What Gets Updated:**
+- System packages (apt)
+- GitHub CLI
+- Oh My Zsh
+- npm and all global packages
+- Claude CLI
+- Gemini CLI
+- GitHub Copilot CLI
+
+**Automatic Schedule:**
+- Updates run daily at 9:00 AM via cron
+- Full output logging for troubleshooting
+- Terminal startup notifications with update summaries
+
+**Manual Controls:**
+
+```bash
+# Run updates manually anytime
+update-all
+
+# View latest update summary
+update-logs
+
+# View complete update details
+update-logs-full
+
+# View errors only
+update-logs-errors
+
+# View all available logs
+ls -la /tmp/daily-updates-logs/
+```
+
+**Configuration:**
+
+To change the update schedule:
+```bash
+crontab -e
+# Change: 0 9 * * * to your preferred time
+```
+
+To enable passwordless apt updates:
+```bash
+sudo EDITOR=nano visudo
+# Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/apt
+```
+
+For complete documentation, see [scripts/DAILY_UPDATES_README.md](scripts/DAILY_UPDATES_README.md).
 
 ### Running the Website
 

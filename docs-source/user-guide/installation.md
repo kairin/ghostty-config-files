@@ -36,6 +36,32 @@ This will install:
 - **Shell**: ZSH (configured by installation), Bash 5.x+ (for scripts)
 - **Disk Space**: ~2GB for full installation
 - **Memory**: 2GB+ RAM recommended
+- **Sudo Configuration**: Passwordless sudo for apt (REQUIRED for automated installation)
+
+### Configure Passwordless Sudo (REQUIRED)
+
+Before running the installation, configure passwordless sudo to enable automated package installation:
+
+```bash
+sudo EDITOR=nano visudo
+# Add this line at the end (replace 'yourusername' with your actual username):
+yourusername ALL=(ALL) NOPASSWD: /usr/bin/apt
+# Save: Ctrl+O, Enter | Exit: Ctrl+X
+```
+
+**Why This is Required**:
+- The installation script (`start.sh`) requires non-interactive sudo access
+- This enables automated daily updates without password prompts
+- Only grants sudo access to `/usr/bin/apt` (not unrestricted sudo)
+
+**Test Your Configuration**:
+```bash
+sudo -n apt update  # Should run without password prompt
+```
+
+If the test command runs without prompting for a password, you're ready to proceed.
+
+**Alternative**: Run installation manually with interactive sudo prompts (not recommended for automation)
 
 ### Required Packages
 The installation script will automatically install required dependencies:
@@ -239,6 +265,78 @@ cp configs/ghostty/config ~/.config/ghostty/config
 # Restart Nautilus
 nautilus -q
 ```
+
+### NVM Installation Issues
+
+> **Automatic Fallback Strategy**: NVM installation attempts first (preferred), but the installation script automatically falls back to system Node.js if NVM fails. AI tools function identically with either method.
+
+```mermaid
+flowchart TD
+    Start([Node.js installation required]) --> InstallNVM[Install NVM<br/>curl nvm install script]
+
+    InstallNVM --> SourceShell[Source shell config<br/>~/.zshrc or ~/.bashrc]
+    SourceShell --> CheckNVM{NVM command<br/>available?}
+
+    CheckNVM -->|Yes| InstallLTS[Install Node.js LTS<br/>nvm install --lts]
+    CheckNVM -->|No| WarnNVM[⚠️ NVM not in PATH<br/>Shell restart needed]
+
+    InstallLTS --> VerifyNode{Node.js<br/>accessible?}
+    WarnNVM --> Fallback[Fallback: System Node.js<br/>sudo apt install nodejs npm]
+
+    VerifyNode -->|Yes| UseNVM[✅ Use NVM Node.js<br/>Preferred method]
+    VerifyNode -->|No| Fallback
+
+    Fallback --> CheckSystem{System Node.js<br/>installed?}
+    CheckSystem -->|Yes| UseSystem[✅ Use system Node.js<br/>AI tools will work]
+    CheckSystem -->|No| InstallSystem[Install: sudo apt install nodejs npm]
+    InstallSystem --> UseSystem
+
+    UseNVM --> InstallAI[Install AI tools<br/>Claude, Gemini, Copilot]
+    UseSystem --> InstallAI
+
+    InstallAI --> Complete([✅ Node.js + AI tools ready])
+
+    style Start fill:#e1f5fe
+    style Complete fill:#c8e6c9
+    style WarnNVM fill:#fff9c4
+    style Fallback fill:#ffcdd2
+    style UseNVM fill:#81c784
+    style UseSystem fill:#aed581
+```
+
+**Issue**: NVM installation fails or not detected
+
+**Symptoms**:
+```
+⚠️  NVM installation may have failed - check logs
+💡 System Node.js will be used as fallback if NVM unavailable
+```
+
+**Solutions**:
+```bash
+# Option 1: Manual NVM installation
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+source ~/.zshrc
+nvm install --lts
+
+# Option 2: Use system Node.js (fallback - already used by script)
+sudo apt install nodejs npm
+
+# Option 3: Check NVM installation
+command -v nvm  # Should show NVM path
+nvm --version   # Should show version number
+
+# Verify Node.js is available
+node --version
+npm --version
+```
+
+**Why This Happens**:
+- NVM requires shell restart to load into PATH
+- The installation script sources shell config but may not pick up NVM in all contexts
+- System Node.js automatically used as fallback (AI tools will still work)
+
+**Impact**: AI tools (Claude Code, Gemini CLI) will function normally with system Node.js
 
 ### ZSH Not Default Shell
 
