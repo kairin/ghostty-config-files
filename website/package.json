@@ -1,0 +1,45 @@
+{
+  "name": "ghostty-config-files",
+  "version": "1.0.0",
+  "description": "A complete terminal environment setup featuring Ghostty terminal emulator with **2025 performance optimizations**, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and Ptyxis terminal via Flatpak.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "clean-docs": "rm -rf ../docs/* || true",
+    "prebuild": "npm run clean-docs",
+    "build": "astro check && astro build",
+    "postbuild": "cp public/favicon.* ../docs/ || true",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "sync": "astro sync",
+    "test": "astro check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kairin/ghostty-config-files.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kairin/ghostty-config-files/issues"
+  },
+  "homepage": "https://github.com/kairin/ghostty-config-files#readme",
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.6.0",
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.14.4",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "daisyui": "^5.5.0"
+  }
+}
