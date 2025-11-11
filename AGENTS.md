@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](CONTEXT7_SETUP.md) • [GitHub MCP Setup](GITHUB_MCP_SETUP.md) • [Spec-Kit Guides](spec-kit/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](CONTEXT7_SETUP.md) • [GitHub MCP Setup](GITHUB_MCP_SETUP.md) • [Spec-Kit Guides](spec-kit/guides/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
 
 ## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
@@ -584,7 +584,7 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
   - `archive/` - Historical/obsolete documentation (preserved for reference)
 
 ### 🎯 Spec-Kit Development Guides
-For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](spec-kit/SPEC_KIT_INDEX.md)** - Complete navigation, commands (/constitution, /specify, /plan, /tasks, /implement), and implementation guides.
+For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](spec-kit/guides/SPEC_KIT_INDEX.md)** - Complete navigation, commands (/constitution, /specify, /plan, /tasks, /implement), and implementation guides.
 
 ## 🌐 Modern Web Development Stack Integration
 

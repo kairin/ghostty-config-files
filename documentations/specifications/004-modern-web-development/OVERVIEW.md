@@ -250,7 +250,7 @@ This will generate:
 ## Related Documentation
 
 - **AI Assistant Instructions**: [AGENTS.md](../../../AGENTS.md)
-- **Spec-Kit Index**: [SPEC_KIT_INDEX.md](../../../spec-kit/SPEC_KIT_INDEX.md)
+- **Spec-Kit Index**: [SPEC_KIT_INDEX.md](../../../spec-kit/guides/SPEC_KIT_INDEX.md)
 - **Directory Structure**: [DIRECTORY_STRUCTURE.md](../../developer/architecture/DIRECTORY_STRUCTURE.md)
 - **GitHub Pages Setup**: [gh-pages-setup.sh](../../../local-infra/runners/gh-pages-setup.sh)
 
