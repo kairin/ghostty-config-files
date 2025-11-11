@@ -29,15 +29,18 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: './package-lock.json'
+          cache-dependency-path: 'website/package-lock.json'
 
       - name: Install dependencies
+        working-directory: ./website
         run: npm ci
 
       - name: Constitutional TypeScript Check
+        working-directory: ./website
         run: npm run check
 
       - name: Build Astro site
+        working-directory: ./website
         run: npm run build
 
       - name: Upload Pages artifact

@@ -46,7 +46,7 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
+          cache-dependency-path: 'website/package-lock.json'
 
       - name: Setup Pages configuration
         uses: actions/configure-pages@v5
@@ -55,11 +55,13 @@ jobs:
           static_site_generator: astro
 
       - name: Install dependencies
+        working-directory: ./website
         run: |
           echo "📦 Installing dependencies with npm ci for faster builds..."
           npm ci --silent
 
       - name: Verify critical dependencies
+        working-directory: ./website
         run: |
           echo "🔍 Verifying Astro installation..."
           npm list astro --depth=0
@@ -67,11 +69,13 @@ jobs:
           npm list typescript --depth=0
 
       - name: Run Astro TypeScript check
+        working-directory: ./website
         run: |
           echo "🔍 Running TypeScript validation..."
           npm run check
 
       - name: Build Astro site
+        working-directory: ./website
         run: |
           echo "🏗️ Building Astro site for production..."
           npm run build
