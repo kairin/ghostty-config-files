@@ -135,7 +135,7 @@ cp .env.example .env  # Add CONTEXT7_API_KEY=ctx7sk-your-api-key
 - **MANDATORY**: Query Context7 before major configuration changes
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 
-**Complete Setup Guide:** [CONTEXT7_SETUP.md](CONTEXT7_SETUP.md)
+**Complete Setup Guide:** [Context7 MCP Setup](../user/setup/context7-mcp.md)
 ```
 
 **Lines to Remove**: 36-40 (detailed verification steps moved to CONTEXT7_SETUP.md)

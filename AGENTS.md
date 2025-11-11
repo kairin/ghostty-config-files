@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](CONTEXT7_SETUP.md) • [GitHub MCP Setup](GITHUB_MCP_SETUP.md) • [Spec-Kit Guides](spec-kit/guides/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](documentations/user/setup/context7-mcp.md) • [GitHub MCP Setup](documentations/user/setup/github-mcp.md) • [Spec-Kit Guides](spec-kit/guides/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
 
 ## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
@@ -50,7 +50,7 @@ exit && claude
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 - **BEST PRACTICE**: Document Context7 queries in conversation logs
 
-**Complete Setup Guide:** [CONTEXT7_SETUP.md](CONTEXT7_SETUP.md) - Installation, configuration, troubleshooting, examples
+**Complete Setup Guide:** [Context7 MCP Setup](documentations/user/setup/context7-mcp.md) - Installation, configuration, troubleshooting, examples
 
 ### 🚨 CRITICAL: GitHub MCP Integration & Repository Operations
 
@@ -88,7 +88,7 @@ exit && claude
 - ✅ Leverages existing gh CLI authentication
 - ✅ Token auto-refreshes via gh CLI
 
-**Complete Setup Guide:** [GITHUB_MCP_SETUP.md](GITHUB_MCP_SETUP.md) - Installation, configuration, usage examples, troubleshooting
+**Complete Setup Guide:** [GitHub MCP Setup](documentations/user/setup/github-mcp.md) - Installation, configuration, usage examples, troubleshooting
 
 ### 🚨 CRITICAL: Branch Management & Git Strategy
 

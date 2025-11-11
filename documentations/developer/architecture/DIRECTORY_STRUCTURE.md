@@ -323,8 +323,8 @@ Scripts organized by development phase:
 
 - **AI Assistant Instructions**: [AGENTS.md](../../../AGENTS.md)
 - **User Quick Start**: [README.md](../../../README.md)
-- **Context7 MCP Setup**: [CONTEXT7_SETUP.md](../../../CONTEXT7_SETUP.md)
-- **GitHub MCP Setup**: [GITHUB_MCP_SETUP.md](../../../GITHUB_MCP_SETUP.md)
+- **Context7 MCP Setup**: [context7-mcp.md](../../user/setup/context7-mcp.md)
+- **GitHub MCP Setup**: [github-mcp.md](../../user/setup/github-mcp.md)
 - **Spec-Kit Guides**: [spec-kit/SPEC_KIT_INDEX.md](../../../spec-kit/guides/SPEC_KIT_INDEX.md)
 
 ---
