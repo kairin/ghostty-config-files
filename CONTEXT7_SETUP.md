@@ -24,6 +24,56 @@ cp .env.example .env
 
 **Security Note**: The `.env` file is gitignored and will never be committed to the repository.
 
+### Step 1.5: Export Environment Variables to Shell (CRITICAL)
+
+**⚠️ CRITICAL REQUIREMENT**: Claude Code's `.mcp.json` uses `${VARIABLE_NAME}` syntax to reference **shell environment variables**. These variables must be exported to your shell environment for MCP servers to access them.
+
+**Option A: Automatic Loading (RECOMMENDED)**
+
+Add environment variable loading to your shell configuration:
+
+```bash
+# Add to ~/.zshrc (or ~/.bashrc for bash users)
+cat >> ~/.zshrc << 'EOF'
+
+# ═══════════════════════════════════════════════════════════
+# Context7 MCP & GitHub Token Configuration
+# Automatically load environment variables from ghostty-config-files
+# ═══════════════════════════════════════════════════════════
+if [ -f /home/kkk/Apps/ghostty-config-files/.env ]; then
+    # Use set -a to automatically export all variables
+    set -a
+    source /home/kkk/Apps/ghostty-config-files/.env
+    set +a
+fi
+EOF
+
+# Reload your shell configuration
+source ~/.zshrc
+```
+
+**Option B: Manual Export (per-session)**
+
+```bash
+# Export environment variables before starting Claude Code
+set -a
+source /home/kkk/Apps/ghostty-config-files/.env
+set +a
+
+# Then start Claude Code
+claude
+```
+
+**Verification**:
+
+```bash
+# Verify environment variables are exported
+echo "CONTEXT7_API_KEY: ${CONTEXT7_API_KEY:0:15}..."
+echo "GITHUB_TOKEN: ${GITHUB_TOKEN:0:15}..."
+
+# Should show key prefixes, not empty strings
+```
+
 ### Step 2: Verify Configuration
 
 Run the automated health check script:
@@ -172,6 +222,32 @@ git status --ignored | grep -E "\.env|\.mcp\.json"
 ```
 
 ## 🛠️ Troubleshooting
+
+### Problem: `/doctor` Shows "Missing environment variables" Warning
+
+**Symptoms**:
+```
+[Warning] [context7] mcpServers.context7: Missing environment variables: CONTEXT7_API_KEY
+[Warning] [github] mcpServers.github: Missing environment variables: GITHUB_TOKEN
+```
+
+**Root Cause**: Environment variables exist in `.env` file but are NOT exported to the shell environment where Claude Code runs.
+
+**Solution**:
+1. **Add automatic loading to shell config** (recommended):
+   ```bash
+   cat >> ~/.zshrc << 'EOF'
+   if [ -f /home/kkk/Apps/ghostty-config-files/.env ]; then
+       set -a
+       source /home/kkk/Apps/ghostty-config-files/.env
+       set +a
+   fi
+   EOF
+   ```
+2. **Reload shell configuration**: `source ~/.zshrc`
+3. **Verify variables are exported**: `env | grep -E 'CONTEXT7_API_KEY|GITHUB_TOKEN'`
+4. **Restart Claude Code**: `exit` then `claude`
+5. **Verify fix**: Run `/doctor` again - warnings should be gone
 
 ### Problem: Context7 returns "Unauthorized"
 

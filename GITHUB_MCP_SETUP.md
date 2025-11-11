@@ -94,9 +94,27 @@ Location: `/home/kkk/Apps/ghostty-config-files/.mcp.json`
 
 Location: `/home/kkk/Apps/ghostty-config-files/.env`
 
+**⚠️ CRITICAL REQUIREMENT**: Claude Code's `.mcp.json` uses `${VARIABLE_NAME}` syntax to reference **shell environment variables**. These must be exported to your shell environment.
+
+**Quick Setup**:
+```bash
+# Add to ~/.zshrc (or ~/.bashrc for bash)
+cat >> ~/.zshrc << 'EOF'
+if [ -f /home/kkk/Apps/ghostty-config-files/.env ]; then
+    set -a
+    source /home/kkk/Apps/ghostty-config-files/.env
+    set +a
+fi
+EOF
+
+# Reload configuration
+source ~/.zshrc
+```
+
+**Example `.env` format**:
 ```bash
 # Context7 MCP Server
-CONTEXT7_API_KEY=ctx7sk-a2796ea4-27c9-4ddd-9377-791af58be2e6
+CONTEXT7_API_KEY=ctx7sk-your-api-key-here
 CONTEXT7_MCP_URL=mcp.context7.com/mcp
 CONTEXT7_API_URL=context7.com/api/v1
 
