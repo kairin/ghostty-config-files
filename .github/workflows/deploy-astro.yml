@@ -33,15 +33,17 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
+          cache-dependency-path: 'website/package-lock.json'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Install dependencies
+        working-directory: ./website
         run: npm ci
 
       - name: Build Astro site
+        working-directory: ./website
         run: npm run build
 
       - name: Upload artifact

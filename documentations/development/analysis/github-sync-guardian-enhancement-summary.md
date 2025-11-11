@@ -519,3 +519,143 @@ All while following AGENTS.md requirements for:
 **Date**: 2025-11-12
 **Status**: ✅ COMPLETE - Ready for production use
 **Next**: Test agent invocation and verify Context7 integration + constitutional compliance works correctly
+
+---
+
+# Astro Build Automation Integration (2025-11-12)
+
+## NEW ENHANCEMENT: Automatic Astro Build Triggering
+
+**Summary**: github-sync-guardian workflow now automatically triggers Astro builds when `website/` files are committed. **Zero workflow changes required** - integration is transparent.
+
+### What Changed
+
+**BEFORE**:
+```bash
+1. Agent commits website/ changes
+2. MANUAL: User runs astro build
+3. MANUAL: User commits docs/ changes
+4. Agent pushes and merges
+```
+
+**AFTER**:
+```bash
+1. Agent commits website/ changes
+   ⚡ AUTO: Post-commit hook builds Astro
+   ⚡ AUTO: Commits docs/ changes
+2. Agent pushes and merges (no manual steps)
+```
+
+### Key Features of Astro Integration
+
+- ✅ **Automatic**: No manual build invocation required
+- ✅ **Non-blocking**: Builds AFTER commit finalized (fast commits)
+- ✅ **Zero GitHub Actions Cost**: All builds run locally
+- ✅ **Constitutional Compliance**: Separate build commits, branch preservation
+- ✅ **Transparent**: github-sync-guardian workflow unchanged
+- ✅ **Smart**: Only builds when `website/` files change
+- ✅ **Context7-Informed**: Based on 2025 Git hooks + Astro best practices research
+
+### Implementation Files
+
+1. **NEW**: `.git/hooks/post-commit` (110 lines)
+   - Detects `website/` changes via `git diff-tree`
+   - Invokes `./local-infra/runners/astro-build-local.sh build`
+   - Creates constitutional build commit if build succeeds
+
+2. **UNCHANGED**: `./local-infra/runners/astro-build-local.sh` (448 lines)
+   - Complete Astro build workflow (existing)
+   - Validates prerequisites, runs build, checks output
+
+3. **NEW**: `documentations/development/analysis/local-cicd-astro-integration-plan.md` (1000+ lines)
+   - Complete implementation plan with Context7 best practices
+   - Testing procedures, troubleshooting, rollback strategies
+
+### Expected Commit History
+
+**After Enhancement**:
+```
+* abc1234 Merge branch '20251112-143000-feat-homepage' into main (--no-ff)
+|\
+| * def5678 build: Update docs from commit ghi9012
+| * ghi9012 feat(website): Update homepage layout
+|/
+* jkl3456 Previous commit
+```
+
+**Key Difference**: Automatic `build:` commit added between source commit and merge.
+
+### Agent Behavior Changes
+
+**NONE**: The post-commit hook operates **transparently**. The agent's workflow remains identical.
+
+**What Happens Automatically (No Agent Action Required)**:
+```bash
+# Between commit and push:
+- Post-commit hook detects website/ changes
+- Astro build runs locally (25-50 seconds)
+- Build commit created if build succeeds
+- Agent continues push normally
+```
+
+### Context7 Research Summary
+
+Based on web searches for "Git hooks + Astro build automation 2025":
+
+1. **Husky** is the recommended tool for managing Git hooks in Node.js/Astro projects
+2. **Post-commit hooks** are best for builds (non-blocking, better UX)
+3. **Self-hosted GitHub Actions runners are FREE** (zero billing for compute)
+4. **GitHub Pages auto-deploys** from docs/ folder (no actions needed)
+
+**Current Implementation Aligns**:
+- ✅ Post-commit hook for automatic builds (Context7 best practice)
+- ✅ Local execution (zero GitHub Actions cost)
+- ✅ GitHub Pages deployment from docs/ (free tier)
+- ✅ Constitutional compliance (branch preservation, etc.)
+
+### Testing Required
+
+**Phase 1: Local Testing** (No Remote Push):
+```bash
+# Test Case 1: Basic website change
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+TEST_BRANCH="${DATETIME}-test-auto-build"
+git checkout -b "$TEST_BRANCH"
+echo "<!-- Test change $(date) -->" >> website/src/pages/index.astro
+git add website/src/pages/index.astro
+git commit -m "test(website): Verify automatic build trigger"
+git log --oneline -2  # Should show build commit + source commit
+```
+
+**Expected Output**:
+```
+def5678 build: Update docs from commit ghi9012
+ghi9012 test(website): Verify automatic build trigger
+```
+
+### Rollback Procedure (If Needed)
+
+**Complete Rollback** (disable automatic builds):
+```bash
+# 1. Disable post-commit hook immediately
+mv .git/hooks/post-commit .git/hooks/post-commit.disabled
+
+# 2. Return to manual build process
+./local-infra/runners/astro-build-local.sh build
+
+# 3. To re-enable after fixing:
+mv .git/hooks/post-commit.disabled .git/hooks/post-commit
+chmod +x .git/hooks/post-commit
+```
+
+### Integration Status
+
+**Status**: ✅ Implementation Complete
+**Testing**: Required (5 test cases documented)
+**Documentation**: Complete (local-cicd-astro-integration-plan.md)
+**Agent Changes**: None (transparent integration)
+**Constitutional Compliance**: ✅ Maintained (separate build commits, branch preservation)
+
+---
+
+**Full Documentation**: [local-cicd-astro-integration-plan.md](local-cicd-astro-integration-plan.md) (1000+ lines)
