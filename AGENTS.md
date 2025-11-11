@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Spec-Kit Guides](spec-kit/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](CONTEXT7_SETUP.md) • [GitHub MCP Setup](GITHUB_MCP_SETUP.md) • [Spec-Kit Guides](spec-kit/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
 
 ## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
@@ -29,28 +29,50 @@ Context7 MCP (Model Context Protocol) server provides up-to-date documentation a
 
 #### Installation & Configuration (MANDATORY)
 ```bash
-# Verify Context7 MCP server is installed
-claude mcp list | grep context7
+# Step 1: Configure environment variables
+# Copy .env.example to .env and add your Context7 API key
+cp .env.example .env
+# Edit .env and set: CONTEXT7_API_KEY=ctx7sk-your-api-key-here
 
-# If not installed, configure in Claude Code settings
-# The MCP server connects to https://mcp.context7.com/mcp
-# Requires GitHub PAT in .env file (already configured)
+# Step 2: Project-level MCP configuration
+# The .mcp.json file is pre-configured to use environment variables
+# It will be loaded automatically when Claude Code starts
+
+# Step 3: Verify configuration
+./scripts/check_context7_health.sh
+
+# Step 4: Restart Claude Code to load MCP servers
+# Exit current session and start a new one:
+# exit
+# claude
+
+# Context7 MCP Server Details:
+# - Type: HTTP MCP Server
+# - URL: https://mcp.context7.com/mcp
+# - Configuration: .mcp.json (project-level, uses ${CONTEXT7_API_KEY})
+# - Global Config: ~/.claude.json (user-level fallback)
 ```
 
 #### Health Check Commands (MANDATORY)
 ```bash
-# Check MCP server connection status
-claude mcp list
+# Run automated health check
+./scripts/check_context7_health.sh
 
-# Query Context7 for project-specific documentation
-# Example: Get latest Astro.build best practices
-claude ask "What are the latest Astro.build GitHub Pages deployment best practices?"
+# Manual verification steps:
+# 1. Check environment configuration
+source .env && echo "API Key configured: ${CONTEXT7_API_KEY:0:12}..."
 
-# Example: Verify Ghostty configuration recommendations
-claude ask "What are the recommended Ghostty terminal performance optimizations for 2025?"
+# 2. Verify MCP configuration
+cat .mcp.json  # Should use ${CONTEXT7_API_KEY} placeholder
 
-# Example: Check Node.js + npm best practices
-claude ask "What are the latest Node.js LTS and npm package management best practices?"
+# 3. Test Context7 connectivity (after restart)
+# Within Claude Code conversation, Context7 MCP tools are available:
+# - mcp__context7__resolve-library-id: Find library IDs
+# - mcp__context7__get-library-docs: Retrieve documentation
+
+# Example usage within Claude Code:
+# "Can you use Context7 to get the latest Astro.build best practices?"
+# "Use Context7 to check Ghostty terminal optimization recommendations"
 ```
 
 #### Integration with Local CI/CD (RECOMMENDED)
@@ -120,6 +142,171 @@ claude ask "Zero-cost DevOps strategies for personal projects"
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 - **BEST PRACTICE**: Document Context7 queries in conversation logs
 - **REQUIREMENT**: Keep AGENTS.md synchronized with Context7 best practices
+
+### 🚨 CRITICAL: GitHub MCP Integration & Repository Operations
+
+GitHub MCP (Model Context Protocol) server provides direct integration with GitHub API, enabling Claude Code to perform repository operations, manage issues, create pull requests, and search across GitHub.
+
+#### Installation & Configuration (COMPLETED ✅)
+```bash
+# GitHub MCP is already configured and ready to use!
+# Configuration files:
+# - .mcp.json: MCP server configuration (stdio via npx)
+# - .env: GITHUB_TOKEN from GitHub CLI (gh auth token)
+
+# Verify GitHub MCP health
+./scripts/check_github_mcp_health.sh
+
+# GitHub MCP Server Details:
+# - Type: stdio MCP Server (spawned via npx)
+# - Package: @modelcontextprotocol/server-github
+# - Authentication: GITHUB_PERSONAL_ACCESS_TOKEN from .env
+# - Token Source: GitHub CLI (gh auth token)
+# - Required Scopes: repo, read:org, admin:public_key, gist
+```
+
+#### Health Check Commands (MANDATORY)
+```bash
+# Run automated GitHub MCP health check
+./scripts/check_github_mcp_health.sh
+
+# Manual verification steps:
+# 1. Check GitHub CLI authentication
+gh auth status
+
+# 2. Verify environment configuration
+source .env && echo "GitHub Token: ${GITHUB_TOKEN:0:12}..."
+
+# 3. Test GitHub MCP connectivity (after restart)
+# Within Claude Code conversation:
+# "Can you list issues in this repository?"
+# "Show me recent pull requests"
+# "Create a branch for the new feature"
+```
+
+#### GitHub MCP Capabilities
+**Repository Operations:**
+- List, create, and manage repositories
+- Fork repositories
+- Get repository metadata and statistics
+
+**Issue Management:**
+- Create, read, update, and search issues
+- Add labels, assignees, and milestones
+- Comment on issues
+
+**Pull Request Operations:**
+- List, create, and manage pull requests
+- Review PRs and add comments
+- Merge pull requests
+- Get PR diffs and status
+
+**Branch Management:**
+- List, create, and delete branches
+- Get branch protection status
+- Compare branches
+
+**File Operations:**
+- Read file contents from any branch/commit
+- Create, update, and delete files
+- Get file history and blame information
+
+**Search Operations:**
+- Search repositories, issues, and pull requests
+- Filter by labels, assignees, status, etc.
+- Full-text search across code
+
+#### Integration with Local CI/CD (RECOMMENDED)
+```bash
+# GitHub MCP enhances local CI/CD workflows
+# File: ./local-infra/runners/gh-workflow-local.sh
+
+# Automated issue creation for failed tests
+github_mcp_ci_integration() {
+    echo "🔗 Integrating GitHub MCP with local CI/CD..."
+
+    # Claude Code can now automatically:
+    # - Create issues for test failures
+    # - Update PR status with build results
+    # - Comment on PRs with performance metrics
+    # - Create commits and push to branches
+}
+```
+
+#### Usage Examples (Within Claude Code)
+```bash
+# Repository queries
+"Can you list all open issues in this repository?"
+"Show me the most recent pull requests"
+"What branches exist in this repository?"
+
+# Issue management
+"Create an issue for the performance bug we just discussed"
+"Update issue #42 to add the 'bug' label"
+"Show me all issues assigned to me"
+
+# Pull request operations
+"Create a PR from the current branch to main"
+"Show me the diff for PR #15"
+"List all approved PRs waiting for merge"
+
+# Branch operations
+"Create a feature branch called '2025-perf-optimization'"
+"Show me branches that haven't been updated in 30 days"
+
+# File operations
+"Show me the contents of README.md from the main branch"
+"Update the installation instructions in docs/setup.md"
+
+# Search operations
+"Find all repositories in my organization using TypeScript"
+"Search for issues mentioning 'performance optimization'"
+```
+
+#### GitHub CLI Integration
+GitHub MCP leverages existing GitHub CLI authentication:
+
+```bash
+# GitHub CLI provides token automatically
+gh auth status
+# Output:
+# ✓ Logged in to github.com account kairin
+# - Token scopes: 'admin:public_key', 'gist', 'read:org', 'repo'
+
+# Token is automatically used by GitHub MCP
+# No separate authentication needed!
+
+# Refresh token if expired
+gh auth refresh
+```
+
+#### Constitutional Compliance
+- **MANDATORY**: Use GitHub MCP for all repository operations (no manual gh CLI)
+- **RECOMMENDED**: GitHub MCP operations follow branch preservation strategy
+- **BEST PRACTICE**: Create issues for significant changes via GitHub MCP
+- **REQUIREMENT**: GitHub MCP respects branch naming conventions (YYYYMMDD-HHMMSS-type-description)
+
+#### Security & Best Practices
+- ✅ **Token Security**: Token stored in .env (not committed)
+- ✅ **Scope Minimization**: Only necessary scopes enabled
+- ✅ **CLI Integration**: Leverages existing gh CLI authentication
+- ✅ **Automatic Refresh**: Token refreshes via gh CLI
+- ✅ **Rate Limiting**: GitHub MCP handles rate limits automatically
+- ✅ **Error Handling**: Graceful fallback for API errors
+
+#### Benefits of GitHub MCP Integration
+- ✅ **Direct API Access**: No need for manual gh CLI commands
+- ✅ **Automated Workflows**: Claude can manage repositories autonomously
+- ✅ **Issue Tracking**: Automatic issue creation and management
+- ✅ **PR Management**: Complete PR lifecycle from Claude Code
+- ✅ **Branch Operations**: Seamless branch creation and management
+- ✅ **Search Integration**: GitHub-wide search from conversations
+- ✅ **Zero GitHub Actions Cost**: All operations via API (no workflow minutes)
+
+#### Documentation
+- **Setup Guide**: [GITHUB_MCP_SETUP.md](GITHUB_MCP_SETUP.md) - Complete installation and usage guide
+- **Health Check**: `/home/kkk/Apps/ghostty-config-files/scripts/check_github_mcp_health.sh`
+- **Configuration**: `.mcp.json` and `.env` files
 
 ### 🚨 CRITICAL: Branch Management & Git Strategy
 
