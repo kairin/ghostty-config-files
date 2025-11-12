@@ -166,7 +166,7 @@ class ConstitutionalValidator:
             progress.update(task, advance=20, description="Validating CI/CD configuration...")
             cicd_issues = await self._validate_cicd_config()
             issues.extend(cicd_issues)
-            files_checked.extend([".github/workflows", "local-infra/"])
+            files_checked.extend([".github/workflows", ".runners-local/"])
 
             # Validate constitutional compliance
             progress.update(task, advance=20, description="Validating constitutional compliance...")
@@ -538,15 +538,15 @@ class ConstitutionalValidator:
                     ))
 
         # Check local CI/CD infrastructure
-        local_infra_dir = self.project_root / "local-infra"
+        local_infra_dir = self.project_root / ".runners-local"
         if not local_infra_dir.exists():
             issues.append(ValidationIssue(
-                file_path="local-infra/",
+                file_path=".runners-local/",
                 severity="error",
                 category="constitutional",
                 rule="local_cicd_required",
                 message="Local CI/CD infrastructure is required",
-                suggestion="Create local-infra/ directory with runner scripts"
+                suggestion="Create .runners-local/ directory with runner scripts"
             ))
         else:
             # Check for required runner scripts
@@ -563,7 +563,7 @@ class ConstitutionalValidator:
                     runner_path = runners_dir / runner
                     if not runner_path.exists():
                         issues.append(ValidationIssue(
-                            file_path=f"local-infra/runners/{runner}",
+                            file_path=f".runners-local/workflows/{runner}",
                             severity="warning",
                             category="constitutional",
                             rule="required_runner_scripts",
@@ -572,12 +572,12 @@ class ConstitutionalValidator:
                         ))
                     elif not runner_path.is_file() or not runner_path.stat().st_mode & 0o111:
                         issues.append(ValidationIssue(
-                            file_path=f"local-infra/runners/{runner}",
+                            file_path=f".runners-local/workflows/{runner}",
                             severity="warning",
                             category="constitutional",
                             rule="executable_permissions",
                             message=f"Runner script not executable: {runner}",
-                            suggestion=f"chmod +x local-infra/runners/{runner}",
+                            suggestion=f"chmod +x .runners-local/workflows/{runner}",
                             auto_fixable=True
                         ))
 

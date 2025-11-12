@@ -89,7 +89,7 @@ class ConstitutionalBranchManager:
 
     def setup_logging(self):
         """Setup constitutional logging"""
-        log_dir = self.project_root / "local-infra" / "logs"
+        log_dir = self.project_root / ".runners-local" / "logs"
         log_dir.mkdir(parents=True, exist_ok=True)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -327,7 +327,7 @@ class ConstitutionalBranchManager:
         }
 
         # Save analysis report
-        report_file = self.project_root / "local-infra" / "logs" / f"branch_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        report_file = self.project_root / ".runners-local" / "logs" / f"branch_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
         # Convert datetime objects to strings for JSON serialization
         def serialize_branch(branch):
@@ -438,7 +438,7 @@ class ConstitutionalBranchManager:
                 self.logger.info(f"   • {candidate['name']} ({candidate['age_days']} days old)")
 
             # Save cleanup report
-            cleanup_file = self.project_root / "local-infra" / "logs" / f"cleanup_candidates_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            cleanup_file = self.project_root / ".runners-local" / "logs" / f"cleanup_candidates_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             with open(cleanup_file, 'w') as f:
                 json.dump({
                     "timestamp": current_date.isoformat(),
@@ -467,7 +467,7 @@ class ConstitutionalBranchManager:
                 self.logger.info(f"     Suggested: {suggested_name}")
 
             # Create enforcement report
-            enforcement_file = self.project_root / "local-infra" / "logs" / f"naming_enforcement_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            enforcement_file = self.project_root / ".runners-local" / "logs" / f"naming_enforcement_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
             enforcement_data = []
             for branch in non_constitutional:
@@ -542,7 +542,7 @@ class ConstitutionalBranchManager:
         self.metrics.constitutional_compliance = all(compliance_checks.values())
 
         # Generate compliance report
-        compliance_file = self.project_root / "local-infra" / "logs" / f"constitutional_compliance_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        compliance_file = self.project_root / ".runners-local" / "logs" / f"constitutional_compliance_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
         with open(compliance_file, 'w') as f:
             json.dump({

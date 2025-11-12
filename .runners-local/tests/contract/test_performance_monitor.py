@@ -19,7 +19,7 @@ class TestPerformanceMonitorContract:
 
     def setup_method(self) -> None:
         """Setup test environment."""
-        self.runner_script = Path("local-infra/runners/performance-monitor.sh")
+        self.runner_script = Path(".runners-local/workflows/performance-monitor.sh")
         self.project_root = Path.cwd()
 
     def test_performance_monitor_script_exists(self) -> None:

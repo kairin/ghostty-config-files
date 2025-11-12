@@ -24,7 +24,7 @@ cd "$PROJECT_ROOT"
 
 # Step 1: Local CI/CD Validation (MANDATORY)
 log "🔧 Running mandatory local CI/CD validation..."
-if ! ./local-infra/runners/gh-workflow-local.sh local; then
+if ! ./.runners-local/workflows/gh-workflow-local.sh local; then
     log "❌ Local CI/CD validation failed - deployment aborted"
     exit 1
 fi
@@ -32,7 +32,7 @@ log "✅ Local CI/CD validation passed"
 
 # Step 2: Local Astro Build (MANDATORY)
 log "🏗️ Running local Astro build..."
-if ! ./local-infra/runners/astro-build-local.sh; then
+if ! ./.runners-local/workflows/astro-build-local.sh; then
     log "❌ Local Astro build failed - deployment aborted"
     exit 1
 fi

@@ -240,9 +240,9 @@ integrate_local_workflows() {
     for runner in "${runner_scripts[@]}"; do
         if [[ -f "${SCRIPT_DIR}/${runner}" ]]; then
             available_runners=$((available_runners + 1))
-            log "SUCCESS" "Found: local-infra/runners/${runner}"
+            log "SUCCESS" "Found: .runners-local/workflows/${runner}"
         else
-            log "WARNING" "Missing: local-infra/runners/${runner}"
+            log "WARNING" "Missing: .runners-local/workflows/${runner}"
         fi
     done
 

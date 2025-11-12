@@ -19,7 +19,7 @@ class TestGitHubWorkflowContract:
 
     def setup_method(self) -> None:
         """Setup test environment."""
-        self.runner_script = Path("local-infra/runners/gh-workflow-local.sh")
+        self.runner_script = Path(".runners-local/workflows/gh-workflow-local.sh")
         self.project_root = Path.cwd()
 
     def test_gh_workflow_script_exists(self) -> None:

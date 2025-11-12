@@ -17,8 +17,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 # Directories to check
 MODULES_DIR="$REPO_ROOT/scripts"
-TESTS_DIR="$REPO_ROOT/local-infra/tests"
-RUNNERS_DIR="$REPO_ROOT/local-infra/runners"
+TESTS_DIR="$REPO_ROOT/.runners-local/tests"
+RUNNERS_DIR="$REPO_ROOT/.runners-local/workflows"
 
 # ShellCheck configuration
 SHELLCHECK_SEVERITY="warning"  # error, warning, info, style
@@ -250,8 +250,8 @@ OPTIONS:
 
 CHECKS:
     - Module scripts (scripts/*.sh)
-    - Test scripts (local-infra/tests/**/*.sh)
-    - Runner scripts (local-infra/runners/*.sh)
+    - Test scripts (.runners-local/tests/**/*.sh)
+    - Runner scripts (.runners-local/workflows/*.sh)
 
 CONFIGURATION:
     Severity: $SHELLCHECK_SEVERITY
@@ -291,8 +291,8 @@ EOF
     local runners_result=0
 
     check_directory "$MODULES_DIR" "Module Scripts (scripts/)" || modules_result=$?
-    check_directory "$TESTS_DIR" "Test Scripts (local-infra/tests/)" || tests_result=$?
-    check_directory "$RUNNERS_DIR" "Runner Scripts (local-infra/runners/)" || runners_result=$?
+    check_directory "$TESTS_DIR" "Test Scripts (.runners-local/tests/)" || tests_result=$?
+    check_directory "$RUNNERS_DIR" "Runner Scripts (.runners-local/workflows/)" || runners_result=$?
 
     # Show detailed output if requested
     if [[ $detailed -eq 1 ]]; then
