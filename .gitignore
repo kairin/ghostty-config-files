@@ -172,3 +172,23 @@ documentations/performance/lighthouse-reports/*.json
 /tmp/ghostty-start-logs/migration-*.log
 /tmp/ghostty-start-logs/migration-*.log.json
 .mcp.json
+
+# Self-hosted runner credentials (CRITICAL - never commit)
+# Security hardening per Context7 best practices (2025-11-12)
+.local-runner/
+~/.local-runner/
+**/.credentials
+**/.credentials_rsaparams
+**/.runner
+**/runner-*.token
+runner-state.json
+runner-credentials.json
+
+# Runner service metadata (machine-specific)
+local-infra/service-*.txt
+local-infra/runner-name.txt
+
+# GitHub Actions runner working directory
+actions-runner/
+_diag/
+_work/
