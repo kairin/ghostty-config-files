@@ -54,7 +54,7 @@
 
 - [ ] CHK029 - Are pre-deployment local CI/CD requirements mandated for EVERY configuration change? [Critical, CLAUDE.md:82]
 - [ ] CHK030 - Is the required validation sequence documented: local workflow → status check → config test → commit? [Completeness, CLAUDE.md:85-99]
-- [ ] CHK031 - Are specific validation commands required: `./local-infra/runners/gh-workflow-local.sh local`? [Clarity, CLAUDE.md:86]
+- [ ] CHK031 - Are specific validation commands required: `./.runners-local/workflows/gh-workflow-local.sh local`? [Clarity, CLAUDE.md:86]
 - [ ] CHK032 - Are requirements specified for verifying local build success before proceeding? [Completeness, CLAUDE.md:88-89]
 - [ ] CHK033 - Is configuration validation required: `ghostty +show-config && ./scripts/check_updates.sh`? [Clarity, CLAUDE.md:92]
 - [ ] CHK034 - Are requirements defined for what constitutes a "passing" local validation? [Ambiguity, Gap]
@@ -186,12 +186,12 @@
 - [ ] CHK112 - Are requirements specified for date command compatibility (GNU date vs BSD date)? [Dependency, Gap]
 - [ ] CHK113 - Are requirements defined for shell environment assumptions (bash 5.x+)? [Dependency, Plan:14]
 - [ ] CHK114 - Are requirements specified for GitHub CLI (`gh`) availability for workflow checks? [Dependency, CLAUDE.md:108-114]
-- [ ] CHK115 - Are requirements defined for local-infra tooling prerequisites? [Dependency, CLAUDE.md:101-106]
+- [ ] CHK115 - Are requirements defined for .runners-local tooling prerequisites? [Dependency, CLAUDE.md:101-106]
 
 ## Dependencies & Assumptions - Internal Dependencies
 
 - [ ] CHK116 - Are requirements specified for AGENTS.md always existing before symlink creation? [Dependency, CLAUDE.md:143]
-- [ ] CHK117 - Are requirements defined for local-infra/runners/ existence before validation? [Dependency, CLAUDE.md:86]
+- [ ] CHK117 - Are requirements defined for .runners-local/workflows/ existence before validation? [Dependency, CLAUDE.md:86]
 - [ ] CHK118 - Are requirements specified for directory structure assumptions (repo root detection)? [Assumption, Gap]
 - [ ] CHK119 - Are requirements defined for main branch always being the integration target? [Assumption, CLAUDE.md:55]
 - [ ] CHK120 - Are requirements specified for single developer vs team workflow assumptions? [Assumption, Gap]

@@ -32,7 +32,7 @@ This feature refactors the Ghostty Configuration Files repository structure to i
 **Constraints**:
 - Must preserve backward compatibility with existing start.sh during migration
 - Must maintain zero GitHub Actions consumption (local CI/CD only)
-- Must preserve all existing directory structures (spec-kit/, local-infra/, .specify/)
+- Must preserve all existing directory structures (spec-kit/, .runners-local/, .specify/)
 - Module isolation required - no circular dependencies allowed
 - Maximum 4-5 top-level directories, maximum 2 levels of nesting
 
@@ -51,10 +51,10 @@ This feature refactors the Ghostty Configuration Files repository structure to i
 | Requirement | Compliance Status | Notes |
 |------------|------------------|-------|
 | **Branch Preservation** | ✅ PASS | Current branch `001-repo-structure-refactor` follows naming convention. No branch deletion planned. |
-| **Local CI/CD First** | ✅ PASS | All changes will be validated with `./local-infra/runners/gh-workflow-local.sh` before GitHub operations. |
+| **Local CI/CD First** | ✅ PASS | All changes will be validated with `./.runners-local/workflows/gh-workflow-local.sh` before GitHub operations. |
 | **Zero GitHub Actions Consumption** | ✅ PASS | No GitHub Actions triggers planned. All CI/CD runs locally. |
 | **Documentation Structure** | ✅ ESTABLISHED | Constitutional reality: `docs/` = committed build output (with .nojekyll), `docs-source/` = editable source. No migration needed. |
-| **Preserve Existing Structures** | ✅ PASS | spec-kit/, local-infra/, .specify/ remain unchanged per FR-015. |
+| **Preserve Existing Structures** | ✅ PASS | spec-kit/, .runners-local/, .specify/ remain unchanged per FR-015. |
 | **Configuration Backup** | ✅ PASS | Incremental migration with automatic backups before each change. |
 | **Logging Requirements** | ✅ PASS | Conversation log will be saved per LLM Conversation Logging requirements. |
 
@@ -211,7 +211,7 @@ specs/[###-feature]/
 │   ├── install_*.sh           # PRESERVE: Keep existing
 │   └── [NEW MODULES]          # ADD: 10+ new modular scripts
 ├── docs/                       # ESTABLISHED: Committed Astro build output (with .nojekyll)
-├── local-infra/                # PRESERVE: No changes
+├── .runners-local/                # PRESERVE: No changes
 ├── spec-kit/                   # PRESERVE: No changes
 └── .specify/                   # PRESERVE: No changes
 
@@ -251,7 +251,7 @@ specs/[###-feature]/
 │       └── testing.md
 ├── docs/                       # ESTABLISHED: Committed Astro build output
 │   └── .nojekyll              # CRITICAL: Must exist and be committed for GitHub Pages
-├── local-infra/                # UNCHANGED
+├── .runners-local/                # UNCHANGED
 ├── spec-kit/                   # UNCHANGED
 └── .specify/                   # UNCHANGED
 ```
@@ -261,7 +261,7 @@ This is a **configuration management project** that uses scripts for automation 
 1. Top-level remains flat with key entry points (manage.sh, start.sh)
 2. scripts/ directory expands with fine-grained modules (flat structure, no scripts/modules/ subdirectory)
 3. Documentation separates source (docs-source/) from committed build output (docs/)
-4. Existing spec-kit/, local-infra/, .specify/ structures preserved unchanged per constitutional requirements
+4. Existing spec-kit/, .runners-local/, .specify/ structures preserved unchanged per constitutional requirements
 
 ## Complexity Tracking
 

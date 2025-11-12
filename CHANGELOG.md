@@ -2,6 +2,94 @@
 
 All notable changes to the Ghostty Configuration Files project are documented in this file.
 
+## [3.3.0] - 2025-11-12 - CRITICAL: CI/CD Infrastructure Consolidation + Security Hardening 🏗️
+
+### 🚨 **BREAKING CHANGE: CI/CD Infrastructure Path Update**
+**Implementation Date**: 2025-11-12 | **Status**: ✅ COMPLETE | **Breaking**: Documentation paths only
+
+#### **✅ New CI/CD Architecture**
+- **Old Location**: `local-infra/` (REMOVED ❌)
+- **New Location**: `.runners-local/` (ACTIVE ✅)
+- **Reason**: Security hardening for runner credentials + clearer organization
+- **Files Affected**: 66 files moved/renamed with path updates
+
+#### **✅ Path Mapping**
+| Old Path | New Path | Purpose |
+|----------|----------|---------|
+| `local-infra/runners/` | `.runners-local/workflows/` | Workflow execution scripts (15 scripts) |
+| `local-infra/tests/` | `.runners-local/tests/` | Testing infrastructure (contract, unit, integration, validation) |
+| `local-infra/logs/` | `.runners-local/logs/workflows/` | CI/CD workflow logs (gitignored) |
+| N/A | `.runners-local/self-hosted/` | Runner management + credentials (NEW) |
+| N/A | `.runners-local/self-hosted/config/` | Machine-specific runner credentials (gitignored) |
+
+#### **✅ Security Enhancements**
+- **Runner Credentials**: Now isolated in `.runners-local/self-hosted/config/` (gitignored)
+- **Enhanced .gitignore**: Added patterns for `.credentials`, `.credentials_rsaparams`, `.runner`, `runner-*.token`
+- **Machine-Specific Isolation**: Runner state and configuration separated from version control
+- **GitHub Actions Working Directories**: `_diag/`, `_work/`, `actions-runner/` properly gitignored
+
+#### **✅ Structural Improvements**
+- **Dotfile Convention**: `.runners-local/` follows dotfile standards for local infrastructure
+- **Clear Separation**: Workflows, self-hosted runners, tests, and logs now clearly organized
+- **Intelligent Categorization**: Logs subdivided into workflows/, builds/, tests/, runners/
+- **Complete Test Suite**: All test infrastructure (contract, unit, integration, validation) consolidated
+
+#### **✅ Migration Required**
+```bash
+# If you have custom scripts referencing old paths
+find . -name "*.sh" -exec sed -i 's|local-infra/runners|.runners-local/workflows|g' {} +
+find . -name "*.sh" -exec sed -i 's|local-infra/tests|.runners-local/tests|g' {} +
+find . -name "*.sh" -exec sed -i 's|local-infra/logs|.runners-local/logs/workflows|g' {} +
+
+# Verify no old references remain
+grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
+```
+
+#### **✅ Updated Command Examples**
+```bash
+# OLD (deprecated)
+./local-infra/runners/gh-workflow-local.sh all
+
+# NEW (current)
+./.runners-local/workflows/gh-workflow-local.sh all
+
+# Self-hosted runner setup (NEW location)
+./.runners-local/self-hosted/setup-self-hosted-runner.sh setup
+
+# Performance monitoring
+./.runners-local/workflows/performance-monitor.sh --baseline
+```
+
+#### **✅ Documentation Updates**
+- **AGENTS.md**: 51 path references updated, added detailed `.runners-local/` structure diagram
+- **README.md**: All command examples updated to use new paths
+- **.runners-local/README.md**: New comprehensive infrastructure guide created
+- **scripts/**: 9 files updated (doc_generator.py, ci_cd_runner.py, etc.)
+- **User Documentation**: 192 references across 30 files (update in progress)
+
+#### **⚠️ Action Required**
+- **Custom Scripts**: Update any personal scripts referencing `local-infra/`
+- **Bookmarks/Aliases**: Update shell aliases and IDE bookmarks
+- **Documentation References**: Some historical docs may still reference old paths (being updated)
+
+#### **✅ Constitutional Compliance**
+- **Zero GitHub Actions Cost**: Maintained (all operations local)
+- **Branch Preservation**: Feature branch `20251112-121146-refactor-consolidate-runners-local` preserved
+- **Security**: Runner credentials properly isolated and gitignored
+- **Local CI/CD Precedence**: All local workflow requirements maintained
+
+#### **📊 Impact Assessment**
+- **Functionality**: No changes - all scripts work identically
+- **Performance**: No impact - same execution paths
+- **Security**: Improved - credentials now properly isolated
+- **Organization**: Improved - clearer separation of concerns
+- **User Impact**: Minimal - simple path updates in custom scripts
+
+#### **🔗 Related Commits**
+- `e8670ca` - Security hardening: Enhanced gitignore for runner credentials
+- `2f4802e` - Infrastructure consolidation: Moved all files to `.runners-local/`
+- `7eb6a68` - Merge to main: Consolidation complete
+
 ## [3.2.0] - 2025-09-21 - CRITICAL: Documentation Structure Reorganization + Astro GitHub Pages 🏗️
 
 ### 🚨 **BREAKING CHANGE: Documentation Structure Completely Reorganized**

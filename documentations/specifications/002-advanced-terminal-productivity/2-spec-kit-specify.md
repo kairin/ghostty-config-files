@@ -262,13 +262,13 @@ team_scalability: true                 # Support for team growth
 ### Performance Validation Framework
 ```bash
 # Automated Performance Testing
-performance_test_suite: "./local-infra/runners/performance-test-advanced.sh"
+performance_test_suite: "./.runners-local/workflows/performance-test-advanced.sh"
 startup_time_benchmark: "./scripts/benchmark-startup-time.sh"
 memory_footprint_analysis: "./scripts/analyze-memory-usage.sh"
 ai_response_time_test: "./scripts/test-ai-response-times.sh"
 
 # Constitutional Compliance Validation
-constitutional_compliance_check: "./local-infra/runners/constitutional-compliance-check.sh"
+constitutional_compliance_check: "./.runners-local/workflows/constitutional-compliance-check.sh"
 foundation_preservation_test: "./scripts/test-foundation-preservation.sh"
 user_customization_validation: "./scripts/validate-user-customizations.sh"
 ```

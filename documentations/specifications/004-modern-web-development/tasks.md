@@ -14,7 +14,7 @@
    → ✅ research.md: Technology decisions → setup tasks
    → ✅ quickstart.md: Implementation scenarios → validation tasks
 3. Generate tasks by category:
-   → ✅ Local CI/CD: local-infra setup, runner scripts, git hooks
+   → ✅ Local CI/CD: .runners-local setup, runner scripts, git hooks
    → ✅ Setup: uv project init, dependencies, linting
    → ✅ Tests: contract tests, integration tests, local validation
    → ✅ Core: Astro components, shadcn/ui integration, Python scripts
@@ -39,7 +39,7 @@
 **Web Application Structure** (constitutional compliance):
 - **Root Configuration**: `pyproject.toml`, `astro.config.mjs`, `tailwind.config.mjs`, `components.json`, `tsconfig.json`
 - **Source Code**: `src/` (Astro), `components/` (shadcn/ui), `scripts/` (Python), `public/` (static assets)
-- **Local CI/CD**: `local-infra/runners/`, `local-infra/logs/`, `local-infra/config/`
+- **Local CI/CD**: `.runners-local/workflows/`, `.runners-local/logs/workflows/`, `.runners-local/config/`
 - **Build Output**: `dist/` (GitHub Pages deployment)
 - **Python Environment**: `.venv/` (uv managed)
 
@@ -57,10 +57,10 @@
 
 ## Phase 3.3: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.4
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [x] T009 [P] Contract test /local-cicd/astro-build in local-infra/tests/contract/test_astro_build.py ✅ FAILING
-- [x] T010 [P] Contract test /local-cicd/gh-workflow in local-infra/tests/contract/test_gh_workflow.py ✅ FAILING
-- [x] T011 [P] Contract test /local-cicd/performance-monitor in local-infra/tests/contract/test_performance_monitor.py ✅ FAILING
-- [x] T012 [P] Contract test /local-cicd/pre-commit in local-infra/tests/contract/test_pre_commit.py ✅ FAILING
+- [x] T009 [P] Contract test /local-cicd/astro-build in .runners-local/tests/contract/test_astro_build.py ✅ FAILING
+- [x] T010 [P] Contract test /local-cicd/gh-workflow in .runners-local/tests/contract/test_gh_workflow.py ✅ FAILING
+- [x] T011 [P] Contract test /local-cicd/performance-monitor in .runners-local/tests/contract/test_performance_monitor.py ✅ FAILING
+- [x] T012 [P] Contract test /local-cicd/pre-commit in .runners-local/tests/contract/test_pre_commit.py ✅ FAILING
 - [x] T013 [P] Integration test uv environment setup in tests/integration/test_uv_setup.py ✅ CREATED
 - [x] T014 [P] Integration test Astro build workflow in tests/integration/test_astro_workflow.py ✅ FAILING
 - [x] T015 [P] Integration test GitHub Pages deployment in tests/integration/test_github_pages.py ✅ FAILING
@@ -72,7 +72,7 @@
 - [x] T019 [P] Project Configuration entity - Create tailwind.config.mjs with design system
 - [x] T020 [P] Project Configuration entity - Create components.json for shadcn/ui
 - [x] T021 [P] Project Configuration entity - Create tsconfig.json with strict compliance
-- [x] T022 [P] Local CI/CD Infrastructure entity - Create local-infra/runners/ directory structure
+- [x] T022 [P] Local CI/CD Infrastructure entity - Create .runners-local/workflows/ directory structure
 - [x] T023 [P] Development Workflow entity - Create .github/workflows/ (documentation only, zero consumption)
 
 ## Phase 3.5: Local CI/CD Runner Implementation
@@ -80,8 +80,8 @@
 - [x] T025 Local CI/CD Infrastructure - Implement gh-workflow-local.sh runner script ✅ IMPLEMENTED
 - [x] T026 Local CI/CD Infrastructure - Implement performance-monitor.sh runner script ✅ IMPLEMENTED
 - [x] T027 Local CI/CD Infrastructure - Implement pre-commit-local.sh validation script ✅ IMPLEMENTED
-- [x] T028 [P] Local CI/CD Infrastructure - Create logging system in local-infra/logs/ ✅ CREATED
-- [x] T029 [P] Local CI/CD Infrastructure - Create config management in local-infra/config/ ✅ CREATED
+- [x] T028 [P] Local CI/CD Infrastructure - Create logging system in .runners-local/logs/workflows/ ✅ CREATED
+- [x] T029 [P] Local CI/CD Infrastructure - Create config management in .runners-local/config/ ✅ CREATED
 
 ## Phase 3.6: Astro.build Implementation
 - [x] T030 [P] Create Astro project structure in src/ directory ✅ CREATED
@@ -103,13 +103,13 @@
 - [x] T042 [P] Create dependency update automation in scripts/update_dependencies.py ✅ IMPLEMENTED (update_checker.py, config_validator.py)
 
 ## Phase 3.9: GitHub Pages Integration
-- [x] T043 Deployment Pipeline entity - Configure GitHub Pages settings via gh CLI ✅ IMPLEMENTED (local-infra/runners/)
+- [x] T043 Deployment Pipeline entity - Configure GitHub Pages settings via gh CLI ✅ IMPLEMENTED (.runners-local/workflows/)
 - [x] T044 Deployment Pipeline entity - Setup custom domain and HTTPS enforcement ✅ CONFIGURED (astro.config.mjs)
 - [x] T045 Deployment Pipeline entity - Implement asset optimization pipeline ✅ IMPLEMENTED (asset optimization in scripts/)
 - [x] T046 Deployment Pipeline entity - Create deployment monitoring and rollback capabilities ✅ IMPLEMENTED (CI/CD runners with monitoring)
 
 ## Phase 3.10: Local Validation Integration
-- [x] T047 Development Workflow - Integrate all runners into unified workflow ✅ IMPLEMENTED (local-infra/runners/ complete)
+- [x] T047 Development Workflow - Integrate all runners into unified workflow ✅ IMPLEMENTED (.runners-local/workflows/ complete)
 - [x] T048 Development Workflow - Setup git hooks for local validation ✅ IMPLEMENTED (pre-commit-local.sh)
 - [x] T049 Performance Metrics - Configure continuous monitoring pipeline ✅ IMPLEMENTED (performance-monitor.sh)
 - [x] T050 Verify zero GitHub Actions consumption compliance ✅ VERIFIED (local CI/CD infrastructure complete)
@@ -159,10 +159,10 @@ Task: "Install shadcn/ui dependencies and create components.json"
 ### Contract Tests Parallel Block (TDD Critical)
 ```bash
 # Launch T009-T012 together (contract tests):
-Task: "Contract test /local-cicd/astro-build in local-infra/tests/contract/test_astro_build.py"
-Task: "Contract test /local-cicd/gh-workflow in local-infra/tests/contract/test_gh_workflow.py"
-Task: "Contract test /local-cicd/performance-monitor in local-infra/tests/contract/test_performance_monitor.py"
-Task: "Contract test /local-cicd/pre-commit in local-infra/tests/contract/test_pre_commit.py"
+Task: "Contract test /local-cicd/astro-build in .runners-local/tests/contract/test_astro_build.py"
+Task: "Contract test /local-cicd/gh-workflow in .runners-local/tests/contract/test_gh_workflow.py"
+Task: "Contract test /local-cicd/performance-monitor in .runners-local/tests/contract/test_performance_monitor.py"
+Task: "Contract test /local-cicd/pre-commit in .runners-local/tests/contract/test_pre_commit.py"
 ```
 
 ### Configuration Implementation Parallel Block

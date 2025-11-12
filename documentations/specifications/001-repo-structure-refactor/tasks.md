@@ -39,10 +39,10 @@
 ## Path Conventions
 **Repository Root**: `/home/kkk/Apps/ghostty-config-files/`
 - **Scripts**: `scripts/` (modular bash modules)
-- **Templates**: `scripts/.module-template.sh`, `local-infra/tests/unit/.test-template.sh`
+- **Templates**: `scripts/.module-template.sh`, `.runners-local/tests/unit/.test-template.sh`
 - **Documentation Source**: `docs-source/` (markdown files to edit)
 - **Documentation Build**: `docs/` (Astro output, committed for GitHub Pages)
-- **Tests**: `local-infra/tests/unit/`, `local-infra/tests/contract/`
+- **Tests**: `.runners-local/tests/unit/`, `.runners-local/tests/contract/`
 - **Validation**: `scripts/validate_module_*.sh`
 
 ---
@@ -56,11 +56,11 @@
 ### Module Templates & Validation Tools (T001-T006)
 
 - [X] T001 [P] Create bash module template in scripts/.module-template.sh with BASH_SOURCE guard, header format, function structure per bash-module-interface contract
-- [X] T002 [P] Create unit test template in local-infra/tests/unit/.test-template.sh with mock setup, assertion helpers, cleanup patterns
+- [X] T002 [P] Create unit test template in .runners-local/tests/unit/.test-template.sh with mock setup, assertion helpers, cleanup patterns
 - [X] T003 Create module contract validation script in scripts/validate_module_contract.sh that checks header completeness, ShellCheck compliance, function documentation
 - [X] T004 [P] Create dependency cycle detection script in scripts/validate_module_deps.sh that parses module headers and performs topological sort
-- [X] T005 [P] Create test helper functions in local-infra/tests/unit/test_functions.sh for assertions, mocking, PATH overrides
-- [X] T006 Integrate validation scripts into local-infra/runners/validate-modules.sh for comprehensive module validation
+- [X] T005 [P] Create test helper functions in .runners-local/tests/unit/test_functions.sh for assertions, mocking, PATH overrides
+- [X] T006 Integrate validation scripts into .runners-local/workflows/validate-modules.sh for comprehensive module validation
 
 ### .nojekyll Protection System (T007-T010)
 
@@ -71,8 +71,8 @@
 
 ### Testing Framework Setup (T011-T012)
 
-- [X] T011 Create ShellCheck validation runner in local-infra/tests/validation/run_shellcheck.sh for static analysis of all modules
-- [X] T012 [P] Update local-infra/runners/test-runner-local.sh to support unit test discovery and execution with timing validation
+- [X] T011 Create ShellCheck validation runner in .runners-local/tests/validation/run_shellcheck.sh for static analysis of all modules
+- [X] T012 [P] Update .runners-local/workflows/test-runner-local.sh to support unit test discovery and execution with timing validation
 
 ---
 
@@ -87,7 +87,7 @@
 - [X] T013 [P] Create common utility functions in scripts/common.sh for path resolution, logging, error handling
 - [X] T014 [P] Create progress reporting functions in scripts/progress.sh for standardized output (🔄 Starting, ✅ Completed, ❌ Failed)
 - [X] T015 [P] Create backup utility functions in scripts/backup_utils.sh for timestamped configuration backups before changes
-- [X] T016 [P] Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh validating all utility functions
+- [X] T016 [P] Write unit tests for common utilities in .runners-local/tests/unit/test_common_utils.sh validating all utility functions
 
 ---
 
@@ -197,28 +197,28 @@
 - [ ] T047 [P] [US3] Create scripts/install_node.sh module for Node.js installation via NVM with version parameter
 - [ ] T048 [P] [US3] Create scripts/install_zig.sh module for Zig compiler installation with version validation
 - [ ] T049 [P] [US3] Create scripts/build_ghostty.sh module for Ghostty build from source with optimization flags
-- [ ] T050 [P] [US3] Write unit tests in local-infra/tests/unit/test_install_modules.sh for install_node, install_zig, build_ghostty modules
+- [ ] T050 [P] [US3] Write unit tests in .runners-local/tests/unit/test_install_modules.sh for install_node, install_zig, build_ghostty modules
 
 ### Configuration Modules (T051-T054)
 
 - [ ] T051 [P] [US3] Create scripts/setup_zsh.sh module for ZSH environment configuration with Oh My ZSH integration
 - [ ] T052 [P] [US3] Create scripts/configure_theme.sh module for Catppuccin theme configuration with light/dark mode switching
 - [ ] T053 [P] [US3] Create scripts/install_context_menu.sh module for Nautilus "Open in Ghostty" context menu integration
-- [ ] T054 [P] [US3] Write unit tests in local-infra/tests/unit/test_config_modules.sh for setup_zsh, configure_theme, install_context_menu modules
+- [ ] T054 [P] [US3] Write unit tests in .runners-local/tests/unit/test_config_modules.sh for setup_zsh, configure_theme, install_context_menu modules
 
 ### Validation & Maintenance Modules (T055-T058)
 
 - [ ] T055 [P] [US3] Create scripts/validate_config.sh module for Ghostty configuration syntax validation
 - [ ] T056 [P] [US3] Create scripts/performance_check.sh module for startup time and memory usage measurement
 - [ ] T057 [P] [US3] Create scripts/dependency_check.sh module for system dependency verification (curl, git, make, etc.)
-- [ ] T058 [P] [US3] Write unit tests in local-infra/tests/unit/test_validation_modules.sh for validate_config, performance_check, dependency_check modules
+- [ ] T058 [P] [US3] Write unit tests in .runners-local/tests/unit/test_validation_modules.sh for validate_config, performance_check, dependency_check modules
 
 ### Integration Modules (T059-T062)
 
 - [ ] T059 [P] [US3] Create scripts/backup_config.sh module for timestamped configuration backups before changes
 - [ ] T060 [P] [US3] Create scripts/update_components.sh module for intelligent component updates preserving user customizations
 - [ ] T061 [P] [US3] Create scripts/generate_docs.sh module for documentation generation
-- [ ] T062 [P] [US3] Write unit tests in local-infra/tests/unit/test_integration_modules.sh for backup_config, update_components, generate_docs modules
+- [ ] T062 [P] [US3] Write unit tests in .runners-local/tests/unit/test_integration_modules.sh for backup_config, update_components, generate_docs modules
 
 ### Module Integration & Orchestration (T063-T068)
 
@@ -240,14 +240,14 @@
 
 ### Contract Testing (T069-T072)
 
-- [ ] T069 [P] Create contract test for manage.sh CLI in local-infra/tests/contract/test_manage_cli.py validating all commands, options, exit codes
-- [ ] T070 [P] Create contract test for bash modules in local-infra/tests/contract/test_bash_modules.py validating module interface compliance
-- [ ] T071 [P] Create integration test for complete workflow in local-infra/tests/integration/test_complete_workflow.sh (install → docs → validate)
-- [ ] T072 [P] Create performance test in local-infra/tests/performance/test_performance_targets.sh validating <2s help, <10s module tests
+- [ ] T069 [P] Create contract test for manage.sh CLI in .runners-local/tests/contract/test_manage_cli.py validating all commands, options, exit codes
+- [ ] T070 [P] Create contract test for bash modules in .runners-local/tests/contract/test_bash_modules.py validating module interface compliance
+- [ ] T071 [P] Create integration test for complete workflow in .runners-local/tests/integration/test_complete_workflow.sh (install → docs → validate)
+- [ ] T072 [P] Create performance test in .runners-local/tests/performance/test_performance_targets.sh validating <2s help, <10s module tests
 
 ### End-to-End Validation (T073-T076)
 
-- [ ] T073 Run complete local CI/CD pipeline with ./local-infra/runners/gh-workflow-local.sh all
+- [ ] T073 Run complete local CI/CD pipeline with ./.runners-local/workflows/gh-workflow-local.sh all
 - [ ] T074 [P] Validate all success criteria from spec.md (SC-001 through SC-012)
 - [ ] T075 [P] Test incremental migration rollback by restoring backup and verifying system recovery
 - [ ] T076 Execute full installation workflow using manage.sh install --verbose and verify all components installed correctly
@@ -317,9 +317,9 @@
 ```bash
 # Launch T001, T002, T004, T005, T007, T009 together:
 Task: "Create bash module template in scripts/.module-template.sh"
-Task: "Create unit test template in local-infra/tests/unit/.test-template.sh"
+Task: "Create unit test template in .runners-local/tests/unit/.test-template.sh"
 Task: "Create dependency cycle detection script in scripts/validate_module_deps.sh"
-Task: "Create test helper functions in local-infra/tests/unit/test_functions.sh"
+Task: "Create test helper functions in .runners-local/tests/unit/test_functions.sh"
 Task: "Create public/.nojekyll file for Astro automatic copy"
 Task: "Verify .gitignore does NOT exclude docs/ directory (build output must be committed)"
 ```
@@ -330,7 +330,7 @@ Task: "Verify .gitignore does NOT exclude docs/ directory (build output must be 
 Task: "Create common utility functions in scripts/common.sh"
 Task: "Create progress reporting functions in scripts/progress.sh"
 Task: "Create backup utility functions in scripts/backup_utils.sh"
-Task: "Write unit tests for common utilities in local-infra/tests/unit/test_common_utils.sh"
+Task: "Write unit tests for common utilities in .runners-local/tests/unit/test_common_utils.sh"
 ```
 
 ### Phase 3: manage.sh Commands (4 parallel tasks)
@@ -359,7 +359,7 @@ Task: "[US2] Create developer documentation in docs-source/developer/"
 Task: "[US3] Create scripts/install_node.sh module"
 Task: "[US3] Create scripts/install_zig.sh module"
 Task: "[US3] Create scripts/build_ghostty.sh module"
-Task: "[US3] Write unit tests in local-infra/tests/unit/test_install_modules.sh"
+Task: "[US3] Write unit tests in .runners-local/tests/unit/test_install_modules.sh"
 ```
 
 ### Phase 5: Configuration Modules (4 parallel tasks)
@@ -368,7 +368,7 @@ Task: "[US3] Write unit tests in local-infra/tests/unit/test_install_modules.sh"
 Task: "[US3] Create scripts/setup_zsh.sh module"
 Task: "[US3] Create scripts/configure_theme.sh module"
 Task: "[US3] Create scripts/install_context_menu.sh module"
-Task: "[US3] Write unit tests in local-infra/tests/unit/test_config_modules.sh"
+Task: "[US3] Write unit tests in .runners-local/tests/unit/test_config_modules.sh"
 ```
 
 ### Phase 5: Validation Modules (4 parallel tasks)
@@ -377,16 +377,16 @@ Task: "[US3] Write unit tests in local-infra/tests/unit/test_config_modules.sh"
 Task: "[US3] Create scripts/validate_config.sh module"
 Task: "[US3] Create scripts/performance_check.sh module"
 Task: "[US3] Create scripts/dependency_check.sh module"
-Task: "[US3] Write unit tests in local-infra/tests/unit/test_validation_modules.sh"
+Task: "[US3] Write unit tests in .runners-local/tests/unit/test_validation_modules.sh"
 ```
 
 ### Phase 6: Contract Testing (4 parallel tasks)
 ```bash
 # Launch T069, T070, T071, T072 together:
-Task: "Create contract test for manage.sh CLI in local-infra/tests/contract/test_manage_cli.py"
-Task: "Create contract test for bash modules in local-infra/tests/contract/test_bash_modules.py"
-Task: "Create integration test for complete workflow in local-infra/tests/integration/test_complete_workflow.sh"
-Task: "Create performance test in local-infra/tests/performance/test_performance_targets.sh"
+Task: "Create contract test for manage.sh CLI in .runners-local/tests/contract/test_manage_cli.py"
+Task: "Create contract test for bash modules in .runners-local/tests/contract/test_bash_modules.py"
+Task: "Create integration test for complete workflow in .runners-local/tests/integration/test_complete_workflow.sh"
+Task: "Create performance test in .runners-local/tests/performance/test_performance_targets.sh"
 ```
 
 ---

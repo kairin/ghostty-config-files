@@ -437,7 +437,7 @@ ping registry.npmjs.org
 
 ### Optional Enhancements
 1. **Add GitHub MCP to Local CI/CD**
-   - Integrate with `./local-infra/runners/gh-workflow-local.sh`
+   - Integrate with `./.runners-local/workflows/gh-workflow-local.sh`
    - Automate issue creation for test failures
    - Add PR status updates from local builds
 

@@ -57,7 +57,7 @@ This document provides a complete directory structure reference for the Ghostty 
 │   │   ├── 002-advanced-terminal-productivity/  # Spec 002
 │   │   └── 004-modern-web-development/  # Spec 004
 │   └── archive/               # Historical/obsolete documentation
-└── local-infra/              # Zero-cost local infrastructure
+└── .runners-local/              # Zero-cost local infrastructure
     ├── runners/              # Local CI/CD scripts
     │   ├── gh-workflow-local.sh    # Local GitHub Actions simulation
     │   ├── gh-pages-setup.sh       # GitHub Pages local testing
@@ -192,11 +192,11 @@ Historical and obsolete documentation preserved for reference:
 - Superseded specifications
 - Historical analysis
 
-### `local-infra/` - Local CI/CD Infrastructure
+### `.runners-local/` - Local CI/CD Infrastructure
 
 Zero-cost local CI/CD infrastructure for GitHub Actions simulation:
 
-#### `local-infra/runners/`
+#### `.runners-local/workflows/`
 Local CI/CD scripts with production-ready implementation:
 
 - **`gh-workflow-local.sh`**: Local GitHub Actions simulation
@@ -221,7 +221,7 @@ Local CI/CD scripts with production-ready implementation:
   - Unit test execution
   - Validation script execution
 
-#### `local-infra/tests/`
+#### `.runners-local/tests/`
 Testing infrastructure:
 
 - **`unit/`**: Unit tests for script modules
@@ -232,7 +232,7 @@ Testing infrastructure:
 
 - **`validation/`**: Validation scripts for configuration and system state
 
-#### `local-infra/logs/`
+#### `.runners-local/logs/workflows/`
 Local CI/CD execution logs:
 
 - Workflow execution logs
@@ -240,7 +240,7 @@ Local CI/CD execution logs:
 - GitHub Pages simulation logs
 - Test execution results
 
-#### `local-infra/config/`
+#### `.runners-local/config/`
 CI/CD configuration files:
 
 - **`workflows/`**: Local workflow definitions
@@ -302,7 +302,7 @@ Scripts organized by development phase:
 
 ### Scripts
 - Executable: `755` (rwxr-xr-x)
-- Examples: `start.sh`, all scripts in `scripts/` and `local-infra/runners/`
+- Examples: `start.sh`, all scripts in `scripts/` and `.runners-local/workflows/`
 
 ### Documentation
 - Read-only: `644` (rw-r--r--)
@@ -315,7 +315,7 @@ Scripts organized by development phase:
 ### Logs
 - Directory: `755` (rwxr-xr-x)
 - Log files: `644` (rw-r--r--)
-- Location: `local-infra/logs/`
+- Location: `.runners-local/logs/workflows/`
 
 ---
 

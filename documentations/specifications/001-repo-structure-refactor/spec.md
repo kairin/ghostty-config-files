@@ -89,7 +89,7 @@ As a maintainer extending repository functionality, I want scripts broken into l
 - **FR-012**: Astro site MUST include both user-facing documentation (installation, usage, configuration) and developer documentation (AI guidelines, architecture, contributing) with clear navigation between sections
 - **FR-013**: Migration MUST follow incremental per-component approach: migrate one script module at a time, one doc section at a time, building manage.sh gradually
 - **FR-014**: Each migration increment MUST be independently testable and deployable without breaking existing functionality
-- **FR-015**: Migration process MUST preserve existing directory structures (spec-kit/, local-infra/, .specify/) unchanged during transition
+- **FR-015**: Migration process MUST preserve existing directory structures (spec-kit/, .runners-local/, .specify/) unchanged during transition
 - **FR-016**: New simplified structure MUST coexist with existing structures without conflicts or namespace collisions
 - **FR-017**: System MUST validate module dependencies and prevent circular references
 - **FR-018**: All existing script functionality MUST be preserved in new structure
@@ -98,7 +98,7 @@ As a maintainer extending repository functionality, I want scripts broken into l
 ### Assumptions
 
 - Repository structure follows nesting limits defined in FR-005 (maximum 2 levels deep) to maintain simplicity for a config project
-- Existing workflow structures (spec-kit/, local-infra/, .specify/) remain unchanged and functional during migration
+- Existing workflow structures (spec-kit/, .runners-local/, .specify/) remain unchanged and functional during migration
 - New simplified structure coexists with existing structures without requiring immediate consolidation
 - Incremental migration allows partial completion states where some modules are migrated while others remain in start.sh
 - Each migration increment can be validated independently before proceeding to next component. One complete increment is defined as: (1) module created with proper contract compliance, (2) unit test written and passing in <10s, and (3) module integrated into manage.sh with proper error handling
@@ -130,7 +130,7 @@ As a maintainer extending repository functionality, I want scripts broken into l
 
 - Q: Overall Structure Complexity - For a "simple config project," what level of organization is most appropriate? → A: Balanced (4-5 top-level directories with shallow nesting: configs/, scripts/, docs-source/, site/) - Clear separation without deep hierarchies
 - Q: Astro Site Scope and Purpose - What should the Astro site include? → A: Documentation + AI Guidelines - Include both user-facing docs and developer AI guidelines in the same site
-- Q: Handling Existing Complex Structures - How should spec-kit/, local-infra/, .specify/ be handled? → A: Preserve all - Keep existing structures unchanged, only add new simplified structure alongside
+- Q: Handling Existing Complex Structures - How should spec-kit/, .runners-local/, .specify/ be handled? → A: Preserve all - Keep existing structures unchanged, only add new simplified structure alongside
 - Q: Script Module Granularity - What level of granularity for script modules? → A: Fine-grained (10+ modules) - Highly specific modules for each sub-task (e.g., separate install_node.sh, install_zig.sh, build_ghostty.sh)
 - Q: Migration Strategy and Rollout - What migration approach balances safety with progress? → A: Incremental per-component - Migrate one script module at a time, one doc section at a time, building manage.sh gradually
 

@@ -458,7 +458,7 @@ grep -q "create-nojekyll" astro.config.mjs && echo "✅ Secondary layer configur
 **Solution**:
 ```bash
 # Use automated sync checker (Priority 4 recommendation)
-./local-infra/runners/documentation-sync-checker.sh
+./.runners-local/workflows/documentation-sync-checker.sh
 
 # Manually review differences
 diff -u docs-source/src/pages/user-guide/feature.md \
@@ -526,7 +526,7 @@ claude ask "How to ensure WCAG 2.1 AA compliance in Astro static sites?"
 Integrate Context7 validation into local CI/CD:
 
 ```bash
-# File: local-infra/runners/gh-workflow-local.sh (enhanced in Priority 3)
+# File: .runners-local/workflows/gh-workflow-local.sh (enhanced in Priority 3)
 
 # Documentation validation stage
 docs_validate_context7() {

@@ -333,7 +333,7 @@ This document defines the entities (configuration artifacts, scripts, and docume
 
 1. **Nesting Limit**: Maximum 2 levels deep from repository root
 2. **Top-Level Count**: Maximum 4-5 top-level directories
-3. **Protected Preservation**: Protected directories (spec-kit/, local-infra/, .specify/) never modified
+3. **Protected Preservation**: Protected directories (spec-kit/, .runners-local/, .specify/) never modified
 4. **Git Tracking**: Generated directories (docs-dist/) must be gitignored
 5. **Purpose Clarity**: Each directory must have single, clear purpose
 
@@ -451,7 +451,7 @@ All long-running operations (>10s) provide progress feedback to users.
 - **All existing scripts/**: Current scripts remain functional
 - **configs/**: No changes to Ghostty configuration
 - **spec-kit/**: Preserved unchanged (constitutional requirement)
-- **local-infra/**: Preserved unchanged (constitutional requirement)
+- **.runners-local/**: Preserved unchanged (constitutional requirement)
 - **.specify/**: Preserved unchanged (constitutional requirement)
 
 ---

@@ -37,7 +37,7 @@ cd /home/kkk/Apps/ghostty-config-files
 git checkout 001-repo-structure-refactor
 
 # Verify local CI/CD works
-./local-infra/runners/gh-workflow-local.sh status
+./.runners-local/workflows/gh-workflow-local.sh status
 
 # Read planning documents
 cat specs/001-repo-structure-refactor/plan.md
@@ -152,14 +152,14 @@ cp scripts/.module-template.sh scripts/install_node.sh
 shellcheck -x scripts/install_node.sh
 
 # Write and run unit tests
-./local-infra/tests/unit/test_install_node.sh
+./.runners-local/tests/unit/test_install_node.sh
 
 # Validate all changes
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Commit incrementally
 DATETIME=$(date +"%Y%m%d-%H%M%S")
-git add scripts/install_node.sh local-infra/tests/unit/test_install_node.sh
+git add scripts/install_node.sh .runners-local/tests/unit/test_install_node.sh
 git commit -m "feat: Add install_node.sh module with unit tests
 
 Implements FR-008: Modular script for Node.js installation.
@@ -174,19 +174,19 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ```bash
 # Run specific module unit tests
-./local-infra/tests/unit/test_install_node.sh
+./.runners-local/tests/unit/test_install_node.sh
 
 # Run all unit tests
-./local-infra/runners/test-runner-local.sh --type unit
+./.runners-local/workflows/test-runner-local.sh --type unit
 
 # Run integration tests
-./local-infra/runners/test-runner-local.sh --type integration
+./.runners-local/workflows/test-runner-local.sh --type integration
 
 # Run complete local CI/CD
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Validate manage.sh CLI contract
-pytest local-infra/tests/contract/test_manage_cli.py
+pytest .runners-local/tests/contract/test_manage_cli.py
 
 # Check for circular dependencies
 ./scripts/validate_module_deps.sh
@@ -236,7 +236,7 @@ cat specs/001-repo-structure-refactor/tasks.md
 # Write code, write tests, validate
 
 # Afternoon: Local CI/CD
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # If tests pass: Commit
 DATETIME=$(date +"%Y%m%d-%H%M%S")
@@ -258,7 +258,7 @@ git checkout 001-repo-structure-refactor
 
 ### Unit Tests (Per Module)
 
-**Location**: `local-infra/tests/unit/test_<module>.sh`
+**Location**: `.runners-local/tests/unit/test_<module>.sh`
 
 **Requirements**:
 - Test all public functions
@@ -269,7 +269,7 @@ git checkout 001-repo-structure-refactor
 **Example**:
 ```bash
 #!/bin/bash
-# local-infra/tests/unit/test_install_node.sh
+# .runners-local/tests/unit/test_install_node.sh
 
 set -euo pipefail
 
@@ -321,7 +321,7 @@ test_validate_node_present
 
 ### Integration Tests (End-to-End)
 
-**Location**: `local-infra/tests/contract/test_manage_cli.py`
+**Location**: `.runners-local/tests/contract/test_manage_cli.py`
 
 **Requirements**:
 - Test complete workflows (e.g., `manage.sh install`)
@@ -364,7 +364,7 @@ def test_manage_install_dry_run():
 
 ### Validation Tests
 
-**Location**: `local-infra/tests/validation/`
+**Location**: `.runners-local/tests/validation/`
 
 **Requirements**:
 - ShellCheck: All modules pass with zero errors
@@ -374,7 +374,7 @@ def test_manage_install_dry_run():
 
 **Run All Validations**:
 ```bash
-./local-infra/runners/validate-modules.sh
+./.runners-local/workflows/validate-modules.sh
 ```
 
 ---
@@ -400,17 +400,17 @@ vim scripts/new_module.sh
 shellcheck -x scripts/new_module.sh
 
 # Create unit test
-cp local-infra/tests/unit/.test-template.sh \
-   local-infra/tests/unit/test_new_module.sh
+cp .runners-local/tests/unit/.test-template.sh \
+   .runners-local/tests/unit/test_new_module.sh
 
 # Edit test
-vim local-infra/tests/unit/test_new_module.sh
+vim .runners-local/tests/unit/test_new_module.sh
 
 # Run test
-./local-infra/tests/unit/test_new_module.sh
+./.runners-local/tests/unit/test_new_module.sh
 
 # Verify <10s execution time
-time ./local-infra/tests/unit/test_new_module.sh
+time ./.runners-local/tests/unit/test_new_module.sh
 ```
 
 ### Add Command to manage.sh
@@ -437,14 +437,14 @@ esac
 ./manage.sh new-command --help
 
 # Add integration test
-vim local-infra/tests/contract/test_manage_cli.py
+vim .runners-local/tests/contract/test_manage_cli.py
 
 def test_manage_new_command_help():
     result = subprocess.run(["./manage.sh", "new-command", "--help"])
     assert result.returncode == 0
 
 # Run integration tests
-pytest local-infra/tests/contract/test_manage_cli.py
+pytest .runners-local/tests/contract/test_manage_cli.py
 ```
 
 ### Update Documentation Structure
@@ -470,7 +470,7 @@ ls -la docs-dist/.nojekyll
 npx astro preview
 
 # Validate GitHub Pages compatibility
-./local-infra/runners/gh-pages-setup.sh
+./.runners-local/workflows/gh-pages-setup.sh
 ```
 
 ---
@@ -503,7 +503,7 @@ shellcheck -x scripts/module.sh
 **Solution**:
 ```bash
 # Profile test execution
-bash -x ./local-infra/tests/unit/test_module.sh 2>&1 | tee /tmp/test-trace.log
+bash -x ./.runners-local/tests/unit/test_module.sh 2>&1 | tee /tmp/test-trace.log
 
 # Common causes:
 # - Not mocking external commands (real network calls, slow binaries)
@@ -606,7 +606,7 @@ cat /tmp/manage-test-*.log
 - [ ] Local CI/CD validates all changes before GitHub
 - [ ] Zero GitHub Actions consumption
 - [ ] .nojekyll preserved in docs-dist/
-- [ ] spec-kit/, local-infra/, .specify/ unchanged
+- [ ] spec-kit/, .runners-local/, .specify/ unchanged
 - [ ] Conversation log saved at end
 
 ---
@@ -631,13 +631,13 @@ cat /tmp/manage-test-*.log
 ### Templates
 
 - **Module Template**: `scripts/.module-template.sh` (to be created)
-- **Test Template**: `local-infra/tests/unit/.test-template.sh` (to be created)
+- **Test Template**: `.runners-local/tests/unit/.test-template.sh` (to be created)
 
 ### Support
 
 - **GitHub Issues**: `https://github.com/kairin/ghostty-config-files/issues`
 - **CLAUDE.md**: Project constitution and requirements
-- **Local CI/CD Logs**: `/tmp/ghostty-start-logs/`, `./local-infra/logs/`
+- **Local CI/CD Logs**: `/tmp/ghostty-start-logs/`, `./.runners-local/logs/workflows/`
 
 ---
 

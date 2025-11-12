@@ -145,18 +145,18 @@ npx shadcn-ui@latest add navigation-menu dropdown-menu
 ### Create Local CI/CD Directory Structure
 ```bash
 # Create local infrastructure directories
-mkdir -p local-infra/{runners,logs,config}
-mkdir -p local-infra/config/{workflows,test-suites}
+mkdir -p .runners-local/{runners,logs,config}
+mkdir -p .runners-local/config/{workflows,test-suites}
 ```
 
 ### Setup Local CI/CD Runners
 ```bash
 # Create main local workflow runner
-cat > local-infra/runners/gh-workflow-local.sh << 'EOF'
+cat > .runners-local/workflows/gh-workflow-local.sh << 'EOF'
 #!/bin/bash
 set -euo pipefail
 
-LOG_DIR="./local-infra/logs"
+LOG_DIR="./.runners-local/logs/workflows"
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 
 log_with_timestamp() {
@@ -197,17 +197,17 @@ case "${1:-all}" in
 esac
 EOF
 
-chmod +x local-infra/runners/gh-workflow-local.sh
+chmod +x .runners-local/workflows/gh-workflow-local.sh
 ```
 
 ### Create Performance Monitor
 ```bash
-cat > local-infra/runners/performance-monitor.sh << 'EOF'
+cat > .runners-local/workflows/performance-monitor.sh << 'EOF'
 #!/bin/bash
 set -euo pipefail
 
 TIMESTAMP=$(date +"%s")
-LOG_FILE="./local-infra/logs/performance-$TIMESTAMP.json"
+LOG_FILE="./.runners-local/logs/workflows/performance-$TIMESTAMP.json"
 
 measure_build_performance() {
     echo "📊 Measuring build performance..."
@@ -278,7 +278,7 @@ case "${1:-measure}" in
 esac
 EOF
 
-chmod +x local-infra/runners/performance-monitor.sh
+chmod +x .runners-local/workflows/performance-monitor.sh
 ```
 
 ## Step 5: Configure Astro and TypeScript
@@ -350,7 +350,7 @@ npm pkg set scripts.preview="astro preview"
 npm pkg set scripts.lint="eslint src --ext ts,tsx,astro"
 npm pkg set scripts.type-check="astro check && tsc --noEmit"
 npm pkg set scripts.format="prettier --write src"
-npm pkg set scripts.ci-local="./local-infra/runners/gh-workflow-local.sh all"
+npm pkg set scripts.ci-local="./.runners-local/workflows/gh-workflow-local.sh all"
 ```
 
 ## Step 6: Create Sample Components and Pages
@@ -530,14 +530,14 @@ EOF
 ### Run Initial Validation
 ```bash
 # Test local CI/CD workflow
-./local-infra/runners/gh-workflow-local.sh validate
+./.runners-local/workflows/gh-workflow-local.sh validate
 
 # Run complete local workflow
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Check performance metrics
-./local-infra/runners/performance-monitor.sh measure
-./local-infra/runners/performance-monitor.sh report
+./.runners-local/workflows/performance-monitor.sh measure
+./.runners-local/workflows/performance-monitor.sh report
 ```
 
 ### Test Development Server
@@ -604,11 +604,11 @@ echo "Target: 95+ scores for Performance, Accessibility, Best Practices, SEO"
 ### Local CI/CD Verification
 ```bash
 # Verify all workflows pass
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Check logs
-ls -la local-infra/logs/
-cat local-infra/logs/workflow-*.log
+ls -la .runners-local/logs/workflows/
+cat .runners-local/logs/workflows/workflow-*.log
 ```
 
 ### GitHub Actions Cost Verification
@@ -657,7 +657,7 @@ npm run build
 
 1. **Customize Configuration**: Modify `astro.config.mjs`, `tailwind.config.mjs`, and `components.json`
 2. **Add More Components**: Install additional shadcn/ui components as needed
-3. **Configure CI/CD**: Enhance local workflows in `local-infra/runners/`
+3. **Configure CI/CD**: Enhance local workflows in `.runners-local/workflows/`
 4. **Performance Optimization**: Use the performance monitor to track and improve metrics
 5. **Deploy**: Push to GitHub and verify GitHub Pages deployment
 

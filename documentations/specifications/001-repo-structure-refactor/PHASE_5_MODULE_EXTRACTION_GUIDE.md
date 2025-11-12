@@ -20,7 +20,7 @@ Phase 5 breaks down the monolithic `start.sh` into 10+ fine-grained modules foll
 
 ### 1. install_node.sh ✅
 - **Location**: `scripts/install_node.sh`
-- **Test**: `local-infra/tests/unit/test_install_node.sh`
+- **Test**: `.runners-local/tests/unit/test_install_node.sh`
 - **Functions**:
   - `install_nvm()` - Install/update NVM
   - `install_node()` - Install Node.js via NVM
@@ -227,7 +227,7 @@ scripts/
 ├── configure_dircolors.sh
 └── update_components.sh
 
-local-infra/tests/unit/
+.runners-local/tests/unit/
 ├── test_install_node.sh     ✅ Complete (6 tests)
 ├── test_install_zig.sh
 ├── test_build_ghostty.sh
@@ -342,7 +342,7 @@ chmod +x scripts/install_xyz.sh
 ### 3. Create Unit Test
 ```bash
 # Copy test template
-cp local-infra/tests/unit/.test-template.sh local-infra/tests/unit/test_install_xyz.sh
+cp .runners-local/tests/unit/.test-template.sh .runners-local/tests/unit/test_install_xyz.sh
 
 # Write test cases:
 # - Module sources successfully
@@ -351,10 +351,10 @@ cp local-infra/tests/unit/.test-template.sh local-infra/tests/unit/test_install_
 # - Error handling works
 
 # Make executable
-chmod +x local-infra/tests/unit/test_install_xyz.sh
+chmod +x .runners-local/tests/unit/test_install_xyz.sh
 
 # Run tests
-./local-infra/tests/unit/test_install_xyz.sh
+./.runners-local/tests/unit/test_install_xyz.sh
 ```
 
 ### 4. Integrate into manage.sh (Future)
@@ -425,9 +425,9 @@ Each module must:
 ## 🔗 References
 
 - **Module Template**: `scripts/.module-template.sh`
-- **Test Template**: `local-infra/tests/unit/.test-template.sh`
+- **Test Template**: `.runners-local/tests/unit/.test-template.sh`
 - **Example Module**: `scripts/install_node.sh`
-- **Example Test**: `local-infra/tests/unit/test_install_node.sh`
+- **Example Test**: `.runners-local/tests/unit/test_install_node.sh`
 - **Source Code**: `start.sh` (functions to extract)
 - **Spec**: `documentations/specifications/001-repo-structure-refactor/spec.md`
 - **Implementation Status**: `documentations/specifications/001-repo-structure-refactor/IMPLEMENTATION_STATUS.md`

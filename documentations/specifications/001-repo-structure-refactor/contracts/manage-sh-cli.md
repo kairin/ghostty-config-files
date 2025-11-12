@@ -597,5 +597,5 @@ This contract guarantees:
 ## References
 
 - **Implementation**: `/manage.sh` (repository root)
-- **Tests**: `/local-infra/tests/contract/test_manage_cli.py`
+- **Tests**: `/.runners-local/tests/contract/test_manage_cli.py`
 - **Documentation**: `/docs-source/user-guide/manage-sh.md`

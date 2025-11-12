@@ -91,13 +91,13 @@
 
 ```bash
 # Astro build simulation
-./local-infra/runners/astro-build-local.sh
+./.runners-local/workflows/astro-build-local.sh
 
 # Core Web Vitals monitoring
-./local-infra/runners/performance-monitor.sh
+./.runners-local/workflows/performance-monitor.sh
 
 # Complete validation workflow
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 ```
 
 ### Validation Steps
@@ -180,7 +180,7 @@ project-root/
 │   ├── layouts/           # Page layouts
 │   └── styles/            # Global styles (Tailwind)
 ├── public/                # Static assets
-├── local-infra/           # Local CI/CD infrastructure
+├── .runners-local/           # Local CI/CD infrastructure
 │   ├── runners/           # CI/CD scripts
 │   └── tests/             # Test infrastructure
 ├── astro.config.mjs       # Astro configuration
@@ -252,7 +252,7 @@ This will generate:
 - **AI Assistant Instructions**: [AGENTS.md](../../../AGENTS.md)
 - **Spec-Kit Index**: [SPEC_KIT_INDEX.md](../../../spec-kit/guides/SPEC_KIT_INDEX.md)
 - **Directory Structure**: [DIRECTORY_STRUCTURE.md](../../developer/architecture/DIRECTORY_STRUCTURE.md)
-- **GitHub Pages Setup**: [gh-pages-setup.sh](../../../local-infra/runners/gh-pages-setup.sh)
+- **GitHub Pages Setup**: [gh-pages-setup.sh](../../../.runners-local/workflows/gh-pages-setup.sh)
 
 ---
 
