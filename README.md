@@ -11,7 +11,7 @@ This repository contains a comprehensive terminal environment setup featuring th
   - **Shell Integration**: Auto-detection with advanced features
 - **ZSH + Oh My ZSH**: A powerful shell with useful plugins.
 - **Modern Unix Tools**: `eza`, `bat`, `ripgrep`, `fzf`, `zoxide`, and `fd`.
-- **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js LTS via NVM, with system Node.js fallback).
+- **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js LTS via fnm - 40x faster than NVM, with system Node.js fallback).
 - **Context Menu**: "Open in Ghostty" right-click option in your file manager.
 - **Automated Daily Updates**: System-wide updates run automatically every day at 9:00 AM.
 - **Astro-Based Website**: A documentation and dashboard website built with Astro.
@@ -42,8 +42,8 @@ flowchart TD
     BuildGhostty --> ConfigZsh[Setup ZSH + Oh My ZSH]
     ConfigZsh --> InstallNode{Node.js<br/>installation}
 
-    InstallNode -->|NVM success| InstallAI[Install AI tools<br/>Claude, Gemini]
-    InstallNode -->|NVM fails| SystemNode[Fallback: system Node.js]
+    InstallNode -->|fnm success| InstallAI[Install AI tools<br/>Claude, Gemini]
+    InstallNode -->|fnm fails| SystemNode[Fallback: system Node.js]
     SystemNode --> InstallAI
 
     InstallAI --> ConfigContext[Setup context menu<br/>Right-click integration]
