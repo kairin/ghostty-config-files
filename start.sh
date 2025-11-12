@@ -1417,31 +1417,45 @@ determine_install_strategy() {
 pre_auth_sudo() {
     log "INFO" "🔑 Checking sudo configuration..."
 
-    # Check if passwordless sudo is configured
-    if sudo -n true 2>/dev/null; then
-        log "SUCCESS" "✅ Passwordless sudo configured - installation will run smoothly"
-        return 0
+    # Use the dedicated verification script for comprehensive checks
+    local verify_script="$SCRIPT_DIR/scripts/verify-passwordless-sudo.sh"
+
+    if [ -f "$verify_script" ]; then
+        # Run verification script (it will show detailed output)
+        if "$verify_script"; then
+            log "SUCCESS" "✅ Passwordless sudo configured - installation will run smoothly"
+            return 0
+        else
+            # Verification script already showed detailed instructions
+            log "ERROR" "❌ Passwordless sudo is REQUIRED for automated installation"
+            log "INFO" ""
+            log "INFO" "💡 Please follow the instructions above, then run ./start.sh again"
+            log "INFO" "💡 Or run: ./scripts/verify-passwordless-sudo.sh to verify configuration"
+            log "INFO" ""
+            return 1
+        fi
+    else
+        # Fallback to basic check if verification script doesn't exist
+        if sudo -n true 2>/dev/null; then
+            log "SUCCESS" "✅ Passwordless sudo configured - installation will run smoothly"
+            return 0
+        fi
+
+        # Basic instructions if script not found
+        log "ERROR" "❌ Passwordless sudo is REQUIRED for automated installation"
+        log "INFO" ""
+        log "INFO" "🔧 To enable passwordless sudo:"
+        log "INFO" "   1. Run: sudo EDITOR=nano visudo"
+        log "INFO" "   2. Add this line at the end:"
+        log "INFO" "      $USER ALL=(ALL) NOPASSWD: /usr/bin/apt"
+        log "INFO" "   3. Save (Ctrl+O, Enter) and exit (Ctrl+X)"
+        log "INFO" "   4. Test: sudo -n apt update"
+        log "INFO" ""
+        log "INFO" "💡 Then run this script again: ./start.sh"
+        log "INFO" ""
+
+        return 1
     fi
-
-    # Passwordless sudo NOT configured - EXIT with instructions
-    log "ERROR" "❌ Passwordless sudo is REQUIRED for automated installation"
-    log "INFO" ""
-    log "INFO" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log "INFO" "📋 Please configure passwordless sudo BEFORE running this script"
-    log "INFO" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    log "INFO" ""
-    log "INFO" "🔧 To enable passwordless sudo:"
-    log "INFO" "   1. Run: sudo EDITOR=nano visudo"
-    log "INFO" "   2. Add this line at the end:"
-    log "INFO" "      $USER ALL=(ALL) NOPASSWD: /usr/bin/apt"
-    log "INFO" "   3. Save (Ctrl+O, Enter) and exit (Ctrl+X)"
-    log "INFO" "   4. Test: sudo -n apt update"
-    log "INFO" ""
-    log "INFO" "💡 Then run this script again: ./start.sh"
-    log "INFO" ""
-    log "INFO" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-    return 1
 }
 
 # Install ZSH and Oh My ZSH
@@ -2724,22 +2738,30 @@ alias update-logs='/home/kkk/Apps/ghostty-config-files/scripts/view-update-logs.
 alias update-logs-full='/home/kkk/Apps/ghostty-config-files/scripts/view-update-logs.sh --full'
 alias update-logs-errors='/home/kkk/Apps/ghostty-config-files/scripts/view-update-logs.sh --errors'
 
-# Display last update summary on terminal launch
-if [[ -f "/tmp/daily-updates-logs/last-update-summary.txt" ]]; then
-    # Only show once per day to avoid spam
-    local last_shown_file="/tmp/.update-summary-shown-$(date +%Y%m%d)"
-    if [[ ! -f "$last_shown_file" ]]; then
-        echo ""
-        echo "📊 Latest System Update Summary:"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        cat "/tmp/daily-updates-logs/last-update-summary.txt"
-        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo ""
-        echo "💡 Commands: update-all | update-logs | update-logs-full | update-logs-errors"
-        echo ""
-        touch "$last_shown_file"
+# Display last update summary on terminal launch (using precmd hook for Powerlevel10k compatibility)
+_show_update_summary_once() {
+    # Remove this function from precmd after first run
+    precmd_functions=(${precmd_functions:#_show_update_summary_once})
+
+    if [[ -f "/tmp/daily-updates-logs/last-update-summary.txt" ]]; then
+        # Only show once per day to avoid spam
+        local last_shown_file="/tmp/.update-summary-shown-$(date +%Y%m%d)"
+        if [[ ! -f "$last_shown_file" ]]; then
+            echo ""
+            echo "📊 Latest System Update Summary:"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            cat "/tmp/daily-updates-logs/last-update-summary.txt"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            echo "💡 Commands: update-all | update-logs | update-logs-full | update-logs-errors"
+            echo ""
+            touch "$last_shown_file"
+        fi
     fi
-fi
+}
+
+# Add to precmd hooks (runs before each prompt display, after instant prompt completes)
+precmd_functions+=(_show_update_summary_once)
 
 EOF
             log "SUCCESS" "✅ Daily update aliases added to .zshrc"
