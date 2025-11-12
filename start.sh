@@ -1060,12 +1060,16 @@ show_help() {
 }
 
 # Parse command line arguments
+# AUTOMATION MODE: Always install everything with maximum verbosity
+# Interactive menus removed for fully automated installation
 SKIP_DEPS=false
 SKIP_NODE=false
 SKIP_AI=false
 SKIP_PTYXIS=false
-VERBOSE=false
-DEBUG_MODE=false
+SKIP_UV=false
+SKIP_SPEC_KIT=false
+VERBOSE=true
+DEBUG_MODE=true
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -2474,6 +2478,58 @@ install_nodejs() {
     fi
 }
 
+# Install uv (Fast Python Package Installer)
+# Constitutional Compliance: Modern web development stack requirement (Feature 001)
+install_uv() {
+    if $SKIP_UV; then
+        log "INFO" "⏭️  Skipping uv installation"
+        return 0
+    fi
+
+    log "STEP" "⚡ Installing uv (Fast Python Package Installer)..."
+    log "INFO" "📊 Performance: uv provides significantly faster package operations than pip"
+
+    # Use modular install_uv.sh script
+    if source "${SCRIPT_DIR}/scripts/install_uv.sh" && install_uv_full; then
+        log "SUCCESS" "✅ uv installation complete"
+        return 0
+    else
+        log "ERROR" "❌ uv installation failed"
+        log "INFO" "ℹ️  Check logs: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Install spec-kit (Specification Development Toolkit)
+# Constitutional Compliance: Spec-Kit development workflow requirement
+install_speckit() {
+    if $SKIP_SPEC_KIT; then
+        log "INFO" "⏭️  Skipping spec-kit installation"
+        return 0
+    fi
+
+    log "STEP" "📋 Installing spec-kit (Specification Development Toolkit)..."
+
+    # Ensure uv is available first
+    if ! command -v uv >/dev/null 2>&1; then
+        log "WARNING" "⚠️  uv not found, installing uv first..."
+        if ! install_uv; then
+            log "ERROR" "❌ Cannot install spec-kit without uv"
+            return 1
+        fi
+    fi
+
+    # Use modular install_spec_kit.sh script
+    if source "${SCRIPT_DIR}/scripts/install_spec_kit.sh" && install_spec_kit_full; then
+        log "SUCCESS" "✅ spec-kit installation complete"
+        return 0
+    else
+        log "ERROR" "❌ spec-kit installation failed"
+        log "INFO" "ℹ️  Check logs: $LOG_FILE"
+        return 1
+    fi
+}
+
 # Install Claude Code CLI
 install_claude_code() {
     if $SKIP_AI; then
@@ -2765,6 +2821,23 @@ verify_installation() {
         log "SUCCESS" "✅ uv Python package manager: $version"
     else
         log "WARNING" "⚠️  uv not found (may need shell restart)"
+    fi
+
+    # Check spec-kit
+    if ! $SKIP_SPEC_KIT; then
+        if command -v specify >/dev/null 2>&1; then
+            local speckit_version=$(specify --version 2>/dev/null | awk '{print $NF}' || echo "unknown")
+            log "SUCCESS" "✅ spec-kit: $speckit_version"
+
+            # Verify slash commands exist
+            local slash_cmd_dir="$HOME/Apps/ghostty-config-files/.claude/commands"
+            if [ -d "$slash_cmd_dir" ]; then
+                local cmd_count=$(find "$slash_cmd_dir" -name "speckit.*.md" 2>/dev/null | wc -l)
+                log "INFO" "   📋 Slash commands: $cmd_count configured"
+            fi
+        else
+            log "WARNING" "⚠️  spec-kit not found (may need shell restart)"
+        fi
     fi
 
     # Check Node.js
@@ -3092,6 +3165,15 @@ main() {
     fi
     capture_stage_screenshot "UV Package Manager" "Python uv package manager setup" 2
 
+    # Install spec-kit (non-blocking)
+    if install_speckit; then
+        track_success "spec-kit" "Specification toolkit installed"
+    else
+        track_warning "spec-kit" "Installation failed - can retry manually"
+        log "INFO" "ℹ️  Continuing with remaining installations..."
+    fi
+    capture_stage_screenshot "spec-kit" "Specification development toolkit setup" 2
+
     # Setup screenshot dependencies after uv is available
     setup_screenshot_dependencies
 
@@ -3176,107 +3258,21 @@ main() {
     restart_shell_environment
 }
 
-# Interactive menu for user-friendly configuration
+# AUTOMATED INSTALLATION: Interactive menu removed
+# This function is now a no-op stub for backward compatibility
 show_interactive_menu() {
-    # Skip menu if any arguments provided (command-line mode)
-    if [ $# -gt 0 ]; then
-        return 0
-    fi
-
-    clear
-    echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║     Comprehensive Terminal Tools Installer - Setup Menu   ║${NC}"
-    echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
+    # AUTOMATION MODE: Always skip interactive menu
+    # Full installation with debug logging is ALWAYS enabled
+    log "INFO" "🤖 Automated installation mode activated"
+    log "INFO" "📊 Full installation with debug logging enabled"
+    log "INFO" "🔧 Components: All (Ghostty, Ptyxis, ZSH, fnm, Node.js, uv, spec-kit, AI tools)"
+    log "INFO" "📁 Logs will be saved to: $LOG_DIR"
     echo ""
-    echo -e "${GREEN}This installer will configure:${NC}"
-    echo "  • ZSH shell with Oh My ZSH and modern tools"
-    echo "  • Ghostty terminal with 2025 optimizations"
-    echo "  • Ptyxis terminal emulator"
-    echo "  • Node.js (via fnm - Fast Node Manager) and development tools"
-    echo "  • Claude Code CLI and Gemini CLI"
-    echo ""
-    echo -e "${YELLOW}═══════════════════════════════════════════════════════════${NC}"
-    echo ""
-
-    # Ask about logging level
-    echo -e "${CYAN}1. Logging Level${NC}"
-    echo "   Choose how much information to display during installation:"
-    echo ""
-    echo "   [1] Standard  - Show important steps and results (recommended)"
-    echo "   [2] Verbose   - Show detailed progress and debug information"
-    echo "   [3] Debug     - Show all commands and system calls"
-    echo ""
-    read -p "   Select logging level [1-3] (default: 1): " logging_choice
-    logging_choice=${logging_choice:-1}
-
-    case $logging_choice in
-        2) VERBOSE=true ;;
-        3) DEBUG_MODE=true; VERBOSE=true ;;
-        *) VERBOSE=false ;;
-    esac
-
-    echo ""
-    echo -e "${YELLOW}───────────────────────────────────────────────────────────${NC}"
-    echo ""
-
-    # Ask about component selection
-    echo -e "${CYAN}2. Component Selection${NC}"
-    echo "   Choose which components to install:"
-    echo ""
-    echo "   [1] Full Installation    - Install everything (recommended)"
-    echo "   [2] Custom Selection     - Choose specific components"
-    echo "   [3] Config Only          - Only update configuration files"
-    echo ""
-    read -p "   Select installation type [1-3] (default: 1): " install_choice
-    install_choice=${install_choice:-1}
-
-    case $install_choice in
-        2)
-            echo ""
-            echo -e "${CYAN}   Select components to SKIP (leave blank for none):${NC}"
-            echo ""
-            read -p "   Skip system dependencies? [y/N]: " skip_deps_choice
-            [[ "$skip_deps_choice" =~ ^[Yy]$ ]] && SKIP_DEPS=true
-
-            read -p "   Skip Node.js/fnm? [y/N]: " skip_node_choice
-            [[ "$skip_node_choice" =~ ^[Yy]$ ]] && SKIP_NODE=true
-
-            read -p "   Skip AI tools (Claude/Gemini)? [y/N]: " skip_ai_choice
-            [[ "$skip_ai_choice" =~ ^[Yy]$ ]] && SKIP_AI=true
-
-            read -p "   Skip Ptyxis terminal? [y/N]: " skip_ptyxis_choice
-            [[ "$skip_ptyxis_choice" =~ ^[Yy]$ ]] && SKIP_PTYXIS=true
-            ;;
-        3)
-            SKIP_DEPS=true
-            SKIP_NODE=true
-            SKIP_AI=true
-            SKIP_PTYXIS=true
-            ;;
-        *)
-            # Full installation - all flags remain false
-            ;;
-    esac
-
-    echo ""
-    echo -e "${YELLOW}═══════════════════════════════════════════════════════════${NC}"
-    echo ""
-    echo -e "${GREEN}Installation Summary:${NC}"
-    echo ""
-    echo "  Logging Level:      $([ "$DEBUG_MODE" = true ] && echo "Debug" || [ "$VERBOSE" = true ] && echo "Verbose" || echo "Standard")"
-    echo "  System Dependencies: $([ "$SKIP_DEPS" = true ] && echo "Skip" || echo "Install")"
-    echo "  Node.js/fnm:        $([ "$SKIP_NODE" = true ] && echo "Skip" || echo "Install")"
-    echo "  AI Tools:           $([ "$SKIP_AI" = true ] && echo "Skip" || echo "Install")"
-    echo "  Ptyxis Terminal:    $([ "$SKIP_PTYXIS" = true ] && echo "Skip" || echo "Install")"
-    echo ""
-    echo -e "${CYAN}📁 All logs will be saved to: $LOG_DIR${NC}"
-    echo ""
-    read -p "Press Enter to continue with this configuration, or Ctrl+C to cancel..."
-    echo ""
+    return 0
 }
 
-# Run interactive menu first (if no command-line arguments provided)
-show_interactive_menu "$@"
+# AUTOMATION MODE: Skip interactive menu call
+# show_interactive_menu "$@"  # DISABLED FOR AUTOMATION
 
 # Run main function
 main "$@"
