@@ -10,9 +10,9 @@
 
 ### Rationale:
 
-After researching bash testing frameworks (BATS, shunit2, ShellSpec, Bach) and analyzing the existing local-infra test infrastructure, a hybrid approach is recommended that:
+After researching bash testing frameworks (BATS, shunit2, ShellSpec, Bach) and analyzing the existing .runners-local test infrastructure, a hybrid approach is recommended that:
 
-1. **Leverages Existing Infrastructure**: The project already uses pytest for contract testing (see `/local-infra/tests/contract/test_gh_workflow.py`), which validates bash scripts via subprocess execution. This approach is proven and working.
+1. **Leverages Existing Infrastructure**: The project already uses pytest for contract testing (see `/.runners-local/tests/contract/test_gh_workflow.py`), which validates bash scripts via subprocess execution. This approach is proven and working.
 
 2. **Meets <10s Testing Requirement**:
    - ShellCheck syntax validation: <1 second per module
@@ -130,7 +130,7 @@ After researching bash testing frameworks (BATS, shunit2, ShellSpec, Bach) and a
 
 ```bash
 # Directory structure for bash module tests
-local-infra/tests/
+.runners-local/tests/
 ├── contract/                    # Existing pytest integration tests
 │   ├── test_gh_workflow.py     # Already exists
 │   └── test_module_*.py         # New: Integration tests for modules
@@ -242,7 +242,7 @@ test_in_isolation() {
 ##### ShellCheck (Static Analysis)
 ```bash
 #!/bin/bash
-# local-infra/tests/validation/run_shellcheck.sh
+# .runners-local/tests/validation/run_shellcheck.sh
 
 run_shellcheck_validation() {
     local exit_code=0
@@ -341,7 +341,7 @@ run_bash_module_tests() {
     log "TEST" "Running bash module tests..."
 
     # 1. ShellCheck validation (fast: ~1-2s total)
-    local validation_script="$PROJECT_ROOT/local-infra/tests/validation/run_shellcheck.sh"
+    local validation_script="$PROJECT_ROOT/.runners-local/tests/validation/run_shellcheck.sh"
     if [[ -f "$validation_script" ]]; then
         if "$validation_script"; then
             track_test_result "ShellCheck Validation" "PASS"
@@ -363,7 +363,7 @@ run_bash_module_tests() {
     done
 
     # 3. Unit tests (fast: 2-5s per module)
-    local unit_test_dir="$PROJECT_ROOT/local-infra/tests/unit"
+    local unit_test_dir="$PROJECT_ROOT/.runners-local/tests/unit"
     for test_script in "$unit_test_dir"/test_*.sh; do
         if [[ -f "$test_script" ]]; then
             local test_name=$(basename "$test_script" .sh)
@@ -401,7 +401,7 @@ run_bash_module_tests() {
 
 ```bash
 #!/bin/bash
-# local-infra/tests/unit/test_install_node.sh
+# .runners-local/tests/unit/test_install_node.sh
 
 set -euo pipefail
 
@@ -572,9 +572,9 @@ Based on research and existing infrastructure analysis:
 - Advanced Web Machinery bash testing: https://advancedweb.hu/unit-testing-bash-scripts/
 
 **Existing Project Infrastructure**:
-- `/local-infra/runners/test-runner-local.sh` - Constitutional test framework
-- `/local-infra/runners/gh-workflow-local.sh` - Local CI/CD simulation
-- `/local-infra/tests/contract/test_gh_workflow.py` - Pytest integration testing pattern
+- `/.runners-local/workflows/test-runner-local.sh` - Constitutional test framework
+- `/.runners-local/workflows/gh-workflow-local.sh` - Local CI/CD simulation
+- `/.runners-local/tests/contract/test_gh_workflow.py` - Pytest integration testing pattern
 
 **Constitutional Requirements** (CLAUDE.md):
 - Zero GitHub Actions consumption (mandatory)

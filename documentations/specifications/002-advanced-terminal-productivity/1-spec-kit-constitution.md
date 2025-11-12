@@ -151,11 +151,11 @@ time zsh -i -c exit 2>/dev/null
 ### AI Integration Validation
 ```bash
 # AI provider connectivity validation
-./local-infra/runners/ai-integration-test.sh --validate-providers
+./.runners-local/workflows/ai-integration-test.sh --validate-providers
 # Expected: OpenAI, Anthropic, Google accessible with fallbacks
 
 # Context awareness validation
-./local-infra/runners/ai-context-test.sh --validate-context
+./.runners-local/workflows/ai-context-test.sh --validate-context
 # Expected: Directory, Git state, command history integration working
 ```
 
@@ -166,7 +166,7 @@ ps aux | grep -E "(zsh|terminal)" | awk '{sum+=$6} END {print sum/1024 " MB"}'
 # Expected: <150MB total including all advanced features
 
 # Caching effectiveness validation
-./local-infra/runners/performance-cache-test.sh --validate
+./.runners-local/workflows/performance-cache-test.sh --validate
 # Expected: Intelligent caching reducing startup and completion times
 ```
 
@@ -177,7 +177,7 @@ chezmoi status 2>/dev/null && echo "Configuration management ready"
 # Expected: chezmoi integration for secure dotfile management
 
 # Template system validation
-./local-infra/runners/team-template-test.sh --validate
+./.runners-local/workflows/team-template-test.sh --validate
 # Expected: Shared standards with individual customization working
 ```
 
@@ -188,7 +188,7 @@ gh api user/settings/billing/actions | jq '.total_minutes_used'
 # MUST remain at baseline (zero consumption for advanced features)
 
 # Complete constitutional compliance check
-./local-infra/runners/constitutional-compliance-check.sh --all
+./.runners-local/workflows/constitutional-compliance-check.sh --all
 # Expected: All five principles maintained throughout advanced features
 ```
 

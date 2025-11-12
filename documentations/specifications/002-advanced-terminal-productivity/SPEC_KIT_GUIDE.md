@@ -65,28 +65,28 @@ This spec-kit provides a comprehensive framework for implementing **Feature 002:
 cd /home/kkk/Apps/ghostty-config-files
 
 # Execute emergency production setup (Phase 4.1)
-./local-infra/runners/emergency-production.sh --execute
+./.runners-local/workflows/emergency-production.sh --execute
 
 # Verify production status
-./local-infra/runners/production-status.sh
+./.runners-local/workflows/production-status.sh
 ```
 
 ### Complete Feature 002 Implementation (15-20 days)
 ```bash
 # Phase 4.1: Emergency Resolution (1-2 days)
-./local-infra/runners/emergency-production.sh
+./.runners-local/workflows/emergency-production.sh
 
 # Phase 4.2: Pipeline Automation (3-4 days)
-./local-infra/runners/phase-4.2-implementation.sh
+./.runners-local/workflows/phase-4.2-implementation.sh
 
 # Phase 4.3: Advanced Monitoring (2-3 days)
-./local-infra/runners/phase-4.3-implementation.sh
+./.runners-local/workflows/phase-4.3-implementation.sh
 
 # Phase 4.4: Maintenance Automation (3-4 days)
-./local-infra/runners/phase-4.4-implementation.sh
+./.runners-local/workflows/phase-4.4-implementation.sh
 
 # Phase 4.5: Production Excellence (4-5 days)
-./local-infra/runners/phase-4.5-implementation.sh
+./.runners-local/workflows/phase-4.5-implementation.sh
 ```
 
 ---
@@ -269,16 +269,16 @@ Production Monitoring Architecture:
 ### Real-time Dashboards
 ```bash
 # Production status dashboard
-./local-infra/runners/production-status.sh
+./.runners-local/workflows/production-status.sh
 
 # Constitutional compliance monitoring
-./local-infra/runners/monitoring/compliance-monitor.sh
+./.runners-local/workflows/monitoring/compliance-monitor.sh
 
 # Performance monitoring
-./local-infra/runners/monitoring/pagespeed-monitor.sh
+./.runners-local/workflows/monitoring/pagespeed-monitor.sh
 
 # Incident tracking
-ls -la local-infra/logs/incidents/
+ls -la .runners-local/logs/workflows/incidents/
 ```
 
 ### Key Performance Indicators (KPIs)
@@ -301,37 +301,37 @@ ls -la local-infra/logs/incidents/
 ### Core Implementation Scripts
 ```bash
 # Emergency production setup (Phase 4.1)
-./local-infra/runners/emergency-production.sh
+./.runners-local/workflows/emergency-production.sh
 
 # TypeScript error resolution
-./local-infra/runners/typescript/error-resolver.sh
+./.runners-local/workflows/typescript/error-resolver.sh
 
 # GitHub Pages deployment
-./local-infra/runners/deployment/deploy.sh
+./.runners-local/workflows/deployment/deploy.sh
 
 # Constitutional compliance validation
-./local-infra/runners/constitutional-validation.sh
+./.runners-local/workflows/constitutional-validation.sh
 
 # Incident response automation
-./local-infra/runners/incident-response.sh
+./.runners-local/workflows/incident-response.sh
 ```
 
 ### Monitoring & Maintenance Scripts
 ```bash
 # Production status dashboard
-./local-infra/runners/production-status.sh
+./.runners-local/workflows/production-status.sh
 
 # Performance monitoring
-./local-infra/runners/monitoring/pagespeed-monitor.sh
+./.runners-local/workflows/monitoring/pagespeed-monitor.sh
 
 # Uptime monitoring setup
-./local-infra/runners/monitoring/uptime-monitoring.sh
+./.runners-local/workflows/monitoring/uptime-monitoring.sh
 
 # Security patch automation
-./local-infra/runners/maintenance/security-patches.sh
+./.runners-local/workflows/maintenance/security-patches.sh
 
 # Backup and recovery
-./local-infra/runners/maintenance/backup-recovery.sh
+./.runners-local/workflows/maintenance/backup-recovery.sh
 ```
 
 ---
@@ -341,19 +341,19 @@ ls -la local-infra/logs/incidents/
 ### Pre-Deployment Validation Checklist
 ```bash
 # Complete validation pipeline
-./local-infra/runners/pre-deployment-validation.sh
+./.runners-local/workflows/pre-deployment-validation.sh
 
 # Constitutional compliance check
-./local-infra/runners/constitutional-validation.sh --full
+./.runners-local/workflows/constitutional-validation.sh --full
 
 # Performance validation
-./local-infra/runners/performance-validation.sh --production
+./.runners-local/workflows/performance-validation.sh --production
 
 # Accessibility validation
-./local-infra/runners/accessibility-validation.sh --wcag-aa
+./.runners-local/workflows/accessibility-validation.sh --wcag-aa
 
 # Security validation
-./local-infra/runners/security-validation.sh --comprehensive
+./.runners-local/workflows/security-validation.sh --comprehensive
 ```
 
 ### Continuous Quality Monitoring
@@ -387,7 +387,7 @@ ls -la local-infra/logs/incidents/
 ```bash
 # Verify Feature 001 completion
 cd /home/kkk/Apps/ghostty-config-files
-./local-infra/runners/constitutional-validation.sh --feature-001
+./.runners-local/workflows/constitutional-validation.sh --feature-001
 
 # Expected: 98.7% constitutional compliance, 62/62 tasks complete
 ```
@@ -411,7 +411,7 @@ Follow [5-spec-kit-implement.md](5-spec-kit-implement.md) for step-by-step imple
 ### Feature 002 Complete Validation
 ```bash
 # Comprehensive Feature 002 validation
-./local-infra/runners/feature-002-validation.sh --complete
+./.runners-local/workflows/feature-002-validation.sh --complete
 
 # Expected results:
 # ✅ All 64 tasks (T063-T126) completed

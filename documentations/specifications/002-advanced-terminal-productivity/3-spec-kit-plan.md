@@ -236,16 +236,16 @@ Each phase must meet these criteria before proceeding:
 ### Continuous Validation Framework
 ```bash
 # Foundation preservation validation
-./local-infra/runners/foundation-preservation-test.sh --all-phases
+./.runners-local/workflows/foundation-preservation-test.sh --all-phases
 
 # Performance validation
-./local-infra/runners/performance-validation.sh --phase-1 --continuous
+./.runners-local/workflows/performance-validation.sh --phase-1 --continuous
 
 # Constitutional compliance validation
-./local-infra/runners/constitutional-compliance-check.sh --phase-1
+./.runners-local/workflows/constitutional-compliance-check.sh --phase-1
 
 # AI integration validation
-./local-infra/runners/ai-integration-test.sh --validate-providers
+./.runners-local/workflows/ai-integration-test.sh --validate-providers
 ```
 
 ### Success Metrics Tracking

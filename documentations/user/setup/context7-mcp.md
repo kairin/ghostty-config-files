@@ -361,7 +361,7 @@ Run the health check script regularly to ensure configuration integrity:
 ./scripts/check_context7_health.sh
 
 # Add to local CI/CD
-# Edit ./local-infra/runners/gh-workflow-local.sh:
+# Edit ./.runners-local/workflows/gh-workflow-local.sh:
 # ./scripts/check_context7_health.sh || exit 1
 ```
 

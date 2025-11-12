@@ -89,7 +89,7 @@ src/
 public/                 # Static assets
 components/             # shadcn/ui components
 scripts/                # Python automation scripts
-local-infra/            # Local CI/CD infrastructure
+.runners-local/            # Local CI/CD infrastructure
 ├── runners/            # Local workflow execution scripts
 ├── logs/               # Execution logs
 └── config/             # CI/CD configuration

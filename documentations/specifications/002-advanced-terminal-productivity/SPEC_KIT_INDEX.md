@@ -138,41 +138,41 @@ All production changes SHALL be validated locally before deployment with constit
 ### Emergency Production Setup (15 minutes)
 ```bash
 cd /home/kkk/Apps/ghostty-config-files
-./local-infra/runners/emergency-production.sh --execute
-./local-infra/runners/production-status.sh
+./.runners-local/workflows/emergency-production.sh --execute
+./.runners-local/workflows/production-status.sh
 ```
 
 ### Complete Implementation (15-20 days)
 ```bash
 # Phase 4.1: Emergency Resolution (1-2 days)
-./local-infra/runners/emergency-production.sh
+./.runners-local/workflows/emergency-production.sh
 
 # Phase 4.2: Pipeline Automation (3-4 days)
-./local-infra/runners/phase-4.2-implementation.sh
+./.runners-local/workflows/phase-4.2-implementation.sh
 
 # Phase 4.3: Advanced Monitoring (2-3 days)
-./local-infra/runners/phase-4.3-implementation.sh
+./.runners-local/workflows/phase-4.3-implementation.sh
 
 # Phase 4.4: Maintenance Automation (3-4 days)
-./local-infra/runners/phase-4.4-implementation.sh
+./.runners-local/workflows/phase-4.4-implementation.sh
 
 # Phase 4.5: Production Excellence (4-5 days)
-./local-infra/runners/phase-4.5-implementation.sh
+./.runners-local/workflows/phase-4.5-implementation.sh
 ```
 
 ### Monitoring & Status
 ```bash
 # Production status dashboard
-./local-infra/runners/production-status.sh
+./.runners-local/workflows/production-status.sh
 
 # Constitutional compliance check
-./local-infra/runners/monitoring/compliance-monitor.sh
+./.runners-local/workflows/monitoring/compliance-monitor.sh
 
 # Performance monitoring
-./local-infra/runners/monitoring/pagespeed-monitor.sh
+./.runners-local/workflows/monitoring/pagespeed-monitor.sh
 
 # Incident response
-./local-infra/runners/incident-response.sh --type=status
+./.runners-local/workflows/incident-response.sh --type=status
 ```
 
 ---
@@ -318,7 +318,7 @@ Automated Maintenance System:
 ### Prerequisites Verification
 ```bash
 # Verify Feature 001 completion
-./local-infra/runners/constitutional-validation.sh --feature-001
+./.runners-local/workflows/constitutional-validation.sh --feature-001
 # Expected: 98.7% constitutional compliance, 62/62 tasks complete
 
 # Verify GitHub CLI setup
@@ -328,7 +328,7 @@ gh auth status && gh repo set-default
 npm --version && npx astro --version
 
 # Verify local CI/CD infrastructure
-ls -la local-infra/runners/
+ls -la .runners-local/workflows/
 ```
 
 ### Go/No-Go Decision Criteria
@@ -359,9 +359,9 @@ ls -la local-infra/runners/
 - Local validation MUST occur before all production changes
 
 ### Emergency Procedures
-- Emergency production setup available via `./local-infra/runners/emergency-production.sh`
-- Rollback capability <30 seconds via `./local-infra/runners/deployment/rollback.sh`
-- Incident response automation via `./local-infra/runners/incident-response.sh`
+- Emergency production setup available via `./.runners-local/workflows/emergency-production.sh`
+- Rollback capability <30 seconds via `./.runners-local/workflows/deployment/rollback.sh`
+- Incident response automation via `./.runners-local/workflows/incident-response.sh`
 
 ### Quality Assurance
 - Pre-deployment validation required for all changes
@@ -375,9 +375,9 @@ ls -la local-infra/runners/
 
 ### Implementation Support
 - **Documentation**: Complete implementation guide in [5-spec-kit-implement.md](5-spec-kit-implement.md)
-- **Scripts**: All implementation scripts in `local-infra/runners/`
-- **Validation**: Constitutional compliance validation via `./local-infra/runners/constitutional-validation.sh`
-- **Monitoring**: Production status dashboard via `./local-infra/runners/production-status.sh`
+- **Scripts**: All implementation scripts in `.runners-local/workflows/`
+- **Validation**: Constitutional compliance validation via `./.runners-local/workflows/constitutional-validation.sh`
+- **Monitoring**: Production status dashboard via `./.runners-local/workflows/production-status.sh`
 
 ### Common Issues & Solutions
 1. **TypeScript Errors**: Use gradual migration strategy in [5-spec-kit-implement.md](5-spec-kit-implement.md)

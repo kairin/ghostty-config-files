@@ -730,7 +730,7 @@ See `/scripts/install_node.sh` (to be created during implementation) for a compl
 
 Before committing, all modules must pass:
 ```bash
-./local-infra/runners/validate-modules.sh
+./.runners-local/workflows/validate-modules.sh
 ```
 
 This checks:

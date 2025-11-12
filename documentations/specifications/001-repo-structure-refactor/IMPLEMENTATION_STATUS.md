@@ -29,7 +29,7 @@
 - `scripts/common.sh` (315 lines) - 15+ utility functions
 - `scripts/progress.sh` (377 lines) - Rich progress reporting
 - `scripts/backup_utils.sh` (347 lines) - Backup/restore system
-- `local-infra/tests/unit/test_common_utils.sh` (547 lines) - 20+ test cases
+- `.runners-local/tests/unit/test_common_utils.sh` (547 lines) - 20+ test cases
 
 **Testing**: All unit tests pass in <10 seconds
 **Impact**: Shared utilities reduce code duplication by 30-40%

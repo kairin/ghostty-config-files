@@ -163,8 +163,8 @@ The modern web development stack consists of five primary entities that manage c
 - `tsconfig.json`: TypeScript compiler configuration
 
 ### Runtime Data
-- `local-infra/logs/`: Execution logs and performance metrics (JSON format)
-- `local-infra/config/`: Workflow definitions and test configurations
+- `.runners-local/logs/workflows/`: Execution logs and performance metrics (JSON format)
+- `.runners-local/config/`: Workflow definitions and test configurations
 - `.venv/`: Python virtual environment (managed by uv)
 - `dist/`: Build artifacts for deployment
 

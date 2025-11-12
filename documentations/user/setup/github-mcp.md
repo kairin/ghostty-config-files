@@ -433,7 +433,7 @@ The GitHub MCP server enhances local CI/CD workflows:
 
 ```bash
 # Local workflow with GitHub integration
-./local-infra/runners/gh-workflow-local.sh local
+./.runners-local/workflows/gh-workflow-local.sh local
 
 # Claude Code can now:
 # - Create issues for failed tests
@@ -499,7 +499,7 @@ Configure separate MCP servers for different accounts:
 ### Project Documentation
 - [CLAUDE.md](/home/kkk/Apps/ghostty-config-files/CLAUDE.md) - Project constitutional requirements
 - [Context7 Setup](CONTEXT7_SETUP.md) - Parallel MCP server setup
-- [Local CI/CD Guide](/home/kkk/Apps/ghostty-config-files/local-infra/README.md) - Integration patterns
+- [Local CI/CD Guide](/home/kkk/Apps/ghostty-config-files/.runners-local/README.md) - Integration patterns
 
 ### Health Check Script
 - Location: `/home/kkk/Apps/ghostty-config-files/scripts/check_github_mcp_health.sh`

@@ -110,7 +110,7 @@ project-root/
 ├── public/                 # Static assets
 ├── components/             # shadcn/ui components
 ├── scripts/                # Python automation scripts
-├── local-infra/            # Local CI/CD infrastructure
+├── .runners-local/            # Local CI/CD infrastructure
 ├── dist/                   # Build output (GitHub Pages)
 └── [config files]          # pyproject.toml, astro.config.mjs, etc.
 ```

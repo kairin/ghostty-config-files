@@ -18,7 +18,7 @@ The Performance Benchmarking Dashboard provides comprehensive performance tracki
 
 ```bash
 # From repository root
-./local-infra/runners/performance-dashboard.sh benchmark
+./.runners-local/workflows/performance-dashboard.sh benchmark
 
 # Dashboard will be generated and opened automatically
 ```
@@ -26,7 +26,7 @@ The Performance Benchmarking Dashboard provides comprehensive performance tracki
 ### View Existing Dashboard
 
 ```bash
-./local-infra/runners/performance-dashboard.sh view
+./.runners-local/workflows/performance-dashboard.sh view
 
 # Or open manually:
 # file:///home/kkk/Apps/ghostty-config-files/documentations/performance/dashboard.html
@@ -74,17 +74,17 @@ The Performance Benchmarking Dashboard provides comprehensive performance tracki
 
 ```bash
 # Complete benchmark suite (recommended)
-./local-infra/runners/performance-dashboard.sh benchmark
+./.runners-local/workflows/performance-dashboard.sh benchmark
 
 # Individual metric collection
-./local-infra/runners/performance-dashboard.sh lighthouse  # Lighthouse only
-./local-infra/runners/performance-dashboard.sh build      # Build metrics only
-./local-infra/runners/performance-dashboard.sh cicd       # CI/CD metrics only
+./.runners-local/workflows/performance-dashboard.sh lighthouse  # Lighthouse only
+./.runners-local/workflows/performance-dashboard.sh build      # Build metrics only
+./.runners-local/workflows/performance-dashboard.sh cicd       # CI/CD metrics only
 
 # Dashboard management
-./local-infra/runners/performance-dashboard.sh dashboard  # Regenerate dashboard
-./local-infra/runners/performance-dashboard.sh view       # Open in browser
-./local-infra/runners/performance-dashboard.sh help       # Show help
+./.runners-local/workflows/performance-dashboard.sh dashboard  # Regenerate dashboard
+./.runners-local/workflows/performance-dashboard.sh view       # Open in browser
+./.runners-local/workflows/performance-dashboard.sh help       # Show help
 ```
 
 ---
@@ -160,10 +160,10 @@ The performance dashboard integrates with the local CI/CD workflow:
 
 ```bash
 # Enhanced local workflow now includes performance tracking
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Optionally run benchmark after workflow
-./local-infra/runners/performance-dashboard.sh benchmark
+./.runners-local/workflows/performance-dashboard.sh benchmark
 ```
 
 ### Automated Tracking
@@ -174,7 +174,7 @@ Add to `.git/hooks/post-commit` for automatic benchmarking:
 #!/bin/bash
 # Run benchmark after significant commits
 if git log -1 --pretty=%B | grep -qE "feat:|fix:|perf:"; then
-    ./local-infra/runners/performance-dashboard.sh build
+    ./.runners-local/workflows/performance-dashboard.sh build
 fi
 ```
 
@@ -184,7 +184,7 @@ The dashboard metrics are validated against Context7 MCP best practices:
 
 ```bash
 # Context7 validation includes performance metrics
-./local-infra/runners/gh-workflow-local.sh context7
+./.runners-local/workflows/gh-workflow-local.sh context7
 ```
 
 ---
@@ -205,7 +205,7 @@ The dashboard is static HTML but can be regenerated at any time:
 
 ```bash
 # Regenerate with latest data
-./local-infra/runners/performance-dashboard.sh dashboard
+./.runners-local/workflows/performance-dashboard.sh dashboard
 ```
 
 ### Mobile Responsive
@@ -242,7 +242,7 @@ lighthouse --version
 npm run build
 
 # Then run benchmark
-./local-infra/runners/performance-dashboard.sh benchmark
+./.runners-local/workflows/performance-dashboard.sh benchmark
 ```
 
 ### Preview Server Fails
@@ -384,7 +384,7 @@ echo "file://$(pwd)/documentations/performance/dashboard.html"
 
 For issues or questions:
 1. Check troubleshooting section above
-2. Review script logs in `local-infra/logs/`
+2. Review script logs in `.runners-local/logs/workflows/`
 3. Verify constitutional requirements in AGENTS.md
 4. Open GitHub issue with dashboard screenshot
 
