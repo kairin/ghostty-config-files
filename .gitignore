@@ -90,10 +90,10 @@ Thumbs.db
 *.tgz
 *.tar.gz
 
-# Local CI/CD logs (keep directory structure)
-local-infra/logs/*.log
-local-infra/logs/*.json
-!local-infra/logs/.gitkeep
+# Local CI/CD logs (consolidated in .runners-local)
+.runners-local/logs/**/*.log
+.runners-local/logs/**/*.json
+!.runners-local/logs/.gitkeep
 
 # Performance monitoring
 *.perf
@@ -146,8 +146,9 @@ deploy/
 deployment/
 
 # Constitutional compliance: Local CI/CD working files
-local-infra/tmp/
-local-infra/cache/
+.runners-local/tmp/
+.runners-local/cache/
+.runners-local/self-hosted/config/
 
 # User customizations (preserve during updates)
 configs/custom/

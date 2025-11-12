@@ -143,7 +143,7 @@ validate_config() {
                 failed_scripts=$((failed_scripts + 1))
                 log "WARNING" "⚠️ ShellCheck issues found in: $(basename "$script_file")"
             fi
-        done < <(find "$REPO_DIR/scripts" "$REPO_DIR/local-infra" -name "*.sh" -type f 2>/dev/null)
+        done < <(find "$REPO_DIR/scripts" "$REPO_DIR/.runners-local" -name "*.sh" -type f 2>/dev/null)
 
         if [ $failed_scripts -eq 0 ]; then
             log "SUCCESS" "✅ All $total_scripts shell scripts passed ShellCheck validation"

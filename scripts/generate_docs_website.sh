@@ -591,9 +591,9 @@ EOF
 
 # Create local CI/CD integration
 create_local_cicd_integration() {
-    mkdir -p "$PROJECT_ROOT/local-infra/runners"
+    mkdir -p "$PROJECT_ROOT/.runners-local/workflows"
 
-    cat > "$PROJECT_ROOT/local-infra/runners/astro-build-local.sh" << 'EOF'
+    cat > "$PROJECT_ROOT/.runners-local/workflows/astro-build-local.sh" << 'EOF'
 #!/bin/bash
 
 # Local Astro.build CI/CD Runner
@@ -643,7 +643,7 @@ else
 fi
 EOF
 
-    chmod +x "$PROJECT_ROOT/local-infra/runners/astro-build-local.sh"
+    chmod +x "$PROJECT_ROOT/.runners-local/workflows/astro-build-local.sh"
 }
 
 # Generate complete Astro.build documentation website
@@ -796,7 +796,7 @@ Local Development:
   npm run check     # Type checking
 
 Deployment:
-  ./local-infra/runners/astro-build-local.sh  # Local CI/CD
+  ./.runners-local/workflows/astro-build-local.sh  # Local CI/CD
   git push                                     # Triggers GitHub Pages deploy
 
 EOF

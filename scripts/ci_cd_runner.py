@@ -98,7 +98,7 @@ class ConstitutionalCICD:
     def __init__(self, project_root: Path):
         self.project_root = project_root
         self.scripts_dir = project_root / "scripts"
-        self.local_infra_dir = project_root / "local-infra"
+        self.local_infra_dir = project_root / ".runners-local"
 
         # Constitutional workflows
         self.workflows = {
@@ -279,7 +279,7 @@ class ConstitutionalCICD:
             WorkflowStep(
                 name="local_cicd_check",
                 description="Local CI/CD infrastructure validation",
-                command=["ls", "-la", "local-infra/runners/"],
+                command=["ls", "-la", ".runners-local/workflows/"],
                 constitutional_check=True
             )
         ]

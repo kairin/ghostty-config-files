@@ -343,7 +343,7 @@ test_local_cicd() {
     # Test log directory structure
     local log_dirs=(
         ".update_cache"
-        "local-infra/logs"
+        ".runners-local/logs/workflows"
         "/tmp/ghostty-start-logs"
     )
 
@@ -467,7 +467,7 @@ run_accessibility_tests() {
 run_bash_unit_tests() {
     log "TEST" "Running bash unit tests..."
 
-    local unit_tests_dir="${PROJECT_ROOT}/local-infra/tests/unit"
+    local unit_tests_dir="${PROJECT_ROOT}/.runners-local/tests/unit"
 
     # Check if unit tests directory exists
     if [[ ! -d "$unit_tests_dir" ]]; then

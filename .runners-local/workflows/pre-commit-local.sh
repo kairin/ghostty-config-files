@@ -8,7 +8,7 @@ set -euo pipefail
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-LOG_DIR="$PROJECT_ROOT/local-infra/logs"
+LOG_DIR="$PROJECT_ROOT/.runners-local/logs/workflows"
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 LOG_FILE="$LOG_DIR/pre-commit-$TIMESTAMP.log"
 
@@ -324,8 +324,8 @@ validate_performance_impact() {
     if [[ "$performance_sensitive_files" -gt 0 ]]; then
         log "⚠️  $performance_sensitive_files performance-sensitive files changed"
         log "    Consider running performance validation after commit:"
-        log "    ./local-infra/runners/performance-monitor.sh --target-url http://localhost:4321"
-        log "    ./local-infra/runners/astro-build-local.sh --environment production --validation full"
+        log "    ./.runners-local/workflows/performance-monitor.sh --target-url http://localhost:4321"
+        log "    ./.runners-local/workflows/astro-build-local.sh --environment production --validation full"
     fi
 
     return 0

@@ -214,7 +214,7 @@ This will start a development server, and you can view the website at `http://lo
     -   `developer/`: Developer documentation (architecture, analysis)
     -   `specifications/`: Active feature specifications (Spec 001, 002, 004)
     -   `archive/`: Historical/obsolete documentation
--   `local-infra/`: Local CI/CD infrastructure for zero-cost testing and validation.
+-   `.runners-local/`: Local CI/CD infrastructure for zero-cost testing and validation.
     -   `tests/unit/`: Unit tests for modular scripts (Phase 1, 5)
     -   `runners/`: Local CI/CD execution scripts
 

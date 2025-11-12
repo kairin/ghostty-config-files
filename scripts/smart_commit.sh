@@ -114,9 +114,9 @@ pre_commit_validation() {
     fi
 
     # Run local CI/CD validation if available
-    if [ -f "$REPO_DIR/local-infra/runners/gh-workflow-local.sh" ]; then
+    if [ -f "$REPO_DIR/.runners-local/workflows/gh-workflow-local.sh" ]; then
         log "INFO" "🏗️ Running local CI/CD validation..."
-        if ! "$REPO_DIR/local-infra/runners/gh-workflow-local.sh" validate; then
+        if ! "$REPO_DIR/.runners-local/workflows/gh-workflow-local.sh" validate; then
             log "ERROR" "Local CI/CD validation failed"
             return 1
         fi

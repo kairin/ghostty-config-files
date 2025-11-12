@@ -8,10 +8,10 @@ echo "🚀 Setting up constitutional Astro GitHub Pages deployment..."
 
 REPO_DIR="$(dirname "$(dirname "$(dirname "$0")")")"
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-LOG_FILE="./local-infra/logs/astro-pages-setup-$TIMESTAMP.log"
+LOG_FILE="./.runners-local/logs/workflows/astro-pages-setup-$TIMESTAMP.log"
 
 # Ensure log directory exists
-mkdir -p ./local-infra/logs
+mkdir -p ./.runners-local/logs/workflows
 
 log_with_timestamp() {
     echo "$(date -Iseconds) [ASTRO-PAGES] $1" | tee -a "$LOG_FILE"

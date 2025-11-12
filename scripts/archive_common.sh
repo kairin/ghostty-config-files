@@ -287,7 +287,7 @@ extract_file_paths() {
     local task_line="$1"
 
     # Common file path patterns
-    echo "$task_line" | grep -oE '(scripts|configs|tests|docs|local-infra|documentations)/[^ ,)]+\.(sh|md|json|yaml|yml|conf|py|js|ts)' || true
+    echo "$task_line" | grep -oE '(scripts|configs|tests|docs|.runners-local|documentations)/[^ ,)]+\.(sh|md|json|yaml|yml|conf|py|js|ts)' || true
     echo "$task_line" | grep -oE '~/\.[a-z]+/[^ ,)]+' || true
     echo "$task_line" | grep -oE 'src/[^ ,)]+\.(sh|md|json|yaml|yml|conf|py|js|ts)' || true
 }

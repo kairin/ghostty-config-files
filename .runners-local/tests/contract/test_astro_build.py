@@ -19,7 +19,7 @@ class TestAstroBuildContract:
 
     def setup_method(self) -> None:
         """Setup test environment."""
-        self.runner_script = Path("local-infra/runners/astro-build-local.sh")
+        self.runner_script = Path(".runners-local/workflows/astro-build-local.sh")
         self.project_root = Path.cwd()
 
     def test_astro_build_script_exists(self) -> None:

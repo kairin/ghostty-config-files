@@ -141,7 +141,7 @@ git push origin main
 ```mermaid
 flowchart TD
     Start([New feature/fix needed]) --> CreateBranch[Create timestamped branch<br/>YYYYMMDD-HHMMSS-type-description]
-    CreateBranch --> LocalCICD{Run local CI/CD<br/>./local-infra/runners/gh-workflow-local.sh all}
+    CreateBranch --> LocalCICD{Run local CI/CD<br/>./.runners-local/workflows/gh-workflow-local.sh all}
 
     LocalCICD -->|Fails| FixIssues[Fix validation errors]
     FixIssues --> LocalCICD
@@ -199,10 +199,10 @@ git commit -m "CRITICAL: Restore .nojekyll for GitHub Pages asset loading"
 
 ```bash
 # 1. Run local workflow (MANDATORY before GitHub)
-./local-infra/runners/gh-workflow-local.sh local
+./.runners-local/workflows/gh-workflow-local.sh local
 
 # 2. Verify local build success
-./local-infra/runners/gh-workflow-local.sh status
+./.runners-local/workflows/gh-workflow-local.sh status
 
 # 3. Test configuration locally
 ghostty +show-config && ./scripts/check_updates.sh
@@ -252,7 +252,7 @@ flowchart LR
 
     Deploy -->|✅ Yes| Complete([✅ DEPLOY TO GITHUB])
     Deploy -->|❌ No| Warn[🚨 STOP: Consuming Actions minutes]
-    Warn --> Review[Review local-infra/logs/]
+    Warn --> Review[Review .runners-local/logs/]
     Review --> Fix7
 
     style Start fill:#e1f5fe
@@ -262,8 +262,8 @@ flowchart LR
 ```
 
 #### Local Workflow Tools (MANDATORY)
-- **`./local-infra/runners/gh-workflow-local.sh`** - Local GitHub Actions simulation
-- **`./local-infra/runners/gh-pages-setup.sh`** - Zero-cost Pages configuration
+- **`./.runners-local/workflows/gh-workflow-local.sh`** - Local GitHub Actions simulation
+- **`./.runners-local/workflows/gh-pages-setup.sh`** - Zero-cost Pages configuration
 - **Commands**: `local`, `status`, `trigger`, `pages`, `all`
 - **Requirement**: Local success BEFORE any GitHub deployment
 
@@ -276,7 +276,7 @@ gh api user/settings/billing/actions
 gh run list --limit 10 --json status,conclusion,name,createdAt
 
 # Verify zero-cost compliance
-./local-infra/runners/gh-pages-setup.sh
+./.runners-local/workflows/gh-pages-setup.sh
 ```
 
 #### Logging & Debugging (MANDATORY)
@@ -290,7 +290,7 @@ LOG_LOCATIONS="/tmp/ghostty-start-logs/"
 └── system_state_TIMESTAMP.json  # Complete system state snapshots
 
 # Local CI/CD logs
-LOCAL_CI_LOGS="./local-infra/logs/"
+LOCAL_CI_LOGS="./.runners-local/logs/"
 ├── workflow-TIMESTAMP.log       # Local workflow execution
 ├── gh-pages-TIMESTAMP.log       # GitHub Pages simulation
 ├── performance-TIMESTAMP.json   # CI performance metrics
@@ -311,7 +311,33 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 ├── configs/                    # Ghostty config, themes, dircolors, workspace
 ├── scripts/                    # Utility scripts (installation, updates, health checks)
 ├── documentations/             # Centralized docs (user/, developer/, specifications/, archive/)
-└── local-infra/               # Local CI/CD (runners/, tests/, logs/, config/)
+└── .runners-local/               # Consolidated CI/CD infrastructure (see below for detail)
+```
+
+**Detailed .runners-local/ Structure**:
+```
+.runners-local/                   # Consolidated local CI/CD infrastructure
+├── workflows/                    # Workflow execution scripts (committed)
+│   ├── gh-workflow-local.sh     # GitHub Actions local simulation
+│   ├── astro-build-local.sh     # Astro build workflows
+│   ├── performance-monitor.sh   # Performance tracking
+│   └── gh-pages-setup.sh        # GitHub Pages setup
+├── self-hosted/                  # Self-hosted runner management
+│   ├── setup-self-hosted-runner.sh  # Runner setup (committed)
+│   └── config/                   # Runner credentials (GITIGNORED)
+├── tests/                        # Complete test infrastructure (committed)
+│   ├── contract/                # Contract tests
+│   ├── unit/                    # Unit tests
+│   ├── integration/             # Integration tests
+│   ├── validation/              # Validation scripts
+│   └── fixtures/                # Test fixtures
+├── logs/                         # Execution logs (GITIGNORED)
+│   ├── workflows/               # Workflow logs
+│   ├── builds/                  # Build logs
+│   ├── tests/                   # Test logs
+│   └── runners/                 # Runner service logs
+├── docs/                         # Runner documentation (committed)
+└── README.md                     # Infrastructure documentation
 ```
 
 **Complete Structure**: See [DIRECTORY_STRUCTURE.md](documentations/developer/architecture/DIRECTORY_STRUCTURE.md) for detailed directory tree with file descriptions, design patterns, and naming conventions.
@@ -436,7 +462,7 @@ cd /home/kkk/Apps/ghostty-config-files
 ./start.sh
 
 # Initialize local CI/CD infrastructure
-./local-infra/runners/gh-workflow-local.sh init
+./.runners-local/workflows/gh-workflow-local.sh init
 
 # Setup GitHub CLI integration
 gh auth login
@@ -446,17 +472,17 @@ gh repo set-default
 ### Local CI/CD Operations
 ```bash
 # Complete local workflow execution
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Individual workflow stages
-./local-infra/runners/gh-workflow-local.sh validate    # Config validation
-./local-infra/runners/gh-workflow-local.sh test       # Performance testing
-./local-infra/runners/gh-workflow-local.sh build      # Build simulation
-./local-infra/runners/gh-workflow-local.sh deploy     # Deployment simulation
+./.runners-local/workflows/gh-workflow-local.sh validate    # Config validation
+./.runners-local/workflows/gh-workflow-local.sh test       # Performance testing
+./.runners-local/workflows/gh-workflow-local.sh build      # Build simulation
+./.runners-local/workflows/gh-workflow-local.sh deploy     # Deployment simulation
 
 # GitHub Actions cost monitoring
-./local-infra/runners/gh-workflow-local.sh billing    # Check usage
-./local-infra/runners/gh-workflow-local.sh status     # Workflow status
+./.runners-local/workflows/gh-workflow-local.sh billing    # Check usage
+./.runners-local/workflows/gh-workflow-local.sh status     # Workflow status
 ```
 
 ### Update Management
@@ -467,7 +493,7 @@ gh repo set-default
 ./scripts/check_updates.sh --config-only # Configuration updates only
 
 # Local CI/CD for updates
-./local-infra/runners/gh-workflow-local.sh update     # Update workflow
+./.runners-local/workflows/gh-workflow-local.sh update     # Update workflow
 ```
 
 ### Daily Automated Updates
@@ -507,11 +533,11 @@ sudo EDITOR=nano visudo                 # Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/
 ```bash
 # Configuration validation
 ghostty +show-config                    # Validate current configuration
-./local-infra/runners/test-runner.sh    # Complete test suite
+./.runners-local/workflows/test-runner.sh    # Complete test suite
 
 # Performance monitoring
-./local-infra/runners/performance-monitor.sh --baseline # Establish baseline
-./local-infra/runners/performance-monitor.sh --compare  # Compare performance
+./.runners-local/workflows/performance-monitor.sh --baseline # Establish baseline
+./.runners-local/workflows/performance-monitor.sh --compare  # Compare performance
 
 # System testing
 ./start.sh --verbose                    # Full installation with detailed logs
@@ -521,23 +547,23 @@ ghostty +show-config                    # Validate current configuration
 
 ### GitHub CLI Integration
 
-**Script**: `local-infra/runners/gh-workflow-local.sh`
+**Script**: `.runners-local/workflows/gh-workflow-local.sh`
 
 The gh-workflow-local.sh script provides comprehensive local CI/CD capabilities with zero GitHub Actions cost. It includes configuration validation, performance testing, workflow status monitoring, and billing checks.
 
 **Usage**:
 ```bash
 # Run complete local workflow
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Individual operations
-./local-infra/runners/gh-workflow-local.sh local      # Simulate GitHub Actions locally
-./local-infra/runners/gh-workflow-local.sh status    # Check workflow status
-./local-infra/runners/gh-workflow-local.sh billing   # Monitor Actions usage
-./local-infra/runners/gh-workflow-local.sh pages     # Local Pages simulation
+./.runners-local/workflows/gh-workflow-local.sh local      # Simulate GitHub Actions locally
+./.runners-local/workflows/gh-workflow-local.sh status    # Check workflow status
+./.runners-local/workflows/gh-workflow-local.sh billing   # Monitor Actions usage
+./.runners-local/workflows/gh-workflow-local.sh pages     # Local Pages simulation
 
 # Get help
-./local-infra/runners/gh-workflow-local.sh --help
+./.runners-local/workflows/gh-workflow-local.sh --help
 ```
 
 **Features**:
@@ -550,23 +576,23 @@ The gh-workflow-local.sh script provides comprehensive local CI/CD capabilities 
 
 ### Performance Monitoring
 
-**Script**: `local-infra/runners/performance-monitor.sh`
+**Script**: `.runners-local/workflows/performance-monitor.sh`
 
 Monitors Ghostty terminal performance, tracks 2025 optimizations, and generates comprehensive performance reports.
 
 **Usage**:
 ```bash
 # Run performance test
-./local-infra/runners/performance-monitor.sh --test
+./.runners-local/workflows/performance-monitor.sh --test
 
 # Establish baseline
-./local-infra/runners/performance-monitor.sh --baseline
+./.runners-local/workflows/performance-monitor.sh --baseline
 
 # Generate weekly report
-./local-infra/runners/performance-monitor.sh --weekly-report
+./.runners-local/workflows/performance-monitor.sh --weekly-report
 
 # Get help
-./local-infra/runners/performance-monitor.sh --help
+./.runners-local/workflows/performance-monitor.sh --help
 ```
 
 **Metrics Collected**:
@@ -576,26 +602,26 @@ Monitors Ghostty terminal performance, tracks 2025 optimizations, and generates 
 - Shell integration detection status
 - System information (hostname, kernel, uptime)
 
-**Output**: Performance data saved to `./local-infra/logs/performance-*.json`
+**Output**: Performance data saved to `./.runners-local/logs/performance-*.json`
 
 ### Zero-Cost GitHub Pages Setup
 
-**Script**: `local-infra/runners/gh-pages-setup.sh`
+**Script**: `.runners-local/workflows/gh-pages-setup.sh`
 
 Configures zero-cost GitHub Pages deployment with Astro.build, including critical `.nojekyll` file validation.
 
 **Usage**:
 ```bash
 # Complete setup (verify, build, configure)
-./local-infra/runners/gh-pages-setup.sh
+./.runners-local/workflows/gh-pages-setup.sh
 
 # Individual operations
-./local-infra/runners/gh-pages-setup.sh --verify      # Verify build and .nojekyll
-./local-infra/runners/gh-pages-setup.sh --build       # Run Astro build
-./local-infra/runners/gh-pages-setup.sh --configure   # Configure GitHub Pages
+./.runners-local/workflows/gh-pages-setup.sh --verify      # Verify build and .nojekyll
+./.runners-local/workflows/gh-pages-setup.sh --build       # Run Astro build
+./.runners-local/workflows/gh-pages-setup.sh --configure   # Configure GitHub Pages
 
 # Get help
-./local-infra/runners/gh-pages-setup.sh --help
+./.runners-local/workflows/gh-pages-setup.sh --help
 ```
 
 **Critical Validations**:
@@ -627,7 +653,7 @@ cp /path/to/conversation.md documentations/development/conversation_logs/CONVERS
 
 # Capture system state and CI/CD logs
 cp /tmp/ghostty-start-logs/system_state_*.json documentations/development/system_states/
-cp ./local-infra/logs/* documentations/development/ci_cd_logs/
+cp ./.runners-local/logs/* documentations/development/ci_cd_logs/
 
 git add documentations/development/
 git commit -m "Add conversation log, system state, and CI/CD logs for local infrastructure setup"
@@ -657,9 +683,9 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 ## ✅ MANDATORY ACTIONS
 
 ### Before Every Configuration Change
-1. **Local CI/CD Execution**: Run `./local-infra/runners/gh-workflow-local.sh all`
+1. **Local CI/CD Execution**: Run `./.runners-local/workflows/gh-workflow-local.sh all`
 2. **Configuration Validation**: Run `ghostty +show-config` to ensure validity
-3. **Performance Testing**: Execute `./local-infra/runners/performance-monitor.sh`
+3. **Performance Testing**: Execute `./.runners-local/workflows/performance-monitor.sh`
 4. **Backup Creation**: Automatic timestamped backup of existing configuration
 5. **User Preservation**: Extract and preserve user customizations
 6. **Documentation**: Update relevant docs if adding features
@@ -728,14 +754,14 @@ For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](sp
 ./start.sh --help
 
 # Get help with local CI/CD
-./local-infra/runners/gh-workflow-local.sh --help
+./.runners-local/workflows/gh-workflow-local.sh --help
 
 # Get help with updates
 ./scripts/check_updates.sh --help
 
 # Validate system state
 ghostty +show-config
-./local-infra/runners/test-runner.sh --validate
+./.runners-local/workflows/test-runner.sh --validate
 
 # Emergency configuration recovery
 cp ~/.config/ghostty/config.backup-* ~/.config/ghostty/config
@@ -746,17 +772,17 @@ ghostty +show-config
 ```bash
 # View comprehensive logs
 ls -la /tmp/ghostty-start-logs/
-ls -la ./local-infra/logs/
+ls -la ./.runners-local/logs/
 
 # Analyze system state
 jq '.' /tmp/ghostty-start-logs/system_state_*.json
 
 # Check CI/CD performance
-jq '.' ./local-infra/logs/performance-*.json
+jq '.' ./.runners-local/logs/performance-*.json
 
 # View errors only
 cat /tmp/ghostty-start-logs/errors.log
-cat ./local-infra/logs/workflow-errors.log
+cat ./.runners-local/logs/workflow-errors.log
 ```
 
 ## 🔄 Continuous Integration & Automation
@@ -764,10 +790,10 @@ cat ./local-infra/logs/workflow-errors.log
 ### Daily Maintenance (Recommended)
 ```bash
 # Add to crontab for automatic local CI/CD
-# 0 9 * * * cd /home/kkk/Apps/ghostty-config-files && ./local-infra/runners/gh-workflow-local.sh all
+# 0 9 * * * cd /home/kkk/Apps/ghostty-config-files && ./.runners-local/workflows/gh-workflow-local.sh all
 
 # Weekly performance monitoring
-# 0 9 * * 0 cd /home/kkk/Apps/ghostty-config-files && ./local-infra/runners/performance-monitor.sh --weekly-report
+# 0 9 * * 0 cd /home/kkk/Apps/ghostty-config-files && ./.runners-local/workflows/performance-monitor.sh --weekly-report
 ```
 
 ### GitHub CLI Automation
@@ -796,7 +822,7 @@ gh api user/settings/billing/actions | jq '{total_minutes_used, included_minutes
 - ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site) (001-repo-structure-refactor)
 - File-based configuration and documentation (no database) (001-repo-structure-refactor)
 - ZSH (Ubuntu 25.10 default shell) + apt/dpkg (package management), snapd (snap installation), systemd (service management), jq (JSON processing), GitHub CLI (workflow integration) (005-apt-snap-migration)
-- File-based logs in `/tmp/ghostty-start-logs/` and `./local-infra/logs/`, backup storage in `~/.config/package-migration/backups/`, JSON state files for migration tracking (005-apt-snap-migration)
+- File-based logs in `/tmp/ghostty-start-logs/` and `./.runners-local/logs/`, backup storage in `~/.config/package-migration/backups/`, JSON state files for migration tracking (005-apt-snap-migration)
 - Bash 5.x+ with YAML/Markdown processing (yq/jq), spec archive system (20251111-042534-feat-task-archive-consolidation)
 
 ## Recent Changes

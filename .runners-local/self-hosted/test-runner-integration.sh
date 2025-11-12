@@ -460,7 +460,7 @@ EOF
                     recommendations+=("Run 'gh auth login' to authenticate GitHub CLI")
                     ;;
                 "runner_config")
-                    recommendations+=("Run './local-infra/runners/setup-self-hosted-runner.sh setup' to configure runner")
+                    recommendations+=("Run './.runners-local/workflows/setup-self-hosted-runner.sh setup' to configure runner")
                     ;;
                 "workflow_validation")
                     recommendations+=("Check workflow file syntax and permissions")

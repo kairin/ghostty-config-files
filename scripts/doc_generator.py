@@ -76,7 +76,7 @@ class ConstitutionalDocumentationGenerator:
 
     def setup_logging(self):
         """Setup constitutional logging"""
-        log_dir = self.project_root / "local-infra" / "logs"
+        log_dir = self.project_root / ".runners-local" / "logs"
         log_dir.mkdir(parents=True, exist_ok=True)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -224,12 +224,12 @@ cd ghostty-config-files
 ### Local CI/CD
 ```bash
 # Complete local workflow
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Individual components
-./local-infra/runners/test-runner-local.sh           # Run tests
-./local-infra/runners/benchmark-runner.sh           # Performance benchmarks
-./local-infra/runners/performance-monitor.sh        # Monitor performance
+./.runners-local/workflows/test-runner-local.sh           # Run tests
+./.runners-local/workflows/benchmark-runner.sh           # Performance benchmarks
+./.runners-local/workflows/performance-monitor.sh        # Monitor performance
 
 # Documentation generation
 python scripts/doc_generator.py                     # Generate all docs
@@ -256,7 +256,7 @@ python scripts/performance_monitor.py --url http://localhost:4321
 python scripts/constitutional_automation.py --validate
 
 # Benchmark system performance
-./local-infra/runners/benchmark-runner.sh --full
+./.runners-local/workflows/benchmark-runner.sh --full
 ```
 
 ## 🏛️ Constitutional Compliance
@@ -284,7 +284,7 @@ git push -u origin "$BRANCH_NAME"
 gh api user/settings/billing/actions | jq '.total_paid_minutes_used'
 
 # Validate local workflows
-./local-infra/runners/gh-workflow-local.sh validate
+./.runners-local/workflows/gh-workflow-local.sh validate
 ```
 
 ## 📚 Documentation
@@ -309,7 +309,7 @@ ghostty +show-config                   # Check configuration
 ./scripts/fix_config.sh                # Automatic repair
 
 # Performance issues
-./local-infra/runners/benchmark-runner.sh --diagnose
+./.runners-local/workflows/benchmark-runner.sh --diagnose
 
 # Update failures
 ./scripts/check_updates.sh --force      # Force updates
@@ -321,10 +321,10 @@ ghostty +show-config                   # Check configuration
 ls -la /tmp/ghostty-start-logs/
 
 # View CI/CD logs
-ls -la ./local-infra/logs/
+ls -la ./.runners-local/logs/workflows/
 
 # Performance metrics
-jq '.' ./local-infra/logs/performance-*.json
+jq '.' ./.runners-local/logs/workflows/performance-*.json
 ```
 
 ## 🤝 Contributing
@@ -337,7 +337,7 @@ jq '.' ./local-infra/logs/performance-*.json
 - Complete documentation required
 
 ### Development Workflow
-1. Run `./local-infra/runners/gh-workflow-local.sh all` before starting
+1. Run `./.runners-local/workflows/gh-workflow-local.sh all` before starting
 2. Create constitutional branch with timestamp naming
 3. Implement changes with constitutional compliance
 4. Validate performance targets locally
@@ -348,7 +348,7 @@ jq '.' ./local-infra/logs/performance-*.json
 ## 📋 Constitutional Checklist
 
 ### Before Deployment
-- [ ] Local CI/CD passes (`./local-infra/runners/gh-workflow-local.sh all`)
+- [ ] Local CI/CD passes (`./.runners-local/workflows/gh-workflow-local.sh all`)
 - [ ] Configuration validates (`ghostty +show-config`)
 - [ ] Performance targets met (Lighthouse 95+, <100KB JS, <2.5s LCP)
 - [ ] Zero GitHub Actions consumption confirmed
@@ -552,7 +552,7 @@ Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
     async def _document_shell_scripts(self):
         """Document shell scripts"""
-        runners_dir = self.project_root / "local-infra" / "runners"
+        runners_dir = self.project_root / ".runners-local" / "runners"
         if not runners_dir.exists():
             return
 
@@ -699,17 +699,17 @@ All user customizations are automatically preserved during updates through:
 python scripts/performance_monitor.py --url http://localhost:4321
 
 # Run performance benchmarks
-./local-infra/runners/benchmark-runner.sh --full
+./.runners-local/workflows/benchmark-runner.sh --full
 
 # Monitor system performance
-./local-infra/runners/performance-monitor.sh --continuous
+./.runners-local/workflows/performance-monitor.sh --continuous
 ```
 
 ### Performance Reports
 Performance reports are automatically generated and stored in:
-- `local-infra/logs/performance-*.json` - System performance metrics
+- `.runners-local/logs/workflows/performance-*.json` - System performance metrics
 - `documentations/performance/reports/` - Historical performance data
-- `local-infra/logs/benchmark-*.json` - Benchmark results
+- `.runners-local/logs/workflows/benchmark-*.json` - Benchmark results
 
 ## Optimization Strategies
 
@@ -787,12 +787,12 @@ Test everything locally before any deployment.
 **Workflow**:
 ```bash
 # Complete local validation
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Individual validation steps
-./local-infra/runners/test-runner-local.sh
-./local-infra/runners/benchmark-runner.sh
-./local-infra/runners/performance-monitor.sh
+./.runners-local/workflows/test-runner-local.sh
+./.runners-local/workflows/benchmark-runner.sh
+./.runners-local/workflows/performance-monitor.sh
 ```
 
 ## Compliance Validation
@@ -803,7 +803,7 @@ Test everything locally before any deployment.
 python scripts/constitutional_automation.py --validate
 
 # Check all compliance requirements
-./local-infra/runners/test-runner-local.sh --constitutional
+./.runners-local/workflows/test-runner-local.sh --constitutional
 ```
 
 ### Manual Compliance Verification
@@ -864,7 +864,7 @@ cd ghostty-config-files
 ./start.sh
 
 # Initialize development environment
-./local-infra/runners/gh-workflow-local.sh init
+./.runners-local/workflows/gh-workflow-local.sh init
 ```
 
 ## Constitutional Development Workflow
@@ -872,10 +872,10 @@ cd ghostty-config-files
 ### 1. Pre-Development Validation
 ```bash
 # Ensure system is ready
-./local-infra/runners/gh-workflow-local.sh validate
+./.runners-local/workflows/gh-workflow-local.sh validate
 
 # Check current performance baseline
-./local-infra/runners/benchmark-runner.sh --baseline
+./.runners-local/workflows/benchmark-runner.sh --baseline
 ```
 
 ### 2. Constitutional Branch Creation
@@ -889,16 +889,16 @@ git checkout -b "$BRANCH_NAME"
 ### 3. Development with Continuous Validation
 ```bash
 # During development, run continuous monitoring
-./local-infra/runners/performance-monitor.sh --watch
+./.runners-local/workflows/performance-monitor.sh --watch
 
 # Validate changes frequently
-./local-infra/runners/test-runner-local.sh --quick
+./.runners-local/workflows/test-runner-local.sh --quick
 ```
 
 ### 4. Pre-Commit Validation
 ```bash
 # Complete local CI/CD before commit
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Ensure constitutional compliance
 python scripts/constitutional_automation.py --validate
@@ -952,7 +952,7 @@ git push origin main
 ### Local Testing
 ```bash
 # Complete test suite
-./local-infra/runners/test-runner-local.sh
+./.runners-local/workflows/test-runner-local.sh
 
 # Component-specific testing
 npm run test                    # Frontend tests
@@ -962,7 +962,7 @@ python -m pytest scripts/      # Python script tests
 ### Performance Testing
 ```bash
 # Performance benchmarks
-./local-infra/runners/benchmark-runner.sh --full
+./.runners-local/workflows/benchmark-runner.sh --full
 
 # Core Web Vitals monitoring
 python scripts/performance_monitor.py --comprehensive
@@ -974,24 +974,24 @@ python scripts/performance_monitor.py --comprehensive
 python scripts/constitutional_automation.py --test
 
 # Zero GitHub Actions validation
-./local-infra/runners/gh-workflow-local.sh billing
+./.runners-local/workflows/gh-workflow-local.sh billing
 ```
 
 ## Debugging
 
 ### Comprehensive Logging
 All operations generate detailed logs:
-- `local-infra/logs/` - CI/CD and workflow logs
+- `.runners-local/logs/workflows/` - CI/CD and workflow logs
 - `/tmp/ghostty-start-logs/` - System installation and update logs
 - `documentations/development/` - Development and debugging information
 
 ### Performance Debugging
 ```bash
 # Analyze performance issues
-jq '.' local-infra/logs/performance-*.json
+jq '.' .runners-local/logs/workflows/performance-*.json
 
 # Monitor system resources
-./local-infra/runners/performance-monitor.sh --diagnose
+./.runners-local/workflows/performance-monitor.sh --diagnose
 ```
 
 ### Configuration Debugging
@@ -1022,7 +1022,7 @@ ghostty +show-config
 All deployments follow the Constitutional Framework ensuring zero GitHub Actions consumption and local validation.
 
 ### Pre-Deployment Checklist
-- [ ] Local CI/CD passes (`./local-infra/runners/gh-workflow-local.sh all`)
+- [ ] Local CI/CD passes (`./.runners-local/workflows/gh-workflow-local.sh all`)
 - [ ] Configuration validates (`ghostty +show-config`)
 - [ ] Performance targets met (Lighthouse 95+, <100KB JS, <2.5s LCP)
 - [ ] Zero GitHub Actions consumption confirmed
@@ -1035,19 +1035,19 @@ All deployments follow the Constitutional Framework ensuring zero GitHub Actions
 #### 1. Local Validation
 ```bash
 # Complete local CI/CD workflow
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Validate constitutional compliance
 python scripts/constitutional_automation.py --validate
 
 # Performance benchmarking
-./local-infra/runners/benchmark-runner.sh --full
+./.runners-local/workflows/benchmark-runner.sh --full
 ```
 
 #### 2. GitHub Pages Deployment (Zero-Cost)
 ```bash
 # Local GitHub Pages simulation
-./local-infra/runners/gh-pages-setup.sh
+./.runners-local/workflows/gh-pages-setup.sh
 
 # Verify zero GitHub Actions consumption
 gh api user/settings/billing/actions | jq '.total_paid_minutes_used'
@@ -1080,7 +1080,7 @@ cp ~/.config/ghostty/config.backup-* ~/.config/ghostty/config
 ghostty +show-config
 
 # Re-run validation
-./local-infra/runners/test-runner-local.sh
+./.runners-local/workflows/test-runner-local.sh
 ```
 
 ### Production Monitoring
@@ -1088,7 +1088,7 @@ ghostty +show-config
 #### Continuous Monitoring
 ```bash
 # Setup continuous monitoring (add to crontab)
-# 0 */6 * * * cd /path/to/project && ./local-infra/runners/performance-monitor.sh --continuous
+# 0 */6 * * * cd /path/to/project && ./.runners-local/workflows/performance-monitor.sh --continuous
 
 # Daily constitutional validation
 # 0 9 * * * cd /path/to/project && python scripts/constitutional_automation.py --validate
@@ -1100,7 +1100,7 @@ ghostty +show-config
 python scripts/performance_monitor.py --production
 
 # System performance monitoring
-./local-infra/runners/benchmark-runner.sh --monitor
+./.runners-local/workflows/benchmark-runner.sh --monitor
 ```
 
 ### Emergency Procedures
@@ -1117,7 +1117,7 @@ python scripts/performance_monitor.py --production
 #### Performance Recovery
 ```bash
 # Performance issue diagnosis
-./local-infra/runners/benchmark-runner.sh --diagnose
+./.runners-local/workflows/benchmark-runner.sh --diagnose
 
 # Apply performance optimizations
 ./scripts/check_updates.sh --performance-only
@@ -1178,7 +1178,7 @@ python scripts/performance_monitor.py --production
 ./start.sh
 
 # Local CI/CD
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/workflows/gh-workflow-local.sh all
 
 # Generate documentation
 python scripts/doc_generator.py
@@ -1190,7 +1190,7 @@ python scripts/doc_generator.py
 python scripts/performance_monitor.py --url http://localhost:4321
 
 # Run benchmarks
-./local-infra/runners/benchmark-runner.sh --full
+./.runners-local/workflows/benchmark-runner.sh --full
 ```
 
 ### Constitutional Validation

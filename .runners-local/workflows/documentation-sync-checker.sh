@@ -398,13 +398,13 @@ check_local_cicd_integration() {
     local status="pass"
     local message="Local CI/CD is properly configured"
 
-    if [ ! -f "$REPO_DIR/local-infra/runners/gh-workflow-local.sh" ]; then
+    if [ ! -f "$REPO_DIR/.runners-local/workflows/gh-workflow-local.sh" ]; then
         status="fail"
         message="gh-workflow-local.sh not found"
         log "ERROR" "❌ $message"
     else
         # Check for Context7 integration
-        if grep -q "validate_context7" "$REPO_DIR/local-infra/runners/gh-workflow-local.sh"; then
+        if grep -q "validate_context7" "$REPO_DIR/.runners-local/workflows/gh-workflow-local.sh"; then
             log "SUCCESS" "✅ Local CI/CD includes Context7 validation"
         else
             status="warning"
