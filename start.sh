@@ -51,14 +51,15 @@ LOG_SESSION_MANIFEST="$LOG_DIR/$LOG_SESSION_ID-manifest.json" # Complete session
 # - Session manifest: jq '.' $LOG_SESSION_MANIFEST
 
 REAL_HOME="${SUDO_HOME:-$HOME}"
-NVM_VERSION="v0.40.1"
-NODE_VERSION="24.6.0"
+# fnm (Fast Node Manager) - Constitutional Compliance (AGENTS.md line 23)
+# 40x faster than NVM (<50ms vs 500ms-3s startup)
+NODE_VERSION="lts/latest"  # fnm supports LTS selection
 
 # Directories
 GHOSTTY_APP_DIR="$REAL_HOME/Apps/ghostty"
 GHOSTTY_CONFIG_DIR="$REAL_HOME/.config/ghostty"
 GHOSTTY_CONFIG_SOURCE="$SCRIPT_DIR/configs/ghostty"
-NVM_DIR="$REAL_HOME/.nvm"
+FNM_DIR="$REAL_HOME/.local/share/fnm"  # XDG-compliant
 APPS_DIR="$REAL_HOME/Apps"
 
 # Global variables for installation status and strategies
@@ -1036,7 +1037,7 @@ show_help() {
     echo "  • Ghostty terminal emulator with optimized configuration"
     echo "  • Ptyxis terminal (prefers apt/snap, fallback to flatpak)"
     echo "  • uv Python package manager (latest version)"
-    echo "  • Node.js (via NVM) with npm and development tools"
+    echo "  • Node.js (via fnm - Fast Node Manager) with npm and development tools"
     echo "  • Claude Code CLI (latest version)"
     echo "  • Gemini CLI (latest version)"
     echo ""
@@ -1045,7 +1046,7 @@ show_help() {
     echo "Options:"
     echo "  --help, -h     Show this help message"
     echo "  --skip-deps    Skip system dependency installation"
-    echo "  --skip-node    Skip Node.js/NVM installation"
+    echo "  --skip-node    Skip Node.js/fnm installation"
     echo "  --skip-ai      Skip AI tools (Claude Code, Gemini CLI)"
     echo "  --skip-ptyxis  Skip Ptyxis installation"
     echo "  --verbose      Enable verbose logging"
@@ -1618,7 +1619,8 @@ install_zsh() {
         # Update plugins with essential trinity + productivity plugins
         if grep -q "plugins=" "$zshrc"; then
             # Replace with optimized plugin list (syntax-highlighting MUST be last)
-            sed -i 's/plugins=([^)]*)/plugins=(git npm node nvm docker docker-compose sudo history extract z you-should-use zsh-autosuggestions zsh-syntax-highlighting)/' "$zshrc"
+            # Note: Removed 'nvm' plugin as we use fnm for constitutional compliance
+            sed -i 's/plugins=([^)]*)/plugins=(git npm node docker docker-compose sudo history extract z you-should-use zsh-autosuggestions zsh-syntax-highlighting)/' "$zshrc"
             log "SUCCESS" "✅ Updated plugins with essential trinity and productivity tools"
         fi
 
@@ -1700,18 +1702,8 @@ EOF
         fi
     fi
         
-        # Add NVM configuration to .zshrc if not present
-        if ! grep -q "export NVM_DIR" "$zshrc"; then
-            cat >> "$zshrc" << 'EOF'
-
-# NVM configuration
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-EOF
-            log "SUCCESS" "✅ Added NVM configuration to .zshrc"
-        fi
+        # Note: fnm configuration is handled by scripts/install_node.sh
+        # This section intentionally left empty (fnm auto-configures during installation)
         
         # Add Ghostty shell integration to .zshrc (CRITICAL for autocompletion)
         if ! grep -q "GHOSTTY_RESOURCES_DIR.*ghostty-integration" "$zshrc"; then
@@ -1755,7 +1747,8 @@ EOF
             cat >> "$zshrc" << 'EOF'
 
 # Gemini CLI integration with Ptyxis
-alias gemini='flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- ~/.nvm/versions/node/v24.6.0/bin/gemini'
+# Uses fnm-managed Node.js (generic path, auto-resolves to current version)
+alias gemini='flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- gemini'
 
 EOF
             log "SUCCESS" "✅ Added Ptyxis gemini integration to .zshrc"
@@ -2361,7 +2354,8 @@ configure_ptyxis_system() {
                 # Add the system Ptyxis integration alias
                 echo "" >> "$shell_config"
                 echo "# Gemini CLI integration with Ptyxis (system)" >> "$shell_config"
-                echo 'alias gemini='"'"'ptyxis -d "$(pwd)" -- ~/.nvm/versions/node/v24.6.0/bin/gemini'"'" >> "$shell_config"
+                echo "# Uses fnm-managed Node.js (generic path, auto-resolves to current version)" >> "$shell_config"
+                echo 'alias gemini='"'"'ptyxis -d "$(pwd)" -- gemini'"'" >> "$shell_config"
                 log "SUCCESS" "✅ Added Ptyxis system gemini integration to $(basename "$shell_config")"
             fi
         fi
@@ -2391,7 +2385,8 @@ configure_ptyxis_flatpak() {
                 # Add the flatpak Ptyxis integration alias
                 echo "" >> "$shell_config"
                 echo "# Gemini CLI integration with Ptyxis (flatpak)" >> "$shell_config"
-                echo 'alias gemini='"'"'flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- ~/.nvm/versions/node/v24.6.0/bin/gemini'"'" >> "$shell_config"
+                echo "# Uses fnm-managed Node.js (generic path, auto-resolves to current version)" >> "$shell_config"
+                echo 'alias gemini='"'"'flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- gemini'"'" >> "$shell_config"
                 log "SUCCESS" "✅ Added Ptyxis flatpak gemini integration to $(basename "$shell_config")"
             fi
         fi
@@ -2457,130 +2452,25 @@ install_uv() {
     fi
 }
 
-# Install Node.js via NVM
+# Install Node.js via fnm (Fast Node Manager)
+# Constitutional Compliance: AGENTS.md line 23 mandates fnm for performance
 install_nodejs() {
     if $SKIP_NODE; then
         log "INFO" "⏭️  Skipping Node.js installation"
         return 0
     fi
-    
-    log "STEP" "📦 Installing Node.js via NVM..."
-    
-    # Install or update NVM
-    if [ ! -d "$NVM_DIR" ]; then
-        log "INFO" "📥 Installing NVM $NVM_VERSION..."
 
-        # Temporarily unset NVM_DIR to let installer create it
-        # (NVM installer fails if NVM_DIR is set but directory doesn't exist)
-        local saved_nvm_dir="$NVM_DIR"
-        unset NVM_DIR
+    log "STEP" "📦 Installing Node.js via fnm (Fast Node Manager)..."
+    log "INFO" "📊 Performance: fnm provides <50ms startup vs 500ms-3s for NVM"
 
-        if curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1; then
-            # Restore NVM_DIR after installation
-            NVM_DIR="$saved_nvm_dir"
-
-            # Verify NVM was actually installed
-            if [ -d "$NVM_DIR" ] && [ -s "$NVM_DIR/nvm.sh" ]; then
-                log "SUCCESS" "✅ NVM installed to $NVM_DIR"
-            else
-                log "ERROR" "❌ NVM installation incomplete - files not created"
-                log "INFO" "ℹ️  Curl succeeded but NVM files missing"
-                log "INFO" "ℹ️  Falling back to system Node.js if available"
-                return 1
-            fi
-        else
-            # Restore NVM_DIR even on failure
-            NVM_DIR="$saved_nvm_dir"
-            log "ERROR" "❌ Failed to install NVM"
-            log "INFO" "ℹ️  Check $LOG_FILE for details"
-            return 1
-        fi
+    # Use modular install_node.sh script
+    if source "${SCRIPT_DIR}/scripts/install_node.sh" && install_node_full "$NODE_VERSION"; then
+        log "SUCCESS" "✅ Node.js installation complete via fnm"
+        return 0
     else
-        log "INFO" "✅ NVM already present"
-
-        # Check if NVM update is available
-        log "INFO" "🔄 Checking for NVM updates..."
-        export NVM_DIR="$NVM_DIR"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-        local current_nvm_version=$(nvm --version 2>/dev/null || echo "unknown")
-        local target_version=$(echo "$NVM_VERSION" | sed 's/v//')
-
-        if [ "$current_nvm_version" != "$target_version" ]; then
-            log "INFO" "🆕 NVM update available ($current_nvm_version → $target_version), updating..."
-            if curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash >> "$LOG_FILE" 2>&1; then
-                log "SUCCESS" "✅ NVM updated to $NVM_VERSION"
-            else
-                log "WARNING" "⚠️  NVM update failed, continuing with existing version"
-            fi
-        else
-            log "SUCCESS" "✅ NVM is up to date ($current_nvm_version)"
-        fi
-    fi
-    
-    # Source NVM with proper environment setup
-    export NVM_DIR="$NVM_DIR"
-
-    # Source NVM script if it exists
-    if [ -s "$NVM_DIR/nvm.sh" ]; then
-        \. "$NVM_DIR/nvm.sh"
-        log "INFO" "✅ NVM script sourced from $NVM_DIR/nvm.sh"
-    else
-        log "ERROR" "❌ NVM script not found at $NVM_DIR/nvm.sh"
+        log "ERROR" "❌ Node.js installation failed"
+        log "INFO" "ℹ️  Check logs: $LOG_FILE"
         return 1
-    fi
-
-    # Source bash completion if available
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-    # Verify NVM is working (check both as command and as function)
-    if ! command -v nvm >/dev/null 2>&1 && ! type nvm >/dev/null 2>&1; then
-        log "ERROR" "❌ NVM not available after sourcing"
-        log "INFO" "ℹ️  NVM_DIR: $NVM_DIR"
-        log "INFO" "ℹ️  Trying alternative sourcing method..."
-
-        # Try alternative sourcing in current shell
-        source "$NVM_DIR/nvm.sh" 2>/dev/null || true
-
-        # Final check
-        if ! command -v nvm >/dev/null 2>&1 && ! type nvm >/dev/null 2>&1; then
-            log "WARNING" "⚠️  NVM installed but not available in current shell"
-            log "INFO" "ℹ️  NVM will be available after shell restart"
-            log "INFO" "ℹ️  Continuing installation..."
-        else
-            log "SUCCESS" "✅ NVM loaded via alternative method"
-        fi
-    else
-        log "SUCCESS" "✅ NVM is available and ready"
-    fi
-
-    # Install Node.js (only if NVM is available)
-    if command -v nvm >/dev/null 2>&1 || type nvm >/dev/null 2>&1; then
-        if ! command -v node >/dev/null 2>&1 || ! node --version | grep -q "v$NODE_VERSION"; then
-            log "INFO" "📥 Installing Node.js $NODE_VERSION..."
-            if nvm install "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
-               nvm use "$NODE_VERSION" >> "$LOG_FILE" 2>&1 && \
-               nvm alias default "$NODE_VERSION" >> "$LOG_FILE" 2>&1; then
-                log "SUCCESS" "✅ Node.js $NODE_VERSION installed"
-            else
-                log "ERROR" "❌ Failed to install Node.js $NODE_VERSION"
-                log "INFO" "ℹ️  Check logs: $LOG_FILE"
-                return 1
-            fi
-        else
-            log "SUCCESS" "✅ Node.js $NODE_VERSION already installed"
-        fi
-    else
-        log "WARNING" "⚠️  NVM not available in current shell, skipping Node.js installation"
-        log "INFO" "ℹ️  Node.js can be installed after restarting shell with: nvm install $NODE_VERSION"
-    fi
-    
-    # Update npm to latest
-    log "INFO" "🔄 Updating npm to latest version..."
-    if npm install -g npm@latest >> "$LOG_FILE" 2>&1; then
-        log "SUCCESS" "✅ npm updated to $(npm --version)"
-    else
-        log "WARNING" "⚠️  npm update failed, continuing with existing version"
     fi
 }
 
@@ -2604,9 +2494,8 @@ install_claude_code() {
         return 1
     fi
 
-    # Source NVM for npm access
-    export NVM_DIR="$NVM_DIR"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    # fnm handles Node.js environment automatically
+    # No need to source anything - npm is available via fnm-managed Node.js
 
     # Install Claude Code globally
     if npm list -g claude-code >/dev/null 2>&1; then
@@ -2655,9 +2544,8 @@ install_gemini_cli() {
         return 1
     fi
 
-    # Source NVM for npm access
-    export NVM_DIR="$NVM_DIR"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    # fnm handles Node.js environment automatically
+    # No need to source anything - npm is available via fnm-managed Node.js
 
     # Install Gemini CLI globally
     if npm list -g @google/gemini-cli >/dev/null 2>&1; then
@@ -2679,9 +2567,8 @@ install_gemini_cli() {
 
     # Create symlink for easier access (try to find the actual gemini binary)
     local gemini_path=""
-    if [ -f "$NVM_DIR/versions/node/v$NODE_VERSION/bin/gemini" ]; then
-        gemini_path="$NVM_DIR/versions/node/v$NODE_VERSION/bin/gemini"
-    elif command -v gemini >/dev/null 2>&1; then
+    # Use fnm-managed Node.js to locate gemini
+    if command -v gemini >/dev/null 2>&1; then
         gemini_path=$(which gemini)
     fi
 
@@ -2913,10 +2800,10 @@ verify_installation() {
         elif [ -x "/usr/local/bin/gemini" ] && /usr/local/bin/gemini --version >/dev/null 2>&1; then
             gemini_version=$(/usr/local/bin/gemini --version 2>/dev/null)
             gemini_found=true
-        # Try NVM paths dynamically
+        # Try fnm-managed Node.js path
         else
-            # Find gemini in any NVM node version
-            for node_path in "$HOME"/.nvm/versions/node/*/bin/gemini; do
+            # Find gemini in fnm node versions (fallback)
+            for node_path in "$HOME"/.local/share/fnm/node-versions/*/installation/bin/gemini; do
                 if [ -x "$node_path" ] && "$node_path" --version >/dev/null 2>&1; then
                     gemini_version=$("$node_path" --version 2>/dev/null)
                     gemini_found=true
@@ -3210,12 +3097,12 @@ main() {
 
     # Install Node.js (non-blocking)
     if install_nodejs; then
-        track_success "Node.js/NVM" "Installed successfully"
+        track_success "Node.js/fnm" "Installed successfully"
     else
-        track_failure "Node.js/NVM" "Installation failed - will be available after shell restart"
+        track_failure "Node.js/fnm" "Installation failed - will be available after shell restart"
         log "INFO" "ℹ️  Continuing with remaining installations..."
     fi
-    capture_stage_screenshot "Node.js Setup" "Node.js and NVM installation" 2
+    capture_stage_screenshot "Node.js Setup" "Node.js and fnm installation" 2
 
     # Install Claude Code (non-blocking)
     if install_claude_code; then
@@ -3305,7 +3192,7 @@ show_interactive_menu() {
     echo "  • ZSH shell with Oh My ZSH and modern tools"
     echo "  • Ghostty terminal with 2025 optimizations"
     echo "  • Ptyxis terminal emulator"
-    echo "  • Node.js (via NVM) and development tools"
+    echo "  • Node.js (via fnm - Fast Node Manager) and development tools"
     echo "  • Claude Code CLI and Gemini CLI"
     echo ""
     echo -e "${YELLOW}═══════════════════════════════════════════════════════════${NC}"
@@ -3351,7 +3238,7 @@ show_interactive_menu() {
             read -p "   Skip system dependencies? [y/N]: " skip_deps_choice
             [[ "$skip_deps_choice" =~ ^[Yy]$ ]] && SKIP_DEPS=true
 
-            read -p "   Skip Node.js/NVM? [y/N]: " skip_node_choice
+            read -p "   Skip Node.js/fnm? [y/N]: " skip_node_choice
             [[ "$skip_node_choice" =~ ^[Yy]$ ]] && SKIP_NODE=true
 
             read -p "   Skip AI tools (Claude/Gemini)? [y/N]: " skip_ai_choice
@@ -3378,7 +3265,7 @@ show_interactive_menu() {
     echo ""
     echo "  Logging Level:      $([ "$DEBUG_MODE" = true ] && echo "Debug" || [ "$VERBOSE" = true ] && echo "Verbose" || echo "Standard")"
     echo "  System Dependencies: $([ "$SKIP_DEPS" = true ] && echo "Skip" || echo "Install")"
-    echo "  Node.js/NVM:        $([ "$SKIP_NODE" = true ] && echo "Skip" || echo "Install")"
+    echo "  Node.js/fnm:        $([ "$SKIP_NODE" = true ] && echo "Skip" || echo "Install")"
     echo "  AI Tools:           $([ "$SKIP_AI" = true ] && echo "Skip" || echo "Install")"
     echo "  Ptyxis Terminal:    $([ "$SKIP_PTYXIS" = true ] && echo "Skip" || echo "Install")"
     echo ""
