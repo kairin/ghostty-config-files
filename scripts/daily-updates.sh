@@ -148,8 +148,50 @@ update_oh_my_zsh() {
     fi
 }
 
+update_fnm() {
+    log_section "4. Updating fnm (Fast Node Manager) & Node.js"
+
+    if command -v fnm &>/dev/null; then
+        log_info "Current fnm version: $(fnm --version)"
+        log_info "Current Node.js version: $(node --version 2>/dev/null || echo 'not set')"
+
+        # Update fnm itself (re-run installer)
+        log_info "Updating fnm to latest version..."
+        if curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell 2>&1 | tee -a "$LOG_FILE"; then
+            log_success "fnm updated successfully"
+            log_info "New fnm version: $(fnm --version)"
+        else
+            log_error "fnm update failed"
+            return 1
+        fi
+
+        # Check for Node.js LTS updates
+        log_info "Checking for Node.js LTS updates..."
+        local current_lts=$(fnm list 2>/dev/null | grep lts-latest | head -1 | awk '{print $2}' || echo 'none')
+        log_info "Current LTS: $current_lts"
+
+        if fnm install --lts 2>&1 | tee -a "$LOG_FILE"; then
+            log_success "Node.js LTS checked/updated"
+            local new_lts=$(fnm list 2>/dev/null | grep lts-latest | head -1 | awk '{print $2}' || echo 'unknown')
+            log_info "LTS version: $new_lts"
+        else
+            log_warning "Node.js LTS check had issues"
+        fi
+
+        # List installed Node.js versions
+        log_info "Installed Node.js versions:"
+        fnm list 2>&1 | tee -a "$LOG_FILE"
+
+        log_success "fnm and Node.js updates completed"
+
+    else
+        log_warning "fnm not found - skipping update"
+        log_info "To install: curl -fsSL https://fnm.vercel.app/install | bash"
+    fi
+}
+
 update_npm_packages() {
-    log_section "4. Updating npm and Global Packages"
+    log_section "5. Updating npm and Global Packages"
 
     if command -v npm &>/dev/null; then
         log_info "Current npm version: $(npm --version)"
@@ -187,7 +229,7 @@ update_npm_packages() {
 }
 
 update_claude_cli() {
-    log_section "5. Updating Claude CLI"
+    log_section "6. Updating Claude CLI"
 
     if command -v claude &>/dev/null; then
         log_info "Current Claude CLI version: $(claude --version 2>&1 || echo 'unknown')"
@@ -207,7 +249,7 @@ update_claude_cli() {
 }
 
 update_gemini_cli() {
-    log_section "6. Updating Gemini CLI"
+    log_section "7. Updating Gemini CLI"
 
     if command -v gemini &>/dev/null || command -v gemini-cli &>/dev/null; then
         local gemini_cmd=$(command -v gemini || command -v gemini-cli)
@@ -234,7 +276,7 @@ update_gemini_cli() {
 }
 
 update_copilot_cli() {
-    log_section "7. Updating Copilot CLI"
+    log_section "8. Updating Copilot CLI"
 
     # Check if @github/copilot is installed via npm
     if npm list -g @github/copilot &>/dev/null; then
@@ -257,6 +299,94 @@ update_copilot_cli() {
         log_warning "GitHub Copilot CLI not found"
         log_info "To install: npm install -g @github/copilot"
         log_info "Note: gh copilot extension was deprecated in Sept 2025"
+    fi
+}
+
+update_uv() {
+    log_section "9. Updating uv (Fast Python Package Installer)"
+
+    if command -v uv &>/dev/null; then
+        log_info "Current uv version: $(uv --version 2>&1 || echo 'unknown')"
+
+        log_info "Updating uv via self-update..."
+        if uv self update 2>&1 | tee -a "$LOG_FILE"; then
+            log_success "uv updated"
+            log_info "New version: $(uv --version 2>&1 || echo 'unknown')"
+        else
+            log_error "uv update failed"
+            return 1
+        fi
+    else
+        log_warning "uv not found - skipping update"
+        log_info "To install: curl -LsSf https://astral.sh/uv/install.sh | sh"
+    fi
+}
+
+update_spec_kit() {
+    log_section "10. Updating spec-kit (Specification Development Toolkit)"
+
+    if command -v uv &>/dev/null; then
+        # Check if spec-kit is installed
+        if uv tool list 2>/dev/null | grep -q "^specify-cli"; then
+            log_info "Found spec-kit installed"
+
+            # Get current version
+            local current_version=$(specify --version 2>/dev/null | awk '{print $NF}' || echo 'unknown')
+            log_info "Current spec-kit version: $current_version"
+
+            log_info "Updating spec-kit via uv tool upgrade..."
+            if uv tool upgrade specify-cli 2>&1 | tee -a "$LOG_FILE"; then
+                log_success "spec-kit updated"
+                local new_version=$(specify --version 2>/dev/null | awk '{print $NF}' || echo 'unknown')
+                log_info "New version: $new_version"
+            else
+                log_error "spec-kit update failed"
+                return 1
+            fi
+        else
+            log_warning "spec-kit not installed via uv"
+            log_info "To install: uv tool install specify-cli"
+        fi
+    else
+        log_warning "uv not found - cannot update spec-kit"
+        log_info "Install uv first: curl -LsSf https://astral.sh/uv/install.sh | sh"
+    fi
+}
+
+update_all_uv_tools() {
+    log_section "11. Updating All uv Tools"
+
+    if command -v uv &>/dev/null; then
+        log_info "Checking for uv tools to update..."
+
+        # Get list of installed tools
+        local tools=$(uv tool list 2>/dev/null | awk '{print $1}' || echo "")
+
+        if [[ -z "$tools" ]]; then
+            log_info "No additional uv tools installed"
+            return 0
+        fi
+
+        log_info "Found uv tools:"
+        echo "$tools" | tee -a "$LOG_FILE"
+
+        # Update each tool (skip spec-kit as it's already updated)
+        local update_count=0
+        while IFS= read -r tool; do
+            if [[ -n "$tool" ]] && [[ "$tool" != "specify-cli" ]]; then
+                log_info "Updating $tool..."
+                if uv tool upgrade "$tool" 2>&1 | tee -a "$LOG_FILE"; then
+                    log_success "$tool updated"
+                    ((update_count++)) || true
+                else
+                    log_warning "$tool update failed, continuing..."
+                fi
+            fi
+        done <<< "$tools"
+
+        log_success "Updated $update_count additional uv tools"
+    else
+        log_warning "uv not found - skipping uv tools update"
     fi
 }
 
@@ -303,6 +433,12 @@ EOF
         echo "⚠️  Oh My Zsh - Failed or Skipped" >> "$SUMMARY_FILE"
     fi
 
+    if grep -q "✅.*fnm" "$LOG_FILE"; then
+        echo "✅ fnm & Node.js - Updated" >> "$SUMMARY_FILE"
+    else
+        echo "⚠️  fnm & Node.js - Failed or Skipped" >> "$SUMMARY_FILE"
+    fi
+
     if grep -q "✅.*npm packages" "$LOG_FILE"; then
         echo "✅ npm & Global Packages - Updated" >> "$SUMMARY_FILE"
     else
@@ -325,6 +461,24 @@ EOF
         echo "✅ Copilot CLI - Updated" >> "$SUMMARY_FILE"
     else
         echo "⚠️  Copilot CLI - Failed or Skipped" >> "$SUMMARY_FILE"
+    fi
+
+    if grep -q "✅.*uv updated" "$LOG_FILE"; then
+        echo "✅ uv (Python Package Installer) - Updated" >> "$SUMMARY_FILE"
+    else
+        echo "⚠️  uv (Python Package Installer) - Failed or Skipped" >> "$SUMMARY_FILE"
+    fi
+
+    if grep -q "✅.*spec-kit updated" "$LOG_FILE"; then
+        echo "✅ spec-kit (Specification Toolkit) - Updated" >> "$SUMMARY_FILE"
+    else
+        echo "⚠️  spec-kit (Specification Toolkit) - Failed or Skipped" >> "$SUMMARY_FILE"
+    fi
+
+    if grep -q "✅.*Updated.*uv tools" "$LOG_FILE"; then
+        echo "✅ Additional uv Tools - Updated" >> "$SUMMARY_FILE"
+    else
+        echo "⚠️  Additional uv Tools - Failed or Skipped" >> "$SUMMARY_FILE"
     fi
 
     echo "" >> "$SUMMARY_FILE"
@@ -359,10 +513,14 @@ main() {
     update_github_cli || overall_success=false
     update_system_packages || overall_success=false
     update_oh_my_zsh || overall_success=false
+    update_fnm || overall_success=false
     update_npm_packages || overall_success=false
     update_claude_cli || overall_success=false
     update_gemini_cli || overall_success=false
     update_copilot_cli || overall_success=false
+    update_uv || overall_success=false
+    update_spec_kit || overall_success=false
+    update_all_uv_tools || overall_success=false
 
     # Generate summary
     generate_summary
