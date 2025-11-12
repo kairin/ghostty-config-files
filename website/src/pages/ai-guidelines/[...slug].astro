@@ -1,0 +1,68 @@
+---
+// Dynamic route for ai-guidelines collection
+// Generates individual pages for each AI guidelines document
+
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('ai-guidelines');
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  pubDate={entry.data.pubDate}
+  author={entry.data.author}
+>
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><a href="/ghostty-config-files/">Home</a></li>
+      <li><a href="/ghostty-config-files/ai-guidelines/core-principles">AI Guidelines</a></li>
+      <li>{entry.data.title}</li>
+    </ul>
+  </div>
+
+  {entry.data.constitutional && (
+    <div class="alert alert-warning mb-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <span><strong>Constitutional Requirement:</strong> This document contains NON-NEGOTIABLE requirements that ALL AI assistants must follow.</span>
+    </div>
+  )}
+
+  <h1>{entry.data.title}</h1>
+
+  {entry.data.description && (
+    <p class="text-xl text-base-content/70 mb-8">{entry.data.description}</p>
+  )}
+
+  <Content />
+
+  {entry.data.tags && entry.data.tags.length > 0 && (
+    <div class="mt-12">
+      <div class="divider"></div>
+      <div class="flex gap-2 flex-wrap">
+        {entry.data.tags.map((tag) => (
+          <span class="badge badge-outline">{tag}</span>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {entry.data.targetAudience && (
+    <div class="mt-4">
+      <span class="text-sm text-base-content/60">Target Audience: <strong>{entry.data.targetAudience}</strong></span>
+    </div>
+  )}
+</BaseLayout>

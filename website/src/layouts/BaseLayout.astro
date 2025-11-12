@@ -1,0 +1,144 @@
+---
+// Base layout component for all pages
+// Provides consistent HTML structure, navigation, and styling
+
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  pubDate?: Date;
+  author?: string;
+}
+
+const { title, description, pubDate, author } = Astro.props;
+const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title} | Ghostty Configuration Files</title>
+    {description && <meta name="description" content={description} />}
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen bg-base-100">
+    <!-- Navigation -->
+    <nav class="navbar bg-base-200 shadow-lg">
+      <div class="container mx-auto">
+        <div class="flex-1">
+          <a href={`${base}/`} class="btn btn-ghost text-xl font-bold">
+            Ghostty Config Files
+          </a>
+        </div>
+        <div class="flex-none">
+          <ul class="menu menu-horizontal px-1">
+            <li><a href={`${base}/user-guide/installation`}>User Guide</a></li>
+            <li><a href={`${base}/ai-guidelines/core-principles`}>AI Guidelines</a></li>
+            <li><a href={`${base}/developer/architecture`}>Developer</a></li>
+            <li>
+              <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer">
+                GitHub
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <!-- Article Header (if metadata provided) -->
+      {(pubDate || author) && (
+        <div class="mb-8 text-sm text-base-content/60">
+          {pubDate && <time datetime={pubDate.toISOString()}>
+            {pubDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </time>}
+          {author && <span> by {author}</span>}
+        </div>
+      )}
+
+      <!-- Page Content -->
+      <article class="prose prose-lg max-w-none">
+        <slot />
+      </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer footer-center bg-base-200 text-base-content p-10 mt-16">
+      <aside>
+        <p class="font-bold">
+          Ghostty Configuration Files
+        </p>
+        <p>
+          A comprehensive terminal environment setup featuring Ghostty terminal emulator<br />
+          with 2025 performance optimizations, AI tools integration, and intelligent update management.
+        </p>
+        <p class="text-sm text-base-content/60">
+          Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+        </p>
+      </aside>
+    </footer>
+
+    <style is:global>
+      /* Reference the global CSS to access DaisyUI classes */
+      @reference "../styles/global.css";
+
+      /* Prose styling for markdown content */
+      .prose {
+        @apply text-base-content;
+      }
+
+      .prose h1 {
+        @apply text-4xl font-bold mb-4 mt-8;
+      }
+
+      .prose h2 {
+        @apply text-3xl font-bold mb-3 mt-6;
+      }
+
+      .prose h3 {
+        @apply text-2xl font-bold mb-2 mt-4;
+      }
+
+      .prose code {
+        @apply bg-base-200 px-1 py-0.5 rounded text-sm font-mono;
+      }
+
+      .prose pre {
+        @apply bg-base-200 p-4 rounded-lg overflow-x-auto;
+      }
+
+      .prose pre code {
+        @apply bg-transparent p-0;
+      }
+
+      .prose a {
+        @apply text-primary hover:text-blue-700 underline;
+      }
+
+      .prose blockquote {
+        @apply border-l-4 border-primary pl-4 italic;
+        opacity: 0.8;
+      }
+    </style>
+  </body>
+</html>

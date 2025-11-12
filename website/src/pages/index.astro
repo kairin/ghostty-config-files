@@ -1,0 +1,180 @@
+---
+// Homepage - Documentation site landing page
+// Lists all content collections with descriptions
+
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Fetch all collections
+const aiGuidelines = await getCollection('ai-guidelines');
+const userGuide = await getCollection('user-guide');
+const developer = await getCollection('developer');
+
+// Sort by title
+const sortByTitle = (a: any, b: any) => a.data.title.localeCompare(b.data.title);
+aiGuidelines.sort(sortByTitle);
+userGuide.sort(sortByTitle);
+developer.sort(sortByTitle);
+
+const base = '/ghostty-config-files';
+---
+
+<BaseLayout
+  title="Documentation Home"
+  description="Comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, AI tools integration, and intelligent update management."
+>
+  <!-- Hero Section -->
+  <div class="hero min-h-[40vh] bg-base-200 rounded-lg mb-12">
+    <div class="hero-content text-center">
+      <div class="max-w-3xl">
+        <h1 class="text-5xl font-bold mb-4">Ghostty Configuration Files</h1>
+        <p class="text-xl mb-6">
+          A comprehensive terminal environment setup featuring Ghostty terminal emulator
+          with 2025 performance optimizations, right-click context menu integration,
+          plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
+        </p>
+        <div class="flex gap-4 justify-center">
+          <a href={`${base}/user-guide/installation`} class="btn btn-primary btn-lg">
+            Get Started
+          </a>
+          <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Documentation Sections -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <!-- User Guide Card -->
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          User Guide
+        </h2>
+        <p class="text-base-content/70 mb-4">
+          Installation, configuration, and usage documentation for end users.
+        </p>
+        <div class="card-actions flex-col items-stretch">
+          {userGuide.map((entry) => (
+            <a href={`${base}/user-guide/${entry.id}`} class="btn btn-sm btn-outline justify-start">
+              {entry.data.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Guidelines Card -->
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          AI Guidelines
+        </h2>
+        <p class="text-base-content/70 mb-4">
+          Constitutional requirements and instructions for AI assistants (Claude, Gemini).
+        </p>
+        <div class="card-actions flex-col items-stretch">
+          {aiGuidelines.map((entry) => (
+            <a href={`${base}/ai-guidelines/${entry.id}`} class="btn btn-sm btn-outline justify-start">
+              {entry.data.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Developer Card -->
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+          Developer
+        </h2>
+        <p class="text-base-content/70 mb-4">
+          Architecture, testing, and technical documentation for contributors.
+        </p>
+        <div class="card-actions flex-col items-stretch">
+          {developer.map((entry) => (
+            <a href={`${base}/developer/${entry.id}`} class="btn btn-sm btn-outline justify-start">
+              {entry.data.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="divider my-12"></div>
+
+  <h2 class="text-3xl font-bold text-center mb-8">Key Features</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body">
+        <h3 class="card-title">2025 Performance Optimizations</h3>
+        <p>Linux CGroup single-instance, enhanced shell integration, and memory management.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body">
+        <h3 class="card-title">Context Menu Integration</h3>
+        <p>Right-click "Open in Ghostty" in Nautilus file manager.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body">
+        <h3 class="card-title">AI Tools Integration</h3>
+        <p>Claude Code, Gemini CLI, and Context7 MCP for documentation synchronization.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body">
+        <h3 class="card-title">Intelligent Updates</h3>
+        <p>Smart detection and preservation of user customizations during updates.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body">
+        <h3 class="card-title">Local CI/CD</h3>
+        <p>Complete workflow execution without GitHub Actions costs.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 border border-base-300">
+      <div class="card-body">
+        <h3 class="card-title">Zero-Configuration Setup</h3>
+        <p>One-command installation for fresh Ubuntu systems.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="divider my-12"></div>
+
+  <div class="alert alert-info">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <div>
+      <h3 class="font-bold">Quick Start</h3>
+      <div class="text-sm">
+        For a fresh Ubuntu installation, clone the repository and run <code class="bg-base-300 px-2 py-1 rounded">./start.sh</code>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

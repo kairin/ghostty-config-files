@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.14.5"><title>Testing Guide | Ghostty Configuration Files</title><meta name="description" content="Testing strategy and execution for Ghostty Configuration Files"><!-- OpenGraph --><meta property="og:title" content="Testing Guide"><meta property="og:description" content="Testing strategy and execution for Ghostty Configuration Files"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.CfsNWnc0.css"></head> <body class="min-h-screen bg-base-100"> <!-- Navigation --> <nav class="navbar bg-base-200 shadow-lg"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold">
+Ghostty Config Files
+</a> </div> <div class="flex-none"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer">
+GitHub
+</a> </li> </ul> </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 py-8"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-base-content/60"> <time datetime="2025-10-27T00:00:00.000Z"> October 27, 2025 </time> <span> by Development Team</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-none">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Testing Guide</li> </ul> </div> <div class="badge mb-4 badge-warning"> INTERMEDIATE </div><h1>Testing Guide</h1> <p class="text-xl text-base-content/70 mb-8">Testing strategy and execution for Ghostty Configuration Files</p><div class="alert alert-info mb-8"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg> <div> <h3 class="font-bold">Technologies</h3> <div class="text-sm flex gap-2 flex-wrap"> <span class="badge badge-sm">Bash 5.x+</span><span class="badge badge-sm">ShellCheck</span><span class="badge badge-sm">Pytest</span> </div> </div> </div><h1 id="testing-guide">Testing Guide</h1>
+<p>This guide explains the testing strategy for the Ghostty Configuration Files repository.</p>
+<h2 id="testing-stack">Testing Stack</h2>
+<ul>
+<li><strong>ShellCheck</strong>: Static analysis for bash scripts</li>
+<li><strong>Custom Test Framework</strong>: Bash-based unit testing</li>
+<li><strong>Integration Tests</strong>: End-to-end workflow validation</li>
+<li><strong>Performance Testing</strong>: Startup time and resource usage</li>
+</ul>
+<h2 id="running-tests">Running Tests</h2>
+<h3 id="all-tests">All Tests</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./local-infra/runners/test-runner.sh</span></span></code></pre>
+<h3 id="unit-tests">Unit Tests</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run all unit tests</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/tests/unit/test_common_utils.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run specific module tests</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/tests/unit/test_install_modules.sh</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/tests/unit/test_config_modules.sh</span></span></code></pre>
+<h3 id="shellcheck">ShellCheck</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Validate all scripts</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/tests/validation/run_shellcheck.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate specific script</span></span>
+<span class="line"><span style="color:#B392F0">shellcheck</span><span style="color:#9ECBFF"> scripts/common.sh</span></span></code></pre>
+<h3 id="validation-tests">Validation Tests</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># All validation checks</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Specific validation</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> config</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> performance</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#79B8FF"> --type</span><span style="color:#9ECBFF"> dependencies</span></span></code></pre>
+<h2 id="writing-tests">Writing Tests</h2>
+<h3 id="unit-test-template">Unit Test Template</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6A737D"># Unit Test: test_mymodule.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source test helpers</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")/test_functions.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source module under test</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "../../../scripts/mymodule.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test counters</span></span>
+<span class="line"><span style="color:#E1E4E8">TESTS_RUN</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0</span></span>
+<span class="line"><span style="color:#E1E4E8">TESTS_PASSED</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0</span></span>
+<span class="line"><span style="color:#E1E4E8">TESTS_FAILED</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test case</span></span>
+<span class="line"><span style="color:#B392F0">test_function_name</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    ((TESTS_RUN</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "  Testing: function description"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Arrange</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> input</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"test"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Act</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> result</span></span>
+<span class="line"><span style="color:#E1E4E8">    result</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">my_function</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$input</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> exit_code</span><span style="color:#F97583">=</span><span style="color:#79B8FF">$?</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Assert</span></span>
+<span class="line"><span style="color:#B392F0">    assert_equals</span><span style="color:#79B8FF"> 0</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$exit_code</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Exit code should be 0"</span></span>
+<span class="line"><span style="color:#B392F0">    assert_contains</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$result</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "expected"</span><span style="color:#9ECBFF"> "Should contain expected text"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    ((TESTS_PASSED</span><span style="color:#F97583">++</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "  ✅ PASS"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run tests</span></span>
+<span class="line"><span style="color:#B392F0">run_all_tests</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    test_function_name</span></span>
+<span class="line"><span style="color:#6A737D">    # ... more tests ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Summary</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Tests: </span><span style="color:#E1E4E8">$TESTS_RUN</span><span style="color:#9ECBFF">, Passed: </span><span style="color:#E1E4E8">$TESTS_PASSED</span><span style="color:#9ECBFF">, Failed: </span><span style="color:#E1E4E8">$TESTS_FAILED</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">    [[ $TESTS_FAILED </span><span style="color:#F97583">-eq</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> ]]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">run_all_tests</span></span></code></pre>
+<h3 id="test-assertions">Test Assertions</h3>
+<p>Available assertion functions:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">assert_equals</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">expecte</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">actua</span><span style="color:#E1E4E8">l</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">messag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"><span style="color:#B392F0">assert_not_equals</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">expecte</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">actua</span><span style="color:#E1E4E8">l</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">messag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"><span style="color:#B392F0">assert_contains</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">haystac</span><span style="color:#E1E4E8">k</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">needl</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">messag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"><span style="color:#B392F0">assert_true</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">conditio</span><span style="color:#E1E4E8">n</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">messag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"><span style="color:#B392F0">assert_file_exists</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">pat</span><span style="color:#E1E4E8">h</span><span style="color:#F97583">></span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">messag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span></code></pre>
+<h2 id="performance-testing">Performance Testing</h2>
+<h3 id="startup-time">Startup Time</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Measure script startup</span></span>
+<span class="line"><span style="color:#F97583">time</span><span style="color:#E1E4E8"> ./manage.sh --version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Target: &#x3C;500ms</span></span></code></pre>
+<h3 id="module-load-time">Module Load Time</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Measure module loading</span></span>
+<span class="line"><span style="color:#F97583">time</span><span style="color:#E1E4E8"> bash -c </span><span style="color:#9ECBFF">'source scripts/common.sh &#x26;&#x26; echo "loaded"'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Target: &#x3C;100ms per module</span></span></code></pre>
+<h3 id="full-workflow">Full Workflow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Measure complete installation (dry-run)</span></span>
+<span class="line"><span style="color:#F97583">time</span><span style="color:#E1E4E8"> ./manage.sh install --dry-run</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Target: &#x3C;2s for help/dry-run</span></span></code></pre>
+<h2 id="cicd-integration">CI/CD Integration</h2>
+<h3 id="local-workflow">Local Workflow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Complete validation workflow</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span></code></pre>
+<h3 id="pre-commit-checks">Pre-Commit Checks</h3>
+<p>Automatically run before each commit:</p>
+<ul>
+<li>ShellCheck validation</li>
+<li>.nojekyll file verification</li>
+<li>Configuration syntax check</li>
+</ul>
+<h2 id="test-coverage">Test Coverage</h2>
+<h3 id="current-coverage">Current Coverage</h3>
+<ul>
+<li><strong>Common Utilities</strong>: 20+ test cases (✅ 100% coverage)</li>
+<li><strong>Progress Reporting</strong>: 4+ test cases (✅ 100% coverage)</li>
+<li><strong>Backup Utilities</strong>: 7+ test cases (✅ 100% coverage)</li>
+<li><strong>Install Modules</strong>: Pending (Phase 5)</li>
+<li><strong>Config Modules</strong>: Pending (Phase 5)</li>
+</ul>
+<h3 id="adding-coverage">Adding Coverage</h3>
+<p>When adding new modules:</p>
+<ol>
+<li>Create corresponding test file</li>
+<li>Achieve >90% function coverage</li>
+<li>Include edge case tests</li>
+<li>Verify performance &#x3C;10s per module</li>
+</ol>
+<h2 id="debugging-tests">Debugging Tests</h2>
+<h3 id="verbose-output">Verbose Output</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Enable debug output</span></span>
+<span class="line"><span style="color:#E1E4E8">DEBUG</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1</span><span style="color:#B392F0"> ./local-infra/tests/unit/test_common_utils.sh</span></span></code></pre>
+<h3 id="specific-test">Specific Test</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run single test function</span></span>
+<span class="line"><span style="color:#B392F0">bash</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> 'source test_functions.sh; source test_mymodule.sh; test_specific_case'</span></span></code></pre>
+<h3 id="test-failures">Test Failures</h3>
+<p>When tests fail:</p>
+<ol>
+<li>Check error message</li>
+<li>Review test assertion</li>
+<li>Verify module behavior</li>
+<li>Update test or fix code</li>
+</ol>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="architecture.md">Architecture Guide</a></li>
+<li><a href="contributing.md">Contributing Guide</a></li>
+<li><a href="../ai-guidelines/core-principles.md">AI Guidelines</a></li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">development</span><span class="badge badge-outline">testing</span><span class="badge badge-outline">quality</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-base-200 text-base-content p-10 mt-16"> <aside> <p class="font-bold">
+Ghostty Configuration Files
+</p> <p>
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-base-content/60">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>
