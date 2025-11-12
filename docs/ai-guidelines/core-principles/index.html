@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.14.5"><title>Core Principles | Ghostty Configuration Files</title><meta name="description" content="AI assistant guidelines for core-principles"><!-- OpenGraph --><meta property="og:title" content="Core Principles"><meta property="og:description" content="AI assistant guidelines for core-principles"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.CfsNWnc0.css"></head> <body class="min-h-screen bg-base-100"> <!-- Navigation --> <nav class="navbar bg-base-200 shadow-lg"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold">
+Ghostty Config Files
+</a> </div> <div class="flex-none"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer">
+GitHub
+</a> </li> </ul> </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 py-8"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-base-content/60"> <time datetime="2025-10-27T00:00:00.000Z"> October 27, 2025 </time> <span> by AI Integration Team</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-none">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles">AI Guidelines</a></li> <li>Core Principles</li> </ul> </div> <div class="alert alert-warning mb-8"> <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path> </svg> <span><strong>Constitutional Requirement:</strong> This document contains NON-NEGOTIABLE requirements that ALL AI assistants must follow.</span> </div><h1>Core Principles</h1> <p class="text-xl text-base-content/70 mb-8">AI assistant guidelines for core-principles</p><blockquote>
+<p><strong>Note</strong>: This is a modular extract from <a href="../../AGENTS.md">AGENTS.md</a> for documentation purposes. AGENTS.md remains the single source of truth.</p>
+</blockquote>
+<h2 id="project-overview">Project Overview</h2>
+<p><strong>Ghostty Configuration Files</strong> is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.</p>
+<h2 id="non-negotiable-requirements">Non-Negotiable Requirements</h2>
+<h3 id="ghostty-performance--optimization-2025">Ghostty Performance &#x26; Optimization (2025)</h3>
+<ul>
+<li><strong>Linux CGroup Single-Instance</strong>: MANDATORY for performance (<code>linux-cgroup = single-instance</code>)</li>
+<li><strong>Enhanced Shell Integration</strong>: Auto-detection with advanced features</li>
+<li><strong>Memory Management</strong>: Optimized scrollback limits and process controls</li>
+<li><strong>Auto Theme Switching</strong>: Light/dark mode support with Catppuccin themes</li>
+<li><strong>Security Features</strong>: Clipboard paste protection enabled</li>
+</ul>
+<h3 id="package-management--dependencies">Package Management &#x26; Dependencies</h3>
+<ul>
+<li><strong>Ghostty</strong>: Built from source with Zig 0.14.0 (latest stable)</li>
+<li><strong>ZSH</strong>: Oh My ZSH with enhanced plugins for productivity</li>
+<li><strong>Node.js</strong>: Latest LTS via NVM for AI tool integration</li>
+<li><strong>Dependencies</strong>: Smart detection and minimal installation footprint</li>
+</ul>
+<h3 id="github-pages-infrastructure">GitHub Pages Infrastructure</h3>
+<ul>
+<li><strong><code>.nojekyll</code> File</strong>: ABSOLUTELY CRITICAL for GitHub Pages deployment</li>
+<li><strong>Location</strong>: <code>docs/.nojekyll</code> (empty file, no content needed)</li>
+<li><strong>Purpose</strong>: Disables Jekyll processing to allow <code>_astro/</code> directory assets</li>
+<li><strong>Impact</strong>: Without this file, ALL CSS/JS assets return 404 errors</li>
+<li><strong>WARNING</strong>: This file is ESSENTIAL - never remove during cleanup operations</li>
+</ul>
+<h4 id="jekyll-cleanup-protection">Jekyll Cleanup Protection</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># BEFORE removing ANY Jekyll-related files, verify this file exists:</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> docs/.nojekyll</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># If missing, recreate immediately:</span></span>
+<span class="line"><span style="color:#B392F0">touch</span><span style="color:#9ECBFF"> docs/.nojekyll</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> docs/.nojekyll</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "CRITICAL: Restore .nojekyll for GitHub Pages asset loading"</span></span></code></pre>
+<h2 id="absolute-prohibitions">Absolute Prohibitions</h2>
+<h3 id="do-not">DO NOT</h3>
+<ul>
+<li><strong>NEVER REMOVE <code>docs/.nojekyll</code></strong> - This breaks ALL CSS/JS loading on GitHub Pages</li>
+<li>Delete branches without explicit user permission</li>
+<li>Use GitHub Actions for anything that consumes minutes</li>
+<li>Skip local CI/CD validation before GitHub deployment</li>
+<li>Ignore existing user customizations during updates</li>
+<li>Apply configuration changes without backup</li>
+<li>Commit sensitive data (API keys, passwords, personal information)</li>
+<li>Bypass the intelligent update system for configuration changes</li>
+<li>Remove Jekyll-related files without verifying <code>.nojekyll</code> preservation</li>
+</ul>
+<h3 id="do-not-bypass">DO NOT BYPASS</h3>
+<ul>
+<li>Branch preservation requirements</li>
+<li>Local CI/CD execution requirements</li>
+<li>Zero-cost operation constraints</li>
+<li>Configuration validation steps</li>
+<li>User customization preservation</li>
+<li>Logging and debugging requirements</li>
+</ul>
+<h2 id="mandatory-actions">Mandatory Actions</h2>
+<h3 id="before-every-configuration-change">Before Every Configuration Change</h3>
+<ol>
+<li><strong>Local CI/CD Execution</strong>: Run <code>./local-infra/runners/gh-workflow-local.sh all</code></li>
+<li><strong>Configuration Validation</strong>: Run <code>ghostty +show-config</code> to ensure validity</li>
+<li><strong>Performance Testing</strong>: Execute <code>./local-infra/runners/performance-monitor.sh</code></li>
+<li><strong>Backup Creation</strong>: Automatic timestamped backup of existing configuration</li>
+<li><strong>User Preservation</strong>: Extract and preserve user customizations</li>
+<li><strong>Documentation</strong>: Update relevant docs if adding features</li>
+<li><strong>Conversation Log</strong>: Save complete AI conversation log with system state</li>
+</ol>
+<h3 id="quality-gates">Quality Gates</h3>
+<ul>
+<li>Local CI/CD workflows execute successfully</li>
+<li>Configuration validates without errors via <code>ghostty +show-config</code></li>
+<li>All 2025 performance optimizations are present and functional</li>
+<li>User customizations are preserved and functional</li>
+<li>Context menu integration works correctly</li>
+<li>GitHub Actions usage remains within free tier limits</li>
+<li>All logging systems capture complete information</li>
+</ul>
+<h2 id="success-criteria">Success Criteria</h2>
+<h3 id="performance-metrics-2025">Performance Metrics (2025)</h3>
+<ul>
+<li><strong>Startup Time</strong>: &#x3C;500ms for new Ghostty instance (CGroup optimization)</li>
+<li><strong>Memory Usage</strong>: &#x3C;100MB baseline with optimized scrollback management</li>
+<li><strong>Shell Integration</strong>: 100% feature detection and activation</li>
+<li><strong>Theme Switching</strong>: Instant response to system light/dark mode changes</li>
+<li><strong>CI/CD Performance</strong>: &#x3C;2 minutes for complete local workflow execution</li>
+</ul>
+<h3 id="user-experience-metrics">User Experience Metrics</h3>
+<ul>
+<li><strong>One-Command Setup</strong>: Fresh Ubuntu system fully configured in &#x3C;10 minutes</li>
+<li><strong>Context Menu</strong>: “Open in Ghostty” available immediately after installation</li>
+<li><strong>Update Efficiency</strong>: Only necessary components updated, no full reinstalls</li>
+<li><strong>Customization Preservation</strong>: 100% user setting retention during updates</li>
+<li><strong>Zero-Cost Operation</strong>: No GitHub Actions minutes consumed for routine operations</li>
+</ul>
+<h3 id="technical-metrics">Technical Metrics</h3>
+<ul>
+<li><strong>Configuration Validity</strong>: 100% successful validation rate</li>
+<li><strong>Update Success</strong>: >99% successful intelligent update application</li>
+<li><strong>Error Recovery</strong>: Automatic rollback on configuration failures</li>
+<li><strong>Logging Coverage</strong>: Complete system state capture for all operations</li>
+<li><strong>CI/CD Success</strong>: >99% local workflow execution success rate</li>
+</ul>
+<h2 id="llm-conversation-logging">LLM Conversation Logging</h2>
+<p><strong>CRITICAL REQUIREMENT</strong>: All AI assistants working on this repository <strong>MUST</strong> save complete conversation logs and maintain debugging information.</p>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li><strong>Complete Logs</strong>: Save entire conversation from start to finish</li>
+<li><strong>Exclude Sensitive Data</strong>: Remove API keys, passwords, personal information</li>
+<li><strong>Storage Location</strong>: <code>documentations/development/conversation_logs/</code></li>
+<li><strong>Naming Convention</strong>: <code>CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md</code></li>
+<li><strong>System State</strong>: Capture before/after system states for debugging</li>
+<li><strong>CI/CD Logs</strong>: Include local workflow execution logs</li>
+</ul>
+<h3 id="example-workflow">Example Workflow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># After completing work, save conversation log and system state</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> documentations/development/conversation_logs/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /path/to/conversation.md</span><span style="color:#9ECBFF"> documentations/development/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Capture system state and CI/CD logs</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/system_state_</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span><span style="color:#9ECBFF"> documentations/development/system_states/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ./local-infra/logs/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF"> documentations/development/ci_cd_logs/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> documentations/development/</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "Add conversation log, system state, and CI/CD logs for local infrastructure setup"</span></span></code></pre> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">ai</span><span class="badge badge-outline">guidelines</span> </div> </div><div class="mt-4"> <span class="text-sm text-base-content/60">Target Audience: <strong>all</strong></span> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-base-200 text-base-content p-10 mt-16"> <aside> <p class="font-bold">
+Ghostty Configuration Files
+</p> <p>
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-base-content/60">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

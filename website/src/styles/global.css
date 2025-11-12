@@ -1,0 +1,17 @@
+/**
+ * Tailwind CSS v4 + DaisyUI v5 Global Styles
+ * DaisyUI v5 requires plugin loading via CSS in Tailwind v4
+ */
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+/**
+ * Custom theme configuration
+ * DaisyUI v5 themes work with Tailwind v4's CSS variable system
+ */
+@theme {
+  /* Font families */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}

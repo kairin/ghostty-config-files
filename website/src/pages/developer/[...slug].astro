@@ -1,0 +1,79 @@
+---
+// Dynamic route for developer collection
+// Generates individual pages for each developer document
+
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('developer');
+
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  pubDate={entry.data.pubDate}
+  author={entry.data.author}
+>
+  <div class="breadcrumbs text-sm mb-6">
+    <ul>
+      <li><a href="/ghostty-config-files/">Home</a></li>
+      <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li>
+      <li>{entry.data.title}</li>
+    </ul>
+  </div>
+
+  {entry.data.difficulty && (
+    <div class={`badge mb-4 ${
+      entry.data.difficulty === 'beginner' ? 'badge-success' :
+      entry.data.difficulty === 'intermediate' ? 'badge-warning' :
+      'badge-error'
+    }`}>
+      {entry.data.difficulty.toUpperCase()}
+    </div>
+  )}
+
+  <h1>{entry.data.title}</h1>
+
+  {entry.data.description && (
+    <p class="text-xl text-base-content/70 mb-8">{entry.data.description}</p>
+  )}
+
+  {entry.data.techStack && entry.data.techStack.length > 0 && (
+    <div class="alert alert-info mb-8">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div>
+        <h3 class="font-bold">Technologies</h3>
+        <div class="text-sm flex gap-2 flex-wrap">
+          {entry.data.techStack.map((tech) => (
+            <span class="badge badge-sm">{tech}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )}
+
+  <Content />
+
+  {entry.data.tags && entry.data.tags.length > 0 && (
+    <div class="mt-12">
+      <div class="divider"></div>
+      <div class="flex gap-2 flex-wrap">
+        {entry.data.tags.map((tag) => (
+          <span class="badge badge-outline">{tag}</span>
+        ))}
+      </div>
+    </div>
+  )}
+</BaseLayout>

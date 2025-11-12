@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.14.5"><title>Contributing Guide | Ghostty Configuration Files</title><meta name="description" content="How to contribute to the Ghostty Configuration Files project"><!-- OpenGraph --><meta property="og:title" content="Contributing Guide"><meta property="og:description" content="How to contribute to the Ghostty Configuration Files project"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.CfsNWnc0.css"></head> <body class="min-h-screen bg-base-100"> <!-- Navigation --> <nav class="navbar bg-base-200 shadow-lg"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold">
+Ghostty Config Files
+</a> </div> <div class="flex-none"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer">
+GitHub
+</a> </li> </ul> </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 py-8"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-base-content/60"> <time datetime="2025-10-27T00:00:00.000Z"> October 27, 2025 </time> <span> by Development Team</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-none">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Contributing Guide</li> </ul> </div> <div class="badge mb-4 badge-success"> BEGINNER </div><h1>Contributing Guide</h1> <p class="text-xl text-base-content/70 mb-8">How to contribute to the Ghostty Configuration Files project</p><div class="alert alert-info mb-8"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg> <div> <h3 class="font-bold">Technologies</h3> <div class="text-sm flex gap-2 flex-wrap"> <span class="badge badge-sm">Bash 5.x+</span><span class="badge badge-sm">Node.js LTS</span><span class="badge badge-sm">Astro.build</span> </div> </div> </div><h1 id="contributing-guide">Contributing Guide</h1>
+<p>Thank you for considering contributing to the Ghostty Configuration Files project!</p>
+<h2 id="quick-start">Quick Start</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Fork the repository</span></span>
+<span class="line"><span style="color:#6A737D"># 2. Clone your fork</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/YOUR_USERNAME/ghostty-config-files.git</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> ghostty-config-files</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Create feature branch (use timestamp format)</span></span>
+<span class="line"><span style="color:#E1E4E8">DATETIME</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +"%Y%m%d-%H%M%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#79B8FF"> -b</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$DATETIME</span><span style="color:#9ECBFF">-feat-your-feature"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Make changes</span></span>
+<span class="line"><span style="color:#6A737D"># ... edit files ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 5. Test locally</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 6. Commit with attribution</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "feat: Your feature description</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">🤖 Generated with [Claude Code](https://claude.com/claude-code)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">Co-Authored-By: Your Name &#x3C;your@email.com>"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 7. Push and create PR</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#79B8FF"> -u</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$DATETIME</span><span style="color:#9ECBFF">-feat-your-feature"</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> pr</span><span style="color:#9ECBFF"> create</span></span></code></pre>
+<h2 id="branch-strategy">Branch Strategy</h2>
+<ul>
+<li><strong>Format</strong>: <code>YYYYMMDD-HHMMSS-type-description</code></li>
+<li><strong>Types</strong>: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>chore</code></li>
+<li><strong>Never delete branches</strong> without explicit permission</li>
+</ul>
+<h2 id="code-standards">Code Standards</h2>
+<h3 id="bash-scripts">Bash Scripts</h3>
+<ul>
+<li>Follow ShellCheck recommendations</li>
+<li>Use <code>set -euo pipefail</code></li>
+<li>Document all functions</li>
+<li>Include module header</li>
+<li>Write unit tests</li>
+</ul>
+<h3 id="configuration-files">Configuration Files</h3>
+<ul>
+<li>Validate with <code>ghostty +show-config</code></li>
+<li>Preserve user customizations</li>
+<li>Document all changes</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>Use Markdown format</li>
+<li>Follow existing structure</li>
+<li>Include code examples</li>
+<li>Test docs build</li>
+</ul>
+<h2 id="testing-requirements">Testing Requirements</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run all tests</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/runners/test-runner.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run ShellCheck</span></span>
+<span class="line"><span style="color:#B392F0">shellcheck</span><span style="color:#9ECBFF"> scripts/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate configuration</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span></code></pre>
+<h2 id="pull-request-process">Pull Request Process</h2>
+<ol>
+<li><strong>Update documentation</strong> if needed</li>
+<li><strong>Add tests</strong> for new features</li>
+<li><strong>Run local CI/CD</strong> before pushing</li>
+<li><strong>Create PR</strong> with descriptive title and body</li>
+<li><strong>Respond to feedback</strong> promptly</li>
+</ol>
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li>Check <a href="architecture.md">Architecture Guide</a></li>
+<li>Review existing code patterns</li>
+<li>Ask questions in issues/PRs</li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">development</span><span class="badge badge-outline">contributing</span><span class="badge badge-outline">guidelines</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-base-200 text-base-content p-10 mt-16"> <aside> <p class="font-bold">
+Ghostty Configuration Files
+</p> <p>
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-base-content/60">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>
