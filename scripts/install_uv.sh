@@ -16,9 +16,9 @@ else
 fi
 
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/common.sh
-source "${SCRIPT_DIR}/common.sh"
+source "${MODULE_DIR}/common.sh"
 
 # ============================================================
 # CLEANUP HANDLER
