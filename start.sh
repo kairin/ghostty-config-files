@@ -10,6 +10,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
@@ -142,6 +143,172 @@ debug() {
         local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
         echo "[$timestamp] [DEBUG] $*" >> "$LOG_FILE"
     fi
+}
+
+# ============================================================================
+# BOX DRAWING FUNCTIONS (Enhanced CLI Rendering)
+# ============================================================================
+
+# Calculate the display width of a string (strips ALL ANSI escape sequences)
+# Handles:
+#   - Color codes (SGR): \x1b[0;32m, \x1b[1;33m, etc.
+#   - Cursor movement: \x1b[H, \x1b[<row>;<col>H, \x1b[A/B/C/D, etc.
+#   - Erase sequences: \x1b[J, \x1b[K, etc.
+#   - OSC sequences: \x1b]0;Title\x07 (window titles)
+#   - Character set selection: \x1b(B, \x1b)0, etc.
+# Returns: Visual character count (proper Unicode handling)
+get_string_width() {
+    local string="$1"
+
+    # Strip ALL ANSI escape sequences using comprehensive regex patterns:
+    # 1. \x1b\[[0-9;]*m          : Standard color codes (SGR - Select Graphic Rendition)
+    # 2. \x1b\[[0-9;]*[A-Za-z]   : Cursor movement and other CSI sequences
+    # 3. \x1b\][^\x07]*\x07      : OSC sequences (Operating System Command)
+    # 4. \x1b[()][AB012]         : Character set selection (G0/G1)
+    local clean_string=$(echo -e "$string" | sed -E '
+        s/\x1b\[[0-9;]*m//g;
+        s/\x1b\[[0-9;]*[A-Za-z]//g;
+        s/\x1b\][^\x07]*\x07//g;
+        s/\x1b[()][AB012]//g
+    ')
+
+    # Return visual character count (handles Unicode properly)
+    echo "${#clean_string}"
+}
+
+# Draw a box with dynamic width calculation and proper padding
+# Usage: draw_box "Title" "line1" "line2" "line3" ...
+draw_box() {
+    local title="$1"
+    shift
+    local -a content=("$@")
+
+    # Calculate maximum width from title and content
+    local max_width=$(get_string_width "$title")
+    local line_width
+
+    for line in "${content[@]}"; do
+        line_width=$(get_string_width "$line")
+        ((line_width > max_width)) && max_width=$line_width
+    done
+
+    # Add padding (4 spaces on each side) - inner width without borders
+    local content_width=$max_width
+    local inner_width=$((max_width + 8))
+
+    # Draw top border (╔══...══╗)
+    printf "${CYAN}╔"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╗${NC}\n"
+
+    # Draw title with padding and vertical borders
+    printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" "$title"
+
+    # Draw middle separator (╠══...══╣)
+    printf "${CYAN}╠"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╣${NC}\n"
+
+    # Draw empty line with borders
+    printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" ""
+
+    # Draw content with padding and vertical borders
+    for line in "${content[@]}"; do
+        printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" "$line"
+    done
+
+    # Draw empty line with borders
+    printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" ""
+
+    # Draw bottom border (╚══...══╝)
+    printf "${CYAN}╚"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╝${NC}\n"
+}
+
+# Draw a colored box with dynamic width calculation and proper padding
+# Usage: draw_colored_box "$COLOR" "Title" "line1" "line2" "line3" ...
+draw_colored_box() {
+    local color="$1"
+    local title="$2"
+    shift 2
+    local -a content=("$@")
+
+    # Calculate maximum width from title and content
+    local max_width=$(get_string_width "$title")
+    local line_width
+
+    for line in "${content[@]}"; do
+        line_width=$(get_string_width "$line")
+        ((line_width > max_width)) && max_width=$line_width
+    done
+
+    # Add padding (4 spaces on each side) - inner width without borders
+    local content_width=$max_width
+    local inner_width=$((max_width + 8))
+
+    # Draw top border (╔══...══╗)
+    printf "${color}╔"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╗${NC}\n"
+
+    # Draw title with padding and vertical borders
+    printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" "$title"
+
+    # Draw middle separator (╠══...══╣)
+    printf "${color}╠"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╣${NC}\n"
+
+    # Draw empty line with borders
+    printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" ""
+
+    # Draw content with padding and vertical borders
+    for line in "${content[@]}"; do
+        printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" "$line"
+    done
+
+    # Draw empty line with borders
+    printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" ""
+
+    # Draw bottom border (╚══...══╝)
+    printf "${color}╚"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╝${NC}\n"
+}
+
+# Draw a simple header box (title only, no content)
+# Usage: draw_header "Title Text"
+draw_header() {
+    local title="$1"
+    local title_width=$(get_string_width "$title")
+    local inner_width=$((title_width + 8))
+
+    # Draw top border (╔══...══╗)
+    printf "${CYAN}╔"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╗${NC}\n"
+
+    # Draw title with padding and vertical borders
+    printf "${CYAN}║${NC}    %-${title_width}s    ${CYAN}║${NC}\n" "$title"
+
+    # Draw bottom border (╚══...══╝)
+    printf "${CYAN}╚"
+    printf '═%.0s' $(seq 1 $inner_width)
+    printf "╝${NC}\n"
+}
+
+# Draw a separator line with dynamic width
+# Usage: draw_separator 40
+draw_separator() {
+    local width="${1:-40}"
+    echo "$(printf '─%.0s' $(seq 1 $width))"
+}
+
+# Draw a tree-style separator with color
+# Usage: draw_tree_separator
+draw_tree_separator() {
+    echo "$(printf '─%.0s' $(seq 1 39))"
 }
 
 # Enhanced command execution with debug mode support
@@ -331,57 +498,74 @@ compare_versions() {
 # Get installed software version from system
 get_installed_version() {
     local software="$1"
+    local version_output
+    local version
+
+    # Temporarily disable pipefail to avoid SIGPIPE issues with head/tail
+    set +o pipefail
 
     case "$software" in
         "ghostty")
             if command -v ghostty >/dev/null 2>&1; then
-                ghostty --version 2>/dev/null | head -1 | awk '{print $2}' || echo "unknown"
+                version_output=$(ghostty --version 2>/dev/null | head -1 | awk '{print $2}')
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
             ;;
         "zsh")
             if command -v zsh >/dev/null 2>&1; then
-                zsh --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+                version_output=$(zsh --version 2>/dev/null | awk '{print $2}')
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
             ;;
         "node")
             if command -v node >/dev/null 2>&1; then
-                node --version 2>/dev/null | sed 's/^v//' || echo "unknown"
+                version_output=$(node --version 2>/dev/null | sed 's/^v//')
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
             ;;
         "ptyxis")
             if command -v ptyxis >/dev/null 2>&1; then
-                ptyxis --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+                # Ptyxis --version outputs multi-line, need first line only
+                version_output=$(ptyxis --version 2>/dev/null | head -1 | awk '{print $2}')
+                echo "${version_output:-unknown}"
             elif snap list 2>/dev/null | grep -q "ptyxis"; then
-                snap list ptyxis 2>/dev/null | tail -n +2 | awk '{print $2}' || echo "unknown"
+                version_output=$(snap list ptyxis 2>/dev/null | tail -n +2 | awk '{print $2}')
+                echo "${version_output:-unknown}"
             elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
-                flatpak info app.devsuite.Ptyxis 2>/dev/null | grep "Version:" | cut -d: -f2 | xargs || echo "unknown"
+                version_output=$(flatpak info app.devsuite.Ptyxis 2>/dev/null | grep "Version:" | cut -d: -f2 | xargs)
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
             ;;
         "uv")
             if command -v uv >/dev/null 2>&1; then
-                uv --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+                version_output=$(uv --version 2>/dev/null | awk '{print $2}')
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
             ;;
         "claude")
             if command -v claude >/dev/null 2>&1; then
-                claude --version 2>/dev/null | head -1 | awk '{print $2}' || echo "unknown"
+                # Claude --version outputs "X.Y.Z (Claude Code)", extract version only
+                version_output=$(claude --version 2>/dev/null | head -1 | awk '{print $1}')
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
             ;;
         "gemini")
-            if command -v gemini >/dev/null 2>&1; then
-                gemini --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+            # Gemini CLI doesn't have --version flag, check npm package instead
+            if npm list -g @google/gemini-cli 2>/dev/null | grep -q "@google/gemini-cli"; then
+                version_output=$(npm list -g @google/gemini-cli 2>/dev/null | grep "@google/gemini-cli" | sed 's/.*@google\/gemini-cli@//' | awk '{print $1}')
+                echo "${version_output:-unknown}"
             else
                 echo "not_installed"
             fi
@@ -390,6 +574,9 @@ get_installed_version() {
             echo "unknown"
             ;;
     esac
+
+    # Re-enable pipefail
+    set -o pipefail
 }
 
 # Display installation state summary
@@ -429,7 +616,7 @@ detect_existing_software() {
         local version=$(get_installed_version "$software")
         if [ "$version" != "not_installed" ]; then
             log "INFO" "   ✅ $software: $version"
-            ((found_count++))
+            found_count=$((found_count + 1))
         else
             log "INFO" "   ❌ $software: Not installed"
         fi
@@ -454,8 +641,10 @@ idempotent_install_zsh() {
     # Check if already completed and not forced
     if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
         local installed_version=$(get_installed_version "zsh")
-        log "INFO" "⏭️  ZSH already installed (version: $installed_version)"
-        log "INFO" "   Use --force-zsh to reinstall"
+        draw_colored_box "$BLUE" "ZSH Installation - Skipped" \
+            "✅ ZSH already installed" \
+            "📦 Version: $installed_version" \
+            "💡 Use --force-zsh to reinstall"
         mark_step_skipped "$step_name" "Already installed"
         return 0
     fi
@@ -486,8 +675,10 @@ idempotent_install_ghostty() {
 
     if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
         local installed_version=$(get_installed_version "ghostty")
-        log "INFO" "⏭️  Ghostty already installed (version: $installed_version)"
-        log "INFO" "   Use --force-ghostty to reinstall"
+        draw_colored_box "$MAGENTA" "Ghostty Installation - Skipped" \
+            "✅ Ghostty already installed" \
+            "📦 Version: $installed_version" \
+            "💡 Use --force-ghostty to reinstall"
         mark_step_skipped "$step_name" "Already installed"
         return 0
     fi
@@ -499,12 +690,22 @@ idempotent_install_ghostty() {
         fi
     fi
 
-    log "INFO" "🔧 Installing Ghostty..."
+    draw_colored_box "$MAGENTA" "Ghostty Installation - Starting" \
+        "🔧 Initiating Ghostty installation" \
+        "⏳ This may take a few minutes..."
+
     if install_ghostty; then
         local version=$(get_installed_version "ghostty")
+        draw_colored_box "$MAGENTA" "Ghostty Installation - Complete" \
+            "✅ Ghostty successfully installed" \
+            "📦 Version: $version" \
+            "🎯 Ready to use!"
         mark_step_completed "$step_name" "$version"
         return 0
     else
+        draw_colored_box "$MAGENTA" "Ghostty Installation - Failed" \
+            "❌ Installation failed" \
+            "📋 Check logs for details: $LOG_FILE"
         mark_step_failed "$step_name" "Installation failed"
         return 1
     fi
@@ -517,8 +718,10 @@ idempotent_install_ptyxis() {
 
     if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
         local installed_version=$(get_installed_version "ptyxis")
-        log "INFO" "⏭️  Ptyxis already installed (version: $installed_version)"
-        log "INFO" "   Use --force-ptyxis to reinstall"
+        draw_colored_box "$MAGENTA" "Ptyxis Installation - Skipped" \
+            "✅ Ptyxis already installed" \
+            "📦 Version: $installed_version" \
+            "💡 Use --force-ptyxis to reinstall"
         mark_step_skipped "$step_name" "Already installed"
         return 0
     fi
@@ -530,12 +733,22 @@ idempotent_install_ptyxis() {
         fi
     fi
 
-    log "INFO" "🔧 Installing Ptyxis..."
+    draw_colored_box "$MAGENTA" "Ptyxis Installation - Starting" \
+        "🔧 Initiating Ptyxis installation" \
+        "⏳ This may take a few minutes..."
+
     if install_ptyxis; then
         local version=$(get_installed_version "ptyxis")
+        draw_colored_box "$MAGENTA" "Ptyxis Installation - Complete" \
+            "✅ Ptyxis successfully installed" \
+            "📦 Version: $version" \
+            "🎯 Ready to use!"
         mark_step_completed "$step_name" "$version"
         return 0
     else
+        draw_colored_box "$MAGENTA" "Ptyxis Installation - Failed" \
+            "❌ Installation failed" \
+            "📋 Check logs for details: $LOG_FILE"
         mark_step_failed "$step_name" "Installation failed"
         return 1
     fi
@@ -1282,7 +1495,7 @@ start_task() {
     if [ -n "$task_description" ]; then
         echo -e "${BLUE}   $task_description${NC}"
     fi
-    echo "───────────────────────────────────────"
+    draw_tree_separator
 
     # Store task start info with safe filename
     local safe_task_id=$(echo "$task_id" | tr -cd '[:alnum:]' | cut -c1-20)
@@ -1312,7 +1525,7 @@ stream_command() {
     cat >> "$LOG_COMMANDS" << EOF
 [$timestamp] [COMMAND_START] Task: $task_id | Description: $description
 [$timestamp] [COMMAND] $command
-───────────────────────────────────────
+$(draw_separator 39)
 EOF
 
     # Run command with real-time output and comprehensive logging
@@ -1320,7 +1533,7 @@ EOF
     {
         echo "[$timestamp] [COMMAND_START] $description"
         echo "[$timestamp] [COMMAND] $command"
-        echo "───────────────────────────────────────"
+        draw_separator 39
 
         # Execute command and capture all output with indentation for readability
         if eval "$command" 2>&1 | while IFS= read -r line; do
@@ -2098,32 +2311,43 @@ pre_auth_sudo() {
 
 # Install ZSH and Oh My ZSH
 install_zsh() {
-    log "STEP" "🐚 Setting up ZSH and Oh My ZSH..."
+    # Draw header box with BLUE color
+    draw_colored_box "$BLUE" "🐚 ZSH and Oh My ZSH Installation" \
+        "Setting up ZSH shell environment" \
+        "Installing plugins and optimizations"
+    echo ""
 
     # Check if ZSH is installed and update if needed
     if ! command -v zsh >/dev/null 2>&1; then
         log "INFO" "📥 Installing latest ZSH..."
         if sudo apt update && sudo apt install -y zsh >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ ZSH installed"
+            # Show success box
+            draw_colored_box "$BLUE" "ZSH Installation - Complete" \
+                "✅ ZSH installed successfully"
+            echo ""
         else
             log "ERROR" "❌ Failed to install ZSH"
             return 1
         fi
     else
         local current_version=$(zsh --version 2>/dev/null | awk '{print $2}' || echo "unknown")
-        log "INFO" "✅ ZSH already installed: $current_version"
 
         # Check for ZSH updates
         log "INFO" "🔄 Checking for ZSH updates..."
         if apt list --upgradable 2>/dev/null | grep -q "^zsh/"; then
             log "INFO" "🆕 ZSH update available, updating..."
             if sudo apt update && sudo apt upgrade -y zsh >> "$LOG_FILE" 2>&1; then
-                log "SUCCESS" "✅ ZSH updated to latest version"
+                draw_colored_box "$BLUE" "ZSH Update - Complete" \
+                    "✅ ZSH updated to latest version"
+                echo ""
             else
                 log "WARNING" "⚠️  ZSH update may have failed"
             fi
         else
-            log "SUCCESS" "✅ ZSH is up to date"
+            draw_colored_box "$BLUE" "ZSH Status" \
+                "✅ ZSH already installed: $current_version" \
+                "✅ ZSH is up to date"
+            echo ""
         fi
     fi
 
@@ -2132,18 +2356,21 @@ install_zsh() {
         log "INFO" "📥 Installing latest Oh My ZSH..."
         # Download and install Oh My ZSH non-interactively
         if sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ Oh My ZSH installed"
+            draw_colored_box "$BLUE" "Oh My ZSH Installation - Complete" \
+                "✅ Oh My ZSH installed successfully"
+            echo ""
         else
             log "ERROR" "❌ Failed to install Oh My ZSH"
             return 1
         fi
     else
-        log "INFO" "✅ Oh My ZSH already installed"
-
         # Update Oh My ZSH to latest version using git pull (more reliable than upgrade script)
         log "INFO" "🔄 Updating Oh My ZSH to latest version..."
         if run_task_command "Updating Oh My ZSH" "cd '$REAL_HOME/.oh-my-zsh' && git pull origin master && cd - >/dev/null" "Pulling latest Oh My ZSH updates" "30s"; then
-            log "SUCCESS" "✅ Oh My ZSH updated successfully"
+            draw_colored_box "$BLUE" "Oh My ZSH Update - Complete" \
+                "✅ Oh My ZSH already installed" \
+                "✅ Updated to latest version successfully"
+            echo ""
         else
             log "WARNING" "⚠️  Oh My ZSH update failed - check network connection"
         fi
@@ -2152,20 +2379,25 @@ install_zsh() {
     # Check current default shell
     local current_shell=$(getent passwd "$USER" | cut -d: -f7)
     local zsh_path=$(which zsh)
-    
+
     if [ "$current_shell" != "$zsh_path" ]; then
         log "INFO" "🔄 Setting ZSH as default shell..."
 
         # Try to change shell using sudo (non-interactive approach)
         if sudo usermod -s "$zsh_path" "$USER" 2>/dev/null; then
-            log "SUCCESS" "✅ ZSH set as default shell (restart terminal to take effect)"
+            draw_colored_box "$BLUE" "Shell Configuration - Complete" \
+                "✅ ZSH set as default shell" \
+                "⚠️  Restart terminal to take effect"
+            echo ""
         else
             log "WARNING" "⚠️  Failed to set ZSH as default shell automatically"
             log "INFO" "💡 You can manually set it with: chsh -s $zsh_path"
             log "INFO" "💡 Or run: sudo usermod -s $zsh_path $USER"
         fi
     else
-        log "SUCCESS" "✅ ZSH is already the default shell"
+        draw_colored_box "$BLUE" "Shell Configuration - Already Set" \
+            "✅ ZSH is already the default shell"
+        echo ""
     fi
     
     # Update Ghostty config to use ZSH
@@ -2182,17 +2414,24 @@ install_zsh() {
     fi
     
     # Install essential Oh My ZSH plugins and optimizations
-    log "INFO" "🔌 Setting up essential Oh My ZSH plugins and optimizations..."
+    draw_colored_box "$BLUE" "🔌 Installing ZSH Plugins & Theme" \
+        "Setting up essential plugins and optimizations"
+    echo ""
+
+    # Track plugin installation status
+    local -a plugin_status=()
 
     # Install zsh-autosuggestions (essential plugin #1)
     local autosuggestions_dir="$REAL_HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     if [ ! -d "$autosuggestions_dir" ]; then
         log "INFO" "📥 Installing zsh-autosuggestions..."
         if git clone https://github.com/zsh-users/zsh-autosuggestions "$autosuggestions_dir" >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ zsh-autosuggestions installed"
+            plugin_status+=("✅ zsh-autosuggestions")
         else
-            log "WARNING" "⚠️  Failed to install zsh-autosuggestions"
+            plugin_status+=("⚠️  zsh-autosuggestions (failed)")
         fi
+    else
+        plugin_status+=("✅ zsh-autosuggestions (already installed)")
     fi
 
     # Install zsh-syntax-highlighting (essential plugin #2)
@@ -2200,10 +2439,12 @@ install_zsh() {
     if [ ! -d "$syntax_highlighting_dir" ]; then
         log "INFO" "📥 Installing zsh-syntax-highlighting..."
         if git clone https://github.com/zsh-users/zsh-syntax-highlighting "$syntax_highlighting_dir" >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ zsh-syntax-highlighting installed"
+            plugin_status+=("✅ zsh-syntax-highlighting")
         else
-            log "WARNING" "⚠️  Failed to install zsh-syntax-highlighting"
+            plugin_status+=("⚠️  zsh-syntax-highlighting (failed)")
         fi
+    else
+        plugin_status+=("✅ zsh-syntax-highlighting (already installed)")
     fi
 
     # Install you-should-use plugin (productivity training)
@@ -2211,10 +2452,12 @@ install_zsh() {
     if [ ! -d "$you_should_use_dir" ]; then
         log "INFO" "📥 Installing you-should-use plugin..."
         if git clone https://github.com/MichaelAquilina/zsh-you-should-use "$you_should_use_dir" >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ you-should-use plugin installed"
+            plugin_status+=("✅ you-should-use")
         else
-            log "WARNING" "⚠️  Failed to install you-should-use plugin"
+            plugin_status+=("⚠️  you-should-use (failed)")
         fi
+    else
+        plugin_status+=("✅ you-should-use (already installed)")
     fi
 
     # Install Powerlevel10k theme for enhanced terminal productivity
@@ -2222,13 +2465,17 @@ install_zsh() {
     if [ ! -d "$p10k_dir" ]; then
         log "INFO" "📥 Installing Powerlevel10k theme..."
         if git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$p10k_dir" >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ Powerlevel10k theme installed"
+            plugin_status+=("✅ Powerlevel10k theme")
         else
-            log "WARNING" "⚠️  Failed to install Powerlevel10k theme"
+            plugin_status+=("⚠️  Powerlevel10k theme (failed)")
         fi
     else
-        log "INFO" "✅ Powerlevel10k theme already installed"
+        plugin_status+=("✅ Powerlevel10k theme (already installed)")
     fi
+
+    # Display plugin installation summary
+    draw_colored_box "$BLUE" "Plugin Installation Summary" "${plugin_status[@]}"
+    echo ""
 
     # Create Powerlevel10k configuration file
     local p10k_config="$REAL_HOME/.p10k.zsh"
@@ -2390,6 +2637,17 @@ alias gemini='flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- gemini'
 EOF
             log "SUCCESS" "✅ Added Ptyxis gemini integration to .zshrc"
         fi
+
+    # Draw final summary box with BLUE color
+    local zsh_version=$(zsh --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+    draw_colored_box "$BLUE" "🐚 ZSH Setup Complete" \
+        "✅ ZSH $zsh_version installed and configured" \
+        "✅ Oh My ZSH framework installed" \
+        "✅ Essential plugins: autosuggestions, syntax-highlighting, you-should-use" \
+        "✅ Powerlevel10k theme configured" \
+        "✅ Performance optimizations applied" \
+        "✅ Ghostty shell integration enabled"
+    echo ""
 }
 
 # Install modern Unix tool replacements for enhanced productivity
@@ -2715,13 +2973,17 @@ install_ghostty() {
 
 # Fresh Ghostty installation
 fresh_install_ghostty() {
-    log "STEP" "👻 Fresh installation of Ghostty terminal emulator..."
+    draw_colored_box "$MAGENTA" "Ghostty Fresh Installation" \
+        "👻 Starting fresh Ghostty installation" \
+        "📦 Attempting snap installation first..."
 
     # First try to install via snap (preferred method)
     if command -v snap >/dev/null 2>&1; then
         log "INFO" "📦 Installing Ghostty via snap (recommended)..."
         if sudo snap install ghostty --classic >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ Ghostty installed successfully via snap"
+            draw_colored_box "$MAGENTA" "Ghostty Snap Installation" \
+                "✅ Ghostty installed successfully via snap" \
+                "⚙️  Applying configuration files..."
             install_ghostty_configuration
             return 0
         else
@@ -2730,7 +2992,9 @@ fresh_install_ghostty() {
     fi
 
     # Fallback to building from source only if snap fails
-    log "INFO" "🔨 Building Ghostty from source (fallback method)..."
+    draw_colored_box "$MAGENTA" "Ghostty Source Build" \
+        "🔨 Building Ghostty from source (fallback)" \
+        "📥 Cloning repository and compiling..."
 
     # Clone Ghostty repository
     if [ ! -d "$GHOSTTY_APP_DIR" ]; then
@@ -2834,16 +3098,24 @@ build_and_install_ghostty() {
 
 # Install Ghostty configuration files
 install_ghostty_configuration() {
-    log "INFO" "⚙️  Installing Ghostty configuration..."
+    draw_colored_box "$MAGENTA" "Ghostty Configuration" \
+        "⚙️  Installing Ghostty configuration files" \
+        "📁 Deploying configs, themes, and dircolors..."
+
     mkdir -p "$GHOSTTY_CONFIG_DIR"
-    
+
+    # Track configuration status
+    local -a config_status=()
+
     # Copy configuration files from configs directory
     for config_file in config theme.conf scroll.conf layout.conf keybindings.conf; do
         if [ -f "$GHOSTTY_CONFIG_SOURCE/$config_file" ]; then
             cp "$GHOSTTY_CONFIG_SOURCE/$config_file" "$GHOSTTY_CONFIG_DIR/"
             log "SUCCESS" "✅ Copied $config_file"
+            config_status+=("✅ $config_file deployed")
         else
             log "WARNING" "⚠️  $config_file not found in $GHOSTTY_CONFIG_SOURCE"
+            config_status+=("⚠️  $config_file missing")
         fi
     done
 
@@ -2852,6 +3124,7 @@ install_ghostty_configuration() {
         mkdir -p "$REAL_HOME/.config"
         cp "$GHOSTTY_CONFIG_SOURCE/dircolors" "$REAL_HOME/.config/dircolors"
         log "SUCCESS" "✅ Deployed dircolors configuration to ~/.config/dircolors"
+        config_status+=("✅ dircolors (XDG-compliant)")
 
         # Ensure shell configs load dircolors (XDG-compliant)
         for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
@@ -2866,13 +3139,16 @@ install_ghostty_configuration() {
         done
     else
         log "WARNING" "⚠️  dircolors not found in $GHOSTTY_CONFIG_SOURCE"
+        config_status+=("⚠️  dircolors missing")
     fi
 
     # Validate configuration
     if ghostty +show-config >/dev/null 2>&1; then
-        log "SUCCESS" "✅ Ghostty configuration is valid"
+        config_status+=("✅ Configuration validated")
+        draw_colored_box "$MAGENTA" "Ghostty Configuration Complete" "${config_status[@]}"
     else
-        log "WARNING" "⚠️  Ghostty configuration validation failed"
+        config_status+=("❌ Configuration validation failed")
+        draw_colored_box "$MAGENTA" "Ghostty Configuration Issues" "${config_status[@]}"
         return 1
     fi
 }
@@ -2896,13 +3172,17 @@ install_ptyxis() {
 
 # Fresh Ptyxis installation (prefer official: apt, snap, then flatpak)
 fresh_install_ptyxis() {
-    log "STEP" "🐚 Fresh installation of Ptyxis terminal..."
+    draw_colored_box "$MAGENTA" "Ptyxis Fresh Installation" \
+        "🐚 Starting fresh Ptyxis installation" \
+        "📦 Trying: apt → snap → flatpak"
 
     # Try apt first (official Ubuntu packages)
     log "INFO" "📥 Attempting Ptyxis installation via apt..."
     if apt-cache show ptyxis >/dev/null 2>&1; then
         if sudo apt update && sudo apt install -y ptyxis >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ Ptyxis installed via apt"
+            draw_colored_box "$MAGENTA" "Ptyxis APT Installation" \
+                "✅ Ptyxis installed via apt" \
+                "⚙️  Configuring system integration..."
             configure_ptyxis_system
             return 0
         else
@@ -2916,7 +3196,9 @@ fresh_install_ptyxis() {
     log "INFO" "📥 Attempting Ptyxis installation via snap..."
     if snap find ptyxis 2>/dev/null | grep -q "ptyxis"; then
         if sudo snap install ptyxis >> "$LOG_FILE" 2>&1; then
-            log "SUCCESS" "✅ Ptyxis installed via snap"
+            draw_colored_box "$MAGENTA" "Ptyxis Snap Installation" \
+                "✅ Ptyxis installed via snap" \
+                "⚙️  Configuring system integration..."
             configure_ptyxis_system
             return 0
         else
@@ -2929,10 +3211,14 @@ fresh_install_ptyxis() {
     # Fallback to flatpak
     log "INFO" "📥 Installing Ptyxis via flatpak (fallback)..."
     if flatpak install -y flathub app.devsuite.Ptyxis >> "$LOG_FILE" 2>&1; then
-        log "SUCCESS" "✅ Ptyxis installed via flatpak"
+        draw_colored_box "$MAGENTA" "Ptyxis Flatpak Installation" \
+            "✅ Ptyxis installed via flatpak" \
+            "⚙️  Configuring flatpak integration..."
         configure_ptyxis_flatpak
     else
-        log "ERROR" "❌ Ptyxis installation failed via all methods"
+        draw_colored_box "$MAGENTA" "Ptyxis Installation Failed" \
+            "❌ Installation failed via all methods" \
+            "📋 Check logs: $LOG_FILE"
         return 1
     fi
 }
@@ -2973,7 +3259,7 @@ update_ptyxis() {
 
 # Configure Ptyxis for system installations (apt/snap)
 configure_ptyxis_system() {
-    log "INFO" "🔧 Configuring Ptyxis (system installation)..."
+    local -a config_status=()
 
     # Create gemini alias in both bashrc and zshrc for system installation
     for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
@@ -2981,6 +3267,7 @@ configure_ptyxis_system() {
             # Check if Ptyxis system integration already exists
             if grep -q "ptyxis.*-d.*gemini" "$shell_config" && ! grep -q "flatpak" "$shell_config"; then
                 log "SUCCESS" "✅ Ptyxis gemini integration already configured in $(basename "$shell_config")"
+                config_status+=("✅ $(basename "$shell_config") - already configured")
             else
                 # Remove any existing gemini aliases
                 if grep -q "alias gemini=" "$shell_config"; then
@@ -2994,17 +3281,21 @@ configure_ptyxis_system() {
                 echo "# Uses fnm-managed Node.js (generic path, auto-resolves to current version)" >> "$shell_config"
                 echo 'alias gemini='"'"'ptyxis -d "$(pwd)" -- gemini'"'" >> "$shell_config"
                 log "SUCCESS" "✅ Added Ptyxis system gemini integration to $(basename "$shell_config")"
+                config_status+=("✅ $(basename "$shell_config") - configured")
             fi
         fi
     done
+
+    draw_colored_box "$MAGENTA" "Ptyxis System Configuration" "${config_status[@]}"
 }
 
 # Configure Ptyxis for flatpak installation
 configure_ptyxis_flatpak() {
-    log "INFO" "🔧 Configuring Ptyxis (flatpak installation)..."
+    local -a config_status=()
 
     # Grant necessary permissions for file access
     flatpak override app.devsuite.Ptyxis --filesystem=home >> "$LOG_FILE" 2>&1
+    config_status+=("✅ Flatpak permissions granted")
 
     # Create gemini alias in both bashrc and zshrc for flatpak
     for shell_config in "$REAL_HOME/.bashrc" "$REAL_HOME/.zshrc"; do
@@ -3012,6 +3303,7 @@ configure_ptyxis_flatpak() {
             # Check if Ptyxis flatpak integration already exists
             if grep -q "flatpak run app.devsuite.Ptyxis.*gemini" "$shell_config"; then
                 log "SUCCESS" "✅ Ptyxis flatpak gemini integration already configured in $(basename "$shell_config")"
+                config_status+=("✅ $(basename "$shell_config") - already configured")
             else
                 # Remove any existing gemini aliases
                 if grep -q "alias gemini=" "$shell_config"; then
@@ -3025,9 +3317,12 @@ configure_ptyxis_flatpak() {
                 echo "# Uses fnm-managed Node.js (generic path, auto-resolves to current version)" >> "$shell_config"
                 echo 'alias gemini='"'"'flatpak run app.devsuite.Ptyxis -d "$(pwd)" -- gemini'"'" >> "$shell_config"
                 log "SUCCESS" "✅ Added Ptyxis flatpak gemini integration to $(basename "$shell_config")"
+                config_status+=("✅ $(basename "$shell_config") - configured")
             fi
         fi
     done
+
+    draw_colored_box "$MAGENTA" "Ptyxis Flatpak Configuration" "${config_status[@]}"
 }
 
 # Install uv Python package manager
@@ -3097,12 +3392,23 @@ install_nodejs() {
         return 0
     fi
 
-    log "STEP" "📦 Installing Node.js via fnm (Fast Node Manager)..."
-    log "INFO" "📊 Performance: fnm provides <50ms startup vs 500ms-3s for NVM"
+    draw_colored_box "$GREEN" "📦 Node.js Installation via fnm" \
+        "Status: Checking existing installation" \
+        "Target: Node.js v${NODE_VERSION}.x (latest)" \
+        "Method: Fast Node Manager (fnm)" \
+        "Performance: <50ms startup vs 500ms-3s for NVM"
 
     # Use modular install_node.sh script
     if source "${SCRIPT_DIR}/scripts/install_node.sh" && install_node_full "$NODE_VERSION"; then
-        log "SUCCESS" "✅ Node.js installation complete via fnm"
+        local node_version=$(node --version 2>/dev/null || echo "unknown")
+        local npm_version=$(npm --version 2>/dev/null || echo "unknown")
+
+        draw_colored_box "$GREEN" "Node.js Installation Complete" \
+            "✅ fnm installed and configured" \
+            "✅ Node.js ${node_version} active" \
+            "✅ npm ${npm_version} available" \
+            "⚡ Performance: <50ms startup time"
+
         return 0
     else
         log "ERROR" "❌ Node.js installation failed"
@@ -3119,12 +3425,20 @@ install_uv() {
         return 0
     fi
 
-    log "STEP" "⚡ Installing uv (Fast Python Package Installer)..."
-    log "INFO" "📊 Performance: uv provides significantly faster package operations than pip"
+    draw_colored_box "$GREEN" "⚡ uv Installation (Fast Python Package Installer)" \
+        "Status: Checking existing installation" \
+        "Purpose: Modern web development stack (Feature 001)" \
+        "Performance: Significantly faster than pip"
 
     # Use modular install_uv.sh script
     if source "${SCRIPT_DIR}/scripts/install_uv.sh" && install_uv_full; then
-        log "SUCCESS" "✅ uv installation complete"
+        local uv_version=$(uv --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+
+        draw_colored_box "$GREEN" "uv Installation Complete" \
+            "✅ uv ${uv_version} installed and configured" \
+            "✅ Python package management ready" \
+            "⚡ Faster package operations enabled"
+
         return 0
     else
         log "ERROR" "❌ uv installation failed"
@@ -3141,7 +3455,10 @@ install_speckit() {
         return 0
     fi
 
-    log "STEP" "📋 Installing spec-kit (Specification Development Toolkit)..."
+    draw_colored_box "$GREEN" "📋 spec-kit Installation (Specification Development Toolkit)" \
+        "Status: Checking dependencies" \
+        "Purpose: Constitutional spec development workflow" \
+        "Requirement: uv package manager"
 
     # Ensure uv is available first
     if ! command -v uv >/dev/null 2>&1; then
@@ -3154,7 +3471,11 @@ install_speckit() {
 
     # Use modular install_spec_kit.sh script
     if source "${SCRIPT_DIR}/scripts/install_spec_kit.sh" && install_spec_kit_full; then
-        log "SUCCESS" "✅ spec-kit installation complete"
+        draw_colored_box "$GREEN" "spec-kit Installation Complete" \
+            "✅ spec-kit installed and configured" \
+            "✅ Specification workflow commands available" \
+            "✅ Constitutional compliance tools ready"
+
         return 0
     else
         log "ERROR" "❌ spec-kit installation failed"
@@ -3170,7 +3491,10 @@ install_claude_code() {
         return 0
     fi
 
-    log "STEP" "🤖 Installing Claude Code CLI..."
+    draw_colored_box "$GREEN" "🤖 AI Development Tools - Claude Code CLI" \
+        "Status: Checking existing installation" \
+        "Package: @anthropic-ai/claude-code" \
+        "Requirement: Node.js and npm (via fnm)"
 
     # Check if Node.js and npm are available
     if ! command -v node >/dev/null 2>&1; then
@@ -3207,7 +3531,12 @@ install_claude_code() {
     # Verify installation
     if command -v claude >/dev/null 2>&1; then
         local version=$(claude --version 2>/dev/null || echo "unknown")
-        log "SUCCESS" "✅ Claude Code ready (version: $version)"
+
+        draw_colored_box "$GREEN" "Claude Code Installation Complete" \
+            "✅ Claude Code CLI installed" \
+            "✅ Version: ${version}" \
+            "✅ AI-powered code assistance ready" \
+            "📝 Command: claude"
     else
         log "WARNING" "⚠️  Claude Code installed but not in PATH (may need shell restart)"
     fi
@@ -3220,7 +3549,10 @@ install_gemini_cli() {
         return 0
     fi
 
-    log "STEP" "💎 Installing Gemini CLI..."
+    draw_colored_box "$GREEN" "💎 AI Development Tools - Google Gemini CLI" \
+        "Status: Checking existing installation" \
+        "Package: @google/gemini-cli" \
+        "Requirement: Node.js and npm (via fnm)"
 
     # Check if Node.js and npm are available
     if ! command -v node >/dev/null 2>&1; then
@@ -3273,7 +3605,11 @@ install_gemini_cli() {
 
     # Verify installation
     if command -v gemini >/dev/null 2>&1; then
-        log "SUCCESS" "✅ Gemini CLI ready and available"
+        draw_colored_box "$GREEN" "Gemini CLI Installation Complete" \
+            "✅ Gemini CLI installed" \
+            "✅ Google AI integration ready" \
+            "✅ System symlink created" \
+            "📝 Command: gemini"
     else
         log "WARNING" "⚠️  Gemini CLI installed but not in PATH (may need shell restart)"
     fi
@@ -3321,17 +3657,19 @@ _show_update_summary_once() {
 
     if [[ -f "/tmp/daily-updates-logs/last-update-summary.txt" ]]; then
         # Only show once per day to avoid spam
-        local last_shown_file="/tmp/.update-summary-shown-$(date +%Y%m%d)"
-        if [[ ! -f "$last_shown_file" ]]; then
+        local last_shown_file="/tmp/.update-summary-shown-\$(date +%Y%m%d)"
+        if [[ ! -f "\$last_shown_file" ]]; then
             echo ""
             echo "📊 Latest System Update Summary:"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            printf '\''━%.0s'\'' \$(seq 1 70)
+            echo ""
             cat "/tmp/daily-updates-logs/last-update-summary.txt"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            printf '\''━%.0s'\'' \$(seq 1 70)
+            echo ""
             echo ""
             echo "💡 Commands: update-all | update-logs | update-logs-full | update-logs-errors"
             echo ""
-            touch "$last_shown_file"
+            touch "\$last_shown_file"
         fi
     fi
 }

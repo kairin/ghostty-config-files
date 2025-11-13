@@ -103,6 +103,9 @@ tmp/
 temp/
 *.tmp
 
+# Installation state (runtime data)
+.installation-state.json
+
 # Build artifacts
 build/
 out/

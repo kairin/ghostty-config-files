@@ -28,9 +28,13 @@ REQUIRED_COMMAND="/usr/bin/apt"
 # ============================================================================
 
 print_header() {
-    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${CYAN}  $1${NC}"
-    echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    local title="$1"
+    local title_width=${#title}
+    local total_width=$((title_width + 8))
+
+    echo -e "${CYAN}$(printf '━%.0s' $(seq 1 $total_width))${NC}"
+    printf "${CYAN}    %-${title_width}s    ${NC}\n" "$title"
+    echo -e "${CYAN}$(printf '━%.0s' $(seq 1 $total_width))${NC}"
 }
 
 print_success() {
@@ -64,11 +68,14 @@ check_passwordless_sudo() {
 }
 
 show_configuration_instructions() {
-    cat << 'EOF'
+    local header_width=76
+    local box_width=76
 
-╔════════════════════════════════════════════════════════════════════════════╗
-║                  HOW TO CONFIGURE PASSWORDLESS SUDO                        ║
-╚════════════════════════════════════════════════════════════════════════════╝
+    cat << EOF
+
+$(printf '═%.0s' $(seq 1 $header_width))
+    HOW TO CONFIGURE PASSWORDLESS SUDO
+$(printf '═%.0s' $(seq 1 $header_width))
 
 This repository requires passwordless sudo for /usr/bin/apt to enable:
   • Automated daily updates at 9:00 AM
@@ -78,17 +85,17 @@ This repository requires passwordless sudo for /usr/bin/apt to enable:
 SECURITY NOTE: This grants passwordless access ONLY to apt commands,
                NOT unrestricted sudo access.
 
-┌────────────────────────────────────────────────────────────────────────────┐
-│ STEP 1: Open sudoers configuration                                        │
-└────────────────────────────────────────────────────────────────────────────┘
+$(printf '─%.0s' $(seq 1 $box_width))
+  STEP 1: Open sudoers configuration
+$(printf '─%.0s' $(seq 1 $box_width))
 
 Run this command:
 
     sudo EDITOR=nano visudo
 
-┌────────────────────────────────────────────────────────────────────────────┐
-│ STEP 2: Add passwordless sudo rule                                        │
-└────────────────────────────────────────────────────────────────────────────┘
+$(printf '─%.0s' $(seq 1 $box_width))
+  STEP 2: Add passwordless sudo rule
+$(printf '─%.0s' $(seq 1 $box_width))
 
 Add this line at the VERY END of the file:
 
@@ -99,9 +106,9 @@ Replace USERNAME with your actual username (current: $USER)
 Example:
     kkk ALL=(ALL) NOPASSWD: /usr/bin/apt
 
-┌────────────────────────────────────────────────────────────────────────────┐
-│ STEP 3: Save and exit                                                     │
-└────────────────────────────────────────────────────────────────────────────┘
+$(printf '─%.0s' $(seq 1 $box_width))
+  STEP 3: Save and exit
+$(printf '─%.0s' $(seq 1 $box_width))
 
 In nano:
   1. Press Ctrl+End to go to end of file
@@ -109,9 +116,9 @@ In nano:
   3. Press Ctrl+O to save, then Enter
   4. Press Ctrl+X to exit
 
-┌────────────────────────────────────────────────────────────────────────────┐
-│ STEP 4: Verify configuration                                              │
-└────────────────────────────────────────────────────────────────────────────┘
+$(printf '─%.0s' $(seq 1 $box_width))
+  STEP 4: Verify configuration
+$(printf '─%.0s' $(seq 1 $box_width))
 
 Run this script again to verify:
 
@@ -123,18 +130,18 @@ Or test manually:
 
 If successful, you should see apt output without a password prompt.
 
-┌────────────────────────────────────────────────────────────────────────────┐
-│ ALTERNATIVE: Interactive Installation                                     │
-└────────────────────────────────────────────────────────────────────────────┘
+$(printf '─%.0s' $(seq 1 $box_width))
+  ALTERNATIVE: Interactive Installation
+$(printf '─%.0s' $(seq 1 $box_width))
 
 If you prefer NOT to configure passwordless sudo, you can:
   • Manually enter password during installation (when prompted)
   • Skip automated daily updates feature
   • Run update-all manually when needed
 
-╔════════════════════════════════════════════════════════════════════════════╗
-║                         SECURITY INFORMATION                               ║
-╚════════════════════════════════════════════════════════════════════════════╝
+$(printf '═%.0s' $(seq 1 $header_width))
+    SECURITY INFORMATION
+$(printf '═%.0s' $(seq 1 $header_width))
 
 ✅ SECURE: Only /usr/bin/apt can run without password
 ✅ SECURE: Other sudo commands still require password
