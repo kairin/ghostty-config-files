@@ -14,4 +14,127 @@
   /* Font families */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Base font size for improved readability */
+  --font-size-base: 18px;
+  --line-height-base: 1.7;
+
+  /* Light mode colors */
+  --color-text-light: #1f2937;
+  --color-text-secondary-light: #6b7280;
+  --color-bg-light: #ffffff;
+  --color-surface-light: #f8f9fa;
+  --color-border-light: #e5e7eb;
+  --color-primary-light: #3b82f6;
+  --color-secondary-light: #8b5cf6;
+  --color-accent-light: #f59e0b;
+  --color-success-light: #10b981;
+
+  /* Dark mode colors */
+  --color-text-dark: #f1f5f9;
+  --color-text-secondary-dark: #cbd5e1;
+  --color-bg-dark: #0f172a;
+  --color-surface-dark: #1e293b;
+  --color-border-dark: #334155;
+  --color-primary-dark: #60a5fa;
+  --color-secondary-dark: #a78bfa;
+  --color-accent-dark: #fbbf24;
+  --color-success-dark: #34d399;
+}
+
+/**
+ * Global Typography Improvements
+ * Enhanced readability with proper spacing and sizing
+ */
+* {
+  transition-property: background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+html {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings with proper hierarchy and spacing */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+/* Paragraphs with proper spacing */
+p {
+  margin-bottom: 1.5em;
+}
+
+/* Code blocks with mono font */
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* Links with clear focus states */
+a {
+  text-decoration-skip-ink: auto;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Lists with proper spacing */
+ul, ol {
+  padding-left: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* Better readability for long content */
+.max-w-readable {
+  max-width: 65ch;
+}
+
+/* Smooth scrolling for anchor links */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Dark mode color scheme */
+html.dark {
+  color-scheme: dark;
+}
+
+html:not(.dark) {
+  color-scheme: light;
 }
