@@ -1,0 +1,9 @@
+{
+    "timestamp": "2025-11-12T08:08:33+08:00",
+    "operation": "Prerequisites check",
+    "duration": "1s",
+    "runner_type": "local",
+    "node_version": "v25.1.0",
+    "npm_version": "11.5.1",
+    "build_output_size": "405527"
+}

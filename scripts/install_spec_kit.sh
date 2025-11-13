@@ -58,6 +58,9 @@ fi
 : "${SPECKIT_COMMAND:=specify}"      # Primary command
 : "${SPECKIT_SLASH_COMMANDS_DIR:=${HOME}/Apps/ghostty-config-files/.claude/commands}"  # Slash commands location
 
+# UV tools installation location (for verification)
+: "${SPECKIT_UV_TOOLS_BIN:=${HOME}/.local/share/uv/tools/specify-cli/bin/${SPECKIT_COMMAND}}"
+
 # ============================================================
 # PUBLIC FUNCTIONS (Module API)
 # ============================================================
@@ -80,8 +83,14 @@ install_spec_kit() {
     fi
 
     # Check if spec-kit is already installed
-    if command -v "$SPECKIT_COMMAND" >/dev/null 2>&1; then
-        log_info "$SPECKIT_COMMAND already installed"
+    # Priority 1: Check UV tools directory (most common location)
+    if [[ -x "$SPECKIT_UV_TOOLS_BIN" ]]; then
+        log_info "$SPECKIT_COMMAND already installed at $SPECKIT_UV_TOOLS_BIN"
+        _check_spec_kit_update
+        return 0
+    # Priority 2: Check PATH (if user added to PATH manually)
+    elif command -v "$SPECKIT_COMMAND" >/dev/null 2>&1; then
+        log_info "$SPECKIT_COMMAND already installed (in PATH)"
         _check_spec_kit_update
         return 0
     fi
@@ -92,14 +101,22 @@ install_spec_kit() {
     if install_uv_tool "$SPECKIT_PACKAGE"; then
         log_info "$SPECKIT_PACKAGE installed successfully"
 
-        # Verify installation
-        if command -v "$SPECKIT_COMMAND" >/dev/null 2>&1; then
+        # Verify installation (check UV tools location directly)
+        if [[ -x "$SPECKIT_UV_TOOLS_BIN" ]]; then
+            local version
+            version=$("$SPECKIT_UV_TOOLS_BIN" --version 2>/dev/null || echo "unknown")
+            log_info "✅ spec-kit installed successfully: $version"
+            log_info "📍 Location: $SPECKIT_UV_TOOLS_BIN"
+            log_info "💡 Will be available as 'specify' after shell restart"
+        elif command -v "$SPECKIT_COMMAND" >/dev/null 2>&1; then
             local version
             version=$("$SPECKIT_COMMAND" --version 2>/dev/null || echo "unknown")
-            log_info "spec-kit version: $version"
+            log_info "✅ spec-kit installed successfully: $version (in current PATH)"
         else
-            log_warn "spec-kit installed but command not found in PATH"
-            log_info "Try adding ~/.local/share/uv/tools to your PATH"
+            log_error "❌ spec-kit installation verification failed"
+            log_info "Expected location: $SPECKIT_UV_TOOLS_BIN"
+            log_info "Run 'uv tool list' to check installation status"
+            return 3
         fi
 
         # Configure slash commands

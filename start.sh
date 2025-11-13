@@ -1138,6 +1138,10 @@ check_installation_status() {
             ghostty_source="apt"
             ghostty_version=$(dpkg -l ghostty 2>/dev/null | tail -1 | awk '{print $3}' || echo "unknown")
             log "INFO" "✅ Ghostty installed via apt: $ghostty_version"
+        elif [[ "$ghostty_path" == "/usr/bin/"* ]] || [[ "$ghostty_path" == "/usr/"* ]]; then
+            ghostty_source="system"
+            ghostty_version=$(ghostty --version 2>/dev/null | head -1 || echo "unknown")
+            log "INFO" "✅ Ghostty installed via system package manager: $ghostty_version"
         else
             ghostty_source="unknown"
             ghostty_version=$(ghostty --version 2>/dev/null | head -1 || echo "unknown")
@@ -1386,7 +1390,15 @@ determine_install_strategy() {
                 log "WARNING" "📋 Ghostty: Snap installation with invalid config, will fix configuration"
                 GHOSTTY_STRATEGY="reconfig"
             fi
-        elif [ "$ghostty_source" = "source" ] || [ "$ghostty_source" = "unknown" ]; then
+        elif [ "$ghostty_source" = "system" ] || [ "$ghostty_source" = "unknown" ]; then
+            if $ghostty_config_valid; then
+                log "INFO" "📋 Ghostty: System installation detected, will only update configuration"
+                GHOSTTY_STRATEGY="config_only"
+            else
+                log "WARNING" "📋 Ghostty: System installation with invalid config, will fix configuration"
+                GHOSTTY_STRATEGY="reconfig"
+            fi
+        elif [ "$ghostty_source" = "source" ]; then
             if $ghostty_config_valid; then
                 log "INFO" "📋 Ghostty: Will update existing source installation"
                 GHOSTTY_STRATEGY="update"
@@ -2725,13 +2737,13 @@ EOF
     if crontab -l 2>/dev/null | grep -q "$daily_updates_script"; then
         log "INFO" "ℹ️  Daily update cron job already configured"
     else
-        # Add cron job
-        (crontab -l 2>/dev/null; echo "# Daily System Updates - ghostty-config-files"; echo "$cron_entry") | crontab -
-        if [ $? -eq 0 ]; then
+        # Add cron job (non-critical)
+        if (crontab -l 2>/dev/null; echo "# Daily System Updates - ghostty-config-files"; echo "$cron_entry") | crontab - 2>/dev/null; then
             log "SUCCESS" "✅ Daily automated updates scheduled for 9:00 AM"
         else
-            log "WARNING" "⚠️  Could not setup cron job - you can set it up manually"
-            return 1
+            log "WARNING" "⚠️  Could not setup cron job - scripts still work manually"
+            log "INFO" "ℹ️  To enable automation, run: crontab -e"
+            log "INFO" "ℹ️  Add this line: $cron_entry"
         fi
     fi
 
@@ -2746,14 +2758,25 @@ EOF
         log "SUCCESS" "✅ Passwordless sudo configured for apt"
     fi
 
-    log "SUCCESS" "✅ Daily update system configured successfully"
-    log "INFO" "📋 Available commands:"
-    log "INFO" "   • update-all - Run updates manually"
-    log "INFO" "   • update-logs - View latest summary"
-    log "INFO" "   • update-logs-full - View complete log"
-    log "INFO" "   • update-logs-errors - View errors only"
-
-    return 0
+    # Verify scripts are executable before declaring success
+    if [ -x "$daily_updates_script" ] && [ -x "$view_logs_script" ]; then
+        log "SUCCESS" "✅ Daily update system configured successfully"
+        log "INFO" "📋 Scripts installed:"
+        log "INFO" "   • $daily_updates_script"
+        log "INFO" "   • $view_logs_script"
+        log "INFO" "📋 Available commands:"
+        log "INFO" "   • update-all - Run updates manually"
+        log "INFO" "   • update-logs - View latest summary"
+        log "INFO" "   • update-logs-full - View complete log"
+        log "INFO" "   • update-logs-errors - View errors only"
+        return 0
+    else
+        log "ERROR" "❌ Daily updates scripts not found or not executable"
+        log "ERROR" "Expected locations:"
+        log "ERROR" "   • $daily_updates_script"
+        log "ERROR" "   • $view_logs_script"
+        return 1
+    fi
 }
 
 # Final verification
