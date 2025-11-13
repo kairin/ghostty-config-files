@@ -69,8 +69,19 @@ install_fnm() {
     log_info "⚡ Installing/updating fnm (Fast Node Manager)..."
 
     # Check if fnm is already installed
-    if command -v fnm >/dev/null 2>&1; then
-        log_info "✅ fnm already installed"
+    # Priority 1: Check installation directory directly
+    local FNM_BINARY="$FNM_DIR/fnm"
+    if [[ -x "$FNM_BINARY" ]]; then
+        log_info "✅ fnm already installed at $FNM_DIR"
+        # Add to current session PATH if not already present
+        if [[ ! "$PATH" =~ "$FNM_DIR" ]]; then
+            export PATH="$FNM_DIR:$PATH"
+        fi
+        _check_fnm_update
+        return 0
+    # Priority 2: Check PATH
+    elif command -v fnm >/dev/null 2>&1; then
+        log_info "✅ fnm already installed (in PATH)"
         _check_fnm_update
         return 0
     fi
@@ -105,15 +116,21 @@ install_node() {
 
     log_info "📦 Installing Node.js $node_version via fnm..."
 
-    # Ensure fnm is available
+    # Ensure fnm is available (use direct path if needed)
+    local FNM_BINARY="$FNM_DIR/fnm"
     if ! command -v fnm >/dev/null 2>&1; then
         # Try to load fnm from known installation location
-        if [[ -f "$FNM_DIR/fnm" ]]; then
+        if [[ -x "$FNM_BINARY" ]]; then
             export PATH="$FNM_DIR:$PATH"
+            eval "$(fnm env --use-on-cd --version-file-strategy=recursive)" 2>/dev/null || true
+            log_info "ℹ️  Loaded fnm from $FNM_DIR for current session"
         else
-            log_error "❌ fnm not found, please install it first"
+            log_error "❌ fnm not found at $FNM_BINARY"
+            log_error "Please install fnm first using: curl -fsSL https://fnm.vercel.app/install | bash"
             return 3
         fi
+    else
+        log_info "ℹ️  Using fnm from PATH: $(command -v fnm)"
     fi
 
     # Check if Node.js is already installed with the target version
@@ -203,6 +220,38 @@ install_node_full() {
 
     # Step 3: Update npm (non-critical)
     update_npm || log_warn "⚠️  npm update skipped, but continuing..."
+
+    # Step 4: Final verification using direct paths
+    log_info "🔍 Performing installation verification..."
+
+    local FNM_BINARY="$FNM_DIR/fnm"
+    if [[ -x "$FNM_BINARY" ]]; then
+        local fnm_version
+        fnm_version=$("$FNM_BINARY" --version 2>/dev/null | awk '{print $2}' || echo "unknown")
+        log_info "✅ fnm verified: $fnm_version"
+        log_info "📍 Location: $FNM_BINARY"
+
+        # Verify Node.js installation via fnm
+        local node_list
+        node_list=$("$FNM_BINARY" list 2>/dev/null | grep -E "v[0-9]+" || echo "")
+        if [[ -n "$node_list" ]]; then
+            log_info "✅ Node.js installed successfully via fnm"
+            log_info "📋 Installed versions:"
+            echo "$node_list" | while read -r line; do
+                log_info "   $line"
+            done
+            log_info "💡 Activate: Run 'source ~/.zshrc' or restart shell"
+            log_info "💡 Quick test: $FNM_BINARY list"
+        else
+            log_error "❌ fnm installed but no Node.js versions found"
+            log_info "🔧 Try: $FNM_BINARY install $node_version"
+            return 3
+        fi
+    else
+        log_error "❌ fnm binary not found at expected location"
+        log_error "Expected: $FNM_BINARY"
+        return 2
+    fi
 
     log_info "✅ Node.js installation complete!"
     log_info "📊 Performance: fnm provides <50ms startup vs 500ms-3s for NVM"

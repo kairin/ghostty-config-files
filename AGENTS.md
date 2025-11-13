@@ -20,7 +20,7 @@
 ### 🚨 CRITICAL: Package Management & Dependencies
 - **Ghostty**: Built from source with Zig 0.14.0 (latest stable)
 - **ZSH**: Oh My ZSH with enhanced plugins for productivity
-- **Node.js**: Latest LTS via NVM for AI tool integration (with system Node.js fallback)
+- **Node.js**: Latest LTS via fnm (Fast Node Manager) for AI tool integration
 - **Dependencies**: Smart detection and minimal installation footprint
 
 ### 🚨 CRITICAL: Installation Prerequisites
@@ -353,7 +353,7 @@ LOCAL_CI_LOGS="./.runners-local/logs/"
 - **Claude Code**: Latest CLI via npm for code assistance
 - **Gemini CLI**: Google's AI assistant with Ptyxis integration
 - **Context7 MCP**: Up-to-date documentation server for best practices synchronization
-- **Node.js**: Latest LTS via NVM for tool compatibility
+- **Node.js**: Latest LTS via fnm (Fast Node Manager) - 40x faster than NVM with <50ms startup impact
 
 **Local CI/CD**:
 - **GitHub CLI**: For workflow simulation and API access

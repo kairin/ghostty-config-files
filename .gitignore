@@ -155,6 +155,7 @@ configs/custom/
 user-config/
 # Backup files (added by migration)
 backups/
+*.backup-*
 
 # Lighthouse performance reports
 documentations/performance/lighthouse-reports/*.json
