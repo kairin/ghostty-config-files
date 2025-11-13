@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.14.5"><title>Constitutional Git Workflow | Ghostty Configuration Files</title><meta name="description" content="Branch preservation strategy and constitutional Git workflow requirements"><!-- OpenGraph --><meta property="og:title" content="Constitutional Git Workflow"><meta property="og:description" content="Branch preservation strategy and constitutional Git workflow requirements"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.C32sr9Om.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"> <!-- Navigation --> <nav class="navbar bg-gray-50 dark:bg-slate-800 shadow-lg border-b border-gray-200 dark:border-gray-700"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-dark-primary">
+Ghostty Config Files
+</a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation" class="hover:text-blue-600 dark:hover:text-dark-primary">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles" class="hover:text-blue-600 dark:hover:text-dark-primary">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture" class="hover:text-blue-600 dark:hover:text-dark-primary">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-dark-primary">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 md:px-8 py-12 max-w-7xl"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-13T00:00:00.000Z"> November 13, 2025 </time> <span> by System Documentation</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-readable mx-auto text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Constitutional Git Workflow</li> </ul> </div> <div class="badge mb-4 badge-warning"> INTERMEDIATE </div><h1>Constitutional Git Workflow</h1> <p class="text-xl text-base-content/70 mb-8">Branch preservation strategy and constitutional Git workflow requirements</p><div class="alert alert-info mb-8"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg> <div> <h3 class="font-bold">Technologies</h3> <div class="text-sm flex gap-2 flex-wrap"> <span class="badge badge-sm">git</span><span class="badge badge-sm">github</span><span class="badge badge-sm">bash</span> </div> </div> </div><h1 id="constitutional-git-workflow">Constitutional Git Workflow</h1>
+<p>This project enforces a constitutional Git workflow that prioritizes branch preservation and configuration history.</p>
+<h2 id="core-constitutional-requirement">Core Constitutional Requirement</h2>
+<p><strong>NEVER DELETE BRANCHES</strong> without explicit user permission.</p>
+<p>Every branch represents valuable configuration history and must be preserved. This is a non-negotiable constitutional requirement.</p>
+<h2 id="branch-naming-convention-mandatory">Branch Naming Convention (MANDATORY)</h2>
+<p><strong>Format</strong>: <code>YYYYMMDD-HHMMSS-type-short-description</code></p>
+<h3 id="components">Components</h3>
+<ul>
+<li><code>YYYYMMDD</code>: Date in year-month-day format</li>
+<li><code>HHMMSS</code>: Time in hour-minute-second format (24-hour)</li>
+<li><code>type</code>: One of: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>chore</code></li>
+<li><code>short-description</code>: Brief kebab-case description</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">20250919-143000-feat-context-menu-integration</span></span>
+<span class="line"><span style="color:#B392F0">20250919-143515-fix-performance-optimization</span></span>
+<span class="line"><span style="color:#B392F0">20250919-144030-docs-agents-enhancement</span></span>
+<span class="line"><span style="color:#B392F0">20251113-135712-feat-automatic-commit-analysis</span></span></code></pre>
+<h2 id="standard-workflow">Standard Workflow</h2>
+<h3 id="1-create-timestamped-branch">1. Create Timestamped Branch</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Generate timestamp and create branch</span></span>
+<span class="line"><span style="color:#E1E4E8">DATETIME</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +"%Y%m%d-%H%M%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">BRANCH_NAME</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">DATETIME</span><span style="color:#9ECBFF">}-feat-your-feature-description"</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#79B8FF"> -b</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$BRANCH_NAME</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h3 id="2-make-changes">2. Make Changes</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Make your code changes</span></span>
+<span class="line"><span style="color:#6A737D"># Test thoroughly</span></span>
+<span class="line"><span style="color:#6A737D"># Ensure all local CI/CD checks pass</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span></code></pre>
+<h3 id="3-commit-changes">3. Commit Changes</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Stage changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Commit with constitutional message</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "Descriptive commit message</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">🤖 Generated with [Claude Code](https://claude.ai/code)</span></span>
+<span class="line"><span style="color:#9ECBFF">Co-Authored-By: Claude &#x3C;noreply@anthropic.com>"</span></span></code></pre>
+<h3 id="4-push-branch">4. Push Branch</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Push to remote with tracking</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#79B8FF"> -u</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$BRANCH_NAME</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h3 id="5-merge-to-main-preserving-branch">5. Merge to Main (Preserving Branch)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Switch to main</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Merge with no-fast-forward (preserves branch history)</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> merge</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$BRANCH_NAME</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF"> --no-ff</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Push main</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># ⚠️ CRITICAL: DO NOT DELETE THE BRANCH</span></span>
+<span class="line"><span style="color:#6A737D"># NEVER: git branch -d "$BRANCH_NAME"</span></span></code></pre>
+<h2 id="constitutional-branch-workflow-diagram">Constitutional Branch Workflow Diagram</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Start([New feature/fix needed]) --> CreateBranch[Create timestamped branch&#x3C;br/>YYYYMMDD-HHMMSS-type-description]</span></span>
+<span class="line"><span style="color:#E1E4E8">    CreateBranch --> LocalCICD{Run local CI/CD&#x3C;br/>./.runners-local/workflows/gh-workflow-local.sh all}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    LocalCICD -->|Fails| FixIssues[Fix validation errors]</span></span>
+<span class="line"><span style="color:#E1E4E8">    FixIssues --> LocalCICD</span></span>
+<span class="line"><span style="color:#E1E4E8">    LocalCICD -->|Success| Checkout[git checkout -b BRANCH_NAME]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Checkout --> MakeChanges[Make code changes]</span></span>
+<span class="line"><span style="color:#E1E4E8">    MakeChanges --> Validate[Validate: ghostty +show-config]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Validate --> Commit[git add .&#x3C;br/>git commit -m 'message']</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Commit --> Push[git push -u origin BRANCH_NAME]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Push --> CheckoutMain[git checkout main]</span></span>
+<span class="line"><span style="color:#E1E4E8">    CheckoutMain --> Merge[git merge BRANCH_NAME --no-ff]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Merge --> PushMain[git push origin main]</span></span>
+<span class="line"><span style="color:#E1E4E8">    PushMain --> Preserve{⚠️ NEVER DELETE BRANCH&#x3C;br/>Preservation MANDATORY}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Preserve -->|Correct| Keep[✅ Branch preserved&#x3C;br/>Complete history maintained]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Preserve -->|❌ Attempted deletion| Warn[🚨 CONSTITUTIONAL VIOLATION&#x3C;br/>Stop immediately]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Keep --> Complete([✅ Workflow complete&#x3C;br/>Branch preserved])</span></span>
+<span class="line"><span style="color:#E1E4E8">    Warn --> RollBack[Restore branch from remote]</span></span>
+<span class="line"><span style="color:#E1E4E8">    RollBack --> Complete</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    style Start fill:#e1f5fe</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Complete fill:#c8e6c9</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Preserve fill:#ffcdd2</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Warn fill:#ff5252,color:#fff</span></span>
+<span class="line"><span style="color:#E1E4E8">    style LocalCICD fill:#fff9c4</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Keep fill:#81c784</span></span></code></pre>
+<h2 id="why-branch-preservation">Why Branch Preservation?</h2>
+<h3 id="historical-context">Historical Context</h3>
+<p>Every configuration change has context:</p>
+<ul>
+<li>Why was the change made?</li>
+<li>What problem did it solve?</li>
+<li>What alternatives were considered?</li>
+</ul>
+<h3 id="debugging-benefits">Debugging Benefits</h3>
+<p>Preserved branches enable:</p>
+<ul>
+<li>Time-travel debugging</li>
+<li>Configuration archaeology</li>
+<li>Pattern recognition across changes</li>
+</ul>
+<h3 id="rollback-safety">Rollback Safety</h3>
+<p>If a change causes issues:</p>
+<ul>
+<li>Full branch history available</li>
+<li>Easy comparison between versions</li>
+<li>Safe rollback with context</li>
+</ul>
+<h3 id="learning-resource">Learning Resource</h3>
+<p>Branches serve as:</p>
+<ul>
+<li>Documentation of evolution</li>
+<li>Examples for future changes</li>
+<li>Training material for contributors</li>
+</ul>
+<h2 id="guardian-command-integration">Guardian Command Integration</h2>
+<p>Use guardian commands for constitutional compliance:</p>
+<h3 id="guardian-commit">/guardian-commit</h3>
+<p>Fully automatic constitutional Git commit:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">/guardian-commit</span></span></code></pre>
+<p>This command:</p>
+<ol>
+<li>Analyzes changes</li>
+<li>Generates commit message</li>
+<li>Creates timestamped branch</li>
+<li>Commits changes</li>
+<li>Merges to main</li>
+<li><strong>Preserves branch</strong> (never deletes)</li>
+</ol>
+<h3 id="guardian-deploy">/guardian-deploy</h3>
+<p>Complete deployment workflow:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">/guardian-deploy</span></span></code></pre>
+<p>Includes:</p>
+<ol>
+<li>Astro build</li>
+<li>Validation</li>
+<li>Constitutional commit</li>
+<li>GitHub Pages deployment</li>
+<li>Branch preservation</li>
+</ol>
+<h2 id="local-cicd-integration">Local CI/CD Integration</h2>
+<h3 id="pre-commit-validation">Pre-Commit Validation</h3>
+<p>Run before committing:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Complete workflow validation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Individual checks</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#6A737D">  # Config</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> test</span><span style="color:#6A737D">      # Tests</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> build</span><span style="color:#6A737D">     # Build</span></span></code></pre>
+<h3 id="automated-checks">Automated Checks</h3>
+<p>The workflow automatically:</p>
+<ul>
+<li>Validates Ghostty configuration</li>
+<li>Checks 2025 optimizations</li>
+<li>Tests performance</li>
+<li>Verifies documentation</li>
+<li>Ensures constitutional compliance</li>
+</ul>
+<h2 id="branch-management">Branch Management</h2>
+<h3 id="view-all-branches">View All Branches</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Local branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Remote branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -r</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># All branches with details</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -av</span></span></code></pre>
+<h3 id="search-branch-history">Search Branch History</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Find branches by pattern</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> "feat-"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Find branches by date</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> "20251113"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Search commit messages across branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> log</span><span style="color:#79B8FF"> --all</span><span style="color:#79B8FF"> --grep=</span><span style="color:#9ECBFF">"performance"</span></span></code></pre>
+<h3 id="compare-branches">Compare Branches</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># See differences between branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> diff</span><span style="color:#9ECBFF"> main..20251113-135712-feat-automatic-commit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># View commits unique to branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> log</span><span style="color:#9ECBFF"> main..20251113-135712-feat-automatic-commit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># View file changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> diff</span><span style="color:#79B8FF"> --stat</span><span style="color:#9ECBFF"> main..20251113-135712-feat-automatic-commit</span></span></code></pre>
+<h2 id="emergency-procedures">Emergency Procedures</h2>
+<h3 id="branch-accidentally-deleted">Branch Accidentally Deleted</h3>
+<p>If a branch was deleted locally:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Restore from remote</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#79B8FF"> -b</span><span style="color:#9ECBFF"> branch-name</span><span style="color:#9ECBFF"> origin/branch-name</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Or fetch all remote branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> fetch</span><span style="color:#79B8FF"> --all</span></span></code></pre>
+<h3 id="need-to-clean-up-after-permission">Need to Clean Up (After Permission)</h3>
+<p>If user explicitly requests cleanup:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Review branches first</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -av</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Delete only with explicit permission</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -d</span><span style="color:#9ECBFF"> branch-name</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#9ECBFF"> origin</span><span style="color:#79B8FF"> --delete</span><span style="color:#9ECBFF"> branch-name</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Document the deletion decision</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> log</span><span style="color:#79B8FF"> --oneline</span><span style="color:#79B8FF"> -1</span><span style="color:#F97583"> >></span><span style="color:#9ECBFF"> branch-deletion-log.txt</span></span></code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="commit-messages">Commit Messages</h3>
+<p>Good commit messages include:</p>
+<ul>
+<li>Clear summary of what changed</li>
+<li>Why the change was made</li>
+<li>Impact on system</li>
+<li>Constitutional attribution</li>
+</ul>
+<p>Example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>feat: Add MCP integration for Context7 documentation</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Integrates Context7 MCP server for up-to-date documentation</span></span>
+<span class="line"><span>access. Enables AI assistants to query latest best practices</span></span>
+<span class="line"><span>before configuration changes.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Impact: Enhanced constitutional compliance validation</span></span>
+<span class="line"><span>Dependencies: Context7 API key required</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>🤖 Generated with [Claude Code](https://claude.ai/code)</span></span>
+<span class="line"><span>Co-Authored-By: Claude &#x3C;noreply@anthropic.com></span></span></code></pre>
+<h3 id="branch-descriptions">Branch Descriptions</h3>
+<p>Add branch descriptions for context:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Add description to current branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> --edit-description</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Example description:</span></span>
+<span class="line"><span style="color:#6A737D"># Implements automatic commit analysis for guardian commands.</span></span>
+<span class="line"><span style="color:#6A737D"># Analyzes git status and diff to generate comprehensive commit</span></span>
+<span class="line"><span style="color:#6A737D"># messages with constitutional compliance.</span></span></code></pre>
+<h3 id="regular-synchronization">Regular Synchronization</h3>
+<p>Keep branches synchronized:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Update main branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> pull</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Update feature branch with main changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#9ECBFF"> feature-branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> merge</span><span style="color:#9ECBFF"> main</span><span style="color:#79B8FF"> --no-ff</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Push updates</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> feature-branch</span></span></code></pre>
+<h2 id="integration-with-github-mcp">Integration with GitHub MCP</h2>
+<p>Use GitHub MCP for constitutional operations:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Create branch via MCP</span></span>
+<span class="line"><span style="color:#B392F0">mcp__github__create_branch</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Push files via MCP</span></span>
+<span class="line"><span style="color:#B392F0">mcp__github__push_files</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Create PR via MCP (preserves branch)</span></span>
+<span class="line"><span style="color:#B392F0">mcp__github__create_pull_request</span></span></code></pre>
+<p>GitHub MCP automatically:</p>
+<ul>
+<li>Follows branch naming conventions</li>
+<li>Preserves all branches</li>
+<li>Maintains constitutional compliance</li>
+<li>Logs all operations</li>
+</ul>
+<h2 id="monitoring-and-auditing">Monitoring and Auditing</h2>
+<h3 id="review-branch-activity">Review Branch Activity</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Recent commits across all branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> log</span><span style="color:#79B8FF"> --all</span><span style="color:#79B8FF"> --oneline</span><span style="color:#79B8FF"> --graph</span><span style="color:#79B8FF"> --decorate</span><span style="color:#79B8FF"> -20</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Branches by last activity</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> for-each-ref</span><span style="color:#79B8FF"> --sort=-committerdate</span><span style="color:#9ECBFF"> refs/heads/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Statistics per branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> log</span><span style="color:#79B8FF"> --all</span><span style="color:#79B8FF"> --numstat</span><span style="color:#79B8FF"> --format=</span><span style="color:#9ECBFF">"%H"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> awk</span><span style="color:#9ECBFF"> 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</span></span></code></pre>
+<h3 id="audit-branch-preservation">Audit Branch Preservation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for deleted branches in reflog</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> reflog</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> "delete"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify remote branch count matches local</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -r</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> wc</span><span style="color:#79B8FF"> -l</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> wc</span><span style="color:#79B8FF"> -l</span></span></code></pre>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="./architecture.md">Architecture Overview</a> - System design</li>
+<li><a href="./testing.md">Testing Guide</a> - Validation procedures</li>
+<li><a href="./contributing.md">Contributing Guide</a> - Contribution workflow</li>
+<li><a href="../ai-guidelines/git-strategy.md">AI Guidelines</a> - AI assistant requirements</li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">git</span><span class="badge badge-outline">workflow</span><span class="badge badge-outline">branches</span><span class="badge badge-outline">constitutional</span><span class="badge badge-outline">strategy</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

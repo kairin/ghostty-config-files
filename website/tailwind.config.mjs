@@ -8,6 +8,7 @@ export default {
   content: [
     './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
   ],
+  darkMode: 'class', // Enable class-based dark mode
   // Theme customization moved to CSS (@theme in global.css)
   // DaisyUI plugin loaded via CSS import
 };
