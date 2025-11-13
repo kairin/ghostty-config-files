@@ -742,7 +742,7 @@ EOF
     # Check if Node.js is installed
     if ! command -v node >/dev/null 2>&1; then
         log_error "Node.js is required but not installed"
-        log_info "Install Node.js first: nvm install --lts"
+        log_info "Install Node.js first: fnm install --lts"
         return 1
     fi
 
@@ -860,7 +860,7 @@ EOF
     # Check if Node.js is installed
     if ! command -v node >/dev/null 2>&1; then
         log_error "Node.js is required but not installed"
-        log_info "Install Node.js first: nvm install --lts"
+        log_info "Install Node.js first: fnm install --lts"
         return 1
     fi
 
