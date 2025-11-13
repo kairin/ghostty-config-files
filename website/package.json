@@ -39,7 +39,7 @@
     "@astrojs/check": "^0.9.4",
     "@astrojs/sitemap": "^3.6.0",
     "@tailwindcss/vite": "^4.1.17",
-    "astro": "^5.14.4",
+    "astro": "^5.15.6",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.2"
   },
