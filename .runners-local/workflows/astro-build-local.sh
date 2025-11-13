@@ -99,17 +99,19 @@ check_prerequisites() {
 
     local errors=0
 
-    # Check Node.js version (Astro requires Node 18+)
+    # Check Node.js version (Astro requires Node 18+, project configured for 25+)
     if command -v node >/dev/null 2>&1; then
         local node_version
         node_version=$(node --version | sed 's/v//')
         local major_version
         major_version=$(echo "$node_version" | cut -d. -f1)
 
-        if [ "$major_version" -ge 18 ]; then
-            log "SUCCESS" "✅ Node.js $node_version (meets Astro requirement)"
+        if [ "$major_version" -ge 25 ]; then
+            log "SUCCESS" "✅ Node.js $node_version (optimal version for project)"
+        elif [ "$major_version" -ge 18 ]; then
+            log "WARNING" "⚠️ Node.js $node_version works but project targets 25+"
         else
-            log "ERROR" "❌ Node.js $node_version too old (Astro requires 18+)"
+            log "ERROR" "❌ Node.js $node_version too old (Astro requires 18+, project targets 25+)"
             errors=$((errors + 1))
         fi
     else

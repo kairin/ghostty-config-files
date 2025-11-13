@@ -20,7 +20,11 @@
 ### 🚨 CRITICAL: Package Management & Dependencies
 - **Ghostty**: Built from source with Zig 0.14.0 (latest stable)
 - **ZSH**: Oh My ZSH with enhanced plugins for productivity
-- **Node.js**: Latest LTS via fnm (Fast Node Manager) for AI tool integration
+- **Node.js**: Latest version (currently v25.2.0) via fnm (Fast Node Manager) for AI tool integration
+  - **Global Policy**: Always use the latest Node.js version (not LTS)
+  - **Project-level**: Individual projects define their own version requirements via `.nvmrc` or `package.json` engines field
+  - **Version Manager**: fnm (Fast Node Manager) - 40x faster than NVM with <50ms startup impact
+  - **Health Audit Note**: Latest Node.js version is intentional and should NOT be flagged as a warning
 - **Dependencies**: Smart detection and minimal installation footprint
 
 ### 🚨 CRITICAL: Installation Prerequisites
@@ -353,7 +357,9 @@ LOCAL_CI_LOGS="./.runners-local/logs/"
 - **Claude Code**: Latest CLI via npm for code assistance
 - **Gemini CLI**: Google's AI assistant with Ptyxis integration
 - **Context7 MCP**: Up-to-date documentation server for best practices synchronization
-- **Node.js**: Latest LTS via fnm (Fast Node Manager) - 40x faster than NVM with <50ms startup impact
+- **Node.js**: Latest version (v25.2.0+) via fnm for modern JavaScript features and optimal performance
+  - Global installations use latest Node.js for cutting-edge features
+  - Project-specific versions managed via fnm when required by individual projects
 
 **Local CI/CD**:
 - **GitHub CLI**: For workflow simulation and API access
@@ -819,11 +825,11 @@ gh api user/settings/billing/actions | jq '{total_minutes_used, included_minutes
 **Review**: Required before any major configuration changes
 
 ## Active Technologies
-- ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site) (001-repo-structure-refactor)
+- ZSH (Ubuntu 25.10 default shell), Node.js latest (v25.2.0+) via fnm (for Astro.build documentation site and AI CLI tools) (001-repo-structure-refactor)
 - File-based configuration and documentation (no database) (001-repo-structure-refactor)
 - ZSH (Ubuntu 25.10 default shell) + apt/dpkg (package management), snapd (snap installation), systemd (service management), jq (JSON processing), GitHub CLI (workflow integration) (005-apt-snap-migration)
 - File-based logs in `/tmp/ghostty-start-logs/` and `./.runners-local/logs/`, backup storage in `~/.config/package-migration/backups/`, JSON state files for migration tracking (005-apt-snap-migration)
 - Bash 5.x+ with YAML/Markdown processing (yq/jq), spec archive system (20251111-042534-feat-task-archive-consolidation)
 
 ## Recent Changes
-- 001-repo-structure-refactor: Added ZSH (Ubuntu 25.10 default shell), Node.js LTS (for Astro.build documentation site)
+- 001-repo-structure-refactor: Added ZSH (Ubuntu 25.10 default shell), Node.js latest (v25.2.0+) via fnm (for Astro.build documentation site and AI CLI tools)

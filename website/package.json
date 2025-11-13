@@ -31,6 +31,10 @@
     "url": "https://github.com/kairin/ghostty-config-files/issues"
   },
   "homepage": "https://github.com/kairin/ghostty-config-files#readme",
+  "engines": {
+    "node": ">=25.0.0",
+    "npm": ">=10.0.0"
+  },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/sitemap": "^3.6.0",
