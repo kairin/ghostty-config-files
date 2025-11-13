@@ -53,7 +53,7 @@ LOG_SESSION_MANIFEST="$LOG_DIR/$LOG_SESSION_ID-manifest.json" # Complete session
 REAL_HOME="${SUDO_HOME:-$HOME}"
 # fnm (Fast Node Manager) - Constitutional Compliance (AGENTS.md line 23)
 # 40x faster than NVM (<50ms vs 500ms-3s startup)
-NODE_VERSION="lts/latest"  # fnm supports LTS selection
+NODE_VERSION="25"  # Constitutional requirement: latest Node.js  # fnm supports LTS selection
 
 # Directories
 GHOSTTY_APP_DIR="$REAL_HOME/Apps/ghostty"
@@ -78,6 +78,23 @@ ptyxis_source=""
 GHOSTTY_STRATEGY=""
 PTYXIS_STRATEGY=""
 CONFIG_NEEDS_UPDATE=false
+
+# Installation state tracking (idempotent operation support)
+STATE_FILE="$SCRIPT_DIR/.installation-state.json"
+
+# Force flags for selective reinstallation
+FORCE_ALL=false
+FORCE_GHOSTTY=false
+FORCE_NODE=false
+FORCE_ZSH=false
+FORCE_PTYXIS=false
+FORCE_UV=false
+FORCE_CLAUDE=false
+FORCE_GEMINI=false
+FORCE_SPEC_KIT=false
+SKIP_CHECKS=false
+RESUME_MODE=false
+RESET_STATE=false
 
 # Ensure log directory exists
 mkdir -p "$LOG_DIR"
@@ -155,6 +172,525 @@ run_command() {
         # Original behavior - hide output
         eval "$command" >> "$LOG_FILE" 2>&1
         return $?
+    fi
+}
+
+# ============================================================================
+# STATE MANAGEMENT FUNCTIONS (Idempotent Operation Support)
+# ============================================================================
+
+# Initialize state file if it doesn't exist
+init_state_file() {
+    if [ ! -f "$STATE_FILE" ] || $RESET_STATE; then
+        log "INFO" "📝 Initializing installation state file..."
+        cat > "$STATE_FILE" <<EOF
+{
+  "created": "$(date -Iseconds)",
+  "last_run": "$(date -Iseconds)",
+  "completed_steps": [],
+  "failed_steps": [],
+  "skipped_steps": [],
+  "versions": {},
+  "flags": {
+    "initial_install": true
+  }
+}
+EOF
+        if $RESET_STATE; then
+            log "INFO" "🔄 Installation state reset - starting fresh"
+        fi
+    fi
+}
+
+# Load state file into memory
+load_state() {
+    if [ -f "$STATE_FILE" ]; then
+        # Validate JSON before loading
+        if jq empty "$STATE_FILE" >/dev/null 2>&1; then
+            return 0
+        else
+            log "WARNING" "⚠️  State file corrupted - will reinitialize"
+            rm -f "$STATE_FILE"
+            init_state_file
+        fi
+    else
+        init_state_file
+    fi
+}
+
+# Save state to file
+save_state() {
+    local timestamp=$(date -Iseconds)
+    jq --arg ts "$timestamp" '.last_run = $ts' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+}
+
+# Check if a step has been completed
+step_completed() {
+    local step_name="$1"
+    if [ ! -f "$STATE_FILE" ]; then
+        return 1
+    fi
+    jq -e --arg step "$step_name" '.completed_steps | index($step) != null' "$STATE_FILE" >/dev/null 2>&1
+}
+
+# Mark a step as completed
+mark_step_completed() {
+    local step_name="$1"
+    local version="${2:-unknown}"
+    local timestamp=$(date -Iseconds)
+
+    # Add to completed_steps array if not already there
+    jq --arg step "$step_name" \
+       --arg ver "$version" \
+       --arg ts "$timestamp" \
+       '
+       if (.completed_steps | index($step)) == null then
+         .completed_steps += [$step]
+       else
+         .
+       end |
+       .versions[$step] = $ver |
+       .last_run = $ts
+       ' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+
+    log "DEBUG" "✅ Marked '$step_name' as completed (version: $version)"
+}
+
+# Mark a step as failed
+mark_step_failed() {
+    local step_name="$1"
+    local error_msg="${2:-Unknown error}"
+    local timestamp=$(date -Iseconds)
+
+    jq --arg step "$step_name" \
+       --arg err "$error_msg" \
+       --arg ts "$timestamp" \
+       '
+       if (.failed_steps | map(.name) | index($step)) == null then
+         .failed_steps += [{name: $step, error: $err, timestamp: $ts}]
+       else
+         .
+       end |
+       .last_run = $ts
+       ' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+
+    log "DEBUG" "❌ Marked '$step_name' as failed: $error_msg"
+}
+
+# Mark a step as skipped
+mark_step_skipped() {
+    local step_name="$1"
+    local reason="${2:-User requested skip}"
+
+    jq --arg step "$step_name" \
+       --arg reason "$reason" \
+       '
+       if (.skipped_steps | map(.name) | index($step)) == null then
+         .skipped_steps += [{name: $step, reason: $reason}]
+       else
+         .
+       end
+       ' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+
+    log "DEBUG" "⏭️  Marked '$step_name' as skipped: $reason"
+}
+
+# Get installed version from state
+get_state_version() {
+    local step_name="$1"
+    if [ ! -f "$STATE_FILE" ]; then
+        echo "unknown"
+        return
+    fi
+    jq -r --arg step "$step_name" '.versions[$step] // "unknown"' "$STATE_FILE"
+}
+
+# Compare semantic versions (returns 0 if v1 >= v2, 1 otherwise)
+compare_versions() {
+    local v1="$1"
+    local v2="$2"
+
+    # Handle special cases
+    if [ "$v1" = "unknown" ] || [ "$v2" = "unknown" ]; then
+        return 1
+    fi
+
+    # Use sort -V for version comparison
+    if [ "$v1" = "$v2" ]; then
+        return 0
+    fi
+
+    local higher=$(printf "%s\n%s\n" "$v1" "$v2" | sort -V | tail -n1)
+    if [ "$higher" = "$v1" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Get installed software version from system
+get_installed_version() {
+    local software="$1"
+
+    case "$software" in
+        "ghostty")
+            if command -v ghostty >/dev/null 2>&1; then
+                ghostty --version 2>/dev/null | head -1 | awk '{print $2}' || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        "zsh")
+            if command -v zsh >/dev/null 2>&1; then
+                zsh --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        "node")
+            if command -v node >/dev/null 2>&1; then
+                node --version 2>/dev/null | sed 's/^v//' || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        "ptyxis")
+            if command -v ptyxis >/dev/null 2>&1; then
+                ptyxis --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+            elif snap list 2>/dev/null | grep -q "ptyxis"; then
+                snap list ptyxis 2>/dev/null | tail -n +2 | awk '{print $2}' || echo "unknown"
+            elif flatpak list 2>/dev/null | grep -q "app.devsuite.Ptyxis"; then
+                flatpak info app.devsuite.Ptyxis 2>/dev/null | grep "Version:" | cut -d: -f2 | xargs || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        "uv")
+            if command -v uv >/dev/null 2>&1; then
+                uv --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        "claude")
+            if command -v claude >/dev/null 2>&1; then
+                claude --version 2>/dev/null | head -1 | awk '{print $2}' || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        "gemini")
+            if command -v gemini >/dev/null 2>&1; then
+                gemini --version 2>/dev/null | awk '{print $2}' || echo "unknown"
+            else
+                echo "not_installed"
+            fi
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
+# Display installation state summary
+show_state_summary() {
+    if [ ! -f "$STATE_FILE" ]; then
+        log "INFO" "📋 No previous installation state found"
+        return
+    fi
+
+    log "INFO" "📋 Previous Installation State:"
+    log "INFO" "   Last run: $(jq -r '.last_run' "$STATE_FILE")"
+
+    local completed_count=$(jq -r '.completed_steps | length' "$STATE_FILE")
+    if [ "$completed_count" -gt 0 ]; then
+        log "INFO" "   ✅ Completed steps ($completed_count):"
+        jq -r '.completed_steps[]' "$STATE_FILE" | while read -r step; do
+            local version=$(jq -r --arg s "$step" '.versions[$s] // "unknown"' "$STATE_FILE")
+            log "INFO" "      - $step (version: $version)"
+        done
+    fi
+
+    local failed_count=$(jq -r '.failed_steps | length' "$STATE_FILE")
+    if [ "$failed_count" -gt 0 ]; then
+        log "WARNING" "   ❌ Failed steps ($failed_count):"
+        jq -r '.failed_steps[] | "      - \(.name): \(.error)"' "$STATE_FILE"
+    fi
+}
+
+# Detect all existing software installations
+detect_existing_software() {
+    log "STEP" "🔍 Detecting existing software installations..."
+
+    local software_list=("ghostty" "zsh" "node" "ptyxis" "uv" "claude" "gemini")
+    local found_count=0
+
+    for software in "${software_list[@]}"; do
+        local version=$(get_installed_version "$software")
+        if [ "$version" != "not_installed" ]; then
+            log "INFO" "   ✅ $software: $version"
+            ((found_count++))
+        else
+            log "INFO" "   ❌ $software: Not installed"
+        fi
+    done
+
+    if [ $found_count -gt 0 ]; then
+        log "INFO" "📊 Found $found_count existing installation(s)"
+    else
+        log "INFO" "📊 No existing installations found - fresh install"
+    fi
+}
+
+# ============================================================================
+# IDEMPOTENT INSTALLATION WRAPPERS
+# ============================================================================
+
+# Idempotent wrapper for install_zsh
+idempotent_install_zsh() {
+    local step_name="install_zsh"
+    local force_flag=$FORCE_ZSH
+
+    # Check if already completed and not forced
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "zsh")
+        log "INFO" "⏭️  ZSH already installed (version: $installed_version)"
+        log "INFO" "   Use --force-zsh to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    # Check for resume mode - skip if not in failed list
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing ZSH..."
+    if install_zsh; then
+        local version=$(get_installed_version "zsh")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_ghostty
+idempotent_install_ghostty() {
+    local step_name="install_ghostty"
+    local force_flag=$FORCE_GHOSTTY
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "ghostty")
+        log "INFO" "⏭️  Ghostty already installed (version: $installed_version)"
+        log "INFO" "   Use --force-ghostty to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing Ghostty..."
+    if install_ghostty; then
+        local version=$(get_installed_version "ghostty")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_ptyxis
+idempotent_install_ptyxis() {
+    local step_name="install_ptyxis"
+    local force_flag=$FORCE_PTYXIS
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "ptyxis")
+        log "INFO" "⏭️  Ptyxis already installed (version: $installed_version)"
+        log "INFO" "   Use --force-ptyxis to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing Ptyxis..."
+    if install_ptyxis; then
+        local version=$(get_installed_version "ptyxis")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_nodejs
+idempotent_install_nodejs() {
+    local step_name="install_nodejs"
+    local force_flag=$FORCE_NODE
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "node")
+        log "INFO" "⏭️  Node.js already installed (version: $installed_version)"
+        log "INFO" "   Use --force-node to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing Node.js..."
+    if install_nodejs; then
+        local version=$(get_installed_version "node")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_uv
+idempotent_install_uv() {
+    local step_name="install_uv"
+    local force_flag=$FORCE_UV
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "uv")
+        log "INFO" "⏭️  uv already installed (version: $installed_version)"
+        log "INFO" "   Use --force-uv to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing uv..."
+    if install_uv; then
+        local version=$(get_installed_version "uv")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_claude_code
+idempotent_install_claude_code() {
+    local step_name="install_claude_code"
+    local force_flag=$FORCE_CLAUDE
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "claude")
+        log "INFO" "⏭️  Claude Code already installed (version: $installed_version)"
+        log "INFO" "   Use --force-claude to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing Claude Code..."
+    if install_claude_code; then
+        local version=$(get_installed_version "claude")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_gemini_cli
+idempotent_install_gemini_cli() {
+    local step_name="install_gemini_cli"
+    local force_flag=$FORCE_GEMINI
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "gemini")
+        log "INFO" "⏭️  Gemini CLI already installed (version: $installed_version)"
+        log "INFO" "   Use --force-gemini to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing Gemini CLI..."
+    if install_gemini_cli; then
+        local version=$(get_installed_version "gemini")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_speckit
+idempotent_install_speckit() {
+    local step_name="install_speckit"
+    local force_flag=$FORCE_SPEC_KIT
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        log "INFO" "⏭️  spec-kit already installed"
+        log "INFO" "   Use --force-spec-kit to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing spec-kit..."
+    if install_speckit; then
+        mark_step_completed "$step_name" "latest"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
     fi
 }
 
@@ -1044,18 +1580,38 @@ show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  --help, -h     Show this help message"
-    echo "  --skip-deps    Skip system dependency installation"
-    echo "  --skip-node    Skip Node.js/fnm installation"
-    echo "  --skip-ai      Skip AI tools (Claude Code, Gemini CLI)"
-    echo "  --skip-ptyxis  Skip Ptyxis installation"
-    echo "  --verbose      Enable verbose logging"
-    echo "  --debug        Enable full debug mode (shows all commands and outputs)"
+    echo "  --help, -h          Show this help message"
+    echo "  --skip-deps         Skip system dependency installation"
+    echo "  --skip-node         Skip Node.js/fnm installation"
+    echo "  --skip-ai           Skip AI tools (Claude Code, Gemini CLI)"
+    echo "  --skip-ptyxis       Skip Ptyxis installation"
+    echo "  --verbose           Enable verbose logging"
+    echo "  --debug             Enable full debug mode (shows all commands and outputs)"
+    echo ""
+    echo "Idempotent Operation Flags:"
+    echo "  --force             Force reinstall everything (ignore state)"
+    echo "  --force-ghostty     Force reinstall only Ghostty"
+    echo "  --force-node        Force reinstall only Node.js/fnm"
+    echo "  --force-zsh         Force reinstall only ZSH"
+    echo "  --force-ptyxis      Force reinstall only Ptyxis"
+    echo "  --force-uv          Force reinstall only uv"
+    echo "  --force-claude      Force reinstall only Claude CLI"
+    echo "  --force-gemini      Force reinstall only Gemini CLI"
+    echo "  --force-spec-kit    Force reinstall only spec-kit"
+    echo "  --skip-checks       Skip all version checks (dangerous)"
+    echo "  --resume            Resume from last failure point"
+    echo "  --reset-state       Clear installation state and start fresh"
+    echo "  --show-state        Show current installation state and exit"
     echo ""
     echo "Examples:"
-    echo "  ./start.sh                    # Full installation"
-    echo "  ./start.sh --skip-deps       # Skip system dependencies"
-    echo "  ./start.sh --verbose         # Verbose output"
+    echo "  ./start.sh                         # Full installation (idempotent)"
+    echo "  ./start.sh --force-ghostty        # Reinstall only Ghostty"
+    echo "  ./start.sh --force-node           # Reinstall only Node.js"
+    echo "  ./start.sh --resume               # Resume from last failure"
+    echo "  ./start.sh --reset-state          # Clear state and reinstall everything"
+    echo "  ./start.sh --show-state           # Show what's already installed"
+    echo "  ./start.sh --skip-deps            # Skip system dependencies"
+    echo "  ./start.sh --verbose              # Verbose output"
     echo ""
 }
 
@@ -1075,6 +1631,12 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --help|-h)
             show_help
+            exit 0
+            ;;
+        --show-state)
+            load_state
+            show_state_summary
+            detect_existing_software
             exit 0
             ;;
         --skip-deps)
@@ -1101,6 +1663,65 @@ while [[ $# -gt 0 ]]; do
             DEBUG_MODE=true
             VERBOSE=true
             set -x  # Enable bash debug mode
+            shift
+            ;;
+        --force)
+            FORCE_ALL=true
+            FORCE_GHOSTTY=true
+            FORCE_NODE=true
+            FORCE_ZSH=true
+            FORCE_PTYXIS=true
+            FORCE_UV=true
+            FORCE_CLAUDE=true
+            FORCE_GEMINI=true
+            FORCE_SPEC_KIT=true
+            log "INFO" "🔄 Force mode enabled - will reinstall all components"
+            shift
+            ;;
+        --force-ghostty)
+            FORCE_GHOSTTY=true
+            shift
+            ;;
+        --force-node)
+            FORCE_NODE=true
+            shift
+            ;;
+        --force-zsh)
+            FORCE_ZSH=true
+            shift
+            ;;
+        --force-ptyxis)
+            FORCE_PTYXIS=true
+            shift
+            ;;
+        --force-uv)
+            FORCE_UV=true
+            shift
+            ;;
+        --force-claude)
+            FORCE_CLAUDE=true
+            shift
+            ;;
+        --force-gemini)
+            FORCE_GEMINI=true
+            shift
+            ;;
+        --force-spec-kit)
+            FORCE_SPEC_KIT=true
+            shift
+            ;;
+        --skip-checks)
+            SKIP_CHECKS=true
+            log "WARNING" "⚠️  Version checks disabled - may cause issues"
+            shift
+            ;;
+        --resume)
+            RESUME_MODE=true
+            log "INFO" "🔄 Resume mode enabled - will continue from last failure"
+            shift
+            ;;
+        --reset-state)
+            RESET_STATE=true
             shift
             ;;
         *)
@@ -3079,6 +3700,16 @@ main() {
     echo -e "${CYAN}========================================${NC}"
     echo ""
 
+    # Initialize installation state tracking (NEW - Idempotent operation support)
+    load_state
+
+    # Show previous state if this is a rerun
+    if [ -f "$STATE_FILE" ]; then
+        show_state_summary
+        detect_existing_software
+        echo ""
+    fi
+
     # Initialize comprehensive session tracking
     init_session_tracking
 
@@ -3090,6 +3721,7 @@ main() {
     log "INFO" "   📄 Logs: $LOG_DIR/$LOG_SESSION_ID.*"
     log "INFO" "   📸 Screenshots: docs/assets/screenshots/$LOG_SESSION_ID/"
     log "INFO" "   📊 Manifest: $LOG_SESSION_MANIFEST"
+    log "INFO" "   💾 State file: $STATE_FILE"
 
     # Initialize SVG screenshot system
     if [ "$ENABLE_SCREENSHOTS" = "true" ] && [ -f "$SVG_CAPTURE_SCRIPT" ]; then
@@ -3127,7 +3759,7 @@ main() {
     fi
     capture_stage_screenshot "Dependencies" "System dependencies installation completed" 3
 
-    if install_zsh; then
+    if idempotent_install_zsh; then
         track_success "ZSH & Oh My ZSH" "Shell environment configured"
     else
         track_warning "ZSH & Oh My ZSH" "Some configuration may be incomplete"
@@ -3148,7 +3780,7 @@ main() {
     fi
     capture_stage_screenshot "Zig Compiler" "Zig compiler installation and setup" 3
 
-    if install_ghostty; then
+    if idempotent_install_ghostty; then
         track_success "Ghostty Terminal" "Installed and configured"
     else
         track_warning "Ghostty Terminal" "Using existing installation"
@@ -3174,14 +3806,14 @@ main() {
     fi
     capture_stage_screenshot "Context Menu" "Right-click context menu integration" 2
 
-    if install_ptyxis; then
+    if idempotent_install_ptyxis; then
         track_success "Ptyxis Terminal" "Installed and configured"
     else
         track_warning "Ptyxis Terminal" "Using existing installation"
     fi
     capture_stage_screenshot "Ptyxis Terminal" "Secondary terminal installation for comparison" 2
 
-    if install_uv; then
+    if idempotent_install_uv; then
         track_success "UV Package Manager" "Python tools ready"
     else
         track_failure "UV Package Manager" "Installation failed"
@@ -3189,7 +3821,7 @@ main() {
     capture_stage_screenshot "UV Package Manager" "Python uv package manager setup" 2
 
     # Install spec-kit (non-blocking)
-    if install_speckit; then
+    if idempotent_install_speckit; then
         track_success "spec-kit" "Specification toolkit installed"
     else
         track_warning "spec-kit" "Installation failed - can retry manually"
@@ -3201,7 +3833,7 @@ main() {
     setup_screenshot_dependencies
 
     # Install Node.js (non-blocking)
-    if install_nodejs; then
+    if idempotent_install_nodejs; then
         track_success "Node.js/fnm" "Installed successfully"
     else
         track_failure "Node.js/fnm" "Installation failed - will be available after shell restart"
@@ -3210,7 +3842,7 @@ main() {
     capture_stage_screenshot "Node.js Setup" "Node.js and fnm installation" 2
 
     # Install Claude Code (non-blocking)
-    if install_claude_code; then
+    if idempotent_install_claude_code; then
         track_success "Claude Code" "Installed successfully"
     else
         track_failure "Claude Code" "Installation failed - can retry manually"
@@ -3219,7 +3851,7 @@ main() {
     capture_stage_screenshot "Claude Code" "Claude Code CLI installation and configuration" 2
 
     # Install Gemini CLI (non-blocking)
-    if install_gemini_cli; then
+    if idempotent_install_gemini_cli; then
         track_success "Gemini CLI" "Installed successfully"
     else
         track_failure "Gemini CLI" "Installation failed - can retry manually"
@@ -3267,11 +3899,15 @@ main() {
     # Finalize session tracking with statistics
     finalize_session_tracking
 
+    # Save final installation state (NEW - Idempotent operation support)
+    save_state
+
     log "INFO" "📊 Installation completed! Session: $LOG_SESSION_ID"
     log "INFO" "📋 Complete session data:"
     log "INFO" "   📄 Logs: ls -la $LOG_DIR/$LOG_SESSION_ID*"
     log "INFO" "   📸 Screenshots: ls -la docs/assets/screenshots/$LOG_SESSION_ID/"
     log "INFO" "   📊 Manifest: jq '.' $LOG_SESSION_MANIFEST"
+    log "INFO" "   💾 State: jq '.' $STATE_FILE"
     log "INFO" "🏷️  Terminal used: $DETECTED_TERMINAL"
 
     # Capture final completion state with all information displayed
