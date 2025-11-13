@@ -16,11 +16,11 @@ else
 fi
 
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MODULE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=scripts/common.sh
-source "${SCRIPT_DIR}/common.sh"
+source "${MODULE_DIR}/common.sh"
 # shellcheck source=scripts/install_uv.sh
-source "${SCRIPT_DIR}/install_uv.sh"
+source "${MODULE_DIR}/install_uv.sh"
 
 # ============================================================
 # CLEANUP HANDLER
