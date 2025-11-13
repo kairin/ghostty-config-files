@@ -186,9 +186,8 @@ documentations/performance/lighthouse-reports/*.json
 runner-state.json
 runner-credentials.json
 
-# Runner service metadata (machine-specific)
-local-infra/service-*.txt
-local-infra/runner-name.txt
+# Runner service metadata (machine-specific) - moved to .runners-local/
+# local-infra/ directory removed - consolidated into .runners-local/
 
 # GitHub Actions runner working directory
 actions-runner/
