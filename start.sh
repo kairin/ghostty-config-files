@@ -92,6 +92,7 @@ FORCE_PTYXIS=false
 FORCE_UV=false
 FORCE_CLAUDE=false
 FORCE_GEMINI=false
+FORCE_COPILOT=false
 FORCE_SPEC_KIT=false
 SKIP_CHECKS=false
 RESUME_MODE=false
@@ -570,6 +571,14 @@ get_installed_version() {
                 echo "not_installed"
             fi
             ;;
+        "copilot")
+            if npm list -g @github/copilot 2>/dev/null | grep -q "@github/copilot"; then
+                version_output=$(npm list -g @github/copilot 2>/dev/null | grep "@github/copilot" | sed 's/.*@github\/copilot@//' | awk '{print $1}')
+                echo "${version_output:-unknown}"
+            else
+                echo "not_installed"
+            fi
+            ;;
         *)
             echo "unknown"
             ;;
@@ -870,6 +879,37 @@ idempotent_install_gemini_cli() {
     log "INFO" "🔧 Installing Gemini CLI..."
     if install_gemini_cli; then
         local version=$(get_installed_version "gemini")
+        mark_step_completed "$step_name" "$version"
+        return 0
+    else
+        mark_step_failed "$step_name" "Installation failed"
+        return 1
+    fi
+}
+
+# Idempotent wrapper for install_copilot_cli
+idempotent_install_copilot_cli() {
+    local step_name="install_copilot_cli"
+    local force_flag=$FORCE_COPILOT
+
+    if step_completed "$step_name" && ! $force_flag && ! $SKIP_CHECKS; then
+        local installed_version=$(get_installed_version "copilot")
+        log "INFO" "⏭️  GitHub Copilot CLI already installed (version: $installed_version)"
+        log "INFO" "   Use --force-copilot to reinstall"
+        mark_step_skipped "$step_name" "Already installed"
+        return 0
+    fi
+
+    if $RESUME_MODE && ! step_completed "$step_name"; then
+        if ! jq -e --arg step "$step_name" '.failed_steps[] | select(.name == $step)' "$STATE_FILE" >/dev/null 2>&1; then
+            log "INFO" "⏭️  Skipping $step_name (not in failed list)"
+            return 0
+        fi
+    fi
+
+    log "INFO" "🔧 Installing GitHub Copilot CLI..."
+    if install_copilot_cli; then
+        local version=$(get_installed_version "copilot")
         mark_step_completed "$step_name" "$version"
         return 0
     else
@@ -1917,6 +1957,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --force-gemini)
             FORCE_GEMINI=true
+            shift
+            ;;
+        --force-copilot)
+            FORCE_COPILOT=true
             shift
             ;;
         --force-spec-kit)
@@ -3615,6 +3659,60 @@ install_gemini_cli() {
     fi
 }
 
+# Install GitHub Copilot CLI
+install_copilot_cli() {
+    if $SKIP_AI; then
+        log "INFO" "⏭️  Skipping GitHub Copilot CLI installation"
+        return 0
+    fi
+
+    draw_colored_box "$GREEN" "🤖 AI Development Tools - GitHub Copilot CLI" \
+        "Status: Checking existing installation" \
+        "Package: @github/copilot" \
+        "Requirement: Node.js and npm (via fnm)"
+
+    # Check if Node.js and npm are available
+    if ! command -v node >/dev/null 2>&1; then
+        log "ERROR" "❌ Node.js is required for Copilot CLI but not found"
+        return 1
+    fi
+
+    if ! command -v npm >/dev/null 2>&1; then
+        log "ERROR" "❌ npm is required for Copilot CLI but not found"
+        return 1
+    fi
+
+    # Install Copilot CLI globally
+    if npm list -g @github/copilot >/dev/null 2>&1; then
+        log "INFO" "🔄 Updating GitHub Copilot CLI..."
+        if npm update -g @github/copilot >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ GitHub Copilot CLI updated"
+        else
+            log "WARNING" "⚠️  Copilot CLI update may have failed"
+        fi
+    else
+        log "INFO" "📥 Installing GitHub Copilot CLI..."
+        if npm install -g @github/copilot >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ GitHub Copilot CLI installed"
+        else
+            log "ERROR" "❌ Copilot CLI installation failed"
+            return 1
+        fi
+    fi
+
+    # Verify installation
+    if command -v copilot >/dev/null 2>&1; then
+        local version=$(copilot --version 2>/dev/null | head -1 || echo "unknown")
+        draw_colored_box "$GREEN" "GitHub Copilot CLI Installation Complete" \
+            "✅ Copilot CLI installed" \
+            "✅ Version: ${version}" \
+            "✅ AI code suggestions ready" \
+            "📝 Command: copilot"
+    else
+        log "WARNING" "⚠️  Copilot CLI installed but not in PATH (may need shell restart)"
+    fi
+}
+
 # Setup daily automated updates
 setup_daily_updates() {
     log "STEP" "🔄 Setting up daily automated updates..."
@@ -3872,8 +3970,16 @@ verify_installation() {
         else
             log "WARNING" "⚠️  Gemini CLI not found or not functioning (may need shell restart)"
         fi
+
+        # Check GitHub Copilot CLI
+        if npm list -g @github/copilot 2>/dev/null | grep -q "@github/copilot"; then
+            local copilot_version=$(npm list -g @github/copilot 2>/dev/null | grep @github/copilot | sed 's/.*@//' | awk '{print $1}')
+            log "SUCCESS" "✅ GitHub Copilot CLI: $copilot_version"
+        else
+            log "WARNING" "⚠️  GitHub Copilot CLI not installed"
+        fi
     fi
-    
+
     return $status
 }
 
@@ -3890,7 +3996,7 @@ show_final_instructions() {
         echo "✅ Ptyxis terminal with Gemini CLI integration"
     fi
     if ! $SKIP_AI; then
-        echo "✅ Claude Code CLI and Gemini CLI"
+        echo "✅ Claude Code CLI, Gemini CLI, and GitHub Copilot CLI"
     fi
     echo "✅ Complete screenshot and documentation system"
     echo ""
@@ -4196,6 +4302,15 @@ main() {
         log "INFO" "ℹ️  Continuing with remaining installations..."
     fi
     capture_stage_screenshot "Gemini CLI" "Google Gemini CLI setup and integration" 2
+
+    # Install GitHub Copilot CLI (non-blocking)
+    if idempotent_install_copilot_cli; then
+        track_success "GitHub Copilot CLI" "Installed successfully"
+    else
+        track_failure "GitHub Copilot CLI" "Installation failed - can retry manually"
+        log "INFO" "ℹ️  Continuing with remaining installations..."
+    fi
+    capture_stage_screenshot "GitHub Copilot" "GitHub Copilot CLI setup and integration" 2
 
     # Setup daily automated updates (non-blocking)
     if setup_daily_updates; then
