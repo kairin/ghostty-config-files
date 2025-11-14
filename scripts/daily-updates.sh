@@ -564,37 +564,67 @@ update_copilot_cli() {
         return 0
     fi
 
-    # Check if @github/copilot is installed via npm
-    if ! npm list -g @github/copilot &>/dev/null; then
+    # Check if Copilot is installed (either as npm package or gh extension)
+    local copilot_npm_installed=false
+    local copilot_gh_installed=false
+
+    # Check npm installation
+    if npm list -g @github/copilot &>/dev/null; then
+        copilot_npm_installed=true
+    fi
+
+    # Check gh extension installation
+    if software_exists "gh" && gh extension list 2>/dev/null | grep -q "github/gh-copilot"; then
+        copilot_gh_installed=true
+    fi
+
+    if [[ "$copilot_npm_installed" == false ]] && [[ "$copilot_gh_installed" == false ]]; then
         log_skip "GitHub Copilot CLI not installed"
-        log_info "To install: npm install -g @github/copilot"
-        log_info "Note: gh copilot extension was deprecated in Sept 2025"
+        log_info "To install (npm): npm install -g @github/copilot"
+        log_info "To install (gh): gh extension install github/gh-copilot"
+        log_info "Note: gh extension method was deprecated in Sept 2024"
         track_update_result "Copilot CLI" "skip"
         return 0
     fi
 
-    log_info "Found GitHub Copilot CLI installed"
+    if [[ "$copilot_npm_installed" == true ]]; then
+        log_info "Found GitHub Copilot CLI installed via npm"
+    else
+        log_info "Found GitHub Copilot CLI installed as gh extension"
+    fi
 
-    # Get current version
-    local current_version=$(npm list -g @github/copilot --depth=0 2>/dev/null | grep @github/copilot | sed 's/.*@//' || echo 'unknown')
-    log_info "Current Copilot version: $current_version"
+    # Handle updates based on installation method
+    if [[ "$copilot_npm_installed" == true ]]; then
+        # Get current version
+        local current_version=$(npm list -g @github/copilot --depth=0 2>/dev/null | grep @github/copilot | sed 's/.*@//' || echo 'unknown')
+        log_info "Current Copilot version: $current_version"
 
-    log_info "Updating GitHub Copilot CLI..."
-    if npm update -g @github/copilot 2>&1 | tee -a "$LOG_FILE"; then
-        local new_version=$(npm list -g @github/copilot --depth=0 2>/dev/null | grep @github/copilot | sed 's/.*@//' || echo 'unknown')
+        log_info "Updating GitHub Copilot CLI via npm..."
+        if npm update -g @github/copilot 2>&1 | tee -a "$LOG_FILE"; then
+            local new_version=$(npm list -g @github/copilot --depth=0 2>/dev/null | grep @github/copilot | sed 's/.*@//' || echo 'unknown')
 
-        if [[ "$current_version" == "$new_version" ]] && [[ "$FORCE_UPDATE" != true ]]; then
-            log_info "Copilot CLI already at latest version"
+            if [[ "$current_version" == "$new_version" ]] && [[ "$FORCE_UPDATE" != true ]]; then
+                log_info "Copilot CLI already at latest version"
+                track_update_result "Copilot CLI" "latest"
+            else
+                log_success "Copilot CLI updated"
+                log_info "New version: $new_version"
+                track_update_result "Copilot CLI" "success"
+            fi
+        else
+            log_error "Copilot CLI update failed"
+            track_update_result "Copilot CLI" "fail"
+            return 1
+        fi
+    elif [[ "$copilot_gh_installed" == true ]]; then
+        log_info "Checking for Copilot gh extension updates..."
+        if gh extension upgrade github/gh-copilot 2>&1 | tee -a "$LOG_FILE"; then
+            log_success "Copilot CLI extension update check completed"
             track_update_result "Copilot CLI" "latest"
         else
-            log_success "Copilot CLI updated"
-            log_info "New version: $new_version"
-            track_update_result "Copilot CLI" "success"
+            log_warning "Copilot CLI extension update check completed with warnings"
+            track_update_result "Copilot CLI" "latest"
         fi
-    else
-        log_error "Copilot CLI update failed"
-        track_update_result "Copilot CLI" "fail"
-        return 1
     fi
 }
 
