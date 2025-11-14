@@ -1,0 +1,432 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.6"><title>Local CI/CD Pipeline | Ghostty Configuration Files</title><meta name="description" content="Zero-cost local CI/CD with complete GitHub Actions simulation and validation"><!-- OpenGraph --><meta property="og:title" content="Local CI/CD Pipeline"><meta property="og:description" content="Zero-cost local CI/CD with complete GitHub Actions simulation and validation"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.C32sr9Om.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"> <!-- Navigation --> <nav class="navbar bg-gray-50 dark:bg-slate-800 shadow-lg border-b border-gray-200 dark:border-gray-700"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-dark-primary">
+Ghostty Config Files
+</a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation" class="hover:text-blue-600 dark:hover:text-dark-primary">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles" class="hover:text-blue-600 dark:hover:text-dark-primary">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture" class="hover:text-blue-600 dark:hover:text-dark-primary">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-dark-primary">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 md:px-8 py-12 max-w-7xl"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-13T00:00:00.000Z"> November 13, 2025 </time> <span> by System Documentation</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-readable mx-auto text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Local CI/CD Pipeline</li> </ul> </div> <div class="badge mb-4 badge-error"> ADVANCED </div><h1>Local CI/CD Pipeline</h1> <p class="text-xl text-base-content/70 mb-8">Zero-cost local CI/CD with complete GitHub Actions simulation and validation</p><div class="alert alert-info mb-8"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg> <div> <h3 class="font-bold">Technologies</h3> <div class="text-sm flex gap-2 flex-wrap"> <span class="badge badge-sm">bash</span><span class="badge badge-sm">github-cli</span><span class="badge badge-sm">github-actions</span><span class="badge badge-sm">astro</span> </div> </div> </div><h1 id="local-cicd-pipeline">Local CI/CD Pipeline</h1>
+<p>Complete workflow validation locally before GitHub deployment. Zero GitHub Actions costs.</p>
+<h2 id="overview">Overview</h2>
+<p>This project implements a comprehensive local CI/CD pipeline that simulates GitHub Actions workflows locally. All testing, validation, and deployment verification happens on your machine before pushing to GitHub.</p>
+<h2 id="zero-cost-strategy">Zero-Cost Strategy</h2>
+<h3 id="why-local-cicd">Why Local CI/CD?</h3>
+<p><strong>Cost Savings</strong>:</p>
+<ul>
+<li>GitHub Actions: 2,000 minutes/month free</li>
+<li>Each workflow run: 5-10 minutes</li>
+<li>Monthly limit: ~200-400 runs</li>
+<li>Local CI/CD: <strong>Unlimited runs, $0 cost</strong></li>
+</ul>
+<p><strong>Speed Benefits</strong>:</p>
+<ul>
+<li>Local: 2-3 minutes per full workflow</li>
+<li>GitHub: 5-10 minutes + queue time</li>
+<li>Feedback: Immediate vs. waiting for cloud</li>
+</ul>
+<p><strong>Development Benefits</strong>:</p>
+<ul>
+<li>Iterate faster</li>
+<li>Debug locally</li>
+<li>No commit pollution</li>
+<li>Complete control</li>
+</ul>
+<h2 id="pipeline-architecture">Pipeline Architecture</h2>
+<h3 id="7-stage-local-pipeline">7-Stage Local Pipeline</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>01: Validate Config     → Ghostty configuration validation</span></span>
+<span class="line"><span>02: Test Performance    → 2025 optimization verification</span></span>
+<span class="line"><span>03: Check Compatibility → Cross-system compatibility</span></span>
+<span class="line"><span>04: Simulate Workflows  → GitHub Actions local simulation</span></span>
+<span class="line"><span>05: Generate Docs       → Documentation update validation</span></span>
+<span class="line"><span>06: Package Release     → Release artifact preparation</span></span>
+<span class="line"><span>07: Deploy Pages        → GitHub Pages local build and test</span></span></code></pre>
+<h3 id="pipeline-flow">Pipeline Flow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    Start([Code change]) --> Stage1[01: Validate Config&#x3C;br/>ghostty +show-config]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage1 -->|Pass| Stage2[02: Test Performance&#x3C;br/>CGroup, shell integration]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage1 -->|Fail| Fix1[Fix configuration]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix1 --> Stage1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage2 -->|Pass| Stage3[03: Check Compatibility&#x3C;br/>Cross-system validation]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage2 -->|Fail| Fix2[Fix performance issues]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix2 --> Stage2</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage3 -->|Pass| Stage4[04: Simulate Workflows&#x3C;br/>GitHub Actions local]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage3 -->|Fail| Fix3[Fix compatibility]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix3 --> Stage3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage4 -->|Pass| Stage5[05: Generate Docs&#x3C;br/>Update &#x26; validate]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage4 -->|Fail| Fix4[Fix workflow issues]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix4 --> Stage4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage5 -->|Pass| Stage6[06: Package Release&#x3C;br/>Prepare artifacts]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage5 -->|Fail| Fix5[Fix documentation]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix5 --> Stage5</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage6 -->|Pass| Stage7[07: Deploy Pages&#x3C;br/>Local build &#x26; test]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage6 -->|Fail| Fix6[Fix packaging]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix6 --> Stage6</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Stage7 -->|Pass| Deploy{Zero GitHub&#x3C;br/>Actions cost?}</span></span>
+<span class="line"><span style="color:#E1E4E8">    Stage7 -->|Fail| Fix7[Fix deployment]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Fix7 --> Stage7</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    Deploy -->|✅ Yes| Complete([✅ DEPLOY TO GITHUB])</span></span>
+<span class="line"><span style="color:#E1E4E8">    Deploy -->|❌ No| Warn[🚨 STOP: Consuming Actions minutes]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Warn --> Review[Review .runners-local/logs/]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Review --> Fix7</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    style Start fill:#e1f5fe</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Complete fill:#c8e6c9</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Warn fill:#ff5252,color:#fff</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Deploy fill:#fff9c4</span></span></code></pre>
+<h2 id="core-scripts">Core Scripts</h2>
+<h3 id="gh-workflow-localsh">gh-workflow-local.sh</h3>
+<p>Main workflow orchestration script.</p>
+<p><strong>Location</strong>: <code>.runners-local/workflows/gh-workflow-local.sh</code></p>
+<p><strong>Commands</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run complete workflow</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Individual stages</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#6A737D">    # Config validation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> test</span><span style="color:#6A737D">       # Performance testing</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> build</span><span style="color:#6A737D">      # Build simulation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> deploy</span><span style="color:#6A737D">     # Deployment simulation</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Monitoring</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> status</span><span style="color:#6A737D">     # Workflow status</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> billing</span><span style="color:#6A737D">    # Actions usage</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Help</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#79B8FF"> --help</span></span></code></pre>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Robust error handling (<code>set -euo pipefail</code>)</li>
+<li>Structured logging with timestamps</li>
+<li>Color-coded output</li>
+<li>Performance timing</li>
+<li>Automatic cleanup</li>
+<li>Constitutional compliance checks</li>
+</ul>
+<h3 id="performance-monitorsh">performance-monitor.sh</h3>
+<p>Monitors Ghostty terminal performance and validates 2025 optimizations.</p>
+<p><strong>Location</strong>: <code>.runners-local/workflows/performance-monitor.sh</code></p>
+<p><strong>Commands</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run performance test</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --test</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Establish baseline</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --baseline</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Generate report</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --weekly-report</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Help</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --help</span></span></code></pre>
+<p><strong>Metrics Collected</strong>:</p>
+<ul>
+<li>Startup time measurement</li>
+<li>Configuration load time</li>
+<li>CGroup optimization status</li>
+<li>Shell integration status</li>
+<li>System information</li>
+</ul>
+<p><strong>Output</strong>: <code>.runners-local/logs/performance-*.json</code></p>
+<h3 id="gh-pages-setupsh">gh-pages-setup.sh</h3>
+<p>Configures zero-cost GitHub Pages deployment with Astro.build.</p>
+<p><strong>Location</strong>: <code>.runners-local/workflows/gh-pages-setup.sh</code></p>
+<p><strong>Commands</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Complete setup</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-pages-setup.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Individual operations</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-pages-setup.sh</span><span style="color:#79B8FF"> --verify</span><span style="color:#6A737D">      # Verify build</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-pages-setup.sh</span><span style="color:#79B8FF"> --build</span><span style="color:#6A737D">       # Run build</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-pages-setup.sh</span><span style="color:#79B8FF"> --configure</span><span style="color:#6A737D">   # Configure Pages</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Help</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-pages-setup.sh</span><span style="color:#79B8FF"> --help</span></span></code></pre>
+<p><strong>Critical Validations</strong>:</p>
+<ul>
+<li><code>.nojekyll</code> file existence (REQUIRED)</li>
+<li>Astro build output verification</li>
+<li>Asset directory validation</li>
+<li>GitHub Pages configuration</li>
+<li>Manual setup fallback</li>
+</ul>
+<h2 id="stage-details">Stage Details</h2>
+<h3 id="stage-1-validate-config">Stage 1: Validate Config</h3>
+<p><strong>Purpose</strong>: Ensure Ghostty configuration is valid.</p>
+<p><strong>Check</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#9ECBFF"> +show-config</span></span></code></pre>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>Configuration parses without errors</li>
+<li>All required settings present</li>
+<li>2025 optimizations enabled</li>
+</ul>
+<p><strong>Failure Actions</strong>:</p>
+<ul>
+<li>Display configuration errors</li>
+<li>Show problematic settings</li>
+<li>Provide fix suggestions</li>
+</ul>
+<h3 id="stage-2-test-performance">Stage 2: Test Performance</h3>
+<p><strong>Purpose</strong>: Verify 2025 performance optimizations.</p>
+<p><strong>Checks</strong>:</p>
+<ul>
+<li>CGroup single-instance enabled</li>
+<li>Shell integration active</li>
+<li>Memory management configured</li>
+<li>Theme switching functional</li>
+</ul>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>All optimizations present</li>
+<li>Performance baseline met</li>
+<li>No degradation detected</li>
+</ul>
+<h3 id="stage-3-check-compatibility">Stage 3: Check Compatibility</h3>
+<p><strong>Purpose</strong>: Ensure cross-system compatibility.</p>
+<p><strong>Checks</strong>:</p>
+<ul>
+<li>Ubuntu version compatibility</li>
+<li>Package dependencies available</li>
+<li>File system structure valid</li>
+<li>Permissions correct</li>
+</ul>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>Compatible with Ubuntu 25.10+</li>
+<li>All dependencies installable</li>
+<li>Directory structure valid</li>
+</ul>
+<h3 id="stage-4-simulate-workflows">Stage 4: Simulate Workflows</h3>
+<p><strong>Purpose</strong>: Test GitHub Actions workflows locally.</p>
+<p><strong>Simulations</strong>:</p>
+<ul>
+<li>Build workflow</li>
+<li>Test workflow</li>
+<li>Deploy workflow</li>
+<li>Release workflow</li>
+</ul>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>All workflows execute successfully</li>
+<li>No GitHub Actions consumption</li>
+<li>Full local validation</li>
+</ul>
+<h3 id="stage-5-generate-docs">Stage 5: Generate Docs</h3>
+<p><strong>Purpose</strong>: Update and validate documentation.</p>
+<p><strong>Checks</strong>:</p>
+<ul>
+<li>Markdown syntax valid</li>
+<li>Links functional</li>
+<li>Images accessible</li>
+<li>Astro build succeeds</li>
+</ul>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>Documentation builds</li>
+<li>No broken links</li>
+<li>Assets properly referenced</li>
+</ul>
+<h3 id="stage-6-package-release">Stage 6: Package Release</h3>
+<p><strong>Purpose</strong>: Prepare release artifacts.</p>
+<p><strong>Artifacts</strong>:</p>
+<ul>
+<li>Configuration files</li>
+<li>Installation scripts</li>
+<li>Documentation</li>
+<li>Change logs</li>
+</ul>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>All artifacts present</li>
+<li>Proper versioning</li>
+<li>Complete metadata</li>
+</ul>
+<h3 id="stage-7-deploy-pages">Stage 7: Deploy Pages</h3>
+<p><strong>Purpose</strong>: Verify GitHub Pages deployment.</p>
+<p><strong>Critical Check</strong>: <code>.nojekyll</code> file presence</p>
+<p><strong>Validations</strong>:</p>
+<ul>
+<li>Astro build completes</li>
+<li><code>docs/index.html</code> exists</li>
+<li><code>docs/_astro/</code> directory present</li>
+<li><code>.nojekyll</code> file exists</li>
+<li>Assets loadable</li>
+</ul>
+<p><strong>Success Criteria</strong>:</p>
+<ul>
+<li>Build output valid</li>
+<li>All assets present</li>
+<li>Ready for deployment</li>
+</ul>
+<h2 id="logging-system">Logging System</h2>
+<h3 id="log-locations">Log Locations</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>.runners-local/logs/</span></span>
+<span class="line"><span>├── workflows/           # Workflow execution logs</span></span>
+<span class="line"><span>├── builds/             # Build logs</span></span>
+<span class="line"><span>├── tests/              # Test logs</span></span>
+<span class="line"><span>├── performance/        # Performance metrics</span></span>
+<span class="line"><span>└── errors/             # Error-only logs</span></span></code></pre>
+<h3 id="log-format">Log Format</h3>
+<p><strong>Structured JSON</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-13T13:57:12Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "stage"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"validate"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"success"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "duration_ms"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1250</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "details"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "config_valid"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "optimizations_enabled"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Human-Readable</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>[2025-11-13 13:57:12] ✅ Stage 1: Validate Config - SUCCESS (1.25s)</span></span>
+<span class="line"><span>  - Configuration valid</span></span>
+<span class="line"><span>  - 2025 optimizations enabled</span></span>
+<span class="line"><span>  - CGroup single-instance active</span></span></code></pre>
+<h3 id="view-logs">View Logs</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Latest workflow log</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> .runners-local/logs/workflows/latest.log</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Performance metrics</span></span>
+<span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.'</span><span style="color:#9ECBFF"> .runners-local/logs/performance/latest.json</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Errors only</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> .runners-local/logs/errors/latest.log</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># All logs for date</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> .runners-local/logs/workflows/2025-11-13</span><span style="color:#79B8FF">*</span></span></code></pre>
+<h2 id="cost-monitoring">Cost Monitoring</h2>
+<h3 id="check-github-actions-usage">Check GitHub Actions Usage</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Via local script</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> billing</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Via GitHub CLI directly</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> api</span><span style="color:#9ECBFF"> user/settings/billing/actions</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#9ECBFF"> '{</span></span>
+<span class="line"><span style="color:#9ECBFF">  total_minutes_used,</span></span>
+<span class="line"><span style="color:#9ECBFF">  included_minutes,</span></span>
+<span class="line"><span style="color:#9ECBFF">  total_paid_minutes_used</span></span>
+<span class="line"><span style="color:#9ECBFF">}'</span></span></code></pre>
+<h3 id="workflow-run-history">Workflow Run History</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Recent runs</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> run</span><span style="color:#9ECBFF"> list</span><span style="color:#79B8FF"> --limit</span><span style="color:#79B8FF"> 10</span><span style="color:#79B8FF"> --json</span><span style="color:#9ECBFF"> status,conclusion,name,createdAt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Failed runs only</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> run</span><span style="color:#9ECBFF"> list</span><span style="color:#79B8FF"> --status</span><span style="color:#9ECBFF"> failure</span><span style="color:#79B8FF"> --limit</span><span style="color:#79B8FF"> 5</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Today's runs</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> run</span><span style="color:#9ECBFF"> list</span><span style="color:#79B8FF"> --created</span><span style="color:#E1E4E8"> $(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%Y-%m-%d</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="zero-cost-verification">Zero-Cost Verification</h3>
+<p><strong>Goal</strong>: 0 paid minutes used</p>
+<p><strong>Monitor</strong>:</p>
+<ul>
+<li><code>total_paid_minutes_used</code> should be 0</li>
+<li><code>total_minutes_used</code> under free tier</li>
+<li>All CI/CD happens locally</li>
+</ul>
+<h2 id="integration-with-guardian-commands">Integration with Guardian Commands</h2>
+<p>Local CI/CD integrates with guardian commands:</p>
+<h3 id="guardian-deploy">/guardian-deploy</h3>
+<p>Complete deployment workflow:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">/guardian-deploy</span></span></code></pre>
+<p>Executes:</p>
+<ol>
+<li>Full local CI/CD pipeline (all 7 stages)</li>
+<li>Astro build and validation</li>
+<li>Constitutional commit</li>
+<li>GitHub Pages deployment</li>
+<li>Zero GitHub Actions cost</li>
+</ol>
+<h3 id="guardian-health">/guardian-health</h3>
+<p>Comprehensive health check:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">/guardian-health</span></span></code></pre>
+<p>Validates:</p>
+<ul>
+<li>Local CI/CD infrastructure</li>
+<li>GitHub MCP integration</li>
+<li>Context7 MCP availability</li>
+<li>Git repository status</li>
+<li>Documentation health</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="pipeline-failures">Pipeline Failures</h3>
+<p><strong>Stage 1 Fails</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check Ghostty config</span></span>
+<span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#9ECBFF"> +show-config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># View errors</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> .runners-local/logs/errors/validate.log</span></span></code></pre>
+<p><strong>Stage 2 Fails</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run performance test</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --test</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check metrics</span></span>
+<span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.'</span><span style="color:#9ECBFF"> .runners-local/logs/performance/latest.json</span></span></code></pre>
+<p><strong>Stage 7 Fails</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verify .nojekyll</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> docs/.nojekyll</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Rebuild if missing</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-pages-setup.sh</span><span style="color:#79B8FF"> --build</span></span></code></pre>
+<h3 id="performance-issues">Performance Issues</h3>
+<p><strong>Slow pipeline</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check system resources</span></span>
+<span class="line"><span style="color:#B392F0">htop</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Review timing logs</span></span>
+<span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.duration_ms'</span><span style="color:#9ECBFF"> .runners-local/logs/workflows/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span></span></code></pre>
+<p><strong>Disk space</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check log directory size</span></span>
+<span class="line"><span style="color:#B392F0">du</span><span style="color:#79B8FF"> -sh</span><span style="color:#9ECBFF"> .runners-local/logs/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Clean old logs (optional)</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> .runners-local/logs/</span><span style="color:#79B8FF"> -mtime</span><span style="color:#9ECBFF"> +30</span><span style="color:#79B8FF"> -delete</span></span></code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="pre-commit-workflow">Pre-Commit Workflow</h3>
+<p>Always run before committing:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Complete validation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Review logs</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> .runners-local/logs/workflows/latest.log</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Commit only if successful</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "Your message"</span></span></code></pre>
+<h3 id="regular-monitoring">Regular Monitoring</h3>
+<p>Weekly checks:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Performance baseline</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --weekly-report</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># GitHub Actions usage</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> billing</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Pipeline health</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> status</span></span></code></pre>
+<h3 id="cicd-maintenance">CI/CD Maintenance</h3>
+<p>Monthly:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Update workflow scripts</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> pull</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Clean old logs</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> .runners-local/logs/</span><span style="color:#79B8FF"> -mtime</span><span style="color:#9ECBFF"> +30</span><span style="color:#79B8FF"> -delete</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify infrastructure</span></span>
+<span class="line"><span style="color:#B392F0">/guardian-health</span></span></code></pre>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="./architecture.md">Architecture Overview</a> - System design</li>
+<li><a href="./git-workflow.md">Git Workflow</a> - Branch strategy</li>
+<li><a href="./testing.md">Testing Guide</a> - Test procedures</li>
+<li><a href="./contributing.md">Contributing Guide</a> - Contribution process</li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">cicd</span><span class="badge badge-outline">github-actions</span><span class="badge badge-outline">testing</span><span class="badge badge-outline">validation</span><span class="badge badge-outline">automation</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>
