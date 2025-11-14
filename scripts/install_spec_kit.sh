@@ -62,6 +62,38 @@ fi
 : "${SPECKIT_UV_TOOLS_BIN:=${HOME}/.local/share/uv/tools/specify-cli/bin/${SPECKIT_COMMAND}}"
 
 # ============================================================
+# UTILITY FUNCTIONS
+# ============================================================
+
+# Function: _get_spec_kit_version
+# Purpose: Get the current spec-kit version from uv tool list
+# Args: None
+# Returns: Version string (e.g., "v0.0.20") or "unknown"
+# Note: The 'specify' command does not support --version flag,
+#       so we extract version from 'uv tool list' output
+_get_spec_kit_version() {
+    local version
+
+    # Check if uv is available
+    if ! command -v uv >/dev/null 2>&1; then
+        echo "unknown"
+        return 1
+    fi
+
+    # Get version from uv tool list
+    # Output format: "specify-cli v0.0.20"
+    version=$(uv tool list 2>/dev/null | grep "^specify-cli" | awk '{print $2}' || echo "")
+
+    if [[ -n "$version" ]]; then
+        echo "$version"
+        return 0
+    else
+        echo "unknown"
+        return 1
+    fi
+}
+
+# ============================================================
 # PUBLIC FUNCTIONS (Module API)
 # ============================================================
 
@@ -104,13 +136,13 @@ install_spec_kit() {
         # Verify installation (check UV tools location directly)
         if [[ -x "$SPECKIT_UV_TOOLS_BIN" ]]; then
             local version
-            version=$("$SPECKIT_UV_TOOLS_BIN" --version 2>/dev/null || echo "unknown")
+            version=$(_get_spec_kit_version)
             log_info "✅ spec-kit installed successfully: $version"
             log_info "📍 Location: $SPECKIT_UV_TOOLS_BIN"
             log_info "💡 Will be available as 'specify' after shell restart"
         elif command -v "$SPECKIT_COMMAND" >/dev/null 2>&1; then
             local version
-            version=$("$SPECKIT_COMMAND" --version 2>/dev/null || echo "unknown")
+            version=$(_get_spec_kit_version)
             log_info "✅ spec-kit installed successfully: $version (in current PATH)"
         else
             log_error "❌ spec-kit installation verification failed"
@@ -150,13 +182,13 @@ update_spec_kit() {
 
     # Get current version
     local current_version
-    current_version=$("$SPECKIT_COMMAND" --version 2>/dev/null | awk '{print $NF}' || echo "unknown")
+    current_version=$(_get_spec_kit_version)
     log_info "Current spec-kit version: $current_version"
 
     # Update using uv tool upgrade
     if update_uv_tool "$SPECKIT_PACKAGE"; then
         local new_version
-        new_version=$("$SPECKIT_COMMAND" --version 2>/dev/null | awk '{print $NF}' || echo "unknown")
+        new_version=$(_get_spec_kit_version)
 
         if [[ "$new_version" != "$current_version" ]]; then
             log_info "spec-kit updated from $current_version to $new_version"
@@ -259,7 +291,7 @@ _check_spec_kit_update() {
     log_info "Checking for spec-kit updates..."
 
     local current_version
-    current_version=$("$SPECKIT_COMMAND" --version 2>/dev/null | awk '{print $NF}' || echo "unknown")
+    current_version=$(_get_spec_kit_version)
 
     log_info "Current spec-kit version: $current_version"
     log_info "To update spec-kit, run: uv tool upgrade $SPECKIT_PACKAGE"

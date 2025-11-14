@@ -7,6 +7,10 @@
 
 set -euo pipefail
 
+# Prevent multiple sourcing of this module (idempotent sourcing)
+[[ -n "${COMMON_SH_LOADED:-}" ]] && return 0
+readonly COMMON_SH_LOADED=1
+
 # Module-level guard: Allow sourcing for testing
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
     SOURCED_FOR_TESTING=1
