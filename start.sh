@@ -203,7 +203,12 @@ draw_box() {
     printf "╗${NC}\n"
 
     # Draw title with padding and vertical borders
-    printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" "$title"
+    local title_display=$(get_string_width "$title")
+    local title_padding=$((content_width - title_display))
+    printf "${CYAN}║${NC}    "
+    echo -ne "$title"
+    printf '%*s' "$((title_padding + 4))" ''
+    printf "${CYAN}║${NC}\n"
 
     # Draw middle separator (╠══...══╣)
     printf "${CYAN}╠"
@@ -211,15 +216,24 @@ draw_box() {
     printf "╣${NC}\n"
 
     # Draw empty line with borders
-    printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" ""
+    printf "${CYAN}║${NC}    "
+    printf '%*s' "$((content_width + 4))" ''
+    printf "${CYAN}║${NC}\n"
 
     # Draw content with padding and vertical borders
     for line in "${content[@]}"; do
-        printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" "$line"
+        local line_display=$(get_string_width "$line")
+        local line_padding=$((content_width - line_display))
+        printf "${CYAN}║${NC}    "
+        echo -ne "$line"
+        printf '%*s' "$((line_padding + 4))" ''
+        printf "${CYAN}║${NC}\n"
     done
 
     # Draw empty line with borders
-    printf "${CYAN}║${NC}    %-${content_width}s    ${CYAN}║${NC}\n" ""
+    printf "${CYAN}║${NC}    "
+    printf '%*s' "$((content_width + 4))" ''
+    printf "${CYAN}║${NC}\n"
 
     # Draw bottom border (╚══...══╝)
     printf "${CYAN}╚"
@@ -254,7 +268,12 @@ draw_colored_box() {
     printf "╗${NC}\n"
 
     # Draw title with padding and vertical borders
-    printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" "$title"
+    local title_display=$(get_string_width "$title")
+    local title_padding=$((content_width - title_display))
+    printf "${color}║${NC}    "
+    echo -ne "$title"
+    printf '%*s' "$((title_padding + 4))" ''
+    printf "${color}║${NC}\n"
 
     # Draw middle separator (╠══...══╣)
     printf "${color}╠"
@@ -262,15 +281,24 @@ draw_colored_box() {
     printf "╣${NC}\n"
 
     # Draw empty line with borders
-    printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" ""
+    printf "${color}║${NC}    "
+    printf '%*s' "$((content_width + 4))" ''
+    printf "${color}║${NC}\n"
 
     # Draw content with padding and vertical borders
     for line in "${content[@]}"; do
-        printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" "$line"
+        local line_display=$(get_string_width "$line")
+        local line_padding=$((content_width - line_display))
+        printf "${color}║${NC}    "
+        echo -ne "$line"
+        printf '%*s' "$((line_padding + 4))" ''
+        printf "${color}║${NC}\n"
     done
 
     # Draw empty line with borders
-    printf "${color}║${NC}    %-${content_width}s    ${color}║${NC}\n" ""
+    printf "${color}║${NC}    "
+    printf '%*s' "$((content_width + 4))" ''
+    printf "${color}║${NC}\n"
 
     # Draw bottom border (╚══...══╝)
     printf "${color}╚"
@@ -291,7 +319,12 @@ draw_header() {
     printf "╗${NC}\n"
 
     # Draw title with padding and vertical borders
-    printf "${CYAN}║${NC}    %-${title_width}s    ${CYAN}║${NC}\n" "$title"
+    local title_display=$(get_string_width "$title")
+    local title_padding=$((title_width - title_display))
+    printf "${CYAN}║${NC}    "
+    echo -ne "$title"
+    printf '%*s' "$((title_padding + 4))" ''
+    printf "${CYAN}║${NC}\n"
 
     # Draw bottom border (╚══...══╝)
     printf "${CYAN}╚"
@@ -2356,7 +2389,7 @@ pre_auth_sudo() {
 # Install ZSH and Oh My ZSH
 install_zsh() {
     # Draw header box with BLUE color
-    draw_colored_box "$BLUE" "🐚 ZSH and Oh My ZSH Installation" \
+    draw_colored_box "$BLUE" "ZSH and Oh My ZSH Installation" \
         "Setting up ZSH shell environment" \
         "Installing plugins and optimizations"
     echo ""
@@ -2458,7 +2491,7 @@ install_zsh() {
     fi
     
     # Install essential Oh My ZSH plugins and optimizations
-    draw_colored_box "$BLUE" "🔌 Installing ZSH Plugins & Theme" \
+    draw_colored_box "$BLUE" "Installing ZSH Plugins & Theme" \
         "Setting up essential plugins and optimizations"
     echo ""
 
@@ -2684,13 +2717,13 @@ EOF
 
     # Draw final summary box with BLUE color
     local zsh_version=$(zsh --version 2>/dev/null | awk '{print $2}' || echo "unknown")
-    draw_colored_box "$BLUE" "🐚 ZSH Setup Complete" \
-        "✅ ZSH $zsh_version installed and configured" \
-        "✅ Oh My ZSH framework installed" \
-        "✅ Essential plugins: autosuggestions, syntax-highlighting, you-should-use" \
-        "✅ Powerlevel10k theme configured" \
-        "✅ Performance optimizations applied" \
-        "✅ Ghostty shell integration enabled"
+    draw_colored_box "$BLUE" "ZSH Setup Complete" \
+        "ZSH $zsh_version installed and configured" \
+        "Oh My ZSH framework installed" \
+        "Essential plugins: autosuggestions, syntax-highlighting, you-should-use" \
+        "Powerlevel10k theme configured" \
+        "Performance optimizations applied" \
+        "Ghostty shell integration enabled"
     echo ""
 }
 
@@ -3436,7 +3469,7 @@ install_nodejs() {
         return 0
     fi
 
-    draw_colored_box "$GREEN" "📦 Node.js Installation via fnm" \
+    draw_colored_box "$GREEN" "Node.js Installation via fnm" \
         "Status: Checking existing installation" \
         "Target: Node.js v${NODE_VERSION}.x (latest)" \
         "Method: Fast Node Manager (fnm)" \
@@ -3469,7 +3502,7 @@ install_uv() {
         return 0
     fi
 
-    draw_colored_box "$GREEN" "⚡ uv Installation (Fast Python Package Installer)" \
+    draw_colored_box "$GREEN" "uv Installation (Fast Python Package Installer)" \
         "Status: Checking existing installation" \
         "Purpose: Modern web development stack (Feature 001)" \
         "Performance: Significantly faster than pip"
@@ -3535,7 +3568,7 @@ install_claude_code() {
         return 0
     fi
 
-    draw_colored_box "$GREEN" "🤖 AI Development Tools - Claude Code CLI" \
+    draw_colored_box "$GREEN" "AI Development Tools - Claude Code CLI" \
         "Status: Checking existing installation" \
         "Package: @anthropic-ai/claude-code" \
         "Requirement: Node.js and npm (via fnm)"
@@ -3666,7 +3699,7 @@ install_copilot_cli() {
         return 0
     fi
 
-    draw_colored_box "$GREEN" "🤖 AI Development Tools - GitHub Copilot CLI" \
+    draw_colored_box "$GREEN" "AI Development Tools - GitHub Copilot CLI" \
         "Status: Checking existing installation" \
         "Package: @github/copilot" \
         "Requirement: Node.js and npm (via fnm)"
