@@ -23,7 +23,7 @@ cd /home/kkk/Apps/ghostty-config-files
 This will install:
 - Ghostty terminal emulator (built from source)
 - ZSH with Oh My ZSH
-- Node.js LTS (via NVM)
+- Node.js latest (v25.2.0+) via fnm (Fast Node Manager)
 - Context menu integration ("Open in Ghostty")
 - AI tools (Claude Code, Gemini CLI)
 - All configuration and optimizations
@@ -87,7 +87,7 @@ cd ghostty-config-files
 
 **What this does**:
 1. Checks for required dependencies
-2. Installs Node.js LTS via NVM
+2. Installs Node.js latest (v25.2.0+) via fnm (Fast Node Manager)
 3. Installs Zig compiler 0.14.0
 4. Builds Ghostty from source
 5. Configures ZSH with Oh My ZSH
@@ -124,11 +124,11 @@ For advanced users who want full control:
 
 #### Step 1: Install Node.js
 ```bash
-# Using NVM (recommended)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+# Using fnm (Fast Node Manager - recommended)
+curl -fsSL https://fnm.vercel.app/install | bash
 source ~/.bashrc
-nvm install --lts
-nvm use --lts
+fnm install --latest
+fnm use latest
 ```
 
 #### Step 2: Install Zig Compiler
@@ -266,24 +266,24 @@ cp configs/ghostty/config ~/.config/ghostty/config
 nautilus -q
 ```
 
-### NVM Installation Issues
+### fnm Installation Issues
 
-> **Automatic Fallback Strategy**: NVM installation attempts first (preferred), but the installation script automatically falls back to system Node.js if NVM fails. AI tools function identically with either method.
+> **Automatic Fallback Strategy**: fnm installation attempts first (preferred for 40x faster startup), but the installation script automatically falls back to system Node.js if fnm fails. AI tools function identically with either method.
 
 ```mermaid
 flowchart TD
-    Start([Node.js installation required]) --> InstallNVM[Install NVM<br/>curl nvm install script]
+    Start([Node.js installation required]) --> Installfnm[Install fnm<br/>curl fnm install script]
 
-    InstallNVM --> SourceShell[Source shell config<br/>~/.zshrc or ~/.bashrc]
-    SourceShell --> CheckNVM{NVM command<br/>available?}
+    Installfnm --> SourceShell[Source shell config<br/>~/.zshrc or ~/.bashrc]
+    SourceShell --> Checkfnm{fnm command<br/>available?}
 
-    CheckNVM -->|Yes| InstallLTS[Install Node.js LTS<br/>nvm install --lts]
-    CheckNVM -->|No| WarnNVM[⚠️ NVM not in PATH<br/>Shell restart needed]
+    Checkfnm -->|Yes| InstallLatest[Install Node.js latest<br/>fnm install --latest]
+    Checkfnm -->|No| Warnfnm[⚠️ fnm not in PATH<br/>Shell restart needed]
 
-    InstallLTS --> VerifyNode{Node.js<br/>accessible?}
-    WarnNVM --> Fallback[Fallback: System Node.js<br/>sudo apt install nodejs npm]
+    InstallLatest --> VerifyNode{Node.js<br/>accessible?}
+    Warnfnm --> Fallback[Fallback: System Node.js<br/>sudo apt install nodejs npm]
 
-    VerifyNode -->|Yes| UseNVM[✅ Use NVM Node.js<br/>Preferred method]
+    VerifyNode -->|Yes| Usefnm[✅ Use fnm Node.js<br/>Preferred method]
     VerifyNode -->|No| Fallback
 
     Fallback --> CheckSystem{System Node.js<br/>installed?}
@@ -291,40 +291,40 @@ flowchart TD
     CheckSystem -->|No| InstallSystem[Install: sudo apt install nodejs npm]
     InstallSystem --> UseSystem
 
-    UseNVM --> InstallAI[Install AI tools<br/>Claude, Gemini, Copilot]
+    Usefnm --> InstallAI[Install AI tools<br/>Claude, Gemini, Copilot]
     UseSystem --> InstallAI
 
     InstallAI --> Complete([✅ Node.js + AI tools ready])
 
     style Start fill:#e1f5fe
     style Complete fill:#c8e6c9
-    style WarnNVM fill:#fff9c4
+    style Warnfnm fill:#fff9c4
     style Fallback fill:#ffcdd2
-    style UseNVM fill:#81c784
+    style Usefnm fill:#81c784
     style UseSystem fill:#aed581
 ```
 
-**Issue**: NVM installation fails or not detected
+**Issue**: fnm installation fails or not detected
 
 **Symptoms**:
 ```
-⚠️  NVM installation may have failed - check logs
-💡 System Node.js will be used as fallback if NVM unavailable
+⚠️  fnm installation may have failed - check logs
+💡 System Node.js will be used as fallback if fnm unavailable
 ```
 
 **Solutions**:
 ```bash
-# Option 1: Manual NVM installation
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+# Option 1: Manual fnm installation
+curl -fsSL https://fnm.vercel.app/install | bash
 source ~/.zshrc
-nvm install --lts
+fnm install --latest
 
 # Option 2: Use system Node.js (fallback - already used by script)
 sudo apt install nodejs npm
 
-# Option 3: Check NVM installation
-command -v nvm  # Should show NVM path
-nvm --version   # Should show version number
+# Option 3: Check fnm installation
+command -v fnm  # Should show fnm path
+fnm --version   # Should show version number
 
 # Verify Node.js is available
 node --version
@@ -332,8 +332,8 @@ npm --version
 ```
 
 **Why This Happens**:
-- NVM requires shell restart to load into PATH
-- The installation script sources shell config but may not pick up NVM in all contexts
+- fnm requires shell restart to load into PATH
+- The installation script sources shell config but may not pick up fnm in all contexts
 - System Node.js automatically used as fallback (AI tools will still work)
 
 **Impact**: AI tools (Claude Code, Gemini CLI) will function normally with system Node.js
@@ -398,5 +398,5 @@ chsh -s /bin/bash
 ## Getting Help
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/your-username/ghostty-config-files/issues)
-- **Documentation**: Browse `docs-source/` for comprehensive guides
+- **Documentation**: Browse `website/src/` for comprehensive guides
 - **Local Validation**: Run `./manage.sh validate` to check system health

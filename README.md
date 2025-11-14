@@ -11,7 +11,7 @@ This repository contains a comprehensive terminal environment setup featuring th
   - **Shell Integration**: Auto-detection with advanced features
 - **ZSH + Oh My ZSH**: A powerful shell with useful plugins.
 - **Modern Unix Tools**: `eza`, `bat`, `ripgrep`, `fzf`, `zoxide`, and `fd`.
-- **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js LTS via fnm - 40x faster than NVM, with system Node.js fallback).
+- **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js latest (v25.2.0) via fnm - 40x faster than NVM, with system Node.js fallback).
 - **Context Menu**: "Open in Ghostty" right-click option in your file manager.
 - **Automated Daily Updates**: System-wide updates run automatically every day at 9:00 AM.
 - **Astro-Based Website**: A documentation and dashboard website built with Astro.
@@ -127,7 +127,7 @@ The repository includes a unified management interface:
 ./manage.sh <command> --help
 ```
 
-For detailed usage, see [docs-source/user-guide/usage.md](docs-source/user-guide/usage.md).
+For detailed usage, see [website/src/user-guide/usage.md](website/src/user-guide/usage.md).
 
 ### Daily Automated Updates
 
@@ -204,7 +204,7 @@ This will start a development server, and you can view the website at `http://lo
     -   `install_node.sh`: Node.js installation module (Phase 5 - first extracted module)
     -   `common.sh`, `progress.sh`, `backup_utils.sh`: Shared utilities (Phase 2)
     -   `.module-template.sh`: Template for creating new modules (Phase 1)
--   `docs-source/`: **Editable documentation source** (git-tracked)
+-   `website/src/`: **Editable documentation source** (git-tracked)
     -   `user-guide/`: User documentation (installation, configuration, usage)
     -   `ai-guidelines/`: AI assistant guidelines (modular extracts from AGENTS.md)
     -   `developer/`: Developer documentation (architecture, contributing, testing)
@@ -241,26 +241,26 @@ The output will be generated in the `docs/` directory.
 ## Documentation
 
 ### For Users
-- **[Installation Guide](docs-source/user-guide/installation.md)** - Complete setup instructions
-- **[Configuration Guide](docs-source/user-guide/configuration.md)** - Customize your environment
-- **[Usage Guide](docs-source/user-guide/usage.md)** - manage.sh command reference
+- **[Installation Guide](website/src/user-guide/installation.md)** - Complete setup instructions
+- **[Configuration Guide](website/src/user-guide/configuration.md)** - Customize your environment
+- **[Usage Guide](website/src/user-guide/usage.md)** - manage.sh command reference
 
 ### For Developers
-- **[Architecture Overview](docs-source/developer/architecture.md)** - System design and patterns
-- **[Contributing Guide](docs-source/developer/contributing.md)** - How to contribute
-- **[Testing Guide](docs-source/developer/testing.md)** - Testing strategies
+- **[Architecture Overview](website/src/developer/architecture.md)** - System design and patterns
+- **[Contributing Guide](website/src/developer/contributing.md)** - How to contribute
+- **[Testing Guide](website/src/developer/testing.md)** - Testing strategies
 
 ### For AI Assistants
-- **[Core Principles](docs-source/ai-guidelines/core-principles.md)** - Project requirements
-- **[Git Strategy](docs-source/ai-guidelines/git-strategy.md)** - Branch management
-- **[CI/CD Requirements](docs-source/ai-guidelines/ci-cd-requirements.md)** - Local CI/CD
-- **[Development Commands](docs-source/ai-guidelines/development-commands.md)** - Quick reference
+- **[Core Principles](website/src/ai-guidelines/core-principles.md)** - Project requirements
+- **[Git Strategy](website/src/ai-guidelines/git-strategy.md)** - Branch management
+- **[CI/CD Requirements](website/src/ai-guidelines/ci-cd-requirements.md)** - Local CI/CD
+- **[Development Commands](website/src/ai-guidelines/development-commands.md)** - Quick reference
 
-**Note**: Edit documentation in `docs-source/`, not `docs/` (which is auto-generated).
+**Note**: Edit documentation in `website/src/`, not `docs/` (which is auto-generated).
 
 ## Contributing
 
-Contributions are welcome! Please read the [Contributing Guide](docs-source/developer/contributing.md) and follow the project's coding conventions before opening a pull request.
+Contributions are welcome! Please read the [Contributing Guide](website/src/developer/contributing.md) and follow the project's coding conventions before opening a pull request.
 
 ## License
 
