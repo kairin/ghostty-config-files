@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.6"><title>Automated Daily Updates | Ghostty Configuration Files</title><meta name="description" content="Smart system-wide updates at 9:00 AM daily with full logging and passwordless execution"><!-- OpenGraph --><meta property="og:title" content="Automated Daily Updates"><meta property="og:description" content="Smart system-wide updates at 9:00 AM daily with full logging and passwordless execution"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.C32sr9Om.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"> <!-- Navigation --> <nav class="navbar bg-gray-50 dark:bg-slate-800 shadow-lg border-b border-gray-200 dark:border-gray-700"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-dark-primary">
+Ghostty Config Files
+</a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation" class="hover:text-blue-600 dark:hover:text-dark-primary">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles" class="hover:text-blue-600 dark:hover:text-dark-primary">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture" class="hover:text-blue-600 dark:hover:text-dark-primary">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-dark-primary">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 md:px-8 py-12 max-w-7xl"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-13T00:00:00.000Z"> November 13, 2025 </time> <span> by System Documentation</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-readable mx-auto text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/user-guide/installation">User Guide</a></li> <li>Automated Daily Updates</li> </ul> </div> <h1>Automated Daily Updates</h1> <p class="text-xl text-base-content/70 mb-8">Smart system-wide updates at 9:00 AM daily with full logging and passwordless execution</p><h1 id="automated-daily-updates">Automated Daily Updates</h1>
+<p>Keep your system and tools up-to-date automatically with intelligent daily updates.</p>
+<h2 id="overview">Overview</h2>
+<p>The configuration includes a smart automated update system that runs daily at 9:00 AM. All system packages, development tools, and AI assistants are updated automatically with full logging.</p>
+<h2 id="what-gets-updated">What Gets Updated</h2>
+<h3 id="system-packages-apt">System Packages (apt)</h3>
+<ul>
+<li>GitHub CLI (<code>gh</code>)</li>
+<li>All installed system packages</li>
+<li>Automatic cleanup with <code>autoremove</code></li>
+</ul>
+<h3 id="development-tools">Development Tools</h3>
+<ul>
+<li>Oh My Zsh framework</li>
+<li>Oh My Zsh plugins</li>
+<li>npm package manager</li>
+<li>All global npm packages</li>
+</ul>
+<h3 id="ai-tools">AI Tools</h3>
+<ul>
+<li>Claude CLI (<code>@anthropic-ai/claude-code</code>)</li>
+<li>Gemini CLI (<code>@google/gemini-cli</code>)</li>
+<li>GitHub Copilot CLI (<code>@github/copilot</code>)</li>
+</ul>
+<h2 id="features">Features</h2>
+<h3 id="automated-scheduling">Automated Scheduling</h3>
+<ul>
+<li>Runs daily at 9:00 AM via cron</li>
+<li>Non-interactive execution</li>
+<li>Background operation (doesn’t interrupt work)</li>
+</ul>
+<h3 id="smart-notifications">Smart Notifications</h3>
+<ul>
+<li>Terminal startup notification (once per day)</li>
+<li>Summary of last update run</li>
+<li>Error notifications if updates fail</li>
+</ul>
+<h3 id="full-logging">Full Logging</h3>
+<ul>
+<li>Complete update output logged</li>
+<li>Timestamped log files</li>
+<li>Error tracking and reporting</li>
+</ul>
+<h3 id="passwordless-execution">Passwordless Execution</h3>
+<ul>
+<li>Requires proper sudoers configuration</li>
+<li>Secure, limited sudo access</li>
+<li>Only for apt package management</li>
+</ul>
+<h2 id="manual-operations">Manual Operations</h2>
+<h3 id="run-updates-now">Run Updates Now</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Execute all updates immediately</span></span>
+<span class="line"><span style="color:#B392F0">update-all</span></span></code></pre>
+<p>This runs the complete update sequence:</p>
+<ol>
+<li>apt update and upgrade</li>
+<li>Oh My Zsh updates</li>
+<li>npm updates</li>
+<li>AI tool updates</li>
+</ol>
+<h3 id="view-update-logs">View Update Logs</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Latest update summary</span></span>
+<span class="line"><span style="color:#B392F0">update-logs</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Complete detailed log</span></span>
+<span class="line"><span style="color:#B392F0">update-logs-full</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Errors only</span></span>
+<span class="line"><span style="color:#B392F0">update-logs-errors</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Browse all log files</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /tmp/daily-updates-logs/</span></span></code></pre>
+<h3 id="log-file-locations">Log File Locations</h3>
+<p>All logs are stored in <code>/tmp/daily-updates-logs/</code>:</p>
+<ul>
+<li><code>daily-updates-YYYYMMDD.log</code> - Complete update output</li>
+<li><code>daily-updates-YYYYMMDD-errors.log</code> - Errors only</li>
+<li><code>daily-updates-latest.log</code> - Symlink to most recent log</li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<h3 id="view-current-schedule">View Current Schedule</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check cron configuration</span></span>
+<span class="line"><span style="color:#B392F0">crontab</span><span style="color:#79B8FF"> -l</span></span></code></pre>
+<p>Default schedule:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Daily updates at 9:00 AM</span></span>
+<span class="line"><span>0 9 * * * /home/kkk/Apps/ghostty-config-files/scripts/daily-updates.sh</span></span></code></pre>
+<h3 id="change-schedule">Change Schedule</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Edit crontab</span></span>
+<span class="line"><span style="color:#B392F0">crontab</span><span style="color:#79B8FF"> -e</span></span></code></pre>
+<p>Example schedules:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Run at 6:00 AM instead</span></span>
+<span class="line"><span>0 6 * * * /path/to/daily-updates.sh</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># Run twice daily (9 AM and 9 PM)</span></span>
+<span class="line"><span>0 9,21 * * * /path/to/daily-updates.sh</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># Run on weekdays only at 8 AM</span></span>
+<span class="line"><span>0 8 * * 1-5 /path/to/daily-updates.sh</span></span></code></pre>
+<h3 id="disable-automated-updates">Disable Automated Updates</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Remove from crontab</span></span>
+<span class="line"><span style="color:#B392F0">crontab</span><span style="color:#79B8FF"> -e</span></span>
+<span class="line"><span style="color:#6A737D"># Comment out or delete the daily-updates line</span></span></code></pre>
+<h2 id="passwordless-sudo-setup">Passwordless Sudo Setup</h2>
+<p>For fully automated apt updates, configure passwordless sudo for apt only.</p>
+<h3 id="setup-steps">Setup Steps</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Edit sudoers file (use visudo for safety)</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> EDITOR=nano</span><span style="color:#9ECBFF"> visudo</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Add this line (replace 'kkk' with your username):</span></span>
+<span class="line"><span style="color:#B392F0">kkk</span><span style="color:#9ECBFF"> ALL=</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">ALL</span><span style="color:#E1E4E8">) </span><span style="color:#9ECBFF">NOPASSWD:</span><span style="color:#9ECBFF"> /usr/bin/apt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Save and exit</span></span></code></pre>
+<h3 id="security-notes">Security Notes</h3>
+<ul>
+<li><strong>Limited scope</strong>: Only <code>/usr/bin/apt</code> has passwordless sudo</li>
+<li><strong>Not unrestricted</strong>: Cannot use sudo for other commands</li>
+<li><strong>Safe configuration</strong>: Uses visudo for syntax validation</li>
+<li><strong>Recommended</strong>: This is the standard approach for automated package management</li>
+</ul>
+<h3 id="verify-configuration">Verify Configuration</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Test passwordless apt</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#79B8FF"> -n</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Should run without password prompt</span></span>
+<span class="line"><span style="color:#6A737D"># If it asks for password, configuration needs adjustment</span></span></code></pre>
+<h3 id="alternative-interactive-updates">Alternative: Interactive Updates</h3>
+<p>If you prefer manual control:</p>
+<ol>
+<li>Don’t configure passwordless sudo</li>
+<li>Run updates manually with <code>update-all</code></li>
+<li>Enter password when prompted</li>
+<li>Disable automated cron job</li>
+</ol>
+<h2 id="update-process-details">Update Process Details</h2>
+<h3 id="phase-1-system-packages">Phase 1: System Packages</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> update</span><span style="color:#6A737D">          # Update package lists</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> upgrade</span><span style="color:#79B8FF"> -y</span><span style="color:#6A737D">      # Upgrade all packages</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> autoremove</span><span style="color:#79B8FF"> -y</span><span style="color:#6A737D">   # Remove unnecessary packages</span></span></code></pre>
+<h3 id="phase-2-oh-my-zsh">Phase 2: Oh My Zsh</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">omz</span><span style="color:#9ECBFF"> update</span><span style="color:#6A737D">              # Update Oh My Zsh framework</span></span>
+<span class="line"><span style="color:#6A737D"># Updates all installed plugins automatically</span></span></code></pre>
+<h3 id="phase-3-npm--global-packages">Phase 3: npm &#x26; Global Packages</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> npm@latest</span><span style="color:#6A737D">           # Update npm itself</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> -g</span><span style="color:#6A737D">                       # Update all global packages</span></span></code></pre>
+<h3 id="phase-4-ai-tools">Phase 4: AI Tools</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @anthropic-ai/claude-code</span><span style="color:#6A737D">  # Claude CLI</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @google/gemini-cli</span><span style="color:#6A737D">         # Gemini CLI</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @github/copilot</span><span style="color:#6A737D">            # GitHub Copilot</span></span></code></pre>
+<h2 id="startup-notifications">Startup Notifications</h2>
+<h3 id="first-terminal-of-the-day">First Terminal of the Day</h3>
+<p>When you open the first terminal after updates run, you’ll see:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>📦 Daily updates completed successfully at 09:15:32</span></span>
+<span class="line"><span>✅ System packages updated</span></span>
+<span class="line"><span>✅ Oh My Zsh updated</span></span>
+<span class="line"><span>✅ npm packages updated</span></span>
+<span class="line"><span>✅ AI tools updated</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>View full log: update-logs</span></span></code></pre>
+<h3 id="subsequent-terminals">Subsequent Terminals</h3>
+<p>No notification shown (once per day per user).</p>
+<h3 id="error-notifications">Error Notifications</h3>
+<p>If updates fail:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>⚠️  Daily updates encountered errors at 09:15:32</span></span>
+<span class="line"><span>❌ Check logs for details: update-logs-errors</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="updates-not-running">Updates Not Running</h3>
+<p><strong>Check cron status</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verify cron service is running</span></span>
+<span class="line"><span style="color:#B392F0">systemctl</span><span style="color:#9ECBFF"> status</span><span style="color:#9ECBFF"> cron</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check crontab entries</span></span>
+<span class="line"><span style="color:#B392F0">crontab</span><span style="color:#79B8FF"> -l</span></span></code></pre>
+<p><strong>Check script permissions</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Script must be executable</span></span>
+<span class="line"><span style="color:#B392F0">chmod</span><span style="color:#9ECBFF"> +x</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files/scripts/daily-updates.sh</span></span></code></pre>
+<h3 id="passwordless-sudo-not-working">Passwordless Sudo Not Working</h3>
+<p><strong>Verify sudoers configuration</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Test passwordless apt</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#79B8FF"> -n</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># If it asks for password:</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> visudo</span></span>
+<span class="line"><span style="color:#6A737D"># Verify the NOPASSWD line is present and correct</span></span></code></pre>
+<h3 id="npm-updates-failing">npm Updates Failing</h3>
+<p><strong>Check npm configuration</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verify npm is properly installed</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#79B8FF"> --version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check global packages location</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> config</span><span style="color:#9ECBFF"> get</span><span style="color:#9ECBFF"> prefix</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Reinstall npm if needed</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> npm</span></span></code></pre>
+<h3 id="logs-not-created">Logs Not Created</h3>
+<p><strong>Check log directory</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verify directory exists and is writable</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /tmp/daily-updates-logs/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Create if missing</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> /tmp/daily-updates-logs</span></span>
+<span class="line"><span style="color:#B392F0">chmod</span><span style="color:#79B8FF"> 755</span><span style="color:#9ECBFF"> /tmp/daily-updates-logs</span></span></code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="monitor-logs-regularly">Monitor Logs Regularly</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check logs weekly</span></span>
+<span class="line"><span style="color:#B392F0">update-logs</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Review errors monthly</span></span>
+<span class="line"><span style="color:#B392F0">update-logs-errors</span></span></code></pre>
+<h3 id="test-updates-before-automation">Test Updates Before Automation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># First time: run manually to verify</span></span>
+<span class="line"><span style="color:#B392F0">update-all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check for errors</span></span>
+<span class="line"><span style="color:#B392F0">update-logs-errors</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># If successful, enable automated cron</span></span></code></pre>
+<h3 id="backup-important-configurations">Backup Important Configurations</h3>
+<p>Before enabling automated updates:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Backup Ghostty config</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ~/.config/ghostty/config</span><span style="color:#9ECBFF"> ~/.config/ghostty/config.backup</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Backup shell configs</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ~/.zshrc</span><span style="color:#9ECBFF"> ~/.zshrc.backup</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ~/.bashrc</span><span style="color:#9ECBFF"> ~/.bashrc.backup</span></span></code></pre>
+<h3 id="review-update-history">Review Update History</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check all log files</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -lah</span><span style="color:#9ECBFF"> /tmp/daily-updates-logs/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Compare timestamps to verify daily execution</span></span></code></pre>
+<h2 id="integration-with-guardian-commands">Integration with Guardian Commands</h2>
+<p>Daily updates integrate with guardian health checks:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check system health including update status</span></span>
+<span class="line"><span style="color:#B392F0">/guardian-health</span></span></code></pre>
+<p>This verifies:</p>
+<ul>
+<li>Last update timestamp</li>
+<li>Update success/failure status</li>
+<li>Available updates</li>
+<li>System package health</li>
+</ul>
+<h2 id="advanced-configuration">Advanced Configuration</h2>
+<h3 id="custom-update-script">Custom Update Script</h3>
+<p>Extend the update system:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Create custom update script</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF"> ~/.local/bin/custom-updates.sh</span><span style="color:#F97583"> &#x3C;&#x3C;</span><span style="color:#9ECBFF"> 'EOF'</span></span>
+<span class="line"><span style="color:#9ECBFF">#!/bin/bash</span></span>
+<span class="line"><span style="color:#9ECBFF"># Add custom updates here</span></span>
+<span class="line"><span style="color:#9ECBFF"># Example: Update flatpak apps</span></span>
+<span class="line"><span style="color:#9ECBFF">flatpak update -y</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF"># Example: Update snap packages</span></span>
+<span class="line"><span style="color:#9ECBFF">sudo snap refresh</span></span>
+<span class="line"><span style="color:#9ECBFF">EOF</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">chmod</span><span style="color:#9ECBFF"> +x</span><span style="color:#9ECBFF"> ~/.local/bin/custom-updates.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Add to crontab after main updates</span></span>
+<span class="line"><span style="color:#B392F0">crontab</span><span style="color:#79B8FF"> -e</span></span>
+<span class="line"><span style="color:#6A737D"># Add: 0 9 * * * ~/.local/bin/custom-updates.sh >> /tmp/custom-updates.log 2>&#x26;1</span></span></code></pre>
+<h3 id="notification-integration">Notification Integration</h3>
+<p>Add desktop notifications:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install notification tool if needed</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> libnotify-bin</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Modify update script to send notifications</span></span>
+<span class="line"><span style="color:#B392F0">notify-send</span><span style="color:#9ECBFF"> "Updates Complete"</span><span style="color:#9ECBFF"> "Daily system updates finished successfully"</span></span></code></pre>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="./installation.md">Installation Guide</a> - Initial setup</li>
+<li><a href="./configuration.md">Configuration Guide</a> - Customization options</li>
+<li><a href="./usage.md">Usage Guide</a> - Daily operations and commands</li>
+<li><a href="./mcp-integration.md">MCP Integration</a> - AI tool updates</li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">updates</span><span class="badge badge-outline">automation</span><span class="badge badge-outline">cron</span><span class="badge badge-outline">maintenance</span><span class="badge badge-outline">system</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

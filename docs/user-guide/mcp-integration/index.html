@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.6"><title>MCP Integration Guide | Ghostty Configuration Files</title><meta name="description" content="Complete guide to Context7 and GitHub MCP integration for enhanced AI development"><!-- OpenGraph --><meta property="og:title" content="MCP Integration Guide"><meta property="og:description" content="Complete guide to Context7 and GitHub MCP integration for enhanced AI development"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.C32sr9Om.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"> <!-- Navigation --> <nav class="navbar bg-gray-50 dark:bg-slate-800 shadow-lg border-b border-gray-200 dark:border-gray-700"> <div class="container mx-auto"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-dark-primary">
+Ghostty Config Files
+</a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1"> <li><a href="/ghostty-config-files/user-guide/installation" class="hover:text-blue-600 dark:hover:text-dark-primary">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles" class="hover:text-blue-600 dark:hover:text-dark-primary">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture" class="hover:text-blue-600 dark:hover:text-dark-primary">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-dark-primary">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </nav> <!-- Main Content --> <main class="container mx-auto px-4 md:px-8 py-12 max-w-7xl"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-13T00:00:00.000Z"> November 13, 2025 </time> <span> by System Documentation</span> </div> <!-- Page Content --> <article class="prose prose-lg max-w-readable mx-auto text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/user-guide/installation">User Guide</a></li> <li>MCP Integration Guide</li> </ul> </div> <h1>MCP Integration Guide</h1> <p class="text-xl text-base-content/70 mb-8">Complete guide to Context7 and GitHub MCP integration for enhanced AI development</p><h1 id="mcp-integration-guide">MCP Integration Guide</h1>
+<p>This guide covers the integration of Model Context Protocol (MCP) servers for enhanced AI-assisted development.</p>
+<h2 id="what-is-mcp">What is MCP?</h2>
+<p>Model Context Protocol (MCP) provides AI assistants with real-time access to external data sources and APIs. This configuration includes two essential MCP servers:</p>
+<ol>
+<li><strong>Context7 MCP</strong>: Up-to-date documentation for all project technologies</li>
+<li><strong>GitHub MCP</strong>: Direct GitHub API integration for repository operations</li>
+</ol>
+<h2 id="context7-mcp-setup">Context7 MCP Setup</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Access up-to-date documentation and best practices for all technologies used in the project.</p>
+<h3 id="quick-setup">Quick Setup</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Configure environment</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> .env.example</span><span style="color:#9ECBFF"> .env</span></span>
+<span class="line"><span style="color:#6A737D"># Edit .env and add: CONTEXT7_API_KEY=ctx7sk-your-api-key</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Verify configuration</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_context7_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Restart Claude Code</span></span>
+<span class="line"><span style="color:#79B8FF">exit</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#B392F0">claude</span></span></code></pre>
+<h3 id="available-tools">Available Tools</h3>
+<ul>
+<li><code>mcp__context7__resolve-library-id</code> - Find library IDs for documentation queries</li>
+<li><code>mcp__context7__get-library-docs</code> - Retrieve up-to-date library documentation</li>
+</ul>
+<h3 id="usage-example">Usage Example</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Query latest Next.js documentation</span></span>
+<span class="line"><span style="color:#6A737D"># Claude automatically uses Context7 MCP when you ask about libraries</span></span>
+<span class="line"><span style="color:#B392F0">"What are the latest best practices for Next.js 14 routing?"</span></span></code></pre>
+<h3 id="constitutional-compliance">Constitutional Compliance</h3>
+<ul>
+<li><strong>MANDATORY</strong>: Query Context7 before major configuration changes</li>
+<li><strong>RECOMMENDED</strong>: Add Context7 validation to local CI/CD workflows</li>
+<li><strong>BEST PRACTICE</strong>: Document Context7 queries in conversation logs</li>
+</ul>
+<h3 id="complete-documentation">Complete Documentation</h3>
+<p>See <a href="../../documentations/user/setup/context7-mcp.md">Context7 MCP Setup</a> for:</p>
+<ul>
+<li>Installation steps</li>
+<li>API key configuration</li>
+<li>Troubleshooting</li>
+<li>Advanced usage examples</li>
+</ul>
+<h2 id="github-mcp-setup">GitHub MCP Setup</h2>
+<h3 id="purpose-1">Purpose</h3>
+<p>Direct GitHub API integration for repository operations without manual CLI commands.</p>
+<h3 id="quick-setup-1">Quick Setup</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Verify GitHub CLI authentication</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> status</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Run health check</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_github_mcp_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Restart Claude Code</span></span>
+<span class="line"><span style="color:#79B8FF">exit</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#B392F0">claude</span></span></code></pre>
+<h3 id="core-capabilities">Core Capabilities</h3>
+<p><strong>Repository Operations</strong>:</p>
+<ul>
+<li>List, create, manage repositories</li>
+<li>Fork repositories</li>
+<li>Create branches</li>
+</ul>
+<p><strong>Issue Management</strong>:</p>
+<ul>
+<li>Create, update, search issues</li>
+<li>Add comments</li>
+<li>Update issue status</li>
+</ul>
+<p><strong>Pull Request Operations</strong>:</p>
+<ul>
+<li>Create pull requests</li>
+<li>Review PRs</li>
+<li>Merge PRs</li>
+<li>Check PR status</li>
+</ul>
+<p><strong>File Operations</strong>:</p>
+<ul>
+<li>Read repository files</li>
+<li>Create/update files</li>
+<li>Push multiple files in single commit</li>
+</ul>
+<p><strong>Search Operations</strong>:</p>
+<ul>
+<li>Search repositories</li>
+<li>Search issues and PRs</li>
+<li>Search code</li>
+<li>Search users</li>
+</ul>
+<h3 id="constitutional-compliance-1">Constitutional Compliance</h3>
+<ul>
+<li><strong>MANDATORY</strong>: Use GitHub MCP for all repository operations</li>
+<li><strong>RECOMMENDED</strong>: GitHub MCP operations follow branch preservation strategy</li>
+<li><strong>REQUIREMENT</strong>: Respect branch naming conventions (YYYYMMDD-HHMMSS-type-description)</li>
+</ul>
+<h3 id="security">Security</h3>
+<ul>
+<li>✅ Token stored in .env (not committed)</li>
+<li>✅ Leverages existing gh CLI authentication</li>
+<li>✅ Token auto-refreshes via gh CLI</li>
+</ul>
+<h3 id="complete-documentation-1">Complete Documentation</h3>
+<p>See <a href="../../documentations/user/setup/github-mcp.md">GitHub MCP Setup</a> for:</p>
+<ul>
+<li>Installation steps</li>
+<li>Authentication setup</li>
+<li>Usage examples</li>
+<li>Troubleshooting</li>
+</ul>
+<h2 id="benefits-of-mcp-integration">Benefits of MCP Integration</h2>
+<h3 id="context7-benefits">Context7 Benefits</h3>
+<ul>
+<li>Always up-to-date documentation</li>
+<li>Best practices validation</li>
+<li>Technology-specific guidance</li>
+<li>Constitutional compliance verification</li>
+</ul>
+<h3 id="github-mcp-benefits">GitHub MCP Benefits</h3>
+<ul>
+<li>No manual gh CLI commands</li>
+<li>Constitutional branch workflows</li>
+<li>Automated PR creation</li>
+<li>Integrated issue management</li>
+</ul>
+<h2 id="health-checks">Health Checks</h2>
+<p>Run health checks to verify MCP integration:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Context7 health check</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_context7_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># GitHub MCP health check</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_github_mcp_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Combined health check (via guardian command)</span></span>
+<span class="line"><span style="color:#B392F0">/guardian-health</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="context7-issues">Context7 Issues</h3>
+<p><strong>Problem</strong>: “MCP server not responding”
+<strong>Solution</strong>:</p>
+<ol>
+<li>Verify API key in .env</li>
+<li>Check network connectivity</li>
+<li>Restart Claude Code</li>
+</ol>
+<p><strong>Problem</strong>: “Library not found”
+<strong>Solution</strong>:</p>
+<ol>
+<li>Use <code>resolve-library-id</code> first</li>
+<li>Check library name spelling</li>
+<li>Try alternative library names</li>
+</ol>
+<h3 id="github-mcp-issues">GitHub MCP Issues</h3>
+<p><strong>Problem</strong>: “Authentication failed”
+<strong>Solution</strong>:</p>
+<ol>
+<li>Run <code>gh auth login</code></li>
+<li>Verify token in .env</li>
+<li>Check token permissions</li>
+</ol>
+<p><strong>Problem</strong>: “Rate limit exceeded”
+<strong>Solution</strong>:</p>
+<ol>
+<li>Wait for rate limit reset</li>
+<li>Use authenticated requests</li>
+<li>Check GitHub API status</li>
+</ol>
+<h2 id="integration-with-guardian-commands">Integration with Guardian Commands</h2>
+<p>MCP servers integrate seamlessly with guardian slash commands:</p>
+<ul>
+<li><code>/guardian-health</code> - Checks MCP server health</li>
+<li><code>/guardian-deploy</code> - Uses GitHub MCP for deployment</li>
+<li><code>/guardian-commit</code> - Uses GitHub MCP for commits</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li>Review <a href="../../ai-guidelines/core-principles.md">AI Guidelines</a> for MCP usage</li>
+<li>Explore <a href="../../developer/architecture.md">Developer Documentation</a> for technical details</li>
+<li>Try <a href="./usage.md">Guardian Commands</a> for automated workflows</li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">mcp</span><span class="badge badge-outline">context7</span><span class="badge badge-outline">github</span><span class="badge badge-outline">ai-tools</span><span class="badge badge-outline">documentation</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>
