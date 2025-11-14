@@ -2341,6 +2341,31 @@ determine_install_strategy() {
     fi
 }
 
+# Validate critical system dependencies
+validate_system_dependencies() {
+    log "INFO" "🔍 Validating system dependencies..."
+
+    local missing_deps=()
+    local critical_deps=("jq" "bc")
+
+    for cmd in "${critical_deps[@]}"; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            missing_deps+=("$cmd")
+            log "ERROR" "❌ Required dependency not found: $cmd"
+        fi
+    done
+
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        log "ERROR" "❌ Missing ${#missing_deps[@]} critical dependencies"
+        log "INFO" "💡 Install with: sudo apt install ${missing_deps[*]}"
+        log "INFO" "💡 These tools are required for state management and calculations"
+        return 1
+    fi
+
+    log "SUCCESS" "✅ All critical dependencies present (jq, bc)"
+    return 0
+}
+
 # Pre-authentication for sudo
 pre_auth_sudo() {
     log "INFO" "🔑 Checking sudo configuration..."
@@ -4176,6 +4201,12 @@ main() {
     echo -e "${CYAN}  Comprehensive Terminal Tools Installer${NC}"
     echo -e "${CYAN}========================================${NC}"
     echo ""
+
+    # Validate critical dependencies FIRST (before any jq usage)
+    if ! validate_system_dependencies; then
+        echo -e "${RED}❌ Cannot proceed without required dependencies${NC}"
+        exit 1
+    fi
 
     # Initialize installation state tracking (NEW - Idempotent operation support)
     load_state

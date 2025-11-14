@@ -729,8 +729,8 @@ update_all_uv_tools() {
 
     log_info "Checking for uv tools to update..."
 
-    # Get list of installed tools
-    local tools=$(uv tool list 2>/dev/null | awk '{print $1}' || echo "")
+    # Get list of installed tools (skip lines starting with '-' which are executables)
+    local tools=$(uv tool list 2>/dev/null | awk '/^[a-zA-Z]/ {print $1}' || echo "")
 
     if [[ -z "$tools" ]]; then
         log_info "No additional uv tools installed"
