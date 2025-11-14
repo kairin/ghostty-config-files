@@ -2943,6 +2943,102 @@ EOF
 }
 
 # Install system dependencies
+# Remove APT packages that have snap equivalents installed
+remove_apt_snap_duplicates() {
+    log "STEP" "🔍 Checking for APT/Snap duplicate packages..."
+
+    # Only proceed if snap is available
+    if ! command -v snap >/dev/null 2>&1; then
+        debug "Snap not available, skipping duplicate check"
+        return 0
+    fi
+
+    # Get list of installed snaps
+    local snap_list
+    snap_list=$(snap list 2>/dev/null | tail -n +2 | awk '{print $1}') || {
+        debug "Failed to get snap list, skipping duplicate check"
+        return 0
+    }
+
+    local duplicates_found=()
+    local duplicates_removed=()
+    local versions_compared=0
+
+    # Check common GNOME apps that might be installed via both apt and snap
+    local common_apps=(
+        "gnome-calculator"
+        "gnome-characters"
+        "gnome-logs"
+        "gnome-system-monitor"
+        "evince"
+        "firefox"
+        "thunderbird"
+    )
+
+    for app in "${common_apps[@]}"; do
+        # Check if installed via both snap and apt
+        local has_snap=false
+        local has_apt=false
+        local snap_version=""
+        local apt_version=""
+
+        # Check snap installation
+        if echo "$snap_list" | grep -q "^${app}$"; then
+            has_snap=true
+            snap_version=$(snap list "$app" 2>/dev/null | tail -n +2 | awk '{print $2}')
+        fi
+
+        # Check apt installation
+        if dpkg -l "$app" 2>/dev/null | grep -q "^ii"; then
+            has_apt=true
+            apt_version=$(dpkg -l "$app" 2>/dev/null | grep "^ii" | awk '{print $3}' | cut -d'-' -f1 | cut -d':' -f2)
+        fi
+
+        # If both are installed, we have a duplicate
+        if $has_snap && $has_apt; then
+            duplicates_found+=("$app")
+            versions_compared=$((versions_compared + 1))
+
+            log "INFO" "📦 Duplicate found: $app"
+            log "INFO" "   SNAP: $snap_version"
+            log "INFO" "   APT:  $apt_version"
+
+            # Compare versions (simple comparison: snap version is authoritative)
+            # Remove APT version to keep snap (snaps are auto-updating and sandboxed)
+            log "INFO" "   → Removing APT version (keeping Snap for auto-updates)"
+
+            if sudo apt remove -y "$app" >> "$LOG_FILE" 2>&1; then
+                duplicates_removed+=("$app")
+                log "SUCCESS" "   ✅ Removed APT version of $app"
+            else
+                log "WARNING" "   ⚠️  Failed to remove APT version of $app"
+            fi
+        fi
+    done
+
+    # Summary
+    if [ ${#duplicates_found[@]} -eq 0 ]; then
+        log "SUCCESS" "✅ No APT/Snap duplicates found"
+    else
+        log "INFO" "📊 Duplicate Detection Summary:"
+        log "INFO" "   Found: ${#duplicates_found[@]} duplicates"
+        log "INFO" "   Removed: ${#duplicates_removed[@]} APT versions"
+        log "INFO" "   Versions compared: $versions_compared"
+
+        if [ ${#duplicates_removed[@]} -gt 0 ]; then
+            log "SUCCESS" "✅ Cleaned up duplicate packages: ${duplicates_removed[*]}"
+        fi
+    fi
+
+    # Clean up any orphaned dependencies
+    if [ ${#duplicates_removed[@]} -gt 0 ]; then
+        log "INFO" "🧹 Cleaning up orphaned dependencies..."
+        if sudo apt autoremove -y >> "$LOG_FILE" 2>&1; then
+            log "SUCCESS" "✅ Cleaned up orphaned dependencies"
+        fi
+    fi
+}
+
 install_system_deps() {
     if $SKIP_DEPS; then
         log "INFO" "⏭️  Skipping system dependencies installation"
@@ -2950,6 +3046,9 @@ install_system_deps() {
     fi
 
     log "STEP" "🔧 Installing system dependencies..."
+
+    # Check for and remove apt/snap duplicates first
+    remove_apt_snap_duplicates
 
     # Update package list with progressive disclosure (suppress CLI warnings)
     if ! run_task_command "Updating package list" "sudo apt update -qq 2>&1 | grep -v 'WARNING.*stable CLI interface'" "Refreshing package repositories" "10-30s"; then
@@ -2968,9 +3067,26 @@ install_system_deps() {
         "libgdk-pixbuf-2.0-dev" "libcairo2-dev" "libvulkan-dev"
         "libgraphene-1.0-dev" "libx11-dev" "libwayland-dev"
         "libonig-dev" "libxml2-dev" "flatpak"
-        "xdotool" "scrot" "imagemagick" "gnome-screenshot"
+        "imagemagick"
         "eza" "bat" "ripgrep" "fzf" "fd-find"
     )
+
+    # Add display-server-specific screenshot tools
+    local display_server="${XDG_SESSION_TYPE:-x11}"
+    if [ "$display_server" = "wayland" ]; then
+        log "INFO" "🖥️  Wayland detected: Using native compositor screenshot support"
+        # GNOME Wayland uses D-Bus interface (no additional packages needed)
+        # wlroots compositors (Sway, Hyprland) would use grim+slurp
+        if [ "${XDG_CURRENT_DESKTOP}" = "GNOME" ]; then
+            log "INFO" "   Using GNOME Shell D-Bus screenshot API (built-in)"
+        else
+            # For non-GNOME Wayland compositors
+            deps+=("grim" "slurp" "swappy")
+        fi
+    else
+        log "INFO" "🖥️  X11 detected: Using X11 screenshot tools"
+        deps+=("xdotool" "scrot" "gnome-screenshot")
+    fi
 
     # Check which packages are missing
     local missing_deps=()
