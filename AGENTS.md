@@ -539,14 +539,29 @@ sudo EDITOR=nano visudo                 # Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/
 ```bash
 # Configuration validation
 ghostty +show-config                    # Validate current configuration
-./.runners-local/workflows/test-runner.sh    # Complete test suite
+./.runners-local/workflows/validate-modules.sh ./scripts  # Module validation
+./.runners-local/workflows/pre-commit-local.sh           # Pre-commit checks
 
 # Performance monitoring
 ./.runners-local/workflows/performance-monitor.sh --baseline # Establish baseline
 ./.runners-local/workflows/performance-monitor.sh --compare  # Compare performance
+./.runners-local/workflows/benchmark-runner.sh all          # Constitutional benchmarks
+./.runners-local/workflows/performance-dashboard.sh view    # View performance dashboard
+
+# Documentation synchronization
+./.runners-local/workflows/documentation-sync-checker.sh    # Validate docs sync
 
 # System testing
 ./start.sh --verbose                    # Full installation with detailed logs
+```
+
+### Astro Build & Deployment
+```bash
+# Astro build workflow
+./.runners-local/workflows/astro-build-local.sh build      # Complete build workflow
+./.runners-local/workflows/astro-build-local.sh check      # TypeScript validation
+./.runners-local/workflows/astro-build-local.sh validate   # GitHub Pages validation
+./.runners-local/workflows/astro-build-local.sh clean      # Clean build output
 ```
 
 ## 🔄 Local CI/CD Implementation
@@ -738,7 +753,7 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 
 ### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
-- **`docs-source/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
+- **`website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
 - **`documentations/`** - **Centralized documentation hub** (as of 2025-11-09):
   - `user/` - End-user documentation (installation, configuration, troubleshooting)
   - `developer/` - Developer documentation (architecture, analysis)
@@ -767,7 +782,7 @@ For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](sp
 
 # Validate system state
 ghostty +show-config
-./.runners-local/workflows/test-runner.sh --validate
+# TODO: ./.runners-local/workflows/test-runner.sh not yet implemented
 
 # Emergency configuration recovery
 cp ~/.config/ghostty/config.backup-* ~/.config/ghostty/config
@@ -821,7 +836,7 @@ gh api user/settings/billing/actions | jq '{total_minutes_used, included_minutes
 **Version**: 2.0-2025-LocalCI
 **Last Updated**: 2025-09-19
 **Status**: ACTIVE - MANDATORY COMPLIANCE
-**Target**: Ubuntu 25.10 (Questing) with Ghostty 1.2.0+ and zero-cost local CI/CD
+**Target**: Ubuntu 25.10 (Questing) with Ghostty 1.1.4+ (1.2.0 upgrade planned) and zero-cost local CI/CD
 **Review**: Required before any major configuration changes
 
 ## Active Technologies

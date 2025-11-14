@@ -4,7 +4,7 @@ description: "System architecture and design patterns for Ghostty Configuration 
 pubDate: 2025-10-27
 author: "Development Team"
 tags: ["development", "architecture", "design"]
-techStack: ["Bash 5.x+", "Node.js LTS", "Astro.build"]
+techStack: ["Bash 5.x+", "Node.js latest (v25.2.0+)", "Astro.build"]
 difficulty: "intermediate"
 ---
 

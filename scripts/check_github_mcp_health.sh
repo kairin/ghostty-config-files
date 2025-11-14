@@ -52,12 +52,12 @@ if [ -f "${ENV_FILE}" ]; then
     source "${ENV_FILE}"
 
     # Export actual token from gh CLI if GITHUB_TOKEN is placeholder
-    if [ "${GITHUB_TOKEN}" = "\${GITHUB_TOKEN}" ] || [ -z "${GITHUB_TOKEN}" ]; then
+    if [ "${GITHUB_TOKEN:-}" = "\${GITHUB_TOKEN}" ] || [ -z "${GITHUB_TOKEN:-}" ]; then
         export GITHUB_TOKEN=$(gh auth token)
         echo -e "  ${YELLOW}ℹ${NC} Using GitHub token from gh CLI"
     fi
 
-    if [ -n "${GITHUB_TOKEN}" ] && [ "${GITHUB_TOKEN}" != "\${GITHUB_TOKEN}" ]; then
+    if [ -n "${GITHUB_TOKEN:-}" ] && [ "${GITHUB_TOKEN:-}" != "\${GITHUB_TOKEN}" ]; then
         echo -e "  ${GREEN}✓${NC} GITHUB_TOKEN configured: ${GITHUB_TOKEN:0:12}..."
     else
         echo -e "  ${RED}✗${NC} GITHUB_TOKEN not configured in .env"

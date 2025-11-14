@@ -58,22 +58,29 @@ This document provides a complete directory structure reference for the Ghostty 
 │   │   └── 004-modern-web-development/  # Spec 004
 │   └── archive/               # Historical/obsolete documentation
 └── .runners-local/              # Zero-cost local infrastructure
-    ├── runners/              # Local CI/CD scripts
+    ├── workflows/            # Local CI/CD scripts
     │   ├── gh-workflow-local.sh    # Local GitHub Actions simulation
     │   ├── gh-pages-setup.sh       # GitHub Pages local testing
-    │   ├── test-runner.sh          # Local test execution
-    │   └── performance-monitor.sh   # Performance tracking
+    │   ├── performance-monitor.sh  # Performance tracking
+    │   ├── astro-build-local.sh    # Astro build workflows
+    │   └── pre-commit-local.sh     # Pre-commit hooks
     ├── tests/                # Testing infrastructure
     │   ├── unit/             # Unit tests
     │   │   ├── .test-template.sh      # Test template (Phase 1)
     │   │   ├── test_functions.sh      # Test assertions (Phase 1)
     │   │   ├── test_install_node.sh   # install_node.sh tests (Phase 5)
     │   │   └── test_common_utils.sh   # Common utilities tests (Phase 2)
-    │   └── validation/       # Validation scripts
-    ├── logs/                 # Local CI/CD logs
-    └── config/               # CI/CD configuration files
-        ├── workflows/        # Local workflow definitions
-        └── test-suites/      # Test configuration
+    │   ├── integration/      # Integration tests
+    │   ├── contract/         # Contract tests
+    │   ├── validation/       # Validation scripts
+    │   └── fixtures/         # Test fixtures and data
+    ├── self-hosted/          # Self-hosted runner management
+    │   ├── setup-self-hosted-runner.sh  # Runner setup
+    │   └── config/           # Runner credentials (GITIGNORED)
+    └── logs/                 # Local CI/CD logs (GITIGNORED)
+        ├── builds/           # Build logs
+        ├── tests/            # Test logs
+        └── runners/          # Runner service logs
 ```
 
 ---
@@ -217,9 +224,15 @@ Local CI/CD scripts with production-ready implementation:
   - Optimization status tracking
   - System information collection
 
-- **`test-runner.sh`**: Local test execution
-  - Unit test execution
-  - Validation script execution
+- **`astro-build-local.sh`**: Astro build workflows
+  - Local Astro build execution
+  - Build verification and validation
+  - Asset optimization
+
+- **`pre-commit-local.sh`**: Pre-commit hooks
+  - Code quality checks
+  - Configuration validation
+  - Documentation synchronization
 
 #### `.runners-local/tests/`
 Testing infrastructure:
@@ -230,21 +243,26 @@ Testing infrastructure:
   - `test_install_node.sh`: install_node.sh unit tests
   - `test_common_utils.sh`: common.sh unit tests
 
+- **`integration/`**: Integration tests for cross-module functionality
+
+- **`contract/`**: Contract tests for API and interface compliance
+
 - **`validation/`**: Validation scripts for configuration and system state
 
-#### `.runners-local/logs/workflows/`
-Local CI/CD execution logs:
+- **`fixtures/`**: Test fixtures and sample data for testing
 
-- Workflow execution logs
-- Performance metrics (JSON)
-- GitHub Pages simulation logs
-- Test execution results
+#### `.runners-local/self-hosted/`
+Self-hosted runner management:
 
-#### `.runners-local/config/`
-CI/CD configuration files:
+- **`setup-self-hosted-runner.sh`**: Runner setup and configuration script
+- **`config/`**: Runner credentials and configuration (GITIGNORED)
 
-- **`workflows/`**: Local workflow definitions
-- **`test-suites/`**: Test configuration and suites
+#### `.runners-local/logs/`
+Local CI/CD execution logs (GITIGNORED):
+
+- **`builds/`**: Build logs and artifacts
+- **`tests/`**: Test execution results
+- **`runners/`**: Runner service logs and workflow execution
 
 ---
 
