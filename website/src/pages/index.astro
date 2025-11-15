@@ -23,23 +23,26 @@ const base = '/ghostty-config-files';
   title="Documentation Home"
   description="Comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, AI tools integration, and intelligent update management."
 >
-  <!-- Hero Section -->
-  <div class="hero min-h-[50vh] bg-gradient-to-br from-light-primary/10 to-light-secondary/10 dark:from-dark-primary/10 dark:to-dark-secondary/10 rounded-xl mb-12 border border-gray-200 dark:border-gray-700">
-    <div class="hero-content text-center">
-      <div class="max-w-4xl">
-        <h1 class="text-6xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+  <!-- Modern Hero Section with Glass Morphism -->
+  <div class="hero min-h-[60vh] glass-card mb-16 overflow-hidden relative">
+    <!-- Animated background gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-cyan-500/20 dark:via-purple-500/20 dark:to-pink-500/20 animate-pulse"></div>
+
+    <div class="hero-content text-center relative z-10 w-full">
+      <div class="w-full px-4">
+        <h1 class="responsive-text-hero font-bold mb-8 text-gray-900 dark:text-gray-100 break-words">
           Ghostty Configuration Files
         </h1>
-        <p class="text-2xl mb-8 text-gray-600 dark:text-gray-400 leading-relaxed">
+        <p class="text-xl md:text-2xl lg:text-3xl mb-10 text-gray-600 dark:text-gray-300 leading-relaxed max-w-5xl mx-auto break-words">
           A comprehensive terminal environment setup featuring Ghostty terminal emulator
           with 2025 performance optimizations, right-click context menu integration,
           plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
         </p>
-        <div class="flex gap-4 justify-center flex-wrap">
-          <a href={`${base}/user-guide/installation`} class="btn btn-lg bg-blue-600 dark:bg-blue-500 hover:bg-purple-600 dark:hover:bg-purple-600 text-white border-0">
+        <div class="flex gap-4 md:gap-6 justify-center flex-wrap">
+          <a href={`${base}/user-guide/installation`} class="btn btn-lg bg-gradient-to-r from-blue-600 to-purple-600 dark:from-cyan-500 dark:to-purple-500 hover:scale-105 text-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300">
             Get Started
           </a>
-          <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="btn btn-lg btn-outline border-2 border-blue-600 dark:border-blue-500 hover:bg-blue-600/10 dark:hover:bg-blue-600/10">
+          <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="btn btn-lg glass-card hover:scale-105 transition-all duration-300">
             View on GitHub
           </a>
         </div>
@@ -48,140 +51,140 @@ const base = '/ghostty-config-files';
   </div>
 
   <!-- Recent Wins Section -->
-  <div class="mb-16">
-    <h2 class="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
+  <div class="mb-20">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
       Recent Wins & Innovations
     </h2>
-    <p class="text-center text-xl mb-12 text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+    <p class="text-center text-xl md:text-2xl mb-16 text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed">
       Here's what makes this configuration exceptional and battle-tested in real-world development
     </p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="responsive-grid">
       <!-- Node.js v25 Strategy -->
-      <div class="card bg-gray-50 dark:bg-slate-800 border-2 border-green-600 dark:border-green-500 shadow-lg hover:shadow-xl transition-all">
-        <div class="card-body">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="badge badge-lg bg-green-600 dark:bg-green-500 text-white border-0">NEW</div>
-            <h3 class="card-title text-2xl text-gray-900 dark:text-gray-100">Node.js v25.2.0</h3>
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="badge badge-lg bg-gradient-to-r from-green-600 to-emerald-500 text-white border-0 shadow-lg">NEW</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">Node.js v25.2.0</h3>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed break-words whitespace-normal">
             Running latest current version (not LTS) for cutting-edge features. Astro.build documentation site benefits from newest Node.js innovations.
           </p>
-          <div class="card-actions">
-            <div class="badge badge-outline border-green-600 dark:border-green-500">Performance</div>
-            <div class="badge badge-outline border-green-600 dark:border-green-500">Modern</div>
+          <div class="flex gap-2 flex-wrap">
+            <div class="badge badge-lg badge-outline border-green-600 dark:border-green-400 text-green-700 dark:text-green-300">Performance</div>
+            <div class="badge badge-lg badge-outline border-green-600 dark:border-green-400 text-green-700 dark:text-green-300">Modern</div>
           </div>
         </div>
       </div>
 
       <!-- Constitutional Git Workflow -->
-      <div class="card bg-gray-50 dark:bg-slate-800 border-2 border-blue-600 dark:border-blue-500 shadow-lg hover:shadow-xl transition-all">
-        <div class="card-body">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="badge badge-lg bg-blue-600 dark:bg-blue-500 text-white border-0">CORE</div>
-            <h3 class="card-title text-2xl text-gray-900 dark:text-gray-100">Git Branch Preservation</h3>
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="badge badge-lg bg-gradient-to-r from-blue-600 to-indigo-500 text-white border-0 shadow-lg">CORE</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">Git Branch Preservation</h3>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed break-words whitespace-normal">
             Constitutional requirement: NEVER delete branches. Every branch preserves valuable configuration history. Automatic merge to main without deletion.
           </p>
-          <div class="card-actions">
-            <div class="badge badge-outline border-blue-600 dark:border-blue-500">Safety</div>
-            <div class="badge badge-outline border-blue-600 dark:border-blue-500">Data Preservation</div>
+          <div class="flex gap-2 flex-wrap">
+            <div class="badge badge-lg badge-outline border-blue-600 dark:border-blue-400 text-blue-700 dark:text-blue-300">Safety</div>
+            <div class="badge badge-lg badge-outline border-blue-600 dark:border-blue-400 text-blue-700 dark:text-blue-300">Data Preservation</div>
           </div>
         </div>
       </div>
 
       <!-- Zero-Cost CI/CD -->
-      <div class="card bg-gray-50 dark:bg-slate-800 border-2 border-amber-600 dark:border-amber-500 shadow-lg hover:shadow-xl transition-all">
-        <div class="card-body">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="badge badge-lg bg-amber-600 dark:bg-amber-500 text-white border-0">EFFICIENCY</div>
-            <h3 class="card-title text-2xl text-gray-900 dark:text-gray-100">Local CI/CD</h3>
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="badge badge-lg bg-gradient-to-r from-amber-600 to-orange-500 text-white border-0 shadow-lg">EFFICIENCY</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">Local CI/CD</h3>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed break-words whitespace-normal">
             Complete workflow validation locally. Zero GitHub Actions costs. Full testing before deployment. Constitutional compliance enforced.
           </p>
-          <div class="card-actions">
-            <div class="badge badge-outline border-amber-600 dark:border-amber-500">Cost-Effective</div>
-            <div class="badge badge-outline border-amber-600 dark:border-amber-500">Fast</div>
+          <div class="flex gap-2 flex-wrap">
+            <div class="badge badge-lg badge-outline border-amber-600 dark:border-amber-400 text-amber-700 dark:text-amber-300">Cost-Effective</div>
+            <div class="badge badge-lg badge-outline border-amber-600 dark:border-amber-400 text-amber-700 dark:text-amber-300">Fast</div>
           </div>
         </div>
       </div>
 
       <!-- MCP Integrations -->
-      <div class="card bg-gray-50 dark:bg-slate-800 border-2 border-purple-600 dark:border-purple-500 shadow-lg hover:shadow-xl transition-all">
-        <div class="card-body">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="badge badge-lg bg-purple-600 dark:bg-purple-500 text-white border-0">AI</div>
-            <h3 class="card-title text-2xl text-gray-900 dark:text-gray-100">MCP Integrations</h3>
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="badge badge-lg bg-gradient-to-r from-purple-600 to-pink-500 text-white border-0 shadow-lg">AI</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">MCP Integrations</h3>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed break-words whitespace-normal">
             Context7 MCP for up-to-date documentation. GitHub MCP for repository operations. Constitutional AI assistance with best practices validation.
           </p>
-          <div class="card-actions">
-            <div class="badge badge-outline border-purple-600 dark:border-purple-500">Context7</div>
-            <div class="badge badge-outline border-purple-600 dark:border-purple-500">GitHub API</div>
+          <div class="flex gap-2 flex-wrap">
+            <div class="badge badge-lg badge-outline border-purple-600 dark:border-purple-400 text-purple-700 dark:text-purple-300">Context7</div>
+            <div class="badge badge-lg badge-outline border-purple-600 dark:border-purple-400 text-purple-700 dark:text-purple-300">GitHub API</div>
           </div>
         </div>
       </div>
 
       <!-- Guardian Commands -->
-      <div class="card bg-gray-50 dark:bg-slate-800 border-2 border-blue-600 dark:border-blue-500 shadow-lg hover:shadow-xl transition-all">
-        <div class="card-body">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="badge badge-lg bg-blue-600 dark:bg-blue-500 text-white border-0">AUTOMATION</div>
-            <h3 class="card-title text-2xl text-gray-900 dark:text-gray-100">Guardian Commands</h3>
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="badge badge-lg bg-gradient-to-r from-cyan-600 to-blue-500 text-white border-0 shadow-lg">AUTOMATION</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">Guardian Commands</h3>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed break-words whitespace-normal">
             One-command workflows: /guardian-health, /guardian-deploy, /guardian-commit, /guardian-cleanup. Constitutional compliance automated.
           </p>
-          <div class="card-actions">
-            <div class="badge badge-outline border-blue-600 dark:border-blue-500">Slash Commands</div>
-            <div class="badge badge-outline border-blue-600 dark:border-blue-500">Workflow</div>
+          <div class="flex gap-2 flex-wrap">
+            <div class="badge badge-lg badge-outline border-cyan-600 dark:border-cyan-400 text-cyan-700 dark:text-cyan-300">Slash Commands</div>
+            <div class="badge badge-lg badge-outline border-cyan-600 dark:border-cyan-400 text-cyan-700 dark:text-cyan-300">Workflow</div>
           </div>
         </div>
       </div>
 
       <!-- Daily Updates -->
-      <div class="card bg-gray-50 dark:bg-slate-800 border-2 border-green-600 dark:border-green-500 shadow-lg hover:shadow-xl transition-all">
-        <div class="card-body">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="badge badge-lg bg-green-600 dark:bg-green-500 text-white border-0">SMART</div>
-            <h3 class="card-title text-2xl text-gray-900 dark:text-gray-100">Automated Updates</h3>
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <div class="badge badge-lg bg-gradient-to-r from-teal-600 to-green-500 text-white border-0 shadow-lg">SMART</div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">Automated Updates</h3>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed break-words whitespace-normal">
             System-wide updates at 9:00 AM daily. Apt, npm, Oh My Zsh, Claude CLI, Gemini CLI. Passwordless with proper sudoers config. Full logging.
           </p>
-          <div class="card-actions">
-            <div class="badge badge-outline border-green-600 dark:border-green-500">Cron</div>
-            <div class="badge badge-outline border-green-600 dark:border-green-500">Maintenance</div>
+          <div class="flex gap-2 flex-wrap">
+            <div class="badge badge-lg badge-outline border-teal-600 dark:border-teal-400 text-teal-700 dark:text-teal-300">Cron</div>
+            <div class="badge badge-lg badge-outline border-teal-600 dark:border-teal-400 text-teal-700 dark:text-teal-300">Maintenance</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Documentation Sections -->
-  <div class="mb-16">
-    <h2 class="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
+  <!-- Documentation Hub -->
+  <div class="mb-20">
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
       Documentation Hub
     </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <div class="responsive-grid mb-12">
       <!-- User Guide Card -->
-      <div class="card bg-gray-50 dark:bg-slate-800 shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all">
-        <div class="card-body">
-          <h2 class="card-title text-2xl mb-4 text-gray-900 dark:text-gray-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            User Guide
-          </h2>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">User Guide</h2>
+          </div>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg">
             Installation, configuration, and usage documentation for end users.
           </p>
-          <div class="card-actions flex-col items-stretch gap-2">
+          <div class="flex flex-col gap-2">
             {userGuide.map((entry) => (
-              <a href={`${base}/user-guide/${entry.id}`} class="btn btn-sm btn-outline border-gray-200 dark:border-gray-700 hover:bg-blue-600/10 dark:hover:bg-blue-600/10 hover:border-blue-600 dark:hover:border-blue-500 justify-start">
+              <a href={`${base}/user-guide/${entry.id}`} class="btn btn-sm glass-card justify-start hover:scale-105 transition-all">
                 {entry.data.title}
               </a>
             ))}
@@ -190,20 +193,20 @@ const base = '/ghostty-config-files';
       </div>
 
       <!-- AI Guidelines Card -->
-      <div class="card bg-gray-50 dark:bg-slate-800 shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all">
-        <div class="card-body">
-          <h2 class="card-title text-2xl mb-4 text-gray-900 dark:text-gray-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
-            AI Guidelines
-          </h2>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">AI Guidelines</h2>
+          </div>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg">
             Constitutional requirements and instructions for AI assistants (Claude, Gemini).
           </p>
-          <div class="card-actions flex-col items-stretch gap-2">
+          <div class="flex flex-col gap-2">
             {aiGuidelines.map((entry) => (
-              <a href={`${base}/ai-guidelines/${entry.id}`} class="btn btn-sm btn-outline border-gray-200 dark:border-gray-700 hover:bg-purple-600/10 dark:hover:bg-purple-600/10 hover:border-purple-600 dark:hover:border-purple-500 justify-start">
+              <a href={`${base}/ai-guidelines/${entry.id}`} class="btn btn-sm glass-card justify-start hover:scale-105 transition-all">
                 {entry.data.title}
               </a>
             ))}
@@ -212,20 +215,20 @@ const base = '/ghostty-config-files';
       </div>
 
       <!-- Developer Card -->
-      <div class="card bg-gray-50 dark:bg-slate-800 shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all">
-        <div class="card-body">
-          <h2 class="card-title text-2xl mb-4 text-gray-900 dark:text-gray-100">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="glass-card hover-lift w-full">
+        <div class="p-6 md:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
             </svg>
-            Developer
-          </h2>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Developer</h2>
+          </div>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg">
             Architecture, testing, and technical documentation for contributors.
           </p>
-          <div class="card-actions flex-col items-stretch gap-2">
+          <div class="flex flex-col gap-2">
             {developer.map((entry) => (
-              <a href={`${base}/developer/${entry.id}`} class="btn btn-sm btn-outline border-gray-200 dark:border-gray-700 hover:bg-amber-600/10 dark:hover:bg-dark-accent/10 hover:border-amber-600 dark:hover:border-amber-500 justify-start">
+              <a href={`${base}/developer/${entry.id}`} class="btn btn-sm glass-card justify-start hover:scale-105 transition-all">
                 {entry.data.title}
               </a>
             ))}
@@ -236,65 +239,68 @@ const base = '/ghostty-config-files';
   </div>
 
   <!-- Features Section -->
-  <div class="divider my-12"></div>
+  <div class="divider my-16"></div>
 
-  <h2 class="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">Key Features</h2>
+  <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900 dark:text-gray-100">Key Features</h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-    <div class="card bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
-      <div class="card-body">
-        <h3 class="card-title text-gray-900 dark:text-gray-100">2025 Performance Optimizations</h3>
-        <p class="text-gray-600 dark:text-gray-400">Linux CGroup single-instance, enhanced shell integration, and memory management.</p>
+  <div class="responsive-grid mb-20">
+    <div class="glass-card hover-lift w-full">
+      <div class="p-6 md:p-8">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">2025 Performance Optimizations</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Linux CGroup single-instance, enhanced shell integration, and memory management.</p>
       </div>
     </div>
 
-    <div class="card bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
-      <div class="card-body">
-        <h3 class="card-title text-gray-900 dark:text-gray-100">Context Menu Integration</h3>
-        <p class="text-gray-600 dark:text-gray-400">Right-click "Open in Ghostty" in Nautilus file manager.</p>
+    <div class="glass-card hover-lift w-full">
+      <div class="p-6 md:p-8">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Context Menu Integration</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Right-click "Open in Ghostty" in Nautilus file manager.</p>
       </div>
     </div>
 
-    <div class="card bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
-      <div class="card-body">
-        <h3 class="card-title text-gray-900 dark:text-gray-100">AI Tools Integration</h3>
-        <p class="text-gray-600 dark:text-gray-400">Claude Code, Gemini CLI, and Context7 MCP for documentation synchronization.</p>
+    <div class="glass-card hover-lift w-full">
+      <div class="p-6 md:p-8">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">AI Tools Integration</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Claude Code, Gemini CLI, and Context7 MCP for documentation synchronization.</p>
       </div>
     </div>
 
-    <div class="card bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
-      <div class="card-body">
-        <h3 class="card-title text-gray-900 dark:text-gray-100">Intelligent Updates</h3>
-        <p class="text-gray-600 dark:text-gray-400">Smart detection and preservation of user customizations during updates.</p>
+    <div class="glass-card hover-lift w-full">
+      <div class="p-6 md:p-8">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Intelligent Updates</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Smart detection and preservation of user customizations during updates.</p>
       </div>
     </div>
 
-    <div class="card bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
-      <div class="card-body">
-        <h3 class="card-title text-gray-900 dark:text-gray-100">Local CI/CD</h3>
-        <p class="text-gray-600 dark:text-gray-400">Complete workflow execution without GitHub Actions costs.</p>
+    <div class="glass-card hover-lift w-full">
+      <div class="p-6 md:p-8">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Local CI/CD</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Complete workflow execution without GitHub Actions costs.</p>
       </div>
     </div>
 
-    <div class="card bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 transition-all">
-      <div class="card-body">
-        <h3 class="card-title text-gray-900 dark:text-gray-100">Zero-Configuration Setup</h3>
-        <p class="text-gray-600 dark:text-gray-400">One-command installation for fresh Ubuntu systems.</p>
+    <div class="glass-card hover-lift w-full">
+      <div class="p-6 md:p-8">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Zero-Configuration Setup</h3>
+        <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">One-command installation for fresh Ubuntu systems.</p>
       </div>
     </div>
   </div>
 
-  <!-- Quick Links -->
-  <div class="divider my-12"></div>
-
-  <div class="alert bg-blue-600/10 dark:bg-blue-500/10 border-2 border-blue-600 dark:border-blue-500">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-8 h-8 text-blue-600 dark:text-blue-400">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-    </svg>
-    <div>
-      <h3 class="font-bold text-xl text-gray-900 dark:text-gray-100">Quick Start</h3>
-      <div class="text-lg text-gray-600 dark:text-gray-400">
-        For a fresh Ubuntu installation, clone the repository and run <code class="bg-gray-50 dark:bg-slate-800 px-3 py-1 rounded border border-gray-200 dark:border-gray-700 font-mono">./start.sh</code>
+  <!-- Quick Start CTA -->
+  <div class="glass-card hover-lift max-w-4xl mx-auto">
+    <div class="p-8 md:p-12">
+      <div class="flex items-start gap-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-12 h-12 text-blue-600 dark:text-cyan-400">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="w-full">
+          <h3 class="font-bold text-2xl md:text-3xl mb-4 text-gray-900 dark:text-gray-100">Quick Start</h3>
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
+            For a fresh Ubuntu installation, clone the repository and run:
+          </p>
+          <code class="block bg-gray-100 dark:bg-slate-800 px-6 py-4 rounded-lg border-2 border-gray-300 dark:border-gray-600 font-mono text-lg md:text-xl text-blue-600 dark:text-cyan-400 break-all">./start.sh</code>
+        </div>
       </div>
     </div>
   </div>
