@@ -1,6 +1,10 @@
 ---
-description: Execute complete deployment workflow - Astro build, validation, commit, and GitHub Pages deployment
+description: Complete Git workflow sync and deployment using local CI/CD runners with multi-agent orchestration - FULLY AUTOMATIC
 ---
+
+## Purpose
+
+**ONE-COMMAND DEPLOYMENT**: Sync all branches, build website, deploy to GitHub Pages with zero manual intervention.
 
 ## User Input
 
@@ -8,29 +12,184 @@ description: Execute complete deployment workflow - Astro build, validation, com
 $ARGUMENTS
 ```
 
-## Workflow
+**Note**: User input is OPTIONAL. Command is fully automatic.
 
-Execute the following agents **in sequence**:
+## Automatic Workflow
 
-1. **astro-build-specialist**:
-   - Rebuild Astro site
-   - Verify .nojekyll file integrity
-   - Validate build output (docs/index.html, docs/_astro/)
+You **MUST** invoke the **master-orchestrator** agent to coordinate the complete deployment workflow.
 
-2. **git-operations-specialist**:
-   - Execute constitutional commit workflow
-   - Commit message: "deploy: Rebuild Astro site with latest content"
-   - Push changes to main branch
+Pass the following instructions to master-orchestrator:
 
-3. **project-health-auditor**:
-   - Verify GitHub Pages configuration
-   - Check deployment status
-   - Validate site accessibility
+### Phase 1: Pre-Deployment Validation (Parallel - 3 Agents)
 
-## Execution
+**Agents to Execute**:
+1. **git-operations-specialist**: Check git status, verify working tree, list branches needing sync
+2. **astro-build-specialist**: Verify build artifacts, .nojekyll file, HTML page count
+3. **project-health-auditor**: Quick health check, symlink verification, constitutional compliance
 
-1. First, invoke `astro-build-specialist` to rebuild the site
-2. Then, invoke `git-operations-specialist` to commit and push
-3. Finally, invoke `project-health-auditor` to verify deployment
+**Validation Requirements**:
+- ✅ Working tree clean or changes identified
+- ✅ .nojekyll file present in docs/
+- ✅ Symlinks intact (CLAUDE.md, GEMINI.md → AGENTS.md)
+- ✅ No critical health issues
 
-Provide a summary report of all three stages.
+### Phase 2: Local CI/CD Validation (Sequential)
+
+**Commands to Execute**:
+```bash
+# Complete local workflow validation
+./.runners-local/workflows/gh-workflow-local.sh all
+
+# Astro build verification
+./.runners-local/workflows/astro-build-local.sh build
+./.runners-local/workflows/astro-build-local.sh validate
+
+# GitHub Pages setup verification
+./.runners-local/workflows/gh-pages-setup.sh --verify
+```
+
+**Expected Results**:
+- ✅ TypeScript compilation: 0 errors
+- ✅ Build completes successfully
+- ✅ All assets accessible
+- ✅ No broken links
+
+### Phase 3: Git Workflow Synchronization (Sequential)
+
+**Agent**: **git-operations-specialist**
+
+**Tasks**:
+1. Ensure main branch is current
+2. Fetch remote updates
+3. Push main to remote (if needed)
+4. Push all feature branches to remote
+5. Verify all branches synced (100% preservation)
+
+**Constitutional Requirements**:
+- ✅ NEVER delete any branches
+- ✅ Branch naming: YYYYMMDD-HHMMSS-type-description
+- ✅ All commits with Claude attribution
+
+### Phase 4: Astro Build Execution (Single Agent)
+
+**Agent**: **astro-build-specialist**
+
+**Tasks**:
+```bash
+# Fresh build
+npm --prefix /home/kkk/Apps/ghostty-config-files/website run build
+
+# Verify output
+- docs/index.html exists
+- docs/_astro/ directory exists
+- docs/.nojekyll present (CRITICAL)
+- HTML page count matches expected
+```
+
+**Build Validation**:
+- ✅ Build time < 2 minutes
+- ✅ All pages generated
+- ✅ CSS bundle optimized
+- ✅ .nojekyll protecting assets
+
+### Phase 5: GitHub Pages Deployment (Parallel - 2 Agents)
+
+**Agent 1**: **git-operations-specialist**
+
+If docs/ has uncommitted changes:
+- Create deployment branch (YYYYMMDD-HHMMSS-deploy-build-artifacts)
+- Commit with constitutional format
+- Merge to main with --no-ff
+- Push to remote
+- Preserve branch (NEVER delete)
+
+**Agent 2**: **astro-build-specialist**
+
+Verify GitHub Pages:
+```bash
+gh api repos/:owner/:repo/pages
+gh repo view --json homepageUrl
+```
+
+### Phase 6: Deployment Verification (Parallel - 3 Agents)
+
+**Verification Tasks**:
+1. **Website Accessibility**: Test homepage, new pages, CSS assets (HTTP 200)
+2. **Build Artifacts**: Verify all HTML pages, .nojekyll, asset directory
+3. **Constitutional Compliance**: Branch preservation, symlinks, zero GitHub Actions cost
+
+**Success Criteria**:
+- ✅ All pages return HTTP 200
+- ✅ All branches preserved (0 deleted)
+- ✅ .nojekyll integrity confirmed
+- ✅ Zero GitHub Actions minutes consumed
+
+### Phase 7: Documentation & Logging (Single Agent)
+
+**Agent**: **documentation-guardian**
+
+**Tasks**:
+- Generate deployment summary
+- Log deployment metrics to .runners-local/logs/
+- Capture system state snapshot
+- Update health dashboard
+
+## Expected Output
+
+```
+🚀 COMPLETE DEPLOYMENT ORCHESTRATION
+
+Total Duration: ~10 minutes
+Agents Coordinated: 7
+Efficiency: 90% parallel optimization
+
+Git Synchronization:
+- ✅ 142 branches synchronized with remote (100% preserved)
+- ✅ Main branch pushed to origin
+- ✅ All feature branches backed up
+
+Astro Build:
+- ✅ Build time: 725ms
+- ✅ Pages generated: 18 HTML pages
+- ✅ CSS bundle: 89KB optimized
+- ✅ TypeScript: 0 errors
+
+GitHub Pages Deployment:
+- ✅ Status: Live and operational
+- ✅ URL: https://kairin.github.io/ghostty-config-files/
+- ✅ All pages accessible: HTTP 200
+
+Constitutional Compliance:
+- ✅ Branch preservation: 100%
+- ✅ Zero GitHub Actions cost
+- ✅ .nojekyll integrity: Confirmed
+- ✅ Symlinks maintained
+```
+
+## When to Use
+
+Run `/guardian-deploy` when you need:
+- Complete deployment of website changes
+- Full Git repository synchronization
+- All branches backed up to remote
+- GitHub Pages updated with latest content
+- Zero manual intervention required
+
+## What This Command Does NOT Do
+
+- ❌ Does NOT clean up redundant files (use `/guardian-cleanup`)
+- ❌ Does NOT fix documentation issues (use `/guardian-documentation`)
+- ❌ Does NOT diagnose health problems (use `/guardian-health`)
+- ❌ Does NOT create new commits for source changes (use `/guardian-commit`)
+
+**Focus**: Deployment orchestration only - assumes source changes already committed.
+
+## Constitutional Compliance
+
+This command enforces:
+- ✅ Local CI/CD execution before GitHub deployment
+- ✅ Branch preservation strategy (NEVER delete)
+- ✅ .nojekyll integrity verification (CRITICAL for GitHub Pages)
+- ✅ Zero GitHub Actions cost (all local runners)
+- ✅ Constitutional commit format
+- ✅ Symlink integrity maintenance

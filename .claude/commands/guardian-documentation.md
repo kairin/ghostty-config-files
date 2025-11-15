@@ -1,6 +1,10 @@
 ---
-description: Verify documentation structure, consolidation, cross-references, and agent system integrity
+description: Verify documentation structure, fix broken links, restore symlinks, ensure single source of truth - FULLY AUTOMATIC
 ---
+
+## Purpose
+
+**DOCUMENTATION INTEGRITY**: Verify all documentation systems, fix broken links, restore symlinks, commit fixes with zero manual intervention.
 
 ## User Input
 
@@ -8,248 +12,314 @@ description: Verify documentation structure, consolidation, cross-references, an
 $ARGUMENTS
 ```
 
-## Workflow
+**Note**: User input is OPTIONAL. Command automatically verifies all documentation.
 
-Execute the following verification steps using specialized agents **in parallel**:
+## Automatic Workflow
 
-### 1. Agent System Verification
+You **MUST** invoke the **master-orchestrator** agent to coordinate the documentation verification workflow.
 
-Invoke **master-orchestrator** to verify:
-- All 9 agents are properly documented in AGENT_REGISTRY.md
-- Agent capabilities match their actual implementations
-- Delegation network is accurate and up-to-date
-- No undocumented agents exist in `.claude/agents/`
+Pass the following instructions to master-orchestrator:
 
-**Current Agent System (9 agents)**:
-1. master-orchestrator (35KB) - Multi-agent coordination
-2. symlink-guardian (16KB) - CLAUDE.md/GEMINI.md symlink integrity
-3. constitutional-compliance-agent (22KB) - AGENTS.md size management
-4. documentation-guardian (18KB) - Single source of truth
-5. git-operations-specialist (19KB) - Git/GitHub operations
-6. astro-build-specialist (18KB) - Astro.build operations
-7. project-health-auditor (19KB) - Health checks & Context7 MCP
-8. repository-cleanup-specialist (21KB) - Cleanup operations
-9. constitutional-workflow-orchestrator (18KB) - Shared templates
+### Phase 1: Symlink Verification (Single Agent)
 
-### 2. Documentation Structure Verification
+**Agent**: **symlink-guardian**
 
-Invoke **constitutional-compliance-agent** to verify:
+**Tasks**:
+1. **Verify Primary Symlinks**:
+   ```bash
+   test -L CLAUDE.md && readlink CLAUDE.md
+   test -L GEMINI.md && readlink GEMINI.md
+   ```
+   - Both must point to AGENTS.md
+   - Identify any broken symlinks
 
-#### Primary Documentation Files
-- **AGENTS.md** - Single source of truth (<40KB limit)
-  - ✅ All symlinks (CLAUDE.md, GEMINI.md) point correctly
-  - ✅ Quick links section up-to-date
-  - ✅ All referenced files exist
+2. **Auto-Restore if Broken**:
+   ```bash
+   # If CLAUDE.md broken or missing
+   rm -f CLAUDE.md
+   ln -s AGENTS.md CLAUDE.md
 
-- **README.md** (root) - User-facing project overview
-  - ✅ Links to AGENTS.md, documentation/, website
-  - ✅ Installation instructions current
-  - ✅ No duplicate content from AGENTS.md
+   # If GEMINI.md broken or missing
+   rm -f GEMINI.md
+   ln -s AGENTS.md GEMINI.md
+   ```
 
-#### Centralized Documentation Hub: `documentations/`
+3. **Scan Repository**:
+   ```bash
+   find . -type l -xtype l  # Find all broken symlinks
+   ```
 
-**Constitutional Structure** (as of 2025-11-09):
-```
-documentations/
-├── user/              # End-user documentation
-│   ├── setup/        # Setup guides (Context7, GitHub MCP)
-│   ├── configuration/
-│   └── troubleshooting/
-├── developer/         # Developer documentation
-│   ├── architecture/ # DIRECTORY_STRUCTURE.md, system design
-│   ├── analysis/     # Analysis reports, README.md
-│   └── workflows/    # Development workflows
-├── specifications/    # Active feature specifications
-│   ├── 001-*/        # Spec-Kit feature planning
-│   ├── 002-*/
-│   └── 004-modern-web-development/OVERVIEW.md
-├── archive/          # Historical/obsolete documentation
-│   └── [deprecated docs preserved for reference]
-├── development/      # Conversation logs, system states
-│   ├── conversation_logs/
-│   ├── system_states/
-│   └── ci_cd_logs/
-└── performance/      # Performance documentation
-    └── README.md
-```
-
-**Verification Checks**:
-- ✅ All README.md files link to parent documentation
-- ✅ No orphaned documentation (files not referenced anywhere)
-- ✅ OVERVIEW.md in specifications/ properly linked from AGENTS.md
-- ✅ Archive contains only historical documentation
-- ✅ No duplicate content across folders
-
-#### Website Documentation: `website/src/`
-
-**Astro Source Structure**:
-```
-website/src/
-├── content/
-│   ├── docs/          # Markdown documentation
-│   └── config.ts      # Content collections
-├── pages/             # Page routes
-└── components/        # UI components
-```
-
-**Verification Checks**:
-- ✅ No duplicate content between `website/src/` and `documentations/`
-- ✅ `website/src/` references `documentations/` for technical details
-- ✅ Built output in `docs/` directory (GitHub Pages deployment)
-
-#### Local CI/CD Documentation: `.runners-local/`
-
-**Verification Checks**:
-- ✅ `.runners-local/README.md` exists and up-to-date
-- ✅ Workflow scripts documented
-- ✅ Links from AGENTS.md to .runners-local/ workflows work
-
-### 3. Cross-Reference Validation
-
-Invoke **documentation-guardian** to verify:
-
-#### Symlink Integrity
-- ✅ `CLAUDE.md → AGENTS.md` (symlink, not regular file)
-- ✅ `GEMINI.md → AGENTS.md` (symlink, not regular file)
+**Expected Output**:
+- ✅ CLAUDE.md → AGENTS.md (restored if needed)
+- ✅ GEMINI.md → AGENTS.md (restored if needed)
 - ✅ No broken symlinks in repository
 
-#### Link Integrity
-Scan all documentation files for broken links:
-```bash
-# Find all markdown files
-find documentations/ -name "*.md"
-find .claude/ -name "*.md"
+### Phase 2: Documentation Structure Verification (Parallel - 2 Agents)
 
-# Check links to:
-- documentations/user/setup/*.md
-- documentations/developer/architecture/*.md
-- documentations/specifications/*/OVERVIEW.md
-- .claude/agents/*.md
-- .claude/commands/*.md
-- spec-kit/guides/*.md
+**Agent 1: constitutional-compliance-agent**
+
+**Tasks**:
+1. **AGENTS.md Size Check**:
+   ```bash
+   du -h AGENTS.md
+   ```
+   - Must be < 40KB constitutional limit
+   - If > 40KB: Split sections into referenced documents
+
+2. **Quick Links Validation**:
+   - Verify all linked files exist
+   - Check paths are correct
+   - Identify 404 links
+
+3. **Agent Registry**:
+   - Verify all 9 agents documented
+   - Check agent descriptions match implementations
+   - Validate delegation network accuracy
+
+**Agent 2: documentation-guardian**
+
+**Tasks**:
+1. **Directory Structure Verification**:
+   ```
+   documentations/
+   ├── user/ (exists, has content)
+   ├── developer/ (exists, has content)
+   ├── specifications/ (exists, has active specs)
+   └── archive/ (exists, historical only)
+   ```
+
+2. **Website Documentation**:
+   - Verify website/src/ structure
+   - Check no duplicate content with documentations/
+   - Validate build output in docs/
+
+3. **Local CI/CD Documentation**:
+   - Verify .runners-local/README.md exists
+   - Check workflow scripts documented
+   - Validate links from AGENTS.md work
+
+**Expected Output**:
+- ✅/❌ AGENTS.md: XX KB (under/over 40KB limit)
+- ✅/❌ All agents documented (9/9)
+- ✅/❌ Documentation structure: Properly organized
+- ✅/❌ No duplicate content detected
+
+### Phase 3: Cross-Reference Validation (Single Agent)
+
+**Agent**: **documentation-guardian**
+
+**Tasks**:
+1. **Scan for Broken Links**:
+   ```bash
+   # Find all markdown files
+   find documentations/ .claude/ spec-kit/ -name "*.md"
+
+   # Check for broken link patterns
+   grep -r "docs-source/" documentations/  # Should be website/src/
+   grep -r "runners/" documentations/      # Should be .runners-local/workflows/
+   grep -r "\](.*)" --include="*.md"       # Extract all links
+   ```
+
+2. **Validate Link Targets**:
+   - For each link, verify target file exists
+   - Check relative paths resolve correctly
+   - Identify moved/deleted file references
+
+3. **Common Issues**:
+   - ❌ `docs-source/` → Fix to `website/src/`
+   - ❌ `runners/` → Fix to `.runners-local/workflows/`
+   - ❌ `local-infra/` → Fix to `.runners-local/`
+   - ❌ Absolute paths → Convert to relative
+
+**Expected Output**:
+- List of broken links with file locations
+- Suggested fixes for each broken link
+- Count of legacy references needing updates
+
+### Phase 4: Auto-Fix Broken Links (Conditional)
+
+**Agent**: **documentation-guardian**
+
+**Tasks** (only if broken links found):
+1. **Auto-Fix Common Patterns**:
+   ```bash
+   # Fix docs-source/ references
+   find documentations/ -name "*.md" -exec sed -i 's|docs-source/|website/src/|g' {} \;
+
+   # Fix runners/ references
+   find documentations/ -name "*.md" -exec sed -i 's|runners/|.runners-local/workflows/|g' {} \;
+
+   # Fix local-infra/ references
+   find documentations/ -name "*.md" -exec sed -i 's|local-infra/|.runners-local/|g' {} \;
+   ```
+
+2. **Validate Fixes**:
+   - Re-scan for broken links
+   - Verify all auto-fixes successful
+   - Report any remaining manual fixes needed
+
+**Skip if**: No broken links found
+
+### Phase 5: Agent Documentation Validation (Single Agent)
+
+**Agent**: **constitutional-compliance-agent**
+
+**Tasks**:
+1. **Verify Each Agent File**:
+   ```bash
+   for file in .claude/agents/*.md; do
+     # Check frontmatter
+     grep "^name:" "$file"
+     grep "^description:" "$file"
+
+     # Check invocation examples
+     grep -A5 "## When to Invoke" "$file"
+   done
+   ```
+
+2. **Validate AGENT_REGISTRY.md**:
+   - Verify all 9 agents listed
+   - Check capabilities descriptions accurate
+   - Validate delegation patterns documented
+
+3. **Slash Command Documentation**:
+   - Verify all guardian-* commands consistent
+   - Check agent references correct
+   - Validate output formats documented
+
+**Expected Output**:
+- ✅/❌ All agents have proper frontmatter (9/9)
+- ✅/❌ Invocation examples complete
+- ✅/❌ AGENT_REGISTRY.md synchronized
+
+### Phase 6: Constitutional Commit (Conditional)
+
+**Agent**: **git-operations-specialist**
+
+**Tasks** (only if changes made):
+```bash
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+BRANCH="$DATETIME-docs-fix-documentation-integrity"
+
+git checkout -b "$BRANCH"
+git add .
+git commit -m "docs: Fix documentation integrity and broken links
+
+Problems Fixed:
+- Restored X broken symlinks (CLAUDE.md, GEMINI.md)
+- Fixed Y broken links (docs-source/ → website/src/)
+- Updated Z legacy path references
+- Verified AGENTS.md size compliance
+
+Changes:
+- Symlinks: CLAUDE.md, GEMINI.md → AGENTS.md
+- Path fixes: docs-source/ → website/src/
+- Path fixes: runners/ → .runners-local/workflows/
+- Verified all 9 agents documented
+
+Validation:
+- All symlinks intact and pointing correctly
+- All internal links validated
+- No broken cross-references
+- AGENTS.md under 40KB limit
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+git push -u origin "$BRANCH"
+git checkout main
+git merge "$BRANCH" --no-ff
+git push origin main
 ```
 
-**Common Broken Link Patterns**:
-- ❌ `docs-source/` → Should be `website/src/`
-- ❌ `runners/` → Should be `.runners-local/workflows/`
-- ❌ Absolute paths when relative paths required
-- ❌ Links to deleted/moved files
+**Skip if**: No issues found, all documentation clean
 
-### 4. Documentation Consolidation Validation
-
-Verify NO scattered documentation:
-
-**❌ Anti-Patterns to Detect**:
-- Multiple README.md files with conflicting information
-- Documentation in random subdirectories not under `documentations/`
-- Orphaned markdown files in root directory
-- Duplicate setup guides in multiple locations
-
-**✅ Proper Patterns**:
-- Single source of truth in `documentations/[category]/`
-- README.md files are index/navigation only
-- All detailed docs in appropriate subdirectory
-- Clear linking hierarchy
-
-### 5. Agent Documentation Consistency
-
-Verify each agent in `.claude/agents/` has:
-- ✅ Proper frontmatter (name, description, model)
-- ✅ Invocation examples
-- ✅ Clear delegation patterns
-- ✅ Tools usage section
-- ✅ Entry in AGENT_REGISTRY.md
-
-### 6. Slash Command Documentation
-
-Verify `.claude/commands/` completeness:
-- ✅ All guardian-* commands follow same format
-- ✅ Each command documents parallel vs sequential execution
-- ✅ Output format templates provided
-- ✅ Links to relevant agents
-
-## Execution
-
-Run all verification steps **in parallel** where possible:
-1. Agent system verification (master-orchestrator)
-2. Documentation structure (constitutional-compliance-agent)
-3. Symlink integrity (documentation-guardian)
-4. Link validation (automated scan)
-5. Consolidation check (automated scan)
-
-## Output Format
+## Expected Output
 
 ```
 📚 DOCUMENTATION INTEGRITY REPORT
-===================================
+==================================
 
-🤖 AGENT SYSTEM STATUS
-✅/❌ All 9 agents documented in AGENT_REGISTRY.md
-✅/❌ Agent capabilities accurate
-✅/❌ Delegation network up-to-date
-✅/❌ No undocumented agents
+SYMLINK STATUS
+==============
+✅ CLAUDE.md → AGENTS.md (verified)
+✅ GEMINI.md → AGENTS.md (verified)
+✅ No broken symlinks in repository
 
-📁 DOCUMENTATION STRUCTURE
-✅/❌ AGENTS.md < 40KB (current: XXkB)
-✅/❌ Symlinks intact (CLAUDE.md, GEMINI.md)
-✅/❌ documentations/ properly organized
-  ✅/❌ user/ setup guides exist
-  ✅/❌ developer/ architecture docs exist
-  ✅/❌ specifications/ active specs exist
-  ✅/❌ archive/ contains only historical docs
-✅/❌ website/src/ vs documentations/ separation
-✅/❌ .runners-local/README.md exists
+DOCUMENTATION STRUCTURE
+=======================
+✅ AGENTS.md: 35.2 KB (under 40KB limit)
+✅ All 9 agents documented in AGENT_REGISTRY.md
+✅ Documentation organized:
+   - user/setup/ ✅
+   - developer/architecture/ ✅
+   - specifications/ ✅ (3 active specs)
+   - archive/ ✅ (historical only)
 
-🔗 CROSS-REFERENCE INTEGRITY
-✅/❌ Symlink verification passed
-✅/❌ All internal links valid (XX checked)
-✅/❌ No broken references to moved files
-✅/❌ Quick Links section current
+CROSS-REFERENCE INTEGRITY
+=========================
+⚠️  Broken links found: 5
+   - documentations/user/setup/context7.md:42 → docs-source/ (fixed)
+   - documentations/developer/workflows.md:18 → runners/ (fixed)
+   - AGENTS.md:156 → local-infra/ (fixed)
 
-🗂️ CONSOLIDATION COMPLIANCE
-✅/❌ No scattered documentation
-✅/❌ Single source of truth maintained
-✅/❌ No duplicate README.md conflicts
-✅/❌ All docs in proper subdirectories
+Auto-Fixed:
+- 3 docs-source/ → website/src/
+- 2 runners/ → .runners-local/workflows/
 
-📋 AGENT DOCUMENTATION
-✅/❌ All agents have proper frontmatter
-✅/❌ Invocation examples complete
-✅/❌ Delegation patterns documented
-✅/❌ AGENT_REGISTRY.md synchronized
+Remaining Issues: 0
 
-⚙️ SLASH COMMANDS
-✅/❌ All guardian-* commands consistent
-✅/❌ Command descriptions accurate
-✅/❌ Output formats documented
+AGENT DOCUMENTATION
+===================
+✅ All agents have proper frontmatter (9/9)
+✅ Invocation examples complete
+✅ AGENT_REGISTRY.md synchronized
+✅ All guardian-* commands consistent
 
----
+ACTIONS TAKEN
+=============
+✅ Restored symlinks: 0 (all intact)
+✅ Fixed broken links: 5
+✅ Updated legacy paths: 5
 
-ISSUES FOUND: X
-- [List of specific issues with file paths]
+Git Workflow:
+- ✅ Branch: 20251115-150000-docs-fix-documentation-integrity
+- ✅ Commit: abc1234
+- ✅ Merged to main
+- ✅ Pushed to remote
+- ✅ Branch preserved
 
-RECOMMENDATIONS:
-- [Specific actions to fix issues]
-
-Overall Status: EXCELLENT / GOOD / NEEDS ATTENTION / CRITICAL
+Overall Status: ✅ EXCELLENT
+All documentation systems verified and fixed.
 ```
 
-## Constitutional Requirements
+## When to Use
 
-This command verifies compliance with:
-- **Single Source of Truth**: AGENTS.md as master reference
-- **Documentation Organization**: Proper use of `documentations/` structure
-- **Agent System**: All 9 agents properly documented and registered
-- **Link Integrity**: No broken cross-references
-- **Consolidation**: No scattered or duplicate documentation
-- **Symlink Integrity**: CLAUDE.md/GEMINI.md always point to AGENTS.md
+Run `/guardian-documentation` when you need to:
+- Verify documentation integrity after major changes
+- Fix broken links automatically
+- Restore broken symlinks
+- Validate agent system documentation
+- Ensure single source of truth compliance
 
-## When to Invoke
+**Best Practice**: Run after file moves, renames, or directory restructuring
 
-Run `/guardian-documentation` proactively:
-- After adding new agents to `.claude/agents/`
-- After major documentation reorganization
-- Before large commits affecting documentation
-- When links may be broken (file moves, renames)
-- Weekly health check for documentation integrity
-- After merging branches with documentation changes
+## What This Command Does NOT Do
+
+- ❌ Does NOT deploy to GitHub Pages (use `/guardian-deploy`)
+- ❌ Does NOT clean up redundant files (use `/guardian-cleanup`)
+- ❌ Does NOT commit source code changes (use `/guardian-commit`)
+- ❌ Does NOT diagnose system health (use `/guardian-health`)
+
+**Focus**: Documentation verification and fixes only.
+
+## Constitutional Compliance
+
+This command enforces:
+- ✅ Single source of truth (AGENTS.md)
+- ✅ Symlink integrity (CLAUDE.md, GEMINI.md → AGENTS.md)
+- ✅ AGENTS.md size limit (< 40KB)
+- ✅ Proper documentation organization
+- ✅ No broken cross-references
+- ✅ Agent system documentation completeness

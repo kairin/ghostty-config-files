@@ -1,6 +1,10 @@
 ---
-description: Fully automatic constitutional Git commit - analyzes changes, generates commit message, creates branch, commits, merges to main
+description: Fully automatic constitutional Git commit - analyzes changes, generates commit message, creates branch, commits, merges to main - FULLY AUTOMATIC
 ---
+
+## Purpose
+
+**AUTO-COMMIT**: Analyze uncommitted changes, generate perfect commit message, execute constitutional workflow with zero manual intervention.
 
 ## User Input
 
@@ -8,102 +12,239 @@ description: Fully automatic constitutional Git commit - analyzes changes, gener
 $ARGUMENTS
 ```
 
-**Note**: User input is OPTIONAL. If provided, use it as additional context for commit message generation.
+**Note**: User input is OPTIONAL. If provided, used as additional context for commit message.
 
 ## Automatic Workflow
 
-You **MUST** perform these steps BEFORE invoking the git-operations-specialist:
+You **MUST** invoke the **master-orchestrator** agent to coordinate the auto-commit workflow.
 
-### 1. Analyze Changes (REQUIRED)
+Pass the following instructions to master-orchestrator:
 
-Run these git commands in parallel to understand what changed:
+### Phase 1: Change Analysis (Parallel - 2 Tasks)
+
+**Task 1: Git Status Analysis**
 ```bash
+# Identify all changes
+git status --porcelain
 git status --short
-git diff --staged
-git diff
+
+# Separate staged vs unstaged
+git diff --cached --name-only  # Staged files
+git diff --name-only           # Unstaged files
 ```
 
-### 2. Auto-Generate Commit Details (REQUIRED)
+**Task 2: Change Content Analysis**
+```bash
+# Analyze what changed
+git diff --cached              # Staged content
+git diff                       # Unstaged content
 
-Based on the git analysis, automatically determine:
-
-**Commit Type** (use the most appropriate):
-- `feat` - New feature or functionality
-- `fix` - Bug fix
-- `docs` - Documentation changes only
-- `refactor` - Code restructuring without behavior change
-- `perf` - Performance improvement
-- `test` - Adding or updating tests
-- `build` - Build system or dependencies
-- `ci` - CI/CD configuration changes
-- `chore` - Maintenance tasks
-
-**Short Description** (for branch name):
-- Extract from file names and changes
-- 2-4 words, kebab-case
-- Examples: "slash-commands", "agent-restructuring", "mcp-integration"
-
-**Commit Message**:
-- First line: `type(scope): Brief summary` (max 72 chars)
-- Blank line
-- Detailed bullet points of what changed
-- Focus on WHY not WHAT (code shows what)
-- Blank line
-- Claude attribution (automatic by agent)
-
-**Example Analysis**:
-```
-Files changed: .claude/commands/commit.md, .claude/commands/deploy.md
-Type: feat (new slash commands)
-Scope: commands
-Description: automatic-commit-workflow
-Message: feat(commands): Add fully automatic commit workflow
-
-- Auto-analyze git changes to determine commit type
-- Auto-generate commit message from file analysis
-- Auto-create branch name from change description
-- No user input required for commit execution
+# Get file statistics
+git diff --cached --stat
+git diff --stat
 ```
 
-### 3. Invoke git-operations-specialist (REQUIRED)
+**Output Required**:
+- List of modified files (with paths)
+- Type of changes (add/modify/delete)
+- Lines changed per file
+- Content summary
 
-Pass the auto-generated details to the agent:
-- Commit type (auto-detected)
-- Commit message (auto-generated)
-- Short description (auto-generated from changes)
-- Optional: User context from $ARGUMENTS if provided
+### Phase 2: Auto-Generate Commit Details (Single Task)
 
-## Constitutional Workflow (Executed by Agent)
+**Automatic Detection Rules**:
 
-The git-operations-specialist will automatically:
+**Commit Type** (auto-detect based on files):
+```
+If files match:
+  .claude/agents/*.md → feat (agent system)
+  .claude/commands/*.md → feat (slash commands)
+  website/src/**/*.md → docs (documentation)
+  website/src/**/*.astro → feat (website features)
+  scripts/*.sh → feat (scripts) or fix (bug fixes)
+  .runners-local/** → ci (CI/CD changes)
+  docs/** → build (Astro build output)
+  *.md (root) → docs (documentation)
+  AGENTS.md, README.md → docs (core documentation)
+```
 
-1. ✅ Create timestamped constitutional branch (YYYYMMDD-HHMMSS-type-description)
-2. ✅ Stage all changes (git add .)
-3. ✅ Commit with constitutional format (including Claude attribution)
-4. ✅ Push to remote with upstream tracking
-5. ✅ Merge to main with --no-ff (preserving branch history)
-6. ✅ Push main to remote
-7. ✅ Return to feature branch (NEVER delete - constitutional requirement)
+**Scope** (auto-extract):
+- From directory: .claude/agents/ → scope: agents
+- From directory: .claude/commands/ → scope: commands
+- From directory: website/src/ → scope: website
+- From directory: scripts/ → scope: scripts
+- From file type: Multiple types → scope: repo
 
-## Output
+**Short Description** (auto-generate):
+```
+Extract from:
+1. File names (remove extensions, join with dashes)
+2. Common theme (e.g., "guardian-commands-enhancement")
+3. Primary change (e.g., "master-orchestrator-integration")
 
-Provide a concise summary:
+Format: kebab-case, 2-5 words max
+Examples:
+  - "guardian-commands-update"
+  - "astro-ui-redesign"
+  - "agent-system-expansion"
+```
+
+**Commit Message** (auto-generate):
+```
+Format:
+type(scope): Brief summary (max 72 chars)
+
+Problem/Context:
+- Why this change was needed
+- What issue it solves
+
+Solution:
+- What was changed
+- Key improvements made
+
+Technical Details:
+- Files modified count
+- Lines added/removed
+- Major components affected
+
+Validation:
+- How it was tested
+- Expected behavior
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+**Example Auto-Generation**:
+```
+Files changed:
+  .claude/commands/guardian-deploy.md (+150 lines)
+  .claude/commands/guardian-cleanup.md (+100 lines)
+
+Auto-detected:
+  Type: feat (new features in commands)
+  Scope: commands (files in .claude/commands/)
+  Description: guardian-commands-enhancement
+
+Generated message:
+feat(commands): Enhance guardian commands with master-orchestrator
+
+Problem:
+- Guardian commands executed agents sequentially
+- No clear separation of concerns
+- Overlapping functionality
+
+Solution:
+- All commands now invoke master-orchestrator
+- Clear phase-based execution
+- Parallel agent coordination where safe
+
+Technical Details:
+- 2 files modified
+- +250 lines added
+- Enhanced /guardian-deploy with 7-phase workflow
+- Enhanced /guardian-cleanup with automatic detection
+
+Validation:
+- Command descriptions updated
+- Output format standardized
+- Constitutional compliance maintained
+```
+
+### Phase 3: Constitutional Git Workflow (Sequential)
+
+**Agent**: **git-operations-specialist**
+
+**Automatic Execution**:
+```bash
+# 1. Create timestamped branch
+DATETIME=$(date +"%Y%m%d-%H%M%S")
+TYPE="<auto-detected-type>"
+DESCRIPTION="<auto-generated-description>"
+BRANCH="${DATETIME}-${TYPE}-${DESCRIPTION}"
+
+git checkout -b "$BRANCH"
+
+# 2. Stage all changes
+git add .
+
+# 3. Commit with auto-generated message
+git commit -m "<auto-generated-message>"
+
+# 4. Push to remote
+git push -u origin "$BRANCH"
+
+# 5. Merge to main
+git checkout main
+git merge "$BRANCH" --no-ff -m "Merge branch '$BRANCH' into main"
+
+# 6. Push main
+git push origin main
+
+# 7. Return to feature branch (NEVER delete)
+git checkout "$BRANCH"
+```
+
+**Constitutional Requirements**:
+- ✅ Branch naming: YYYYMMDD-HHMMSS-type-description
+- ✅ Commit message: Multi-paragraph with context
+- ✅ Claude attribution: Automatic footer
+- ✅ Branch preservation: NEVER delete
+- ✅ Merge strategy: --no-ff (preserve history)
+
+## Expected Output
+
 ```
 🤖 AUTOMATIC COMMIT COMPLETE
 
-Detected Changes:
-  - 2 files modified (.claude/commands/)
+Change Analysis:
+- Files modified: 2
+- Lines added: +250
+- Lines removed: -15
+- Net change: +235 lines
 
-Auto-Generated:
-  Type: feat
-  Branch: 20251113-134500-feat-automatic-commit
-  Message: "feat(commands): Add fully automatic commit workflow"
+Auto-Generated Details:
+Type: feat
+Scope: commands
+Branch: 20251115-143000-feat-guardian-commands-enhancement
+Message: "feat(commands): Enhance guardian commands with master-orchestrator"
 
-Status: ✅ Committed, merged to main, branch preserved
+Git Workflow:
+- ✅ Branch created and pushed to origin
+- ✅ Changes committed with constitutional format
+- ✅ Merged to main with --no-ff
+- ✅ Main pushed to remote
+- ✅ Branch preserved (not deleted)
+
+Constitutional Compliance: ✅ 100%
 ```
 
-**IMPORTANT**:
-- NO user input required (fully automatic)
-- User can provide optional context via $ARGUMENTS
-- All naming and documentation generated automatically
-- Constitutional compliance enforced by agent
+## When to Use
+
+Run `/guardian-commit` when you have:
+- Source code changes ready to commit
+- Documentation updates to save
+- Configuration file modifications
+- Any uncommitted changes needing constitutional commit
+
+**Perfect for**: Quick commits without thinking about branch names or commit messages.
+
+## What This Command Does NOT Do
+
+- ❌ Does NOT deploy to GitHub Pages (use `/guardian-deploy`)
+- ❌ Does NOT clean up redundant files (use `/guardian-cleanup`)
+- ❌ Does NOT build Astro website (use `/guardian-deploy`)
+- ❌ Does NOT diagnose health issues (use `/guardian-health`)
+
+**Focus**: Git commit workflow only - analyzes changes, commits with perfect format.
+
+## Constitutional Compliance
+
+This command enforces:
+- ✅ Automatic commit type detection
+- ✅ Meaningful commit messages (not "Update files")
+- ✅ Constitutional branch naming
+- ✅ Branch preservation strategy
+- ✅ Proper merge strategy (--no-ff)
+- ✅ Claude Code attribution
