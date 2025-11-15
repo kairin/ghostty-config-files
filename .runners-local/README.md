@@ -8,7 +8,7 @@ Consolidated local infrastructure for continuous integration, deployment testing
 
 - **workflows/** - Workflow execution scripts (committed)
   - `gh-workflow-local.sh` - Local GitHub Actions simulation
-  - `gh-pages-setup.sh` - GitHub Pages local testing
+  - `gh-pages-setup.sh` - GitHub Pages local testing (active)
   - `astro-build-local.sh` - Astro build workflow
   - `performance-monitor.sh` - Performance tracking
   - `pre-commit-local.sh` - Pre-commit validation
@@ -16,6 +16,7 @@ Consolidated local infrastructure for continuous integration, deployment testing
   - `benchmark-runner.sh` - Constitutional performance benchmarking
   - `performance-dashboard.sh` - Performance metrics dashboard
   - `validate-modules.sh` - Module contract and dependency validation
+  - ~~`astro-pages-setup.sh.DISABLED`~~ - Archived (replaced by `gh-pages-setup.sh`)
 - **self-hosted/** - Self-hosted runner management (committed scripts, gitignored config)
   - `setup-self-hosted-runner.sh` - Runner setup
   - `config/` - Machine-specific runner credentials (gitignored)
