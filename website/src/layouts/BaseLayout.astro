@@ -37,33 +37,39 @@ const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   </head>
-  <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
-    <!-- Navigation -->
-    <nav class="navbar bg-gray-50 dark:bg-slate-800 shadow-lg border-b border-gray-200 dark:border-gray-700">
-      <div class="container mx-auto">
-        <div class="flex-1">
-          <a href={`${base}/`} class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-dark-primary">
-            Ghostty Config Files
-          </a>
-        </div>
-        <div class="flex-none gap-2">
-          <ul class="menu menu-horizontal px-1">
-            <li><a href={`${base}/user-guide/installation`} class="hover:text-blue-600 dark:hover:text-dark-primary">User Guide</a></li>
-            <li><a href={`${base}/ai-guidelines/core-principles`} class="hover:text-blue-600 dark:hover:text-dark-primary">AI Guidelines</a></li>
-            <li><a href={`${base}/developer/architecture`} class="hover:text-blue-600 dark:hover:text-dark-primary">Developer</a></li>
-            <li>
-              <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-dark-primary">
-                GitHub
-              </a>
-            </li>
-          </ul>
-          <ThemeToggle />
+  <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg">
+    <!-- Modern Glass Morphism Navigation -->
+    <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300">
+      <div class="full-width-section">
+        <div class="navbar">
+          <div class="flex-1">
+            <a href={`${base}/`} class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all">
+              <span class="hidden md:inline">Ghostty Config Files</span>
+              <span class="md:hidden">Ghostty</span>
+            </a>
+          </div>
+          <div class="flex-none gap-2">
+            <ul class="menu menu-horizontal px-1 hidden lg:flex">
+              <li><a href={`${base}/user-guide/installation`} class="hover:text-blue-600 dark:hover:text-cyan-400 transition-all">User Guide</a></li>
+              <li><a href={`${base}/ai-guidelines/core-principles`} class="hover:text-purple-600 dark:hover:text-purple-400 transition-all">AI Guidelines</a></li>
+              <li><a href={`${base}/developer/architecture`} class="hover:text-amber-600 dark:hover:text-amber-400 transition-all">Developer</a></li>
+              <li>
+                <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-cyan-400 transition-all">
+                  GitHub
+                </a>
+              </li>
+            </ul>
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 md:px-8 py-12 max-w-7xl">
+    <!-- Spacer for fixed nav -->
+    <div class="h-20"></div>
+
+    <!-- Main Content - Full Width -->
+    <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12">
       <!-- Article Header (if metadata provided) -->
       {(pubDate || author) && (
         <div class="mb-8 text-sm text-gray-600 dark:text-gray-400">
@@ -78,14 +84,14 @@ const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
         </div>
       )}
 
-      <!-- Page Content -->
-      <article class="prose prose-lg max-w-readable mx-auto text-lg leading-relaxed">
+      <!-- Page Content - Full Width with Max Readable for Prose -->
+      <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">
         <slot />
       </article>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700">
+    <!-- Modern Glass Footer -->
+    <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50">
       <aside>
         <p class="font-bold text-xl mb-2">
           Ghostty Configuration Files
