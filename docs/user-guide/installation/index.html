@@ -12,7 +12,7 @@ GitHub
 <ul>
 <li>Ghostty terminal emulator (built from source)</li>
 <li>ZSH with Oh My ZSH</li>
-<li>Node.js LTS (via NVM)</li>
+<li>Node.js latest (v25.2.0+) via fnm (Fast Node Manager)</li>
 <li>Context menu integration (“Open in Ghostty”)</li>
 <li>AI tools (Claude Code, Gemini CLI)</li>
 <li>All configuration and optimizations</li>
@@ -63,7 +63,7 @@ GitHub
 <p><strong>What this does</strong>:</p>
 <ol>
 <li>Checks for required dependencies</li>
-<li>Installs Node.js LTS via NVM</li>
+<li>Installs Node.js latest (v25.2.0+) via fnm (Fast Node Manager)</li>
 <li>Installs Zig compiler 0.14.0</li>
 <li>Builds Ghostty from source</li>
 <li>Configures ZSH with Oh My ZSH</li>
@@ -92,11 +92,11 @@ GitHub
 <h3 id="method-3-manual-component-installation">Method 3: Manual Component Installation</h3>
 <p>For advanced users who want full control:</p>
 <h4 id="step-1-install-nodejs">Step 1: Install Node.js</h4>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Using NVM (recommended)</span></span>
-<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -o-</span><span style="color:#9ECBFF"> https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> bash</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Using fnm (Fast Node Manager - recommended)</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -fsSL</span><span style="color:#9ECBFF"> https://fnm.vercel.app/install</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> bash</span></span>
 <span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> ~/.bashrc</span></span>
-<span class="line"><span style="color:#B392F0">nvm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --lts</span></span>
-<span class="line"><span style="color:#B392F0">nvm</span><span style="color:#9ECBFF"> use</span><span style="color:#79B8FF"> --lts</span></span></code></pre>
+<span class="line"><span style="color:#B392F0">fnm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --latest</span></span>
+<span class="line"><span style="color:#B392F0">fnm</span><span style="color:#9ECBFF"> use</span><span style="color:#9ECBFF"> latest</span></span></code></pre>
 <h4 id="step-2-install-zig-compiler">Step 2: Install Zig Compiler</h4>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Download and install Zig 0.14.0</span></span>
 <span class="line"><span style="color:#B392F0">wget</span><span style="color:#9ECBFF"> https://ziglang.org/download/0.14.0/zig-linux-x86_64-0.14.0.tar.xz</span></span>
@@ -189,23 +189,23 @@ GitHub
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Restart Nautilus</span></span>
 <span class="line"><span style="color:#B392F0">nautilus</span><span style="color:#79B8FF"> -q</span></span></code></pre>
-<h3 id="nvm-installation-issues">NVM Installation Issues</h3>
+<h3 id="fnm-installation-issues">fnm Installation Issues</h3>
 <blockquote>
-<p><strong>Automatic Fallback Strategy</strong>: NVM installation attempts first (preferred), but the installation script automatically falls back to system Node.js if NVM fails. AI tools function identically with either method.</p>
+<p><strong>Automatic Fallback Strategy</strong>: fnm installation attempts first (preferred for 40x faster startup), but the installation script automatically falls back to system Node.js if fnm fails. AI tools function identically with either method.</p>
 </blockquote>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    Start([Node.js installation required]) --> InstallNVM[Install NVM&#x3C;br/>curl nvm install script]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Start([Node.js installation required]) --> Installfnm[Install fnm&#x3C;br/>curl fnm install script]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    InstallNVM --> SourceShell[Source shell config&#x3C;br/>~/.zshrc or ~/.bashrc]</span></span>
-<span class="line"><span style="color:#E1E4E8">    SourceShell --> CheckNVM{NVM command&#x3C;br/>available?}</span></span>
+<span class="line"><span style="color:#E1E4E8">    Installfnm --> SourceShell[Source shell config&#x3C;br/>~/.zshrc or ~/.bashrc]</span></span>
+<span class="line"><span style="color:#E1E4E8">    SourceShell --> Checkfnm{fnm command&#x3C;br/>available?}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    CheckNVM -->|Yes| InstallLTS[Install Node.js LTS&#x3C;br/>nvm install --lts]</span></span>
-<span class="line"><span style="color:#E1E4E8">    CheckNVM -->|No| WarnNVM[⚠️ NVM not in PATH&#x3C;br/>Shell restart needed]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Checkfnm -->|Yes| InstallLatest[Install Node.js latest&#x3C;br/>fnm install --latest]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Checkfnm -->|No| Warnfnm[⚠️ fnm not in PATH&#x3C;br/>Shell restart needed]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    InstallLTS --> VerifyNode{Node.js&#x3C;br/>accessible?}</span></span>
-<span class="line"><span style="color:#E1E4E8">    WarnNVM --> Fallback[Fallback: System Node.js&#x3C;br/>sudo apt install nodejs npm]</span></span>
+<span class="line"><span style="color:#E1E4E8">    InstallLatest --> VerifyNode{Node.js&#x3C;br/>accessible?}</span></span>
+<span class="line"><span style="color:#E1E4E8">    Warnfnm --> Fallback[Fallback: System Node.js&#x3C;br/>sudo apt install nodejs npm]</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    VerifyNode -->|Yes| UseNVM[✅ Use NVM Node.js&#x3C;br/>Preferred method]</span></span>
+<span class="line"><span style="color:#E1E4E8">    VerifyNode -->|Yes| Usefnm[✅ Use fnm Node.js&#x3C;br/>Preferred method]</span></span>
 <span class="line"><span style="color:#E1E4E8">    VerifyNode -->|No| Fallback</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    Fallback --> CheckSystem{System Node.js&#x3C;br/>installed?}</span></span>
@@ -213,41 +213,41 @@ GitHub
 <span class="line"><span style="color:#E1E4E8">    CheckSystem -->|No| InstallSystem[Install: sudo apt install nodejs npm]</span></span>
 <span class="line"><span style="color:#E1E4E8">    InstallSystem --> UseSystem</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    UseNVM --> InstallAI[Install AI tools&#x3C;br/>Claude, Gemini, Copilot]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Usefnm --> InstallAI[Install AI tools&#x3C;br/>Claude, Gemini, Copilot]</span></span>
 <span class="line"><span style="color:#E1E4E8">    UseSystem --> InstallAI</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    InstallAI --> Complete([✅ Node.js + AI tools ready])</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    style Start fill:#e1f5fe</span></span>
 <span class="line"><span style="color:#E1E4E8">    style Complete fill:#c8e6c9</span></span>
-<span class="line"><span style="color:#E1E4E8">    style WarnNVM fill:#fff9c4</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Warnfnm fill:#fff9c4</span></span>
 <span class="line"><span style="color:#E1E4E8">    style Fallback fill:#ffcdd2</span></span>
-<span class="line"><span style="color:#E1E4E8">    style UseNVM fill:#81c784</span></span>
+<span class="line"><span style="color:#E1E4E8">    style Usefnm fill:#81c784</span></span>
 <span class="line"><span style="color:#E1E4E8">    style UseSystem fill:#aed581</span></span></code></pre>
-<p><strong>Issue</strong>: NVM installation fails or not detected</p>
+<p><strong>Issue</strong>: fnm installation fails or not detected</p>
 <p><strong>Symptoms</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>⚠️  NVM installation may have failed - check logs</span></span>
-<span class="line"><span>💡 System Node.js will be used as fallback if NVM unavailable</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>⚠️  fnm installation may have failed - check logs</span></span>
+<span class="line"><span>💡 System Node.js will be used as fallback if fnm unavailable</span></span></code></pre>
 <p><strong>Solutions</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Option 1: Manual NVM installation</span></span>
-<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -o-</span><span style="color:#9ECBFF"> https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> bash</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Option 1: Manual fnm installation</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -fsSL</span><span style="color:#9ECBFF"> https://fnm.vercel.app/install</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> bash</span></span>
 <span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> ~/.zshrc</span></span>
-<span class="line"><span style="color:#B392F0">nvm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --lts</span></span>
+<span class="line"><span style="color:#B392F0">fnm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --latest</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Option 2: Use system Node.js (fallback - already used by script)</span></span>
 <span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> nodejs</span><span style="color:#9ECBFF"> npm</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#6A737D"># Option 3: Check NVM installation</span></span>
-<span class="line"><span style="color:#79B8FF">command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> nvm</span><span style="color:#6A737D">  # Should show NVM path</span></span>
-<span class="line"><span style="color:#B392F0">nvm</span><span style="color:#79B8FF"> --version</span><span style="color:#6A737D">   # Should show version number</span></span>
+<span class="line"><span style="color:#6A737D"># Option 3: Check fnm installation</span></span>
+<span class="line"><span style="color:#79B8FF">command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> fnm</span><span style="color:#6A737D">  # Should show fnm path</span></span>
+<span class="line"><span style="color:#B392F0">fnm</span><span style="color:#79B8FF"> --version</span><span style="color:#6A737D">   # Should show version number</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Verify Node.js is available</span></span>
 <span class="line"><span style="color:#B392F0">node</span><span style="color:#79B8FF"> --version</span></span>
 <span class="line"><span style="color:#B392F0">npm</span><span style="color:#79B8FF"> --version</span></span></code></pre>
 <p><strong>Why This Happens</strong>:</p>
 <ul>
-<li>NVM requires shell restart to load into PATH</li>
-<li>The installation script sources shell config but may not pick up NVM in all contexts</li>
+<li>fnm requires shell restart to load into PATH</li>
+<li>The installation script sources shell config but may not pick up fnm in all contexts</li>
 <li>System Node.js automatically used as fallback (AI tools will still work)</li>
 </ul>
 <p><strong>Impact</strong>: AI tools (Claude Code, Gemini CLI) will function normally with system Node.js</p>
@@ -295,7 +295,7 @@ GitHub
 <h2 id="getting-help">Getting Help</h2>
 <ul>
 <li><strong>GitHub Issues</strong>: <a href="https://github.com/your-username/ghostty-config-files/issues">Report bugs or request features</a></li>
-<li><strong>Documentation</strong>: Browse <code>docs-source/</code> for comprehensive guides</li>
+<li><strong>Documentation</strong>: Browse <code>website/src/</code> for comprehensive guides</li>
 <li><strong>Local Validation</strong>: Run <code>./manage.sh validate</code> to check system health</li>
 </ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">installation</span><span class="badge badge-outline">setup</span><span class="badge badge-outline">quickstart</span> </div> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700"> <aside> <p class="font-bold text-xl mb-2">
 Ghostty Configuration Files
