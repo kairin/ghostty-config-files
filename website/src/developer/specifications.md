@@ -1,6 +1,11 @@
 ---
 title: "Specifications Overview"
 description: "Complete overview of active feature specifications using spec-kit methodology"
+pubDate: 2025-11-15
+author: "Development Team"
+tags: ["specifications", "spec-kit", "planning", "architecture"]
+techStack: ["Spec-Kit", "YAML", "Markdown"]
+difficulty: "intermediate"
 ---
 
 # Specifications Overview

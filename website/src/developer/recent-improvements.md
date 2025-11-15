@@ -1,6 +1,11 @@
 ---
 title: "Recent Improvements"
 description: "Comprehensive summary of project improvements and enhancements (November 2025)"
+pubDate: 2025-11-15
+author: "Development Team"
+tags: ["improvements", "changelog", "features", "enhancements"]
+techStack: ["Bash 5.x+", "Node.js latest (v25.2.0+)", "Astro.build", "Guardian Commands"]
+difficulty: "beginner"
 ---
 
 # Recent Improvements (November 2025)

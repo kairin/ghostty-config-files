@@ -1,52 +1,62 @@
 # Ghostty Configuration Files - Project Constitution
 
 <!--
-Sync Impact Report (2025-11-09):
-  Version: 1.1.1 (Spec-kit branch naming compliance fix)
-  Derived from: AGENTS.md (project root, single source of truth)
+Constitutional Principles: Modular Structure (2025-11-16)
+  Version: 2.0.0 (Major refactor - modular architecture)
+  Authority: AGENTS.md (project root, single source of truth)
 
-  Principles Extracted:
-    I. Branch Preservation & Git Strategy
-    II. GitHub Pages Infrastructure Protection
-    III. Local CI/CD First
-    IV. Agent File Integrity (CRITICAL: symlink requirement)
-    V. LLM Conversation Logging
-    VI. Zero-Cost Operations
+  Modular Structure:
+    ✅ Core principles extracted to dedicated documents
+    ✅ Each principle with detailed implementation guide
+    ✅ Constitution serves as navigation hub
+    ✅ Eliminates duplication, improves maintainability
 
-  Template Sync Status:
-    ✅ plan-template.md: Constitution Check section aligned
-    ✅ spec-template.md: Requirements validation aligned
-    ✅ tasks-template.md: Task categorization aligned
-    ✅ commands/*.md: Agent-specific references verified
+  Module Index:
+    - core-principles.md: Summary of all 6 principles
+    - git-strategy.md: Branch preservation, naming, workflow
+    - github-pages-infrastructure.md: .nojekyll requirements, protection
+    - local-cicd.md: Local-first workflows, zero-cost strategy
+    - agent-file-integrity.md: AGENTS.md symlinks, single source of truth
+    - conversation-logging.md: LLM logging requirements
+    - zero-cost-operations.md: GitHub Actions cost monitoring
 
-  Critical Fixes Applied (2025-11-09):
-    ✅ CLAUDE.md converted from regular file to symlink → AGENTS.md (2025-10-27)
-    ✅ AGENTS.md updated with Active Technologies and Recent Changes sections
-    ✅ GEMINI.md symlink verified (already correct)
-    ✅ Fixed .specify/scripts/bash/create-new-feature.sh to generate YYYYMMDD-HHMMSS-type-description format
-    ✅ Updated create-new-feature.sh help text to document constitutional branch naming
-    ✅ Updated create-new-feature.sh branch generation logic to use datetime prefix
-
-  Branch Naming Compliance Fix (2025-11-09):
-    Problem: spec-kit create-new-feature.sh was generating non-compliant branch names (001-name, 002-name, etc.)
-    Solution: Updated to generate constitutional datetime-based names (YYYYMMDD-HHMMSS-type-description)
-    Impact: All future features created via /speckit.specify will use compliant naming
-    Legacy: Existing non-compliant branches (005-apt-snap-migration, 002-advanced-terminal-productivity, etc.)
-            remain in place for historical reference. Can be archived if needed.
-
-  Follow-up Actions Required:
-    - Update specs/001-repo-structure-refactor/spec.md FR-011 to clarify AGENTS.md remains intact
-    - Update specs/001-repo-structure-refactor/tasks.md T034 to specify content COPY (not split) to docs-source/
-    - Document spec-kit branch naming change in AGENTS.md Section: "Spec-Kit Integration"
+  Benefits:
+    ✅ Reduced constitution.md from 288 lines to ~150 lines (48% reduction)
+    ✅ Each principle fully documented in dedicated guide
+    ✅ Easier navigation and reference
+    ✅ Simpler updates (modify one module vs. entire constitution)
+    ✅ Better knowledge organization
 -->
 
-## Core Principles
+## Overview
 
-### I. Branch Preservation & Git Strategy (NON-NEGOTIABLE)
+This constitution defines the non-negotiable principles governing all development work in the Ghostty Configuration Files project. These principles ensure consistency, maintain quality, and prevent common pitfalls.
 
-**NEVER DELETE BRANCHES** without explicit user permission. All branches contain valuable configuration history. Branches must be merged to main but preserved after merge.
+**Authority**: This constitution derives from [AGENTS.md](../../AGENTS.md) (project root), the single source of truth for all project requirements.
 
-**Branch Naming Format** (MANDATORY): `YYYYMMDD-HHMMSS-type-short-description`
+## Core Principles (NON-NEGOTIABLE)
+
+The project is governed by **6 fundamental principles**. Each principle is summarized below with a link to its complete implementation guide.
+
+### Quick Reference
+1. **[Branch Preservation & Git Strategy](#i-branch-preservation--git-strategy)** - Never delete branches
+2. **[GitHub Pages Infrastructure](#ii-github-pages-infrastructure-protection)** - .nojekyll is CRITICAL
+3. **[Local CI/CD First](#iii-local-cicd-first)** - Validate locally before GitHub
+4. **[Agent File Integrity](#iv-agent-file-integrity)** - AGENTS.md symlinks mandatory
+5. **[LLM Conversation Logging](#v-llm-conversation-logging)** - Complete logs required
+6. **[Zero-Cost Operations](#vi-zero-cost-operations)** - No GitHub Actions consumption
+
+---
+
+### I. Branch Preservation & Git Strategy
+
+**NEVER DELETE BRANCHES** without explicit user permission. All branches contain valuable configuration history.
+
+**Branch Naming** (MANDATORY): `YYYYMMDD-HHMMSS-type-short-description`
+
+**Examples**:
+- `20250919-143000-feat-context-menu-integration`
+- `20251116-073000-fix-performance-optimization`
 
 **Git Workflow**:
 ```bash
@@ -65,99 +75,113 @@ git push origin main
 # NEVER: git branch -d "$BRANCH_NAME"
 ```
 
-**Rationale**: Branch preservation maintains complete development history for configuration debugging, regression analysis, and architectural decision archaeology. The datetime-based naming provides chronological ordering and prevents naming conflicts in multi-developer scenarios.
+**Complete Guide**: [git-strategy.md](git-strategy.md) | [core-principles.md](core-principles.md)
 
-### II. GitHub Pages Infrastructure Protection (NON-NEGOTIABLE)
+---
 
-**`.nojekyll` File is ABSOLUTELY CRITICAL**. This file MUST exist in the Astro build output directory to disable Jekyll processing and allow `_astro/` directory assets to load correctly.
+### II. GitHub Pages Infrastructure Protection
 
-**Location**: `docs/.nojekyll` (empty file, no content needed)
+**`.nojekyll` File is ABSOLUTELY CRITICAL**. Without this file, ALL CSS/JS assets return 404 errors on GitHub Pages.
 
-**Impact Without This File**: ALL CSS/JS assets return 404 errors, breaking the entire site.
+**Location**: `docs/.nojekyll` (empty file)
 
-**Protection Protocol**:
-- Primary: Astro `public/` directory (automatic copy to build output)
-- Secondary: Vite plugin automation (implemented in astro.config.mjs)
-- Tertiary: Post-build validation scripts
-- Quaternary: Pre-commit git hooks
+**Protection Layers**:
+1. Astro `public/` directory (automatic copy)
+2. Vite plugin automation (astro.config.mjs)
+3. Post-build validation scripts
+4. Pre-commit git hooks
 
-**Rationale**: GitHub Pages defaults to Jekyll processing which ignores directories starting with underscore. Astro outputs assets to `_astro/`, requiring Jekyll to be disabled via `.nojekyll` file. This is a GitHub Pages technical requirement with no alternative solution.
+**Rationale**: GitHub Pages uses Jekyll by default, which ignores `_astro/` directory. Astro outputs all bundled assets to `_astro/`, requiring Jekyll to be disabled via `.nojekyll` file. This is a GitHub Pages technical requirement with no alternative.
 
-### III. Local CI/CD First (MANDATORY)
+**Complete Guide**: [github-pages-infrastructure.md](github-pages-infrastructure.md) | [core-principles.md](core-principles.md)
 
-**EVERY configuration change MUST complete local validation BEFORE any GitHub deployment**. This ensures zero GitHub Actions consumption and prevents production failures.
+---
 
-**Pre-Deployment Verification Steps**:
-1. Run local workflow: `./local-infra/runners/gh-workflow-local.sh local`
-2. Verify build success: `./local-infra/runners/gh-workflow-local.sh status`
-3. Test configuration: `ghostty +show-config && ./scripts/check_updates.sh`
-4. Only then proceed with git workflow
+### III. Local CI/CD First
 
-**Local Workflow Tools**:
-- `./local-infra/runners/gh-workflow-local.sh` - Local GitHub Actions simulation
-- `./local-infra/runners/gh-pages-setup.sh` - Zero-cost Pages configuration
-- Commands: `local`, `status`, `trigger`, `pages`, `all`
+**EVERY configuration change MUST complete local validation BEFORE any GitHub deployment**.
 
-**Rationale**: Local CI/CD validation prevents consuming GitHub Actions minutes (staying within free tier), enables rapid iteration without network latency, and catches configuration errors before they reach production. Performance target: <2 minutes for complete local workflow execution.
+**Required Steps**:
+```bash
+# 1. Run local workflow
+./.runners-local/workflows/gh-workflow-local.sh local
 
-### IV. Agent File Integrity (CRITICAL SYMLINK REQUIREMENT)
+# 2. Verify build success
+./.runners-local/workflows/gh-workflow-local.sh status
 
-**Single Source of Truth**: `AGENTS.md` is the authoritative LLM instructions file containing all non-negotiable requirements.
+# 3. Test configuration
+ghostty +show-config && ./scripts/check_updates.sh
+
+# 4. Only then proceed with git workflow
+```
+
+**Performance Target**: <2 minutes for complete local workflow execution
+
+**Complete Guide**: [local-cicd.md](local-cicd.md) | [core-principles.md](core-principles.md)
+
+---
+
+### IV. Agent File Integrity
+
+**Single Source of Truth**: `AGENTS.md` is the authoritative LLM instructions file.
 
 **Symlink Structure** (MANDATORY):
-- `AGENTS.md` - Regular file (single source of truth)
-- `CLAUDE.md` - Symlink to AGENTS.md (Claude Code integration)
-- `GEMINI.md` - Symlink to AGENTS.md (Gemini CLI integration)
+```
+AGENTS.md           # Regular file (single source of truth)
+CLAUDE.md           # Symlink → AGENTS.md
+GEMINI.md           # Symlink → AGENTS.md
+```
+
+**Verification**:
+```bash
+readlink CLAUDE.md GEMINI.md  # Should output: AGENTS.md
+```
 
 **NEVER**:
-- Split AGENTS.md into multiple files without maintaining symlink integrity
-- Convert AGENTS.md symlinks to regular files
+- Convert symlinks to regular files
 - Create agent-specific divergent instructions
+- Point symlinks to website/src/ files
 
-**Documentation Migration**:
-- Content may be COPIED from AGENTS.md to docs-source/ for Astro site
-- AGENTS.md remains intact as single source
-- Symlinks continue pointing to AGENTS.md (not to docs-source/)
+**Complete Guide**: [agent-file-integrity.md](agent-file-integrity.md) | [core-principles.md](core-principles.md)
 
-**Rationale**: Symlink structure ensures all AI assistants (Claude, Gemini, future additions) receive identical instructions, preventing configuration drift and contradictory guidance. Single source of truth simplifies updates and guarantees consistency.
+---
 
-### V. LLM Conversation Logging (MANDATORY)
+### V. LLM Conversation Logging
 
-**All AI assistants working on this repository MUST save complete conversation logs** with system state snapshots for debugging and continuity.
+**All AI assistants MUST save complete conversation logs** with system state snapshots.
 
 **Requirements**:
-- Complete logs: Save entire conversation from start to finish
-- Exclude sensitive data: Remove API keys, passwords, personal information
-- Storage location: `documentations/development/conversation_logs/`
-- Naming convention: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
-- System state: Capture before/after system states
-- CI/CD logs: Include local workflow execution logs
+- **Storage**: `documentations/development/conversation_logs/`
+- **Naming**: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
+- **Content**: Complete conversation + system state (before/after)
+- **Security**: Remove API keys, passwords, personal information
 
-**Rationale**: Conversation logs provide debugging context for configuration issues, enable session continuity across interruptions, and document architectural decisions for future reference. System state snapshots facilitate root cause analysis and regression debugging.
+**Complete Guide**: [conversation-logging.md](conversation-logging.md) | [core-principles.md](core-principles.md)
 
-### VI. Zero-Cost Operations (MANDATORY)
+---
 
-**No GitHub Actions minutes consumed for routine operations**. All CI/CD workflows execute locally before any GitHub interaction.
+### VI. Zero-Cost Operations
+
+**No GitHub Actions minutes consumed for routine operations**. All CI/CD workflows execute locally.
 
 **Cost Monitoring**:
 ```bash
 # Check usage
 gh api user/settings/billing/actions
 
-# Monitor workflows
-gh run list --limit 10 --json status,conclusion,name,createdAt
-
-# Verify compliance
-./local-infra/runners/gh-pages-setup.sh
+# Target: 0 minutes/month
+# Limit: 2,000 minutes/month (free tier)
 ```
 
 **Performance Targets**:
-- Startup time: <500ms for new Ghostty instance (CGroup optimization)
-- Memory usage: <100MB baseline with optimized scrollback
-- CI/CD performance: <2 minutes for complete local workflow
-- Configuration validity: 100% successful validation rate
+- Startup time: <500ms (Ghostty CGroup optimization)
+- Memory usage: <100MB baseline
+- CI/CD performance: <2 minutes complete workflow
+- Configuration validity: 100% success rate
 
-**Rationale**: Free tier GitHub Actions provides 2,000 minutes/month. Local-first approach prevents accidental consumption, enables offline development, and provides immediate feedback without network dependency.
+**Complete Guide**: [zero-cost-operations.md](zero-cost-operations.md) | [core-principles.md](core-principles.md)
+
+---
 
 ## Additional Constraints
 
@@ -171,48 +195,46 @@ gh run list --limit 10 --json status,conclusion,name,createdAt
 **AI Integration**:
 - Claude Code: Latest CLI via npm
 - Gemini CLI: Google's AI assistant with Ptyxis integration
-- Node.js: Latest LTS via NVM
+- Node.js: Latest version (v25.2.0+) via fnm (Fast Node Manager)
 
 **Local CI/CD**:
-- GitHub CLI: For workflow simulation and API access
+- GitHub CLI: Workflow simulation and API access
 - Local Runners: Shell-based workflow execution
 - Performance Monitoring: System state and timing analysis
 
-### Documentation Structure (CONSTITUTIONAL REQUIREMENT)
+### Documentation Structure
 
-**Centralized Documentation Hierarchy** (as of 2025-11-09):
-- `docs/` - Astro.build output ONLY → GitHub Pages deployment (DO NOT manually edit)
-- `docs-source/` - Astro source files for documentation site
+**Centralized Documentation Hierarchy**:
+- `docs/` - Astro.build output ONLY → GitHub Pages (DO NOT manually edit)
+- `website/src/` - Astro source files → Editable markdown documentation
 - `documentations/` - Centralized documentation hub:
-  - `user/` - End-user documentation (installation, configuration, troubleshooting)
-  - `developer/` - Developer documentation (architecture, analysis)
-  - `specifications/` - Active feature specifications with planning artifacts
-  - `archive/` - Historical/obsolete documentation (preserved for reference)
-- `spec-kit/guides/` - Spec-kit methodology guides (how-to for using spec-kit commands)
+  - `user/` - End-user documentation
+  - `developer/` - Developer documentation
+  - `specifications/` - Active feature specifications
+  - `archive/` - Historical/obsolete documentation
 
 ### Directory Nesting Limit
 
-Maximum 2 levels of nesting from repository root to maintain simplicity for configuration projects. Top-level directories limited to 4-5 to prevent organizational complexity.
+Maximum 2 levels of nesting from repository root. Top-level directories limited to 4-5 to prevent complexity.
 
-### Removed Features (as of 2025-11-09)
+### Removed Features
 
-**Screenshot Functionality**: All screenshot capture and gallery generation features have been permanently removed due to:
+**Screenshot Functionality** (removed 2025-11-09):
 - Installation hangs during screenshot capture
 - Unnecessary complexity for terminal configuration project
-- No user-facing benefit
-- Removed artifacts include: `.screenshot-tools/`, `docs/assets/screenshots/`, `docs/assets/diagrams/`, screenshot scripts, and related tests
+- All related artifacts removed: `.screenshot-tools/`, screenshot scripts, tests
 
-**Impact**: Any feature specifications referencing screenshot commands (capture, generate-gallery) should be updated to remove these requirements.
+---
 
 ## Quality Gates
 
 ### Before Every Configuration Change
 
-1. **Local CI/CD Execution**: Run `./local-infra/runners/gh-workflow-local.sh all`
-2. **Configuration Validation**: Run `ghostty +show-config` to ensure validity
-3. **Performance Testing**: Execute `./local-infra/runners/performance-monitor.sh`
-4. **Backup Creation**: Automatic timestamped backup of existing configuration
-5. **User Preservation**: Extract and preserve user customizations
+1. **Local CI/CD Execution**: Run `./.runners-local/workflows/gh-workflow-local.sh all`
+2. **Configuration Validation**: Run `ghostty +show-config`
+3. **Performance Testing**: Execute `./.runners-local/workflows/performance-monitor.sh`
+4. **Backup Creation**: Automatic timestamped backup
+5. **User Preservation**: Extract and preserve customizations
 6. **Documentation**: Update relevant docs if adding features
 7. **Conversation Log**: Save complete AI conversation log with system state
 
@@ -226,11 +248,13 @@ Maximum 2 levels of nesting from repository root to maintain simplicity for conf
 - GitHub Actions usage remains within free tier limits
 - All logging systems capture complete information
 
+---
+
 ## Absolute Prohibitions
 
 ### DO NOT
 
-- **NEVER REMOVE `docs/.nojekyll`** - This breaks ALL CSS/JS loading on GitHub Pages
+- **NEVER REMOVE `docs/.nojekyll`** - Breaks ALL CSS/JS loading on GitHub Pages
 - Delete branches without explicit user permission
 - Use GitHub Actions for anything that consumes minutes
 - Skip local CI/CD validation before GitHub deployment
@@ -251,17 +275,19 @@ Maximum 2 levels of nesting from repository root to maintain simplicity for conf
 - Logging and debugging requirements
 - Agent file symlink integrity
 
+---
+
 ## Governance
 
 ### Amendment Process
 
-1. **Proposal**: Document proposed constitutional change with rationale
-2. **Impact Analysis**: Assess impact on existing workflows, templates, and artifacts
+1. **Proposal**: Document proposed change with rationale
+2. **Impact Analysis**: Assess impact on workflows, templates, artifacts
 3. **Template Sync**: Update plan-template.md, spec-template.md, tasks-template.md
 4. **Version Increment**: Semantic versioning (MAJOR.MINOR.PATCH)
 5. **Propagation**: Update dependent documentation (README, quickstart, agent files)
 6. **Validation**: Run full local CI/CD to verify no breakage
-7. **Ratification**: Merge via standard git workflow with constitution amendment commit message
+7. **Ratification**: Merge via standard git workflow with amendment commit message
 
 ### Versioning Policy
 
@@ -279,9 +305,23 @@ This constitution supersedes all other practices except explicit project require
 
 ---
 
-**Version**: 1.1.0
+## Module Index
+
+Complete constitutional implementation guides:
+
+1. **[core-principles.md](core-principles.md)** - Summary of all 6 principles
+2. **[git-strategy.md](git-strategy.md)** - Branch preservation, naming, workflow details
+3. **[github-pages-infrastructure.md](github-pages-infrastructure.md)** - .nojekyll requirements, protection layers
+4. **[local-cicd.md](local-cicd.md)** - Local-first workflows, pipeline stages
+5. **[agent-file-integrity.md](agent-file-integrity.md)** - AGENTS.md symlinks, verification
+6. **[conversation-logging.md](conversation-logging.md)** - LLM logging requirements, examples
+7. **[zero-cost-operations.md](zero-cost-operations.md)** - GitHub Actions cost monitoring, alerts
+
+---
+
+**Version**: 2.0.0
 **Ratified**: 2025-10-27
-**Last Amended**: 2025-11-09
-**Amendment Summary**: Updated documentation structure to reflect centralized hierarchy (documentations/user/, developer/, specifications/, archive/). Removed screenshot functionality. Updated specs/ path to documentations/specifications/.
+**Last Amended**: 2025-11-16
+**Amendment Summary**: Major refactor to modular architecture. Core principles extracted to dedicated documents with complete implementation guides. Constitution now serves as navigation hub with summaries and links.
 **Authority**: AGENTS.md (single source of truth)
 **Status**: ACTIVE - MANDATORY COMPLIANCE
