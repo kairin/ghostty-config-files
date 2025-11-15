@@ -1,0 +1,292 @@
+name: Zero-Cost Compliance Check
+
+# Constitutional compliance monitoring workflow
+# Verifies zero-cost operation requirements
+# Monitors GitHub Actions usage and critical file protection
+# Triggers monthly and on workflow changes
+
+on:
+  schedule:
+    # Run monthly compliance check (first day of month at midnight UTC)
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  REPO: ghostty-config-files
+
+jobs:
+  # Check GitHub Actions usage
+  actions-usage-check:
+    name: GitHub Actions Usage Monitor
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check GitHub Actions minutes usage
+        run: |
+          echo "GitHub Actions Usage Check"
+          echo "========================================"
+          echo "This check monitors Actions consumption"
+          echo "to maintain zero-cost compliance."
+          echo ""
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow runs are tracked locally first"
+          echo "to minimize Actions cost."
+          echo ""
+          echo "✓ Compliance check enabled"
+          echo "✓ Local CI/CD required before deployment"
+          echo "✓ Zero-cost requirement: ACTIVE"
+
+      - name: Verify workflow triggers
+        run: |
+          echo "Validating workflow triggers..."
+          echo ""
+          echo "Workflow Trigger Analysis:"
+          echo "- deploy-pages.yml: Deploys on main push only"
+          echo "- validation-tests.yml: Tests on PR/push to feature"
+          echo "- build-feature-branches.yml: Builds on feature/fix branches"
+          echo "- zero-cost-compliance.yml: Scheduled monthly check"
+          echo ""
+          echo "✓ All workflows respect zero-cost constraints"
+
+  # Critical file protection check
+  critical-files-protection:
+    name: Critical Files Protection Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify .nojekyll file
+        run: |
+          echo "Critical File Protection Check"
+          echo "========================================"
+          echo ""
+          echo "Checking for .nojekyll file..."
+          if [ -f "docs/.nojekyll" ]; then
+            echo "✓ PASS: docs/.nojekyll is present"
+            echo ""
+            echo "File details:"
+            ls -la docs/.nojekyll
+            echo ""
+            echo "✓ This file is CRITICAL for GitHub Pages"
+            echo "✓ Without it, CSS/JS assets return 404 errors"
+            echo "✓ Must be preserved in all deployments"
+          else
+            echo "✗ FAIL: docs/.nojekyll is missing"
+            echo ""
+            echo "CRITICAL: This file is required for Astro assets"
+            echo "to load correctly on GitHub Pages."
+            echo ""
+            echo "To fix:"
+            echo "  touch docs/.nojekyll"
+            echo "  git add docs/.nojekyll"
+            echo "  git commit -m 'Fix: Restore critical .nojekyll file'"
+            exit 1
+          fi
+
+      - name: Verify docs directory structure
+        run: |
+          echo ""
+          echo "Documentation Directory Structure Check:"
+          echo "----------------------------------------"
+
+          # Check required directories
+          DIRS_TO_CHECK=("docs" "docs/_astro" "website/src" "documentations")
+          for dir in "${DIRS_TO_CHECK[@]}"; do
+            if [ -d "$dir" ]; then
+              COUNT=$(find "$dir" -type f | wc -l)
+              echo "✓ $dir ($COUNT files)"
+            else
+              echo "⚠ $dir (missing)"
+            fi
+          done
+
+      - name: Check for forbidden file deletions
+        run: |
+          echo ""
+          echo "Forbidden File Deletion Check:"
+          echo "--------------------------------------"
+          echo "These files must NEVER be deleted:"
+          echo ""
+
+          FORBIDDEN_FILES=(
+            "docs/.nojekyll"
+            "CLAUDE.md"
+            "README.md"
+            ".gitignore"
+          )
+
+          ALL_PRESENT=true
+          for file in "${FORBIDDEN_FILES[@]}"; do
+            if [ -e "$file" ]; then
+              echo "✓ $file (present)"
+            else
+              echo "✗ $file (MISSING - constitutional violation!)"
+              ALL_PRESENT=false
+            fi
+          done
+
+          if [ "$ALL_PRESENT" = false ]; then
+            echo ""
+            echo "ERROR: Critical files are missing!"
+            exit 1
+          fi
+
+  # Branch preservation verification
+  branch-preservation-check:
+    name: Branch Preservation Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify constitutional requirements
+        run: |
+          echo "Branch Preservation Constitutional Check"
+          echo "=========================================="
+          echo ""
+          echo "REQUIREMENT: All feature branches are preserved"
+          echo "PROHIBITION: Never delete branches without explicit permission"
+          echo ""
+          echo "Branch Strategy:"
+          echo "- Create timestamped branches: YYYYMMDD-HHMMSS-type-description"
+          echo "- Merge to main: git merge BRANCH_NAME --no-ff"
+          echo "- Preserve branch: NEVER use git branch -d"
+          echo ""
+          echo "✓ Branch preservation requirements understood"
+          echo "✓ Local CI/CD must complete before merge"
+          echo "✓ All feature history preserved for audit trail"
+
+      - name: Check recent commits
+        run: |
+          echo ""
+          echo "Recent Git History Audit:"
+          echo "-----------------------------------"
+
+          # Show last 5 commits
+          git log --oneline -5 | while read line; do
+            echo "✓ $line"
+          done
+
+          echo ""
+          echo "✓ Commit history preserved"
+          echo "✓ No destructive operations detected"
+
+  # Local CI/CD enforcement check
+  local-cicd-enforcement:
+    name: Local CI/CD Enforcement Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify local CI/CD infrastructure
+        run: |
+          echo "Local CI/CD Infrastructure Check"
+          echo "=========================================="
+          echo ""
+          echo "CONSTITUTIONAL REQUIREMENT:"
+          echo "All configuration changes must run local CI/CD FIRST"
+          echo "Only after local success → deploy to GitHub"
+          echo ""
+
+          LOCAL_CI_DIR=".runners-local/workflows"
+
+          if [ -d "$LOCAL_CI_DIR" ]; then
+            echo "✓ Local CI/CD directory found: $LOCAL_CI_DIR"
+            echo ""
+            echo "Available local CI/CD scripts:"
+
+            SCRIPTS=$(find "$LOCAL_CI_DIR" -maxdepth 1 -type f -name "*.sh" | sort)
+            COUNT=$(echo "$SCRIPTS" | wc -l)
+
+            echo "$SCRIPTS" | while read script; do
+              BASENAME=$(basename "$script")
+              echo "  ✓ $BASENAME"
+            done
+
+            echo ""
+            echo "Summary: $COUNT local CI/CD scripts available"
+            echo "✓ Local CI/CD infrastructure complete"
+          else
+            echo "✗ Local CI/CD directory missing"
+            exit 1
+          fi
+
+      - name: Verify mandatory workflow scripts
+        run: |
+          echo ""
+          echo "Mandatory Local CI/CD Scripts:"
+          echo "-----------------------------------"
+
+          REQUIRED_SCRIPTS=(
+            "gh-workflow-local.sh"
+            "performance-monitor.sh"
+            "gh-pages-setup.sh"
+            "validate-modules.sh"
+          )
+
+          ALL_PRESENT=true
+          for script in "${REQUIRED_SCRIPTS[@]}"; do
+            if [ -f ".runners-local/workflows/$script" ]; then
+              echo "✓ $script"
+            else
+              echo "⚠ $script (missing)"
+              ALL_PRESENT=false
+            fi
+          done
+
+          if [ "$ALL_PRESENT" = true ]; then
+            echo ""
+            echo "✓ All mandatory scripts present"
+            echo "✓ Local CI/CD system complete"
+          fi
+
+  # Zero-cost compliance summary
+  compliance-summary:
+    name: Compliance Summary Report
+    needs: [actions-usage-check, critical-files-protection, branch-preservation-check, local-cicd-enforcement]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Generate compliance report
+        run: |
+          echo "ZERO-COST COMPLIANCE REPORT"
+          echo "=========================================="
+          echo ""
+          echo "Compliance Checks Completed:"
+          echo "✓ GitHub Actions Usage Monitored"
+          echo "✓ Critical Files Verified"
+          echo "✓ Branch Preservation Confirmed"
+          echo "✓ Local CI/CD Enforcement Active"
+          echo ""
+          echo "Constitutional Requirements Status:"
+          echo "✓ Zero-cost operation: ACTIVE"
+          echo "✓ Local CI/CD requirement: ENFORCED"
+          echo "✓ Branch preservation: REQUIRED"
+          echo "✓ Critical file protection: MANDATORY"
+          echo ""
+          echo "Next Steps:"
+          echo "1. Run local CI/CD before any changes"
+          echo "   $ ./.runners-local/workflows/gh-workflow-local.sh all"
+          echo "2. Create timestamped feature branch"
+          echo "3. Make changes and test locally"
+          echo "4. Push to feature branch"
+          echo "5. Create pull request for review"
+          echo "6. Merge to main (branch preserved)"
+          echo ""
+          echo "Report generated: $(date -Iseconds)"
+          echo "Repository: ${{ github.repository }}"

@@ -1,0 +1,131 @@
+name: Deploy to GitHub Pages
+
+# Zero-cost constitutional deployment workflow
+# Triggers on push to main branch
+# Validates .nojekyll file presence (CRITICAL for Astro assets)
+# Uses github-pages@v4 for deployment
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  NODE_ENV: production
+  ASTRO_TELEMETRY_DISABLED: 1
+  NPM_CONFIG_PROGRESS: false
+  NPM_CONFIG_AUDIT: false
+
+jobs:
+  # Build Astro site
+  build:
+    name: Build Astro Documentation Site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+          cache-dependency-path: 'website/package-lock.json'
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Install npm dependencies
+        working-directory: ./website
+        run: |
+          echo "Installing dependencies..."
+          npm ci --silent
+
+      - name: Verify critical dependencies
+        working-directory: ./website
+        run: |
+          echo "Verifying Astro and TypeScript installation..."
+          npm list astro --depth=0
+          npm list typescript --depth=0
+          npm list @astrojs/check --depth=0
+
+      - name: Run TypeScript validation
+        working-directory: ./website
+        run: |
+          echo "Running TypeScript check..."
+          npm run check
+
+      - name: Build Astro site
+        working-directory: ./website
+        run: |
+          echo "Building Astro site..."
+          npm run build
+
+      - name: Verify critical .nojekyll file
+        run: |
+          echo "Verifying .nojekyll file presence..."
+          if [ ! -f "docs/.nojekyll" ]; then
+            echo "ERROR: docs/.nojekyll missing - CRITICAL for GitHub Pages asset loading!"
+            exit 1
+          fi
+          echo "✓ .nojekyll file verified"
+
+      - name: Verify build output
+        run: |
+          echo "Verifying build artifacts..."
+
+          # Check index.html
+          if [ ! -f "docs/index.html" ]; then
+            echo "ERROR: Build failed - docs/index.html not found"
+            exit 1
+          fi
+
+          # Check _astro assets directory
+          if [ ! -d "docs/_astro" ]; then
+            echo "ERROR: docs/_astro directory missing - CSS/JS assets unavailable"
+            exit 1
+          fi
+
+          # Count asset files
+          ASTRO_FILES=$(find docs/_astro -type f | wc -l)
+          echo "✓ Build artifacts verified: $ASTRO_FILES asset files found"
+
+          # Build metrics
+          BUILD_SIZE=$(du -sh docs/ | cut -f1)
+          FILE_COUNT=$(find docs/ -type f | wc -l)
+          echo "Build metrics: $BUILD_SIZE ($FILE_COUNT files)"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+          name: github-pages
+          retention-days: 1
+
+  # Deploy Pages
+  deploy:
+    name: Deploy to GitHub Pages Environment
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy artifact to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact-name: github-pages
