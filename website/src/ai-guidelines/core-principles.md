@@ -27,7 +27,7 @@ constitutional: true
 ### Package Management & Dependencies
 - **Ghostty**: Built from source with Zig 0.14.0 (latest stable)
 - **ZSH**: Oh My ZSH with enhanced plugins for productivity
-- **Node.js**: Latest LTS via NVM for AI tool integration
+- **Node.js**: Latest version (v25.2.0+) via fnm (Fast Node Manager) for AI tool integration
 - **Dependencies**: Smart detection and minimal installation footprint
 
 ### GitHub Pages Infrastructure
@@ -73,9 +73,9 @@ git commit -m "CRITICAL: Restore .nojekyll for GitHub Pages asset loading"
 ## Mandatory Actions
 
 ### Before Every Configuration Change
-1. **Local CI/CD Execution**: Run `./local-infra/runners/gh-workflow-local.sh all`
+1. **Local CI/CD Execution**: Run `./.runners-local/workflows/gh-workflow-local.sh all`
 2. **Configuration Validation**: Run `ghostty +show-config` to ensure validity
-3. **Performance Testing**: Execute `./local-infra/runners/performance-monitor.sh`
+3. **Performance Testing**: Execute `./.runners-local/workflows/performance-monitor.sh`
 4. **Backup Creation**: Automatic timestamped backup of existing configuration
 5. **User Preservation**: Extract and preserve user customizations
 6. **Documentation**: Update relevant docs if adding features
@@ -133,7 +133,7 @@ cp /path/to/conversation.md documentations/development/conversation_logs/CONVERS
 
 # Capture system state and CI/CD logs
 cp /tmp/ghostty-start-logs/system_state_*.json documentations/development/system_states/
-cp ./local-infra/logs/* documentations/development/ci_cd_logs/
+cp ./.runners-local/logs/* documentations/development/ci_cd_logs/
 
 git add documentations/development/
 git commit -m "Add conversation log, system state, and CI/CD logs for local infrastructure setup"

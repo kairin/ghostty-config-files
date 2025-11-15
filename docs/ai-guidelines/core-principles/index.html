@@ -20,7 +20,7 @@ GitHub
 <ul>
 <li><strong>Ghostty</strong>: Built from source with Zig 0.14.0 (latest stable)</li>
 <li><strong>ZSH</strong>: Oh My ZSH with enhanced plugins for productivity</li>
-<li><strong>Node.js</strong>: Latest LTS via NVM for AI tool integration</li>
+<li><strong>Node.js</strong>: Latest version (v25.2.0+) via fnm (Fast Node Manager) for AI tool integration</li>
 <li><strong>Dependencies</strong>: Smart detection and minimal installation footprint</li>
 </ul>
 <h3 id="github-pages-infrastructure">GitHub Pages Infrastructure</h3>
@@ -64,9 +64,9 @@ GitHub
 <h2 id="mandatory-actions">Mandatory Actions</h2>
 <h3 id="before-every-configuration-change">Before Every Configuration Change</h3>
 <ol>
-<li><strong>Local CI/CD Execution</strong>: Run <code>./local-infra/runners/gh-workflow-local.sh all</code></li>
+<li><strong>Local CI/CD Execution</strong>: Run <code>./.runners-local/workflows/gh-workflow-local.sh all</code></li>
 <li><strong>Configuration Validation</strong>: Run <code>ghostty +show-config</code> to ensure validity</li>
-<li><strong>Performance Testing</strong>: Execute <code>./local-infra/runners/performance-monitor.sh</code></li>
+<li><strong>Performance Testing</strong>: Execute <code>./.runners-local/workflows/performance-monitor.sh</code></li>
 <li><strong>Backup Creation</strong>: Automatic timestamped backup of existing configuration</li>
 <li><strong>User Preservation</strong>: Extract and preserve user customizations</li>
 <li><strong>Documentation</strong>: Update relevant docs if adding features</li>
@@ -125,7 +125,7 @@ GitHub
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Capture system state and CI/CD logs</span></span>
 <span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/system_state_</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span><span style="color:#9ECBFF"> documentations/development/system_states/</span></span>
-<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ./local-infra/logs/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF"> documentations/development/ci_cd_logs/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ./.runners-local/logs/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF"> documentations/development/ci_cd_logs/</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> documentations/development/</span></span>
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "Add conversation log, system state, and CI/CD logs for local infrastructure setup"</span></span></code></pre> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">ai</span><span class="badge badge-outline">guidelines</span> </div> </div><div class="mt-4"> <span class="text-sm text-base-content/60">Target Audience: <strong>all</strong></span> </div> </article> </main> <!-- Footer --> <footer class="footer footer-center bg-gray-50 dark:bg-slate-800 text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200 dark:border-gray-700"> <aside> <p class="font-bold text-xl mb-2">
