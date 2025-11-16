@@ -11,7 +11,7 @@
 **Input**: Consolidation of three related features into unified terminal development infrastructure:
 1. Repository structure refactoring with manage.sh CLI and modular architecture
 2. AI-powered terminal productivity with modern Unix tools and advanced theming
-3. Modern web development stack with uv + Astro + Tailwind + shadcn/ui + GitHub Pages
+3. Modern web development stack with uv + Astro + Tailwind + DaisyUI (with shadcn/ui as future enhancement) + GitHub Pages
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -34,7 +34,7 @@ As a developer setting up a new development machine, I want a single command to 
 
 ### User Story 2 - Modern Web Development Workflow (Priority: P1)
 
-As a web developer building documentation sites and web projects, I want integrated modern web tooling (uv for Python, Astro for static sites, Tailwind CSS + shadcn/ui for UI) with local CI/CD validation so that I can build high-performance websites without ongoing costs while maintaining code quality.
+As a web developer building documentation sites and web projects, I want integrated modern web tooling (uv for Python, Astro for static sites, Tailwind CSS + DaisyUI for UI) with local CI/CD validation so that I can build high-performance websites without ongoing costs while maintaining code quality.
 
 **Why this priority**: Directly addresses the need for cost-effective, high-performance web development. Combines Python automation, modern frontend tooling, and zero-cost deployment into one workflow.
 
@@ -123,7 +123,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **FR-010**: All source documentation MUST reside in `website/src/` with clear separation from build output
 - **FR-011**: Generated documentation MUST output to `docs/` directory for GitHub Pages deployment with mandatory .nojekyll file
 - **FR-012**: docs/ directory MUST be committed with Astro build output including critical .nojekyll file to disable Jekyll processing
-- **FR-013**: Monolithic start.sh script MUST be refactored into fine-grained modules (10+ modules) in scripts/ directory
+- **FR-013**: Monolithic start.sh script MUST be refactored into fine-grained modules (18 specialized modules: install_node, install_ghostty, install_ai_tools, install_modern_tools, configure_zsh, install_uv, install_theme, configure_dircolors, check_updates, daily-updates, backup_utils, validate_modules, common, progress, task_display, task_manager, verification, profile_startup) in scripts/ directory
 - **FR-014**: Each module MUST handle a single, highly specific sub-task with independent testability
 - **FR-015**: Modules MUST be sourceable and testable independently, completing in under 10 seconds when tested in isolation
 - **FR-016**: System MUST validate module dependencies and prevent circular references
@@ -142,7 +142,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **FR-029**: System MUST implement automated accessibility testing (axe-core, Lighthouse CI) in local CI/CD for WCAG 2.1 Level AA compliance verification
 - **FR-030**: System MUST implement automated security scanning (npm audit, dependency vulnerability checking) in local CI/CD workflows
 - **FR-031**: System MUST provide local GitHub Actions runner infrastructure to execute ANY GitHub automation locally before cloud deployment
-- **FR-032**: Local CI/CD MUST support all GitHub Actions workflows including custom actions, matrix builds, and workflow dependencies
+- **FR-032**: Local CI/CD MUST support GitHub Actions workflows via nektos/act with MOST workflow features (custom actions, environment variables, secrets) but with known limitations (some GitHub-specific contexts, hosted runner features, and complex matrix builds may require cloud validation)
 
 ### Functional Requirements - AI Integration
 
@@ -155,7 +155,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 
 ### Functional Requirements - Terminal Productivity
 
-- **FR-050**: System MUST support advanced theme installation (Powerlevel10k and/or Starship)
+- **FR-050**: System MUST support advanced theme installation with user choice between Powerlevel10k (ZSH-specific, feature-rich) OR Starship (shell-agnostic, minimal)
 - **FR-051**: System MUST achieve sub-50ms shell startup times through performance optimization
 - **FR-052**: System MUST provide intelligent caching (compilation caching, lazy loading, deferred initialization)
 - **FR-053**: System MUST install modern Unix tools (bat, exa, ripgrep, fd, zoxide, fzf)
@@ -165,10 +165,10 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 ### Functional Requirements - Node.js Management
 
 - **FR-060**: System MUST install Node.js using fnm (Fast Node Manager) for <50ms startup impact
-- **FR-061**: Global Node.js installations MUST use latest stable version (not LTS) per constitutional requirement
-- **FR-062**: System MUST support per-project Node.js versions via .nvmrc or package.json engines field
+- **FR-061**: Global Node.js installations MUST use latest stable version (not LTS) per constitutional requirement (example: v25.2.0+ as of 2025-11)
+- **FR-062**: System MUST support per-project Node.js versions via .nvmrc or package.json engines field (projects may override global policy with project-specific requirements)
 - **FR-063**: fnm MUST be configured for automatic version switching on directory change
-- **FR-064**: ALL technologies MUST use latest stable versions (not LTS) - applies to Astro, Tailwind, TypeScript, uv, npm packages
+- **FR-064**: ALL technologies MUST use latest stable versions (not LTS) for global installations and system-wide tools - applies to Astro, Tailwind, TypeScript, uv, npm packages - while individual projects may specify their own version constraints via package.json or .nvmrc
 
 ### Functional Requirements - Migration and Updates
 
@@ -224,7 +224,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 
 ### Measurable Outcomes - Architecture
 
-- **SC-030**: All 10+ fine-grained modules tested independently in <10s each
+- **SC-030**: All 18 fine-grained modules tested independently in <10s each
 - **SC-031**: Documentation clearly separated: source in website/src/, output in docs/
 - **SC-032**: Zero data loss during migration (all scripts backed up)
 - **SC-033**: Repository size remains manageable with committed docs/ output
@@ -335,14 +335,14 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 ### From 004-modern-web-development
 
 **Planning** ✅ COMPLETE
-- Full specification with uv, Astro, Tailwind, shadcn/ui, GitHub Pages
+- Full specification with uv, Astro, Tailwind, DaisyUI, GitHub Pages
 - Local CI/CD requirements defined
 - Performance targets established
 
 **Implementation** ⚠️ PARTIAL
 - Astro already in use for documentation site
 - docs/ deployment to GitHub Pages functional
-- uv, Tailwind, shadcn/ui not yet integrated
+- uv, Tailwind, DaisyUI not yet integrated
 - Local CI/CD infrastructure exists but needs web-specific workflows
 
 ### Implementation Status Summary
@@ -375,7 +375,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 
 2. **Modern Web Stack Integration** (Parallel to Phase 5)
    - Install uv for Python dependency management
-   - Integrate Tailwind CSS + shadcn/ui into Astro
+   - Integrate Tailwind CSS + DaisyUI into Astro
    - Enhance local CI/CD for web-specific validations
    - Enables: Professional documentation site and developer tooling
 
@@ -401,7 +401,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 
 **Must run sequentially**:
 - Foundational modules → AI integration → Advanced theming
-- Basic Astro → Tailwind/shadcn/ui → Component library
+- Basic Astro → Tailwind + DaisyUI → Component library enhancement
 
 ## Out of Scope
 
