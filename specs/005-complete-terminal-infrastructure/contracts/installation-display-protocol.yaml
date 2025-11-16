@@ -1,0 +1,661 @@
+openapi: 3.0.3
+info:
+  title: Installation Display Protocol
+  description: |
+    Contract for parallel task installation UI that provides clean, readable progress
+    display with collapsible verbose output and dynamic verification status.
+
+    **UI Requirements** (from clarification 2025-11-16):
+    - Each task on separate line (not cluttered)
+    - Verbose sub-tasks collapse into single line when complete
+    - Screen remains neat and tidy at all times
+    - Clear step indication at all times
+    - Dynamic status verification (not hardcoded messages)
+
+    **Functional Requirements**:
+    - FR-006: Parallel task UI with collapsible verbose output
+    - FR-007: Dynamic status (not hardcoded messages) with proper verification
+    - FR-008: Clear current step while keeping completed tasks visible in collapsed format
+
+    **Success Criteria**:
+    - SC-025: Installation shows parallel tasks on separate lines with collapsible verbose output
+    - SC-026: Each installation step uses dynamic verification (not hardcoded success messages)
+    - SC-027: Screen remains clean - completed tasks collapse to single line
+    - SC-028: User can always see current step and overall progress without scrolling
+  version: 1.0.0
+  contact:
+    name: Ghostty Configuration Files Project
+    url: https://github.com/username/ghostty-config-files
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Installation service API (local)
+
+tags:
+  - name: Sessions
+    description: Installation session management
+  - name: Tasks
+    description: Task progress and status
+  - name: Display
+    description: Display state and rendering
+  - name: Verification
+    description: Dynamic verification operations
+
+paths:
+  /sessions:
+    post:
+      summary: Create installation session
+      tags: [Sessions]
+      description: Initializes a new installation session with task list and display configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_name:
+                  type: string
+                  description: Human-readable session name
+                  example: Complete Terminal Infrastructure Installation
+                terminal_height:
+                  type: number
+                  description: Terminal height in lines (for layout calculation)
+                  example: 40
+                terminal_width:
+                  type: number
+                  description: Terminal width in columns
+                  example: 120
+                tasks:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TaskDefinition'
+                  description: List of tasks to be executed
+                display_mode:
+                  type: string
+                  enum: [parallel, sequential, quiet]
+                  default: parallel
+                  description: Display mode for task progress
+              required:
+                - session_name
+                - terminal_height
+                - tasks
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstallationSession'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sessions/{session_id}:
+    get:
+      summary: Get installation session status
+      tags: [Sessions]
+      description: Retrieves current status of installation session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Session status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstallationSession'
+
+  /sessions/{session_id}/tasks/{task_id}:
+    patch:
+      summary: Update task status
+      tags: [Tasks]
+      description: Updates status of a specific task (status change, progress, subtasks)
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [pending, running, completed, failed]
+                  description: New task status
+                progress_percent:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  description: Task progress percentage
+                subtask_update:
+                  type: object
+                  nullable: true
+                  properties:
+                    subtask_id:
+                      type: string
+                    status:
+                      type: string
+                      enum: [pending, running, completed, failed]
+                    output_line:
+                      type: string
+                      description: New verbose output line to append
+                  description: Update for a specific subtask
+                verification_result:
+                  type: object
+                  nullable: true
+                  properties:
+                    method:
+                      type: string
+                      description: Command or check performed
+                    status:
+                      type: string
+                      enum: [verifying, verified, failed]
+                    result:
+                      type: string
+                      description: Dynamic verification result (e.g., "v25.2.0 detected")
+                  description: Verification status update (FR-007)
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /sessions/{session_id}/display:
+    get:
+      summary: Get current display state
+      tags: [Display]
+      description: |
+        Retrieves the current display state for rendering in terminal.
+        Returns formatted display lines ready for terminal output.
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Display state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisplayState'
+
+  /sessions/{session_id}/display/render:
+    post:
+      summary: Trigger display refresh
+      tags: [Display]
+      description: Triggers a display refresh (re-render all visible tasks)
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force_full_redraw:
+                  type: boolean
+                  default: false
+                  description: Force full screen redraw (not just incremental update)
+      responses:
+        '200':
+          description: Display refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisplayState'
+
+  /verification/execute:
+    post:
+      summary: Execute dynamic verification
+      tags: [Verification]
+      description: |
+        Executes a verification command and returns dynamic result.
+        Used for FR-007 requirement: proper verification methods (not hardcoded messages).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                verification_type:
+                  type: string
+                  enum: [command_exists, version_check, config_validation, service_status]
+                  description: Type of verification to perform
+                command:
+                  type: string
+                  description: Command to execute for verification
+                  example: node --version
+                expected_pattern:
+                  type: string
+                  nullable: true
+                  description: Regex pattern for expected output (optional)
+                  example: "^v\\d+\\.\\d+\\.\\d+$"
+                timeout_seconds:
+                  type: number
+                  default: 5
+                  description: Verification timeout
+              required:
+                - verification_type
+                - command
+      responses:
+        '200':
+          description: Verification completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResult'
+        '400':
+          description: Invalid verification request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    TaskDefinition:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: Unique task identifier
+          example: install-node
+        task_name:
+          type: string
+          description: Human-readable task name
+          example: Installing Node.js via fnm
+        task_type:
+          type: string
+          enum: [download, install, configure, validate]
+          description: Task category
+        estimated_duration_seconds:
+          type: number
+          description: Estimated execution time
+        subtasks:
+          type: array
+          items:
+            type: object
+            properties:
+              subtask_id:
+                type: string
+                description: Unique subtask identifier
+              description:
+                type: string
+                description: Subtask description
+                example: Downloading fnm installer
+          description: Verbose subtasks that will collapse when complete (FR-006)
+        verification:
+          type: object
+          properties:
+            method:
+              type: string
+              description: Verification command or method
+              example: node --version
+            expected_pattern:
+              type: string
+              nullable: true
+              description: Expected output pattern (regex)
+          description: Verification configuration (FR-007)
+      required:
+        - task_id
+        - task_name
+        - task_type
+
+    InstallationSession:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: uuid
+          description: Unique session identifier
+        session_name:
+          type: string
+          description: Human-readable session name
+        status:
+          type: string
+          enum: [not_started, in_progress, completed, failed, cancelled]
+          description: Overall installation status
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+          description: All tasks in session
+        display_config:
+          type: object
+          properties:
+            terminal_height:
+              type: number
+            terminal_width:
+              type: number
+            max_visible_tasks:
+              type: number
+              description: Calculated from terminal_height (reserve space for header/footer)
+            display_mode:
+              type: string
+              enum: [parallel, sequential, quiet]
+        progress:
+          type: object
+          properties:
+            completed_tasks:
+              type: number
+            total_tasks:
+              type: number
+            progress_percent:
+              type: number
+              minimum: 0
+              maximum: 100
+            current_task_index:
+              type: number
+              description: Index of currently executing task
+      required:
+        - session_id
+        - session_name
+        - status
+        - tasks
+        - display_config
+        - progress
+
+    Task:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: Unique task identifier
+        task_name:
+          type: string
+          description: Human-readable task name
+        task_type:
+          type: string
+          enum: [download, install, configure, validate]
+        status:
+          type: string
+          enum: [pending, running, completed, failed]
+          description: Current task status
+        status_icon:
+          type: string
+          description: Unicode icon for status (e.g., ⏳ pending, ▶ running, ✓ completed, ✗ failed)
+          example: "▶"
+        display_line:
+          type: number
+          description: Line number on screen where task is displayed
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        progress_percent:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Task progress percentage
+        subtasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subtask'
+          description: Verbose subtasks (collapse when complete per FR-006)
+        collapsed_summary:
+          type: string
+          nullable: true
+          description: One-line summary when task completed and collapsed (FR-008, SC-027)
+          example: "✓ Installing Node.js via fnm (complete)"
+        verification:
+          type: object
+          nullable: true
+          properties:
+            method:
+              type: string
+              description: Verification command executed
+              example: "node --version"
+            status:
+              type: string
+              enum: [not_started, verifying, verified, failed]
+              description: Verification status
+            result:
+              type: string
+              nullable: true
+              description: Dynamic verification result (FR-007, SC-026)
+              example: "v25.2.0 detected ✓"
+          description: Dynamic verification state (not hardcoded)
+        error:
+          type: object
+          nullable: true
+          properties:
+            message:
+              type: string
+            code:
+              type: string
+      required:
+        - task_id
+        - task_name
+        - task_type
+        - status
+        - status_icon
+        - display_line
+
+    Subtask:
+      type: object
+      properties:
+        subtask_id:
+          type: string
+          description: Unique subtask identifier
+        description:
+          type: string
+          description: Subtask description
+          example: Downloading fnm v1.35.0
+        status:
+          type: string
+          enum: [pending, running, completed, failed]
+          description: Subtask status
+        status_icon:
+          type: string
+          description: Unicode icon (e.g., ⏳ ▶ ✓ ✗)
+          example: "✓"
+        collapsed:
+          type: boolean
+          description: Whether subtask is collapsed (true when completed per FR-006)
+        verbose_output:
+          type: array
+          items:
+            type: string
+          description: Full verbose output lines (stored but not displayed when collapsed)
+        one_line_summary:
+          type: string
+          nullable: true
+          description: One-line summary shown when collapsed
+          example: "✓ Downloaded fnm v1.35.0 (2.3 MB)"
+      required:
+        - subtask_id
+        - description
+        - status
+        - status_icon
+        - collapsed
+
+    DisplayState:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+          description: When this display state was generated
+        screen_lines:
+          type: array
+          items:
+            type: string
+          description: Formatted lines ready for terminal output
+          example:
+            - "╔══════════════════════════════════════════════════════════╗"
+            - "║ Installing Complete Terminal Infrastructure (47%)       ║"
+            - "╠══════════════════════════════════════════════════════════╣"
+            - "║ ✓ Installing Ghostty from source (complete)             ║"
+            - "║ ✓ Installing Node.js via fnm (complete)                 ║"
+            - "║ ▶ Installing AI tools (2/3 complete)                    ║"
+            - "║   ├── ✓ Claude Code (verified)                          ║"
+            - "║   ├── ▶ Gemini CLI (installing v1.2.0...)               ║"
+            - "║   └── ⏳ Copilot CLI (pending)                           ║"
+            - "║ ⏳ Building documentation site (pending)                 ║"
+            - "║ ⏳ Configuring shell environment (pending)               ║"
+            - "╠══════════════════════════════════════════════════════════╣"
+            - "║ Step 3/5 • Estimated: 2 minutes remaining               ║"
+            - "╚══════════════════════════════════════════════════════════╝"
+        cursor_position:
+          type: object
+          properties:
+            line:
+              type: number
+              description: Cursor line position
+            column:
+              type: number
+              description: Cursor column position
+          description: Terminal cursor position for incremental updates
+        render_mode:
+          type: string
+          enum: [full_redraw, incremental_update]
+          description: How to apply this display state
+        current_task_line:
+          type: number
+          description: Line number of currently executing task
+        visible_task_count:
+          type: number
+          description: Number of tasks currently visible on screen
+        scroll_offset:
+          type: number
+          description: Scroll offset if tasks exceed screen height
+        compliance:
+          type: object
+          properties:
+            sc_025_met:
+              type: boolean
+              description: "SC-025: Parallel tasks on separate lines with collapsible verbose output"
+            sc_026_met:
+              type: boolean
+              description: "SC-026: Dynamic verification (not hardcoded success messages)"
+            sc_027_met:
+              type: boolean
+              description: "SC-027: Screen remains clean - completed tasks collapse to single line"
+            sc_028_met:
+              type: boolean
+              description: "SC-028: User can see current step and overall progress without scrolling"
+          description: Success criteria compliance tracking
+      required:
+        - session_id
+        - timestamp
+        - screen_lines
+        - render_mode
+        - compliance
+
+    VerificationResult:
+      type: object
+      properties:
+        verification_type:
+          type: string
+          enum: [command_exists, version_check, config_validation, service_status]
+        command_executed:
+          type: string
+          description: Actual command that was executed
+          example: node --version
+        status:
+          type: string
+          enum: [verified, failed, error]
+          description: Verification outcome
+        exit_code:
+          type: number
+          description: Command exit code
+        stdout:
+          type: string
+          description: Command standard output
+          example: "v25.2.0"
+        stderr:
+          type: string
+          description: Command standard error output
+        pattern_matched:
+          type: boolean
+          nullable: true
+          description: Whether output matched expected pattern (if pattern provided)
+        dynamic_result:
+          type: string
+          description: Human-readable dynamic result (FR-007, SC-026)
+          example: "Node.js v25.2.0 detected ✓"
+        duration_ms:
+          type: number
+          description: Verification execution time in milliseconds
+        timestamp:
+          type: string
+          format: date-time
+          description: When verification was executed
+      required:
+        - verification_type
+        - command_executed
+        - status
+        - exit_code
+        - dynamic_result
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: object
+              additionalProperties: true
+          required:
+            - code
+            - message
+      required:
+        - error
+
+externalDocs:
+  description: Installation Progress Display Implementation
+  url: https://github.com/username/ghostty-config-files/blob/main/scripts/progress.sh

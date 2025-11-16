@@ -1,0 +1,879 @@
+openapi: 3.0.3
+info:
+  title: Quality Gate Interface
+  description: |
+    Contract for automated quality gates including accessibility testing (axe-core),
+    security scanning (npm audit), and performance validation (Lighthouse CI).
+
+    **Quality Requirements** (from clarification 2025-11-16):
+    - Automated accessibility testing: axe-core + Lighthouse CI for WCAG 2.1 Level AA
+    - Automated security scanning: npm audit + dependency vulnerability checking
+    - All quality gates run in local CI/CD before deployment
+
+    **Functional Requirements**:
+    - FR-029: Automated accessibility testing (axe-core, Lighthouse CI) for WCAG 2.1 Level AA compliance
+    - FR-030: Automated security scanning (npm audit, dependency vulnerability checking) in local CI/CD
+    - FR-025: Lighthouse scores 95+ across all metrics (Performance, Accessibility, Best Practices, SEO)
+
+    **Success Criteria**:
+    - SC-045: Automated accessibility testing runs in local CI/CD and reports WCAG 2.1 Level AA compliance
+    - SC-046: All accessibility violations detected by axe-core are reported before deployment
+    - SC-047: Lighthouse accessibility score maintains 95+ throughout development
+    - SC-048: Automated security scanning detects vulnerable dependencies before deployment
+    - SC-049: npm audit reports zero high/critical vulnerabilities in production dependencies
+  version: 1.0.0
+  contact:
+    name: Ghostty Configuration Files Project
+    url: https://github.com/username/ghostty-config-files
+
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Quality gate service (local)
+
+tags:
+  - name: Accessibility
+    description: Accessibility testing operations (axe-core + Lighthouse)
+  - name: Security
+    description: Security scanning operations (npm audit + vulnerability checking)
+  - name: Performance
+    description: Performance testing operations (Lighthouse CI)
+  - name: Reports
+    description: Quality gate report management
+
+paths:
+  /accessibility/scan:
+    post:
+      summary: Run accessibility scan
+      tags: [Accessibility]
+      description: |
+        Executes axe-core accessibility scan against target HTML files or URLs.
+        Validates WCAG 2.1 Level AA compliance (FR-029, SC-045, SC-046).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scan_type:
+                  type: string
+                  enum: [file, url, directory]
+                  description: Type of target to scan
+                target:
+                  type: string
+                  description: File path, URL, or directory to scan
+                  example: docs/index.html
+                wcag_level:
+                  type: string
+                  enum: [A, AA, AAA]
+                  default: AA
+                  description: WCAG compliance level to test
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    enum: [wcag2a, wcag2aa, wcag2aaa, wcag21a, wcag21aa, wcag21aaa, best-practice]
+                  description: axe-core rule tags to include
+                  default: [wcag21aa]
+                include_warnings:
+                  type: boolean
+                  default: false
+                  description: Include warnings in results (not just violations)
+                save_report:
+                  type: boolean
+                  default: true
+                  description: Save detailed report to logs
+              required:
+                - scan_type
+                - target
+      responses:
+        '200':
+          description: Accessibility scan completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessibilityScanResult'
+        '400':
+          description: Invalid scan request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /security/scan:
+    post:
+      summary: Run security scan
+      tags: [Security]
+      description: |
+        Executes npm audit security scan to detect vulnerable dependencies.
+        Validates zero high/critical vulnerabilities requirement (FR-030, SC-048, SC-049).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scan_type:
+                  type: string
+                  enum: [npm_audit, dependency_check, full]
+                  default: full
+                  description: Type of security scan
+                project_path:
+                  type: string
+                  description: Path to project root (contains package.json)
+                  default: "."
+                audit_level:
+                  type: string
+                  enum: [info, low, moderate, high, critical]
+                  default: high
+                  description: Minimum severity level to report
+                production_only:
+                  type: boolean
+                  default: true
+                  description: Only scan production dependencies (exclude devDependencies)
+                fail_on_severity:
+                  type: array
+                  items:
+                    type: string
+                    enum: [critical, high, moderate, low]
+                  default: [critical, high]
+                  description: Fail scan if vulnerabilities at these levels found (SC-049)
+                save_report:
+                  type: boolean
+                  default: true
+                  description: Save detailed report to logs
+              required:
+                - project_path
+      responses:
+        '200':
+          description: Security scan completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityScanResult'
+        '400':
+          description: Invalid scan request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /performance/lighthouse:
+    post:
+      summary: Run Lighthouse performance audit
+      tags: [Performance]
+      description: |
+        Executes Lighthouse audit for performance, accessibility, best practices, and SEO.
+        Validates 95+ score requirement across all metrics (FR-025, SC-047).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_url:
+                  type: string
+                  format: uri
+                  description: URL to audit (can be local file:// URL)
+                  example: file:///home/user/project/docs/index.html
+                categories:
+                  type: array
+                  items:
+                    type: string
+                    enum: [performance, accessibility, best-practices, seo, pwa]
+                  default: [performance, accessibility, best-practices, seo]
+                  description: Lighthouse categories to audit
+                form_factor:
+                  type: string
+                  enum: [mobile, desktop]
+                  default: desktop
+                  description: Device form factor for audit
+                throttling:
+                  type: string
+                  enum: [simulated, devtools, provided, none]
+                  default: simulated
+                  description: Network/CPU throttling strategy
+                min_scores:
+                  type: object
+                  properties:
+                    performance:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      default: 95
+                    accessibility:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      default: 95
+                    best_practices:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      default: 95
+                    seo:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      default: 95
+                  description: Minimum required scores (FR-025, SC-047)
+                save_report:
+                  type: boolean
+                  default: true
+                  description: Save detailed HTML/JSON report
+              required:
+                - target_url
+      responses:
+        '200':
+          description: Lighthouse audit completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LighthouseResult'
+        '400':
+          description: Invalid audit request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reports:
+    get:
+      summary: List quality gate reports
+      tags: [Reports]
+      description: Lists all saved quality gate reports
+      parameters:
+        - name: report_type
+          in: query
+          schema:
+            type: string
+            enum: [accessibility, security, performance, all]
+            default: all
+          description: Filter by report type
+        - name: limit
+          in: query
+          schema:
+            type: number
+            default: 10
+          description: Maximum number of reports to return
+        - name: offset
+          in: query
+          schema:
+            type: number
+            default: 0
+          description: Pagination offset
+      responses:
+        '200':
+          description: List of reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reports:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/QualityGateReport'
+                  total:
+                    type: number
+                    description: Total number of reports matching filter
+                  limit:
+                    type: number
+                  offset:
+                    type: number
+
+  /reports/{report_id}:
+    get:
+      summary: Get specific quality gate report
+      tags: [Reports]
+      description: Retrieves detailed quality gate report by ID
+      parameters:
+        - name: report_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Quality gate report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QualityGateReport'
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /compliance/check:
+    post:
+      summary: Check overall quality compliance
+      tags: [Reports]
+      description: |
+        Executes all quality gates (accessibility, security, performance) and
+        validates against constitutional requirements and success criteria.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+                  description: Target to validate (URL, file path, or project directory)
+                project_path:
+                  type: string
+                  description: Path to project root for security scanning
+                  default: "."
+                strict_mode:
+                  type: boolean
+                  default: true
+                  description: Fail on any violations (strict compliance)
+                blocking_gates:
+                  type: array
+                  items:
+                    type: string
+                    enum: [accessibility, security, performance]
+                  default: [accessibility, security, performance]
+                  description: Which gates are blocking (prevent deployment if failed)
+              required:
+                - target
+      responses:
+        '200':
+          description: Compliance check completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceCheckResult'
+
+components:
+  schemas:
+    AccessibilityScanResult:
+      type: object
+      properties:
+        scan_id:
+          type: string
+          format: uuid
+          description: Unique scan identifier
+        timestamp:
+          type: string
+          format: date-time
+        target:
+          type: string
+          description: Target that was scanned
+        wcag_level:
+          type: string
+          enum: [A, AA, AAA]
+          description: WCAG level tested
+        status:
+          type: string
+          enum: [passed, failed, warning]
+          description: Overall scan status
+        summary:
+          type: object
+          properties:
+            total_checks:
+              type: number
+              description: Total accessibility checks performed
+            violations:
+              type: number
+              description: Number of violations found
+            passes:
+              type: number
+              description: Number of checks passed
+            incomplete:
+              type: number
+              description: Number of checks that require manual review
+            inapplicable:
+              type: number
+              description: Number of checks not applicable
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessibilityViolation'
+          description: Detailed list of violations (SC-046)
+        wcag_compliance:
+          type: object
+          properties:
+            level_a:
+              type: boolean
+              description: WCAG Level A compliance met
+            level_aa:
+              type: boolean
+              description: WCAG Level AA compliance met (SC-045)
+            level_aaa:
+              type: boolean
+              description: WCAG Level AAA compliance met
+        blocking:
+          type: boolean
+          description: Does this result block deployment?
+        report_path:
+          type: string
+          nullable: true
+          description: Path to detailed HTML/JSON report
+      required:
+        - scan_id
+        - timestamp
+        - target
+        - wcag_level
+        - status
+        - summary
+        - violations
+        - wcag_compliance
+        - blocking
+
+    AccessibilityViolation:
+      type: object
+      properties:
+        violation_id:
+          type: string
+          description: axe-core rule ID
+          example: color-contrast
+        severity:
+          type: string
+          enum: [minor, moderate, serious, critical]
+          description: Violation severity
+        category:
+          type: string
+          description: WCAG category
+          example: "WCAG 2.1 Level AA"
+        description:
+          type: string
+          description: Human-readable description of violation
+          example: "Elements must have sufficient color contrast"
+        help_url:
+          type: string
+          format: uri
+          description: URL to detailed help documentation
+        impact:
+          type: string
+          enum: [minor, moderate, serious, critical]
+          description: User impact level
+        wcag_tags:
+          type: array
+          items:
+            type: string
+          description: WCAG success criteria tags
+          example: [wcag2aa, wcag143]
+        nodes:
+          type: array
+          items:
+            type: object
+            properties:
+              html:
+                type: string
+                description: HTML snippet of violating element
+              target:
+                type: array
+                items:
+                  type: string
+                description: CSS selector path to element
+              failure_summary:
+                type: string
+                description: Specific failure explanation
+          description: DOM nodes with this violation
+        remediation:
+          type: string
+          description: Suggested fix
+      required:
+        - violation_id
+        - severity
+        - description
+        - impact
+        - nodes
+
+    SecurityScanResult:
+      type: object
+      properties:
+        scan_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        project_path:
+          type: string
+          description: Path to scanned project
+        scan_type:
+          type: string
+          enum: [npm_audit, dependency_check, full]
+        status:
+          type: string
+          enum: [passed, failed, warning]
+          description: Overall scan status
+        summary:
+          type: object
+          properties:
+            total_dependencies:
+              type: number
+              description: Total dependencies scanned
+            vulnerabilities:
+              type: object
+              properties:
+                critical:
+                  type: number
+                  description: Critical severity vulnerabilities
+                high:
+                  type: number
+                  description: High severity vulnerabilities
+                moderate:
+                  type: number
+                  description: Moderate severity vulnerabilities
+                low:
+                  type: number
+                  description: Low severity vulnerabilities
+                info:
+                  type: number
+                  description: Informational vulnerabilities
+              description: Vulnerability count by severity
+        vulnerabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityVulnerability'
+          description: Detailed list of vulnerabilities
+        compliance:
+          type: object
+          properties:
+            zero_high_critical:
+              type: boolean
+              description: Zero high/critical vulnerabilities? (SC-049)
+            production_dependencies_clean:
+              type: boolean
+              description: Production dependencies have no high/critical vulnerabilities?
+        blocking:
+          type: boolean
+          description: Does this result block deployment?
+        report_path:
+          type: string
+          nullable: true
+          description: Path to detailed report
+      required:
+        - scan_id
+        - timestamp
+        - project_path
+        - scan_type
+        - status
+        - summary
+        - vulnerabilities
+        - compliance
+        - blocking
+
+    SecurityVulnerability:
+      type: object
+      properties:
+        vulnerability_id:
+          type: string
+          description: CVE ID or advisory ID
+          example: CVE-2024-12345
+        package_name:
+          type: string
+          description: Vulnerable package name
+        current_version:
+          type: string
+          description: Currently installed version
+        patched_version:
+          type: string
+          nullable: true
+          description: Version with fix (if available)
+        severity:
+          type: string
+          enum: [critical, high, moderate, low, info]
+          description: Vulnerability severity
+        cwe:
+          type: array
+          items:
+            type: string
+          description: CWE (Common Weakness Enumeration) IDs
+        description:
+          type: string
+          description: Vulnerability description
+        dependency_path:
+          type: array
+          items:
+            type: string
+          description: Dependency chain to vulnerable package
+        remediation:
+          type: object
+          properties:
+            recommendation:
+              type: string
+              description: Recommended action
+            upgrade_available:
+              type: boolean
+              description: Is upgrade available?
+            breaking_change:
+              type: boolean
+              description: Does fix require breaking change?
+      required:
+        - vulnerability_id
+        - package_name
+        - current_version
+        - severity
+        - description
+
+    LighthouseResult:
+      type: object
+      properties:
+        audit_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        target_url:
+          type: string
+          format: uri
+        form_factor:
+          type: string
+          enum: [mobile, desktop]
+        status:
+          type: string
+          enum: [passed, failed]
+          description: Overall audit status (based on min_scores)
+        scores:
+          type: object
+          properties:
+            performance:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Performance score (SC-047)
+            accessibility:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Accessibility score (must be >= 95, SC-047)
+            best_practices:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: Best Practices score
+            seo:
+              type: number
+              minimum: 0
+              maximum: 100
+              description: SEO score
+            pwa:
+              type: number
+              minimum: 0
+              maximum: 100
+              nullable: true
+              description: PWA score (if applicable)
+          description: Lighthouse category scores
+        thresholds_met:
+          type: object
+          properties:
+            performance:
+              type: boolean
+              description: Performance >= 95?
+            accessibility:
+              type: boolean
+              description: Accessibility >= 95? (SC-047)
+            best_practices:
+              type: boolean
+              description: Best Practices >= 95?
+            seo:
+              type: boolean
+              description: SEO >= 95?
+          description: Whether minimum scores met (FR-025)
+        audits:
+          type: array
+          items:
+            type: object
+            properties:
+              audit_id:
+                type: string
+                description: Lighthouse audit identifier
+              title:
+                type: string
+                description: Audit title
+              score:
+                type: number
+                nullable: true
+                minimum: 0
+                maximum: 1
+                description: Audit score (0-1 scale)
+              score_display_mode:
+                type: string
+                enum: [numeric, binary, manual, informative, not-applicable, error]
+              description:
+                type: string
+                description: Audit description
+          description: Individual audit results
+        blocking:
+          type: boolean
+          description: Does this result block deployment?
+        report_path:
+          type: string
+          nullable: true
+          description: Path to detailed HTML/JSON report
+      required:
+        - audit_id
+        - timestamp
+        - target_url
+        - form_factor
+        - status
+        - scores
+        - thresholds_met
+        - blocking
+
+    ComplianceCheckResult:
+      type: object
+      properties:
+        check_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        target:
+          type: string
+          description: Target validated
+        overall_status:
+          type: string
+          enum: [compliant, non_compliant, warning]
+          description: Overall compliance status
+        gate_results:
+          type: object
+          properties:
+            accessibility:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [passed, failed, skipped]
+                blocking:
+                  type: boolean
+                scan_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                summary:
+                  type: string
+                  description: One-line summary of result
+            security:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [passed, failed, skipped]
+                blocking:
+                  type: boolean
+                scan_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                summary:
+                  type: string
+            performance:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [passed, failed, skipped]
+                blocking:
+                  type: boolean
+                audit_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                summary:
+                  type: string
+        success_criteria_met:
+          type: object
+          properties:
+            sc_045:
+              type: boolean
+              description: "SC-045: Automated accessibility testing runs in local CI/CD"
+            sc_046:
+              type: boolean
+              description: "SC-046: All axe-core violations reported before deployment"
+            sc_047:
+              type: boolean
+              description: "SC-047: Lighthouse accessibility score >= 95"
+            sc_048:
+              type: boolean
+              description: "SC-048: Automated security scanning detects vulnerable dependencies"
+            sc_049:
+              type: boolean
+              description: "SC-049: npm audit reports zero high/critical vulnerabilities"
+        deployment_allowed:
+          type: boolean
+          description: Can deployment proceed based on quality gates?
+        report_paths:
+          type: array
+          items:
+            type: string
+          description: Paths to detailed reports
+      required:
+        - check_id
+        - timestamp
+        - target
+        - overall_status
+        - gate_results
+        - success_criteria_met
+        - deployment_allowed
+
+    QualityGateReport:
+      type: object
+      properties:
+        report_id:
+          type: string
+          format: uuid
+        report_type:
+          type: string
+          enum: [accessibility, security, performance, compliance]
+        timestamp:
+          type: string
+          format: date-time
+        target:
+          type: string
+        status:
+          type: string
+          enum: [passed, failed, warning]
+        summary:
+          type: string
+          description: One-line summary of report
+        detailed_report_path:
+          type: string
+          description: Path to detailed report file
+        file_format:
+          type: string
+          enum: [json, html, markdown]
+          description: Report file format
+      required:
+        - report_id
+        - report_type
+        - timestamp
+        - target
+        - status
+        - detailed_report_path
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+            - code
+            - message
+      required:
+        - error
+
+externalDocs:
+  description: Quality Gate Implementation Documentation
+  url: https://github.com/username/ghostty-config-files/blob/main/.runners-local/workflows/quality-gates.md

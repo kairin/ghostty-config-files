@@ -1,0 +1,696 @@
+openapi: 3.0.3
+info:
+  title: Local CI/CD Runner Interface
+  description: |
+    Contract for local GitHub Actions runner infrastructure that executes workflows
+    locally before cloud deployment with zero Actions minutes consumption.
+
+    **Constitutional Requirements**:
+    - Zero GitHub Actions minutes consumption (VI. Zero-Cost Operations)
+    - Local CI/CD validation before GitHub deployment (III. Local CI/CD First)
+    - Complete workflow fidelity to cloud environment (FR-031, FR-032)
+
+    **Success Criteria**:
+    - SC-050: Local runner executes ALL workflows locally with 100% fidelity
+    - SC-051: Any GitHub automation testable/validatable locally before cloud deployment
+    - Performance target: <2 minutes complete workflow execution
+  version: 1.0.0
+  contact:
+    name: Ghostty Configuration Files Project
+    url: https://github.com/username/ghostty-config-files
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local CI/CD runner (development)
+  - url: unix:///tmp/cicd-runner.sock/api/v1
+    description: Local CI/CD runner (Unix socket)
+
+tags:
+  - name: Workflows
+    description: Workflow execution and management
+  - name: Jobs
+    description: Individual job operations
+  - name: Steps
+    description: Step-level execution
+  - name: Artifacts
+    description: Build artifact management
+  - name: Monitoring
+    description: Performance and cost monitoring
+
+paths:
+  /workflows:
+    get:
+      summary: List available workflows
+      tags: [Workflows]
+      description: Lists all GitHub Actions workflows available for local execution
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  workflows:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkflowSummary'
+
+  /workflows/{workflow_id}/execute:
+    post:
+      summary: Execute workflow locally
+      tags: [Workflows]
+      description: |
+        Executes a GitHub Actions workflow in the local environment with complete
+        fidelity to cloud runner behavior. Supports matrix builds, workflow
+        dependencies, and custom actions.
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Workflow identifier (filename or ID)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trigger:
+                  type: object
+                  properties:
+                    event:
+                      type: string
+                      enum: [push, pull_request, workflow_dispatch, schedule, manual]
+                      description: Triggering event type
+                    branch:
+                      type: string
+                      description: Git branch name
+                    context:
+                      type: object
+                      additionalProperties: true
+                      description: Additional event context (commit, PR number, etc.)
+                  required: [event]
+                environment:
+                  type: object
+                  additionalProperties: string
+                  description: Environment variables to inject
+                secrets:
+                  type: object
+                  additionalProperties: string
+                  description: Secrets to inject (encrypted in logs)
+                dry_run:
+                  type: boolean
+                  default: false
+                  description: Simulate execution without running commands
+              required: [trigger]
+      responses:
+        '202':
+          description: Workflow execution started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowExecution'
+        '400':
+          description: Invalid request (missing required parameters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Workflow not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /workflows/{workflow_id}/status:
+    get:
+      summary: Get workflow execution status
+      tags: [Workflows]
+      description: Retrieves current status of workflow execution
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: execution_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Execution instance ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowStatus'
+
+  /workflows/{workflow_id}/cancel:
+    post:
+      summary: Cancel running workflow
+      tags: [Workflows]
+      description: Cancels an in-progress workflow execution
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: execution_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Workflow cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Workflow cancelled successfully
+                  execution_id:
+                    type: string
+                    format: uuid
+
+  /jobs/{job_id}/logs:
+    get:
+      summary: Stream job logs
+      tags: [Jobs]
+      description: Streams real-time logs from job execution (Server-Sent Events)
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: follow
+          in: query
+          schema:
+            type: boolean
+            default: true
+          description: Follow log stream (tail -f behavior)
+      responses:
+        '200':
+          description: Log stream
+          content:
+            text/event-stream:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    format: date-time
+                  level:
+                    type: string
+                    enum: [debug, info, warning, error]
+                  message:
+                    type: string
+                  step_id:
+                    type: string
+                    nullable: true
+
+  /artifacts:
+    get:
+      summary: List build artifacts
+      tags: [Artifacts]
+      description: Lists all artifacts generated by workflow executions
+      parameters:
+        - name: workflow_id
+          in: query
+          schema:
+            type: string
+          description: Filter by workflow
+        - name: execution_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by execution
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  artifacts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Artifact'
+
+  /artifacts/{artifact_id}:
+    get:
+      summary: Download artifact
+      tags: [Artifacts]
+      description: Downloads a specific build artifact
+      parameters:
+        - name: artifact_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Artifact download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Artifact not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /monitoring/performance:
+    get:
+      summary: Get performance metrics
+      tags: [Monitoring]
+      description: Retrieves performance metrics for local CI/CD executions
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [hour, day, week, month]
+            default: day
+          description: Time period for metrics aggregation
+      responses:
+        '200':
+          description: Performance metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerformanceMetrics'
+
+  /monitoring/github-actions-usage:
+    get:
+      summary: GitHub Actions usage monitoring
+      tags: [Monitoring]
+      description: |
+        Monitors GitHub Actions minutes consumption to ensure zero-cost compliance.
+        **CRITICAL**: This endpoint MUST return 0 minutes for all local workflows.
+      responses:
+        '200':
+          description: GitHub Actions usage (MUST be 0 for local workflows)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_minutes_used:
+                    type: number
+                    description: MUST be 0 for constitutional compliance
+                    example: 0
+                  local_minutes_saved:
+                    type: number
+                    description: Minutes that would have been consumed if run on GitHub
+                    example: 127
+                  compliance_status:
+                    type: string
+                    enum: [compliant, warning, violation]
+                    description: Zero-cost compliance status
+                    example: compliant
+                  last_sync:
+                    type: string
+                    format: date-time
+                    description: Last sync with GitHub API
+                required:
+                  - total_minutes_used
+                  - compliance_status
+
+components:
+  schemas:
+    WorkflowSummary:
+      type: object
+      properties:
+        workflow_id:
+          type: string
+          description: Unique workflow identifier
+          example: build-and-deploy
+        name:
+          type: string
+          description: Human-readable workflow name
+          example: Build and Deploy Documentation
+        file_path:
+          type: string
+          description: Path to workflow file
+          example: .github/workflows/build-deploy.yml
+        triggers:
+          type: array
+          items:
+            type: string
+            enum: [push, pull_request, workflow_dispatch, schedule]
+          description: Events that trigger this workflow
+        last_execution:
+          type: object
+          nullable: true
+          properties:
+            execution_id:
+              type: string
+              format: uuid
+            timestamp:
+              type: string
+              format: date-time
+            status:
+              type: string
+              enum: [success, failure, cancelled]
+            duration_seconds:
+              type: number
+      required:
+        - workflow_id
+        - name
+        - file_path
+        - triggers
+
+    WorkflowExecution:
+      type: object
+      properties:
+        execution_id:
+          type: string
+          format: uuid
+          description: Unique execution instance ID
+        workflow_id:
+          type: string
+          description: Workflow being executed
+        status:
+          type: string
+          enum: [queued, running, success, failure, cancelled]
+          description: Current execution status
+        started_at:
+          type: string
+          format: date-time
+          description: Execution start timestamp
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Execution completion timestamp
+        trigger:
+          type: object
+          description: Trigger information
+          properties:
+            event:
+              type: string
+            branch:
+              type: string
+            context:
+              type: object
+              additionalProperties: true
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+          description: Jobs in this workflow
+        github_actions_minutes_consumed:
+          type: number
+          description: MUST be 0 for local executions (constitutional requirement)
+          example: 0
+      required:
+        - execution_id
+        - workflow_id
+        - status
+        - started_at
+        - github_actions_minutes_consumed
+
+    WorkflowStatus:
+      type: object
+      properties:
+        execution_id:
+          type: string
+          format: uuid
+        workflow_id:
+          type: string
+        status:
+          type: string
+          enum: [queued, running, success, failure, cancelled]
+        progress_percent:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Overall progress percentage
+        current_job:
+          type: string
+          nullable: true
+          description: Currently executing job name
+        jobs_completed:
+          type: number
+          description: Number of completed jobs
+        jobs_total:
+          type: number
+          description: Total number of jobs
+        duration_seconds:
+          type: number
+          description: Elapsed time since start
+        estimated_remaining_seconds:
+          type: number
+          nullable: true
+          description: Estimated time to completion
+        logs_url:
+          type: string
+          format: uri
+          description: URL to stream logs
+      required:
+        - execution_id
+        - workflow_id
+        - status
+        - progress_percent
+
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: string
+          format: uuid
+          description: Unique job instance ID
+        job_name:
+          type: string
+          description: Job name from workflow file
+        status:
+          type: string
+          enum: [pending, running, success, failure, skipped]
+          description: Job execution status
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Step'
+          description: Steps in this job
+        runner:
+          type: object
+          description: Runner information
+          properties:
+            os:
+              type: string
+              example: ubuntu-25.10
+            arch:
+              type: string
+              example: x86_64
+            container:
+              type: string
+              nullable: true
+              description: Docker container image if applicable
+        matrix:
+          type: object
+          nullable: true
+          additionalProperties: true
+          description: Matrix strategy values for this job instance
+      required:
+        - job_id
+        - job_name
+        - status
+
+    Step:
+      type: object
+      properties:
+        step_id:
+          type: string
+          format: uuid
+          description: Unique step instance ID
+        step_name:
+          type: string
+          description: Step name or command
+        status:
+          type: string
+          enum: [pending, running, success, failure, skipped]
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        duration_seconds:
+          type: number
+          nullable: true
+        exit_code:
+          type: number
+          nullable: true
+          description: Command exit code
+        command:
+          type: string
+          description: Executed command (obfuscated if contains secrets)
+        outputs:
+          type: object
+          additionalProperties: string
+          description: Step outputs (for use in subsequent steps)
+      required:
+        - step_id
+        - step_name
+        - status
+
+    Artifact:
+      type: object
+      properties:
+        artifact_id:
+          type: string
+          format: uuid
+        artifact_name:
+          type: string
+          description: User-defined artifact name
+        workflow_id:
+          type: string
+        execution_id:
+          type: string
+          format: uuid
+        size_bytes:
+          type: number
+          description: Artifact size in bytes
+        created_at:
+          type: string
+          format: date-time
+        download_url:
+          type: string
+          format: uri
+          description: URL to download artifact
+        retention_days:
+          type: number
+          description: Days until artifact auto-deletion
+        paths:
+          type: array
+          items:
+            type: string
+          description: File paths included in artifact
+      required:
+        - artifact_id
+        - artifact_name
+        - size_bytes
+        - download_url
+
+    PerformanceMetrics:
+      type: object
+      properties:
+        period:
+          type: string
+          enum: [hour, day, week, month]
+          description: Aggregation period
+        total_executions:
+          type: number
+          description: Total workflow executions in period
+        successful_executions:
+          type: number
+          description: Successful completions
+        failed_executions:
+          type: number
+          description: Failed executions
+        average_duration_seconds:
+          type: number
+          description: Average execution time
+        p50_duration_seconds:
+          type: number
+          description: Median execution time
+        p95_duration_seconds:
+          type: number
+          description: 95th percentile execution time
+        p99_duration_seconds:
+          type: number
+          description: 99th percentile execution time
+        github_actions_minutes_consumed:
+          type: number
+          description: MUST be 0 for constitutional compliance
+          example: 0
+        github_actions_minutes_saved:
+          type: number
+          description: Minutes saved by running locally
+        constitutional_compliance:
+          type: object
+          properties:
+            zero_cost_compliant:
+              type: boolean
+              description: Is zero-cost requirement met?
+            performance_target_met:
+              type: boolean
+              description: Is <2 minute target met? (SC-012, constitutional)
+            average_duration_seconds:
+              type: number
+              description: For comparison to 120s target
+          required:
+            - zero_cost_compliant
+            - performance_target_met
+      required:
+        - period
+        - total_executions
+        - github_actions_minutes_consumed
+        - constitutional_compliance
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+            message:
+              type: string
+              description: Human-readable error message
+            details:
+              type: object
+              additionalProperties: true
+              description: Additional error context
+          required:
+            - code
+            - message
+      required:
+        - error
+
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Optional API key for secured local runner instances
+
+security:
+  - ApiKey: []
+  - {} # Allow unauthenticated for local development
+
+externalDocs:
+  description: Local CI/CD Infrastructure Documentation
+  url: https://github.com/username/ghostty-config-files/blob/main/.runners-local/README.md
