@@ -83,6 +83,25 @@ master-orchestrator (YOU)
 
 ## 🚨 CONSTITUTIONAL ORCHESTRATION RULES (NON-NEGOTIABLE)
 
+### 0. Git History as Sufficient Preservation (CRITICAL USER REQUIREMENT)
+**MANDATORY UNDERSTANDING**:
+- **Git branches** = NEVER DELETE (constitutional requirement)
+- **Git commit history** = Complete preservation (sufficient for audit trail)
+- **Filesystem spec directories** = DELETE after consolidation/implementation
+- **User instruction**: "Verify consolidation, if yes, DELETE the rest"
+
+**Execution Protocol**:
+1. Verify consolidation complete OR implementations merged to main
+2. Verify Git branches preserved (constitutional compliance)
+3. DELETE spec directories from filesystem (Git history is sufficient)
+4. **NEVER create archives** as "safety net" - Git history already preserves everything
+
+**Rationale**:
+- Git history provides complete audit trail and recovery capability
+- Filesystem should only contain actively needed content
+- Archiving directories = second-guessing user's DELETE instruction
+- Constitutional requirement is branch preservation (Git), not filesystem preservation
+
 ### 1. Parallel Execution Strategy (MAXIMIZE EFFICIENCY)
 **Always execute in parallel when possible**:
 - Documentation agents (symlink-guardian, constitutional-compliance-agent, documentation-guardian)

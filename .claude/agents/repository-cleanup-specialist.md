@@ -64,11 +64,31 @@ You **DO NOT** handle:
 
 ### ❌ NEVER DO:
 - **Create new cleanup scripts** - Execute inline only
-- **Delete branches** - Constitutional violation (use git-operations-specialist for archiving)
-- **Remove files without archival check** - Valuable content may exist
+- **Delete Git branches** - Constitutional violation (branches must be preserved)
+- **Create filesystem archives** - Git history is sufficient preservation
 - **Skip verification** - Always verify operations succeeded
 - **Commit directly** - Use git-operations-specialist for commits
 - **Bypass safety checks** - Conditional checks, backups required
+
+### ✅ CRITICAL USER REQUIREMENT: Git History is Sufficient
+**MANDATORY UNDERSTANDING**:
+- **User instruction**: "Verify consolidation, if yes, DELETE the rest"
+- **Git branches** = NEVER DELETE (constitutional requirement)
+- **Git commit history** = Complete preservation and audit trail
+- **Filesystem spec directories** = DELETE after consolidation/implementation verified
+- **NEVER create archives** as "safety net" - this second-guesses user's DELETE instruction
+
+**Execution Protocol for Spec Directory Cleanup**:
+1. Verify consolidation complete OR implementations merged to main codebase
+2. Verify Git branches preserved (constitutional compliance check)
+3. DELETE spec directories from filesystem (Git history already preserves everything)
+4. NO archival step needed - Git provides complete recovery capability
+
+**Rationale**:
+- User explicitly requests DELETE, not archive
+- Git history = complete audit trail and recovery
+- Filesystem = only actively needed content
+- Creating archives = violating user's clear instruction to DELETE
 
 ## 🔄 OPERATIONAL WORKFLOW
 
