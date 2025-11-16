@@ -282,6 +282,6 @@ This constitution supersedes all other practices except explicit project require
 **Version**: 1.1.0
 **Ratified**: 2025-10-27
 **Last Amended**: 2025-11-09
-**Amendment Summary**: Updated documentation structure to reflect centralized hierarchy (documentations/user/, developer/, specifications/, archive/). Removed screenshot functionality. Updated specs/ path to documentations/specifications/.
+**Amendment Summary**: Updated documentation structure to reflect specs/ as primary location (specs/005-complete-terminal-infrastructure/, specs/archive/). Created docs-setup/ for critical guides. Removed screenshot functionality.
 **Authority**: AGENTS.md (single source of truth)
 **Status**: ACTIVE - MANDATORY COMPLIANCE

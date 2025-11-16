@@ -13,13 +13,15 @@ Complete guide to the centralized documentation hierarchy and organization princ
 │   └── .nojekyll                 # CRITICAL for GitHub Pages
 ├── website/src/                  # Astro source files (editable documentation)
 │   ├── user-guide/              # User documentation
-│   ├── ai-guidelines/           # AI assistant guidelines  
+│   ├── ai-guidelines/           # AI assistant guidelines
 │   └── developer/               # Developer documentation
-├── documentations/               # Centralized documentation hub
-│   ├── user/                    # End-user docs (installation, configuration, troubleshooting)
-│   ├── developer/               # Developer docs (architecture, analysis)
-│   ├── specifications/          # Active feature specifications with planning artifacts
-│   └── archive/                 # Historical/obsolete documentation (preserved)
+├── specs/                        # Feature specifications hub
+│   ├── 005-complete-terminal-infrastructure/  # Active consolidated specification
+│   └── archive/pre-consolidation/            # Historical specs (001, 002, 004)
+├── docs-setup/                   # Critical setup guides
+│   ├── context7-mcp.md          # Context7 MCP integration
+│   ├── github-mcp.md            # GitHub MCP integration
+│   └── DIRECTORY_STRUCTURE.md   # Architecture reference
 └── spec-kit/guides/             # Spec-kit methodology guides
 ```
 
@@ -37,13 +39,16 @@ Complete guide to the centralized documentation hierarchy and organization princ
 - **Build**: `npm run build` → generates `docs/`
 - **Categories**: user-guide/, ai-guidelines/, developer/
 
-#### documentations/ (Centralized Hub)
-- **Purpose**: Single source for all non-website documentation
+#### specs/ (Feature Specifications Hub)
+- **Purpose**: Single source for all feature specifications
 - **Structure**:
-  - `user/`: Installation guides, setup instructions, troubleshooting
-  - `developer/`: Architecture docs, contribution guides, analysis
-  - `specifications/`: Active feature specs (Spec 001, 002, 004)
-  - `archive/`: Historical documentation (preserved for reference)
+  - `005-complete-terminal-infrastructure/`: Active consolidated specification
+  - `archive/pre-consolidation/`: Historical specs (001, 002, 004)
+
+#### docs-setup/ (Critical Setup Guides)
+- **Purpose**: Essential setup and architecture documentation
+- **Content**: MCP integration guides, directory structure reference
+- **Audience**: Developers and AI assistants
 
 #### spec-kit/guides/
 - **Purpose**: Spec-kit methodology and usage guides
@@ -72,14 +77,14 @@ cd website && npm run build
 ls -la ../docs/user-guide/new-feature/index.html
 ```
 
-### Adding Developer Documentation
+### Adding Critical Setup Documentation
 ```bash
-# 1. Create in documentations/developer/
-vim documentations/developer/new-architecture.md
+# 1. Create in docs-setup/
+vim docs-setup/new-integration.md
 
 # 2. Write content (standard markdown)
 
-# 3. No build required (direct consumption)
+# 3. Update CLAUDE.md references if needed
 ```
 
 ### Adding Feature Specification
@@ -88,9 +93,13 @@ vim documentations/developer/new-architecture.md
 /speckit.specify "feature description"
 
 # 2. Files created in:
-documentations/specifications/00X-feature-name/
+specs/00X-feature-name/
 ├── spec.md
 ├── plan.md
+├── research.md
+├── data-model.md
+├── quickstart.md
+├── contracts/
 └── tasks.md
 ```
 

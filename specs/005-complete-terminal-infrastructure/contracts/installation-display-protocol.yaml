@@ -1,0 +1,625 @@
+# Contract: Installation Display Protocol
+# Feature: 005-complete-terminal-infrastructure
+# Version: 1.0.0
+# Created: 2025-11-16
+#
+# Purpose: Defines the interface for parallel task UI display during installation
+#          with collapsible verbose output inspired by Claude Code presentation
+
+---
+contract_id: installation-display-protocol
+contract_version: 1.0.0
+description: |
+  Protocol for displaying parallel task execution with collapsible verbose output.
+  Implements professional installation UI with clean screen management,
+  dynamic status verification, and real-time progress tracking.
+
+---
+## Display Format Specification
+
+format:
+  task_states:
+    queued:
+      symbol: "[ ]"
+      color: gray
+      description: Task waiting to execute
+    running:
+      symbol: "[→]"
+      color: blue
+      description: Task currently executing
+      animation: pulse  # Optional pulsing effect
+    completed:
+      symbol: "[✓]"
+      color: green
+      description: Task completed successfully
+    failed:
+      symbol: "[✗]"
+      color: red
+      description: Task failed
+    warning:
+      symbol: "[!]"
+      color: yellow
+      description: Task completed with warnings
+
+  task_display_line:
+    collapsed:
+      format: "{symbol} {task_name} ({duration})"
+      example: "[✓] Install Node.js via fnm (2.3s)"
+      max_width: terminal_width
+      truncation: "..."
+    expanded:
+      format: |
+        {symbol} {task_name}...
+           ├─ {subtask_1} {status}
+           ├─ {subtask_2} {status}
+           └─ {subtask_n} {status}
+      example: |
+        [→] Install Ghostty dependencies...
+           ├─ Checking system requirements... ✓
+           ├─ Installing libgtk-4-dev... ✓
+           ├─ Installing libadwaita-1-dev... (in progress)
+           └─ Verifying installation... (pending)
+
+  screen_layout:
+    header:
+      lines: 3
+      content:
+        - "━━━ Terminal Environment Installation ━━━"
+        - "Progress: {completed}/{total} tasks | Time: {elapsed}"
+        - ""
+    task_area:
+      lines: dynamic  # Grows with active tasks, up to max_visible_tasks
+      scrollable: true
+      max_visible_tasks: 10
+    footer:
+      lines: 2
+      content:
+        - ""
+        - "[Press 'v' to expand/collapse verbose output | Ctrl+C to cancel]"
+
+---
+## Status Code Definitions
+
+status_codes:
+  task_execution:
+    TASK_QUEUED: 0
+    TASK_RUNNING: 1
+    TASK_COMPLETED: 0  # Success
+    TASK_FAILED: 1     # Failure
+    TASK_WARNING: 2    # Completed with warnings
+    TASK_CANCELLED: 130  # User cancelled (Ctrl+C)
+
+  verification:
+    VERIFY_SUCCESS: 0
+    VERIFY_FAILED: 1
+    VERIFY_PARTIAL: 2   # Some checks passed
+    VERIFY_SKIPPED: 3   # Verification skipped
+
+  display_control:
+    EXPAND_TASK: 101
+    COLLAPSE_TASK: 102
+    REFRESH_DISPLAY: 103
+    SCROLL_UP: 104
+    SCROLL_DOWN: 105
+
+---
+## API Interface
+
+functions:
+  - name: init_display
+    description: Initialize the task display system
+    parameters:
+      - name: session_type
+        type: string
+        required: true
+        description: Type of session (installation, update, validation)
+      - name: total_tasks
+        type: integer
+        required: true
+        description: Total number of tasks in session
+      - name: parallel_limit
+        type: integer
+        required: false
+        default: 4
+        description: Maximum parallel tasks
+    returns:
+      type: string
+      description: Display session ID (UUID)
+    exit_codes:
+      0: Display initialized successfully
+      1: Failed to initialize (terminal not TTY, insufficient height, etc.)
+
+  - name: register_task
+    description: Register a new task for display
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+        description: Display session ID
+      - name: task_id
+        type: string
+        required: true
+        description: Unique task identifier
+      - name: task_name
+        type: string
+        required: true
+        description: Human-readable task name
+      - name: subtasks
+        type: array[string]
+        required: false
+        description: List of subtask names
+    returns:
+      type: boolean
+      description: Registration success
+    exit_codes:
+      0: Task registered
+      1: Invalid display_id
+      2: Duplicate task_id
+
+  - name: update_task_status
+    description: Update task status (queued → running → completed/failed)
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: task_id
+        type: string
+        required: true
+      - name: status
+        type: enum
+        required: true
+        values: [queued, running, completed, failed, warning]
+      - name: verification_result
+        type: object
+        required: false
+        description: Dynamic verification result (not hardcoded)
+    returns:
+      type: boolean
+    exit_codes:
+      0: Status updated
+      1: Invalid task_id
+      2: Invalid status transition
+
+  - name: update_subtask_status
+    description: Update individual subtask status
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: task_id
+        type: string
+        required: true
+      - name: subtask_id
+        type: string
+        required: true
+      - name: status
+        type: enum
+        required: true
+        values: [pending, running, completed, failed]
+    returns:
+      type: boolean
+    exit_codes:
+      0: Subtask status updated
+      1: Invalid task_id or subtask_id
+
+  - name: append_task_output
+    description: Append verbose output to task buffer
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: task_id
+        type: string
+        required: true
+      - name: output_line
+        type: string
+        required: true
+      - name: output_type
+        type: enum
+        required: false
+        default: info
+        values: [info, warning, error, debug]
+    returns:
+      type: boolean
+    exit_codes:
+      0: Output appended
+      1: Buffer full (exceeds 10KB limit)
+
+  - name: expand_task
+    description: Expand task to show verbose output
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: task_id
+        type: string
+        required: true
+    returns:
+      type: boolean
+    exit_codes:
+      0: Task expanded
+      1: Task not found or no output available
+
+  - name: collapse_task
+    description: Collapse task to single-line summary
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: task_id
+        type: string
+        required: true
+    returns:
+      type: boolean
+    exit_codes:
+      0: Task collapsed
+      1: Task not found
+
+  - name: refresh_display
+    description: Re-render the entire display
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: force
+        type: boolean
+        required: false
+        default: false
+        description: Force refresh even if not needed
+    returns:
+      type: boolean
+    exit_codes:
+      0: Display refreshed
+      1: Display session invalid
+
+  - name: cleanup_display
+    description: Clean up and finalize display session
+    parameters:
+      - name: display_id
+        type: string
+        required: true
+      - name: save_logs
+        type: boolean
+        required: false
+        default: true
+        description: Save task logs to files
+    returns:
+      type: object
+      description: Final statistics (total, completed, failed, duration)
+    exit_codes:
+      0: Display cleaned up successfully
+      1: Failed to save logs
+
+---
+## Collapse/Expand Behavior
+
+behavior:
+  auto_collapse:
+    enabled: true
+    trigger: task_status == "completed"
+    delay: 2.0  # seconds after completion
+    conditions:
+      - task_output_size < 1KB  # Don't auto-collapse large outputs
+      - no_errors_in_output
+
+  auto_expand:
+    enabled: true
+    trigger: task_status == "failed"
+    immediate: true
+    show_last_n_lines: 20  # Show last 20 lines of output on failure
+
+  manual_control:
+    keybinding: 'v'
+    toggle_mode: true  # Press 'v' to toggle current task
+    all_keybinding: 'V'  # Press Shift+V to expand all failed tasks
+
+  screen_management:
+    max_visible_lines: terminal_height - header_lines - footer_lines
+    scroll_behavior: auto  # Auto-scroll to current task
+    scroll_keybindings:
+      up: 'k' or UP_ARROW
+      down: 'j' or DOWN_ARROW
+      page_up: PAGE_UP
+      page_down: PAGE_DOWN
+
+---
+## Dynamic Verification Requirements
+
+verification:
+  principle: |
+    NEVER display hardcoded success messages.
+    ALWAYS verify actual system state dynamically.
+
+  verification_methods:
+    binary_installed:
+      check: command -v {binary} &>/dev/null
+      verify_version: |
+        if [[ -n "{min_version}" ]]; then
+          version_ge "$(get_version {binary})" "{min_version}"
+        fi
+
+    config_valid:
+      check: |
+        [[ -f "{config_file}" && -r "{config_file}" ]] && \
+        {validation_command} "{config_file}"
+
+    service_running:
+      check: |
+        systemctl is-active --quiet {service} 2>/dev/null && \
+        {health_check_command}
+
+    integration_working:
+      check: |
+        {integration_test_command} && \
+        verify_expected_output
+
+  status_display:
+    verified_success: "[✓] {task_name} (verified)"
+    verified_failure: "[✗] {task_name} (verification failed: {reason})"
+    partial_success: "[!] {task_name} (partial: {details})"
+    skipped_verification: "[✓] {task_name} (verification skipped)"
+
+  examples:
+    node_installation:
+      task: "Install Node.js via fnm"
+      verification: |
+        verify_binary "node" "25.0.0" && \
+        verify_binary "npm" "10.0.0" && \
+        verify_integration "node -e 'console.log(\"test\")'"
+      display_on_success: "[✓] Install Node.js via fnm (verified v25.2.0)"
+      display_on_failure: "[✗] Install Node.js via fnm (node binary not found)"
+
+    ghostty_config:
+      task: "Configure Ghostty"
+      verification: |
+        verify_config "$HOME/.config/ghostty/config" "ghostty +show-config" && \
+        verify_config_contains "linux-cgroup = single-instance"
+      display_on_success: "[✓] Configure Ghostty (config valid, optimizations enabled)"
+      display_on_failure: "[✗] Configure Ghostty (config syntax error at line 42)"
+
+---
+## Parallel Task Management
+
+parallelism:
+  max_parallel: 4  # Constitutional default
+  scheduling:
+    strategy: fifo  # First-in-first-out
+    respect_dependencies: true
+    priority_levels:
+      critical: 1    # Run immediately (e.g., backups)
+      high: 2        # Run soon (e.g., package installation)
+      normal: 3      # Default priority
+      low: 4         # Run when slots available (e.g., cache warming)
+
+  output_isolation:
+    method: process_substitution  # Use bash process substitution
+    buffering: line  # Buffer output by line
+    interleaving: prevented  # Never mix output from different tasks
+    implementation: |
+      # Each task gets isolated output
+      task_output_fd=$(mktemp --fifo)
+      exec {task_fd}<> "$task_output_fd"
+
+      # Run task with output redirection
+      (
+        task_function "$@" 2>&1 | tee >(cat >&${task_fd})
+      ) &
+      task_pid=$!
+
+      # Monitor task output and update display
+      while IFS= read -r line <&${task_fd}; do
+        append_task_output "$display_id" "$task_id" "$line"
+      done
+
+  task_coordination:
+    start_notification: |
+      update_task_status "$display_id" "$task_id" "running"
+      register_task_pid "$task_id" "$task_pid"
+
+    completion_notification: |
+      wait "$task_pid"
+      exit_code=$?
+      verify_task_success "$task_id"
+      update_task_status "$display_id" "$task_id" \
+        "$(exit_code_to_status $exit_code $verification_result)"
+
+    failure_handling: |
+      if [[ "$status" == "failed" ]]; then
+        expand_task "$display_id" "$task_id"  # Auto-expand on failure
+        log_error "Task $task_id failed with exit code $exit_code"
+      fi
+
+---
+## Terminal Control
+
+terminal:
+  requirements:
+    is_tty: true
+    min_width: 80
+    min_height: 24
+    supports_ansi_colors: true
+
+  ansi_codes:
+    clear_screen: "\033[2J"
+    move_cursor_home: "\033[H"
+    move_cursor_to: "\033[{row};{col}H"
+    clear_line: "\033[2K"
+    hide_cursor: "\033[?25l"
+    show_cursor: "\033[?25h"
+    save_cursor: "\033[s"
+    restore_cursor: "\033[u"
+
+    colors:
+      reset: "\033[0m"
+      bold: "\033[1m"
+      gray: "\033[90m"
+      red: "\033[91m"
+      green: "\033[92m"
+      yellow: "\033[93m"
+      blue: "\033[94m"
+
+  refresh_strategy:
+    rate: 100ms  # 10 fps max
+    method: incremental  # Only redraw changed lines
+    debounce: true  # Prevent excessive refreshes
+    on_signal:
+      SIGWINCH: handle_terminal_resize
+      SIGINT: cleanup_and_exit
+      SIGTERM: cleanup_and_exit
+
+---
+## Implementation Example
+
+example_usage: |
+  #!/bin/bash
+  source scripts/task_display.sh
+
+  # Initialize display
+  display_id=$(init_display "installation" 5 4)
+
+  # Register tasks
+  register_task "$display_id" "node" "Install Node.js via fnm" \
+    "Download fnm" "Install fnm" "Install Node.js" "Verify installation"
+  register_task "$display_id" "ghostty" "Install Ghostty" \
+    "Clone repository" "Build from source" "Install binary"
+  register_task "$display_id" "zsh" "Configure ZSH" \
+    "Install Oh My ZSH" "Install plugins" "Configure theme"
+  register_task "$display_id" "tools" "Install modern Unix tools" \
+    "bat" "exa" "ripgrep" "fd" "zoxide"
+  register_task "$display_id" "verify" "Verify installation"
+
+  # Start display refresh loop in background
+  refresh_display "$display_id" &
+  refresh_pid=$!
+
+  # Execute tasks in parallel
+  install_node_task "$display_id" &
+  install_ghostty_task "$display_id" &
+  install_zsh_task "$display_id" &
+
+  # Wait for all tasks
+  wait
+
+  # Install tools sequentially after dependencies
+  install_tools_task "$display_id"
+
+  # Verify entire installation
+  verify_installation_task "$display_id"
+
+  # Cleanup
+  kill $refresh_pid 2>/dev/null
+  cleanup_display "$display_id"
+
+example_task_function: |
+  install_node_task() {
+    local display_id="$1"
+    local task_id="node"
+
+    update_task_status "$display_id" "$task_id" "running"
+
+    # Subtask 1: Download fnm
+    update_subtask_status "$display_id" "$task_id" "download_fnm" "running"
+    if curl -fsSL https://fnm.vercel.app/install | bash; then
+      update_subtask_status "$display_id" "$task_id" "download_fnm" "completed"
+    else
+      update_subtask_status "$display_id" "$task_id" "download_fnm" "failed"
+      update_task_status "$display_id" "$task_id" "failed"
+      return 1
+    fi
+
+    # Subtask 2: Install Node.js
+    update_subtask_status "$display_id" "$task_id" "install_node" "running"
+    if fnm install latest; then
+      update_subtask_status "$display_id" "$task_id" "install_node" "completed"
+    else
+      update_subtask_status "$display_id" "$task_id" "install_node" "failed"
+      update_task_status "$display_id" "$task_id" "failed"
+      return 1
+    fi
+
+    # Subtask 3: Verify (DYNAMIC, not hardcoded)
+    update_subtask_status "$display_id" "$task_id" "verify" "running"
+    if verify_binary "node" "25.0.0" && \
+       verify_binary "npm" "10.0.0" && \
+       verify_integration "node"; then
+      update_subtask_status "$display_id" "$task_id" "verify" "completed"
+      update_task_status "$display_id" "$task_id" "completed" "$(get_node_version)"
+    else
+      update_subtask_status "$display_id" "$task_id" "verify" "failed"
+      update_task_status "$display_id" "$task_id" "failed" "Verification failed"
+      return 1
+    fi
+  }
+
+---
+## Testing Requirements
+
+test_coverage:
+  - name: test_display_initialization
+    description: Verify display initializes with valid parameters
+  - name: test_task_registration
+    description: Verify tasks can be registered and tracked
+  - name: test_status_transitions
+    description: Verify valid status transitions (queued → running → completed)
+  - name: test_parallel_output_isolation
+    description: Verify outputs from parallel tasks don't interleave
+  - name: test_auto_collapse
+    description: Verify completed tasks auto-collapse after delay
+  - name: test_auto_expand_on_failure
+    description: Verify failed tasks auto-expand to show errors
+  - name: test_dynamic_verification
+    description: Verify dynamic status checks work correctly
+  - name: test_terminal_resize
+    description: Verify display adapts to terminal resize (SIGWINCH)
+  - name: test_cleanup
+    description: Verify proper cleanup on exit
+
+---
+## Dependencies
+
+required_binaries:
+  - name: tput
+    description: Terminal control
+    check: command -v tput
+  - name: stty
+    description: Terminal settings
+    check: command -v stty
+
+required_env_vars:
+  - TERM  # Terminal type for ANSI support
+
+required_features:
+  - tty: true
+  - ansi_colors: true
+  - signal_handling: true
+
+---
+## Performance Targets
+
+performance:
+  display_initialization: <100ms
+  task_registration: <10ms per task
+  status_update: <5ms
+  full_refresh: <50ms for 10 tasks
+  output_append: <1ms per line
+  max_memory_usage: 10MB for display state
+  buffer_size_per_task: 10KB
+
+---
+## Compatibility
+
+compatibility:
+  terminals:
+    - xterm
+    - xterm-256color
+    - gnome-terminal
+    - ghostty
+    - kitty
+    - alacritty
+  shells:
+    - bash >= 4.0
+    - zsh >= 5.0
+  operating_systems:
+    - Ubuntu 25.10 (primary)
+    - Ubuntu 24.04 LTS (tested)
+    - Debian 13 (should work)

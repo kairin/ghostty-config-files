@@ -14,75 +14,59 @@ This project uses the **spec-kit methodology** for structured feature developmen
 
 ## Active Specifications
 
-### Spec 001: Repository Structure Refactoring
+### Spec 005: Complete Terminal Infrastructure
 
-**Status**: 55% Complete (46/84 tasks)
-**Branch**: `001-repo-structure-refactor`
-**Created**: 2025-10-26
+**Status**: Active - Consolidated Specification
+**Branch**: `005-complete-terminal-infrastructure`
+**Created**: 2025-11-16
 
-Consolidates scripts into `manage.sh`, restructures documentation to separate source from generated content, and improves modularity by breaking down monolithic files.
+Unified specification consolidating repository structure refactoring (001), advanced terminal productivity features (002), and modern web development stack (004) into a single comprehensive terminal infrastructure specification.
 
-**Key Achievements:**
-- Documentation centralization (`documentations/` hub structure)
-- Screenshot functionality removal (28 files, 2,474 lines removed)
-- File organization (40% reduction in root directory clutter)
-- GitHub Pages documentation structure (`docs/` + `docs-source/`)
+**Core Components:**
+- **Repository Architecture**: Modular scripts, centralized documentation hub, spec-kit workflow integration
+- **Terminal Productivity**: AI-powered command assistance, advanced themes, performance optimizations
+- **Web Development Stack**: uv + Astro.build + Tailwind CSS + shadcn/ui with GitHub Pages deployment
+- **MCP Integration**: Context7 documentation sync, GitHub API integration
+- **CI/CD Infrastructure**: Local workflow execution, zero-cost GitHub Pages, performance monitoring
 
-**Outstanding:**
-- Phase 5: Modular script architecture (start.sh → manage.sh with 10+ modules)
-- Phase 6: Integration testing
-- Phase 7: Polish & documentation
-
-**Location**: `/documentations/specifications/001-repo-structure-refactor/`
-
----
-
-### Spec 002: Advanced Terminal Productivity Suite
-
-**Status**: Planning Complete - Ready for Implementation
-**Branch**: `002-advanced-terminal-productivity`
-**Created**: 2025-09-21
-
-Extends Ghostty configuration with AI-powered command assistance, advanced Oh My Zsh themes, performance optimizations, and team collaboration features.
-
-**Features:**
-- **AI Integration**: zsh-codex, GitHub Copilot CLI for natural language to command translation
-- **Advanced Themes**: Powerlevel10k/Starship with instant prompt rendering
-- **Performance**: Sub-50ms shell startup times with intelligent caching
-- **Team Collaboration**: Shared configuration templates and dotfile management
-
-**Success Metrics:**
-- <50ms shell startup time (vs current ~200ms average)
-- 30-50% reduction in command lookup time
-- 40% fewer command-line errors with AI assistance
-- 90% configuration compliance across team members
-
-**Location**: `/documentations/specifications/002-advanced-terminal-productivity/`
-
----
-
-### Spec 004: Modern Web Development Stack
-
-**Status**: Planning Complete - Ready for Tasks
-**Branch**: `004-modern-web-development`
-**Created**: 2025-01-20
-
-Modern web development stack with uv for Python dependency management, Astro.build for static site generation, Tailwind CSS + shadcn/ui for component-driven UI, and GitHub Pages deployment.
-
-**Core Stack:**
-- **Python**: uv (>=0.4.0) for dependency management
-- **Static Site**: Astro.build (>=4.0) with TypeScript strict mode
-- **UI**: Tailwind CSS (>=3.4) + shadcn/ui components
-- **Deployment**: GitHub Pages with zero ongoing costs
-- **CI/CD**: Mandatory local workflow execution
+**Key Features:**
+- One-command fresh Ubuntu setup with zero configuration
+- 2025 Ghostty performance optimizations (CGroup single-instance, <500ms startup)
+- AI tool integration (Claude Code, Gemini CLI, GitHub Copilot)
+- Automated daily updates with intelligent preservation
+- Complete local CI/CD pipeline (zero GitHub Actions costs)
 
 **Performance Targets:**
+- Shell startup: <50ms with intelligent caching
+- Ghostty startup: <500ms with CGroup optimization
+- Astro build: <30 seconds for complete documentation site
+- GitHub Pages deployment: <2 minutes total
 - Lighthouse scores: 95+ across all metrics
-- JavaScript bundles: <100KB for initial load
-- Page load time: <1.5 seconds
-- Core Web Vitals: All in "Good" range
 
-**Location**: `/documentations/specifications/004-modern-web-development/`
+**Location**: `/documentations/specifications/005-complete-terminal-infrastructure/`
+
+---
+
+## Archived Specifications
+
+The following specifications have been consolidated into Spec 005 and archived for historical reference:
+
+### Spec 001: Repository Structure Refactoring (ARCHIVED)
+**Archive Location**: `/documentations/archive/pre-consolidation-specs/001-repo-structure-refactor/`
+**Status**: 55% Complete → Consolidated into 005
+**Consolidation Coverage**: 98%
+
+### Spec 002: Advanced Terminal Productivity (ARCHIVED)
+**Archive Location**: `/documentations/archive/pre-consolidation-specs/002-advanced-terminal-productivity/`
+**Status**: Planning Complete → Consolidated into 005
+**Consolidation Coverage**: 95%
+
+### Spec 004: Modern Web Development Stack (ARCHIVED)
+**Archive Location**: `/documentations/archive/pre-consolidation-specs/004-modern-web-development/`
+**Status**: Planning Complete → Consolidated into 005
+**Consolidation Coverage**: 97%
+
+For complete archive details, see: [Archive Index](/documentations/archive/pre-consolidation-specs/ARCHIVE_INDEX.md)
 
 ---
 
@@ -136,21 +120,22 @@ specifications/[spec-id]-[feature-name]/
 
 | Spec ID | Feature | Status | Progress |
 |---------|---------|--------|----------|
-| 001 | Repository Structure Refactoring | In Progress | 55% (46/84 tasks) |
-| 002 | Advanced Terminal Productivity | Planning Complete | Ready for /tasks |
-| 004 | Modern Web Development Stack | Planning Complete | Ready for /tasks |
+| 005 | Complete Terminal Infrastructure | Active | Consolidated from 001, 002, 004 |
+| 001 | Repository Structure Refactoring | Archived | 98% consolidated into 005 |
+| 002 | Advanced Terminal Productivity | Archived | 95% consolidated into 005 |
+| 004 | Modern Web Development Stack | Archived | 97% consolidated into 005 |
 
 ---
 
 ## Related Documentation
 
-- [Spec-Kit Guide](/documentations/specifications/002-advanced-terminal-productivity/SPEC_KIT_GUIDE.md)
-- [Spec-Kit Index](/documentations/specifications/002-advanced-terminal-productivity/SPEC_KIT_INDEX.md)
+- [Spec-Kit Guides](/spec-kit/guides/SPEC_KIT_INDEX.md)
 - [Architecture Overview](/ghostty-config-files/developer/architecture)
 - [Contributing Guide](/ghostty-config-files/developer/contributing)
+- [Archive Index](/documentations/archive/pre-consolidation-specs/ARCHIVE_INDEX.md)
 
 ---
 
-**Last Updated**: 2025-11-15
-**Specification Count**: 3 active (001, 002, 004)
+**Last Updated**: 2025-11-16
+**Specification Count**: 1 active (005), 3 archived (001, 002, 004)
 **Methodology**: spec-kit with constitutional compliance
