@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](documentations/user/setup/context7-mcp.md) • [GitHub MCP Setup](documentations/user/setup/github-mcp.md) • [Spec-Kit Guides](spec-kit/guides/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](docs-setup/context7-mcp.md) • [GitHub MCP Setup](docs-setup/github-mcp.md) • [Spec-Kit Guides](spec-kit/guides/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
 
 ## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
@@ -64,7 +64,7 @@ exit && claude
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 - **BEST PRACTICE**: Document Context7 queries in conversation logs
 
-**Complete Setup Guide:** [Context7 MCP Setup](documentations/user/setup/context7-mcp.md) - Installation, configuration, troubleshooting, examples
+**Complete Setup Guide:** [Context7 MCP Setup](docs-setup/context7-mcp.md) - Installation, configuration, troubleshooting, examples
 
 ### 🚨 CRITICAL: GitHub MCP Integration & Repository Operations
 
@@ -102,7 +102,7 @@ exit && claude
 - ✅ Leverages existing gh CLI authentication
 - ✅ Token auto-refreshes via gh CLI
 
-**Complete Setup Guide:** [GitHub MCP Setup](documentations/user/setup/github-mcp.md) - Installation, configuration, usage examples, troubleshooting
+**Complete Setup Guide:** [GitHub MCP Setup](docs-setup/github-mcp.md) - Installation, configuration, usage examples, troubleshooting
 
 ### 🚨 CRITICAL: Branch Management & Git Strategy
 
@@ -754,11 +754,11 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 ### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
 - **`website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
-- **`documentations/`** - **Centralized documentation hub** (as of 2025-11-16):
-  - `user/` - End-user documentation (installation, configuration, troubleshooting)
-  - `developer/` - Developer documentation (architecture, analysis)
-  - `specifications/` - Active feature specifications with planning artifacts (Spec 005)
-  - `archive/` - Historical/obsolete documentation and archived specifications (001, 002, 004)
+- **`specs/`** - **Feature specifications hub** (as of 2025-11-16):
+  - `005-complete-terminal-infrastructure/` - Active consolidated specification
+  - `archive/pre-consolidation/` - Historical specifications (001, 002, 004)
+- **`docs-setup/`** - **Critical setup guides** (MCP integration, architecture)
+- **`spec-kit/guides/`** - **Spec-Kit workflow documentation** (constitution, specify, plan, tasks, implement)
 
 ### 🎯 Spec-Kit Development Guides
 For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](spec-kit/guides/SPEC_KIT_INDEX.md)** - Complete navigation, commands (/constitution, /specify, /plan, /tasks, /implement), and implementation guides.
@@ -767,9 +767,9 @@ For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](sp
 
 **Spec 005**: Unified terminal infrastructure specification consolidating repository structure refactoring (001), advanced terminal productivity (002), and modern web development stack (004).
 
-**Complete Specification**: [spec.md](documentations/specifications/005-complete-terminal-infrastructure/spec.md) - Core components, performance targets, CI/CD requirements, constitutional compliance, implementation phases.
+**Complete Specification**: [spec.md](specs/005-complete-terminal-infrastructure/spec.md) - Core components, performance targets, CI/CD requirements, constitutional compliance, implementation phases.
 
-**Archived Specifications**: [Archive Index](documentations/archive/pre-consolidation-specs/ARCHIVE_INDEX.md) - Historical reference for specs 001, 002, 004.
+**Archived Specifications**: [Archive Index](specs/archive/pre-consolidation/ARCHIVE_INDEX.md) - Historical reference for specs 001, 002, 004.
 
 ### Support Commands
 ```bash
