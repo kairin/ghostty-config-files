@@ -1,0 +1,774 @@
+# Contract: Quality Gate Interface
+# Feature: 005-complete-terminal-infrastructure
+# Version: 1.0.0
+# Created: 2025-11-16
+#
+# Purpose: Defines the interface for automated quality validation (accessibility,
+#          security, performance) integrated into local CI/CD workflows
+
+---
+contract_id: quality-gate-interface
+contract_version: 1.0.0
+description: |
+  Interface for executing automated quality gates including accessibility testing
+  (axe-core, Lighthouse CI), security scanning (npm audit, dependency checking),
+  and performance validation with WCAG 2.1 Level AA compliance.
+
+---
+## Core Requirements
+
+requirements:
+  accessibility:
+    standard: WCAG 2.1 Level AA
+    tools:
+      - axe-core (>=4.0.0)
+      - Lighthouse CI (>=0.13.0)
+    automation: true
+    blocking: Violations block deployment
+
+  security:
+    tools:
+      - npm audit (built-in)
+      - GitHub Dependabot (cloud-based alerts)
+    thresholds:
+      critical: 0 (zero tolerance)
+      high: 0 (zero tolerance)
+      moderate: warning only
+      low: informational
+    automation: true
+    blocking: Critical/high vulnerabilities block deployment
+
+  performance:
+    tools:
+      - Lighthouse CI (performance metrics)
+      - Custom benchmarks
+    thresholds:
+      lighthouse_min: 95 (all categories)
+      bundle_size_max: 100KB (initial load)
+      shell_startup_max: 50ms
+    automation: true
+    blocking: Performance regressions block deployment
+
+---
+## API Interface
+
+functions:
+  - name: run_accessibility_gate
+    description: Execute accessibility validation with axe-core and Lighthouse
+    parameters:
+      - name: target_url
+        type: string
+        required: true
+        description: URL to test (typically http://localhost:4321 for dev server)
+      - name: rules
+        type: array[string]
+        required: false
+        default: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]
+        description: Accessibility rules to check
+      - name: output_dir
+        type: string
+        required: false
+        default: "./accessibility-reports"
+        description: Report output directory
+      - name: fail_on_violations
+        type: boolean
+        required: false
+        default: true
+        description: Exit with error if violations found
+    returns:
+      type: object
+      description: Accessibility test results
+    exit_codes:
+      0: No violations found
+      1: Violations detected (if fail_on_violations: true)
+      2: Test execution error
+
+  - name: run_security_gate
+    description: Execute security vulnerability scanning
+    parameters:
+      - name: audit_level
+        type: enum
+        required: false
+        default: "moderate"
+        values: ["low", "moderate", "high", "critical"]
+        description: Minimum severity to report
+      - name: production_only
+        type: boolean
+        required: false
+        default: true
+        description: Only check production dependencies
+      - name: output_file
+        type: string
+        required: false
+        default: "./security-report.json"
+        description: Report output file
+    returns:
+      type: object
+      description: Security audit results
+    exit_codes:
+      0: No vulnerabilities found
+      1: Vulnerabilities detected above threshold
+      2: Audit execution error
+
+  - name: run_performance_gate
+    description: Execute performance validation with Lighthouse
+    parameters:
+      - name: target_url
+        type: string
+        required: true
+        description: URL to test
+      - name: thresholds
+        type: object
+        required: false
+        description: Performance thresholds
+      - name: runs
+        type: integer
+        required: false
+        default: 3
+        description: Number of runs for averaging
+      - name: output_dir
+        type: string
+        required: false
+        default: "./lighthouse-reports"
+        description: Report output directory
+    returns:
+      type: object
+      description: Performance test results
+    exit_codes:
+      0: All thresholds met
+      1: Thresholds violated
+      2: Test execution error
+
+  - name: run_all_gates
+    description: Execute all quality gates in sequence
+    parameters:
+      - name: target_url
+        type: string
+        required: true
+        description: URL for accessibility/performance testing
+      - name: fail_fast
+        type: boolean
+        required: false
+        default: false
+        description: Stop on first failure
+    returns:
+      type: object
+      description: Combined gate results
+    exit_codes:
+      0: All gates passed
+      1: One or more gates failed
+      2: Execution error
+
+  - name: generate_gate_report
+    description: Generate human-readable quality gate report
+    parameters:
+      - name: results
+        type: object
+        required: true
+        description: Gate execution results
+      - name: format
+        type: enum
+        required: false
+        default: "markdown"
+        values: ["markdown", "html", "json", "text"]
+        description: Report format
+      - name: output_file
+        type: string
+        required: true
+        description: Output file path
+    returns:
+      type: boolean
+    exit_codes:
+      0: Report generated successfully
+      1: Report generation failed
+
+---
+## Accessibility Gate Configuration
+
+accessibility_config:
+  axe_core:
+    installation: npm install --save-dev @axe-core/cli
+    config_file: .axerc.json
+    config_content: |
+      {
+        "rules": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+        "reporter": "v2",
+        "save": "accessibility-report.json",
+        "exit": true
+      }
+
+    execution: |
+      # Start development server
+      npm run preview &
+      SERVER_PID=$!
+      sleep 5
+
+      # Run axe-core
+      npx axe http://localhost:4321 \
+        --rules wcag2a,wcag2aa,wcag21a,wcag21aa \
+        --exit \
+        --save accessibility-report.json
+
+      # Cleanup
+      kill $SERVER_PID
+
+    output_format: |
+      {
+        "url": "http://localhost:4321",
+        "timestamp": "2025-11-16T10:30:00Z",
+        "testEngine": {
+          "name": "axe-core",
+          "version": "4.9.0"
+        },
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "description": "Elements must have sufficient color contrast",
+            "help": "https://dequeuniversity.com/rules/axe/4.9/color-contrast",
+            "nodes": [
+              {
+                "html": "<div class=\"text-gray-400\">...",
+                "target": ["#content > div:nth-child(2)"],
+                "failureSummary": "Fix: Ensure contrast ratio is at least 4.5:1"
+              }
+            ]
+          }
+        ],
+        "passes": 42,
+        "incomplete": 3,
+        "inapplicable": 12
+      }
+
+  lighthouse_ci:
+    installation: npm install --save-dev @lhci/cli
+    config_file: lighthouserc.js
+    config_content: |
+      module.exports = {
+        ci: {
+          collect: {
+            url: ['http://localhost:4321'],
+            startServerCommand: 'npm run preview',
+            startServerReadyPattern: 'Local:',
+            numberOfRuns: 3
+          },
+          assert: {
+            preset: 'lighthouse:recommended',
+            assertions: {
+              'categories:accessibility': ['error', {minScore: 0.95}],
+              'categories:performance': ['error', {minScore: 0.95}],
+              'categories:best-practices': ['error', {minScore: 0.95}],
+              'categories:seo': ['error', {minScore: 0.95}]
+            }
+          },
+          upload: {
+            target: 'filesystem',
+            outputDir: './lighthouse-reports'
+          }
+        }
+      };
+
+    execution: |
+      npx lhci autorun
+
+    output_format: |
+      {
+        "url": "http://localhost:4321",
+        "categories": {
+          "performance": {
+            "score": 0.98,
+            "title": "Performance"
+          },
+          "accessibility": {
+            "score": 0.96,
+            "title": "Accessibility",
+            "auditRefs": [
+              {
+                "id": "aria-allowed-attr",
+                "weight": 10,
+                "score": 1
+              }
+            ]
+          }
+        }
+      }
+
+  wcag_compliance:
+    level: AA  # WCAG 2.1 Level AA
+    criteria:
+      perceivable:
+        - "1.1.1 Non-text Content (A)"
+        - "1.3.1 Info and Relationships (A)"
+        - "1.4.3 Contrast (Minimum) (AA)"
+        - "1.4.5 Images of Text (AA)"
+      operable:
+        - "2.1.1 Keyboard (A)"
+        - "2.4.2 Page Titled (A)"
+        - "2.4.7 Focus Visible (AA)"
+      understandable:
+        - "3.1.1 Language of Page (A)"
+        - "3.2.3 Consistent Navigation (AA)"
+        - "3.3.1 Error Identification (A)"
+      robust:
+        - "4.1.1 Parsing (A)"
+        - "4.1.2 Name, Role, Value (A)"
+
+    automated_coverage:
+      axe_core: 57%  # Industry standard
+      lighthouse: 30%  # Supplementary checks
+      manual_required: 13%  # Flagged as "incomplete"
+
+---
+## Security Gate Configuration
+
+security_config:
+  npm_audit:
+    execution: |
+      # Run npm audit with threshold
+      npm audit --audit-level=moderate --json > security-report.json
+
+      # Parse results
+      HIGH_VULN=$(jq '.metadata.vulnerabilities.high' security-report.json)
+      CRITICAL_VULN=$(jq '.metadata.vulnerabilities.critical' security-report.json)
+
+      # Check thresholds
+      if [ "$HIGH_VULN" -gt 0 ] || [ "$CRITICAL_VULN" -gt 0 ]; then
+        echo "ERROR: Found high/critical vulnerabilities"
+        npm audit
+        exit 1
+      fi
+
+    output_format: |
+      {
+        "auditReportVersion": 2,
+        "metadata": {
+          "vulnerabilities": {
+            "critical": 0,
+            "high": 0,
+            "moderate": 2,
+            "low": 5,
+            "info": 0
+          },
+          "dependencies": 150,
+          "devDependencies": 50,
+          "totalDependencies": 200
+        },
+        "vulnerabilities": {
+          "package-name": {
+            "name": "package-name",
+            "severity": "moderate",
+            "via": ["dependency"],
+            "effects": ["parent-package"],
+            "range": "<=1.2.3",
+            "nodes": ["node_modules/package-name"],
+            "fixAvailable": {
+              "name": "parent-package",
+              "version": "2.0.0"
+            }
+          }
+        }
+      }
+
+  lockfile_validation:
+    execution: |
+      # Validate package-lock.json integrity
+      npm ci --dry-run
+
+      # Check for package-lock.json in git
+      if ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then
+        echo "ERROR: package-lock.json not committed"
+        exit 1
+      fi
+
+      # Verify lockfile is up-to-date
+      npm install --package-lock-only --dry-run
+
+  dependabot_config:
+    file: .github/dependabot.yml
+    content: |
+      version: 2
+      updates:
+        - package-ecosystem: "npm"
+          directory: "/"
+          schedule:
+            interval: "weekly"
+          open-pull-requests-limit: 10
+          reviewers:
+            - "maintainer"
+          labels:
+            - "dependencies"
+            - "security"
+          # Auto-merge security patches (optional)
+          auto-merge:
+            - match:
+                dependency-type: "all"
+                update-type: "security:patch"
+
+  severity_thresholds:
+    critical:
+      action: fail  # Exit 1, block deployment
+      cve_lookup: true
+      notification: immediate
+    high:
+      action: fail  # Exit 1, block deployment
+      cve_lookup: true
+      notification: immediate
+    moderate:
+      action: warn  # Exit 0 with warning
+      cve_lookup: false
+      notification: weekly_summary
+    low:
+      action: info  # Exit 0, informational only
+      cve_lookup: false
+      notification: monthly_summary
+
+---
+## Performance Gate Configuration
+
+performance_config:
+  lighthouse_metrics:
+    thresholds:
+      performance: 95
+      accessibility: 95
+      best_practices: 95
+      seo: 95
+    metrics:
+      first_contentful_paint: <1.8s
+      largest_contentful_paint: <2.5s
+      total_blocking_time: <200ms
+      cumulative_layout_shift: <0.1
+      speed_index: <3.4s
+
+  bundle_size:
+    thresholds:
+      initial_js: 100KB  # 100 KiB max
+      initial_css: 50KB  # 50 KiB max
+      total_initial: 150KB  # 150 KiB max combined
+    tools:
+      - name: bundlesize
+        install: npm install --save-dev bundlesize
+        config: |
+          // package.json
+          {
+            "bundlesize": [
+              {
+                "path": "./dist/_astro/*.js",
+                "maxSize": "100 KB"
+              },
+              {
+                "path": "./dist/_astro/*.css",
+                "maxSize": "50 KB"
+              }
+            ]
+          }
+
+  shell_startup:
+    threshold: 50ms  # Constitutional requirement
+    measurement: |
+      # Measure ZSH startup time
+      time_start=$(date +%s%N)
+      zsh -i -c exit
+      time_end=$(date +%s%N)
+      startup_time=$(( (time_end - time_start) / 1000000 ))  # Convert to ms
+
+      if [ $startup_time -gt 50 ]; then
+        echo "ERROR: Shell startup time exceeded: ${startup_time}ms > 50ms"
+        exit 1
+      fi
+
+  build_time:
+    threshold: 120s  # 2 minutes max for full build
+    measurement: |
+      time_start=$(date +%s)
+      npm run build
+      time_end=$(date +%s)
+      build_time=$((time_end - time_start))
+
+      if [ $build_time -gt 120 ]; then
+        echo "WARNING: Build time exceeded: ${build_time}s > 120s"
+        exit 1
+      fi
+
+---
+## Integration with CI/CD
+
+cicd_integration:
+  github_actions:
+    file: .github/workflows/quality-gates.yml
+    content: |
+      name: Quality Gates
+
+      on: [push, pull_request]
+
+      jobs:
+        accessibility:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 'latest'
+            - run: npm ci
+            - run: npm run build
+            - name: Run Accessibility Tests
+              run: |
+                npm run preview &
+                sleep 5
+                npx axe http://localhost:4321 --exit
+                npx lhci autorun
+            - uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                name: accessibility-reports
+                path: accessibility-reports/
+
+        security:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 'latest'
+            - run: npm ci
+            - name: Run Security Audit
+              run: |
+                npm audit --audit-level=high
+                npm ci --dry-run
+            - uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                name: security-reports
+                path: security-report.json
+
+        performance:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version: 'latest'
+            - run: npm ci
+            - run: npm run build
+            - name: Run Performance Tests
+              run: npx lhci autorun
+            - uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                name: lighthouse-reports
+                path: lighthouse-reports/
+
+  local_execution:
+    description: Execute quality gates locally with nektos/act
+    commands:
+      - name: All gates
+        command: act push -W .github/workflows/quality-gates.yml
+      - name: Accessibility only
+        command: act -j accessibility -W .github/workflows/quality-gates.yml
+      - name: Security only
+        command: act -j security -W .github/workflows/quality-gates.yml
+      - name: Performance only
+        command: act -j performance -W .github/workflows/quality-gates.yml
+
+  manage_sh_integration:
+    commands:
+      - command: ./manage.sh validate accessibility
+        description: Run accessibility gate
+        implementation: |
+          source scripts/quality_gates.sh
+          run_accessibility_gate "http://localhost:4321"
+
+      - command: ./manage.sh validate security
+        description: Run security gate
+        implementation: |
+          source scripts/quality_gates.sh
+          run_security_gate
+
+      - command: ./manage.sh validate performance
+        description: Run performance gate
+        implementation: |
+          source scripts/quality_gates.sh
+          run_performance_gate "http://localhost:4321"
+
+      - command: ./manage.sh validate all
+        description: Run all quality gates
+        implementation: |
+          source scripts/quality_gates.sh
+          run_all_gates "http://localhost:4321"
+
+---
+## Reporting
+
+reports:
+  accessibility:
+    formats:
+      - json: accessibility-report.json (machine-readable)
+      - html: accessibility-report.html (human-readable)
+      - summary: accessibility-summary.txt (CLI output)
+    contents:
+      - Total violations by severity
+      - WCAG criterion failures
+      - Affected elements with selectors
+      - Remediation recommendations
+      - Documentation links
+
+  security:
+    formats:
+      - json: security-report.json (machine-readable)
+      - summary: security-summary.txt (CLI output)
+    contents:
+      - Vulnerabilities by severity
+      - Affected packages and versions
+      - CVE identifiers
+      - Fix recommendations
+      - Dependency tree analysis
+
+  performance:
+    formats:
+      - json: lighthouse-report.json (machine-readable)
+      - html: lighthouse-report.html (interactive)
+      - summary: performance-summary.txt (CLI output)
+    contents:
+      - Lighthouse scores (performance, accessibility, best practices, SEO)
+      - Core Web Vitals metrics
+      - Bundle size analysis
+      - Performance opportunities
+      - Best practice recommendations
+
+  combined:
+    format: quality-gates-report.md
+    content: |
+      # Quality Gates Report
+
+      **Date**: 2025-11-16T10:30:00Z
+      **Commit**: abc123def
+      **Branch**: feat-new-feature
+
+      ## Summary
+
+      | Gate | Status | Score | Violations |
+      |------|--------|-------|------------|
+      | Accessibility | ✓ PASS | 96 | 0 |
+      | Security | ✓ PASS | - | 0 high/critical |
+      | Performance | ✓ PASS | 98 | 0 |
+
+      ## Accessibility
+
+      - **WCAG 2.1 Level AA**: Compliant
+      - **Violations**: 0
+      - **Incomplete**: 3 (require manual review)
+
+      ## Security
+
+      - **Critical Vulnerabilities**: 0
+      - **High Vulnerabilities**: 0
+      - **Moderate Vulnerabilities**: 2 (non-blocking)
+
+      ## Performance
+
+      - **Lighthouse Performance**: 98
+      - **Bundle Size**: 85 KB (under 100 KB limit)
+      - **Shell Startup**: 42ms (under 50ms limit)
+
+---
+## Testing Requirements
+
+test_coverage:
+  - name: test_accessibility_gate
+    description: Verify accessibility gate detects violations
+  - name: test_security_gate
+    description: Verify security gate detects vulnerabilities
+  - name: test_performance_gate
+    description: Verify performance gate detects regressions
+  - name: test_threshold_enforcement
+    description: Verify thresholds block deployment correctly
+  - name: test_report_generation
+    description: Verify reports generated in all formats
+  - name: test_cicd_integration
+    description: Verify gates integrate with GitHub Actions
+  - name: test_local_execution
+    description: Verify gates run locally with act
+
+---
+## Dependencies
+
+required_binaries:
+  - name: node
+    version: ">=25.0.0"
+    check: node --version
+  - name: npm
+    version: ">=10.0.0"
+    check: npm --version
+
+required_npm_packages:
+  - name: "@axe-core/cli"
+    version: ">=4.0.0"
+    dev: true
+  - name: "@lhci/cli"
+    version: ">=0.13.0"
+    dev: true
+  - name: bundlesize
+    version: ">=0.18.0"
+    dev: true
+
+required_files:
+  - .axerc.json
+  - lighthouserc.js
+  - .github/dependabot.yml
+
+---
+## Constitutional Compliance
+
+compliance:
+  wcag_21_level_aa:
+    requirement: Automated accessibility testing in CI/CD
+    enforcement: axe-core + Lighthouse CI in quality gates
+    validation: All violations must be addressed before deployment
+
+  zero_vulnerabilities:
+    requirement: Zero high/critical security vulnerabilities
+    enforcement: npm audit in quality gates
+    validation: Blocks deployment on critical/high findings
+
+  performance_targets:
+    requirement: 95+ Lighthouse scores, <100KB bundles, <50ms shell startup
+    enforcement: Lighthouse CI + custom benchmarks
+    validation: Blocks deployment on threshold violations
+
+  zero_cost_operations:
+    requirement: Quality gates run locally before GitHub
+    enforcement: act executes all gates locally
+    validation: Zero GitHub Actions consumption for gate execution
+
+---
+## Performance Targets
+
+performance:
+  gate_execution_time:
+    accessibility: <60 seconds (including server startup)
+    security: <10 seconds (npm audit)
+    performance: <90 seconds (3 Lighthouse runs)
+    total: <3 minutes for all gates
+
+  resource_usage:
+    memory: <500MB peak
+    disk: <100MB for all reports
+    network: <50MB (Lighthouse assets)
+
+---
+## Compatibility
+
+compatibility:
+  tools:
+    axe_core: ">=4.0.0"
+    lighthouse_ci: ">=0.13.0"
+    npm_audit: Built-in (npm >=7.0.0)
+    act: ">=0.2.82"
+
+  node_versions:
+    minimum: 18.0.0
+    recommended: 25.2.0 (latest)
+
+  operating_systems:
+    - Ubuntu 25.10 (primary)
+    - Ubuntu 24.04 LTS (tested)
+    - Linux with Node.js (should work)
