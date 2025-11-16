@@ -247,7 +247,7 @@ install_fnm() {
         else
             log_info "✅ fnm already installed at $FNM_DIR (version $fnm_version)"
             # Add to current session PATH if not already present
-            if [[ ! "$PATH" =~ "$FNM_DIR" ]]; then
+            if [[ ! "$PATH" =~ $FNM_DIR ]]; then
                 export PATH="$FNM_DIR:$PATH"
             fi
             _check_fnm_update
@@ -662,6 +662,7 @@ _configure_fnm_shell_integration() {
     log_info "🔧 Configuring fnm shell integration..."
 
     # fnm shell integration block
+    # shellcheck disable=SC2016  # Intentionally using single quotes to prevent expansion
     local fnm_block='
 # fnm (Fast Node Manager) - 2025 Performance Optimized
 # Loads 40x faster than NVM, minimal startup impact (<50ms)

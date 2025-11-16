@@ -115,7 +115,13 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **FR-004**: System MUST maintain backward compatibility by keeping start.sh as a wrapper to `manage.sh install`
 - **FR-005**: Each management operation MUST support dry-run mode for validation before execution
 - **FR-006**: Installation display MUST use parallel task UI with collapsible verbose output - each task on separate line, subtasks collapse into parent, screen remains clean
+  - **Performance Budget**: Complete frame rendering <50ms (smooth 20 FPS updates)
+  - **Render Batch Size**: 10 tasks per batch (aligns with 10 FPS refresh rate for 50-100 task workflows)
+  - **Auto-Collapse**: 10 seconds after completion before collapsing to summary (balanced visibility without clutter)
+  - **ANSI Fallback**: Plain text with ASCII symbols ([ ], [✓], [X]) for non-ANSI terminals
 - **FR-007**: All installation steps MUST show dynamic status (not hardcoded messages) with proper verification methods
+  - **Terminal Width**: Graceful degradation (full display at 100+ cols, truncated at 80-99, minimal at <80 cols)
+  - **Minimum Width**: 80 columns supported with responsive truncation
 - **FR-008**: Task display MUST clearly show current step while keeping completed tasks visible in collapsed one-line format
 
 ### Functional Requirements - Repository Structure
@@ -151,7 +157,13 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **FR-042**: System MUST support zsh-codex for natural language to command translation
 - **FR-043**: System MUST integrate GitHub Copilot CLI with existing gh setup
 - **FR-044**: AI tools MUST support multiple providers (OpenAI, Anthropic, Google) with fallbacks
-- **FR-045**: AI assistance MUST understand current directory, Git state, and recent command context
+- **FR-045**: AI assistance MUST understand current directory, Git state, and recent command context with these data sources:
+  - **Shell History**: Last 10 commands from ~/.zsh_history (extended format: `: timestamp:duration;command`)
+  - **Git Context**: Current branch (git symbolic-ref --short HEAD), uncommitted files (git status --porcelain), last 5 commits (git log --oneline -5)
+  - **Environment Variables**: PWD, USER, SHELL, TERM, LANG, GIT_AUTHOR_NAME, GIT_AUTHOR_EMAIL, NODE_VERSION
+  - **Context File**: Cached at ~/.cache/ghostty-ai-context/context-<timestamp>.json
+  - **Refresh Rate**: On-demand (per AI tool invocation), max 1s cache age
+  - **Performance Target**: <100ms context extraction time
 
 ### Functional Requirements - Terminal Productivity
 
@@ -179,6 +191,25 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **FR-074**: Update system MUST detect and preserve user customizations
 - **FR-075**: System MUST provide automatic backup before configuration changes
 - **FR-076**: Failed operations MUST trigger automatic rollback to previous working state
+
+### Functional Requirements - Installation Strategy
+
+- **FR-080**: Ghostty installation MUST follow snap-first strategy with intelligent fallback chain: Official Snap (classic confinement) → APT latest → Source build (avoid if possible)
+  - **Snap Publisher**: Proceed with domain-verified snap (build process controlled by official Ghostty repository)
+  - **Confinement Handling**: Refuse strict-confinement snap, fallback to apt/source (terminal emulators require full system access for htop, apt, etc.)
+  - **Fallback Timing**: Immediate intelligent fallback without user prompts (auto-detect availability and proceed)
+  - **Performance Target**: Snap installation <3 minutes (vs 5-10 minutes source build)
+- **FR-081**: File manager context menu integration MUST support multi-file manager environments
+  - **Detection**: Multi-method file manager detection (running processes, XDG_CURRENT_DESKTOP, installed packages, xdg-mime default)
+  - **Installation Strategy**: Active file manager + universal .desktop fallback (native integration with broad coverage)
+  - **Unknown File Managers**: Universal .desktop file only for non-Nautilus/Nemo/Thunar file managers (XDG-compliant fallback)
+  - **Context Menu Label**: "Open in Ghostty" (consistent with current implementation, clear action verb)
+- **FR-082**: System MUST verify snap publisher authenticity before installation
+  - **Verification**: Domain ownership confirmation via snapcraft.io publisher verification
+  - **Security**: Prevent social engineering attacks through publisher whitelist or auto-verification
+- **FR-083**: Context menu integration MUST be snap-aware
+  - **Binary Paths**: Auto-detect `/snap/bin/ghostty` (snap), `~/.local/bin/ghostty` (source), or `$(command -v ghostty)` (apt)
+  - **Desktop Files**: Support snap-specific locations (`/var/lib/snapd/desktop/applications/`) and user-local (`~/.local/share/applications/`)
 
 ### Assumptions
 
