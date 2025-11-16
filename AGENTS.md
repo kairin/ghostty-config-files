@@ -754,20 +754,22 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 ### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
 - **`website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
-- **`documentations/`** - **Centralized documentation hub** (as of 2025-11-09):
+- **`documentations/`** - **Centralized documentation hub** (as of 2025-11-16):
   - `user/` - End-user documentation (installation, configuration, troubleshooting)
   - `developer/` - Developer documentation (architecture, analysis)
-  - `specifications/` - Active feature specifications with planning artifacts (Spec 001, 002, 004)
-  - `archive/` - Historical/obsolete documentation (preserved for reference)
+  - `specifications/` - Active feature specifications with planning artifacts (Spec 005)
+  - `archive/` - Historical/obsolete documentation and archived specifications (001, 002, 004)
 
 ### 🎯 Spec-Kit Development Guides
 For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](spec-kit/guides/SPEC_KIT_INDEX.md)** - Complete navigation, commands (/constitution, /specify, /plan, /tasks, /implement), and implementation guides.
 
-## 🌐 Modern Web Development Stack Integration
+## 🌐 Complete Terminal Infrastructure
 
-**Feature 001**: uv + Astro.build + Tailwind CSS + shadcn/ui stack with zero-cost GitHub Pages deployment. **Planning Complete** - Ready for `/tasks` command.
+**Spec 005**: Unified terminal infrastructure specification consolidating repository structure refactoring (001), advanced terminal productivity (002), and modern web development stack (004).
 
-**Complete Specification**: [OVERVIEW.md](documentations/specifications/004-modern-web-development/OVERVIEW.md) - Core stack, performance targets, CI/CD requirements, constitutional compliance, implementation phases.
+**Complete Specification**: [spec.md](documentations/specifications/005-complete-terminal-infrastructure/spec.md) - Core components, performance targets, CI/CD requirements, constitutional compliance, implementation phases.
+
+**Archived Specifications**: [Archive Index](documentations/archive/pre-consolidation-specs/ARCHIVE_INDEX.md) - Historical reference for specs 001, 002, 004.
 
 ### Support Commands
 ```bash

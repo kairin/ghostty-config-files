@@ -114,6 +114,9 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **FR-003**: manage.sh MUST display help when invoked with --help or invalid arguments
 - **FR-004**: System MUST maintain backward compatibility by keeping start.sh as a wrapper to `manage.sh install`
 - **FR-005**: Each management operation MUST support dry-run mode for validation before execution
+- **FR-006**: Installation display MUST use parallel task UI with collapsible verbose output - each task on separate line, subtasks collapse into parent, screen remains clean
+- **FR-007**: All installation steps MUST show dynamic status (not hardcoded messages) with proper verification methods
+- **FR-008**: Task display MUST clearly show current step while keeping completed tasks visible in collapsed one-line format
 
 ### Functional Requirements - Repository Structure
 
@@ -127,50 +130,55 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 
 ### Functional Requirements - Modern Web Development
 
-- **FR-020**: System MUST provide Python dependency management exclusively through uv (>=0.4.0)
-- **FR-021**: System MUST generate static sites using Astro.build (>=4.0) with TypeScript strict mode
-- **FR-022**: System MUST provide UI components through shadcn/ui with Tailwind CSS (>=3.4) and full accessibility
+- **FR-020**: System MUST provide Python dependency management exclusively through uv (>=0.9.0, latest stable) with installation validation
+- **FR-021**: System MUST generate static sites using Astro.build (>=5.0, latest stable) with TypeScript strict mode (>=5.9)
+- **FR-022**: System MUST provide UI components through DaisyUI (latest stable) with Tailwind CSS (>=4.0, latest stable) and full accessibility (shadcn/ui reserved for future consideration if deeper customization needed)
 - **FR-023**: System MUST deploy to GitHub Pages with zero ongoing hosting costs
 - **FR-024**: System MUST execute all CI/CD workflows locally before any GitHub operations
 - **FR-025**: System MUST achieve Lighthouse scores of 95+ across all metrics (Performance, Accessibility, Best Practices, SEO)
 - **FR-026**: System MUST maintain JavaScript bundle sizes under 100KB for initial load
 - **FR-027**: System MUST provide local build simulation mirroring exact GitHub Actions environment
 - **FR-028**: System MUST support dark mode with class-based strategy and consistent design tokens
+- **FR-029**: System MUST implement automated accessibility testing (axe-core, Lighthouse CI) in local CI/CD for WCAG 2.1 Level AA compliance verification
+- **FR-030**: System MUST implement automated security scanning (npm audit, dependency vulnerability checking) in local CI/CD workflows
+- **FR-031**: System MUST provide local GitHub Actions runner infrastructure to execute ANY GitHub automation locally before cloud deployment
+- **FR-032**: Local CI/CD MUST support all GitHub Actions workflows including custom actions, matrix builds, and workflow dependencies
 
 ### Functional Requirements - AI Integration
 
-- **FR-030**: System MUST install and configure Claude Code (@anthropic-ai/claude-code) via npm
-- **FR-031**: System MUST install and configure Gemini CLI (@google/gemini-cli) via npm
-- **FR-032**: System MUST support zsh-codex for natural language to command translation
-- **FR-033**: System MUST integrate GitHub Copilot CLI with existing gh setup
-- **FR-034**: AI tools MUST support multiple providers (OpenAI, Anthropic, Google) with fallbacks
-- **FR-035**: AI assistance MUST understand current directory, Git state, and recent command context
+- **FR-040**: System MUST install and configure Claude Code (@anthropic-ai/claude-code) via npm
+- **FR-041**: System MUST install and configure Gemini CLI (@google/gemini-cli) via npm
+- **FR-042**: System MUST support zsh-codex for natural language to command translation
+- **FR-043**: System MUST integrate GitHub Copilot CLI with existing gh setup
+- **FR-044**: AI tools MUST support multiple providers (OpenAI, Anthropic, Google) with fallbacks
+- **FR-045**: AI assistance MUST understand current directory, Git state, and recent command context
 
 ### Functional Requirements - Terminal Productivity
 
-- **FR-040**: System MUST support advanced theme installation (Powerlevel10k and/or Starship)
-- **FR-041**: System MUST achieve sub-50ms shell startup times through performance optimization
-- **FR-042**: System MUST provide intelligent caching (compilation caching, lazy loading, deferred initialization)
-- **FR-043**: System MUST install modern Unix tools (bat, exa, ripgrep, fd, zoxide, fzf)
-- **FR-044**: System MUST provide startup time profiling and performance monitoring
-- **FR-045**: System MUST support team configuration templates with individual customization preservation
+- **FR-050**: System MUST support advanced theme installation (Powerlevel10k and/or Starship)
+- **FR-051**: System MUST achieve sub-50ms shell startup times through performance optimization
+- **FR-052**: System MUST provide intelligent caching (compilation caching, lazy loading, deferred initialization)
+- **FR-053**: System MUST install modern Unix tools (bat, exa, ripgrep, fd, zoxide, fzf)
+- **FR-054**: System MUST provide startup time profiling and performance monitoring
+- **FR-055**: System MUST support team configuration templates with individual customization preservation
 
 ### Functional Requirements - Node.js Management
 
-- **FR-050**: System MUST install Node.js using fnm (Fast Node Manager) for <50ms startup impact
-- **FR-051**: Global Node.js installations MUST use latest version (not LTS) per constitutional requirement
-- **FR-052**: System MUST support per-project Node.js versions via .nvmrc or package.json engines field
-- **FR-053**: fnm MUST be configured for automatic version switching on directory change
+- **FR-060**: System MUST install Node.js using fnm (Fast Node Manager) for <50ms startup impact
+- **FR-061**: Global Node.js installations MUST use latest stable version (not LTS) per constitutional requirement
+- **FR-062**: System MUST support per-project Node.js versions via .nvmrc or package.json engines field
+- **FR-063**: fnm MUST be configured for automatic version switching on directory change
+- **FR-064**: ALL technologies MUST use latest stable versions (not LTS) - applies to Astro, Tailwind, TypeScript, uv, npm packages
 
 ### Functional Requirements - Migration and Updates
 
-- **FR-060**: Migration MUST follow incremental per-component approach (one module at a time)
-- **FR-061**: Each migration increment MUST be independently testable and deployable
-- **FR-062**: System MUST preserve existing directory structures (spec-kit/, .runners-local/, .specify/) during transition
-- **FR-063**: All existing script functionality MUST be preserved in new structure
-- **FR-064**: Update system MUST detect and preserve user customizations
-- **FR-065**: System MUST provide automatic backup before configuration changes
-- **FR-066**: Failed operations MUST trigger automatic rollback to previous working state
+- **FR-070**: Migration MUST follow incremental per-component approach (one module at a time)
+- **FR-071**: Each migration increment MUST be independently testable and deployable
+- **FR-072**: System MUST preserve existing directory structures (spec-kit/, .runners-local/, .specify/) during transition
+- **FR-073**: All existing script functionality MUST be preserved in new structure
+- **FR-074**: Update system MUST detect and preserve user customizations
+- **FR-075**: System MUST provide automatic backup before configuration changes
+- **FR-076**: Failed operations MUST trigger automatic rollback to previous working state
 
 ### Assumptions
 
@@ -182,6 +190,7 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - Shell environment is bash-compatible for module sourcing
 - Passwordless sudo configured for apt package installation
 - GitHub CLI authenticated for repository operations
+- Latest stable versions policy: All technologies use latest stable (not LTS) per constitutional requirement
 
 ## Success Criteria *(mandatory)*
 
@@ -208,6 +217,10 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **SC-022**: Time to locate and modify specific functionality reduced by 50%
 - **SC-023**: AI command assistance reduces command lookup time by 30-50%
 - **SC-024**: manage.sh --help displays all commands in under 2 seconds
+- **SC-025**: Installation display shows parallel tasks on separate lines with collapsible verbose output
+- **SC-026**: Each installation step uses dynamic verification (not hardcoded success messages)
+- **SC-027**: Screen remains clean during installation - completed tasks collapse to single line
+- **SC-028**: User can always see current step and overall progress without scrolling
 
 ### Measurable Outcomes - Architecture
 
@@ -224,14 +237,30 @@ As a power user requiring maximum terminal efficiency, I want advanced theming (
 - **SC-042**: Documentation site navigation accessible within 2 clicks from home
 - **SC-043**: Hot module replacement provides instant feedback during development
 - **SC-044**: GitHub Pages deployment succeeds with HTTPS enforcement
+- **SC-045**: Automated accessibility testing runs in local CI/CD and reports WCAG 2.1 Level AA compliance status
+- **SC-046**: All accessibility violations detected by axe-core are reported before deployment
+- **SC-047**: Lighthouse accessibility score maintains 95+ throughout development
+- **SC-048**: Automated security scanning detects vulnerable dependencies before deployment
+- **SC-049**: npm audit reports zero high/critical vulnerabilities in production dependencies
+- **SC-050**: Local GitHub Actions runner executes ALL workflows locally with 100% fidelity to cloud environment
+- **SC-051**: Any GitHub automation can be tested and validated locally before cloud deployment
 
 ### Measurable Outcomes - Team Collaboration
 
-- **SC-050**: Team configuration compliance >90% across members
-- **SC-051**: Individual customizations preserved during team standard updates
-- **SC-052**: Configuration sharing reduces new member setup time by 70%
+- **SC-060**: Team configuration compliance >90% across members
+- **SC-061**: Individual customizations preserved during team standard updates
+- **SC-062**: Configuration sharing reduces new member setup time by 70%
 
 ## Clarifications
+
+### Session 2025-11-16
+
+- Q: Component library strategy - Should we use shadcn/ui (spec requirement) or DaisyUI (current implementation)? → A: Use Tailwind with DaisyUI; shadcn/ui reserved for future if needed
+- Q: Python tooling scope - Implement uv now or document as future-ready? → A: Implement uv >=0.9.0 now with example automation scripts
+- Q: Installation display requirements - How should parallel task installation be presented to users? → A: Parallel task UI like Claude Code - each task separate line, verbose subtasks collapse into parent, dynamic status with verification, keep screen clean and clear
+- Q: Version requirements strategy - Use LTS or latest stable versions? → A: ALL technologies must use latest stable versions (not LTS) - Astro >=5.0, Tailwind >=4.0, TypeScript >=5.9, uv >=0.9.0, applies to all npm packages
+- Q: Accessibility testing approach - Manual testing or automated in CI/CD? → A: Add automated accessibility testing (axe-core, Lighthouse CI) to local CI/CD workflows for continuous WCAG 2.1 Level AA compliance verification
+- Q: Security scanning and local GitHub runners - Automate security or manual reviews? → A: Add automated security scanning (npm audit, dependency checking) AND full local GitHub Actions runner infrastructure to execute ANY GitHub automation locally before cloud deployment
 
 ### Original Clarifications from 001-repo-structure-refactor
 
