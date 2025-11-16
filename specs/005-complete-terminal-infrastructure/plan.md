@@ -89,7 +89,7 @@ Provide a single-command setup (`./manage.sh install`) for a complete, productio
 
 **Scale/Scope**:
 - 18 fine-grained shell modules (single responsibility: install_node, install_ghostty, install_ai_tools, install_modern_tools, configure_zsh, install_uv, install_theme, configure_dircolors, check_updates, daily-updates, backup_utils, validate_modules, common, progress, task_display, task_manager, verification, profile_startup)
-- 4 user stories with 76 functional requirements
+- 4 user stories with 52 functional requirements
 - 62 success criteria with measurable outcomes
 - 3 consolidated feature specs (001, 002, 004)
 - Documentation site with 5+ sections (user-guide, ai-guidelines, developer)

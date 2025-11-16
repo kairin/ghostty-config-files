@@ -3,10 +3,10 @@
 **Feature Branch**: `005-complete-terminal-infrastructure`
 **Created**: 2025-11-16
 **Status**: Ready for Implementation
-**Total Tasks**: 158 tasks across 7 phases
+**Total Tasks**: 159 tasks across 7 phases
 
 **Input Documents**:
-- [spec.md](./spec.md) - 4 user stories, 76 functional requirements
+- [spec.md](./spec.md) - 4 user stories, 52 functional requirements
 - [plan.md](./plan.md) - Technical context, architecture decisions
 - [data-model.md](./data-model.md) - 10 entities with validation rules
 - [contracts/](./contracts/) - 3 OpenAPI specifications
@@ -115,7 +115,7 @@ graph TD
 
 ---
 
-## Phase 3: US1 - Unified Development Environment (40 tasks)
+## Phase 3: US1 - Unified Development Environment (41 tasks)
 
 **Priority**: P1 - Critical Path
 **Duration**: 2 weeks
@@ -135,20 +135,20 @@ graph TD
 
 ### Dynamic Verification System (5 tasks)
 
-- [ ] T039 [P] [US1] Implement scripts/verification.sh - Core verification framework
-- [ ] T040 [P] [US1] Create verify_binary() - Binary installation and version checking
-- [ ] T041 [P] [US1] Create verify_config() - Configuration file syntax validation
-- [ ] T042 [P] [US1] Create verify_service() - Service status and health checks
-- [ ] T043 [P] [US1] Create verify_integration() - Functional end-to-end validation
+- [x] T039 [P] [US1] Implement scripts/verification.sh - Core verification framework
+- [x] T040 [P] [US1] Create verify_binary() - Binary installation and version checking
+- [x] T041 [P] [US1] Create verify_config() - Configuration file syntax validation
+- [x] T042 [P] [US1] Create verify_service() - Service status and health checks
+- [x] T043 [P] [US1] Create verify_integration() - Functional end-to-end validation
 
 ### Node.js Installation Module (6 tasks)
 
-- [ ] T044 [US1] Extract Node.js installation logic from start.sh to scripts/install_node.sh
-- [ ] T045 [US1] Implement fnm (Fast Node Manager) installation at ~/.local/share/fnm/
-- [ ] T046 [US1] Configure fnm for latest stable Node.js policy (not LTS) in ~/.zshrc
-- [ ] T047 [US1] Add per-project version switching via .nvmrc detection
-- [ ] T048 [US1] Implement dynamic verification (node --version, npm --version, test script execution)
-- [ ] T049 [US1] Create .runners-local/tests/unit/test_install_node.sh (<10s execution)
+- [x] T044 [US1] Extract Node.js installation logic from start.sh to scripts/install_node.sh
+- [x] T045 [US1] Implement fnm (Fast Node Manager) installation at ~/.local/share/fnm/
+- [x] T046 [US1] Configure fnm for latest stable Node.js policy (not LTS) in ~/.zshrc
+- [x] T047 [US1] Add per-project version switching via .nvmrc detection
+- [x] T048 [US1] Implement dynamic verification (node --version, npm --version, test script execution)
+- [x] T049 [US1] Create .runners-local/tests/unit/test_install_node.sh (<10s execution)
 
 ### Ghostty Installation Module (7 tasks)
 
@@ -160,7 +160,7 @@ graph TD
 - [ ] T055 [US1] Implement dynamic verification (ghostty +show-config, CGroup check)
 - [ ] T056 [US1] Create .runners-local/tests/unit/test_install_ghostty.sh (<10s execution)
 
-### AI Tools Installation Module (6 tasks)
+### AI Tools Installation Module (10 tasks)
 
 - [ ] T057 [US1] Create scripts/install_ai_tools.sh for AI tool installation
 - [ ] T058 [US1] Implement Claude Code (@anthropic-ai/claude-code) installation via npm
@@ -168,13 +168,48 @@ graph TD
 - [ ] T060 [US1] Implement GitHub Copilot CLI (@github/copilot) installation via npm
 - [ ] T061 [US1] Add zsh-codex integration for natural language commands
 - [ ] T062 [US1] Create .runners-local/tests/unit/test_install_ai_tools.sh (<10s execution)
+- [ ] T062.1 [US1] Install Claude MCP servers via npm (filesystem, github, git)
+  - Install @modelcontextprotocol/server-filesystem, server-github, server-git via npm global with --prefix ~/.npm-global
+  - Configure ~/.config/Claude/claude_desktop_config.json with server paths and environment variables
+  - Set up GITHUB_TOKEN environment variable for GitHub server integration
+  - Test: claude mcp list shows all 3 servers (filesystem, github, git)
+  - Verify: claude mcp test-server filesystem returns success, <500ms server startup time
+  - Document: MCP server configuration in documentations/user/mcp-setup.md
+- [ ] T062.2 [US1] Install Gemini MCP servers (if available)
+  - Install Gemini CLI: npm install -g @google/gemini-cli@latest
+  - Install FastMCP: pip install fastmcp>=2.12.3 (for MCP server integration)
+  - Configure Gemini MCP integration via fastmcp install gemini-cli
+  - Test: gemini CLI with MCP server access and function calling
+  - Document: Gemini MCP limitations (Python-only auto-calling as of 2025-03, experimental JavaScript support)
+  - Fallback: Gemini CLI works standalone if MCP unavailable, document workarounds
+- [ ] T062.3 [US1] Create AI context extraction script (scripts/extract_ai_context.sh)
+  - Extract last 10 zsh commands from ~/.zsh_history (extended format: `: timestamp:duration;command`)
+  - Extract git branch (git symbolic-ref --short HEAD), status (git status --porcelain), last 5 commits (git log --oneline -5)
+  - Extract environment variables (PWD, USER, SHELL, TERM, LANG, GIT_AUTHOR_NAME, GIT_AUTHOR_EMAIL, NODE_VERSION)
+  - Write JSON to ~/.cache/ghostty-ai-context/context-<timestamp>.json with proper schema validation
+  - Implement caching (max 1s age, refresh on-demand per AI tool invocation)
+  - Test: Context JSON generated in <100ms, contains all required fields (shell_history, git, environment)
+  - Verify: JSON valid (jq validation), all fields present, timestamps accurate, performance <100ms
+- [ ] T062.4 [US1] Integrate AI context extraction with Claude Code and Gemini CLI
+  - Add pre-invocation hooks for claude and gemini commands to refresh context cache
+  - Create MCP server wrapper script that exposes AI context cache to Claude/Gemini
+  - Test: AI tools receive current context on every invocation (<200ms total overhead)
+  - Verify: Context includes accurate shell history, git state, environment variables
 
-### Modern Unix Tools Module (5 tasks)
+### Modern Unix Tools Module (6 tasks)
 
 - [ ] T063 [P] [US1] Create scripts/install_modern_tools.sh for modern Unix tools
 - [ ] T064 [P] [US1] Implement bat (better cat) installation and configuration
 - [ ] T065 [P] [US1] Implement exa (better ls) installation and configuration
-- [ ] T066 [P] [US1] Implement ripgrep, fd, zoxide, fzf installation
+- [ ] T066 [P] [US1] Implement ripgrep, fd, zoxide installation
+- [ ] T066.1 [P] [US1] Install and configure fzf (fuzzy finder) with shell integration
+  - Install fzf via apt (fzf package) or GitHub release (latest stable)
+  - Configure Ctrl+R for fuzzy history search (bash and zsh)
+  - Configure Ctrl+T for file finder in current directory
+  - Configure Alt+C for directory navigation
+  - Add shell integration to ~/.bashrc and ~/.zshrc
+  - Test: fzf --version, Ctrl+R in terminal, file finder functionality
+  - Performance: <50ms invocation time, <100ms search latency for 10k+ items
 - [ ] T067 [P] [US1] Create .runners-local/tests/unit/test_install_modern_tools.sh (<10s execution)
 
 ### ZSH Configuration Module (3 tasks)
@@ -327,7 +362,7 @@ graph TD
 - [ ] T141.4 [P] Implement manage.sh validate modules subcommand (validates all 18 module contracts, dependency graph, circular reference detection, <10s timeout enforcement)
 - [ ] T141.5 [P] Implement manage.sh validate all subcommand (orchestrates T141.1-T141.4 in parallel, aggregates results, generates comprehensive quality report)
 - [ ] T142 [P] Implement end-to-end installation test on fresh Ubuntu 25.10 VM
-- [ ] T143 [P] Validate all 76 functional requirements (FR-001 through FR-076)
+- [ ] T143 [P] Validate all 52 functional requirements (FR-001 through FR-052)
 - [ ] T144 [P] Verify all 62 success criteria (SC-001 through SC-062)
 - [ ] T145 [P] Test parallel execution capabilities across all modules
 
