@@ -15,7 +15,7 @@ Provide a single-command setup (`./manage.sh install`) for a complete, productio
 - Bash 5.x+ (shell scripts with YAML/Markdown processing via yq/jq)
 - TypeScript >=5.9 (strict mode for Astro.build)
 - Python >=3.11 (via uv >=0.9.0 for package management)
-- Node.js latest stable (currently v25.2.0+ via fnm)
+- Node.js latest stable for global installations (currently v25.2.0+ via fnm, with per-project version support via .nvmrc)
 - Zig 0.14.0 (for Ghostty compilation from source)
 
 **Primary Dependencies**:
@@ -36,8 +36,18 @@ Provide a single-command setup (`./manage.sh install`) for a complete, productio
 **Testing**:
 - **Shell Scripts**: shellcheck (linting), bats (Bash Automated Testing System)
 - **Modules**: Isolated validation (<10s per module), contract validation, dependency checking
-- **Web**: Lighthouse CI (performance/accessibility), axe-core (WCAG 2.1 Level AA), npm audit (security)
+- **Web**: Lighthouse CI (performance/accessibility), axe-core (WCAG 2.1 Level AA with manual review process for "incomplete" checks: document check ID, context, manual verification steps, and resolution in accessibility audit log), npm audit (security)
 - **Integration**: Local GitHub Actions simulation, complete CI/CD pipeline validation
+
+**Accessibility Testing Protocol**:
+- **Automated**: axe-core detects violations (critical/serious/moderate/minor) and incomplete checks requiring manual review
+- **Manual Review Process for "Incomplete" Checks**:
+  1. Document check ID, element selector, and context in `.runners-local/logs/accessibility/incomplete-checks.md`
+  2. Manually verify compliance using browser DevTools and WCAG 2.1 guidelines
+  3. Record verification steps, result (pass/fail), and remediation actions
+  4. Update incomplete-checks.md with resolution status and date
+  5. Re-run axe-core to confirm automated detection after fixes
+- **Severity Thresholds**: Critical (blocks deployment), Serious (warning + manual review), Moderate/Minor (logged for future improvement)
 
 **Target Platform**: Ubuntu 25.10 (Questing) with Ghostty 1.1.4+ (1.2.0 upgrade planned)
 
@@ -52,6 +62,22 @@ Provide a single-command setup (`./manage.sh install`) for a complete, productio
 - Module tests: <10s each (isolated execution)
 - Local CI/CD: <2 minutes (complete workflow)
 
+**Performance Baseline Metrics** (for T127-T134 monitoring):
+- **Shell Startup Components**:
+  - ZSH initialization: <20ms (core shell loading)
+  - Oh My ZSH framework: <15ms (plugin manager overhead)
+  - Plugin loading: <10ms total (git, zsh-autosuggestions, zsh-syntax-highlighting, fzf)
+  - Theme rendering: <5ms (Powerlevel10k/Starship prompt generation)
+  - Total target: <50ms (sum of all components)
+- **Memory Footprint**:
+  - Ghostty baseline: <100MB (with optimized scrollback)
+  - ZSH session: <50MB (including plugins and theme)
+  - Node.js tools: <200MB (fnm + npm globals)
+- **Compilation Caching**:
+  - First run: No cache, measure uncached time
+  - Subsequent runs: Cache hit rate >90%, speedup >2x
+- **Monitoring Frequency**: Daily performance snapshots, weekly regression analysis
+
 **Constraints**:
 - Zero-cost operations (no GitHub Actions consumption)
 - Latest stable versions policy (not LTS)
@@ -62,7 +88,7 @@ Provide a single-command setup (`./manage.sh install`) for a complete, productio
 - Memory: <100MB baseline (Ghostty with optimized scrollback)
 
 **Scale/Scope**:
-- 10+ fine-grained shell modules (single responsibility)
+- 18 fine-grained shell modules (single responsibility: install_node, install_ghostty, install_ai_tools, install_modern_tools, configure_zsh, install_uv, install_theme, configure_dircolors, check_updates, daily-updates, backup_utils, validate_modules, common, progress, task_display, task_manager, verification, profile_startup)
 - 4 user stories with 76 functional requirements
 - 62 success criteria with measurable outcomes
 - 3 consolidated feature specs (001, 002, 004)
@@ -269,7 +295,7 @@ This is a **Hybrid Infrastructure + Web Application** project combining:
 | Decision | Why Needed | Simpler Alternative Rejected Because |
 |----------|------------|-------------------------------------|
 | Hybrid structure (shell + web) | Terminal infrastructure management requires shell scripts; documentation requires modern web tooling | Single technology insufficient: Shell can't generate performant static sites; Web frameworks can't manage system installations |
-| 10+ fine-grained modules | Independent testability (FR-015: <10s per module), maintainability, single responsibility principle | Monolithic start.sh already proven unmaintainable (current state); Refactoring enables incremental testing and deployment |
+| 18 fine-grained modules | Independent testability (FR-015: <10s per module), maintainability, single responsibility principle | Monolithic start.sh already proven unmaintainable (current state); Refactoring enables incremental testing and deployment with precise module boundaries |
 | Committed docs/ output | GitHub Pages requires committed build output; .nojekyll file MUST be in git history | Using separate gh-pages branch adds complexity and breaks local preview; Docs source/output separation (website/src vs docs/) is clearer |
 | Local CI/CD infrastructure | Zero-cost operations (Constitutional Req VI); GitHub Actions free tier exhaustion risk | Cloud-only CI/CD consumes Actions minutes (2,000/month limit); Local validation prevents deployment failures |
 | Multiple AI tools | Provider diversity (FR-044: OpenAI, Anthropic, Google); fallback resilience; different use cases (code vs. commands) | Single AI tool insufficient: Claude Code (code), Gemini CLI (commands), Copilot (suggestions) serve different workflows |

@@ -3,7 +3,7 @@
 **Feature Branch**: `005-complete-terminal-infrastructure`
 **Created**: 2025-11-16
 **Status**: Ready for Implementation
-**Total Tasks**: 152 tasks across 7 phases
+**Total Tasks**: 158 tasks across 7 phases
 
 **Input Documents**:
 - [spec.md](./spec.md) - 4 user stories, 76 functional requirements
@@ -98,7 +98,7 @@ graph TD
 - [x] T017 Implement argument parsing with global options (--help, --version, --verbose, --quiet, --dry-run)
 - [x] T018 Implement command routing for install, docs, update, validate, cicd subcommands
 - [x] T019 Add comprehensive error handling with cleanup traps
-- [x] T020 Create install command interface (awaiting module integration)
+- [x] T020 Create install command interface with dry-run support for validation before installation (awaiting module integration)
 - [x] T021 Create docs command stubs (build, dev, deploy, clean)
 - [x] T022 Create update command stubs (all, node, ghostty, ai-tools, versions)
 - [x] T023 Create validate command stubs (all, accessibility, security, performance, modules)
@@ -108,7 +108,7 @@ graph TD
 ### Module Validation Framework (5 tasks) - ✅ COMPLETE
 
 - [x] T026 [P] Implement module contract validation in scripts/validate_modules.sh
-- [x] T027 [P] Create dependency checker preventing circular references
+- [x] T027 [P] Create dependency checker with circular reference detection using topological sort (detects cycles via depth-first search, reports circular dependency chains with module names)
 - [x] T028 [P] Implement module timeout enforcement (<10s per module)
 - [x] T029 [P] Create module test runner with parallel execution
 - [x] T030 [P] Set up module documentation templates
@@ -194,8 +194,8 @@ graph TD
 
 ### uv Python Integration (5 tasks)
 
-- [ ] T071 [P] [US2] Create scripts/install_uv.sh for uv package manager
-- [ ] T072 [P] [US2] Implement uv >=0.9.0 installation via curl | sh
+- [ ] T071 [P] [US2] Create scripts/install_uv.sh for uv package manager with dry-run support
+- [ ] T072 [P] [US2] Implement uv >=0.9.0 installation via official standalone installer (curl -LsSf https://astral.sh/uv/install.sh | sh) for best performance and reliability
 - [ ] T073 [P] [US2] Create example automation scripts in scripts/examples/python/
 - [ ] T074 [P] [US2] Add uv.lock generation for reproducible Python environments
 - [ ] T075 [P] [US2] Create .runners-local/tests/unit/test_install_uv.sh (<10s execution)
@@ -213,14 +213,14 @@ graph TD
 
 ### Local CI/CD Workflows (9 tasks)
 
-- [ ] T084 [US2] Create .runners-local/workflows/astro-build-local.sh for Astro builds
+- [ ] T084 [US2] Create .runners-local/workflows/astro-build-local.sh for Astro builds with dry-run mode for pre-flight validation
 - [ ] T085 [US2] Implement accessibility testing with axe-core in .runners-local/workflows/accessibility-check.sh
 - [ ] T086 [US2] Implement Lighthouse CI configuration in lighthouserc.js (95+ score targets)
 - [ ] T087 [US2] Create security scanning workflow in .runners-local/workflows/security-check.sh
 - [ ] T088 [US2] Implement npm audit integration with high/critical blocking
 - [ ] T089 [US2] Create performance monitoring in .runners-local/workflows/performance-monitor.sh
 - [ ] T090 [US2] Implement bundle size validation (<100KB threshold)
-- [ ] T091 [US2] Create GitHub Actions local runner setup with nektos/act >=0.2.82
+- [ ] T091 [US2] Create GitHub Actions local runner setup with nektos/act >=0.2.82 using catthehacker/ubuntu:act-latest Docker image (700MB, Ubuntu-based with common tools pre-installed) and dry-run support for validation before execution
 - [ ] T092 [US2] Configure .actrc for repository-specific act settings
 
 ### Quality Gates Integration (8 tasks)
@@ -256,7 +256,7 @@ graph TD
 - [ ] T106 [P] [US3] Validate docs/ vs website/src/ separation is clear
 - [ ] T107 [P] [US3] Verify .nojekyll protection across all 4 layers
 - [ ] T108 [P] [US3] Clean up root directory (target: <15 files)
-- [ ] T109 [P] [US3] Organize scripts/ with clear module naming
+- [ ] T109 [P] [US3] Organize scripts/ with clear module naming (all 18 modules: install_node, install_ghostty, install_ai_tools, install_modern_tools, configure_zsh, install_uv, install_theme, configure_dircolors, check_updates, daily-updates, backup_utils, validate_modules, common, progress, task_display, task_manager, verification, profile_startup)
 - [ ] T110 [P] [US3] Validate documentations/ hub structure (user/, developer/, specifications/)
 
 ### Documentation Site Content (10 tasks)
@@ -312,15 +312,20 @@ graph TD
 
 ---
 
-## Phase 7: Polish and Final Validation (12 tasks)
+## Phase 7: Polish and Final Validation (18 tasks)
 
 **Priority**: P1 - Required before release
 **Duration**: 0.5 weeks
 **Dependencies**: All previous phases complete
 
-### Cross-Cutting Concerns (5 tasks)
+### Cross-Cutting Concerns (10 tasks)
 
 - [ ] T141 [P] Create comprehensive integration tests in .runners-local/tests/integration/
+- [ ] T141.1 [P] Implement manage.sh validate accessibility subcommand (runs axe-core + Lighthouse accessibility audit, reports WCAG 2.1 Level AA compliance)
+- [ ] T141.2 [P] Implement manage.sh validate security subcommand (runs npm audit + dependency vulnerability scan, blocks on high/critical issues)
+- [ ] T141.3 [P] Implement manage.sh validate performance subcommand (runs Lighthouse performance audit + bundle size check, reports against baseline metrics)
+- [ ] T141.4 [P] Implement manage.sh validate modules subcommand (validates all 18 module contracts, dependency graph, circular reference detection, <10s timeout enforcement)
+- [ ] T141.5 [P] Implement manage.sh validate all subcommand (orchestrates T141.1-T141.4 in parallel, aggregates results, generates comprehensive quality report)
 - [ ] T142 [P] Implement end-to-end installation test on fresh Ubuntu 25.10 VM
 - [ ] T143 [P] Validate all 76 functional requirements (FR-001 through FR-076)
 - [ ] T144 [P] Verify all 62 success criteria (SC-001 through SC-062)
@@ -333,11 +338,12 @@ graph TD
 - [ ] T148 [P] Generate comprehensive CI/CD logs in documentations/development/ci_cd_logs/
 - [ ] T149 [P] Update README.md with new manage.sh commands
 
-### Constitutional Compliance (3 tasks)
+### Constitutional Compliance (4 tasks)
 
 - [ ] T150 Verify branch preservation (never delete without permission)
 - [ ] T151 Confirm .nojekyll file protection (all 4 layers functional)
 - [ ] T152 Validate zero GitHub Actions consumption (local CI/CD only)
+- [ ] T153 [P] Validate .nojekyll presence across all 4 layers (website/public/, docs/, Vite plugin config, pre-commit hooks) and verify GitHub Pages asset loading with automated smoke test
 
 ---
 
