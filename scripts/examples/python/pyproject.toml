@@ -1,0 +1,21 @@
+[project]
+name = "ghostty-python-tools"
+version = "0.1.0"
+description = "Python automation tools for Ghostty Configuration Files"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.1.7",
+    "pydantic>=2.10.0",
+    "rich>=13.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "mypy>=1.11.0",
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
