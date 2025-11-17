@@ -25,11 +25,11 @@ constitutional: true
 │   ├── ghostty/               # Ghostty terminal configuration
 │   └── workspace/             # Development workspace files
 ├── scripts/                   # Utility and automation scripts
-├── local-infra/              # Zero-cost local infrastructure
-│   ├── runners/              # Local CI/CD scripts
+├── .runners-local/              # Zero-cost local infrastructure
+│   ├── .runners-local/workflows/              # Local CI/CD scripts
 │   ├── logs/                 # Local CI/CD logs
 │   └── config/               # CI/CD configuration files
-└── docs-source/              # Documentation source files
+└── website/src/              # Documentation source files
     ├── user-guide/           # User documentation
     ├── ai-guidelines/        # AI assistant guidelines
     └── developer/            # Developer documentation
@@ -72,7 +72,7 @@ cd /home/kkk/Apps/ghostty-config-files
 ./start.sh
 
 # Initialize local CI/CD infrastructure
-./local-infra/runners/gh-workflow-local.sh init
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh init
 
 # Setup GitHub CLI integration
 gh auth login
@@ -117,17 +117,17 @@ gh repo set-default
 ### Local CI/CD Operations
 ```bash
 # Complete local workflow execution
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 
 # Individual workflow stages
-./local-infra/runners/gh-workflow-local.sh validate    # Config validation
-./local-infra/runners/gh-workflow-local.sh test       # Performance testing
-./local-infra/runners/gh-workflow-local.sh build      # Build simulation
-./local-infra/runners/gh-workflow-local.sh deploy     # Deployment simulation
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh validate    # Config validation
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh test       # Performance testing
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh build      # Build simulation
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh deploy     # Deployment simulation
 
 # GitHub Actions cost monitoring
-./local-infra/runners/gh-workflow-local.sh billing    # Check usage
-./local-infra/runners/gh-workflow-local.sh status     # Workflow status
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh billing    # Check usage
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh status     # Workflow status
 ```
 
 ### Update Management
@@ -138,18 +138,18 @@ gh repo set-default
 ./scripts/check_updates.sh --config-only # Configuration updates only
 
 # Local CI/CD for updates
-./local-infra/runners/gh-workflow-local.sh update     # Update workflow
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh update     # Update workflow
 ```
 
 ### Testing & Validation
 ```bash
 # Configuration validation
 ghostty +show-config                    # Validate current configuration
-./local-infra/runners/test-runner.sh    # Complete test suite
+./.runners-local/.runners-local/workflows/test-runner.sh    # Complete test suite
 
 # Performance monitoring
-./local-infra/runners/performance-monitor.sh --baseline # Establish baseline
-./local-infra/runners/performance-monitor.sh --compare  # Compare performance
+./.runners-local/.runners-local/workflows/performance-monitor.sh --baseline # Establish baseline
+./.runners-local/.runners-local/workflows/performance-monitor.sh --compare  # Compare performance
 
 # System testing
 ./start.sh --verbose                    # Full installation with detailed logs
@@ -161,17 +161,17 @@ ghostty +show-config                    # Validate current configuration
 ```bash
 # View comprehensive logs
 ls -la /tmp/ghostty-start-logs/
-ls -la ./local-infra/logs/
+ls -la ./.runners-local/logs/
 
 # Analyze system state
 jq '.' /tmp/ghostty-start-logs/system_state_*.json
 
 # Check CI/CD performance
-jq '.' ./local-infra/logs/performance-*.json
+jq '.' ./.runners-local/logs/performance-*.json
 
 # View errors only
 cat /tmp/ghostty-start-logs/errors.log
-cat ./local-infra/logs/workflow-errors.log
+cat ./.runners-local/logs/workflow-errors.log
 ```
 
 ### Emergency Recovery
@@ -187,14 +187,14 @@ ghostty +show-config
 ./start.sh --help
 
 # Get help with local CI/CD
-./local-infra/runners/gh-workflow-local.sh --help
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh --help
 
 # Get help with updates
 ./scripts/check_updates.sh --help
 
 # Validate system state
 ghostty +show-config
-./local-infra/runners/test-runner.sh --validate
+./.runners-local/.runners-local/workflows/test-runner.sh --validate
 ```
 
 ## Documentation Structure
@@ -202,12 +202,12 @@ ghostty +show-config
 ### 🚨 CRITICAL: Documentation Directory Rules
 
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (DO NOT manually edit)
-- **`docs-source/`** - **All editable documentation** → installation guides, screenshots, manuals, specs
+- **`website/src/`** - **All editable documentation** → installation guides, screenshots, manuals, specs
 
 ### Documentation Locations
-- **User Guide**: `docs-source/user-guide/` - Installation, configuration, usage
-- **Developer Docs**: `docs-source/developer/` - Architecture, contributing, testing
-- **AI Guidelines**: `docs-source/ai-guidelines/` - This file and related guides
+- **User Guide**: `website/src/user-guide/` - Installation, configuration, usage
+- **Developer Docs**: `website/src/developer/` - Architecture, contributing, testing
+- **AI Guidelines**: `website/src/ai-guidelines/` - This file and related guides
 - **Spec-Kit**: `spec-kit/` - Modern web development stack guides
 
 ## Spec-Kit Development Guides
@@ -248,9 +248,9 @@ For implementing modern web development stacks with local CI/CD:
 **Local CI/CD Requirements**:
 ```bash
 # Modern web stack local workflow
-./local-infra/runners/astro-build-local.sh       # Astro build simulation
-./local-infra/runners/performance-monitor.sh     # Core Web Vitals monitoring
-./local-infra/runners/gh-workflow-local.sh all   # Complete validation
+./.runners-local/.runners-local/workflows/astro-build-local.sh       # Astro build simulation
+./.runners-local/.runners-local/workflows/performance-monitor.sh     # Core Web Vitals monitoring
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all   # Complete validation
 ```
 
 **Development Workflow Integration**:
@@ -293,7 +293,7 @@ Test locally before deployment:
 ./manage.sh validate
 
 # 2. Run local CI/CD
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 
 # 3. Only then deploy
 git push

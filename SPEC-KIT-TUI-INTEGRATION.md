@@ -168,7 +168,7 @@ After EVERY spec-kit command, apply these corrections:
 
 | Find | Replace |
 |------|---------|
-| `local-infra/` | `.runners-local/` |
+| `.runners-local/` | `.runners-local/` |
 | `shadcn/ui` | `DaisyUI` |
 | `Node.js 18+` | `Node.js latest (v25.2.0+)` |
 
@@ -216,7 +216,7 @@ All ultra-think analysis available in `/tmp/`:
 I need to establish the project constitution for the ghostty-config-files TUI redesign.
 
 CRITICAL CORRECTIONS (current repository reality):
-- Use .runners-local/ NOT local-infra/
+- Use .runners-local/ NOT .runners-local/
 - Use DaisyUI NOT shadcn/ui
 - Use Node.js latest (v25.2.0+) NOT Node.js 18+
 - Use gum (Charm Bracelet) for TUI

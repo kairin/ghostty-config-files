@@ -385,13 +385,13 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 4. **Package Managers**: Verify uv exclusive (FR-032-033), fnm exclusive (FR-034-035)
 5. **Architecture**: Verify modular lib/ structure (FR-020-031), no monolithic start.sh
 6. **Critical Files**: Verify docs/.nojekyll preserved (not in this spec but related infrastructure)
-7. **Directory Naming**: Verify .runners-local/ used (not local-infra/)
+7. **Directory Naming**: Verify .runners-local/ used (not .runners-local/)
 8. **Component Library**: Verify DaisyUI used in website (not shadcn/ui)
 9. **Node.js Version**: Verify latest v25.2.0+ (not LTS/18+)
 
 ### Reconciliation Matrix Application
 After spec generation, apply these corrections:
-- ✅ `local-infra/` → `.runners-local/` (already correct in this spec)
+- ✅ `.runners-local/` → `.runners-local/` (already correct in this spec)
 - ✅ `shadcn/ui` → `DaisyUI` (not applicable to this spec)
 - ✅ `Node.js 18+` → `Node.js latest (v25.2.0+)` (FR-038 compliant)
 - ✅ Verify `gum` mentioned (FR-001 compliant)

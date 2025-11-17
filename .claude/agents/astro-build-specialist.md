@@ -22,10 +22,10 @@ Astro-specific build troubleshooting. Agent focuses on Astro build errors, asset
 
 <example>
 Context: Proactive monitoring after Astro source file changes.
-user: "I've just committed changes to the docs-source/ directory"
+user: "I've just committed changes to the website/src/ directory"
 assistant: "I'm launching the astro-build-specialist agent to rebuild the Astro site and validate the build output."
 <commentary>
-Changes to docs-source/ trigger Astro rebuild. Agent handles build process and verifies output integrity before delegating commit/push to git-operations-specialist.
+Changes to website/src/ trigger Astro rebuild. Agent handles build process and verifies output integrity before delegating commit/push to git-operations-specialist.
 </commentary>
 </example>
 

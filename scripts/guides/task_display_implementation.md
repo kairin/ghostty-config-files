@@ -596,7 +596,7 @@ task_execute() {
 
 ## Unit Testing
 
-Create `local-infra/tests/unit/test_progress.sh`:
+Create `.runners-local/tests/unit/test_progress.sh`:
 
 ```bash
 #!/bin/bash
@@ -825,16 +825,16 @@ git checkout -b "$BRANCH_NAME"
 
 # Enhance progress.sh module
 # 1. Add task display functions to scripts/progress.sh
-# 2. Create local-infra/tests/unit/test_progress.sh
+# 2. Create .runners-local/tests/unit/test_progress.sh
 # 3. Update install_node.sh and install_ghostty.sh to use task_execute()
 
 # Test locally
-./local-infra/tests/unit/test_progress.sh
+./.runners-local/tests/unit/test_progress.sh
 ./manage.sh install node
 
 # Commit with constitutional format
 git add scripts/progress.sh \
-        local-infra/tests/unit/test_progress.sh
+        .runners-local/tests/unit/test_progress.sh
 
 git commit -m "feat(progress): Implement Claude Code-style task display system
 

@@ -763,7 +763,7 @@ install_modern_tools() {
 
 ## Unit Testing
 
-Create `local-infra/tests/unit/test_install_modern_tools.sh`:
+Create `.runners-local/tests/unit/test_install_modern_tools.sh`:
 
 ```bash
 #!/bin/bash
@@ -860,7 +860,7 @@ BRANCH_NAME="${DATETIME}-feat-modern-unix-tools"
 git checkout -b "$BRANCH_NAME"
 
 git add scripts/install_modern_tools.sh \
-        local-infra/tests/unit/test_install_modern_tools.sh \
+        .runners-local/tests/unit/test_install_modern_tools.sh \
         manage.sh
 
 git commit -m "feat(tools): Implement modern Unix tools installation

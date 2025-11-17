@@ -115,8 +115,8 @@ Pass the following instructions to master-orchestrator:
    find documentations/ .claude/ spec-kit/ -name "*.md"
 
    # Check for broken link patterns
-   grep -r "docs-source/" documentations/  # Should be website/src/
-   grep -r "runners/" documentations/      # Should be .runners-local/workflows/
+   grep -r "website/src/" documentations/  # Should be website/src/
+   grep -r ".runners-local/workflows/" documentations/      # Should be .runners-local/workflows/
    grep -r "\](.*)" --include="*.md"       # Extract all links
    ```
 
@@ -126,9 +126,9 @@ Pass the following instructions to master-orchestrator:
    - Identify moved/deleted file references
 
 3. **Common Issues**:
-   - ❌ `docs-source/` → Fix to `website/src/`
-   - ❌ `runners/` → Fix to `.runners-local/workflows/`
-   - ❌ `local-infra/` → Fix to `.runners-local/`
+   - ❌ `website/src/` → Fix to `website/src/`
+   - ❌ `.runners-local/workflows/` → Fix to `.runners-local/workflows/`
+   - ❌ `.runners-local/` → Fix to `.runners-local/`
    - ❌ Absolute paths → Convert to relative
 
 **Expected Output**:
@@ -143,14 +143,14 @@ Pass the following instructions to master-orchestrator:
 **Tasks** (only if broken links found):
 1. **Auto-Fix Common Patterns**:
    ```bash
-   # Fix docs-source/ references
-   find documentations/ -name "*.md" -exec sed -i 's|docs-source/|website/src/|g' {} \;
+   # Fix website/src/ references
+   find documentations/ -name "*.md" -exec sed -i 's|website/src/|website/src/|g' {} \;
 
-   # Fix runners/ references
-   find documentations/ -name "*.md" -exec sed -i 's|runners/|.runners-local/workflows/|g' {} \;
+   # Fix .runners-local/workflows/ references
+   find documentations/ -name "*.md" -exec sed -i 's|.runners-local/workflows/|.runners-local/workflows/|g' {} \;
 
-   # Fix local-infra/ references
-   find documentations/ -name "*.md" -exec sed -i 's|local-infra/|.runners-local/|g' {} \;
+   # Fix .runners-local/ references
+   find documentations/ -name "*.md" -exec sed -i 's|.runners-local/|.runners-local/|g' {} \;
    ```
 
 2. **Validate Fixes**:
@@ -207,14 +207,14 @@ git commit -m "docs: Fix documentation integrity and broken links
 
 Problems Fixed:
 - Restored X broken symlinks (CLAUDE.md, GEMINI.md)
-- Fixed Y broken links (docs-source/ → website/src/)
+- Fixed Y broken links (website/src/ → website/src/)
 - Updated Z legacy path references
 - Verified AGENTS.md size compliance
 
 Changes:
 - Symlinks: CLAUDE.md, GEMINI.md → AGENTS.md
-- Path fixes: docs-source/ → website/src/
-- Path fixes: runners/ → .runners-local/workflows/
+- Path fixes: website/src/ → website/src/
+- Path fixes: .runners-local/workflows/ → .runners-local/workflows/
 - Verified all 9 agents documented
 
 Validation:
@@ -260,13 +260,13 @@ DOCUMENTATION STRUCTURE
 CROSS-REFERENCE INTEGRITY
 =========================
 ⚠️  Broken links found: 5
-   - documentations/user/setup/context7.md:42 → docs-source/ (fixed)
-   - documentations/developer/workflows.md:18 → runners/ (fixed)
-   - AGENTS.md:156 → local-infra/ (fixed)
+   - documentations/user/setup/context7.md:42 → website/src/ (fixed)
+   - documentations/developer/workflows.md:18 → .runners-local/workflows/ (fixed)
+   - AGENTS.md:156 → .runners-local/ (fixed)
 
 Auto-Fixed:
-- 3 docs-source/ → website/src/
-- 2 runners/ → .runners-local/workflows/
+- 3 website/src/ → website/src/
+- 2 .runners-local/workflows/ → .runners-local/workflows/
 
 Remaining Issues: 0
 

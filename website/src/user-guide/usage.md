@@ -283,7 +283,7 @@ The gallery is generated at `documentations/screenshots/gallery.html` with:
 # Start documentation dev server
 ./manage.sh docs dev
 
-# In another terminal, make changes to docs-source/
+# In another terminal, make changes to website/src/
 # Browser auto-reloads at http://localhost:4321
 
 # When done, build for production
@@ -293,8 +293,8 @@ The gallery is generated at `documentations/screenshots/gallery.html` with:
 ### Adding Documentation
 
 ```bash
-# 1. Edit source files in docs-source/
-vim docs-source/user-guide/new-feature.md
+# 1. Edit source files in website/src/
+vim website/src/user-guide/new-feature.md
 
 # 2. Test locally
 ./manage.sh docs dev
@@ -303,7 +303,7 @@ vim docs-source/user-guide/new-feature.md
 ./manage.sh docs build
 
 # 4. Commit changes
-git add docs-source/ docs/
+git add website/src/ docs/
 git commit -m "docs: Add new feature documentation"
 ```
 

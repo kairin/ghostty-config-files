@@ -223,8 +223,8 @@ MCP servers MUST be verified with health check scripts before constitutional com
 - Application configs: `~/.config/<app>/` (NOT `~/.<app>/`)
 
 **Current Infrastructure Naming**:
-- `.runners-local/` is the CURRENT local CI/CD directory (NOT `local-infra/`)
-- All references to `local-infra/` are OBSOLETE and MUST be corrected
+- `.runners-local/` is the CURRENT local CI/CD directory (NOT `.runners-local/`)
+- All references to `.runners-local/` are OBSOLETE and MUST be corrected
 
 ## Development Workflow
 
@@ -314,7 +314,7 @@ ALL AI assistant conversations working on this repository MUST save complete con
 
 **Requirements**:
 - Complete logs from start to finish (exclude API keys/sensitive data)
-- Storage: `documentations/development/conversation_logs/`
+- Storage: `documentations/developer/conversation_logs/`
 - Naming: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
 - Include system state captures for debugging
 - Include CI/CD execution logs when applicable
@@ -340,7 +340,7 @@ This constitution supersedes all other development practices and documentation e
 **All code reviews, PRs, and spec-kit workflows MUST verify constitutional compliance**:
 - TUI framework = gum (not alternatives)
 - Package managers = uv (Python), fnm (Node.js) only
-- Directory naming = .runners-local/ (not local-infra/)
+- Directory naming = .runners-local/ (not .runners-local/)
 - Component library = DaisyUI (not shadcn/ui)
 - Node.js version = latest (v25.2.0+, not LTS/18+)
 - Critical files preserved (docs/.nojekyll, etc.)

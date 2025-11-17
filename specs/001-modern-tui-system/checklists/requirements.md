@@ -621,7 +621,7 @@ This checklist ensures all functional requirements (FR-001 through FR-075), non-
 - [ ] **Package Managers**: uv (Python), fnm (Node.js) exclusive
 - [ ] **Architecture**: Modular lib/ structure (not monolithic)
 - [ ] **Critical Files**: docs/.nojekyll preserved
-- [ ] **Directory Naming**: .runners-local/ (not local-infra/)
+- [ ] **Directory Naming**: .runners-local/ (not .runners-local/)
 - [ ] **Component Library**: DaisyUI (not shadcn/ui)
 - [ ] **Node.js Version**: Latest v25.2.0+ (not LTS/18+)
 

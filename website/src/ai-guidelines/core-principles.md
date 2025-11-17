@@ -120,7 +120,7 @@ git commit -m "CRITICAL: Restore .nojekyll for GitHub Pages asset loading"
 ### Requirements
 - **Complete Logs**: Save entire conversation from start to finish
 - **Exclude Sensitive Data**: Remove API keys, passwords, personal information
-- **Storage Location**: `documentations/development/conversation_logs/`
+- **Storage Location**: `documentations/developer/conversation_logs/`
 - **Naming Convention**: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
 - **System State**: Capture before/after system states for debugging
 - **CI/CD Logs**: Include local workflow execution logs
@@ -128,13 +128,13 @@ git commit -m "CRITICAL: Restore .nojekyll for GitHub Pages asset loading"
 ### Example Workflow
 ```bash
 # After completing work, save conversation log and system state
-mkdir -p documentations/development/conversation_logs/
-cp /path/to/conversation.md documentations/development/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
+mkdir -p documentations/developer/conversation_logs/
+cp /path/to/conversation.md documentations/developer/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
 
 # Capture system state and CI/CD logs
-cp /tmp/ghostty-start-logs/system_state_*.json documentations/development/system_states/
-cp ./.runners-local/logs/* documentations/development/ci_cd_logs/
+cp /tmp/ghostty-start-logs/system_state_*.json documentations/developer/system_states/
+cp ./.runners-local/logs/* documentations/developer/ci_cd_logs/
 
-git add documentations/development/
+git add documentations/developer/
 git commit -m "Add conversation log, system state, and CI/CD logs for local infrastructure setup"
 ```

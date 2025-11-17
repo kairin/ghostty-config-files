@@ -19,10 +19,10 @@ constitutional: true
 
 ```bash
 # 1. Run local workflow (MANDATORY before GitHub)
-./local-infra/runners/gh-workflow-local.sh local
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh local
 
 # 2. Verify local build success
-./local-infra/runners/gh-workflow-local.sh status
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh status
 
 # 3. Test configuration locally
 ghostty +show-config && ./scripts/check_updates.sh
@@ -35,8 +35,8 @@ git checkout -b "$BRANCH_NAME"
 ```
 
 ### Local Workflow Tools (MANDATORY)
-- **`./local-infra/runners/gh-workflow-local.sh`** - Local GitHub Actions simulation
-- **`./local-infra/runners/gh-pages-setup.sh`** - Zero-cost Pages configuration
+- **`./.runners-local/.runners-local/workflows/gh-workflow-local.sh`** - Local GitHub Actions simulation
+- **`./.runners-local/.runners-local/workflows/gh-pages-setup.sh`** - Zero-cost Pages configuration
 - **Commands**: `local`, `status`, `trigger`, `pages`, `all`
 - **Requirement**: Local success BEFORE any GitHub deployment
 
@@ -50,7 +50,7 @@ gh api user/settings/billing/actions
 gh run list --limit 10 --json status,conclusion,name,createdAt
 
 # Verify zero-cost compliance
-./local-infra/runners/gh-pages-setup.sh
+./.runners-local/.runners-local/workflows/gh-pages-setup.sh
 ```
 
 ### Logging & Debugging (MANDATORY)
@@ -65,7 +65,7 @@ LOG_LOCATIONS="/tmp/ghostty-start-logs/"
 └── system_state_TIMESTAMP.json  # Complete system state snapshots
 
 # Local CI/CD logs
-LOCAL_CI_LOGS="./local-infra/logs/"
+LOCAL_CI_LOGS="./.runners-local/logs/"
 ├── workflow-TIMESTAMP.log       # Local workflow execution
 ├── gh-pages-TIMESTAMP.log       # GitHub Pages simulation
 ├── performance-TIMESTAMP.json   # CI performance metrics
@@ -77,7 +77,7 @@ LOCAL_CI_LOGS="./local-infra/logs/"
 ### GitHub CLI Integration
 
 ```bash
-# File: local-infra/runners/gh-workflow-local.sh
+# File: .runners-local/.runners-local/workflows/gh-workflow-local.sh
 #!/bin/bash
 
 # GitHub CLI-based local workflow simulation
@@ -90,7 +90,7 @@ case "$1" in
         ghostty +show-config || exit 1
 
         # Performance testing
-        ./local-infra/runners/performance-monitor.sh --test
+        ./.runners-local/.runners-local/workflows/performance-monitor.sh --test
 
         # Build simulation
         ./start.sh --verbose --dry-run
@@ -108,7 +108,7 @@ case "$1" in
 
     "pages")
         # Local GitHub Pages simulation
-        ./local-infra/runners/gh-pages-setup.sh
+        ./.runners-local/.runners-local/workflows/gh-pages-setup.sh
         ;;
 
     "all")
@@ -121,7 +121,7 @@ esac
 ### Performance Monitoring
 
 ```bash
-# File: local-infra/runners/performance-monitor.sh
+# File: .runners-local/.runners-local/workflows/performance-monitor.sh
 #!/bin/bash
 
 monitor_ghostty_performance() {
@@ -137,7 +137,7 @@ monitor_ghostty_performance() {
     config_time=$(time (ghostty +show-config) 2>&1 | grep real | awk '{print $2}')
 
     # Store results in JSON
-    cat > "./local-infra/logs/performance-$(date +%s).json" << EOF
+    cat > "./.runners-local/logs/performance-$(date +%s).json" << EOF
 {
     "timestamp": "$(date -Iseconds)",
     "startup_time": "$startup_time",
@@ -155,7 +155,7 @@ EOF
 ### Zero-Cost GitHub Pages Setup
 
 ```bash
-# File: local-infra/runners/gh-pages-setup.sh
+# File: .runners-local/.runners-local/workflows/gh-pages-setup.sh
 #!/bin/bash
 
 setup_github_pages() {
@@ -221,7 +221,7 @@ cd /home/kkk/Apps/ghostty-config-files
 ./start.sh
 
 # Initialize local CI/CD infrastructure
-./local-infra/runners/gh-workflow-local.sh init
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh init
 
 # Setup GitHub CLI integration
 gh auth login
@@ -231,17 +231,17 @@ gh repo set-default
 ### Local CI/CD Operations
 ```bash
 # Complete local workflow execution
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 
 # Individual workflow stages
-./local-infra/runners/gh-workflow-local.sh validate    # Config validation
-./local-infra/runners/gh-workflow-local.sh test       # Performance testing
-./local-infra/runners/gh-workflow-local.sh build      # Build simulation
-./local-infra/runners/gh-workflow-local.sh deploy     # Deployment simulation
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh validate    # Config validation
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh test       # Performance testing
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh build      # Build simulation
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh deploy     # Deployment simulation
 
 # GitHub Actions cost monitoring
-./local-infra/runners/gh-workflow-local.sh billing    # Check usage
-./local-infra/runners/gh-workflow-local.sh status     # Workflow status
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh billing    # Check usage
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh status     # Workflow status
 ```
 
 ### Update Management
@@ -252,18 +252,18 @@ gh repo set-default
 ./scripts/check_updates.sh --config-only # Configuration updates only
 
 # Local CI/CD for updates
-./local-infra/runners/gh-workflow-local.sh update     # Update workflow
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh update     # Update workflow
 ```
 
 ### Testing & Validation
 ```bash
 # Configuration validation
 ghostty +show-config                    # Validate current configuration
-./local-infra/runners/test-runner.sh    # Complete test suite
+./.runners-local/.runners-local/workflows/test-runner.sh    # Complete test suite
 
 # Performance monitoring
-./local-infra/runners/performance-monitor.sh --baseline # Establish baseline
-./local-infra/runners/performance-monitor.sh --compare  # Compare performance
+./.runners-local/.runners-local/workflows/performance-monitor.sh --baseline # Establish baseline
+./.runners-local/.runners-local/workflows/performance-monitor.sh --compare  # Compare performance
 
 # System testing
 ./start.sh --verbose                    # Full installation with detailed logs
@@ -274,10 +274,10 @@ ghostty +show-config                    # Validate current configuration
 ### Daily Maintenance (Recommended)
 ```bash
 # Add to crontab for automatic local CI/CD
-# 0 9 * * * cd /home/kkk/Apps/ghostty-config-files && ./local-infra/runners/gh-workflow-local.sh all
+# 0 9 * * * cd /home/kkk/Apps/ghostty-config-files && ./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 
 # Weekly performance monitoring
-# 0 9 * * 0 cd /home/kkk/Apps/ghostty-config-files && ./local-infra/runners/performance-monitor.sh --weekly-report
+# 0 9 * * 0 cd /home/kkk/Apps/ghostty-config-files && ./.runners-local/.runners-local/workflows/performance-monitor.sh --weekly-report
 ```
 
 ### GitHub CLI Automation
