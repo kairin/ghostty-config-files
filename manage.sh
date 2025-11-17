@@ -241,8 +241,8 @@ EXAMPLES:
 DOCUMENTATION:
     For detailed documentation, see:
     - README.md - Quick start and overview
-    - docs-source/user-guide/ - User documentation
-    - docs-source/developer/ - Developer guides
+    - website/src/user-guide/ - User documentation
+    - website/src/developer/ - Developer guides
 
 VERSION: ${VERSION} (${BUILD_DATE})
 
@@ -483,7 +483,7 @@ NOTES:
     - Automatic backup created before installation
     - Automatic rollback on failure
     - Progress tracking with step counter
-    - See docs-source/user-guide/installation.md for details
+    - See website/src/user-guide/installation.md for details
 
 EOF
         return 0

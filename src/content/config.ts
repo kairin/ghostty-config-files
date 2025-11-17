@@ -12,7 +12,7 @@ import { defineCollection, z } from 'astro:content';
  * - developer: Developer documentation (architecture, contributing, testing)
  *
  * Constitutional Compliance:
- * - Separation of source (docs-source/) from build output (docs-dist/)
+ * - Separation of source (website/src/) from build output (docs-dist/)
  * - Shallow nesting (max 2 levels deep per FR-005)
  * - Clear audience segmentation
  */

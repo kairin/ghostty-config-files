@@ -3,7 +3,7 @@ name: Deploy Astro Site to GitHub Pages (DISABLED - Self-Hosted Runner Not Confi
 # ISSUE: This workflow requires a self-hosted runner but none is configured
 # STATUS: Disabled to prevent stuck workflows
 # SOLUTION: Use astro-build-deploy.yml (GitHub-hosted) or configure self-hosted runner
-# See: local-infra/runners/setup-self-hosted-runner.sh
+# See: .runners-local/runners/setup-self-hosted-runner.sh
 
 on:
   workflow_dispatch:

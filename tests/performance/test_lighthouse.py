@@ -23,7 +23,7 @@ class TestLighthousePerformance:
         """Setup test environment."""
         self.project_root = Path.cwd()
         self.dist_dir = self.project_root / "dist"
-        self.performance_script = self.project_root / "local-infra/runners/performance-monitor.sh"
+        self.performance_script = self.project_root / ".runners-local/runners/performance-monitor.sh"
 
     def test_performance_monitor_script_exists(self) -> None:
         """Test that performance monitoring script exists."""
@@ -211,11 +211,11 @@ class TestLighthousePerformance:
         assert self.performance_script.exists(), "Performance monitoring script must exist"
 
         # Logs directory for performance data
-        logs_dir = self.project_root / "local-infra/logs"
+        logs_dir = self.project_root / ".runners-local/logs"
         assert logs_dir.exists(), "Performance logs directory must exist"
 
         # Performance monitoring integration in CI/CD
-        gh_workflow_script = self.project_root / "local-infra/runners/gh-workflow-local.sh"
+        gh_workflow_script = self.project_root / ".runners-local/runners/gh-workflow-local.sh"
         if gh_workflow_script.exists():
             content = gh_workflow_script.read_text()
             assert "performance" in content.lower(), "GitHub workflow must include performance monitoring"
@@ -239,7 +239,7 @@ class TestLighthousePerformance:
             # Should be able to establish performance baseline
             if result.returncode == 0:
                 # Check that baseline was recorded
-                logs_dir = self.project_root / "local-infra/logs"
+                logs_dir = self.project_root / ".runners-local/logs"
                 perf_files = list(logs_dir.glob("performance-*.json"))
                 assert len(perf_files) > 0, "Performance baseline should be recorded"
 

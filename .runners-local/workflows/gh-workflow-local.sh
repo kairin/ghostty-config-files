@@ -289,7 +289,7 @@ EOF
         local temp_query=$(mktemp)
         cat > "$temp_query" <<'EOF'
 Review this documentation strategy for completeness and best practices. Check for:
-1. Clear tier separation (docs/, docs-source/, documentations/)
+1. Clear tier separation (docs/, website/src/, documentations/)
 2. Decision frameworks are well-defined
 3. Workflow examples are practical
 4. Maintenance guidelines exist

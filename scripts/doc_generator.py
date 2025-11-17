@@ -983,7 +983,7 @@ python scripts/constitutional_automation.py --test
 All operations generate detailed logs:
 - `.runners-local/logs/workflows/` - CI/CD and workflow logs
 - `/tmp/ghostty-start-logs/` - System installation and update logs
-- `documentations/development/` - Development and debugging information
+- `documentations/developer/` - Development and debugging information
 
 ### Performance Debugging
 ```bash

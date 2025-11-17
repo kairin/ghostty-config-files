@@ -165,7 +165,7 @@ class TestGitHubPagesDeployment:
         # This tests the deployment pipeline without actual deployment
 
         # Check that we can simulate GitHub Pages deployment
-        deployment_script = self.project_root / "local-infra/runners/gh-pages-setup.sh"
+        deployment_script = self.project_root / ".runners-local/runners/gh-pages-setup.sh"
 
         # This will fail until we create the deployment script
         if deployment_script.exists():
