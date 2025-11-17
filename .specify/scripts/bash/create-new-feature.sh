@@ -40,26 +40,18 @@ while [ $i -le $# ]; do
             fi
             BRANCH_NUMBER="$next_arg"
             ;;
-        --help|-h)
+        --help|-h) 
             echo "Usage: $0 [--json] [--short-name <name>] [--number N] <feature_description>"
             echo ""
             echo "Options:"
             echo "  --json              Output in JSON format"
             echo "  --short-name <name> Provide a custom short name (2-4 words) for the branch"
-            echo "  --number N          Specify branch number manually (for spec directory naming only)"
+            echo "  --number N          Specify branch number manually (overrides auto-detection)"
             echo "  --help, -h          Show this help message"
-            echo ""
-            echo "Branch Naming"
-            echo "  New branches follow constitutional format: YYYYMMDD-HHMMSS-type-description"
-            echo "  Example: 20251109-182345-feat-authentication-system"
-            echo "  Types: feat, fix, docs, refactor, test, chore"
             echo ""
             echo "Examples:"
             echo "  $0 'Add user authentication system' --short-name 'user-auth'"
             echo "  $0 'Implement OAuth2 integration for API' --number 5"
-            echo ""
-            echo "Note: --number parameter controls spec directory numbering (specs/005-name/)"
-            echo "      but branch names use datetime-based format per constitutional requirements"
             exit 0
             ;;
         *) 
@@ -88,9 +80,56 @@ find_repo_root() {
     return 1
 }
 
+# Function to get highest number from specs directory
+get_highest_from_specs() {
+    local specs_dir="$1"
+    local highest=0
+    
+    if [ -d "$specs_dir" ]; then
+        for dir in "$specs_dir"/*; do
+            [ -d "$dir" ] || continue
+            dirname=$(basename "$dir")
+            number=$(echo "$dirname" | grep -o '^[0-9]\+' || echo "0")
+            number=$((10#$number))
+            if [ "$number" -gt "$highest" ]; then
+                highest=$number
+            fi
+        done
+    fi
+    
+    echo "$highest"
+}
+
+# Function to get highest number from git branches
+get_highest_from_branches() {
+    local highest=0
+    
+    # Get all branches (local and remote)
+    branches=$(git branch -a 2>/dev/null || echo "")
+    
+    if [ -n "$branches" ]; then
+        while IFS= read -r branch; do
+            # Clean branch name: remove leading markers and remote prefixes
+            clean_branch=$(echo "$branch" | sed 's/^[* ]*//; s|^remotes/[^/]*/||')
+            
+            # Extract feature number if branch matches pattern ###-*
+            if echo "$clean_branch" | grep -q '^[0-9]\{3\}-'; then
+                number=$(echo "$clean_branch" | grep -o '^[0-9]\{3\}' || echo "0")
+                number=$((10#$number))
+                if [ "$number" -gt "$highest" ]; then
+                    highest=$number
+                fi
+            fi
+        done <<< "$branches"
+    fi
+    
+    echo "$highest"
+}
+
 # Function to check existing branches (local and remote) and return next available number
 check_existing_branches() {
     local short_name="$1"
+    local specs_dir="$2"
     
     # Fetch all remotes to get latest branch info (suppress errors if no remotes)
     git fetch --all --prune 2>/dev/null || true
@@ -103,8 +142,8 @@ check_existing_branches() {
     
     # Check specs directory as well
     local spec_dirs=""
-    if [ -d "$SPECS_DIR" ]; then
-        spec_dirs=$(find "$SPECS_DIR" -maxdepth 1 -type d -name "[0-9]*-${short_name}" 2>/dev/null | xargs -n1 basename 2>/dev/null | sed 's/-.*//' | sort -n)
+    if [ -d "$specs_dir" ]; then
+        spec_dirs=$(find "$specs_dir" -maxdepth 1 -type d -name "[0-9]*-${short_name}" 2>/dev/null | xargs -n1 basename 2>/dev/null | sed 's/-.*//' | sort -n)
     fi
     
     # Combine all sources and get the highest number
@@ -119,10 +158,16 @@ check_existing_branches() {
     echo $((max_num + 1))
 }
 
+# Function to clean and format a branch name
+clean_branch_name() {
+    local name="$1"
+    echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//'
+}
+
 # Resolve repository root. Prefer git information when available, but fall back
 # to searching for repository markers so the workflow still functions in repositories that
 # were initialised with --no-git.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if git rev-parse --show-toplevel >/dev/null 2>&1; then
     REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -184,49 +229,34 @@ generate_branch_name() {
         echo "$result"
     else
         # Fallback to original logic if no meaningful words found
-        echo "$description" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//' | tr '-' '\n' | grep -v '^$' | head -3 | tr '\n' '-' | sed 's/-$//'
+        local cleaned=$(clean_branch_name "$description")
+        echo "$cleaned" | tr '-' '\n' | grep -v '^$' | head -3 | tr '\n' '-' | sed 's/-$//'
     fi
 }
 
 # Generate branch name
 if [ -n "$SHORT_NAME" ]; then
     # Use provided short name, just clean it up
-    BRANCH_SUFFIX=$(echo "$SHORT_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//')
+    BRANCH_SUFFIX=$(clean_branch_name "$SHORT_NAME")
 else
     # Generate from description with smart filtering
     BRANCH_SUFFIX=$(generate_branch_name "$FEATURE_DESCRIPTION")
 fi
 
-# Generate constitutional datetime-based branch name (YYYYMMDD-HHMMSS-type-description)
-# This replaces the old sequential numbering approach (001-name, 002-name, etc.)
-DATETIME=$(date +"%Y%m%d-%H%M%S")
-FEATURE_TYPE="feat"  # Default to 'feat' type
-
-# Determine feature number for legacy spec directory naming (separate from branch name)
+# Determine branch number
 if [ -z "$BRANCH_NUMBER" ]; then
     if [ "$HAS_GIT" = true ]; then
         # Check existing branches on remotes
-        BRANCH_NUMBER=$(check_existing_branches "$BRANCH_SUFFIX")
+        BRANCH_NUMBER=$(check_existing_branches "$BRANCH_SUFFIX" "$SPECS_DIR")
     else
         # Fall back to local directory check
-        HIGHEST=0
-        if [ -d "$SPECS_DIR" ]; then
-            for dir in "$SPECS_DIR"/*; do
-                [ -d "$dir" ] || continue
-                dirname=$(basename "$dir")
-                number=$(echo "$dirname" | grep -o '^[0-9]\+' || echo "0")
-                number=$((10#$number))
-                if [ "$number" -gt "$HIGHEST" ]; then HIGHEST=$number; fi
-            done
-        fi
+        HIGHEST=$(get_highest_from_specs "$SPECS_DIR")
         BRANCH_NUMBER=$((HIGHEST + 1))
     fi
 fi
 
-# Constitutional branch name format: YYYYMMDD-HHMMSS-type-description
-# Example: 20251109-182345-feat-apt-snap-migration
 FEATURE_NUM=$(printf "%03d" "$BRANCH_NUMBER")
-BRANCH_NAME="${DATETIME}-${FEATURE_TYPE}-${BRANCH_SUFFIX}"
+BRANCH_NAME="${FEATURE_NUM}-${BRANCH_SUFFIX}"
 
 # GitHub enforces a 244-byte limit on branch names
 # Validate and truncate if necessary
