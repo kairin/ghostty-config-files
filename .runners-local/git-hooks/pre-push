@@ -1,0 +1,37 @@
+#!/bin/bash
+# Constitutional Compliance Pre-Push Hook
+# Validates branch naming and prevents branch deletion
+
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+PATTERN='^[0-9]{8}-[0-9]{6}-(feat|fix|docs|refactor|test|chore|perf|style|ci)-[a-z0-9-]+$'
+
+echo "Validating branch name: $BRANCH_NAME"
+
+# Allow main branch
+if [[ "$BRANCH_NAME" == "main" ]]; then
+    echo "✓ Main branch - validation passed"
+    exit 0
+fi
+
+# Validate feature branch naming
+if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+    echo "🚨 BLOCKING: Branch name doesn't follow constitutional format"
+    echo ""
+    echo "Expected format: YYYYMMDD-HHMMSS-type-short-description"
+    echo "Got: $BRANCH_NAME"
+    echo ""
+    echo "Valid types: feat, fix, docs, refactor, test, chore, perf, style, ci"
+    echo ""
+    echo "Examples:"
+    echo "  20251117-143000-feat-context-menu-integration"
+    echo "  20251117-143515-fix-performance-optimization"
+    echo "  20251117-144030-docs-agents-enhancement"
+    echo ""
+    echo "To fix, rename your branch:"
+    echo "  DATETIME=\$(date +'%Y%m%d-%H%M%S')"
+    echo "  git branch -m \${DATETIME}-type-description"
+    exit 1
+fi
+
+echo "✅ Branch name validation passed"
+exit 0
