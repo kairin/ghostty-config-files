@@ -216,7 +216,7 @@ This will start a development server, and you can view the website at `http://lo
     -   `archive/`: Historical/obsolete documentation
 -   `.runners-local/`: Local CI/CD infrastructure for zero-cost testing and validation.
     -   `tests/unit/`: Unit tests for modular scripts (Phase 1, 5)
-    -   `runners/`: Local CI/CD execution scripts
+    -   `.runners-local/workflows/`: Local CI/CD execution scripts
 
 ## Development
 

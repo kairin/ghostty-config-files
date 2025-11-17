@@ -34,7 +34,7 @@ These are ALL required for spec-kit execution:
 
 ## ❌ Folders MOVED to delete/
 
-### 1. `local-infra/` → `delete/old-infrastructure-naming/`
+### 1. `.runners-local/` → `delete/old-infrastructure-naming/`
 - **Why**: Obsolete naming convention (replaced by `.runners-local/`)
 - **Contents**: Only old logs (not critical)
 - **Action**: Archived for historical reference
@@ -50,7 +50,7 @@ delete/
 ├── 01-QUICK-REFERENCE-keep-visible.md 📋 One-page cheat sheet
 ├── 02-verify-prerequisites.sh         ✅ Automated checker
 ├── old-spec-artifacts/                🗄️  Previous spec attempts
-└── old-infrastructure-naming/         🗄️  Deprecated local-infra/
+└── old-infrastructure-naming/         🗄️  Deprecated .runners-local/
 ```
 
 **Purpose**: Reference materials during spec-kit execution

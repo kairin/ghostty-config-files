@@ -10,12 +10,12 @@
 ## EXECUTIVE SUMMARY
 
 The spec-kit guides contain **multiple critical contradictions** between:
-1. **OLD SPEC-KIT REQUIREMENTS** (uv + Astro + shadcn/ui + local-infra/)
+1. **OLD SPEC-KIT REQUIREMENTS** (uv + Astro + shadcn/ui + .runners-local/)
 2. **CURRENT PROJECT STATE** (Ghostty terminal + .runners-local/ + DaisyUI + manage.sh)
 3. **CLAUDE.md PROJECT MANDATES** (Node.js latest, branch preservation, .runners-local infrastructure)
 
 These contradictions create **broken workflows** when users follow spec-kit commands, as they will:
-- Create wrong directory structure (`local-infra/` instead of `.runners-local/`)
+- Create wrong directory structure (`.runners-local/` instead of `.runners-local/`)
 - Recommend outdated component libraries (shadcn/ui instead of DaisyUI)
 - Miss node version requirements (specifies Node.js 18+ instead of latest)
 - Reference non-existent scripts and workflows
@@ -29,7 +29,7 @@ These contradictions create **broken workflows** when users follow spec-kit comm
 
 ### ISSUE 1.1: Directory Structure Mismatch (CRITICAL)
 
-**Location**: ALL spec-kit guides reference `local-infra/`
+**Location**: ALL spec-kit guides reference `.runners-local/`
 
 - `spec-kit/guides/SPEC_KIT_INDEX.md:31, 103, 116`
 - `spec-kit/guides/2-spec-kit-specify.md:65-71, 87-99`
@@ -50,22 +50,22 @@ These contradictions create **broken workflows** when users follow spec-kit comm
 
 **What spec-kit Teaches**:
 ```
-./local-infra/                         # WRONG DIRECTORY NAME
-├── runners/
+./.runners-local/                         # WRONG DIRECTORY NAME
+├── .runners-local/workflows/
 ├── logs/
 ├── config/
 └── tests/
 ```
 
 **Impact**:
-- Users create `local-infra/` directory when `.runners-local/` already exists
+- Users create `.runners-local/` directory when `.runners-local/` already exists
 - Duplicate infrastructure scattered across codebase
 - Scripts in wrong location won't be found
 - CI/CD pipelines fail silently
 
 **Example Contradiction** (4-spec-kit-tasks.md:186):
 ```bash
-./local-infra/runners/gh-workflow-local.sh all || exit 1  # WRONG PATH
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all || exit 1  # WRONG PATH
 # Should be:
 ./.runners-local/workflows/gh-workflow-local.sh all || exit 1  # CORRECT PATH
 ```
@@ -190,9 +190,9 @@ User Story 1: Unified Development Environment
 
 ```bash
 # SPEC-KIT SAYS (wrong paths):
-./local-infra/runners/gh-workflow-local.sh
-./local-infra/runners/astro-build-local.sh
-./local-infra/runners/performance-monitor.sh
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh
+./.runners-local/.runners-local/workflows/astro-build-local.sh
+./.runners-local/.runners-local/workflows/performance-monitor.sh
 
 # ACTUAL PROJECT HAS (correct paths):
 ./.runners-local/workflows/gh-workflow-local.sh
@@ -203,11 +203,11 @@ User Story 1: Unified Development Environment
 **Evidence**:
 - All 5 spec-kit guide files (1-5) contain >100 references to wrong paths
 - `.runners-local/` directory ALREADY EXISTS with correct scripts
-- No `local-infra/` directory in project
+- No `.runners-local/` directory in project
 
 **User Experience**:
 ```bash
-User: ./local-infra/runners/gh-workflow-local.sh all
+User: ./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 Error: No such file or directory
 (User is confused - thinks they did something wrong, but actually spec-kit was wrong)
 ```
@@ -219,7 +219,7 @@ Error: No such file or directory
 **Spec-kit teaches PHASE 0 approach**:
 ```
 Phase 0 (BEFORE ALL OTHERS): Local CI/CD Infrastructure Setup
-- Create complete local-infra/ directory structure
+- Create complete .runners-local/ directory structure
 - Build and test all runner scripts
 - Configure git hooks for automatic execution
 ```
@@ -234,7 +234,7 @@ LOCAL CI/CD REQUIREMENTS:
 
 **Impact**:
 - Users waste 4-6 hours building duplicate CI/CD infrastructure
-- Creates competing systems (`local-infra/` vs `.runners-local/`)
+- Creates competing systems (`.runners-local/` vs `.runners-local/`)
 - Branch workflow examples won't work
 - Performance monitoring integrations fail
 
@@ -293,7 +293,7 @@ DATETIME=$(date +"%Y%m%d-%H%M%S")
 BRANCH_NAME="${DATETIME}-task-X-description"
 
 # 1. MANDATORY: Local CI/CD validation
-./local-infra/runners/gh-workflow-local.sh all || exit 1
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all || exit 1
 ```
 
 **CLAUDE.md Version** (requires .runners-local, not local-infra):
@@ -334,7 +334,7 @@ BRANCH_NAME="${DATETIME}-type-short-description"
 ### ISSUE 3.3: Test Coverage Gap (HIGH)
 
 **Spec-kit References**:
-- Mentions tests should exist in `local-infra/tests/`
+- Mentions tests should exist in `.runners-local/tests/`
 - No guidance on HOW to write tests
 - No test templates provided
 - Test structure conflicts with `.runners-local/tests/` reality
@@ -409,7 +409,7 @@ BRANCH_NAME="${DATETIME}-type-short-description"
 **Spec-kit teaches** (2-spec-kit-specify.md:73-113):
 ```
 project-root/
-├── local-infra/        # WRONG: Should be .runners-local
+├── .runners-local/        # WRONG: Should be .runners-local
 ├── scripts/            # Only Python scripts mentioned
 ├── src/                # Astro source (missing Ghostty config details)
 ```
@@ -443,9 +443,9 @@ project-root/
 ## KNOWN DIVERGENCES (Updated 2025-11-17)
 
 ### Directory Structure
-- SPEC-KIT SAYS: local-infra/
+- SPEC-KIT SAYS: .runners-local/
 - ACTUAL PROJECT: .runners-local/
-- ACTION: Replace all local-infra/ with .runners-local/
+- ACTION: Replace all .runners-local/ with .runners-local/
 
 ### Component Library
 - SPEC-KIT SAYS: shadcn/ui
@@ -477,10 +477,10 @@ USE CLAUDE.md for: Terminal configuration and complete project requirements
 ```bash
 # Update all local-infra references to .runners-local
 find spec-kit/guides -name "*.md" -exec sed -i \
-  's|./local-infra/runners/|./.runners-local/workflows/|g' {} \;
+  's|./.runners-local/.runners-local/workflows/|./.runners-local/workflows/|g' {} \;
 
 find spec-kit/guides -name "*.md" -exec sed -i \
-  's|./local-infra/|./.runners-local/|g' {} \;
+  's|./.runners-local/|./.runners-local/|g' {} \;
 ```
 
 **Files affected**:
@@ -548,12 +548,12 @@ ghostty +show-config | grep linux-cgroup
 
 | Aspect | Spec-Kit Says | Actual Project | Status | Fix |
 |--------|---------------|----------------|--------|-----|
-| Local CI/CD dir | `local-infra/` | `.runners-local/` | CRITICAL | Replace all paths |
+| Local CI/CD dir | `.runners-local/` | `.runners-local/` | CRITICAL | Replace all paths |
 | Components | shadcn/ui | DaisyUI | CRITICAL | Update tasks |
 | Node.js | 18+ | latest | MODERATE | Add fnm guidance |
 | Project scope | Web stack only | Terminal + Web | HIGH | Add Ghostty section |
-| Scripts location | local-infra/runners | .runners-local/workflows | CRITICAL | Update 40+ refs |
-| Test location | local-infra/tests | .runners-local/tests | MODERATE | Update structure |
+| Scripts location | .runners-local/runners | .runners-local/workflows | CRITICAL | Update 40+ refs |
+| Test location | .runners-local/tests | .runners-local/tests | MODERATE | Update structure |
 | .nojekyll | Not mentioned | CRITICAL file | HIGH | Add to deploy docs |
 
 ---
@@ -602,7 +602,7 @@ After each spec-kit phase, verify actual project state:
 ## 6. PRIORITY FIXES ROADMAP
 
 ### IMMEDIATE (This Week)
-1. Update all `local-infra/` to `.runners-local/` paths in spec-kit guides
+1. Update all `.runners-local/` to `.runners-local/` paths in spec-kit guides
 2. Add reconciliation matrix to spec-kit
 3. Add prerequisites guide (Context7, GitHub MCP)
 4. Document .nojekyll critical file requirement
@@ -630,7 +630,7 @@ After each spec-kit phase, verify actual project state:
 ## 7. EVIDENCE COMPILATION
 
 ### Contradiction #1: Directory Names
-- **Spec-kit**: `local-infra/runners/gh-workflow-local.sh` (100+ occurrences)
+- **Spec-kit**: `.runners-local/.runners-local/workflows/gh-workflow-local.sh` (100+ occurrences)
 - **Actual**: `.runners-local/workflows/gh-workflow-local.sh` (confirmed existing)
 - **File**: `/home/kkk/Apps/ghostty-config-files/.runners-local/workflows/gh-workflow-local.sh`
 
@@ -650,7 +650,7 @@ After each spec-kit phase, verify actual project state:
 - **Evidence**: CLAUDE.md project overview vs SPEC_KIT_INDEX.md overview
 
 ### Contradiction #5: Script Paths  
-- **Spec-kit**: "./local-infra/runners/gh-workflow-local.sh all" (4-spec-kit-tasks.md:186)
+- **Spec-kit**: "./.runners-local/.runners-local/workflows/gh-workflow-local.sh all" (4-spec-kit-tasks.md:186)
 - **CLAUDE.md**: "./.runners-local/workflows/gh-workflow-local.sh all" (CLAUDE.md:148)
 - **Evidence**: Both files explicitly state these paths
 

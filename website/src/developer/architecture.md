@@ -22,8 +22,8 @@ Ghostty Configuration Files Repository
 ├── Installation Layer (start.sh, manage.sh)
 ├── Modular Scripts Layer (scripts/*)
 ├── Configuration Layer (configs/*)
-├── Documentation Layer (docs-source/, docs/)
-├── Local CI/CD Layer (local-infra/*)
+├── Documentation Layer (website/src/, docs/)
+├── Local CI/CD Layer (.runners-local/*)
 └── Spec-Kit Layer (.specify/*, spec-kit/*)
 ```
 
@@ -85,15 +85,15 @@ Ghostty Configuration Files Repository
 │   ├── config_*.sh         # Configuration modules
 │   └── validate_*.sh       # Validation modules
 │
-├── docs-source/            # Documentation source (editable)
+├── website/src/            # Documentation source (editable)
 │   ├── user-guide/         # User documentation
 │   ├── ai-guidelines/      # AI assistant guidelines
 │   └── developer/          # Developer documentation
 │
 ├── docs/                   # Documentation build output (gitignored)
 │
-├── local-infra/            # Local CI/CD infrastructure
-│   ├── runners/            # CI/CD scripts
+├── .runners-local/            # Local CI/CD infrastructure
+│   ├── .runners-local/workflows/            # CI/CD scripts
 │   ├── tests/              # Test suites
 │   └── logs/               # CI/CD logs
 │
@@ -213,7 +213,7 @@ configs/ghostty/
 
 **Purpose**: Dual-structure documentation (source + build)
 
-**Source** (`docs-source/`):
+**Source** (`website/src/`):
 - Markdown files (git-tracked)
 - Organized by audience (user/developer/AI)
 - Content collections for Astro
@@ -348,7 +348,7 @@ apply_updates()
 ### Test Organization
 
 ```
-local-infra/tests/
+.runners-local/tests/
 ├── unit/                    # Unit tests
 │   ├── test_functions.sh   # Test helpers
 │   ├── test_common_utils.sh # Common module tests
@@ -364,7 +364,7 @@ local-infra/tests/
 ### Test Execution Flow
 
 ```
-./local-infra/runners/test-runner.sh
+./.runners-local/.runners-local/workflows/test-runner.sh
        │
        ├─► Run ShellCheck (static analysis)
        ├─► Run unit tests (<10s per module)

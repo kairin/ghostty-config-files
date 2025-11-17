@@ -535,7 +535,7 @@ configure_zsh() {
 
 ## Unit Testing
 
-Create `local-infra/tests/unit/test_configure_zsh.sh`:
+Create `.runners-local/tests/unit/test_configure_zsh.sh`:
 
 ```bash
 #!/bin/bash
@@ -668,7 +668,7 @@ BRANCH_NAME="${DATETIME}-feat-zsh-configuration"
 git checkout -b "$BRANCH_NAME"
 
 git add scripts/configure_zsh.sh \
-        local-infra/tests/unit/test_configure_zsh.sh \
+        .runners-local/tests/unit/test_configure_zsh.sh \
         manage.sh
 
 git commit -m "feat(zsh): Implement ZSH configuration module

@@ -8,7 +8,7 @@ All notable changes to the Ghostty Configuration Files project are documented in
 **Implementation Date**: 2025-11-12 | **Status**: ✅ COMPLETE | **Breaking**: Documentation paths only
 
 #### **✅ New CI/CD Architecture**
-- **Old Location**: `local-infra/` (REMOVED ❌)
+- **Old Location**: `.runners-local/` (REMOVED ❌)
 - **New Location**: `.runners-local/` (ACTIVE ✅)
 - **Reason**: Security hardening for runner credentials + clearer organization
 - **Files Affected**: 66 files moved/renamed with path updates
@@ -16,9 +16,9 @@ All notable changes to the Ghostty Configuration Files project are documented in
 #### **✅ Path Mapping**
 | Old Path | New Path | Purpose |
 |----------|----------|---------|
-| `local-infra/runners/` | `.runners-local/workflows/` | Workflow execution scripts (15 scripts) |
-| `local-infra/tests/` | `.runners-local/tests/` | Testing infrastructure (contract, unit, integration, validation) |
-| `local-infra/logs/` | `.runners-local/logs/workflows/` | CI/CD workflow logs (gitignored) |
+| `.runners-local/.runners-local/workflows/` | `.runners-local/workflows/` | Workflow execution scripts (15 scripts) |
+| `.runners-local/tests/` | `.runners-local/tests/` | Testing infrastructure (contract, unit, integration, validation) |
+| `.runners-local/logs/` | `.runners-local/logs/workflows/` | CI/CD workflow logs (gitignored) |
 | N/A | `.runners-local/self-hosted/` | Runner management + credentials (NEW) |
 | N/A | `.runners-local/self-hosted/config/` | Machine-specific runner credentials (gitignored) |
 
@@ -31,15 +31,15 @@ All notable changes to the Ghostty Configuration Files project are documented in
 #### **✅ Structural Improvements**
 - **Dotfile Convention**: `.runners-local/` follows dotfile standards for local infrastructure
 - **Clear Separation**: Workflows, self-hosted runners, tests, and logs now clearly organized
-- **Intelligent Categorization**: Logs subdivided into workflows/, builds/, tests/, runners/
+- **Intelligent Categorization**: Logs subdivided into workflows/, builds/, tests/, .runners-local/workflows/
 - **Complete Test Suite**: All test infrastructure (contract, unit, integration, validation) consolidated
 
 #### **✅ Migration Required**
 ```bash
 # If you have custom scripts referencing old paths
-find . -name "*.sh" -exec sed -i 's|local-infra/runners|.runners-local/workflows|g' {} +
-find . -name "*.sh" -exec sed -i 's|local-infra/tests|.runners-local/tests|g' {} +
-find . -name "*.sh" -exec sed -i 's|local-infra/logs|.runners-local/logs/workflows|g' {} +
+find . -name "*.sh" -exec sed -i 's|.runners-local/runners|.runners-local/workflows|g' {} +
+find . -name "*.sh" -exec sed -i 's|.runners-local/tests|.runners-local/tests|g' {} +
+find . -name "*.sh" -exec sed -i 's|.runners-local/logs|.runners-local/logs/workflows|g' {} +
 
 # Verify no old references remain
 grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
@@ -48,7 +48,7 @@ grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
 #### **✅ Updated Command Examples**
 ```bash
 # OLD (deprecated)
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 
 # NEW (current)
 ./.runners-local/workflows/gh-workflow-local.sh all
@@ -68,7 +68,7 @@ grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
 - **User Documentation**: 192 references across 30 files (update in progress)
 
 #### **⚠️ Action Required**
-- **Custom Scripts**: Update any personal scripts referencing `local-infra/`
+- **Custom Scripts**: Update any personal scripts referencing `.runners-local/`
 - **Bookmarks/Aliases**: Update shell aliases and IDE bookmarks
 - **Documentation References**: Some historical docs may still reference old paths (being updated)
 
@@ -505,7 +505,7 @@ grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
 - **Constitution Update**: `.specify/memory/constitution.md` - Version 1.1.0 → 1.2.0 with Root Cause Analysis Mandate
 - **Component Excellence**: 6 Astro components with complete TypeScript compliance (AccessibilityFeatures, AdvancedSearch, DataVisualization, ErrorBoundary, InteractiveTutorial, InternationalizationSupport)
 - **Documentation**: `CHANGELOG.md` and `README.md` updated with constitutional compliance achievements
-- **Infrastructure**: `local-infra/runners/astro-pages-setup.sh` - Constitutional Astro deployment script
+- **Infrastructure**: `.runners-local/.runners-local/workflows/astro-pages-setup.sh` - Constitutional Astro deployment script
 - **Jekyll Contamination Removal**: `docs/_config.yml` deleted - unauthorized component eliminated
 
 #### **🏛️ Constitutional Compliance Verification**
@@ -783,7 +783,7 @@ grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
 ### 📋 **Current Implementation Status**
 - ✅ **Specification Complete**: All spec-kit files generated and validated
 - ✅ **Astro Project Created**: `/home/kkk/Apps/ghostty-config-files/astro.config.mjs` and `package.json` exist
-- ✅ **Local CI/CD Infrastructure**: Complete local-infra/runners/ directory with all required scripts
+- ✅ **Local CI/CD Infrastructure**: Complete .runners-local/.runners-local/workflows/ directory with all required scripts
 - ❌ **GitHub Pages Deployment**: NOT activated - website not hosted yet
 - ❌ **Local Workflow Integration**: GitHub CLI setup needed for zero-cost deployment
 
@@ -800,9 +800,9 @@ grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
 4. **Zero-Cost Validation**: Ensure all deployments use local runners, no GitHub Actions consumption
 
 ### 🏗️ **Available Infrastructure (Ready for Activation)**
-- **`local-infra/runners/astro-build-local.sh`**: Local Astro build runner
-- **`local-infra/runners/gh-pages-setup.sh`**: GitHub Pages configuration script
-- **`local-infra/runners/gh-cli-integration.sh`**: GitHub CLI integration utilities
+- **`.runners-local/.runners-local/workflows/astro-build-local.sh`**: Local Astro build runner
+- **`.runners-local/.runners-local/workflows/gh-pages-setup.sh`**: GitHub Pages configuration script
+- **`.runners-local/.runners-local/workflows/gh-cli-integration.sh`**: GitHub CLI integration utilities
 - **`astro.config.mjs`**: Astro configuration with GitHub Pages support
 - **Complete uv + Python environment**: Ready for local CI/CD execution
 
@@ -853,7 +853,7 @@ grep -r "local-infra" . --exclude-dir=.git --exclude-dir=node_modules
 Feature 002 spec-kit framework complete with emergency production setup available:
 ```bash
 cd /home/kkk/Apps/ghostty-config-files
-./local-infra/runners/emergency-production.sh --execute
+./.runners-local/.runners-local/workflows/emergency-production.sh --execute
 ```
 
 ---
@@ -868,7 +868,7 @@ cd /home/kkk/Apps/ghostty-config-files
 
 ### Added
 - **T001** ✅ Constitutional project structure following plan.md specifications
-  - Created: `src/`, `components/`, `scripts/`, `local-infra/`, `tests/`, `public/` directories
+  - Created: `src/`, `components/`, `scripts/`, `.runners-local/`, `tests/`, `public/` directories
   - Established: Modern web application structure with Python automation support
 
 - **T002** ✅ uv Python environment initialization
@@ -942,22 +942,22 @@ cd /home/kkk/Apps/ghostty-config-files
 
 ### Added
 - **T009** ✅ Contract test for `/local-cicd/astro-build` endpoint
-  - File: `local-infra/tests/contract/test_astro_build.py`
+  - File: `.runners-local/tests/contract/test_astro_build.py`
   - Coverage: Production/development environments, performance metrics validation
   - Status: **FAILING** ✅ (TDD requirement satisfied)
 
 - **T010** ✅ Contract test for `/local-cicd/gh-workflow` endpoint
-  - File: `local-infra/tests/contract/test_gh_workflow.py`
+  - File: `.runners-local/tests/contract/test_gh_workflow.py`
   - Coverage: All workflow types, zero GitHub Actions consumption
   - Status: **FAILING** ✅ (TDD requirement satisfied)
 
 - **T011** ✅ Contract test for `/local-cicd/performance-monitor` endpoint
-  - File: `local-infra/tests/contract/test_performance_monitor.py`
+  - File: `.runners-local/tests/contract/test_performance_monitor.py`
   - Coverage: Lighthouse, Core Web Vitals, accessibility, security
   - Status: **FAILING** ✅ (TDD requirement satisfied)
 
 - **T012** ✅ Contract test for `/local-cicd/pre-commit` endpoint
-  - File: `local-infra/tests/contract/test_pre_commit.py`
+  - File: `.runners-local/tests/contract/test_pre_commit.py`
   - Coverage: File validation, constitutional compliance checks
   - Status: **FAILING** ✅ (TDD requirement satisfied)
 
@@ -1033,7 +1033,7 @@ cd /home/kkk/Apps/ghostty-config-files
   - Constitutional: Type safety maximized
 
 - **T022** ✅ Local CI/CD infrastructure directory structure
-  - Created: `local-infra/runners/`, `local-infra/logs/`, `local-infra/config/`
+  - Created: `.runners-local/.runners-local/workflows/`, `.runners-local/logs/`, `.runners-local/config/`
   - Subdirectories: `workflows/`, `test-suites/`
   - Organization: Complete CI/CD simulation framework
 
@@ -1058,7 +1058,7 @@ cd /home/kkk/Apps/ghostty-config-files
 
 ### Added
 - **T024** ✅ astro-build-local.sh runner script implementation
-  - File: `local-infra/runners/astro-build-local.sh`
+  - File: `.runners-local/.runners-local/workflows/astro-build-local.sh`
   - Features: Environment support (development/production), validation levels (basic/full)
   - Constitutional compliance: Zero GitHub Actions, performance monitoring
   - Bundle validation: JavaScript <100KB constitutional requirement enforced
@@ -1069,21 +1069,21 @@ cd /home/kkk/Apps/ghostty-config-files
   - Performance metrics: Lighthouse simulation, Core Web Vitals, bundle analysis
 
 - **T025** ✅ gh-workflow-local.sh runner script (pre-existing, enhanced)
-  - File: `local-infra/runners/gh-workflow-local.sh`
+  - File: `.runners-local/.runners-local/workflows/gh-workflow-local.sh`
   - Features: Complete GitHub Actions simulation with zero consumption
   - GitHub CLI integration: Repository status, billing monitoring, workflow validation
   - Constitutional compliance: Enforces local-only execution
   - API contract: Matches `/local-cicd/gh-workflow` endpoint specification
 
 - **T026** ✅ performance-monitor.sh runner script (enhanced)
-  - File: `local-infra/runners/performance-monitor.sh`
+  - File: `.runners-local/.runners-local/workflows/performance-monitor.sh`
   - Features: Ghostty performance monitoring, system metrics capture
   - Constitutional compliance: Performance baseline establishment
   - GitHub CLI integration: Repository metrics correlation capability
   - Ready for MCP integration: Structured for latest Lighthouse documentation
 
 - **T027** ✅ pre-commit-local.sh validation script (NEW IMPLEMENTATION)
-  - File: `local-infra/runners/pre-commit-local.sh`
+  - File: `.runners-local/.runners-local/workflows/pre-commit-local.sh`
   - Features: Comprehensive pre-commit validation with GitHub CLI integration
   - File validation: Python, TypeScript, Astro, JSON, YAML, Markdown syntax checking
   - Commit message validation: Conventional commit format detection
@@ -1094,15 +1094,15 @@ cd /home/kkk/Apps/ghostty-config-files
   - API contract compliance: JSON output matching OpenAPI specification
   - Comprehensive logging: Human-readable logs and structured JSON reports
 
-- **T028** ✅ Logging system in local-infra/logs/ (enhanced)
-  - Directory: `local-infra/logs/`
+- **T028** ✅ Logging system in .runners-local/logs/ (enhanced)
+  - Directory: `.runners-local/logs/`
   - Features: Structured logging with JSON reports and system state capture
   - Log files: Performance metrics, workflow execution, GitHub API responses
   - Retention: Automatic log management with timestamped files
   - Integration: All runner scripts generate comprehensive logs
 
-- **T029** ✅ Config management in local-infra/config/ (enhanced)
-  - Directory: `local-infra/config/`
+- **T029** ✅ Config management in .runners-local/config/ (enhanced)
+  - Directory: `.runners-local/config/`
   - Features: CI/CD configuration management and templates
   - Structure: Workflows/, test-suites/ subdirectories
   - Templates: GitHub Actions documentation, repository settings
@@ -1250,17 +1250,17 @@ cd /home/kkk/Apps/ghostty-config-files
 
 ### Added
 - **T043** ✅ GitHub CLI integration for zero-consumption workflows
-  - File: `local-infra/runners/gh-cli-integration.sh` with comprehensive GitHub operations
+  - File: `.runners-local/.runners-local/workflows/gh-cli-integration.sh` with comprehensive GitHub operations
   - Features: Zero GitHub Actions validation, branch preservation, performance monitoring
   - Constitutional compliance: Complete workflow management without minute consumption
 
 - **T044** ✅ Local test runner with constitutional validation
-  - File: `local-infra/runners/test-runner-local.sh` with comprehensive test execution
+  - File: `.runners-local/.runners-local/workflows/test-runner-local.sh` with comprehensive test execution
   - Features: Constitutional compliance testing, performance validation, configuration validation
   - Integration: Ghostty config validation, Python/Node.js/Astro testing, security checks
 
 - **T045** ✅ Performance benchmarking system
-  - File: `local-infra/runners/benchmark-runner.sh` with constitutional target validation
+  - File: `.runners-local/.runners-local/workflows/benchmark-runner.sh` with constitutional target validation
   - Features: Lighthouse auditing, Core Web Vitals measurement, build performance testing
   - Validation: Bundle size monitoring, memory usage tracking, baseline comparison
 
@@ -1399,7 +1399,7 @@ cd /home/kkk/Apps/ghostty-config-files
 ### ✅ III. Local CI/CD First (NON-NEGOTIABLE)
 - **Status**: FRAMEWORK COMPLETE, IMPLEMENTATION IN PROGRESS
 - **Implementation**: Complete test coverage, local runner infrastructure
-- **Evidence**: 4 contract tests, local-infra/ structure, zero GitHub Actions
+- **Evidence**: 4 contract tests, .runners-local/ structure, zero GitHub Actions
 
 ### ✅ IV. Component-Driven UI Architecture
 - **Status**: CONFIGURATION COMPLETE

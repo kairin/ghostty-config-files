@@ -100,8 +100,8 @@ You **DO NOT** handle:
 echo "Analyzing directory structure redundancy..."
 
 # Example patterns to detect:
-# - local-infra/ vs .runners-local/ (duplicate CI/CD infrastructure)
-# - docs-source/ vs website/ (duplicate documentation sources)
+# - .runners-local/ vs .runners-local/ (duplicate CI/CD infrastructure)
+# - website/src/ vs website/ (duplicate documentation sources)
 # - scripts/migration_*.sh (completed migration scripts)
 # - Root directory clutter (*.md.backup-*, verification reports)
 
@@ -223,21 +223,21 @@ echo "  PHASE 1: DIRECTORY CONSOLIDATION"
 echo "═══════════════════════════════════════════════════════════════════════"
 
 # Example: Consolidate duplicate directories
-if [ -d "local-infra/logs" ] && [ -d ".runners-local/logs" ]; then
-  echo "Consolidating logs: local-infra/logs → .runners-local/logs/"
+if [ -d ".runners-local/logs" ] && [ -d ".runners-local/logs" ]; then
+  echo "Consolidating logs: .runners-local/logs → .runners-local/logs/"
   mkdir -p ".runners-local/logs/archive-from-local-infra"
-  mv local-infra/logs/* ".runners-local/logs/archive-from-local-infra/" 2>/dev/null || true
-  rmdir local-infra/logs
+  mv .runners-local/logs/* ".runners-local/logs/archive-from-.runners-local/" 2>/dev/null || true
+  rmdir .runners-local/logs
   echo "✅ Logs consolidated"
 fi
 
 # Example: Remove duplicate CI/CD infrastructure
 if [ -d "local-infra" ] && [ -d ".runners-local" ]; then
-  echo "Archiving obsolete local-infra/ (superseded by .runners-local/)"
+  echo "Archiving obsolete .runners-local/ (superseded by .runners-local/)"
   mkdir -p ".runners-local/archive/local-infra-legacy"
-  mv local-infra/* ".runners-local/archive/local-infra-legacy/" 2>/dev/null || true
+  mv .runners-local/* ".runners-local/archive/local-infra-legacy/" 2>/dev/null || true
   rmdir local-infra
-  echo "✅ local-infra/ archived and removed"
+  echo "✅ .runners-local/ archived and removed"
 fi
 
 echo ""
@@ -245,13 +245,13 @@ echo "════════════════════════�
 echo "  PHASE 2: DOCUMENTATION ARCHIVING"
 echo "═══════════════════════════════════════════════════════════════════════"
 
-# Example: Archive obsolete docs-source/ (superseded by website/)
+# Example: Archive obsolete website/src/ (superseded by website/)
 if [ -d "docs-source" ]; then
-  echo "Archiving obsolete docs-source/ (superseded by website/)"
+  echo "Archiving obsolete website/src/ (superseded by website/)"
   mkdir -p "documentations/archive/docs-source-legacy"
-  mv docs-source/* "documentations/archive/docs-source-legacy/" 2>/dev/null || true
+  mv website/src/* "documentations/archive/docs-source-legacy/" 2>/dev/null || true
   rmdir docs-source
-  echo "✅ docs-source/ archived to documentations/archive/"
+  echo "✅ website/src/ archived to documentations/archive/"
 fi
 
 echo ""
@@ -363,8 +363,8 @@ echo "  Repository Size: $SIZE_BEFORE → (calculating post-commit)"
 📋 CLEANUP BREAKDOWN:
 
   **Directory Consolidation:**
-    - local-infra/ → .runners-local/ (archived)
-    - docs-source/ → documentations/archive/ (archived)
+    - .runners-local/ → .runners-local/ (archived)
+    - website/src/ → documentations/archive/ (archived)
     - [other consolidations]
 
   **Scripts Removed:**

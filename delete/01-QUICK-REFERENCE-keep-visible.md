@@ -8,7 +8,7 @@
 
 | Find This | Replace With | Why |
 |-----------|--------------|-----|
-| `local-infra/` | `.runners-local/` | Directory was renamed |
+| `.runners-local/` | `.runners-local/` | Directory was renamed |
 | `shadcn/ui` | `DaisyUI` | Using DaisyUI not shadcn |
 | `Node.js 18+` | `Node.js latest (v25.2.0+)` | Using latest not LTS |
 | Missing `.nojekyll` | Add to `docs/.nojekyll` | CRITICAL for GitHub Pages |
@@ -20,7 +20,7 @@
 ```bash
 # 1. Verify critical files exist
 ls docs/.nojekyll              # ✅ Must exist
-ls .runners-local/             # ✅ Must exist (not local-infra/)
+ls .runners-local/             # ✅ Must exist (not .runners-local/)
 grep "daisyui" website/package.json  # ✅ Must be present
 
 # 2. Check git status
@@ -40,7 +40,7 @@ git status                     # Should be clean or known changes
 # For generated file (e.g., constitution.md, spec.md, plan.md, tasks.md)
 FILE="[path-to-generated-file]"
 
-sed -i 's|local-infra/|.runners-local/|g' "$FILE"
+sed -i 's|.runners-local/|.runners-local/|g' "$FILE"
 sed -i 's|shadcn/ui|DaisyUI|g' "$FILE"
 sed -i 's|Node\.js 18|Node.js latest (v25.2.0+)|g' "$FILE"
 ```
@@ -57,7 +57,7 @@ ls .runners-local/ || echo "❌ .runners-local/ missing!"
 ```
 
 ### Step 3: Review Generated Content
-- [ ] Check for `local-infra/` references → Should be `.runners-local/`
+- [ ] Check for `.runners-local/` references → Should be `.runners-local/`
 - [ ] Check for `shadcn/ui` references → Should be `DaisyUI`
 - [ ] Check for `Node.js 18+` references → Should be `latest (v25.2.0+)`
 - [ ] Verify `.nojekyll` is mentioned/preserved
@@ -96,7 +96,7 @@ git push origin main
 I need to establish the project constitution for ghostty-config-files.
 
 CRITICAL CORRECTIONS (current repository reality):
-- Use .runners-local/ NOT local-infra/
+- Use .runners-local/ NOT .runners-local/
 - Use DaisyUI NOT shadcn/ui
 - Use Node.js latest (v25.2.0+) NOT Node.js 18+
 - docs/.nojekyll is CRITICAL and must be preserved
@@ -128,7 +128,7 @@ Create specification for [feature description].
 
 Reference constitution.md for non-negotiable principles.
 
-CRITICAL: Use .runners-local/ (not local-infra/), DaisyUI (not shadcn/ui),
+CRITICAL: Use .runners-local/ (not .runners-local/), DaisyUI (not shadcn/ui),
 Node.js latest v25.2.0+ (not 18+), and preserve docs/.nojekyll.
 ```
 
@@ -191,7 +191,7 @@ ls docs/.nojekyll                 # Verify critical file
 
 ## 🚨 Red Flags (STOP Immediately)
 
-- ❌ `local-infra/` appears in generated output
+- ❌ `.runners-local/` appears in generated output
 - ❌ `shadcn/ui` mentioned instead of DaisyUI
 - ❌ `Node.js 18` or LTS versions mentioned
 - ❌ `docs/.nojekyll` missing or deleted
@@ -223,8 +223,8 @@ git push
 
 ### If Wrong Directory Name Used
 ```bash
-# If local-infra/ accidentally created
-rm -rf local-infra/
+# If .runners-local/ accidentally created
+rm -rf .runners-local/
 # Verify .runners-local/ still exists
 ls .runners-local/
 ```

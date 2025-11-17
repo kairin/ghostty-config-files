@@ -80,7 +80,7 @@ This document provides a complete directory structure reference for the Ghostty 
     └── logs/                 # Local CI/CD logs (GITIGNORED)
         ├── builds/           # Build logs
         ├── tests/            # Test logs
-        └── runners/          # Runner service logs
+        └── .runners-local/workflows/          # Runner service logs
 ```
 
 ---
@@ -262,7 +262,7 @@ Local CI/CD execution logs (GITIGNORED):
 
 - **`builds/`**: Build logs and artifacts
 - **`tests/`**: Test execution results
-- **`runners/`**: Runner service logs and workflow execution
+- **`.runners-local/workflows/`**: Runner service logs and workflow execution
 
 ---
 
@@ -288,7 +288,7 @@ Scripts organized by development phase:
 
 ### 4. **Three-Tier Documentation**
 1. **Tier 1**: Astro build output (`docs/`) → GitHub Pages deployment
-2. **Tier 2**: Editable source (`docs-source/`) → Human-editable markdown
+2. **Tier 2**: Editable source (`website/src/`) → Human-editable markdown
 3. **Tier 3**: Centralized hub (`documentations/`) → Comprehensive repository
 
 ### 5. **Zero-Cost CI/CD**

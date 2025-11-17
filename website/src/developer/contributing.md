@@ -29,7 +29,7 @@ git checkout -b "$DATETIME-feat-your-feature"
 
 # 5. Test locally
 ./manage.sh validate
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 
 # 6. Commit with attribution
 git add .
@@ -77,7 +77,7 @@ gh pr create
 
 ```bash
 # Run all tests
-./local-infra/runners/test-runner.sh
+./.runners-local/.runners-local/workflows/test-runner.sh
 
 # Run ShellCheck
 shellcheck scripts/*.sh

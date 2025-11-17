@@ -24,25 +24,25 @@ This guide explains the testing strategy for the Ghostty Configuration Files rep
 ### All Tests
 
 ```bash
-./local-infra/runners/test-runner.sh
+./.runners-local/.runners-local/workflows/test-runner.sh
 ```
 
 ### Unit Tests
 
 ```bash
 # Run all unit tests
-./local-infra/tests/unit/test_common_utils.sh
+./.runners-local/tests/unit/test_common_utils.sh
 
 # Run specific module tests
-./local-infra/tests/unit/test_install_modules.sh
-./local-infra/tests/unit/test_config_modules.sh
+./.runners-local/tests/unit/test_install_modules.sh
+./.runners-local/tests/unit/test_config_modules.sh
 ```
 
 ### ShellCheck
 
 ```bash
 # Validate all scripts
-./local-infra/tests/validation/run_shellcheck.sh
+./.runners-local/tests/validation/run_shellcheck.sh
 
 # Validate specific script
 shellcheck scripts/common.sh
@@ -162,7 +162,7 @@ time ./manage.sh install --dry-run
 
 ```bash
 # Complete validation workflow
-./local-infra/runners/gh-workflow-local.sh all
+./.runners-local/.runners-local/workflows/gh-workflow-local.sh all
 ```
 
 ### Pre-Commit Checks
@@ -196,7 +196,7 @@ When adding new modules:
 
 ```bash
 # Enable debug output
-DEBUG=1 ./local-infra/tests/unit/test_common_utils.sh
+DEBUG=1 ./.runners-local/tests/unit/test_common_utils.sh
 ```
 
 ### Specific Test

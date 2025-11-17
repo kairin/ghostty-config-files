@@ -726,7 +726,7 @@ Total: 12 scripts, 5,192 lines
 ### B.2 Documentation Files
 
 ```
-documentations/development/
+documentations/developer/
 ├── constitutional-compliance-audit-20251117.md (THIS FILE)
 └── conversation_logs/ (previous AI conversations)
 

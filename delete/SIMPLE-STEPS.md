@@ -10,7 +10,7 @@
 
 ### STEP 0: Understand the Problem
 Your previous spec-kit attempts kept reverting because the spec-kit guides had outdated information:
-- ❌ They reference `local-infra/` (doesn't exist in your project)
+- ❌ They reference `.runners-local/` (doesn't exist in your project)
 - ❌ They recommend `shadcn/ui` (you use DaisyUI)
 - ❌ They require `Node.js 18+` (you use latest v25.2.0+)
 
@@ -50,7 +50,7 @@ cat delete/03-MASTER-GUIDE-comprehensive.md
 2. **BUT** tell it these corrections:
    ```
    CRITICAL CORRECTIONS (use current reality):
-   - Use .runners-local/ NOT local-infra/
+   - Use .runners-local/ NOT .runners-local/
    - Use DaisyUI NOT shadcn/ui
    - Use Node.js latest (v25.2.0+) NOT Node.js 18+
    - Preserve docs/.nojekyll (CRITICAL for GitHub Pages)
@@ -62,7 +62,7 @@ cat delete/03-MASTER-GUIDE-comprehensive.md
    FILE=".specify/memory/constitution.md"
 
    # Fix the 3 common mistakes
-   sed -i 's|local-infra/|.runners-local/|g' "$FILE"
+   sed -i 's|.runners-local/|.runners-local/|g' "$FILE"
    sed -i 's|shadcn/ui|DaisyUI|g' "$FILE"
    sed -i 's|Node\.js 18|Node.js latest (v25.2.0+)|g' "$FILE"
    ```
@@ -99,7 +99,7 @@ cat delete/03-MASTER-GUIDE-comprehensive.md
    ```bash
    FILE="specs/[feature-name]/spec.md"  # Adjust path
 
-   sed -i 's|local-infra/|.runners-local/|g' "$FILE"
+   sed -i 's|.runners-local/|.runners-local/|g' "$FILE"
    sed -i 's|shadcn/ui|DaisyUI|g' "$FILE"
    sed -i 's|Node\.js 18|Node.js latest (v25.2.0+)|g' "$FILE"
    ```
@@ -117,7 +117,7 @@ cat delete/03-MASTER-GUIDE-comprehensive.md
    ```bash
    FILE="specs/[feature-name]/plan.md"
 
-   sed -i 's|local-infra/|.runners-local/|g' "$FILE"
+   sed -i 's|.runners-local/|.runners-local/|g' "$FILE"
    sed -i 's|shadcn/ui|DaisyUI|g' "$FILE"
    sed -i 's|Node\.js 18|Node.js latest (v25.2.0+)|g' "$FILE"
    ```
@@ -135,7 +135,7 @@ cat delete/03-MASTER-GUIDE-comprehensive.md
    ```bash
    FILE="specs/[feature-name]/tasks.md"
 
-   sed -i 's|local-infra/|.runners-local/|g' "$FILE"
+   sed -i 's|.runners-local/|.runners-local/|g' "$FILE"
    sed -i 's|shadcn/ui|DaisyUI|g' "$FILE"
    sed -i 's|Node\.js 18|Node.js latest (v25.2.0+)|g' "$FILE"
    ```
@@ -188,7 +188,7 @@ git commit -m "chore: Remove spec-kit reference materials after successful imple
 **After EVERY spec-kit command, immediately run these 3 lines:**
 
 ```bash
-sed -i 's|local-infra/|.runners-local/|g' [generated-file]
+sed -i 's|.runners-local/|.runners-local/|g' [generated-file]
 sed -i 's|shadcn/ui|DaisyUI|g' [generated-file]
 sed -i 's|Node\.js 18|Node.js latest (v25.2.0+)|g' [generated-file]
 ```

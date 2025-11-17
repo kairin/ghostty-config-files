@@ -527,7 +527,7 @@ install_ai_tools() {
 
 ## Unit Testing
 
-Create `local-infra/tests/unit/test_install_ai_tools.sh`:
+Create `.runners-local/tests/unit/test_install_ai_tools.sh`:
 
 ```bash
 #!/bin/bash
@@ -837,11 +837,11 @@ git checkout -b "$BRANCH_NAME"
 
 # Implement module
 # 1. Create scripts/install_ai_tools.sh
-# 2. Create local-infra/tests/unit/test_install_ai_tools.sh
+# 2. Create .runners-local/tests/unit/test_install_ai_tools.sh
 # 3. Update manage.sh with ai-tools subcommand
 
 # Test locally
-./local-infra/tests/unit/test_install_ai_tools.sh
+./.runners-local/tests/unit/test_install_ai_tools.sh
 ./manage.sh install ai-tools
 
 # Validate AI tools
@@ -851,7 +851,7 @@ gh copilot --version
 
 # Commit with constitutional format
 git add scripts/install_ai_tools.sh \
-        local-infra/tests/unit/test_install_ai_tools.sh \
+        .runners-local/tests/unit/test_install_ai_tools.sh \
         manage.sh
 
 git commit -m "feat(ai-tools): Implement AI tools installation module

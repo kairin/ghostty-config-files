@@ -30,7 +30,7 @@ Consolidated local infrastructure for continuous integration, deployment testing
   - `workflows/` - Workflow execution logs
   - `builds/` - Build logs
   - `tests/` - Test execution logs
-  - `runners/` - Runner service logs
+  - `.runners-local/workflows/` - Runner service logs
 - **docs/** - Runner documentation (committed)
 
 ## Quick Start
@@ -244,11 +244,11 @@ Consolidated local infrastructure for continuous integration, deployment testing
 
 ### 3. documentation-sync-checker.sh
 
-**Purpose**: Validates consistency across the three-tier documentation system (docs/, docs-source/, documentations/) with comprehensive synchronization checks.
+**Purpose**: Validates consistency across the three-tier documentation system (docs/, website/src/, documentations/) with comprehensive synchronization checks.
 
 **Key Features**:
 - Tier 1 (docs/) build output validation (.nojekyll, index.html, _astro/)
-- Tier 2 (docs-source/) source structure verification
+- Tier 2 (website/src/) source structure verification
 - Tier 3 (documentations/) hub structure validation
 - Astro outDir configuration verification
 - AGENTS.md symlinks validation (CLAUDE.md, GEMINI.md)
@@ -283,7 +283,7 @@ Consolidated local infrastructure for continuous integration, deployment testing
 **Critical Files Validated**:
 - `docs/.nojekyll` (CRITICAL for GitHub Pages)
 - `docs/index.html` (Astro build output)
-- `docs-source/astro.config.mjs` (Astro configuration)
+- `website/src/astro.config.mjs` (Astro configuration)
 - `CLAUDE.md` → `AGENTS.md` (symlink)
 - `GEMINI.md` → `AGENTS.md` (symlink)
 

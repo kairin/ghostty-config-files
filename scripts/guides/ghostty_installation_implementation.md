@@ -1309,7 +1309,7 @@ install_ghostty() {
 
 ## Unit Testing
 
-Create `local-infra/tests/unit/test_install_ghostty.sh`:
+Create `.runners-local/tests/unit/test_install_ghostty.sh`:
 
 ```bash
 #!/bin/bash
@@ -1577,11 +1577,11 @@ git checkout -b "$BRANCH_NAME"
 
 # Implement module
 # 1. Create scripts/install_ghostty.sh
-# 2. Create local-infra/tests/unit/test_install_ghostty.sh
+# 2. Create .runners-local/tests/unit/test_install_ghostty.sh
 # 3. Update manage.sh with ghostty subcommand
 
 # Test locally
-./local-infra/tests/unit/test_install_ghostty.sh
+./.runners-local/tests/unit/test_install_ghostty.sh
 ./manage.sh install ghostty
 
 # Validate Ghostty installation
@@ -1590,7 +1590,7 @@ ghostty +show-config
 
 # Commit with constitutional format
 git add scripts/install_ghostty.sh \
-        local-infra/tests/unit/test_install_ghostty.sh \
+        .runners-local/tests/unit/test_install_ghostty.sh \
         manage.sh
 
 git commit -m "feat(ghostty): Implement Ghostty build module with Zig 0.14.0
