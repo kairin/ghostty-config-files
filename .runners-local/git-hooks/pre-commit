@@ -1,0 +1,74 @@
+#!/bin/bash
+# Constitutional Compliance Pre-Commit Hook
+# Validates AGENTS.md size, symlinks, .nojekyll, and configuration
+
+set -e
+
+echo "Running constitutional compliance checks..."
+
+# 1. AGENTS.md size validation (BLOCKING)
+if [ -f "AGENTS.md" ]; then
+    AGENTS_SIZE=$(stat -c%s "AGENTS.md" 2>/dev/null || stat -f%z "AGENTS.md")
+    AGENTS_KB=$((AGENTS_SIZE / 1024))
+
+    echo "  AGENTS.md size: ${AGENTS_KB}KB (limit: 40KB)"
+
+    if [ $AGENTS_KB -gt 40 ]; then
+        echo "🚨 BLOCKING: AGENTS.md exceeds 40KB (${AGENTS_KB}KB)"
+        echo "Run modularization workflow before committing"
+        exit 1
+    elif [ $AGENTS_KB -gt 35 ]; then
+        echo "⚠️ WARNING: AGENTS.md approaching size limit (${AGENTS_KB}KB)"
+        echo "Consider proactive modularization"
+    fi
+fi
+
+# 2. Symlink validation (BLOCKING)
+SYMLINK_ERROR=0
+
+if [ ! -L "CLAUDE.md" ]; then
+    echo "🚨 BLOCKING: CLAUDE.md is not a symlink"
+    SYMLINK_ERROR=1
+fi
+
+if [ ! -L "GEMINI.md" ]; then
+    echo "🚨 BLOCKING: GEMINI.md is not a symlink"
+    SYMLINK_ERROR=1
+fi
+
+if [ $SYMLINK_ERROR -eq 1 ]; then
+    echo "Repairing symlinks..."
+    rm -f CLAUDE.md GEMINI.md
+    ln -s AGENTS.md CLAUDE.md
+    ln -s AGENTS.md GEMINI.md
+    git add CLAUDE.md GEMINI.md
+    echo "✓ Symlinks repaired and staged"
+fi
+
+# 3. .nojekyll validation (BLOCKING for docs changes)
+if git diff --cached --name-only | grep -q "^docs/"; then
+    if [ ! -f "docs/.nojekyll" ]; then
+        echo "🚨 CRITICAL: docs/.nojekyll missing (REQUIRED for GitHub Pages)"
+        echo "Creating file..."
+        touch "docs/.nojekyll"
+        git add "docs/.nojekyll"
+        echo "✓ Created docs/.nojekyll and staged"
+    fi
+fi
+
+# 4. Configuration validation (BLOCKING if config changed)
+if git diff --cached --name-only | grep -q "config"; then
+    if command -v ghostty &> /dev/null; then
+        if ! ghostty +show-config > /dev/null 2>&1; then
+            echo "🚨 BLOCKING: Ghostty configuration invalid"
+            echo "Run 'ghostty +show-config' to see errors"
+            exit 1
+        fi
+        echo "✓ Ghostty configuration valid"
+    else
+        echo "⚠️ WARNING: ghostty command not found, skipping config validation"
+    fi
+fi
+
+echo "✅ All constitutional compliance checks passed"
+exit 0

@@ -1,0 +1,49 @@
+#!/bin/bash
+# Constitutional Compliance Commit Message Hook
+# Validates co-authorship and message format
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+echo "Validating commit message..."
+
+# Check for mandatory co-authorship (for AI-assisted commits)
+if ! grep -q "Co-Authored-By:" "$COMMIT_MSG_FILE"; then
+    echo "⚠️ WARNING: Missing co-authorship attribution"
+    echo ""
+    echo "For AI-assisted commits, add:"
+    echo "Co-Authored-By: Claude <noreply@anthropic.com>"
+    echo ""
+    echo "For human commits, this warning can be ignored"
+fi
+
+# Check for Claude Code attribution (informational)
+if ! grep -q "Generated with \[Claude Code\]" "$COMMIT_MSG_FILE"; then
+    if grep -q "Co-Authored-By: Claude" "$COMMIT_MSG_FILE"; then
+        echo "ℹ️ INFO: Consider adding Claude Code attribution:"
+        echo "🤖 Generated with [Claude Code](https://claude.ai/code)"
+    fi
+fi
+
+# Check subject line length (recommendation, not blocking)
+SUBJECT=$(head -n1 "$COMMIT_MSG_FILE")
+SUBJECT_LENGTH=${#SUBJECT}
+
+if [ $SUBJECT_LENGTH -gt 72 ]; then
+    echo "⚠️ WARNING: Subject line exceeds 72 characters ($SUBJECT_LENGTH)"
+    echo "Consider shortening for better Git log readability"
+fi
+
+# Check for prohibited patterns (BLOCKING)
+PROHIBITED_PATTERNS=("^wip$" "^temp$" "^test$" "^update$" "^fix$")
+
+for PATTERN in "${PROHIBITED_PATTERNS[@]}"; do
+    if echo "$SUBJECT" | grep -qi "$PATTERN"; then
+        echo "🚨 BLOCKING: Commit message too vague: '$SUBJECT'"
+        echo "Provide descriptive commit message explaining WHAT and WHY"
+        exit 1
+    fi
+done
+
+echo "✓ Commit message validation passed"
+exit 0
