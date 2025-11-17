@@ -1,327 +1,370 @@
-# Ghostty Configuration Files - Project Constitution
+# Ghostty Configuration Files Constitution
 
 <!--
-Constitutional Principles: Modular Structure (2025-11-16)
-  Version: 2.0.0 (Major refactor - modular architecture)
-  Authority: AGENTS.md (project root, single source of truth)
+SYNC IMPACT REPORT:
+Version Change: Template → 1.0.0
+Constitution Type: Initial ratification (TUI redesign + existing principles consolidation)
+Date: 2025-11-18
 
-  Modular Structure:
-    ✅ Core principles extracted to dedicated documents
-    ✅ Each principle with detailed implementation guide
-    ✅ Constitution serves as navigation hub
-    ✅ Eliminates duplication, improves maintainability
+Modified Principles:
+- NEW: All 10 core principles established (TUI Framework through Performance Standards)
+- NEW: Technology Stack Mandates section
+- NEW: Development Workflow section
+- CONSOLIDATED: Existing AGENTS.md non-negotiable requirements integrated
 
-  Module Index:
-    - core-principles.md: Summary of all 6 principles
-    - git-strategy.md: Branch preservation, naming, workflow
-    - github-pages-infrastructure.md: .nojekyll requirements, protection
-    - local-cicd.md: Local-first workflows, zero-cost strategy
-    - agent-file-integrity.md: AGENTS.md symlinks, single source of truth
-    - conversation-logging.md: LLM logging requirements
-    - zero-cost-operations.md: GitHub Actions cost monitoring
+Templates Status:
+- ⚠ .specify/templates/plan-template.md: Pending review for TUI principle alignment
+- ⚠ .specify/templates/spec-template.md: Pending review for verification requirements
+- ⚠ .specify/templates/tasks-template.md: Pending review for lib/ architecture categorization
 
-  Benefits:
-    ✅ Reduced constitution.md from 288 lines to ~150 lines (48% reduction)
-    ✅ Each principle fully documented in dedicated guide
-    ✅ Easier navigation and reference
-    ✅ Simpler updates (modify one module vs. entire constitution)
-    ✅ Better knowledge organization
+Follow-up TODOs:
+- Validate template alignment after constitution ratification
+- Update AGENTS.md to reference this constitution
+- Propagate TUI principles to all spec-kit templates
 -->
 
-## Overview
+## Core Principles
 
-This constitution defines the non-negotiable principles governing all development work in the Ghostty Configuration Files project. These principles ensure consistency, maintain quality, and prevent common pitfalls.
+### I. TUI Framework Standard (NON-NEGOTIABLE)
 
-**Authority**: This constitution derives from [AGENTS.md](../../AGENTS.md) (project root), the single source of truth for all project requirements.
+**gum (Charm Bracelet)** is the exclusive TUI framework for all installation and interactive scripts.
 
-## Core Principles (NON-NEGOTIABLE)
+**Requirements**:
+- All installation UI MUST use gum for spinners, progress bars, prompts, and styling
+- No alternative TUI frameworks (whiptail, dialog, rich-cli, etc.) permitted
+- gum MUST be installed via system package manager (apt/snap)
+- Fallback to plain text output if gum unavailable (graceful degradation)
 
-The project is governed by **6 fundamental principles**. Each principle is summarized below with a link to its complete implementation guide.
+**Rationale**: gum provides fast (<10ms startup), reliable, cross-platform TUI with zero dependencies. Standardization prevents broken UI across different terminals and SSH sessions.
 
-### Quick Reference
-1. **[Branch Preservation & Git Strategy](#i-branch-preservation--git-strategy)** - Never delete branches
-2. **[GitHub Pages Infrastructure](#ii-github-pages-infrastructure-protection)** - .nojekyll is CRITICAL
-3. **[Local CI/CD First](#iii-local-cicd-first)** - Validate locally before GitHub
-4. **[Agent File Integrity](#iv-agent-file-integrity)** - AGENTS.md symlinks mandatory
-5. **[LLM Conversation Logging](#v-llm-conversation-logging)** - Complete logs required
-6. **[Zero-Cost Operations](#vi-zero-cost-operations)** - No GitHub Actions consumption
+### II. Adaptive Box Drawing (NON-NEGOTIABLE)
 
----
+All box drawing MUST use adaptive UTF-8/ASCII detection with automatic fallback.
 
-### I. Branch Preservation & Git Strategy
+**Requirements**:
+- UTF-8 double-line boxes (╔═╗ ║ ╚═╝) for modern terminals (Ghostty, xterm, etc.)
+- ASCII boxes (+=-|) for SSH connections and legacy terminals
+- Automatic terminal capability detection via TERM environment variable
+- Manual override via `BOX_DRAWING=ascii` or `BOX_DRAWING=utf8` environment variable
+- NO hard-coded box characters without fallback logic
 
-**NEVER DELETE BRANCHES** without explicit user permission. All branches contain valuable configuration history.
+**Rationale**: Solves broken box character problem permanently across all terminal types while maintaining professional appearance where supported.
 
-**Branch Naming** (MANDATORY): `YYYYMMDD-HHMMSS-type-short-description`
+### III. Real Verification Tests (NON-NEGOTIABLE)
 
-**Examples**:
-- `20250919-143000-feat-context-menu-integration`
-- `20251116-073000-fix-performance-optimization`
+All installation verification MUST use real system state checks. Hard-coded success messages are PROHIBITED.
 
-**Git Workflow**:
+**Requirements**:
+- Every installation task MUST have corresponding `verify_<component>()` function
+- Verification functions MUST check actual system state (command existence, version numbers, file contents)
+- Verification MUST return proper exit codes (0=success, 1=failure)
+- NO echo "✓ Success" without actual verification
+- Multi-layer verification: unit tests (per-component), integration tests (cross-component), health checks (pre/post)
+
+**Rationale**: Prevents false positives where installation appears successful but components are missing or misconfigured. Enables idempotency and resume capability.
+
+### IV. Docker-Like Collapsible Output (NON-NEGOTIABLE)
+
+Installation output MUST use progressive summarization (Docker-like UX).
+
+**Requirements**:
+- Completed tasks collapse to single-line summaries: `✓ Task name (duration)`
+- Active task shows full output with animated spinner
+- Queued tasks show pending status with ⏸ indicator
+- Errors auto-expand with recovery suggestions
+- Verbose mode toggle (press 'v' or --verbose flag) for full output
+- Overall progress percentage and time estimates displayed
+
+**Rationale**: Reduces overwhelming output while maintaining full transparency. Professional UX familiar to developers from Docker CLI.
+
+### V. Modular lib/ Architecture (NON-NEGOTIABLE)
+
+All installation code MUST follow modular library structure, NOT monolithic scripts.
+
+**Required Directory Structure**:
+```
+lib/
+├── core/
+│   ├── logging.sh          # Structured logging (JSON + human-readable)
+│   ├── state.sh            # State management (resume capability)
+│   ├── errors.sh           # Error handling + recovery suggestions
+│   └── utils.sh            # Shared utilities
+├── ui/
+│   ├── tui.sh              # gum integration
+│   ├── boxes.sh            # Adaptive box drawing
+│   ├── collapsible.sh      # Progressive summarization
+│   └── progress.sh         # Progress bars + spinners
+├── tasks/
+│   ├── ghostty.sh          # Ghostty installation
+│   ├── zsh.sh              # ZSH configuration
+│   ├── python_uv.sh        # Python + uv setup
+│   ├── nodejs_fnm.sh       # Node.js + fnm setup
+│   └── ai_tools.sh         # Claude, Gemini, Copilot CLI
+└── verification/
+    ├── unit_tests.sh       # Per-component verification
+    ├── integration_tests.sh # Cross-component validation
+    └── health_checks.sh    # Pre/post installation checks
+```
+
+**Rationale**: Modularity enables independent testing, maintainability, and reusability. Each component has single responsibility and clear interface.
+
+### VI. Package Manager Exclusivity (NON-NEGOTIABLE)
+
+**Python**: `uv` exclusively (10-100x faster than pip)
+**Node.js**: `fnm` exclusively (<50ms startup, constitutional requirement)
+
+**Requirements**:
+- ALL Python package operations MUST use `uv pip install`, `uv run`, `uv venv`
+- NO usage of `pip`, `pip3`, `python -m pip`, `poetry`, `pipenv`
+- ALL Node.js version management MUST use `fnm install`, `fnm use`, `fnm default`
+- NO usage of `nvm`, `n`, `asdf`, manual Node.js installation
+- Package managers MUST be verified after installation with real version checks
+
+**Rationale**: uv and fnm provide massive performance improvements (10-100x and 40x respectively). Standardization prevents conflicts and ensures constitutional compliance.
+
+### VII. Structured Logging (NON-NEGOTIABLE)
+
+All installation processes MUST implement dual-format logging.
+
+**Requirements**:
+- Human-readable console output (color-coded, formatted)
+- Structured JSON logs for parsing/automation (`/tmp/installation-logs/*.json`)
+- Log rotation and retention (keep last 10 installations)
+- Performance metrics captured (task timing, system resources)
+- System state snapshots (before/after installation)
+
+**Rationale**: Dual logging enables both user-friendly output and machine-parseable analytics for debugging and automation.
+
+### VIII. Error Handling & Recovery (NON-NEGOTIABLE)
+
+All errors MUST provide clear recovery suggestions, not just failure messages.
+
+**Requirements**:
+- Error messages MUST include: what failed, why it likely failed, how to fix it
+- Errors MUST auto-expand in collapsible output
+- Continue-or-abort option for non-critical errors
+- Rollback capability for failed tasks where applicable
+- Error aggregation at end of installation (summary of all failures)
+
+**Rationale**: Users should never be stuck with cryptic errors. Clear recovery paths reduce support burden and improve success rates.
+
+### IX. Idempotency (NON-NEGOTIABLE)
+
+All installation tasks MUST be safe to re-run without side effects.
+
+**Requirements**:
+- Check existing state before installation (skip if already installed)
+- Preserve user customizations during updates
+- Backup critical files before modification
+- Restore capability for failed modifications
+- Resume capability for interrupted installations (state persistence)
+
+**Rationale**: Users should confidently re-run installations for updates or recovery without fear of corruption or data loss.
+
+### X. Performance Standards (NON-NEGOTIABLE)
+
+Installation MUST meet performance targets.
+
+**Requirements**:
+- Total installation time: <10 minutes on fresh Ubuntu system
+- fnm startup time: <50ms (constitutional requirement)
+- gum startup time: <10ms (verified during installation)
+- Parallel task execution where dependencies allow
+- Progress feedback MUST update at least every 5 seconds
+
+**Rationale**: Fast installation improves user experience. Performance targets ensure system remains responsive and efficient.
+
+## Technology Stack Mandates
+
+### Terminal Environment (NON-NEGOTIABLE)
+
+**Ghostty Terminal**:
+- MUST install latest from source (Zig 0.14.0+)
+- MUST enable Linux CGroup single-instance (`linux-cgroup = single-instance`)
+- MUST configure enhanced shell integration (auto-detection)
+- MUST set unlimited scrollback (999999999 lines) with CGroup protection
+- MUST configure auto theme switching (light/dark mode support)
+- MUST enable clipboard paste protection
+
+**ZSH Configuration**:
+- MUST install Oh My ZSH framework
+- MUST configure productivity plugins
+- MUST preserve user customizations during updates
+
+**Context Menu Integration**:
+- MUST configure Nautilus "Open in Ghostty" context menu
+- MUST work immediately after installation
+
+### AI Tools Integration (NON-NEGOTIABLE)
+
+**Claude Code**: Latest via npm (@anthropic-ai/claude-code)
+**Gemini CLI**: Latest via npm (@google/gemini-cli)
+**GitHub Copilot CLI**: Latest via npm (@github/copilot)
+
+All AI tools MUST be installed via npm using fnm-managed Node.js.
+
+### MCP Server Integration (NON-NEGOTIABLE)
+
+**Context7 MCP**: MUST be operational for up-to-date documentation queries
+**GitHub MCP**: MUST be operational for repository operations
+
+MCP servers MUST be verified with health check scripts before constitutional compliance declared.
+
+### Critical File Preservation (NON-NEGOTIABLE)
+
+**docs/.nojekyll**: MUST NEVER be deleted (CRITICAL for GitHub Pages asset loading)
+**.runners-local/**: MUST remain as current CI/CD infrastructure directory
+**website/package.json**: MUST contain DaisyUI (NOT shadcn/ui), Node.js >=25.0.0
+
+### Directory Standards (NON-NEGOTIABLE)
+
+**XDG Compliance**: ALL user configuration MUST follow XDG Base Directory Specification
+- dircolors: `~/.config/dircolors` (NOT `~/.dircolors`)
+- Application configs: `~/.config/<app>/` (NOT `~/.<app>/`)
+
+**Current Infrastructure Naming**:
+- `.runners-local/` is the CURRENT local CI/CD directory (NOT `local-infra/`)
+- All references to `local-infra/` are OBSOLETE and MUST be corrected
+
+## Development Workflow
+
+### Branch Management (NON-NEGOTIABLE)
+
+**Branch Preservation**: NEVER delete branches without explicit user permission. ALL branches contain valuable configuration history.
+
+**Branch Naming Schema** (MANDATORY):
+```
+YYYYMMDD-HHMMSS-type-short-description
+
+Examples:
+- 20251118-143000-feat-tui-redesign
+- 20251118-143515-fix-box-drawing
+- 20251118-144030-docs-constitution
+```
+
+**Constitutional Branch Workflow**:
 ```bash
 DATETIME=$(date +"%Y%m%d-%H%M%S")
-BRANCH_NAME="${DATETIME}-feat-description"
+BRANCH_NAME="${DATETIME}-type-description"
+
 git checkout -b "$BRANCH_NAME"
 git add .
 git commit -m "Descriptive message
 
 🤖 Generated with [Claude Code](https://claude.ai/code)
 Co-Authored-By: Claude <noreply@anthropic.com>"
+
 git push -u origin "$BRANCH_NAME"
 git checkout main
 git merge "$BRANCH_NAME" --no-ff
 git push origin main
-# NEVER: git branch -d "$BRANCH_NAME"
+
+# DO NOT: git branch -d "$BRANCH_NAME"
+# Branches are preserved for historical reference
 ```
 
-**Complete Guide**: [git-strategy.md](git-strategy.md) | [core-principles.md](core-principles.md)
+### Local CI/CD Requirements (NON-NEGOTIABLE)
 
----
+**Pre-Deployment Verification**: EVERY configuration change MUST complete local CI/CD pipeline FIRST before GitHub deployment.
 
-### II. GitHub Pages Infrastructure Protection
-
-**`.nojekyll` File is ABSOLUTELY CRITICAL**. Without this file, ALL CSS/JS assets return 404 errors on GitHub Pages.
-
-**Location**: `docs/.nojekyll` (empty file)
-
-**Protection Layers**:
-1. Astro `public/` directory (automatic copy)
-2. Vite plugin automation (astro.config.mjs)
-3. Post-build validation scripts
-4. Pre-commit git hooks
-
-**Rationale**: GitHub Pages uses Jekyll by default, which ignores `_astro/` directory. Astro outputs all bundled assets to `_astro/`, requiring Jekyll to be disabled via `.nojekyll` file. This is a GitHub Pages technical requirement with no alternative.
-
-**Complete Guide**: [github-pages-infrastructure.md](github-pages-infrastructure.md) | [core-principles.md](core-principles.md)
-
----
-
-### III. Local CI/CD First
-
-**EVERY configuration change MUST complete local validation BEFORE any GitHub deployment**.
-
-**Required Steps**:
+**Required Pipeline Execution**:
 ```bash
-# 1. Run local workflow
-./.runners-local/workflows/gh-workflow-local.sh local
+# Run complete local workflow (MANDATORY)
+./.runners-local/workflows/gh-workflow-local.sh all
 
-# 2. Verify build success
-./.runners-local/workflows/gh-workflow-local.sh status
-
-# 3. Test configuration
-ghostty +show-config && ./scripts/check_updates.sh
-
-# 4. Only then proceed with git workflow
+# Individual validation stages available:
+./.runners-local/workflows/gh-workflow-local.sh validate  # Config validation
+./.runners-local/workflows/gh-workflow-local.sh test      # Performance testing
+./.runners-local/workflows/gh-workflow-local.sh build     # Build simulation
+./.runners-local/workflows/gh-workflow-local.sh deploy    # Deployment simulation
 ```
 
-**Performance Target**: <2 minutes for complete local workflow execution
+**Zero-Cost Requirement**: NO GitHub Actions minutes may be consumed for routine operations. All CI/CD MUST run locally first.
 
-**Complete Guide**: [local-cicd.md](local-cicd.md) | [core-principles.md](core-principles.md)
+### GitHub Pages Infrastructure (NON-NEGOTIABLE)
 
----
-
-### IV. Agent File Integrity
-
-**Single Source of Truth**: `AGENTS.md` is the authoritative LLM instructions file.
-
-**Symlink Structure** (MANDATORY):
-```
-AGENTS.md           # Regular file (single source of truth)
-CLAUDE.md           # Symlink → AGENTS.md
-GEMINI.md           # Symlink → AGENTS.md
-```
-
-**Verification**:
-```bash
-readlink CLAUDE.md GEMINI.md  # Should output: AGENTS.md
-```
-
-**NEVER**:
-- Convert symlinks to regular files
-- Create agent-specific divergent instructions
-- Point symlinks to website/src/ files
-
-**Complete Guide**: [agent-file-integrity.md](agent-file-integrity.md) | [core-principles.md](core-principles.md)
-
----
-
-### V. LLM Conversation Logging
-
-**All AI assistants MUST save complete conversation logs** with system state snapshots.
+**`.nojekyll` Protection**: The `docs/.nojekyll` file is ABSOLUTELY CRITICAL.
 
 **Requirements**:
-- **Storage**: `documentations/development/conversation_logs/`
-- **Naming**: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
-- **Content**: Complete conversation + system state (before/after)
-- **Security**: Remove API keys, passwords, personal information
+- MUST exist in docs/ directory (empty file)
+- MUST be verified before and after every deployment
+- MUST be restored immediately if missing: `touch docs/.nojekyll`
+- WITHOUT this file, ALL CSS/JS assets return 404 errors on GitHub Pages
 
-**Complete Guide**: [conversation-logging.md](conversation-logging.md) | [core-principles.md](core-principles.md)
+**Purpose**: Disables Jekyll processing to allow `_astro/` directory assets to load correctly.
 
----
+### Logging & Debugging (NON-NEGOTIABLE)
 
-### VI. Zero-Cost Operations
+**Installation Logs**: `/tmp/ghostty-start-logs/`
+- `start-TIMESTAMP.log` - Human-readable main log
+- `start-TIMESTAMP.log.json` - Structured JSON for parsing
+- `errors.log` - Critical issues only
+- `performance.json` - Performance metrics
+- `system_state_TIMESTAMP.json` - Complete system state snapshots
 
-**No GitHub Actions minutes consumed for routine operations**. All CI/CD workflows execute locally.
+**CI/CD Logs**: `./.runners-local/logs/`
+- `workflow-TIMESTAMP.log` - Local workflow execution
+- `gh-pages-TIMESTAMP.log` - GitHub Pages simulation
+- `performance-TIMESTAMP.json` - CI performance metrics
+- `test-results-TIMESTAMP.json` - Test execution results
 
-**Cost Monitoring**:
-```bash
-# Check usage
-gh api user/settings/billing/actions
+### Conversation Logging (MANDATORY)
 
-# Target: 0 minutes/month
-# Limit: 2,000 minutes/month (free tier)
-```
+ALL AI assistant conversations working on this repository MUST save complete conversation logs.
 
-**Performance Targets**:
-- Startup time: <500ms (Ghostty CGroup optimization)
-- Memory usage: <100MB baseline
-- CI/CD performance: <2 minutes complete workflow
-- Configuration validity: 100% success rate
-
-**Complete Guide**: [zero-cost-operations.md](zero-cost-operations.md) | [core-principles.md](core-principles.md)
-
----
-
-## Additional Constraints
-
-### Technology Stack (NON-NEGOTIABLE)
-
-**Terminal Environment**:
-- Ghostty: Latest from source (Zig 0.14.0) with 2025 optimizations
-- ZSH: Oh My ZSH with productivity plugins
-- Context Menu: Nautilus integration
-
-**AI Integration**:
-- Claude Code: Latest CLI via npm
-- Gemini CLI: Google's AI assistant with Ptyxis integration
-- Node.js: Latest version (v25.2.0+) via fnm (Fast Node Manager)
-
-**Local CI/CD**:
-- GitHub CLI: Workflow simulation and API access
-- Local Runners: Shell-based workflow execution
-- Performance Monitoring: System state and timing analysis
-
-### Documentation Structure
-
-**Centralized Documentation Hierarchy**:
-- `docs/` - Astro.build output ONLY → GitHub Pages (DO NOT manually edit)
-- `website/src/` - Astro source files → Editable markdown documentation
-- `documentations/` - Centralized documentation hub:
-  - `user/` - End-user documentation
-  - `developer/` - Developer documentation
-  - `specifications/` - Active feature specifications
-  - `archive/` - Historical/obsolete documentation
-
-### Directory Nesting Limit
-
-Maximum 2 levels of nesting from repository root. Top-level directories limited to 4-5 to prevent complexity.
-
-### Removed Features
-
-**Screenshot Functionality** (removed 2025-11-09):
-- Installation hangs during screenshot capture
-- Unnecessary complexity for terminal configuration project
-- All related artifacts removed: `.screenshot-tools/`, screenshot scripts, tests
-
----
-
-## Quality Gates
-
-### Before Every Configuration Change
-
-1. **Local CI/CD Execution**: Run `./.runners-local/workflows/gh-workflow-local.sh all`
-2. **Configuration Validation**: Run `ghostty +show-config`
-3. **Performance Testing**: Execute `./.runners-local/workflows/performance-monitor.sh`
-4. **Backup Creation**: Automatic timestamped backup
-5. **User Preservation**: Extract and preserve customizations
-6. **Documentation**: Update relevant docs if adding features
-7. **Conversation Log**: Save complete AI conversation log with system state
-
-### Validation Criteria
-
-- Local CI/CD workflows execute successfully
-- Configuration validates without errors via `ghostty +show-config`
-- All 2025 performance optimizations present and functional
-- User customizations preserved and functional
-- Context menu integration works correctly
-- GitHub Actions usage remains within free tier limits
-- All logging systems capture complete information
-
----
-
-## Absolute Prohibitions
-
-### DO NOT
-
-- **NEVER REMOVE `docs/.nojekyll`** - Breaks ALL CSS/JS loading on GitHub Pages
-- Delete branches without explicit user permission
-- Use GitHub Actions for anything that consumes minutes
-- Skip local CI/CD validation before GitHub deployment
-- Ignore existing user customizations during updates
-- Apply configuration changes without backup
-- Commit sensitive data (API keys, passwords, personal information)
-- Bypass the intelligent update system for configuration changes
-- Remove Jekyll-related files without verifying `.nojekyll` preservation
-- Convert CLAUDE.md or GEMINI.md from symlinks to regular files
-
-### DO NOT BYPASS
-
-- Branch preservation requirements
-- Local CI/CD execution requirements
-- Zero-cost operation constraints
-- Configuration validation steps
-- User customization preservation
-- Logging and debugging requirements
-- Agent file symlink integrity
-
----
+**Requirements**:
+- Complete logs from start to finish (exclude API keys/sensitive data)
+- Storage: `documentations/development/conversation_logs/`
+- Naming: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
+- Include system state captures for debugging
+- Include CI/CD execution logs when applicable
 
 ## Governance
 
-### Amendment Process
+### Amendment Procedure
 
-1. **Proposal**: Document proposed change with rationale
-2. **Impact Analysis**: Assess impact on workflows, templates, artifacts
-3. **Template Sync**: Update plan-template.md, spec-template.md, tasks-template.md
-4. **Version Increment**: Semantic versioning (MAJOR.MINOR.PATCH)
-5. **Propagation**: Update dependent documentation (README, quickstart, agent files)
-6. **Validation**: Run full local CI/CD to verify no breakage
-7. **Ratification**: Merge via standard git workflow with amendment commit message
+This constitution supersedes all other development practices and documentation except where explicitly deferred.
 
-### Versioning Policy
+**Amendment Requirements**:
+1. Amendments MUST be documented with rationale
+2. Version MUST be bumped according to semantic versioning:
+   - MAJOR: Backward incompatible principle removals/redefinitions
+   - MINOR: New principles added or material expansions
+   - PATCH: Clarifications, wording improvements, non-semantic changes
+3. Sync Impact Report MUST be generated (prepended as HTML comment)
+4. Template propagation MUST be completed before merge
+5. Migration plan MUST be provided for breaking changes
 
-- **MAJOR**: Backward incompatible principle removals or redefinitions
-- **MINOR**: New principle/section added or materially expanded guidance
-- **PATCH**: Clarifications, wording, typo fixes, non-semantic refinements
+### Compliance Verification
 
-### Compliance Review
+**All code reviews, PRs, and spec-kit workflows MUST verify constitutional compliance**:
+- TUI framework = gum (not alternatives)
+- Package managers = uv (Python), fnm (Node.js) only
+- Directory naming = .runners-local/ (not local-infra/)
+- Component library = DaisyUI (not shadcn/ui)
+- Node.js version = latest (v25.2.0+, not LTS/18+)
+- Critical files preserved (docs/.nojekyll, etc.)
+- Verification tests are real (not hard-coded)
+- Box drawing is adaptive (UTF-8 with ASCII fallback)
 
-All PRs/reviews must verify constitutional compliance before merge. Complexity additions must be justified in spec.md "Complexity Tracking" section. Use AGENTS.md (project root) for runtime development guidance.
+**Violations MUST be rejected** with clear explanation and constitutional reference.
 
-### Supersedence
+### Complexity Justification
 
-This constitution supersedes all other practices except explicit project requirements in spec.md files. When conflicts arise, constitutional principles take precedence unless explicitly justified in "Complexity Tracking" section of the spec.
+Any deviation from constitutional simplicity MUST be justified with:
+- Performance data showing benefit
+- Security analysis if applicable
+- Maintenance impact assessment
+- Alternative approaches considered and rejected
+
+### Runtime Guidance
+
+For development workflow guidance beyond constitutional principles, refer to:
+- `AGENTS.md` - LLM assistant instructions (v2.0-2025-LocalCI)
+- `.claude/commands/` - Spec-kit slash commands
+- `docs-setup/` - MCP integration guides
+- `SPEC-KIT-TUI-INTEGRATION.md` - TUI redesign workflow integration
 
 ---
 
-## Module Index
-
-Complete constitutional implementation guides:
-
-1. **[core-principles.md](core-principles.md)** - Summary of all 6 principles
-2. **[git-strategy.md](git-strategy.md)** - Branch preservation, naming, workflow details
-3. **[github-pages-infrastructure.md](github-pages-infrastructure.md)** - .nojekyll requirements, protection layers
-4. **[local-cicd.md](local-cicd.md)** - Local-first workflows, pipeline stages
-5. **[agent-file-integrity.md](agent-file-integrity.md)** - AGENTS.md symlinks, verification
-6. **[conversation-logging.md](conversation-logging.md)** - LLM logging requirements, examples
-7. **[zero-cost-operations.md](zero-cost-operations.md)** - GitHub Actions cost monitoring, alerts
-
----
-
-**Version**: 2.0.0
-**Ratified**: 2025-10-27
-**Last Amended**: 2025-11-16
-**Amendment Summary**: Major refactor to modular architecture. Core principles extracted to dedicated documents with complete implementation guides. Constitution now serves as navigation hub with summaries and links.
-**Authority**: AGENTS.md (single source of truth)
-**Status**: ACTIVE - MANDATORY COMPLIANCE
+**Version**: 1.0.0 | **Ratified**: 2025-11-18 | **Last Amended**: 2025-11-18
