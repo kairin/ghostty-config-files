@@ -2,7 +2,7 @@ name: Deploy Astro to GitHub Pages (DISABLED - LOCAL CI/CD ONLY)
 
 # CONSTITUTIONAL REQUIREMENT: Zero GitHub Actions consumption
 # This workflow is DISABLED to enforce local CI/CD execution
-# Use: ./local-infra/runners/astro-build-local.sh
+# Use: ./.runners-local/runners/astro-build-local.sh
 on:
   workflow_dispatch:
     inputs:

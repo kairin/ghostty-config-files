@@ -125,25 +125,25 @@ check_tier1_build_output() {
     add_check_result "tier1_build_output" "$status" "$message"
 }
 
-# Check 2: Verify Tier 2 (docs-source/) source files exist
+# Check 2: Verify Tier 2 (website/src/) source files exist
 check_tier2_source_structure() {
-    log "STEP" "📝 Checking Tier 2 (docs-source/) source structure..."
+    log "STEP" "📝 Checking Tier 2 (website/src/) source structure..."
 
     local status="pass"
     local message="Tier 2 source structure is valid"
 
     # Check critical source directories
-    if [ ! -d "$REPO_DIR/docs-source/src/pages" ]; then
+    if [ ! -d "$REPO_DIR/website/src/src/pages" ]; then
         status="fail"
-        message="docs-source/src/pages/ missing - no Astro source content"
+        message="website/src/src/pages/ missing - no Astro source content"
         log "ERROR" "❌ $message"
-    elif [ ! -f "$REPO_DIR/docs-source/astro.config.mjs" ]; then
+    elif [ ! -f "$REPO_DIR/website/src/astro.config.mjs" ]; then
         status="fail"
-        message="docs-source/astro.config.mjs missing - no Astro configuration"
+        message="website/src/astro.config.mjs missing - no Astro configuration"
         log "ERROR" "❌ $message"
-    elif [ ! -f "$REPO_DIR/docs-source/public/.nojekyll" ]; then
+    elif [ ! -f "$REPO_DIR/website/src/public/.nojekyll" ]; then
         status="warning"
-        message="docs-source/public/.nojekyll missing - primary protection layer missing"
+        message="website/src/public/.nojekyll missing - primary protection layer missing"
         log "WARNING" "⚠️ $message"
     else
         log "SUCCESS" "✅ Tier 2 source structure is valid"
@@ -189,13 +189,13 @@ check_astro_outdir_config() {
     local astro_config=""
     if [ -f "$REPO_DIR/astro.config.mjs" ]; then
         astro_config="$REPO_DIR/astro.config.mjs"
-    elif [ -f "$REPO_DIR/docs-source/astro.config.mjs" ]; then
-        astro_config="$REPO_DIR/docs-source/astro.config.mjs"
+    elif [ -f "$REPO_DIR/website/src/astro.config.mjs" ]; then
+        astro_config="$REPO_DIR/website/src/astro.config.mjs"
     fi
 
     if [ -z "$astro_config" ]; then
         status="fail"
-        message="astro.config.mjs not found in root or docs-source/"
+        message="astro.config.mjs not found in root or website/src/"
         log "ERROR" "❌ $message"
     else
         # Check outDir setting
@@ -270,8 +270,8 @@ check_user_guide_sync() {
     local tier2_guides=()
     local tier3_guides=()
 
-    if [ -d "$REPO_DIR/docs-source/src/pages/user-guide" ]; then
-        mapfile -t tier2_guides < <(find "$REPO_DIR/docs-source/src/pages/user-guide" -name "*.md" -type f 2>/dev/null | sort)
+    if [ -d "$REPO_DIR/website/src/src/pages/user-guide" ]; then
+        mapfile -t tier2_guides < <(find "$REPO_DIR/website/src/src/pages/user-guide" -name "*.md" -type f 2>/dev/null | sort)
     fi
 
     if [ -d "$REPO_DIR/documentations/user" ]; then
@@ -374,7 +374,7 @@ check_configuration_drift() {
     # Check for missing .nojekyll protection
     local nojekyll_count=0
     [ -f "$REPO_DIR/docs/.nojekyll" ] && ((nojekyll_count++))
-    [ -f "$REPO_DIR/docs-source/public/.nojekyll" ] && ((nojekyll_count++))
+    [ -f "$REPO_DIR/website/src/public/.nojekyll" ] && ((nojekyll_count++))
 
     if [ $nojekyll_count -lt 2 ]; then
         drift_issues+=("Incomplete .nojekyll protection layers ($nojekyll_count/2)")

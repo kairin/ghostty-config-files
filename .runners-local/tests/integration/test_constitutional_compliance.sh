@@ -194,7 +194,7 @@ test_principle_4_agent_file_integrity() {
     echo "    ✓ NON-NEGOTIABLE requirements documented"
 }
 
-# Principle 5: Conversation Logging (complete logs in documentations/development/)
+# Principle 5: Conversation Logging (complete logs in documentations/developer/)
 test_principle_5_conversation_logging() {
     ((TESTS_RUN++))
     echo "  Principle 5: Conversation Logging Requirement"
@@ -207,8 +207,8 @@ test_principle_5_conversation_logging() {
     fi
 
     # Verify development directory exists
-    if [[ ! -d "${PROJECT_ROOT}/documentations/development" ]]; then
-        log_warn "documentations/development/ directory missing (will be created when needed)"
+    if [[ ! -d "${PROJECT_ROOT}/documentations/developer" ]]; then
+        log_warn "documentations/developer/ directory missing (will be created when needed)"
         # Don't fail - directory is created when first log is saved
     fi
 
