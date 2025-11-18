@@ -9,7 +9,7 @@
 
 ### User Story 1 - Fresh Installation Experience (Priority: P1)
 
-A user runs `./start.sh` on a fresh Ubuntu system and sees a beautiful, professional installation process with proper box drawing, real-time progress, and collapsible output like Docker.
+A user runs `./start.sh` on a fresh Ubuntu system and sees a beautiful, professional installation process with proper box drawing, real-time progress, and collapsible output like Docker. Professional appearance measured by SC-002: Zero broken box characters across all terminal types.
 
 **Why this priority**: This is the primary user journey and the most common use case. Without a working installation system, nothing else matters. This delivers immediate value by providing a functional terminal environment.
 
@@ -204,7 +204,7 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 
 #### Idempotency & Resume Capability
 - **FR-053**: System MUST check existing state before installation and skip if already installed
-- **FR-054**: System MUST preserve user customizations during updates (ZSH config, Ghostty themes, etc.)
+- **FR-054**: System MUST preserve user customizations during updates (e.g., .zshrc, .bashrc, ~/.config/ghostty/config, shell aliases, environment variables)
 - **FR-055**: System MUST backup critical files before modification with timestamped backups
 - **FR-056**: System MUST implement restore capability for failed modifications
 - **FR-057**: System MUST persist installation state in JSON files for resume capability after interruption
@@ -214,7 +214,7 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 - **FR-059**: System MUST complete total installation in <10 minutes on fresh Ubuntu system
 - **FR-060**: System MUST validate fnm startup time <50ms (constitutional requirement)
 - **FR-061**: System MUST validate gum startup time <10ms (verified during installation)
-- **FR-062**: System MUST execute independent tasks in parallel where dependencies allow
+- **FR-062**: System MUST execute independent tasks in parallel where dependencies allow (maximum 3 concurrent tasks for system stability and resource management)
 - **FR-063**: System MUST update progress feedback at least every 5 seconds during long-running tasks
 
 #### App Duplicate Detection & Cleanup
