@@ -11,7 +11,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/ - Python build artifacts (DO NOT IGNORE root lib/ - our shell library)
 lib64/
 parts/
 sdist/
@@ -159,6 +159,8 @@ user-config/
 # Backup files (added by migration)
 backups/
 *.backup-*
+# TUI system backup files (lib/ directory backups)
+lib/**/*.backup
 
 # Lighthouse performance reports
 documentations/performance/lighthouse-reports/*.json
