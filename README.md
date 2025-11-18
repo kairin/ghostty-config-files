@@ -14,6 +14,12 @@ This repository contains a comprehensive terminal environment setup featuring th
 - **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js latest (v25.2.0) via fnm - 40x faster than NVM, with system Node.js fallback).
 - **Context Menu**: "Open in Ghostty" right-click option in your file manager.
 - **Automated Daily Updates**: System-wide updates run automatically every day at 9:00 AM.
+- **Modern TUI Installation System**: Intelligent installation with gum TUI framework
+  - **Adaptive Box Drawing**: UTF-8 (┌─┐) or ASCII (+--+) auto-detected for terminal compatibility
+  - **Duplicate Detection**: Automatic detection and cleanup of conflicting installations
+  - **Idempotent Re-runs**: Safe to run multiple times - preserves user customizations
+  - **Real Verification**: System state checks (no hard-coded success messages)
+  - **Modular Architecture**: Clean lib/ directory structure for maintainability
 - **Astro-Based Website**: A documentation and dashboard website built with Astro.
 
 ## Getting Started
