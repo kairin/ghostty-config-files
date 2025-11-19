@@ -56,12 +56,13 @@ source "${SCRIPT_DIR}/../core/logging.sh"
 source "${SCRIPT_DIR}/../core/utils.sh"
 
 # Global state tracking
-declare -A TASK_STATUS      # task_id => status (pending/running/success/failed/skipped)
-declare -A TASK_TIMES       # task_id => duration in seconds
-declare -A TASK_ERRORS      # task_id => error message
-declare -A TASK_DETAILS     # task_id => task name
-declare -A TASK_OUTPUT      # task_id => buffered command output
-declare -a TASK_ORDER       # Array of task IDs in execution order
+# Global state tracking
+declare -gA TASK_STATUS      # task_id => status (pending/running/success/failed/skipped)
+declare -gA TASK_TIMES       # task_id => duration in seconds
+declare -gA TASK_ERRORS      # task_id => error message
+declare -gA TASK_DETAILS     # task_id => task name
+declare -gA TASK_OUTPUT      # task_id => buffered command output
+declare -ga TASK_ORDER       # Array of task IDs in execution order
 
 # Verbose mode (T033)
 # TEMPORARY: Default to verbose=true until full collapsible UI with output buffering is complete
@@ -365,7 +366,7 @@ start_task() {
 #
 complete_task() {
     local task_id="$1"
-    local duration="$2"
+    local duration="${2:-0}"
 
     update_task_status "$task_id" "success" "$duration"
     log "INFO" "Completed task: $task_id ($(format_duration "$duration"))"
@@ -380,7 +381,7 @@ complete_task() {
 #
 fail_task() {
     local task_id="$1"
-    local error_msg="$2"
+    local error_msg="${2:-Unknown error}"
 
     update_task_status "$task_id" "failed" "$error_msg"
     log "ERROR" "Failed task: $task_id - $error_msg"
