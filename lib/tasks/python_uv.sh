@@ -40,7 +40,7 @@ readonly UV_BIN_DIR="${HOME}/.local/bin"
 readonly UV_BINARY="${UV_BIN_DIR}/uv"
 
 # Conflicting package managers (constitutional prohibition)
-readonly CONFLICTING_MANAGERS=(
+readonly PYTHON_CONFLICTING_MANAGERS=(
     "pip"
     "pip3"
     "poetry"
@@ -60,7 +60,7 @@ check_conflicting_package_managers() {
 
     local conflicts_found=0
 
-    for manager in "${CONFLICTING_MANAGERS[@]}"; do
+    for manager in "${PYTHON_CONFLICTING_MANAGERS[@]}"; do
         if command_exists "$manager"; then
             log "WARNING" "  ⚠ Conflicting package manager detected: $manager"
             log "WARNING" "    Constitutional requirement: uv EXCLUSIVE"

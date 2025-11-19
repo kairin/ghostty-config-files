@@ -211,7 +211,7 @@ class ConstitutionalValidator:
     async def _validate_python_config(self) -> List[ValidationIssue]:
         """Validate Python configuration (pyproject.toml)."""
         issues: List[ValidationIssue] = []
-        pyproject_path = self.project_root / "pyproject.toml"
+        pyproject_path = self.project_root / "scripts" / "config" / "pyproject.toml"
 
         if not pyproject_path.exists():
             issues.append(ValidationIssue(

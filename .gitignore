@@ -102,6 +102,9 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+# Root folder cleanup artifacts (temporary analysis files)
+CLEANUP_EXECUTION_SCRIPT.sh
+ROOT_CLEANUP_PLAN.md
 
 # Installation state (runtime data)
 .installation-state.json
