@@ -17,6 +17,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${LOGGING_SH_LOADED:-}" ] || return 0
+LOGGING_SH_LOADED=1
+
 # Global log file paths (initialized in init_logging)
 LOG_DIR="/tmp/ghostty-start-logs"
 LOG_FILE=""

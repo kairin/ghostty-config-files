@@ -15,6 +15,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${STATE_SH_LOADED:-}" ] || return 0
+STATE_SH_LOADED=1
+
 # Source logging module (SCRIPT_DIR set by orchestrator)
 # NOTE: SCRIPT_DIR points to repository root, not lib/core/
 STATE_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

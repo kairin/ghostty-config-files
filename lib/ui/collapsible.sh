@@ -29,6 +29,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${COLLAPSIBLE_SH_LOADED:-}" ] || return 0
+COLLAPSIBLE_SH_LOADED=1
+
 # Source required utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../core/logging.sh"

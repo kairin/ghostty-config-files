@@ -15,6 +15,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${DUPLICATE_DETECTION_SH_LOADED:-}" ] || return 0
+DUPLICATE_DETECTION_SH_LOADED=1
+
 # Source utility module
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../core/utils.sh"

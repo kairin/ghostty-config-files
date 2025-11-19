@@ -187,6 +187,68 @@ cleanup_on_exit() {
 trap cleanup_on_exit EXIT SIGINT SIGTERM
 
 # ═════════════════════════════════════════════════════════════
+# HELPER FUNCTIONS
+# ═════════════════════════════════════════════════════════════
+
+#
+# Execute a single task (used by both sequential and parallel execution)
+#
+# Args:
+#   $1 - Task ID
+#   $2 - Dependencies (comma-separated)
+#   $3 - Installation function name
+#   $4 - Verification function name
+#
+# Returns:
+#   0 = success
+#   1 = failure
+#
+execute_single_task() {
+    local task_id="$1"
+    local deps="$2"
+    local install_fn="$3"
+    local verify_fn="$4"
+
+    # Skip if already completed (idempotency)
+    if is_task_completed "$task_id" && [ "$FORCE_ALL" = false ]; then
+        skip_task "$task_id"
+        return 0
+    fi
+
+    # Check dependencies
+    if [ -n "$deps" ]; then
+        IFS=',' read -ra dep_array <<< "$deps"
+        for dep in "${dep_array[@]}"; do
+            if ! is_task_completed "$dep"; then
+                log "ERROR" "Dependency not met: $task_id requires $dep"
+                fail_task "$task_id" "Dependency not met: $dep"
+                return 1
+            fi
+        done
+    fi
+
+    # Execute task
+    start_task "$task_id"
+
+    local task_start
+    task_start=$(get_unix_timestamp)
+
+    if $install_fn; then
+        local task_end
+        task_end=$(get_unix_timestamp)
+        local duration
+        duration=$(calculate_duration "$task_start" "$task_end")
+
+        complete_task "$task_id" "$duration"
+        mark_task_completed "$task_id" "$duration"
+        return 0
+    else
+        fail_task "$task_id" "Installation function failed: $install_fn"
+        return 1
+    fi
+}
+
+# ═════════════════════════════════════════════════════════════
 # ORCHESTRATION LOGIC (T038)
 # ═════════════════════════════════════════════════════════════
 
@@ -220,10 +282,10 @@ main() {
     # State management (T035)
     if [ "$RESUME_MODE" = true ]; then
         log "INFO" "Resume mode enabled - loading previous state..."
-        load_installation_state
+        load_state
     else
         log "INFO" "Fresh installation mode"
-        init_installation_state
+        init_state
     fi
 
     # Register all tasks
@@ -235,9 +297,105 @@ main() {
         register_task "$task_id" "$(echo "$install_fn" | sed 's/_/ /g' | sed 's/task //')"
     done
 
-    # Execute tasks (T036 - parallel execution)
-    log "INFO" "Starting installation (${total_tasks} tasks)..."
+    # ═════════════════════════════════════════════════════════════
+    # PARALLEL EXECUTION ENGINE (T036)
+    # ═════════════════════════════════════════════════════════════
 
+    # Group tasks by parallel_group for execution batching
+    declare -A parallel_groups
+    for task_entry in "${TASK_REGISTRY[@]}"; do
+        IFS='|' read -r task_id deps install_fn verify_fn parallel_group est_seconds <<< "$task_entry"
+
+        if [ -n "${parallel_groups[$parallel_group]:-}" ]; then
+            parallel_groups[$parallel_group]+=" $task_id"
+        else
+            parallel_groups[$parallel_group]="$task_id"
+        fi
+    done
+
+    # Execute tasks by parallel group (0, 1, 2, 3, ...)
+    log "INFO" "Starting installation (${total_tasks} tasks, parallel execution enabled)..."
+
+    for group_id in $(printf '%s\n' "${!parallel_groups[@]}" | sort -n); do
+        local group_tasks=(${parallel_groups[$group_id]})
+        local group_size=${#group_tasks[@]}
+
+        log "INFO" "═══════════════════════════════════════════════════════════════"
+        log "INFO" "Parallel Group $group_id: ${group_size} task(s)"
+        log "INFO" "═══════════════════════════════════════════════════════════════"
+
+        # If only one task in group, execute sequentially (no background)
+        if [ "$group_size" -eq 1 ]; then
+            local task_id="${group_tasks[0]}"
+
+            # Find task entry
+            for task_entry in "${TASK_REGISTRY[@]}"; do
+                IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
+                if [ "$entry_id" = "$task_id" ]; then
+                    execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn"
+                    if [ $? -eq 0 ]; then
+                        ((completed_tasks++))
+                    fi
+                    break
+                fi
+            done
+        else
+            # Multiple tasks - execute in parallel
+            log "INFO" "Launching ${group_size} tasks in parallel..."
+
+            local pids=()
+            local task_ids=()
+
+            # Launch tasks in background
+            for task_id in "${group_tasks[@]}"; do
+                # Find task entry
+                for task_entry in "${TASK_REGISTRY[@]}"; do
+                    IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
+
+                    if [ "$entry_id" = "$task_id" ]; then
+                        log "INFO" "  → Launching $task_id..."
+
+                        # Execute in background
+                        (execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn") &
+                        pids+=($!)
+                        task_ids+=("$task_id")
+                        break
+                    fi
+                done
+            done
+
+            # Wait for all parallel tasks to complete
+            log "INFO" "Waiting for ${#pids[@]} parallel tasks to complete..."
+
+            local failed_count=0
+            for i in "${!pids[@]}"; do
+                local pid=${pids[$i]}
+                local task_id=${task_ids[$i]}
+
+                if wait "$pid"; then
+                    log "SUCCESS" "  ✓ $task_id completed"
+                    ((completed_tasks++))
+                else
+                    log "ERROR" "  ✗ $task_id failed"
+                    ((failed_count++))
+                fi
+            done
+
+            # Check if any parallel tasks failed (blocking)
+            if [ "$failed_count" -gt 0 ]; then
+                log "ERROR" "Parallel group $group_id: $failed_count task(s) failed"
+                exit 1
+            fi
+
+            log "SUCCESS" "Parallel group $group_id: All ${group_size} tasks completed"
+        fi
+
+        # Show progress after each group
+        show_progress_bar "$completed_tasks" "$total_tasks"
+    done
+
+    # Skip old sequential execution loop (replaced by parallel engine above)
+    if false; then
     for task_entry in "${TASK_REGISTRY[@]}"; do
         IFS='|' read -r task_id deps install_fn verify_fn parallel_group est_seconds <<< "$task_entry"
 
@@ -283,6 +441,7 @@ main() {
         # Show progress
         show_progress_bar "$completed_tasks" "$total_tasks"
     done
+    fi  # End of disabled sequential loop
 
     # Post-installation health check
     log "INFO" "Running post-installation health checks..."
