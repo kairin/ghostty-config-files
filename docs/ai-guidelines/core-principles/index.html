@@ -111,21 +111,21 @@ GitHub
 <ul>
 <li><strong>Complete Logs</strong>: Save entire conversation from start to finish</li>
 <li><strong>Exclude Sensitive Data</strong>: Remove API keys, passwords, personal information</li>
-<li><strong>Storage Location</strong>: <code>documentations/development/conversation_logs/</code></li>
+<li><strong>Storage Location</strong>: <code>documentations/developer/conversation_logs/</code></li>
 <li><strong>Naming Convention</strong>: <code>CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md</code></li>
 <li><strong>System State</strong>: Capture before/after system states for debugging</li>
 <li><strong>CI/CD Logs</strong>: Include local workflow execution logs</li>
 </ul>
 <h3 id="example-workflow">Example Workflow</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># After completing work, save conversation log and system state</span></span>
-<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> documentations/development/conversation_logs/</span></span>
-<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /path/to/conversation.md</span><span style="color:#9ECBFF"> documentations/development/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> documentations/developer/conversation_logs/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /path/to/conversation.md</span><span style="color:#9ECBFF"> documentations/developer/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Capture system state and CI/CD logs</span></span>
-<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/system_state_</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span><span style="color:#9ECBFF"> documentations/development/system_states/</span></span>
-<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ./.runners-local/logs/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF"> documentations/development/ci_cd_logs/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/system_state_</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span><span style="color:#9ECBFF"> documentations/developer/system_states/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ./.runners-local/logs/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF"> documentations/developer/ci_cd_logs/</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> documentations/development/</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> documentations/developer/</span></span>
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "Add conversation log, system state, and CI/CD logs for local infrastructure setup"</span></span></code></pre> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">ai</span><span class="badge badge-outline">guidelines</span> </div> </div><div class="mt-4"> <span class="text-sm text-base-content/60">Target Audience: <strong>all</strong></span> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
 Ghostty Configuration Files
 </p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">

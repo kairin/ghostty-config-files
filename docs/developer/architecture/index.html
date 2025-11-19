@@ -9,8 +9,8 @@ GitHub
 <span class="line"><span>├── Installation Layer (start.sh, manage.sh)</span></span>
 <span class="line"><span>├── Modular Scripts Layer (scripts/*)</span></span>
 <span class="line"><span>├── Configuration Layer (configs/*)</span></span>
-<span class="line"><span>├── Documentation Layer (docs-source/, docs/)</span></span>
-<span class="line"><span>├── Local CI/CD Layer (local-infra/*)</span></span>
+<span class="line"><span>├── Documentation Layer (website/src/, docs/)</span></span>
+<span class="line"><span>├── Local CI/CD Layer (.runners-local/*)</span></span>
 <span class="line"><span>└── Spec-Kit Layer (.specify/*, spec-kit/*)</span></span></code></pre>
 <h3 id="component-diagram">Component Diagram</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────┐</span></span>
@@ -63,15 +63,15 @@ GitHub
 <span class="line"><span>│   ├── config_*.sh         # Configuration modules</span></span>
 <span class="line"><span>│   └── validate_*.sh       # Validation modules</span></span>
 <span class="line"><span>│</span></span>
-<span class="line"><span>├── docs-source/            # Documentation source (editable)</span></span>
+<span class="line"><span>├── website/src/            # Documentation source (editable)</span></span>
 <span class="line"><span>│   ├── user-guide/         # User documentation</span></span>
 <span class="line"><span>│   ├── ai-guidelines/      # AI assistant guidelines</span></span>
 <span class="line"><span>│   └── developer/          # Developer documentation</span></span>
 <span class="line"><span>│</span></span>
 <span class="line"><span>├── docs/                   # Documentation build output (gitignored)</span></span>
 <span class="line"><span>│</span></span>
-<span class="line"><span>├── local-infra/            # Local CI/CD infrastructure</span></span>
-<span class="line"><span>│   ├── runners/            # CI/CD scripts</span></span>
+<span class="line"><span>├── .runners-local/            # Local CI/CD infrastructure</span></span>
+<span class="line"><span>│   ├── .runners-local/workflows/            # CI/CD scripts</span></span>
 <span class="line"><span>│   ├── tests/              # Test suites</span></span>
 <span class="line"><span>│   └── logs/               # CI/CD logs</span></span>
 <span class="line"><span>│</span></span>
@@ -173,7 +173,7 @@ GitHub
 <span class="line"><span>└── keybindings.conf    # Keybindings</span></span></code></pre>
 <h3 id="4-documentation-layer">4. Documentation Layer</h3>
 <p><strong>Purpose</strong>: Dual-structure documentation (source + build)</p>
-<p><strong>Source</strong> (<code>docs-source/</code>):</p>
+<p><strong>Source</strong> (<code>website/src/</code>):</p>
 <ul>
 <li>Markdown files (git-tracked)</li>
 <li>Organized by audience (user/developer/AI)</li>
@@ -284,7 +284,7 @@ GitHub
 <span class="line"><span>                      show_progress "error"</span></span></code></pre>
 <h2 id="testing-architecture">Testing Architecture</h2>
 <h3 id="test-organization">Test Organization</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>local-infra/tests/</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>.runners-local/tests/</span></span>
 <span class="line"><span>├── unit/                    # Unit tests</span></span>
 <span class="line"><span>│   ├── test_functions.sh   # Test helpers</span></span>
 <span class="line"><span>│   ├── test_common_utils.sh # Common module tests</span></span>
@@ -296,7 +296,7 @@ GitHub
 <span class="line"><span>└── validation/            # Static analysis</span></span>
 <span class="line"><span>    └── run_shellcheck.sh</span></span></code></pre>
 <h3 id="test-execution-flow">Test Execution Flow</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>./local-infra/runners/test-runner.sh</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>./.runners-local/.runners-local/workflows/test-runner.sh</span></span>
 <span class="line"><span>       │</span></span>
 <span class="line"><span>       ├─► Run ShellCheck (static analysis)</span></span>
 <span class="line"><span>       ├─► Run unit tests (&#x3C;10s per module)</span></span>

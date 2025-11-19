@@ -15,11 +15,11 @@ GitHub
 <span class="line"><span>│   ├── ghostty/               # Ghostty terminal configuration</span></span>
 <span class="line"><span>│   └── workspace/             # Development workspace files</span></span>
 <span class="line"><span>├── scripts/                   # Utility and automation scripts</span></span>
-<span class="line"><span>├── local-infra/              # Zero-cost local infrastructure</span></span>
-<span class="line"><span>│   ├── runners/              # Local CI/CD scripts</span></span>
+<span class="line"><span>├── .runners-local/              # Zero-cost local infrastructure</span></span>
+<span class="line"><span>│   ├── .runners-local/workflows/              # Local CI/CD scripts</span></span>
 <span class="line"><span>│   ├── logs/                 # Local CI/CD logs</span></span>
 <span class="line"><span>│   └── config/               # CI/CD configuration files</span></span>
-<span class="line"><span>└── docs-source/              # Documentation source files</span></span>
+<span class="line"><span>└── website/src/              # Documentation source files</span></span>
 <span class="line"><span>    ├── user-guide/           # User documentation</span></span>
 <span class="line"><span>    ├── ai-guidelines/        # AI assistant guidelines</span></span>
 <span class="line"><span>    └── developer/            # Developer documentation</span></span></code></pre>
@@ -60,7 +60,7 @@ GitHub
 <span class="line"><span style="color:#B392F0">./start.sh</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Initialize local CI/CD infrastructure</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> init</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> init</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Setup GitHub CLI integration</span></span>
 <span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> login</span></span>
@@ -99,17 +99,17 @@ GitHub
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">comman</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span><span style="color:#79B8FF"> --verbose</span><span style="color:#6A737D">      # Verbose output</span></span></code></pre>
 <h3 id="local-cicd-operations">Local CI/CD Operations</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Complete local workflow execution</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Individual workflow stages</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#6A737D">    # Config validation</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> test</span><span style="color:#6A737D">       # Performance testing</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> build</span><span style="color:#6A737D">      # Build simulation</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> deploy</span><span style="color:#6A737D">     # Deployment simulation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> validate</span><span style="color:#6A737D">    # Config validation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> test</span><span style="color:#6A737D">       # Performance testing</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> build</span><span style="color:#6A737D">      # Build simulation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> deploy</span><span style="color:#6A737D">     # Deployment simulation</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># GitHub Actions cost monitoring</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> billing</span><span style="color:#6A737D">    # Check usage</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> status</span><span style="color:#6A737D">     # Workflow status</span></span></code></pre>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> billing</span><span style="color:#6A737D">    # Check usage</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> status</span><span style="color:#6A737D">     # Workflow status</span></span></code></pre>
 <h3 id="update-management">Update Management</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Smart update detection and application</span></span>
 <span class="line"><span style="color:#B392F0">./scripts/check_updates.sh</span><span style="color:#6A737D">              # Check and apply necessary updates</span></span>
@@ -117,15 +117,15 @@ GitHub
 <span class="line"><span style="color:#B392F0">./scripts/check_updates.sh</span><span style="color:#79B8FF"> --config-only</span><span style="color:#6A737D"> # Configuration updates only</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Local CI/CD for updates</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#6A737D">     # Update workflow</span></span></code></pre>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#6A737D">     # Update workflow</span></span></code></pre>
 <h3 id="testing--validation">Testing &#x26; Validation</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Configuration validation</span></span>
 <span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#9ECBFF"> +show-config</span><span style="color:#6A737D">                    # Validate current configuration</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/test-runner.sh</span><span style="color:#6A737D">    # Complete test suite</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/test-runner.sh</span><span style="color:#6A737D">    # Complete test suite</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Performance monitoring</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/performance-monitor.sh</span><span style="color:#79B8FF"> --baseline</span><span style="color:#6A737D"> # Establish baseline</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/performance-monitor.sh</span><span style="color:#79B8FF"> --compare</span><span style="color:#6A737D">  # Compare performance</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --baseline</span><span style="color:#6A737D"> # Establish baseline</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/performance-monitor.sh</span><span style="color:#79B8FF"> --compare</span><span style="color:#6A737D">  # Compare performance</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># System testing</span></span>
 <span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --verbose</span><span style="color:#6A737D">                    # Full installation with detailed logs</span></span></code></pre>
@@ -133,17 +133,17 @@ GitHub
 <h3 id="view-logs">View Logs</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># View comprehensive logs</span></span>
 <span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/</span></span>
-<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> ./local-infra/logs/</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> ./.runners-local/logs/</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Analyze system state</span></span>
 <span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.'</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/system_state_</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Check CI/CD performance</span></span>
-<span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.'</span><span style="color:#9ECBFF"> ./local-infra/logs/performance-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span></span>
+<span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.'</span><span style="color:#9ECBFF"> ./.runners-local/logs/performance-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># View errors only</span></span>
 <span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /tmp/ghostty-start-logs/errors.log</span></span>
-<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> ./local-infra/logs/workflow-errors.log</span></span></code></pre>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> ./.runners-local/logs/workflow-errors.log</span></span></code></pre>
 <h3 id="emergency-recovery">Emergency Recovery</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Emergency configuration recovery</span></span>
 <span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> ~/.config/ghostty/config.backup-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF"> ~/.config/ghostty/config</span></span>
@@ -153,25 +153,25 @@ GitHub
 <span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --help</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Get help with local CI/CD</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#79B8FF"> --help</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#79B8FF"> --help</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Get help with updates</span></span>
 <span class="line"><span style="color:#B392F0">./scripts/check_updates.sh</span><span style="color:#79B8FF"> --help</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Validate system state</span></span>
 <span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#9ECBFF"> +show-config</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/test-runner.sh</span><span style="color:#79B8FF"> --validate</span></span></code></pre>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/test-runner.sh</span><span style="color:#79B8FF"> --validate</span></span></code></pre>
 <h2 id="documentation-structure">Documentation Structure</h2>
 <h3 id="-critical-documentation-directory-rules">🚨 CRITICAL: Documentation Directory Rules</h3>
 <ul>
 <li><strong><code>docs/</code></strong> - <strong>Astro.build output ONLY</strong> → GitHub Pages deployment (DO NOT manually edit)</li>
-<li><strong><code>docs-source/</code></strong> - <strong>All editable documentation</strong> → installation guides, screenshots, manuals, specs</li>
+<li><strong><code>website/src/</code></strong> - <strong>All editable documentation</strong> → installation guides, screenshots, manuals, specs</li>
 </ul>
 <h3 id="documentation-locations">Documentation Locations</h3>
 <ul>
-<li><strong>User Guide</strong>: <code>docs-source/user-guide/</code> - Installation, configuration, usage</li>
-<li><strong>Developer Docs</strong>: <code>docs-source/developer/</code> - Architecture, contributing, testing</li>
-<li><strong>AI Guidelines</strong>: <code>docs-source/ai-guidelines/</code> - This file and related guides</li>
+<li><strong>User Guide</strong>: <code>website/src/user-guide/</code> - Installation, configuration, usage</li>
+<li><strong>Developer Docs</strong>: <code>website/src/developer/</code> - Architecture, contributing, testing</li>
+<li><strong>AI Guidelines</strong>: <code>website/src/ai-guidelines/</code> - This file and related guides</li>
 <li><strong>Spec-Kit</strong>: <code>spec-kit/</code> - Modern web development stack guides</li>
 </ul>
 <h2 id="spec-kit-development-guides">Spec-Kit Development Guides</h2>
@@ -211,9 +211,9 @@ GitHub
 </ul>
 <p><strong>Local CI/CD Requirements</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Modern web stack local workflow</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/astro-build-local.sh</span><span style="color:#6A737D">       # Astro build simulation</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/performance-monitor.sh</span><span style="color:#6A737D">     # Core Web Vitals monitoring</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span><span style="color:#6A737D">   # Complete validation</span></span></code></pre>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/astro-build-local.sh</span><span style="color:#6A737D">       # Astro build simulation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/performance-monitor.sh</span><span style="color:#6A737D">     # Core Web Vitals monitoring</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span><span style="color:#6A737D">   # Complete validation</span></span></code></pre>
 <p><strong>Development Workflow Integration</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Spec-kit workflow commands</span></span>
 <span class="line"><span style="color:#B392F0">/.specify/scripts/bash/create-new-feature.sh</span><span style="color:#6A737D">    # Feature specification</span></span>
@@ -240,7 +240,7 @@ GitHub
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># 2. Run local CI/CD</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># 3. Only then deploy</span></span>
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span></span></code></pre> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">ai</span><span class="badge badge-outline">guidelines</span> </div> </div><div class="mt-4"> <span class="text-sm text-base-content/60">Target Audience: <strong>all</strong></span> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">

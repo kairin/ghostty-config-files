@@ -17,7 +17,7 @@ GitHub
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># 5. Test locally</span></span>
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># 6. Commit with attribution</span></span>
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> .</span></span>
@@ -60,7 +60,7 @@ GitHub
 </ul>
 <h2 id="testing-requirements">Testing Requirements</h2>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run all tests</span></span>
-<span class="line"><span style="color:#B392F0">./local-infra/runners/test-runner.sh</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/test-runner.sh</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># Run ShellCheck</span></span>
 <span class="line"><span style="color:#B392F0">shellcheck</span><span style="color:#9ECBFF"> scripts/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.sh</span></span>
