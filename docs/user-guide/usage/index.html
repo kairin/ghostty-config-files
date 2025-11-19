@@ -214,14 +214,14 @@ GitHub
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Start documentation dev server</span></span>
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#6A737D"># In another terminal, make changes to docs-source/</span></span>
+<span class="line"><span style="color:#6A737D"># In another terminal, make changes to website/src/</span></span>
 <span class="line"><span style="color:#6A737D"># Browser auto-reloads at http://localhost:4321</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># When done, build for production</span></span>
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --clean</span></span></code></pre>
 <h3 id="adding-documentation">Adding Documentation</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Edit source files in docs-source/</span></span>
-<span class="line"><span style="color:#B392F0">vim</span><span style="color:#9ECBFF"> docs-source/user-guide/new-feature.md</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Edit source files in website/src/</span></span>
+<span class="line"><span style="color:#B392F0">vim</span><span style="color:#9ECBFF"> website/src/user-guide/new-feature.md</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># 2. Test locally</span></span>
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> dev</span></span>
@@ -230,7 +230,7 @@ GitHub
 <span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> docs</span><span style="color:#9ECBFF"> build</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#6A737D"># 4. Commit changes</span></span>
-<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> docs-source/</span><span style="color:#9ECBFF"> docs/</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> website/src/</span><span style="color:#9ECBFF"> docs/</span></span>
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "docs: Add new feature documentation"</span></span></code></pre>
 <h3 id="capturing-screenshots">Capturing Screenshots</h3>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Prepare the screen (terminal, config, etc.)</span></span>

@@ -3,7 +3,14 @@
 **Date**: 2025-11-20
 **Purpose**: Break down monolithic task files into single-purpose modular scripts
 **Status**: Design Phase
+**Location**: `/documentation/architecture/MODULAR_TASK_ARCHITECTURE.md` (restructured 2025-11-20)
 **User Requirement**: "Each step is calling a script that does the one thing for that segment of the process"
+
+**Note**: Repository restructured on 2025-11-20 to consolidate fragmented documentation:
+- ✅ Single `/documentation/` folder (was: `/docs-setup/`, `/documentations/`, `/specs/`)
+- ✅ Single `/astro-website/` folder (was: `/website/` + root `/src/` + root `/public/`)
+- ✅ Archived spec-kit to `/archive-spec-kit/.specify/`
+- ✅ Deleted obsolete `/delete/` folder
 
 ---
 

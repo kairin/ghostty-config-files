@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
 
-**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Gemini Integration](GEMINI.md) • [Context7 Setup](docs-setup/context7-mcp.md) • [GitHub MCP Setup](docs-setup/github-mcp.md) • [Spec-Kit Guides](spec-kit/guides/SPEC_KIT_INDEX.md) • [Performance Optimizations](#performance-optimizations)
+**Quick Links:** [README](README.md) • [CLAUDE Integration](CLAUDE.md) • [Context7 Setup](documentation/setup/context7-mcp.md) • [GitHub MCP Setup](documentation/setup/github-mcp.md) • [Performance Optimizations](#performance-optimizations)
 
 ## ⚡ NON-NEGOTIABLE REQUIREMENTS
 
@@ -64,7 +64,7 @@ exit && claude
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 - **BEST PRACTICE**: Document Context7 queries in conversation logs
 
-**Complete Setup Guide:** [Context7 MCP Setup](docs-setup/context7-mcp.md) - Installation, configuration, troubleshooting, examples
+**Complete Setup Guide:** [Context7 MCP Setup](documentation/setup/context7-mcp.md) - Installation, configuration, troubleshooting, examples
 
 ### 🚨 CRITICAL: GitHub MCP Integration & Repository Operations
 
@@ -102,7 +102,7 @@ exit && claude
 - ✅ Leverages existing gh CLI authentication
 - ✅ Token auto-refreshes via gh CLI
 
-**Complete Setup Guide:** [GitHub MCP Setup](docs-setup/github-mcp.md) - Installation, configuration, usage examples, troubleshooting
+**Complete Setup Guide:** [GitHub MCP Setup](documentation/setup/github-mcp.md) - Installation, configuration, usage examples, troubleshooting
 
 ### 🚨 CRITICAL: Branch Management & Git Strategy
 
@@ -305,17 +305,31 @@ LOCAL_CI_LOGS="./.runners-local/logs/"
 
 ### Directory Structure (MANDATORY)
 
-**Essential Structure**:
+**Essential Structure** (Restructured 2025-11-20):
 ```
 /home/kkk/Apps/ghostty-config-files/
 ├── start.sh, manage.sh         # Installation & management scripts
-├── AGENTS.md                   # AI assistant instructions (single source of truth)
-├── CLAUDE.md, GEMINI.md        # AI integration (symlinks to AGENTS.md)
-├── README.md                   # User documentation
+├── CLAUDE.md, README.md        # AI instructions & user documentation
 ├── configs/                    # Ghostty config, themes, dircolors, workspace
 ├── scripts/                    # Utility scripts (installation, updates, health checks)
-├── documentations/             # Centralized docs (user/, developer/, specifications/, archive/)
-└── .runners-local/               # Consolidated CI/CD infrastructure (see below for detail)
+├── lib/                        # Modular task libraries (ghostty/, zsh/, python_uv/, etc.)
+├── documentation/              # SINGLE documentation folder (consolidated)
+│   ├── setup/                  # Setup guides (MCP, new-device, zsh-security)
+│   ├── architecture/           # Architecture docs (MODULAR_TASK_ARCHITECTURE.md)
+│   ├── developer/              # Developer docs (handoff summaries, guides)
+│   ├── user/                   # User guides
+│   ├── specifications/         # Feature specifications
+│   └── archive/                # Historical documentation
+├── astro-website/              # Astro.build source (CONSOLIDATED)
+│   ├── src/                    # Astro source files & markdown content
+│   ├── public/                 # Static assets (.nojekyll, favicon, manifest)
+│   ├── astro.config.mjs        # Astro configuration (outDir: '../docs')
+│   └── package.json            # Dependencies
+├── docs/                       # Astro BUILD OUTPUT ONLY (GitHub Pages)
+│   └── .nojekyll               # CRITICAL - never delete
+├── tests/                      # Test infrastructure
+├── .runners-local/             # Local CI/CD infrastructure (see below)
+└── archive-spec-kit/           # Archived spec-kit materials (.specify/)
 ```
 
 **Detailed .runners-local/ Structure**:
@@ -344,7 +358,7 @@ LOCAL_CI_LOGS="./.runners-local/logs/"
 └── README.md                     # Infrastructure documentation
 ```
 
-**Complete Structure**: See [DIRECTORY_STRUCTURE.md](documentations/developer/architecture/DIRECTORY_STRUCTURE.md) for detailed directory tree with file descriptions, design patterns, and naming conventions.
+**Complete Structure**: See [DIRECTORY_STRUCTURE.md](documentation/setup/DIRECTORY_STRUCTURE.md) for detailed directory tree with file descriptions, design patterns, and naming conventions.
 
 ### Technology Stack (NON-NEGOTIABLE)
 
@@ -661,7 +675,7 @@ Configures zero-cost GitHub Pages deployment with Astro.build, including critica
 ### Requirements
 - **Complete Logs**: Save entire conversation from start to finish
 - **Exclude Sensitive Data**: Remove API keys, passwords, personal information
-- **Storage Location**: `documentations/developer/conversation_logs/`
+- **Storage Location**: `documentation/developer/conversation_logs/`
 - **Naming Convention**: `CONVERSATION_LOG_YYYYMMDD_DESCRIPTION.md`
 - **System State**: Capture before/after system states for debugging
 - **CI/CD Logs**: Include local workflow execution logs
@@ -669,14 +683,14 @@ Configures zero-cost GitHub Pages deployment with Astro.build, including critica
 ### Example Workflow
 ```bash
 # After completing work, save conversation log and system state
-mkdir -p documentations/developer/conversation_logs/
-cp /path/to/conversation.md documentations/developer/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
+mkdir -p documentation/developer/conversation_logs/
+cp /path/to/conversation.md documentation/developer/conversation_logs/CONVERSATION_LOG_20250919_local_cicd_setup.md
 
 # Capture system state and CI/CD logs
-cp /tmp/ghostty-start-logs/system_state_*.json documentations/developer/system_states/
-cp ./.runners-local/logs/* documentations/developer/ci_cd_logs/
+cp /tmp/ghostty-start-logs/system_state_*.json documentation/developer/system_states/
+cp ./.runners-local/logs/* documentation/developer/ci_cd_logs/
 
-git add documentations/developer/
+git add documentation/developer/
 git commit -m "Add conversation log, system state, and CI/CD logs for local infrastructure setup"
 ```
 
@@ -751,22 +765,23 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 - [CLAUDE.md](CLAUDE.md) - Claude Code integration details (symlink to this file)
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration details (symlink to this file)
 
-### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
+### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT - Restructured 2025-11-20)
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
-- **`website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
-- **`specs/`** - **Feature specifications hub**:
-  - `001-modern-tui-system/` - Active modern TUI system specification
-- **`docs-setup/`** - **Critical setup guides** (MCP integration, architecture)
-- **`.specify/`** - **Spec-Kit workflow infrastructure** (commands, scripts, templates)
-
-### 🎯 Spec-Kit Development Guides
-Modern TUI development workflow available via slash commands: /guardian-health, /speckit.tasks, /speckit.implement, /guardian-commit, etc. See `.specify/` directory for workflow infrastructure.
+- **`astro-website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
+- **`documentation/`** - **SINGLE documentation folder** (consolidated from docs-setup/, documentations/, specs/):
+  - `documentation/setup/` - Setup guides (MCP integration, new-device, zsh-security)
+  - `documentation/architecture/` - Architecture docs (MODULAR_TASK_ARCHITECTURE.md, DIRECTORY_STRUCTURE.md)
+  - `documentation/developer/` - Developer docs (handoff summaries, conversation logs, guides)
+  - `documentation/user/` - User guides
+  - `documentation/specifications/` - Feature specifications (001-modern-tui-system/)
+  - `documentation/archive/` - Historical documentation
+- **`archive-spec-kit/`** - **Archived spec-kit materials** (.specify/ folder, no longer active)
 
 ## 🌐 Modern TUI System Infrastructure
 
 **Active Spec**: Modern TUI Installation System (001) - Phases 1-6 MVP complete with gum.sh module and comprehensive documentation.
 
-**Complete Specification**: [spec.md](specs/001-modern-tui-system/spec.md) - Core components, performance targets, implementation phases, task tracking.
+**Complete Specification**: [spec.md](documentation/specifications/001-modern-tui-system/spec.md) - Core components, performance targets, implementation phases, task tracking.
 
 ### Support Commands
 ```bash
