@@ -3,7 +3,7 @@
 **Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system/`
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/ ✅
 
-**Progress**: 34/64 tasks complete (53.1%) - Phase 5 COMPLETE ✅, Phase 7 STARTED ✅
+**Progress**: 40/64 tasks complete (62.5%) - Phase 6 (Orchestration) COMPLETE ✅
 **Last Updated**: 2025-11-19
 
 **Tests**: No explicit test requirements in spec.md - verification functions serve as integration tests
@@ -419,7 +419,7 @@ task_install_COMPONENT() {
 
 ### Task Registry and Dependency Resolution
 
-- [ ] T034 [US1] [US7] Create task registry in new start.sh
+- [X] T034 [US1] [US7] Create task registry in new start.sh
   - Task definitions: Array of {id, name, install_function, verify_function, dependencies[], estimated_duration}
   - All tasks from lib/tasks/*.sh: gum, ghostty, zsh, python_uv, nodejs_fnm, ai_tools, context_menu
   - Dependency graph:
@@ -435,7 +435,7 @@ task_install_COMPONENT() {
   - Topological sort: Resolve dependencies, determine execution order
   - Independent tasks marked for parallel execution
 
-- [ ] T035 [US3] Implement state management in start.sh orchestrator
+- [X] T035 [US3] Implement state management in start.sh orchestrator
   - Load installation state: Call init_state() from lib/core/state.sh
   - Resume mode: --resume flag calls resume_installation()
   - Idempotency: Check is_task_completed() before each task
@@ -444,7 +444,7 @@ task_install_COMPONENT() {
 
 ### Parallel Execution Engine
 
-- [ ] T036 [US7] Implement parallel task execution in start.sh
+- [X] T036 [US7] Implement parallel task execution in start.sh
   - Function: execute_parallel_tasks(task_ids[]) - Launch independent tasks in background
   - Background jobs: Use `task &` to launch parallel tasks
   - PID tracking: Capture PIDs, wait for all to complete
@@ -454,7 +454,7 @@ task_install_COMPONENT() {
 
 ### Command-Line Interface
 
-- [ ] T037 [US1] [US2] [US6] Implement CLI argument parsing in start.sh
+- [X] T037 [US1] [US2] [US6] Implement CLI argument parsing in start.sh
   - --help: Show usage information and examples
   - --verbose: Enable verbose mode (no collapsing)
   - --resume: Resume from last checkpoint
@@ -465,7 +465,7 @@ task_install_COMPONENT() {
 
 ### Main Orchestrator Logic
 
-- [ ] T038 [US1] Create new start.sh orchestrator (replaces monolithic script)
+- [X] T038 [US1] Create new start.sh orchestrator (replaces monolithic script)
   - Load all lib/ modules: source lib/core/*.sh, lib/ui/*.sh, lib/tasks/*.sh, lib/verification/*.sh
   - Initialize systems: logging, state, TUI, box drawing
   - Pre-installation health check: Run pre_installation_health_check() unless --skip-checks
@@ -476,7 +476,7 @@ task_install_COMPONENT() {
   - Final summary: Show completed tasks, failed tasks, performance metrics
   - Total duration: Validate <10 minutes on fresh installation (constitutional)
 
-- [ ] T039 [US1] Add interrupt handling (SIGINT, SIGTERM) to start.sh
+- [X] T039 [US1] Add interrupt handling (SIGINT, SIGTERM) to start.sh
   - Trap: cleanup_on_exit() saves state on interrupt
   - Kill background spinners/tasks gracefully
   - Save installation state to JSON
@@ -494,19 +494,16 @@ task_install_COMPONENT() {
 
 **Context7 Validation**: Query "Ubuntu snap vs apt duplicate detection 2025" and "Safe snap package removal best practices"
 
-- [X] T040 [P] [US4] Implement lib/tasks/app_audit.sh - Duplicate app detection system with disk usage calculation (FR-064, FR-066)
-  - **Status**: ✅ COMPLETE (2025-11-18)
-  - **Implementation**: lib/tasks/app_audit.sh created with comprehensive audit system
+- [ ] T040 [P] [US4] Implement lib/tasks/app_audit.sh - Duplicate app detection system with disk usage calculation (FR-064, FR-066)
   - **Context7**: Query "Ubuntu application duplicate detection methods 2025"
-  - Scan installed packages: `dpkg -l`, `snap list`, desktop file scanning ✅
-  - Detect duplicates: Same app installed via snap + apt ✅
-  - Detect disabled snaps: `snap list --all | grep disabled` ✅
-  - Detect unnecessary browsers: Firefox, Chromium, Chrome, Edge (if 4 browsers, recommend keeping 1-2) ✅
-  - **FR-066**: Calculate disk usage per duplicate: `du -sh /snap/<package>` for snaps, `dpkg-query -W -f='${Installed-Size}' <package>` for apt packages ✅
-  - Aggregate total disk usage by category (snap-duplicates, apt-duplicates, disabled-snaps) ✅
-  - Generate report: /tmp/ubuntu-apps-audit.md with categorized duplicates and disk usage metrics ✅
-  - **Acceptance**: Disk usage calculated and reported for each duplicate category ✅
-  - **Functions Exported**: scan_apt_packages, scan_snap_packages, scan_desktop_files, detect_duplicates, detect_disabled_snaps, detect_browsers, generate_audit_report, task_run_app_audit
+  - Scan installed packages: `dpkg -l`, `snap list`, desktop file scanning
+  - Detect duplicates: Same app installed via snap + apt
+  - Detect disabled snaps: `snap list --all | grep disabled`
+  - Detect unnecessary browsers: Firefox, Chromium, Chrome, Edge (if 4 browsers, recommend keeping 1-2)
+  - **FR-066**: Calculate disk usage per duplicate: `du -sh /snap/<package>` for snaps, `dpkg-query -W -f='${Installed-Size}' <package>` for apt packages
+  - Aggregate total disk usage by category (snap-duplicates, apt-duplicates, disabled-snaps)
+  - Generate report: /tmp/ubuntu-apps-audit.md with categorized duplicates and disk usage metrics
+  - **Acceptance**: Disk usage calculated and reported for each duplicate category
 
 - [ ] T041 [US4] Implement duplicate categorization in lib/tasks/app_audit.sh
   - Category 1: Enabled duplicates (snap + apt both active) - HIGH priority

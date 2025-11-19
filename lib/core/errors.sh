@@ -14,6 +14,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${ERRORS_SH_LOADED:-}" ] || return 0
+ERRORS_SH_LOADED=1
+
 # Source logging module
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/logging.sh"

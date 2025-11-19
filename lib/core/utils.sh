@@ -14,6 +14,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${UTILS_SH_LOADED:-}" ] || return 0
+UTILS_SH_LOADED=1
+
 #
 # Strip ANSI escape sequences from string
 #

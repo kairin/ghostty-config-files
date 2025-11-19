@@ -13,6 +13,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${TUI_SH_LOADED:-}" ] || return 0
+TUI_SH_LOADED=1
+
 # Source utility and logging modules
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../core/utils.sh"
