@@ -9,6 +9,23 @@
 # - ANSI cursor management for in-place updates
 # - Verbose mode toggle (T033 integrated)
 #
+# CURRENT STATUS (2025-11-20):
+# - Output capture functions added: run_command_collapsible(), show_task_output()
+# - Collapsible rendering re-enabled (was temporarily disabled)
+# - VERBOSE_MODE=true by default (shows all output in real-time)
+#
+# TODO FOR FULL COLLAPSIBLE UI:
+# 1. Update all lib/tasks/*.sh modules to use run_command_collapsible()
+#    - ghostty.sh: git clone, zig build, tar extraction
+#    - python_uv.sh: curl downloads, tar extraction
+#    - nodejs_fnm.sh: downloads and extractions
+#    - zsh.sh: oh-my-zsh installation, plugin downloads
+#    - ai_tools.sh: npm install commands
+# 2. Add proper output buffering for parallel tasks
+# 3. Implement task output expansion on failure
+# 4. Test with VERBOSE_MODE=false for Docker-like collapsed output
+# 5. Add keyboard shortcut to toggle verbose mode during installation
+#
 # Task States:
 #   pending   → "⏸ Task name (queued)"
 #   running   → "⠋ Task name..." (with spinner animation)
@@ -42,11 +59,14 @@ source "${SCRIPT_DIR}/../core/utils.sh"
 declare -A TASK_STATUS      # task_id => status (pending/running/success/failed/skipped)
 declare -A TASK_TIMES       # task_id => duration in seconds
 declare -A TASK_ERRORS      # task_id => error message
-declare -A TASK_DETAILS     # task_id => detailed output (for expansion)
+declare -A TASK_DETAILS     # task_id => task name
+declare -A TASK_OUTPUT      # task_id => buffered command output
 declare -a TASK_ORDER       # Array of task IDs in execution order
 
 # Verbose mode (T033)
-VERBOSE_MODE=${VERBOSE_MODE:-false}  # Can be set via --verbose flag
+# TEMPORARY: Default to verbose=true until full collapsible UI with output buffering is complete
+# This ensures users see all installation output in real-time
+VERBOSE_MODE=${VERBOSE_MODE:-true}  # Can be set via --verbose flag
 
 # ANSI cursor control
 readonly ANSI_SAVE_CURSOR="\033[s"
@@ -109,9 +129,76 @@ register_task() {
     TASK_TIMES["$task_id"]=0
     TASK_ERRORS["$task_id"]=""
     TASK_DETAILS["$task_id"]="$task_name"
+    TASK_OUTPUT["$task_id"]=""
     TASK_ORDER+=("$task_id")
 
     log "INFO" "Registered task: $task_id ($task_name)"
+}
+
+#
+# Run command with collapsible output
+#
+# Executes a command while capturing output for the collapsible UI.
+# In verbose mode, shows output in real-time. In collapsed mode, buffers
+# output and only shows on error or when expanded.
+#
+# Args:
+#   $1 - Task ID
+#   $2+ - Command and arguments to execute
+#
+# Returns:
+#   Command exit code
+#
+# Example:
+#   run_command_collapsible "install-ghostty" git clone https://github.com/ghostty-org/ghostty
+#
+run_command_collapsible() {
+    local task_id="$1"
+    shift
+    local cmd=("$@")
+
+    # In verbose mode, just run command normally with tee to log
+    if [ "$VERBOSE_MODE" = true ]; then
+        "${cmd[@]}" 2>&1 | tee -a "$(get_log_file)"
+        return "${PIPESTATUS[0]}"
+    fi
+
+    # In collapsed mode, buffer output
+    local output_file
+    output_file=$(mktemp)
+    local exit_code=0
+
+    # Run command, capturing output
+    if "${cmd[@]}" > "$output_file" 2>&1; then
+        exit_code=0
+    else
+        exit_code=$?
+    fi
+
+    # Store output in task buffer
+    TASK_OUTPUT["$task_id"]=$(cat "$output_file")
+
+    # Also append to log file
+    cat "$output_file" >> "$(get_log_file)"
+
+    # Cleanup
+    rm -f "$output_file"
+
+    return $exit_code
+}
+
+#
+# Show task output (expand collapsed task)
+#
+# Args:
+#   $1 - Task ID
+#
+show_task_output() {
+    local task_id="$1"
+
+    if [ -n "${TASK_OUTPUT[$task_id]:-}" ]; then
+        echo "${TASK_OUTPUT[$task_id]}"
+    fi
 }
 
 #
@@ -219,10 +306,6 @@ render_task_line() {
 # - Failed task: Expanded with error details
 #
 render_all_tasks() {
-    # TEMPORARY: Disable collapsible UI completely due to output chaos
-    # TODO: Fix parallel task display with proper buffering
-    return 0
-
     # Skip rendering in verbose mode (full output shown)
     if [ "$VERBOSE_MODE" = true ]; then
         return 0
@@ -469,6 +552,8 @@ demo_collapsible_output() {
 export -f init_collapsible_output
 export -f cleanup_collapsible_output
 export -f register_task
+export -f run_command_collapsible
+export -f show_task_output
 export -f update_task_status
 export -f get_status_symbol
 export -f render_task_line
