@@ -34,8 +34,71 @@ GUM_STARTUP_MS=0
 #
 # Usage: init_tui
 #
+#
+# Ensure gum is installed
+#
+# Checks if gum is available, and if not, attempts to install it.
+#
+# Returns:
+#   0 = gum available
+#   1 = gum missing and installation failed
+#
+ensure_gum() {
+    if command_exists "gum"; then
+        return 0
+    fi
+
+    log "WARNING" "gum TUI tool not found. Attempting to install..."
+
+    # Try go install if go is available
+    if command_exists "go"; then
+        log "INFO" "Installing gum via go install..."
+        if go install github.com/charmbracelet/gum@latest; then
+            # Add go bin to path if not there
+            export PATH=$PATH:$(go env GOPATH)/bin
+            log "SUCCESS" "gum installed via go"
+            return 0
+        fi
+    fi
+
+    # Try apt if on Debian/Ubuntu
+    if command_exists "apt-get"; then
+        log "INFO" "Installing gum via apt..."
+        # We need sudo for apt
+        if sudo -n true 2>/dev/null; then
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+            echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+            sudo apt-get update && sudo apt-get install -y gum
+            log "SUCCESS" "gum installed via apt"
+            return 0
+        else
+             log "WARNING" "Sudo password required for apt installation. Skipping auto-install."
+        fi
+    fi
+
+    log "ERROR" "Could not install gum automatically. Please install it manually:"
+    log "INFO" "  go install github.com/charmbracelet/gum@latest"
+    log "INFO" "  OR visit https://github.com/charmbracelet/gum"
+    return 1
+}
+
+#
+# Initialize TUI system
+#
+# Detects gum availability, measures performance, sets TUI_AVAILABLE flag
+#
+# Usage: init_tui [require_gum]
+#
 init_tui() {
+    local require_gum="${1:-false}"
+
     log "INFO" "Initializing TUI system"
+
+    # Auto-install if required
+    if [ "$require_gum" = true ]; then
+        ensure_gum || true
+    fi
 
     # Check if gum is available
     if command_exists "gum"; then
@@ -64,6 +127,11 @@ init_tui() {
         TUI_AVAILABLE=false
         log "WARNING" "gum not found - using plain text fallback"
         log "INFO" "Install gum for enhanced TUI: https://github.com/charmbracelet/gum"
+        
+        if [ "$require_gum" = true ]; then
+            log "ERROR" "TUI required but gum could not be installed."
+            return 1
+        fi
     fi
 }
 

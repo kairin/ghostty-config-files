@@ -36,33 +36,30 @@ set -euo pipefail
 # INITIALIZATION
 # ═════════════════════════════════════════════════════════════
 
-# Detect script directory
-readonly ORCHESTRATOR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Source the core bootstrap script
+# This handles repo discovery, library sourcing, and initialization
+if [[ -f "$(dirname "${BASH_SOURCE[0]}")/lib/init.sh" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/lib/init.sh"
+else
+    # Fallback for running from random directories if git is available
+    source "$(git rev-parse --show-toplevel)/lib/init.sh"
+fi
 
-# Source all lib modules (order matters - dependencies first)
-source "${ORCHESTRATOR_DIR}/lib/core/logging.sh"
-source "${ORCHESTRATOR_DIR}/lib/core/utils.sh"
-source "${ORCHESTRATOR_DIR}/lib/core/state.sh"
-source "${ORCHESTRATOR_DIR}/lib/core/errors.sh"
-source "${ORCHESTRATOR_DIR}/lib/ui/tui.sh"
-source "${ORCHESTRATOR_DIR}/lib/ui/boxes.sh"
-source "${ORCHESTRATOR_DIR}/lib/ui/collapsible.sh"
-source "${ORCHESTRATOR_DIR}/lib/ui/progress.sh"
-source "${ORCHESTRATOR_DIR}/lib/verification/health_checks.sh"
-source "${ORCHESTRATOR_DIR}/lib/verification/duplicate_detection.sh"
-source "${ORCHESTRATOR_DIR}/lib/verification/unit_tests.sh"
-source "${ORCHESTRATOR_DIR}/lib/verification/integration_tests.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/gum.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/ghostty.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/zsh.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/python_uv.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/nodejs_fnm.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/ai_tools.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/context_menu.sh"
-source "${ORCHESTRATOR_DIR}/lib/tasks/app_audit.sh"
+# Source task modules (not yet in init.sh as they are specific to start.sh)
+source "${LIB_DIR}/tasks/gum.sh"
+source "${LIB_DIR}/tasks/ghostty.sh"
+source "${LIB_DIR}/tasks/zsh.sh"
+source "${LIB_DIR}/tasks/python_uv.sh"
+source "${LIB_DIR}/tasks/nodejs_fnm.sh"
+source "${LIB_DIR}/tasks/ai_tools.sh"
+source "${LIB_DIR}/tasks/context_menu.sh"
+source "${LIB_DIR}/tasks/app_audit.sh"
+source "${LIB_DIR}/verification/duplicate_detection.sh"
+source "${LIB_DIR}/verification/unit_tests.sh"
+source "${LIB_DIR}/verification/integration_tests.sh"
 
 # For task modules that need it
-export SCRIPT_DIR="${ORCHESTRATOR_DIR}"
+export SCRIPT_DIR="${REPO_ROOT}"
 
 # ═════════════════════════════════════════════════════════════
 # TASK REGISTRY (T034 - Dependency Resolution)
@@ -258,11 +255,18 @@ execute_single_task() {
 
 main() {
     # Initialize systems
-    init_logging
+    # Note: Logging and TUI are already initialized by init.sh
+    # init_logging
     init_box_drawing "$BOX_STYLE"
-    init_tui
+    # init_tui
     init_collapsible_output
     init_progress_tracking
+
+    # Run robust environment verification
+    if ! run_environment_checks; then
+        log "ERROR" "Environment verification failed."
+        exit 1
+    fi
 
     if [ "$VERBOSE_MODE" = true ]; then
         enable_verbose_mode

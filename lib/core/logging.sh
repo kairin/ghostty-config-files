@@ -36,14 +36,18 @@ COLOR_WARNING="\033[0;33m"   # Yellow
 COLOR_ERROR="\033[0;31m"     # Red
 COLOR_BOLD="\033[1m"
 
-# Log level definitions
-declare -A LOG_LEVELS=(
-    [TEST]=0
-    [INFO]=1
-    [SUCCESS]=2
-    [WARNING]=3
-    [ERROR]=4
-)
+# Helper to get numeric log level
+get_level_num() {
+    case "$1" in
+        DEBUG)   echo 0 ;;
+        TEST)    echo 0 ;;
+        INFO)    echo 1 ;;
+        SUCCESS) echo 2 ;;
+        WARNING) echo 3 ;;
+        ERROR)   echo 4 ;;
+        *)       echo -1 ;;
+    esac
+}
 
 # Current log level threshold (default: TEST - show all)
 LOG_LEVEL_THRESHOLD=0
@@ -150,14 +154,14 @@ log() {
     local color
     local level_num
 
-    # Validate log level
-    if [ -z "${LOG_LEVELS[$level]:-}" ]; then
+    # Validate log level and get number
+    level_num=$(get_level_num "$level")
+    if [ "$level_num" -eq -1 ]; then
         echo "ERROR: Invalid log level '$level'" >&2
         return 1
     fi
 
     # Check if message should be logged based on threshold
-    level_num="${LOG_LEVELS[$level]}"
     if [ "$level_num" -lt "$LOG_LEVEL_THRESHOLD" ]; then
         return 0
     fi
@@ -167,6 +171,7 @@ log() {
 
     # Select color based on level
     case "$level" in
+        DEBUG)   color="$COLOR_TEST" ;;
         TEST)    color="$COLOR_TEST" ;;
         INFO)    color="$COLOR_INFO" ;;
         SUCCESS) color="$COLOR_SUCCESS" ;;
@@ -180,12 +185,12 @@ log() {
         "$timestamp" "$level" "$message"
 
     # Human-readable log file output (no color codes)
-    if [ -n "$LOG_FILE" ] && [ -f "$LOG_FILE" ]; then
+    if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
         printf "[%s] %s %s\n" "$timestamp" "$level" "$message" >> "$LOG_FILE"
     fi
 
     # Structured JSON log output
-    if [ -n "$LOG_FILE_JSON" ] && [ -f "$LOG_FILE_JSON" ]; then
+    if [ -n "${LOG_FILE_JSON:-}" ] && [ -f "$LOG_FILE_JSON" ]; then
         # Escape special characters in message for JSON
         local escaped_message
         escaped_message=$(printf '%s' "$message" | jq -Rs .)
@@ -212,7 +217,7 @@ EOF
 # Call this at the end of script execution to properly close JSON log file
 #
 finalize_logging() {
-    if [ -n "$LOG_FILE_JSON" ] && [ -f "$LOG_FILE_JSON" ]; then
+    if [ -n "${LOG_FILE_JSON:-}" ] && [ -f "$LOG_FILE_JSON" ]; then
         # Remove trailing comma and close JSON array
         sed -i '$ s/,$//' "$LOG_FILE_JSON"
         echo "]" >> "$LOG_FILE_JSON"
@@ -232,15 +237,19 @@ finalize_logging() {
 #
 set_log_level() {
     local level="$1"
-
-    if [ -z "${LOG_LEVELS[$level]:-}" ]; then
+    local level_num
+    
+    level_num=$(get_level_num "$level")
+    if [ "$level_num" -eq -1 ]; then
         echo "ERROR: Invalid log level '$level'" >&2
         return 1
     fi
 
-    LOG_LEVEL_THRESHOLD="${LOG_LEVELS[$level]}"
+    LOG_LEVEL_THRESHOLD="$level_num"
     log "INFO" "Log level threshold set to $level"
 }
+
+export -f get_level_num
 
 # Export functions for use in other modules
 export -f init_logging
