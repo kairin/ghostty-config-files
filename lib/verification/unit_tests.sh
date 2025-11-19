@@ -31,6 +31,48 @@ source "${SCRIPT_DIR}/../core/logging.sh"
 source "${SCRIPT_DIR}/../core/utils.sh"
 
 #
+# Clean up orphaned Ghostty files and conflicting installations
+#
+# Removes:
+#   - Orphaned desktop entries (when binary missing)
+#   - Snap installations (conflicts with from-source)
+#   - APT installations (conflicts with from-source)
+#
+cleanup_orphaned_ghostty_files() {
+    log "INFO" "Checking for orphaned Ghostty files..."
+
+    # Remove orphaned desktop entries
+    local desktop_file="$HOME/.local/share/applications/ghostty-here.desktop"
+    if [ -f "$desktop_file" ]; then
+        # Check if the desktop file points to a missing binary
+        local exec_line
+        exec_line=$(grep "^Exec=" "$desktop_file" 2>/dev/null | cut -d= -f2 | cut -d' ' -f1 || true)
+        if [ -n "$exec_line" ] && ! command -v "$exec_line" >/dev/null 2>&1; then
+            log "WARNING" "⚠ Found orphaned desktop entry: $desktop_file"
+            log "INFO" "  Removing orphaned file..."
+            rm -f "$desktop_file"
+            update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+        fi
+    fi
+
+    # Check for snap installation
+    if snap list 2>/dev/null | grep -q "ghostty"; then
+        log "WARNING" "⚠ Snap version of Ghostty detected"
+        log "WARNING" "  Snap installations conflict with from-source builds"
+        log "INFO" "  Removing snap version..."
+        snap remove ghostty 2>/dev/null || log "WARNING" "  Failed to remove snap (may need sudo)"
+    fi
+
+    # Check for apt installation
+    if dpkg -l 2>/dev/null | grep -q "^ii.*ghostty"; then
+        log "WARNING" "⚠ APT version of Ghostty detected"
+        log "WARNING" "  APT installations conflict with from-source builds"
+        log "INFO" "  Removing apt version..."
+        sudo apt remove --purge -y ghostty 2>/dev/null || log "WARNING" "  Failed to remove apt package (may need sudo)"
+    fi
+}
+
+#
 # T015: Verify Ghostty installed and functional
 #
 # Real system checks (NO hard-coded success):
@@ -51,6 +93,9 @@ source "${SCRIPT_DIR}/../core/utils.sh"
 #
 verify_ghostty_installed() {
     log "INFO" "Verifying Ghostty installation..."
+
+    # Clean up conflicting installations first
+    cleanup_orphaned_ghostty_files
 
     local ghostty_path="${GHOSTTY_APP_DIR:-$HOME/.local/share/ghostty}/bin/ghostty"
 
@@ -1090,6 +1135,7 @@ run_all_unit_tests() {
 }
 
 # Export all verification functions
+export -f cleanup_orphaned_ghostty_files
 export -f verify_ghostty_installed
 export -f verify_zsh_configured
 export -f verify_python_uv

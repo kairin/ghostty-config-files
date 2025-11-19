@@ -171,7 +171,7 @@ cleanup_on_exit() {
     cleanup_collapsible_output
 
     # Save state
-    save_installation_state
+    save_state
 
     if [ $exit_code -ne 0 ]; then
         log "INFO" ""
@@ -326,20 +326,22 @@ main() {
         log "INFO" "Parallel Group $group_id: ${group_size} task(s)"
         log "INFO" "═══════════════════════════════════════════════════════════════"
 
-        # If only one task in group, execute sequentially (no background)
-        if [ "$group_size" -eq 1 ]; then
-            local task_id="${group_tasks[0]}"
-
-            # Find task entry
-            for task_entry in "${TASK_REGISTRY[@]}"; do
-                IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
-                if [ "$entry_id" = "$task_id" ]; then
-                    execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn"
-                    if [ $? -eq 0 ]; then
-                        ((completed_tasks++))
+        # TEMPORARY: Disable parallel execution to fix output chaos (TODO: implement output buffering)
+        # Execute all tasks sequentially for now
+        if true; then
+            # Loop through all tasks in this group sequentially
+            for task_id in "${group_tasks[@]}"; do
+                # Find task entry
+                for task_entry in "${TASK_REGISTRY[@]}"; do
+                    IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
+                    if [ "$entry_id" = "$task_id" ]; then
+                        execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn"
+                        if [ $? -eq 0 ]; then
+                            ((completed_tasks += 1))
+                        fi
+                        break
                     fi
-                    break
-                fi
+                done
             done
         else
             # Multiple tasks - execute in parallel
@@ -376,10 +378,10 @@ main() {
 
                 if wait "$pid"; then
                     log "SUCCESS" "  ✓ $task_id completed"
-                    ((completed_tasks++))
+                    ((completed_tasks += 1))
                 else
                     log "ERROR" "  ✗ $task_id failed"
-                    ((failed_count++))
+                    ((failed_count += 1))
                 fi
             done
 
@@ -404,7 +406,7 @@ main() {
         # Skip if already completed (idempotency)
         if is_task_completed "$task_id" && [ "$FORCE_ALL" = false ]; then
             skip_task "$task_id"
-            ((completed_tasks++))
+            ((completed_tasks += 1))
             continue
         fi
 
@@ -434,7 +436,7 @@ main() {
 
             complete_task "$task_id" "$duration"
             mark_task_completed "$task_id" "$duration"
-            ((completed_tasks++))
+            ((completed_tasks += 1))
         else
             fail_task "$task_id" "Installation function failed: $install_fn"
             exit 1

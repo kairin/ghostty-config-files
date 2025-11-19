@@ -28,8 +28,9 @@ source "${STATE_LIB_DIR}/logging.sh"
 STATE_FILE="/tmp/ghostty-start-logs/installation-state.json"
 
 # Current state (loaded into memory)
-declare -A STATE_COMPLETED_TASKS
-declare -A STATE_FAILED_TASKS
+# Initialize associative arrays (required for set -u with empty arrays)
+declare -A STATE_COMPLETED_TASKS=()
+declare -A STATE_FAILED_TASKS=()
 STATE_VERSION="2.0"
 STATE_LAST_RUN=""
 
@@ -129,7 +130,11 @@ load_state() {
     # Load last run timestamp
     STATE_LAST_RUN=$(jq -r '.last_run' "$STATE_FILE")
 
-    log "SUCCESS" "Loaded state: ${#STATE_COMPLETED_TASKS[@]} completed, ${#STATE_FAILED_TASKS[@]} failed"
+    # Count tasks (safe for empty arrays with set -u)
+    local completed_count="${#STATE_COMPLETED_TASKS[@]}"
+    local failed_count="${#STATE_FAILED_TASKS[@]}"
+
+    log "SUCCESS" "Loaded state: $completed_count completed, $failed_count failed"
 }
 
 #
@@ -177,7 +182,11 @@ save_state() {
 }
 EOF
 
-    log "INFO" "State saved: ${#STATE_COMPLETED_TASKS[@]} completed, ${#STATE_FAILED_TASKS[@]} failed"
+    # Count tasks (safe for empty arrays with set -u)
+    local completed_count="${#STATE_COMPLETED_TASKS[@]}"
+    local failed_count="${#STATE_FAILED_TASKS[@]}"
+
+    log "INFO" "State saved: $completed_count completed, $failed_count failed"
 }
 
 #
