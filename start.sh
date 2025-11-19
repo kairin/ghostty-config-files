@@ -76,8 +76,8 @@ readonly TASK_REGISTRY=(
     "install-zsh|verify-prereqs|task_install_zsh|verify_zsh_configured|1|60"
     "install-uv|verify-prereqs|task_install_uv|verify_python_uv|1|45"
     "install-fnm|verify-prereqs|task_install_fnm|verify_fnm_installed|1|30"
-    "install-nodejs|install-fnm|task_install_nodejs|verify_nodejs_version|2|120"
-    "install-ai-tools|install-nodejs|task_install_ai_tools|verify_claude_cli|3|90"
+    # NOTE: install-nodejs removed - fnm installs Node.js automatically (task_install_fnm handles both)
+    "install-ai-tools|install-fnm|task_install_ai_tools|verify_claude_cli|3|90"
     "install-context-menu|install-ghostty|task_install_context_menu|verify_context_menu|2|15"
     "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|4|20"
 )
