@@ -254,7 +254,8 @@ verify_python_uv() {
     fi
 
     # Check 4: uv pip subcommand works
-    if ! uv pip --version &>/dev/null; then
+    # Note: 'uv pip' doesn't have --version flag, test with list instead
+    if ! uv pip list &>/dev/null; then
         log "ERROR" "✗ uv pip subcommand not working"
         return 1
     fi

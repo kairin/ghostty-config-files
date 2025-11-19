@@ -87,7 +87,9 @@ readonly TASK_REGISTRY=(
 # ═════════════════════════════════════════════════════════════
 
 # Default flags
-VERBOSE_MODE=false
+# VERBOSE_MODE defaults to true to show all installation output
+# Users can disable with --quiet flag for collapsed Docker-like output (future)
+VERBOSE_MODE=true
 RESUME_MODE=false
 FORCE_ALL=false
 SKIP_CHECKS=false

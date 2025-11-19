@@ -261,6 +261,11 @@ get_status_symbol() {
 #   Formatted task line
 #
 render_task_line() {
+    # Skip in verbose mode (safety check - should be caught by render_all_tasks)
+    if [ "$VERBOSE_MODE" = true ]; then
+        return 0
+    fi
+
     local task_id="$1"
     local status="${TASK_STATUS[$task_id]}"
     local task_name="${TASK_DETAILS[$task_id]}"
