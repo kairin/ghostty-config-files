@@ -754,22 +754,19 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 ### 🚨 CRITICAL: Documentation Structure (CONSTITUTIONAL REQUIREMENT)
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
 - **`website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
-- **`specs/`** - **Feature specifications hub** (as of 2025-11-16):
-  - `005-complete-terminal-infrastructure/` - Active consolidated specification
-  - `archive/pre-consolidation/` - Historical specifications (001, 002, 004)
+- **`specs/`** - **Feature specifications hub**:
+  - `001-modern-tui-system/` - Active modern TUI system specification
 - **`docs-setup/`** - **Critical setup guides** (MCP integration, architecture)
-- **`spec-kit/guides/`** - **Spec-Kit workflow documentation** (constitution, specify, plan, tasks, implement)
+- **`.specify/`** - **Spec-Kit workflow infrastructure** (commands, scripts, templates)
 
 ### 🎯 Spec-Kit Development Guides
-For modern web development with uv + Astro + GitHub Pages: **[Spec-Kit Index](spec-kit/guides/SPEC_KIT_INDEX.md)** - Complete navigation, commands (/constitution, /specify, /plan, /tasks, /implement), and implementation guides.
+Modern TUI development workflow available via slash commands: /guardian-health, /speckit.tasks, /speckit.implement, /guardian-commit, etc. See `.specify/` directory for workflow infrastructure.
 
-## 🌐 Complete Terminal Infrastructure
+## 🌐 Modern TUI System Infrastructure
 
-**Spec 005**: Unified terminal infrastructure specification consolidating repository structure refactoring (001), advanced terminal productivity (002), and modern web development stack (004).
+**Active Spec**: Modern TUI Installation System (001) - Phases 1-6 MVP complete with gum.sh module and comprehensive documentation.
 
-**Complete Specification**: [spec.md](specs/005-complete-terminal-infrastructure/spec.md) - Core components, performance targets, CI/CD requirements, constitutional compliance, implementation phases.
-
-**Archived Specifications**: [Archive Index](specs/archive/pre-consolidation/ARCHIVE_INDEX.md) - Historical reference for specs 001, 002, 004.
+**Complete Specification**: [spec.md](specs/001-modern-tui-system/spec.md) - Core components, performance targets, implementation phases, task tracking.
 
 ### Support Commands
 ```bash
