@@ -59,6 +59,7 @@ source "${ORCHESTRATOR_DIR}/lib/tasks/python_uv.sh"
 source "${ORCHESTRATOR_DIR}/lib/tasks/nodejs_fnm.sh"
 source "${ORCHESTRATOR_DIR}/lib/tasks/ai_tools.sh"
 source "${ORCHESTRATOR_DIR}/lib/tasks/context_menu.sh"
+source "${ORCHESTRATOR_DIR}/lib/tasks/app_audit.sh"
 
 # For task modules that need it
 export SCRIPT_DIR="${ORCHESTRATOR_DIR}"
@@ -78,6 +79,7 @@ readonly TASK_REGISTRY=(
     "install-nodejs|install-fnm|task_install_nodejs|verify_nodejs_version|2|120"
     "install-ai-tools|install-nodejs|task_install_ai_tools|verify_claude_cli|3|90"
     "install-context-menu|install-ghostty|task_install_context_menu|verify_context_menu|2|15"
+    "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|4|20"
 )
 
 # ═════════════════════════════════════════════════════════════
