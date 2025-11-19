@@ -3,7 +3,7 @@
 **Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system/`
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/ ✅
 
-**Progress**: 30/64 tasks complete (46.9%) - Phase 4 (Task Modules) MVP COMPLETE ✅
+**Progress**: 33/64 tasks complete (51.6%) - Phase 5 (Progressive Summarization) COMPLETE ✅
 **Last Updated**: 2025-11-19
 
 **Tests**: No explicit test requirements in spec.md - verification functions serve as integration tests
@@ -375,7 +375,7 @@ task_install_COMPONENT() {
 
 **Context7 Validation**: Query "ANSI cursor management bash scripts" and "Terminal output collapsing patterns"
 
-- [ ] T031 [US1] [US6] Implement lib/ui/collapsible.sh - Docker-like progressive summarization
+- [X] T031 [US1] [US6] Implement lib/ui/collapsible.sh - Docker-like progressive summarization
   - Task status tracking: Global arrays TASK_STATUS[], TASK_TIMES[], TASK_ERRORS[], TASK_ORDER[]
   - Function: register_task(task_id, task_name) - Initialize task
   - Function: render_task(task_id) - Render single task based on status
@@ -388,7 +388,7 @@ task_install_COMPONENT() {
   - Collapsing: Completed tasks collapse to single line
   - Expansion: Errors auto-expand with recovery suggestions
 
-- [ ] T032 [P] [US1] [US7] Implement lib/ui/progress.sh - Progress bars and spinners
+- [X] T032 [P] [US1] [US7] Implement lib/ui/progress.sh - Progress bars and spinners
   - Function: show_progress_bar() - Calculate and display overall progress
     - Progress bar width: 30 characters
     - Filled: ● (completed tasks), Empty: ○ (remaining tasks)
@@ -398,7 +398,7 @@ task_install_COMPONENT() {
   - Function: show_header() - Box with installation title
   - Function: show_footer() - Time elapsed + estimated remaining
 
-- [ ] T033 [US6] Implement verbose mode toggle in lib/ui/collapsible.sh
+- [X] T033 [US6] Implement verbose mode toggle in lib/ui/collapsible.sh
   - Global: VERBOSE_MODE=false
   - Function: toggle_verbose() - Switch between collapsed and expanded output
   - Trap: Catch USR1 signal (or keyboard input) to toggle
