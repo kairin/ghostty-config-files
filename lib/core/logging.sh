@@ -115,6 +115,18 @@ get_timestamp() {
 }
 
 #
+# Get current log file path
+#
+# Returns: Path to current human-readable log file
+#
+# Usage:
+#   command 2>&1 | tee -a "$(get_log_file)"
+#
+get_log_file() {
+    echo "$LOG_FILE"
+}
+
+#
 # Log a message with specified level
 #
 # Arguments:
@@ -234,6 +246,7 @@ set_log_level() {
 export -f init_logging
 export -f rotate_logs
 export -f get_timestamp
+export -f get_log_file
 export -f log
 export -f finalize_logging
 export -f set_log_level

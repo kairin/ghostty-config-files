@@ -211,12 +211,12 @@ show_header() {
     local title="$1"
     local subtitle="${2:-}"
 
-    local content=("$title")
+    # Pass title as box title, subtitle as content
     if [ -n "$subtitle" ]; then
-        content+=("" "$subtitle")
+        draw_box "$title" 70 "$subtitle"
+    else
+        draw_box "$title" 70
     fi
-
-    draw_box "" "${content[@]}"
     echo ""
 }
 

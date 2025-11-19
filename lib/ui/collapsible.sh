@@ -219,6 +219,10 @@ render_task_line() {
 # - Failed task: Expanded with error details
 #
 render_all_tasks() {
+    # TEMPORARY: Disable collapsible UI completely due to output chaos
+    # TODO: Fix parallel task display with proper buffering
+    return 0
+
     # Skip rendering in verbose mode (full output shown)
     if [ "$VERBOSE_MODE" = true ]; then
         return 0

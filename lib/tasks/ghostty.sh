@@ -35,7 +35,9 @@ source "${SCRIPT_DIR}/../verification/unit_tests.sh"
 readonly GHOSTTY_REPO="https://github.com/ghostty-org/ghostty.git"
 readonly GHOSTTY_BUILD_DIR="/tmp/ghostty-build"
 readonly GHOSTTY_INSTALL_DIR="${GHOSTTY_APP_DIR:-$HOME/.local/share/ghostty}"
-readonly ZIG_MIN_VERSION="0.14.0"
+readonly ZIG_MIN_VERSION="0.15.2"
+readonly ZIG_DOWNLOAD_URL="https://ziglang.org/download/0.15.2/zig-x86_64-linux-0.15.2.tar.xz"
+readonly ZIG_INSTALL_DIR="$HOME/Apps/zig"
 
 #
 # Check Zig compiler availability and version
@@ -47,28 +49,91 @@ readonly ZIG_MIN_VERSION="0.14.0"
 check_zig_compiler() {
     log "INFO" "Checking Zig compiler..."
 
+    local zig_version=""
+    if command_exists "zig"; then
+        zig_version=$(zig version 2>&1 | head -n 1)
+        log "INFO" "  Zig version: $zig_version"
+
+        # Extract version number (e.g., "0.15.2" from "0.15.2-dev.1234+abc")
+        local zig_major zig_minor zig_patch
+        zig_major=$(echo "$zig_version" | cut -d. -f1)
+        zig_minor=$(echo "$zig_version" | cut -d. -f2 | cut -d- -f1)
+        zig_patch=$(echo "$zig_version" | cut -d. -f3 | cut -d- -f1)
+
+        # Check if version >= 0.15.2
+        if [ "$zig_major" -eq 0 ] && [ "$zig_minor" -gt 15 ]; then
+            log "SUCCESS" "✓ Zig compiler ready ($zig_version ≥$ZIG_MIN_VERSION)"
+            return 0
+        elif [ "$zig_major" -eq 0 ] && [ "$zig_minor" -eq 15 ] && [ "${zig_patch:-0}" -ge 2 ]; then
+            log "SUCCESS" "✓ Zig compiler ready ($zig_version ≥$ZIG_MIN_VERSION)"
+            return 0
+        fi
+
+        log "WARNING" "⚠ Zig version too old: $zig_version (need ≥$ZIG_MIN_VERSION)"
+        log "INFO" "  Will upgrade Zig automatically..."
+    else
+        log "WARNING" "⚠ Zig compiler not found"
+        log "INFO" "  Will install Zig $ZIG_MIN_VERSION automatically..."
+    fi
+
+    # Auto-upgrade/install Zig
+    upgrade_zig
+    return $?
+}
+
+#
+# Upgrade or install Zig to required version
+#
+upgrade_zig() {
+    log "INFO" "Installing Zig $ZIG_MIN_VERSION..."
+
+    # Create Apps directory if needed
+    mkdir -p "$HOME/Apps"
+
+    # Download Zig
+    local zig_tarball="/tmp/zig-$ZIG_MIN_VERSION.tar.xz"
+    log "INFO" "  Downloading Zig $ZIG_MIN_VERSION..."
+    if ! curl -fsSL "$ZIG_DOWNLOAD_URL" -o "$zig_tarball"; then
+        log "ERROR" "✗ Failed to download Zig"
+        return 1
+    fi
+
+    # Extract
+    log "INFO" "  Extracting Zig..."
+    cd "$HOME/Apps"
+    tar xf "$zig_tarball"
+
+    # Remove/backup old zig installation
+    if [ -e "zig" ]; then
+        log "INFO" "  Backing up old Zig installation..."
+        if [ -d "zig" ] && [ ! -L "zig" ]; then
+            # It's a directory (old installation), move it
+            mv zig zig-old-backup-$(date +%Y%m%d-%H%M%S)
+        elif [ -L "zig" ]; then
+            # It's a symlink, just remove it
+            rm -f zig
+        else
+            # It's a file, remove it
+            rm -f zig
+        fi
+    fi
+
+    # Create new symlink
+    ln -s "zig-x86_64-linux-$ZIG_MIN_VERSION" zig
+
+    # Cleanup
+    rm -f "$zig_tarball"
+
+    # Verify
     if ! command_exists "zig"; then
-        log "ERROR" "✗ Zig compiler not found"
-        log "ERROR" "  Install Zig 0.14.0+ from https://ziglang.org/download/"
+        log "ERROR" "✗ Zig installation failed (not in PATH)"
+        log "ERROR" "  Add to PATH: export PATH=\"$HOME/Apps/zig:\$PATH\""
         return 1
     fi
 
-    local zig_version
-    zig_version=$(zig version 2>&1 | head -n 1)
-    log "INFO" "  Zig version: $zig_version"
-
-    # Extract version number (e.g., "0.14.0" from "0.14.0-dev.1234+abc")
-    local zig_major zig_minor
-    zig_major=$(echo "$zig_version" | cut -d. -f1)
-    zig_minor=$(echo "$zig_version" | cut -d. -f2 | cut -d- -f1)
-
-    if [ "$zig_major" -eq 0 ] && [ "$zig_minor" -lt 14 ]; then
-        log "ERROR" "✗ Zig version too old: $zig_version (need ≥0.14.0)"
-        log "ERROR" "  Download latest: https://ziglang.org/download/"
-        return 1
-    fi
-
-    log "SUCCESS" "✓ Zig compiler ready ($zig_version ≥0.14.0)"
+    local new_version
+    new_version=$(zig version 2>&1 | head -n 1)
+    log "SUCCESS" "✓ Zig $new_version installed successfully"
     return 0
 }
 

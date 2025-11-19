@@ -137,22 +137,27 @@ is_utf8_terminal() {
 #
 # Detect optimal box drawing character set
 #
+# Arguments:
+#   $1 - Box style override (optional, default: from BOX_DRAWING env var or "auto")
+#
 # Selection logic:
-#   1. Check BOX_DRAWING environment variable (manual override)
-#   2. If SSH session: Use ASCII (best compatibility)
-#   3. If UTF-8 locale + UTF-8 terminal: Use UTF-8 double-line
-#   4. If UTF-8 locale: Use UTF-8 single-line
-#   5. Default: ASCII
+#   1. Check function parameter (manual override)
+#   2. Check BOX_DRAWING environment variable (manual override)
+#   3. If SSH session: Use ASCII (best compatibility)
+#   4. If UTF-8 locale + UTF-8 terminal: Use UTF-8 double-line
+#   5. If UTF-8 locale: Use UTF-8 single-line
+#   6. Default: ASCII
 #
 # Returns:
 #   Sets global BOX_CHARS array to selected character set
 #
 # Usage:
-#   init_box_drawing
-#   echo "${BOX_CHARS[TL]}"  # Top-left corner
+#   init_box_drawing              # Auto-detect
+#   init_box_drawing "ascii"      # Force ASCII
+#   echo "${BOX_CHARS[TL]}"       # Top-left corner
 #
 init_box_drawing() {
-    local box_style="${BOX_DRAWING:-auto}"
+    local box_style="${1:-${BOX_DRAWING:-auto}}"
 
     # Manual override
     case "$box_style" in
