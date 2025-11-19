@@ -28,6 +28,10 @@
 
 set -euo pipefail
 
+# Source guard - prevent redundant loading
+[ -z "${NODEJS_FNM_SH_LOADED:-}" ] || return 0
+NODEJS_FNM_SH_LOADED=1
+
 # Source required utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../core/logging.sh"
@@ -45,7 +49,7 @@ readonly NODE_LATEST_VERSION="latest"  # Constitutional: LATEST, not LTS
 readonly FNM_STARTUP_THRESHOLD_MS=50  # CRITICAL CONSTITUTIONAL REQUIREMENT
 
 # Conflicting version managers (constitutional prohibition)
-readonly CONFLICTING_MANAGERS=(
+readonly NODEJS_CONFLICTING_MANAGERS=(
     "nvm"
     "n"
     "asdf"
@@ -64,7 +68,7 @@ check_conflicting_version_managers() {
 
     local conflicts_found=0
 
-    for manager in "${CONFLICTING_MANAGERS[@]}"; do
+    for manager in "${NODEJS_CONFLICTING_MANAGERS[@]}"; do
         if command_exists "$manager"; then
             log "WARNING" "  ⚠ Conflicting version manager detected: $manager"
             log "WARNING" "    Constitutional requirement: fnm EXCLUSIVE"
