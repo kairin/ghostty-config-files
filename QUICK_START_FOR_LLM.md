@@ -1,8 +1,9 @@
 # Quick Start for New LLM - Ghostty Config Files
 
 **Repository**: https://github.com/kairin/ghostty-config-files
-**Current State**: MVP Complete (30/64 tasks - 46.9%)
-**Your Mission**: Pick any task from Phase 7-10 and implement it following the constitutional workflow
+**Current State**: Phase 7 Started (31/64 tasks - 48.4%)
+**Latest Update**: T040 App Audit System Complete (2025-11-18)
+**Your Mission**: Pick any task from Phase 5-10 and implement it following the constitutional workflow
 
 ---
 
@@ -30,9 +31,22 @@ git checkout -b "${DATETIME}-feat-your-feature-name"
 
 ## 🎯 Available Tasks (Pick One)
 
-### Phase 7: App Audit System (5 tasks)
-- **T040**: Implement lib/tasks/app_audit.sh (duplicate app detection)
-- **T041**: Implement duplicate categorization
+### Phase 5: Progressive Summarization (3 tasks)
+- **T031**: Implement lib/ui/collapsible.sh (Docker-like output)
+- **T032**: Implement lib/ui/progress.sh (Progress bars)
+- **T033**: Implement verbose mode toggle
+
+### Phase 6: Orchestration (6 tasks)
+- **T034**: Create task registry in new start.sh
+- **T035**: Implement state management in orchestrator
+- **T036**: Implement parallel task execution
+- **T037**: Implement CLI argument parsing
+- **T038**: Create new start.sh orchestrator
+- **T039**: Add interrupt handling
+
+### Phase 7: App Audit System (4 remaining tasks) - **T040 COMPLETE** ✅
+- ~~**T040**: Implement lib/tasks/app_audit.sh (duplicate app detection)~~ ✅ **COMPLETE**
+- **T041**: Implement duplicate categorization (HIGH/MEDIUM/LOW priority)
 - **T042**: Implement safe cleanup commands
 - **T043**: Create CLI for app audit
 - **T044**: Desktop icon verification
@@ -53,6 +67,8 @@ git checkout -b "${DATETIME}-feat-your-feature-name"
 
 ### Phase 10: Documentation (7 tasks)
 - **T055**: Integrate with local CI/CD workflows
+- **T056**: Update README.md with TUI highlights
+- **T057**: Create ARCHITECTURE.md (already exists, needs TUI updates)
 - **T058**: Update AGENTS.md with TUI references
 - **T059**: Create MIGRATION-GUIDE.md
 - **T060**: Update SPEC-KIT-TUI-INTEGRATION.md

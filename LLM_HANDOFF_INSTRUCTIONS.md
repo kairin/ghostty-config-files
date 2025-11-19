@@ -1,9 +1,10 @@
 # LLM Handoff Instructions - Ghostty Config Files Repository
 
-**Date**: 2025-11-19
+**Date**: 2025-11-18 (Updated)
 **Repository**: https://github.com/kairin/ghostty-config-files
-**Current Status**: MVP Complete (30/64 tasks - 46.9%)
-**Main Branch**: `main` (commit: `78ef342`)
+**Current Status**: Phase 7 Started (31/64 tasks - 48.4%)
+**Main Branch**: `main` (commit: `fdcc050`)
+**Active Branch**: `claude/ghostty-config-development-01EgBPaP4jUVfqvbdVjjFQ9o` (commit: `995b681`)
 **Feature Branch**: `001-modern-tui-system` (preserved, not deleted)
 
 ---
@@ -21,18 +22,110 @@ main (78ef342) - SYNCED WITH REMOTE ✅
   └── DO NOT DELETE (constitutional requirement)
 ```
 
-### What's Complete (30/64 tasks)
-- ✅ **Phase 1**: Repository structure and backup system
-- ✅ **Phase 2**: Core infrastructure (logging, state, errors, utils)
-- ✅ **Phase 3**: UI components (TUI, boxes, collapsible, progress)
-- ✅ **Phase 4**: Task modules (ghostty, zsh, python_uv, nodejs_fnm, ai_tools, context_menu, **gum**)
+### What's Complete (31/64 tasks)
+- ✅ **Phase 1**: Repository structure and backup system (4/4 tasks)
+- ✅ **Phase 2**: Core infrastructure (logging, state, errors, utils) (9/9 tasks)
+- ✅ **Phase 3**: UI components and verification framework (11/11 tasks)
+- ✅ **Phase 4**: Task modules (ghostty, zsh, python_uv, nodejs_fnm, ai_tools, context_menu, **gum**) (7/7 tasks)
+- ✅ **Phase 7 (Started)**: App Audit System - **T040 Complete** (1/5 tasks)
+  - ✅ **NEW**: lib/tasks/app_audit.sh - Duplicate detection with disk usage calculation
+  - ✅ Scan APT packages (dpkg -l) with installed size
+  - ✅ Scan Snap packages (snap list --all) with du -sh disk usage
+  - ✅ Detect duplicates (same app via snap + apt)
+  - ✅ Detect disabled snaps with total disk usage
+  - ✅ Browser installation analysis
+  - ✅ Generate markdown report (/tmp/ubuntu-apps-audit.md)
 - ✅ **Documentation**: ARCHITECTURE.md (700+ lines), README.md enhancements
 
-### What's Outstanding (34/64 tasks)
-- ⏳ **Phase 7**: App Audit System (5 tasks - T040-T044)
+### What's Outstanding (33/64 tasks)
+- ⏳ **Phase 5**: Progressive Summarization & Collapsible Output (3 tasks - T031-T033)
+- ⏳ **Phase 6**: Orchestration & Main Entry Point (6 tasks - T034-T039)
+- ⏳ **Phase 7**: App Audit System (4 tasks remaining - T041-T044) - **T040 COMPLETE** ✅
 - ⏳ **Phase 8**: Context7 Integration (4 tasks - T045-T048)
 - ⏳ **Phase 9**: Testing Infrastructure (6 tasks - T049-T054)
-- ⏳ **Phase 10**: Documentation & Deployment (7 tasks - T056-T064)
+- ⏳ **Phase 10**: Documentation & Deployment (7 tasks - T055-T064)
+
+---
+
+## 📝 Recent Updates (2025-11-18)
+
+### T040: App Audit Duplicate Detection System ✅ COMPLETE
+
+**File Created**: `lib/tasks/app_audit.sh` (651 lines)
+
+**Commit**: `995b681` - "feat: Implement app audit duplicate detection system (T040)"
+
+**Key Features Implemented**:
+1. **APT Package Scanning** (`scan_apt_packages`)
+   - Uses `dpkg -l` to list installed packages
+   - Calculates disk usage with `dpkg-query -W -f='${Installed-Size}'`
+   - Returns JSON array with name, version, size, method
+
+2. **Snap Package Scanning** (`scan_snap_packages`)
+   - Uses `snap list --all` to include disabled packages
+   - Calculates disk usage with `du -sh /snap/<package>/<rev>`
+   - Identifies disabled snaps for cleanup recommendations
+   - Returns JSON array with disabled flag
+
+3. **Desktop File Scanning** (`scan_desktop_files`)
+   - Scans system and user desktop file locations
+   - Extracts Name, Exec, Icon from .desktop files
+   - Supports duplicate icon detection
+
+4. **Duplicate Detection** (`detect_duplicates`)
+   - Cross-references snap and apt packages
+   - Common app name mappings (firefox, chromium, etc.)
+   - Calculates total disk usage (snap + apt)
+   - Returns JSON array of duplicates with recommendations
+
+5. **Disabled Snap Detection** (`detect_disabled_snaps`)
+   - Filters disabled snaps from scan results
+   - Aggregates total disk usage in MB
+   - Provides cleanup commands
+
+6. **Browser Analysis** (`detect_browsers`)
+   - Detects common browsers (Firefox, Chrome, Chromium, Edge, etc.)
+   - Warns if >3 browsers installed
+   - Recommendations to keep 1-2 browsers
+
+7. **Report Generation** (`generate_audit_report`)
+   - Creates markdown report at `/tmp/ubuntu-apps-audit.md`
+   - Summary table with counts and status indicators
+   - Three priority sections: HIGH (duplicates), MEDIUM (disabled), LOW (browsers)
+   - Cleanup commands for each category
+   - Total reclaimable disk space calculation
+
+**Constitutional Compliance**:
+- ✅ Modular Architecture (Principle V)
+- ✅ FR-026: Duplicate detection framework
+- ✅ FR-064: Application audit system
+- ✅ FR-066: Disk usage calculation per category
+- ✅ FR-053: Idempotent operations
+- ✅ Real verification tests (actual system scanning)
+
+**Testing**:
+- ✅ Syntax validation (`bash -n`)
+- ✅ Function export verification
+- ✅ Execution test (generates valid report)
+- ✅ Error handling (graceful degradation when jq/bc unavailable)
+
+**Functions Exported**:
+```bash
+task_run_app_audit          # Main orchestrator
+scan_apt_packages           # APT inventory
+scan_snap_packages          # Snap inventory
+scan_desktop_files          # Desktop app discovery
+detect_duplicates           # Cross-manager duplicates
+detect_disabled_snaps       # Disabled snap finder
+detect_browsers             # Browser analysis
+generate_audit_report       # Markdown report generator
+```
+
+**Next Steps for Phase 7**:
+- T041: Duplicate categorization (already implemented in T040)
+- T042: Safe cleanup commands (implement interactive removal)
+- T043: CLI for app audit (create scripts/app-audit.sh)
+- T044: Desktop icon verification (implement .desktop validation)
 
 ---
 
