@@ -36,14 +36,14 @@ jobs:
         with:
           node-version: '25'
           cache: 'npm'
-          cache-dependency-path: 'website/package-lock.json'
+          cache-dependency-path: 'astro-website/package-lock.json'
 
       - name: Install dependencies
-        working-directory: ./website
+        working-directory: ./astro-website
         run: npm install
 
       - name: Build Astro site
-        working-directory: ./website
+        working-directory: ./astro-website
         run: npm run build
 
       - name: Upload artifact

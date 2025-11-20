@@ -143,19 +143,19 @@ jobs:
         with:
           node-version: '25'
           cache: 'npm'
-          cache-dependency-path: 'website/package-lock.json'
+          cache-dependency-path: 'astro-website/package-lock.json'
 
       - name: Install website dependencies
-        working-directory: ./website
+        working-directory: ./astro-website
         run: npm ci --silent
 
       - name: Run TypeScript check
-        working-directory: ./website
+        working-directory: ./astro-website
         run: npm run check
         continue-on-error: false
 
       - name: Verify TypeScript strict mode
-        working-directory: ./website
+        working-directory: ./astro-website
         run: |
           echo "Verifying TypeScript configuration..."
           if grep -q '"strict": true' tsconfig.json; then

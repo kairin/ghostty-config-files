@@ -42,19 +42,19 @@ jobs:
         with:
           node-version: '25'
           cache: 'npm'
-          cache-dependency-path: 'website/package-lock.json'
+          cache-dependency-path: 'astro-website/package-lock.json'
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
 
       - name: Install npm dependencies
-        working-directory: ./website
+        working-directory: ./astro-website
         run: |
           echo "Installing dependencies..."
           npm ci --silent
 
       - name: Verify critical dependencies
-        working-directory: ./website
+        working-directory: ./astro-website
         run: |
           echo "Verifying Astro and TypeScript installation..."
           npm list astro --depth=0
@@ -62,13 +62,13 @@ jobs:
           npm list @astrojs/check --depth=0
 
       - name: Run TypeScript validation
-        working-directory: ./website
+        working-directory: ./astro-website
         run: |
           echo "Running TypeScript check..."
           npm run check
 
       - name: Build Astro site
-        working-directory: ./website
+        working-directory: ./astro-website
         run: |
           echo "Building Astro site..."
           npm run build
