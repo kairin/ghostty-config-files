@@ -4,6 +4,27 @@
 
 Automatic detection and fixing of ZSH compinit insecure file warnings. This system prevents the recurring "zsh compinit: insecure files" error that occurs when completion files have incorrect ownership or permissions.
 
+## Quick Fix (TL;DR)
+
+If you're seeing the "zsh compinit: insecure files" warning right now:
+
+```bash
+# 1. List insecure files
+compaudit
+
+# 2. One-time quick fix (requires password)
+/home/kkk/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh
+
+# 3. For automatic fixes without password prompts, add passwordless sudo:
+sudo EDITOR=nano visudo
+# Add this line (replace 'kkk' with your username):
+# kkk ALL=(ALL) NOPASSWD: /usr/bin/chown, /usr/bin/chmod
+# Save: Ctrl+X, Y, Enter
+
+# 4. Test the fix
+compaudit  # Should return no output if fixed
+```
+
 ## Problem Statement
 
 ZSH's completion system (`compinit`) performs security checks on completion files and directories. Files owned by users other than root or the current user (e.g., `nobody:nogroup`) trigger security warnings:
@@ -117,13 +138,48 @@ The `-u` flag for `compinit` (skip security checks) also doesn't prevent the ini
 
 ## Common Scenarios
 
-### After System Updates
+### Google Antigravity Package (Most Common Issue)
 
-Package managers may install completion files with incorrect ownership:
+The **antigravity** package from Google frequently installs its ZSH completion file with incorrect ownership:
 
 ```bash
-# Example: APT installs Python antigravity completion
--rw-r--r-- 1 nobody nogroup 2554 /usr/share/zsh/vendor-completions/_antigravity
+# Problem: File owned by nobody instead of root
+$ ls -la /usr/share/zsh/vendor-completions/_antigravity
+-rw-r--r-- 1 nobody nobody 2554 Nov 19 10:55 /usr/share/zsh/vendor-completions/_antigravity
+
+# Result: ZSH security warning on every terminal launch
+zsh compinit: insecure files, run compaudit for list.
+```
+
+**Root Cause**: The antigravity package (version 1.0.0-1763520963) from Google installs the completion file with `nobody:nobody` ownership instead of `root:root`. This can happen during:
+- Initial package installation
+- Package updates
+- System updates that modify the package
+
+**Immediate Fix** (single-line command):
+```bash
+sudo chown root:root /usr/share/zsh/vendor-completions/_antigravity && sudo chmod 644 /usr/share/zsh/vendor-completions/_antigravity
+```
+
+**Verify Fix**:
+```bash
+compaudit  # Should return no output
+```
+
+**Permanent Solution**: Configure passwordless sudo (see section below) so the automatic daily fix script handles this without password prompts.
+
+**Alternative**: If you don't need antigravity, uninstall it:
+```bash
+sudo apt remove antigravity
+```
+
+### After System Updates
+
+Other packages may also install completion files with incorrect ownership:
+
+```bash
+# Example: Various packages installing with wrong ownership
+-rw-r--r-- 1 nobody nogroup 2554 /usr/share/zsh/vendor-completions/_some_tool
 ```
 
 **Solution**: Automatic daily check detects and fixes this.
@@ -160,6 +216,46 @@ For fully automatic fixing without password prompts:
    ```
 
 ## Troubleshooting
+
+### Issue: Warning Keeps Recurring After Fix
+
+**Symptoms**: You run the fix command, `compaudit` returns no output, but the warning reappears on the next terminal launch.
+
+**Cause**: The antigravity package (or another package) is being reinstalled or its files are being reset, possibly by:
+- Automatic daily updates (`update-all` command)
+- Manual package updates with `apt upgrade`
+- Package reinstallation triggers
+
+**Solutions**:
+
+1. **Enable automatic daily fix** (recommended):
+   ```bash
+   # Configure passwordless sudo
+   sudo EDITOR=nano visudo
+   # Add this line:
+   kkk ALL=(ALL) NOPASSWD: /usr/bin/chown, /usr/bin/chmod
+   ```
+
+   The daily ZSH security check (runs automatically on first terminal launch each day) will then fix the issue without password prompts.
+
+2. **Manual fix each time** (if passwordless sudo not desired):
+   ```bash
+   sudo chown root:root /usr/share/zsh/vendor-completions/_antigravity && sudo chmod 644 /usr/share/zsh/vendor-completions/_antigravity
+   ```
+
+3. **Prevent package from being updated**:
+   ```bash
+   # Hold the antigravity package at current version
+   sudo apt-mark hold antigravity
+
+   # Verify hold status
+   apt-mark showhold
+   ```
+
+4. **Remove the package** (if not needed):
+   ```bash
+   sudo apt remove antigravity
+   ```
 
 ### Issue: "Authentication failed"
 
