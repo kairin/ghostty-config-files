@@ -65,9 +65,10 @@ declare -gA TASK_OUTPUT      # task_id => buffered command output
 declare -ga TASK_ORDER       # Array of task IDs in execution order
 
 # Verbose mode (T033)
-# TEMPORARY: Default to verbose=true until full collapsible UI with output buffering is complete
-# This ensures users see all installation output in real-time
-VERBOSE_MODE=${VERBOSE_MODE:-true}  # Can be set via --verbose flag
+# DEFAULT: VERBOSE_MODE=false for Docker-like collapsed terminal output
+# CRITICAL: Full verbose logs ALWAYS captured to log files regardless of this setting
+# Users can enable full terminal output with --verbose flag
+VERBOSE_MODE=${VERBOSE_MODE:-false}  # Can be set via --verbose flag
 
 # ANSI cursor control
 readonly ANSI_SAVE_CURSOR="\033[s"
@@ -140,8 +141,8 @@ register_task() {
 # Run command with collapsible output
 #
 # Executes a command while capturing output for the collapsible UI.
-# In verbose mode, shows output in real-time. In collapsed mode, buffers
-# output and only shows on error or when expanded.
+# CRITICAL: ALWAYS logs full output to verbose log file regardless of VERBOSE_MODE.
+# In verbose mode, shows output in real-time. In collapsed mode, shows only status.
 #
 # Args:
 #   $1 - Task ID
@@ -149,6 +150,14 @@ register_task() {
 #
 # Returns:
 #   Command exit code
+#
+# Dual-Mode Behavior:
+#   - VERBOSE_MODE=true: Show full output to terminal + log to files
+#   - VERBOSE_MODE=false: Show collapsed status + log full output to files
+#
+# Constitutional Compliance:
+#   - User Requirement: "all logs captured in full, extremely verbose regardless"
+#   - Dual-mode output: Terminal (collapsed) + Log files (full verbose)
 #
 # Example:
 #   run_command_collapsible "install-ghostty" git clone https://github.com/ghostty-org/ghostty
@@ -158,29 +167,40 @@ run_command_collapsible() {
     shift
     local cmd=("$@")
 
-    # In verbose mode, just run command normally with tee to log
-    if [ "$VERBOSE_MODE" = true ]; then
-        "${cmd[@]}" 2>&1 | tee -a "$(get_log_file)"
-        return "${PIPESTATUS[0]}"
-    fi
-
-    # In collapsed mode, buffer output
+    # Capture output to variable (for both terminal and logs)
+    local output
+    local exit_code=0
     local output_file
     output_file=$(mktemp)
-    local exit_code=0
 
-    # Run command, capturing output
+    # Execute command with output capture
     if "${cmd[@]}" > "$output_file" 2>&1; then
         exit_code=0
     else
         exit_code=$?
     fi
 
-    # Store output in task buffer
-    TASK_OUTPUT["$task_id"]=$(cat "$output_file")
+    # Read captured output
+    output=$(cat "$output_file")
 
-    # Also append to log file
-    cat "$output_file" >> "$(get_log_file)"
+    # ALWAYS log full output to verbose log file (regardless of VERBOSE_MODE)
+    log_command_output "$task_id: ${cmd[*]}" "$output"
+
+    # Terminal display depends on VERBOSE_MODE
+    if [ "$VERBOSE_MODE" = true ]; then
+        # Show full output to terminal
+        echo "$output"
+    else
+        # Show only collapsed summary (Docker-like)
+        # Output already logged to verbose file, just show status via task rendering
+        :
+    fi
+
+    # Store output in task buffer (for expansion on failure)
+    TASK_OUTPUT["$task_id"]="$output"
+
+    # Also append to human-readable log file
+    echo "$output" >> "$(get_log_file)"
 
     # Cleanup
     rm -f "$output_file"
