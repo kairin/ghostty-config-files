@@ -70,71 +70,37 @@ export SCRIPT_DIR="${REPO_ROOT}"
 #   - A bash function name: "task_install_gum"
 #   - A modular script path: "script:lib/tasks/ghostty/00-check-prerequisites.sh"
 readonly TASK_REGISTRY=(
+    # ═══════════════════════════════════════════════════════════════
     # Prerequisites
+    # ═══════════════════════════════════════════════════════════════
     "verify-prereqs||pre_installation_health_check|verify_health|0|10"
     "install-gum|verify-prereqs|task_install_gum|verify_gum_installed|1|30"
 
     # ═══════════════════════════════════════════════════════════════
-    # Ghostty Installation (Modular - 9 steps)
+    # Component Managers (each orchestrates its own sub-steps)
     # ═══════════════════════════════════════════════════════════════
-    "ghostty-check-prereqs|verify-prereqs|script:lib/tasks/ghostty/00-check-prerequisites.sh|verify_ghostty_installed|1|5"
-    "ghostty-download-zig|ghostty-check-prereqs|script:lib/tasks/ghostty/01-download-zig.sh|verify_ghostty_installed|1|30"
-    "ghostty-extract-zig|ghostty-download-zig|script:lib/tasks/ghostty/02-extract-zig.sh|verify_ghostty_installed|1|10"
-    "ghostty-clone-repo|ghostty-extract-zig|script:lib/tasks/ghostty/03-clone-ghostty.sh|verify_ghostty_installed|1|20"
-    "ghostty-build|ghostty-clone-repo|script:lib/tasks/ghostty/04-build-ghostty.sh|verify_ghostty_installed|1|90"
-    "ghostty-install-binary|ghostty-build|script:lib/tasks/ghostty/05-install-binary.sh|verify_ghostty_installed|1|10"
-    "ghostty-configure|ghostty-install-binary|script:lib/tasks/ghostty/06-configure-ghostty.sh|verify_ghostty_installed|1|10"
-    "ghostty-desktop-entry|ghostty-configure|script:lib/tasks/ghostty/07-create-desktop-entry.sh|verify_ghostty_installed|1|5"
-    "ghostty-verify|ghostty-desktop-entry|script:lib/tasks/ghostty/08-verify-installation.sh|verify_ghostty_installed|1|5"
+    # Ghostty Terminal (9 steps: Zig build, Ghostty installation)
+    "install-ghostty|verify-prereqs|script:lib/installers/ghostty/install.sh|verify_ghostty_installed|1|185"
+
+    # ZSH + Oh My ZSH (6 steps: OMZ, plugins, zshrc config, security)
+    "install-zsh|verify-prereqs|script:lib/installers/zsh/install.sh|verify_zsh_configured|1|70"
+
+    # Python UV Package Manager (5 steps: UV installer, shell config)
+    "install-uv|verify-prereqs|script:lib/installers/python_uv/install.sh|verify_python_uv|1|50"
+
+    # Node.js Fast Node Manager (5 steps: fnm, Node.js, shell config)
+    "install-fnm|verify-prereqs|script:lib/installers/nodejs_fnm/install.sh|verify_fnm_installed|1|70"
+
+    # AI Tools (5 steps: Claude CLI, Gemini CLI, Copilot CLI)
+    "install-ai-tools|install-fnm|script:lib/installers/ai_tools/install.sh|verify_claude_cli|3|105"
+
+    # Context Menu Integration (3 steps: Nautilus right-click menu)
+    "install-context-menu|install-ghostty|script:lib/installers/context_menu/install.sh|verify_context_menu|2|20"
 
     # ═══════════════════════════════════════════════════════════════
-    # ZSH Installation (Modular - 6 steps)
+    # App Audit (Final validation)
     # ═══════════════════════════════════════════════════════════════
-    "zsh-check-prereqs|verify-prereqs|script:lib/tasks/zsh/00-check-prerequisites.sh|verify_zsh_configured|1|5"
-    "zsh-install-omz|zsh-check-prereqs|script:lib/tasks/zsh/01-install-oh-my-zsh.sh|verify_zsh_configured|1|20"
-    "zsh-install-plugins|zsh-install-omz|script:lib/tasks/zsh/02-install-plugins.sh|verify_zsh_configured|1|15"
-    "zsh-configure-zshrc|zsh-install-plugins|script:lib/tasks/zsh/03-configure-zshrc.sh|verify_zsh_configured|1|10"
-    "zsh-install-security|zsh-configure-zshrc|script:lib/tasks/zsh/04-install-security-check.sh|verify_zsh_configured|1|5"
-    "zsh-verify|zsh-install-security|script:lib/tasks/zsh/05-verify-installation.sh|verify_zsh_configured|1|5"
-
-    # ═══════════════════════════════════════════════════════════════
-    # Python UV Installation (Modular - 5 steps)
-    # ═══════════════════════════════════════════════════════════════
-    "uv-check-prereqs|verify-prereqs|script:lib/tasks/python_uv/00-check-prerequisites.sh|verify_python_uv|1|5"
-    "uv-download|uv-check-prereqs|script:lib/tasks/python_uv/01-download-uv.sh|verify_python_uv|1|15"
-    "uv-extract|uv-download|script:lib/tasks/python_uv/02-extract-uv.sh|verify_python_uv|1|10"
-    "uv-install|uv-extract|script:lib/tasks/python_uv/03-install-uv.sh|verify_python_uv|1|10"
-    "uv-verify|uv-install|script:lib/tasks/python_uv/04-verify-installation.sh|verify_python_uv|1|5"
-
-    # ═══════════════════════════════════════════════════════════════
-    # Node.js FNM Installation (Modular - 5 steps)
-    # ═══════════════════════════════════════════════════════════════
-    "fnm-check-prereqs|verify-prereqs|script:lib/tasks/nodejs_fnm/00-check-prerequisites.sh|verify_fnm_installed|1|5"
-    "fnm-download|fnm-check-prereqs|script:lib/tasks/nodejs_fnm/01-download-fnm.sh|verify_fnm_installed|1|15"
-    "fnm-install|fnm-download|script:lib/tasks/nodejs_fnm/02-install-fnm.sh|verify_fnm_installed|1|10"
-    "fnm-install-nodejs|fnm-install|script:lib/tasks/nodejs_fnm/03-install-nodejs.sh|verify_fnm_installed|1|30"
-    "fnm-verify|fnm-install-nodejs|script:lib/tasks/nodejs_fnm/04-verify-installation.sh|verify_fnm_installed|1|5"
-
-    # ═══════════════════════════════════════════════════════════════
-    # AI Tools Installation (Modular - 5 steps)
-    # ═══════════════════════════════════════════════════════════════
-    "ai-tools-check-prereqs|fnm-verify|script:lib/tasks/ai_tools/00-check-prerequisites.sh|verify_claude_cli|3|5"
-    "ai-tools-install-claude|ai-tools-check-prereqs|script:lib/tasks/ai_tools/01-install-claude-cli.sh|verify_claude_cli|3|30"
-    "ai-tools-install-gemini|ai-tools-check-prereqs|script:lib/tasks/ai_tools/02-install-gemini-cli.sh|verify_claude_cli|3|30"
-    "ai-tools-install-copilot|ai-tools-check-prereqs|script:lib/tasks/ai_tools/03-install-copilot-cli.sh|verify_claude_cli|3|30"
-    "ai-tools-verify|ai-tools-install-claude,ai-tools-install-gemini,ai-tools-install-copilot|script:lib/tasks/ai_tools/04-verify-installation.sh|verify_claude_cli|3|5"
-
-    # ═══════════════════════════════════════════════════════════════
-    # Context Menu Installation (Modular - 3 steps)
-    # ═══════════════════════════════════════════════════════════════
-    "context-menu-check-prereqs|ghostty-verify|script:lib/tasks/context_menu/00-check-prerequisites.sh|verify_context_menu|2|5"
-    "context-menu-install|context-menu-check-prereqs|script:lib/tasks/context_menu/01-install-context-menu.sh|verify_context_menu|2|10"
-    "context-menu-verify|context-menu-install|script:lib/tasks/context_menu/02-verify-installation.sh|verify_context_menu|2|5"
-
-    # ═══════════════════════════════════════════════════════════════
-    # App Audit (Legacy - TODO: Modularize)
-    # ═══════════════════════════════════════════════════════════════
-    "run-app-audit|ai-tools-verify,context-menu-verify|task_run_app_audit|verify_app_audit_report|4|20"
+    "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|4|20"
 )
 
 # ═════════════════════════════════════════════════════════════
