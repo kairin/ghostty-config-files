@@ -51,15 +51,16 @@ fi
 check_insecure_files() {
     local insecure_files=()
 
-    if command -v compaudit >/dev/null 2>&1; then
-        # Capture compaudit output
+    # compaudit is a ZSH function, must run in ZSH context
+    if command -v zsh >/dev/null 2>&1; then
+        # Capture compaudit output by running in ZSH with compinit loaded
         while IFS= read -r file; do
             if [[ -n "$file" && -f "$file" ]]; then
                 insecure_files+=("$file")
             fi
-        done < <(compaudit 2>/dev/null || true)
+        done < <(zsh -c 'autoload -Uz compinit; compinit -u 2>/dev/null; compaudit 2>&1' | grep -v "^There are insecure" || true)
     else
-        log_error "compaudit command not found. Is zsh installed?"
+        log_error "ZSH is not installed on this system"
         return 1
     fi
 
