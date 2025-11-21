@@ -108,13 +108,15 @@ readonly TASK_REGISTRY=(
 # ═════════════════════════════════════════════════════════════
 
 # Default flags
-# VERBOSE_MODE defaults to true to show all installation output
-# Users can disable with --quiet flag for collapsed Docker-like output (future)
-VERBOSE_MODE=true
+# VERBOSE_MODE defaults to false for Docker-like collapsed terminal output
+# Users can enable full terminal output with --verbose flag
+# CRITICAL: Full verbose logs ALWAYS captured to log files regardless of mode
+VERBOSE_MODE=false
 RESUME_MODE=false
 FORCE_ALL=false
 SKIP_CHECKS=false
 BOX_STYLE=""
+SHOW_LOGS=false
 
 show_help() {
     cat <<EOF
@@ -124,15 +126,30 @@ Usage: ./start.sh [OPTIONS]
 
 Options:
   --help                Show this help message
-  --verbose             Enable verbose mode (show full output, no collapsing)
+  --verbose             Enable verbose mode (show full output in terminal)
+  --show-logs           Display log file locations after installation
   --resume              Resume from last checkpoint
   --force-all           Force reinstall all components (ignore idempotency)
   --skip-checks         Skip pre-installation health checks (not recommended)
   --box-style STYLE     Force box drawing style (ascii|utf8|utf8-double)
 
+Output Modes:
+  (default)             Docker-like collapsed output (logs saved to ./logs/)
+  --verbose             Show full output in terminal (logs still saved)
+  --show-logs           Display log file locations after installation
+
+Logging:
+  All installation output is always saved to full verbose logs in:
+    ./logs/installation/    - Main installation logs
+    ./logs/components/      - Per-component logs
+    ./logs/errors.log       - All errors consolidated
+
+  Use logs for debugging even when using collapsed output mode.
+
 Examples:
-  ./start.sh                    # Fresh installation (default)
-  ./start.sh --verbose          # Full output, no collapsing
+  ./start.sh                    # Fresh installation (collapsed output)
+  ./start.sh --verbose          # Full terminal output + log files
+  ./start.sh --show-logs        # Show log locations after installation
   ./start.sh --resume           # Resume interrupted installation
   ./start.sh --force-all        # Force reinstall everything
   ./start.sh --box-style ascii  # Use ASCII box drawing (SSH/legacy terminals)
@@ -150,6 +167,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --verbose)
             VERBOSE_MODE=true
+            shift
+            ;;
+        --show-logs)
+            SHOW_LOGS=true
             shift
             ;;
         --resume)
@@ -549,6 +570,29 @@ main() {
     log "INFO" "  2. Launch Ghostty: ghostty"
     log "INFO" "  3. Configure API keys: cp .env.example .env && edit .env"
     log "INFO" ""
+
+    # Display log file locations if requested
+    if [ "$SHOW_LOGS" = true ] || [ "$VERBOSE_MODE" = false ]; then
+        log "INFO" "═══════════════════════════════════════"
+        log "INFO" "Installation Logs"
+        log "INFO" "═══════════════════════════════════════"
+        log "INFO" ""
+        log "INFO" "Main installation log:"
+        log "INFO" "  Human-readable: $(get_log_file)"
+        log "INFO" "  Verbose debug:  $(get_verbose_log_file)"
+        log "INFO" "  Structured JSON: ${LOG_FILE_JSON}"
+        log "INFO" ""
+        log "INFO" "Component logs:"
+        log "INFO" "  Directory: ${REPO_ROOT}/logs/components/"
+        if [ -d "${REPO_ROOT}/logs/components/" ]; then
+            ls -1t "${REPO_ROOT}/logs/components/" 2>/dev/null | head -5 | while read -r logfile; do
+                log "INFO" "    - ${logfile}"
+            done
+        fi
+        log "INFO" ""
+        log "INFO" "Error log: ${REPO_ROOT}/logs/errors.log"
+        log "INFO" ""
+    fi
 
     return 0
 }
