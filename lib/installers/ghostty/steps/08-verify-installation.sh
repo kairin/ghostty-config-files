@@ -30,8 +30,29 @@ main() {
     fi
 
     log "INFO" "Checking Ghostty version..."
-    if "$ghostty_bin" --version; then
-        log "SUCCESS" "Ghostty binary is functional"
+    local installed_version
+    if installed_version=$("$ghostty_bin" --version 2>&1 | grep -oP '\d+\.\d+\.\d+' | head -1); then
+        log "SUCCESS" "Ghostty binary is functional: v$installed_version"
+
+        # Check for updates from GitHub releases
+        log "INFO" "Checking for Ghostty updates..."
+        local latest_version
+        if latest_version=$(curl -sf --max-time 5 https://api.github.com/repos/ghostty-org/ghostty/releases/latest 2>/dev/null | grep -oP '"tag_name":\s*"v?\K[0-9.]+'); then
+            if [ -n "$latest_version" ]; then
+                if version_greater "$latest_version" "$installed_version"; then
+                    log "WARNING" "Ghostty update available: v$latest_version (installed: v$installed_version)"
+                    log "INFO" "Run installation again to update"
+                    # Return exit code 2 to signal "update available" (for future automation)
+                    echo "UPDATE_AVAILABLE|$installed_version|$latest_version"
+                else
+                    log "SUCCESS" "Ghostty is up-to-date (v$installed_version)"
+                    echo "UP_TO_DATE|$installed_version"
+                fi
+            fi
+        else
+            log "INFO" "Could not check for updates (network unavailable or rate limited)"
+            echo "VERSION_CHECK_FAILED|$installed_version"
+        fi
     else
         log "ERROR" "Ghostty binary failed to execute"
         fail_task "$task_id"
