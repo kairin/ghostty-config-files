@@ -71,36 +71,40 @@ export SCRIPT_DIR="${REPO_ROOT}"
 #   - A modular script path: "script:lib/tasks/ghostty/00-check-prerequisites.sh"
 readonly TASK_REGISTRY=(
     # ═══════════════════════════════════════════════════════════════
-    # Prerequisites
+    # Priority 0: Gum TUI Framework (ALWAYS FIRST, ALWAYS REINSTALLED)
     # ═══════════════════════════════════════════════════════════════
-    "verify-prereqs||pre_installation_health_check|verify_health|0|10"
-    "install-gum|verify-prereqs|task_install_gum|verify_gum_installed|1|30"
+    "install-gum||script:lib/installers/gum/install.sh|verify_gum_installed|0|40"
 
     # ═══════════════════════════════════════════════════════════════
-    # Component Managers (each orchestrates its own sub-steps)
+    # Priority 1: Prerequisites
+    # ═══════════════════════════════════════════════════════════════
+    "verify-prereqs|install-gum|pre_installation_health_check|verify_health|1|10"
+
+    # ═══════════════════════════════════════════════════════════════
+    # Priority 2: Component Managers (each orchestrates its own sub-steps)
     # ═══════════════════════════════════════════════════════════════
     # Ghostty Terminal (9 steps: Zig build, Ghostty installation)
-    "install-ghostty|verify-prereqs|script:lib/installers/ghostty/install.sh|verify_ghostty_installed|1|185"
+    "install-ghostty|verify-prereqs|script:lib/installers/ghostty/install.sh|verify_ghostty_installed|2|185"
 
     # ZSH + Oh My ZSH (6 steps: OMZ, plugins, zshrc config, security)
-    "install-zsh|verify-prereqs|script:lib/installers/zsh/install.sh|verify_zsh_configured|1|70"
+    "install-zsh|verify-prereqs|script:lib/installers/zsh/install.sh|verify_zsh_configured|2|70"
 
     # Python UV Package Manager (5 steps: UV installer, shell config)
-    "install-uv|verify-prereqs|script:lib/installers/python_uv/install.sh|verify_python_uv|1|50"
+    "install-uv|verify-prereqs|script:lib/installers/python_uv/install.sh|verify_python_uv|2|50"
 
     # Node.js Fast Node Manager (5 steps: fnm, Node.js, shell config)
-    "install-fnm|verify-prereqs|script:lib/installers/nodejs_fnm/install.sh|verify_fnm_installed|1|70"
+    "install-fnm|verify-prereqs|script:lib/installers/nodejs_fnm/install.sh|verify_fnm_installed|2|70"
 
     # AI Tools (5 steps: Claude CLI, Gemini CLI, Copilot CLI)
-    "install-ai-tools|install-fnm|script:lib/installers/ai_tools/install.sh|verify_claude_cli|3|105"
+    "install-ai-tools|install-fnm|script:lib/installers/ai_tools/install.sh|verify_claude_cli|4|105"
 
     # Context Menu Integration (3 steps: Nautilus right-click menu)
-    "install-context-menu|install-ghostty|script:lib/installers/context_menu/install.sh|verify_context_menu|2|20"
+    "install-context-menu|install-ghostty|script:lib/installers/context_menu/install.sh|verify_context_menu|3|20"
 
     # ═══════════════════════════════════════════════════════════════
-    # App Audit (Final validation)
+    # Priority 5: App Audit (Final validation)
     # ═══════════════════════════════════════════════════════════════
-    "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|4|20"
+    "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|5|20"
 )
 
 # ═════════════════════════════════════════════════════════════
@@ -261,7 +265,8 @@ execute_single_task() {
     local verify_fn="$4"
 
     # Skip if already completed (idempotency)
-    if is_task_completed "$task_id" && [ "$FORCE_ALL" = false ]; then
+    # EXCEPTION: gum is ALWAYS reinstalled (constitutional requirement)
+    if [ "$task_id" != "install-gum" ] && is_task_completed "$task_id" && [ "$FORCE_ALL" = false ]; then
         skip_task "$task_id"
         return 0
     fi
