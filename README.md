@@ -266,7 +266,13 @@ The output will be generated in the `docs/` directory.
 
 ## Contributing
 
-Contributions are welcome! Please read the [Contributing Guide](website/src/developer/contributing.md) and follow the project's coding conventions before opening a pull request.
+Contributions are welcome! Please read our comprehensive [Contributing Guide](.github/CONTRIBUTING.md) for:
+- Documentation structure explained (docs/ vs documentation/ vs astro-website/src/)
+- Git workflow and branch preservation policy
+- Development commands and testing procedures
+- Code style guidelines
+
+For detailed developer documentation, see [website/src/developer/contributing.md](website/src/developer/contributing.md).
 
 ## License
 
