@@ -117,11 +117,11 @@ init_tui() {
 
         log "SUCCESS" "gum TUI framework detected: $GUM_VERSION (startup: ${GUM_STARTUP_MS}ms)"
 
-        # Constitutional compliance check (<10ms target)
+        # Constitutional compliance check (<10ms target) - only in debug logs
         if [ "$GUM_STARTUP_MS" -lt 10 ]; then
-            log "SUCCESS" "✓ CONSTITUTIONAL COMPLIANCE: gum startup ${GUM_STARTUP_MS}ms (<10ms requirement MET)"
+            log "DEBUG" "gum performance: ${GUM_STARTUP_MS}ms (<10ms target met)"
         else
-            log "WARNING" "⚠ gum startup ${GUM_STARTUP_MS}ms exceeds 10ms target (acceptable, not blocking)"
+            log "DEBUG" "gum performance: ${GUM_STARTUP_MS}ms (target <10ms, acceptable <50ms)"
         fi
     else
         TUI_AVAILABLE=false
