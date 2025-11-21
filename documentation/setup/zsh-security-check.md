@@ -34,7 +34,10 @@ zsh compinit: insecure files, run compaudit for list.
 Ignore insecure files and continue [y] or abort compinit [n]?
 ```
 
-This issue commonly occurs after system updates when package managers install completion files with incorrect ownership.
+This issue commonly occurs after:
+- System updates when package managers install completion files with incorrect ownership
+- Reinstalling packages like `antigravity` that create completion files owned by `nobody:nogroup`
+- The daily check marker file prevents re-running the auto-fix on the same day after package reinstalls
 
 ## Solution
 
@@ -216,6 +219,29 @@ For fully automatic fixing without password prompts:
    ```
 
 ## Troubleshooting
+
+### Issue: Fix Script Says "No insecure files found" But Warning Still Appears
+
+**Symptoms**: The fix script reports no issues, but `compaudit` shows insecure files and the warning persists.
+
+**Cause**: Bug fixed in 2025-11-21 - the script was running `compaudit` in bash, but `compaudit` is a ZSH function that requires loading the completion system first.
+
+**Solution**: The script has been updated to properly run `compaudit` in a ZSH context. If you experience this:
+
+1. **Manually remove the daily check marker**:
+   ```bash
+   rm /tmp/.zsh-security-check-$(date +%Y%m%d)
+   ```
+
+2. **Run the updated script**:
+   ```bash
+   /home/kkk/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh
+   ```
+
+The updated script now correctly detects insecure files by running:
+```bash
+zsh -c 'autoload -Uz compinit; compinit -u 2>/dev/null; compaudit 2>&1'
+```
 
 ### Issue: Warning Keeps Recurring After Fix
 
