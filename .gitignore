@@ -45,10 +45,16 @@ dist/
 # TypeScript
 *.tsbuildinfo
 
-# Logs
-logs/*.log
-logs/*.json
+# Logs (dual-mode output system)
+# Ignore all log files in logs/ and subdirectories
+logs/**/*.log
+logs/**/*.json
+logs/errors.log
+# Keep directory structure
 !logs/.gitkeep
+!logs/installation/.gitkeep
+!logs/components/.gitkeep
+# Global log pattern
 *.log
 
 # Runtime data
