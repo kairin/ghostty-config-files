@@ -4,6 +4,8 @@
 # Purpose: Orchestrates 9-step Ghostty terminal emulator installation process
 # Dependencies: Zig 0.14.0+, Git, build-essential
 # Exit Codes: 0=success, 1=failure
+#
+# Architecture: Data-driven with modular TUI integration via manager-runner.sh
 
 set -euo pipefail
 
@@ -11,55 +13,28 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STEPS_DIR="${SCRIPT_DIR}/steps"
 
-# Source common functions
+# Source common functions and modular TUI wrapper
 source "${STEPS_DIR}/common.sh"
-
-# Source core logging if available
-if [ -f "${REPO_ROOT}/lib/core/logging.sh" ]; then
-    source "${REPO_ROOT}/lib/core/logging.sh"
-else
-    # Fallback logging functions
-    log() {
-        local level="$1"
-        shift
-        echo "[${level}] $*" >&2
-    }
-fi
+source "${REPO_ROOT}/lib/installers/common/manager-runner.sh"
 
 # Main installation orchestrator
 main() {
-    log "INFO" "Starting Ghostty installation (9 steps)..."
-
-    local steps=(
-        "00-check-prerequisites.sh"
-        "01-download-zig.sh"
-        "02-extract-zig.sh"
-        "03-clone-ghostty.sh"
-        "04-build-ghostty.sh"
-        "05-install-binary.sh"
-        "06-configure-ghostty.sh"
-        "07-create-desktop-entry.sh"
-        "08-verify-installation.sh"
+    # Define installation steps as data (not loops)
+    # Format: "script.sh|Display Name|Estimated Duration (seconds)"
+    declare -a INSTALL_STEPS=(
+        "00-check-prerequisites.sh|Check Prerequisites|5"
+        "01-download-zig.sh|Download Zig Compiler|30"
+        "02-extract-zig.sh|Extract Zig Tarball|10"
+        "03-clone-ghostty.sh|Clone Ghostty Repository|20"
+        "04-build-ghostty.sh|Build Ghostty|90"
+        "05-install-binary.sh|Install Ghostty Binary|10"
+        "06-configure-ghostty.sh|Configure Ghostty|10"
+        "07-create-desktop-entry.sh|Create Desktop Entry|5"
+        "08-verify-installation.sh|Verify Installation|5"
     )
 
-    local step_num=1
-    local total_steps=${#steps[@]}
-
-    for step in "${steps[@]}"; do
-        local step_name="${step%.sh}"
-        log "INFO" "Step ${step_num}/${total_steps}: ${step_name}"
-
-        if ! "${STEPS_DIR}/${step}"; then
-            log "ERROR" "Ghostty installation failed at step ${step_num}/${total_steps}: ${step_name}"
-            log "ERROR" "Check logs for details: /tmp/ghostty-start-logs/"
-            return 1
-        fi
-
-        ((step_num++))
-    done
-
-    log "SUCCESS" "Ghostty installation complete (${total_steps}/${total_steps} steps)"
-    return 0
+    # One function call runs everything with full TUI integration
+    run_install_steps "Ghostty Terminal" "$STEPS_DIR" "${INSTALL_STEPS[@]}"
 }
 
 # Execute main function
