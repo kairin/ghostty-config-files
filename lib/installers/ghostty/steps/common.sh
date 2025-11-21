@@ -7,7 +7,7 @@ set -euo pipefail
 
 # Source core libraries if not already sourced
 if [ -z "${REPO_ROOT:-}" ]; then
-    source "$(dirname "${BASH_SOURCE[0]}")/../../init.sh"
+    source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 fi
 
 # Installation constants

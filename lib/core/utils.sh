@@ -210,7 +210,13 @@ get_unix_timestamp_ns() {
 command_exists() {
     local command_name="$1"
 
-    command -v "$command_name" &>/dev/null
+    # Use type -t to check command type, excluding aliases
+    # Returns: file, builtin, function (we want these)
+    # Does NOT return: alias (we want to exclude these)
+    local cmd_type
+    cmd_type=$(type -t "$command_name" 2>/dev/null)
+
+    [[ "$cmd_type" == "file" || "$cmd_type" == "builtin" ]]
 }
 
 #
