@@ -283,15 +283,26 @@ gh run list --limit 10 --json status,conclusion,name,createdAt
 ./.runners-local/workflows/gh-pages-setup.sh
 ```
 
-#### Logging & Debugging (MANDATORY)
+#### Logging & Debugging (MANDATORY) - Dual-Mode Output System
 ```bash
-# Comprehensive logging system
-LOG_LOCATIONS="/tmp/ghostty-start-logs/"
-├── start-TIMESTAMP.log          # Human-readable main log
-├── start-TIMESTAMP.log.json     # Structured JSON log for parsing
-├── errors.log                   # Critical issues only
-├── performance.json             # Performance metrics
-└── system_state_TIMESTAMP.json  # Complete system state snapshots
+# Comprehensive dual-mode logging system
+# Terminal: Docker-like collapsed (default) OR --verbose for full output
+# Log Files: FULL verbose output ALWAYS captured (regardless of mode)
+
+LOG_LOCATIONS="${REPO_ROOT}/logs/"
+├── installation/
+│   ├── start-TIMESTAMP.log             # Human-readable summary
+│   ├── start-TIMESTAMP.log.json        # Structured JSON log
+│   ├── start-TIMESTAMP-verbose.log     # FULL command output (debugging)
+│   └── .gitkeep
+├── components/
+│   ├── ghostty-TIMESTAMP.log           # Per-component logs
+│   ├── zsh-TIMESTAMP.log
+│   ├── python_uv-TIMESTAMP.log
+│   ├── nodejs_fnm-TIMESTAMP.log
+│   ├── ai_tools-TIMESTAMP.log
+│   └── .gitkeep
+└── errors.log                           # All errors (consolidated)
 
 # Local CI/CD logs
 LOCAL_CI_LOGS="./.runners-local/logs/"
@@ -299,7 +310,25 @@ LOCAL_CI_LOGS="./.runners-local/logs/"
 ├── gh-pages-TIMESTAMP.log       # GitHub Pages simulation
 ├── performance-TIMESTAMP.json   # CI performance metrics
 └── test-results-TIMESTAMP.json  # Test execution results
+
+# View full verbose logs (COMPLETE debugging info)
+less logs/installation/start-*-verbose.log | tail -1
+
+# View component-specific logs
+less logs/components/ghostty-*.log | tail -1
+
+# Display log locations
+./start.sh --show-logs
 ```
+
+**CRITICAL LOGGING REQUIREMENT** (2025-11-21):
+- **Terminal Output**: Docker-like collapsed by default (VERBOSE_MODE=false)
+- **Log Files**: FULL verbose output ALWAYS captured (every command, every byte)
+- **User Experience**: Clean, professional collapsed UI
+- **Debugging**: Complete information preserved in permanent log files
+- **Location**: `${REPO_ROOT}/logs/` (NOT `/tmp` - persistent across reboots)
+
+**Complete Guide**: [LOGGING_GUIDE.md](documentation/developer/LOGGING_GUIDE.md)
 
 ## 🏗️ System Architecture
 
