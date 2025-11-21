@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # 1. Bootstrap
-source "$(dirname "${BASH_SOURCE[0]}")/../../init.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 
 # 2. Load Common Utils
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
