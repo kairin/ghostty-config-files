@@ -12,7 +12,8 @@ set -euo pipefail
 
 # Get script directory and repository root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPTS_DIR="${SCRIPT_DIR}/scripts"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+SCRIPTS_DIR="${SCRIPT_DIR}"
 
 # Source common utilities
 # shellcheck source=./scripts/common.sh
