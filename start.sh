@@ -66,17 +66,75 @@ export SCRIPT_DIR="${REPO_ROOT}"
 # ═════════════════════════════════════════════════════════════
 
 # Task format: "id|dependencies|install_fn|verify_fn|parallel_group|estimated_seconds"
+# install_fn can be either:
+#   - A bash function name: "task_install_gum"
+#   - A modular script path: "script:lib/tasks/ghostty/00-check-prerequisites.sh"
 readonly TASK_REGISTRY=(
+    # Prerequisites
     "verify-prereqs||pre_installation_health_check|verify_health|0|10"
     "install-gum|verify-prereqs|task_install_gum|verify_gum_installed|1|30"
-    "install-ghostty|verify-prereqs|task_install_ghostty|verify_ghostty_installed|1|180"
-    "install-zsh|verify-prereqs|task_install_zsh|verify_zsh_configured|1|60"
-    "install-uv|verify-prereqs|task_install_uv|verify_python_uv|1|45"
-    "install-fnm|verify-prereqs|task_install_fnm|verify_fnm_installed|1|30"
-    # NOTE: install-nodejs removed - fnm installs Node.js automatically (task_install_fnm handles both)
-    "install-ai-tools|install-fnm|task_install_ai_tools|verify_claude_cli|3|90"
-    "install-context-menu|install-ghostty|task_install_context_menu|verify_context_menu|2|15"
-    "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|4|20"
+
+    # ═══════════════════════════════════════════════════════════════
+    # Ghostty Installation (Modular - 9 steps)
+    # ═══════════════════════════════════════════════════════════════
+    "ghostty-check-prereqs|verify-prereqs|script:lib/tasks/ghostty/00-check-prerequisites.sh|verify_ghostty_installed|1|5"
+    "ghostty-download-zig|ghostty-check-prereqs|script:lib/tasks/ghostty/01-download-zig.sh|verify_ghostty_installed|1|30"
+    "ghostty-extract-zig|ghostty-download-zig|script:lib/tasks/ghostty/02-extract-zig.sh|verify_ghostty_installed|1|10"
+    "ghostty-clone-repo|ghostty-extract-zig|script:lib/tasks/ghostty/03-clone-ghostty.sh|verify_ghostty_installed|1|20"
+    "ghostty-build|ghostty-clone-repo|script:lib/tasks/ghostty/04-build-ghostty.sh|verify_ghostty_installed|1|90"
+    "ghostty-install-binary|ghostty-build|script:lib/tasks/ghostty/05-install-binary.sh|verify_ghostty_installed|1|10"
+    "ghostty-configure|ghostty-install-binary|script:lib/tasks/ghostty/06-configure-ghostty.sh|verify_ghostty_installed|1|10"
+    "ghostty-desktop-entry|ghostty-configure|script:lib/tasks/ghostty/07-create-desktop-entry.sh|verify_ghostty_installed|1|5"
+    "ghostty-verify|ghostty-desktop-entry|script:lib/tasks/ghostty/08-verify-installation.sh|verify_ghostty_installed|1|5"
+
+    # ═══════════════════════════════════════════════════════════════
+    # ZSH Installation (Modular - 6 steps)
+    # ═══════════════════════════════════════════════════════════════
+    "zsh-check-prereqs|verify-prereqs|script:lib/tasks/zsh/00-check-prerequisites.sh|verify_zsh_configured|1|5"
+    "zsh-install-omz|zsh-check-prereqs|script:lib/tasks/zsh/01-install-oh-my-zsh.sh|verify_zsh_configured|1|20"
+    "zsh-install-plugins|zsh-install-omz|script:lib/tasks/zsh/02-install-plugins.sh|verify_zsh_configured|1|15"
+    "zsh-configure-zshrc|zsh-install-plugins|script:lib/tasks/zsh/03-configure-zshrc.sh|verify_zsh_configured|1|10"
+    "zsh-install-security|zsh-configure-zshrc|script:lib/tasks/zsh/04-install-security-check.sh|verify_zsh_configured|1|5"
+    "zsh-verify|zsh-install-security|script:lib/tasks/zsh/05-verify-installation.sh|verify_zsh_configured|1|5"
+
+    # ═══════════════════════════════════════════════════════════════
+    # Python UV Installation (Modular - 5 steps)
+    # ═══════════════════════════════════════════════════════════════
+    "uv-check-prereqs|verify-prereqs|script:lib/tasks/python_uv/00-check-prerequisites.sh|verify_python_uv|1|5"
+    "uv-download|uv-check-prereqs|script:lib/tasks/python_uv/01-download-uv.sh|verify_python_uv|1|15"
+    "uv-extract|uv-download|script:lib/tasks/python_uv/02-extract-uv.sh|verify_python_uv|1|10"
+    "uv-install|uv-extract|script:lib/tasks/python_uv/03-install-uv.sh|verify_python_uv|1|10"
+    "uv-verify|uv-install|script:lib/tasks/python_uv/04-verify-installation.sh|verify_python_uv|1|5"
+
+    # ═══════════════════════════════════════════════════════════════
+    # Node.js FNM Installation (Modular - 5 steps)
+    # ═══════════════════════════════════════════════════════════════
+    "fnm-check-prereqs|verify-prereqs|script:lib/tasks/nodejs_fnm/00-check-prerequisites.sh|verify_fnm_installed|1|5"
+    "fnm-download|fnm-check-prereqs|script:lib/tasks/nodejs_fnm/01-download-fnm.sh|verify_fnm_installed|1|15"
+    "fnm-install|fnm-download|script:lib/tasks/nodejs_fnm/02-install-fnm.sh|verify_fnm_installed|1|10"
+    "fnm-install-nodejs|fnm-install|script:lib/tasks/nodejs_fnm/03-install-nodejs.sh|verify_fnm_installed|1|30"
+    "fnm-verify|fnm-install-nodejs|script:lib/tasks/nodejs_fnm/04-verify-installation.sh|verify_fnm_installed|1|5"
+
+    # ═══════════════════════════════════════════════════════════════
+    # AI Tools Installation (Modular - 5 steps)
+    # ═══════════════════════════════════════════════════════════════
+    "ai-tools-check-prereqs|fnm-verify|script:lib/tasks/ai_tools/00-check-prerequisites.sh|verify_claude_cli|3|5"
+    "ai-tools-install-claude|ai-tools-check-prereqs|script:lib/tasks/ai_tools/01-install-claude-cli.sh|verify_claude_cli|3|30"
+    "ai-tools-install-gemini|ai-tools-check-prereqs|script:lib/tasks/ai_tools/02-install-gemini-cli.sh|verify_claude_cli|3|30"
+    "ai-tools-install-copilot|ai-tools-check-prereqs|script:lib/tasks/ai_tools/03-install-copilot-cli.sh|verify_claude_cli|3|30"
+    "ai-tools-verify|ai-tools-install-claude,ai-tools-install-gemini,ai-tools-install-copilot|script:lib/tasks/ai_tools/04-verify-installation.sh|verify_claude_cli|3|5"
+
+    # ═══════════════════════════════════════════════════════════════
+    # Context Menu Installation (Modular - 3 steps)
+    # ═══════════════════════════════════════════════════════════════
+    "context-menu-check-prereqs|ghostty-verify|script:lib/tasks/context_menu/00-check-prerequisites.sh|verify_context_menu|2|5"
+    "context-menu-install|context-menu-check-prereqs|script:lib/tasks/context_menu/01-install-context-menu.sh|verify_context_menu|2|10"
+    "context-menu-verify|context-menu-install|script:lib/tasks/context_menu/02-verify-installation.sh|verify_context_menu|2|5"
+
+    # ═══════════════════════════════════════════════════════════════
+    # App Audit (Legacy - TODO: Modularize)
+    # ═══════════════════════════════════════════════════════════════
+    "run-app-audit|ai-tools-verify,context-menu-verify|task_run_app_audit|verify_app_audit_report|4|20"
 )
 
 # ═════════════════════════════════════════════════════════════
@@ -194,15 +252,20 @@ trap cleanup_on_exit EXIT SIGINT SIGTERM
 #
 # Execute a single task (used by both sequential and parallel execution)
 #
+# Supports both modular scripts and legacy functions:
+#   - Modular script: install_fn starts with "script:" (e.g., "script:lib/tasks/ghostty/00-check-prerequisites.sh")
+#   - Legacy function: install_fn is a function name (e.g., "task_install_gum")
+#
 # Args:
 #   $1 - Task ID
 #   $2 - Dependencies (comma-separated)
-#   $3 - Installation function name
+#   $3 - Installation function name or script path (prefix with "script:" for modular scripts)
 #   $4 - Verification function name
 #
 # Returns:
 #   0 = success
 #   1 = failure
+#   2 = skipped (already done)
 #
 execute_single_task() {
     local task_id="$1"
@@ -234,17 +297,66 @@ execute_single_task() {
     local task_start
     task_start=$(get_unix_timestamp)
 
-    if $install_fn; then
-        local task_end
-        task_end=$(get_unix_timestamp)
-        local duration
-        duration=$(calculate_duration "$task_start" "$task_end")
+    local exit_code=0
 
+    # Check if install_fn is a modular script path (starts with "script:")
+    if [[ "$install_fn" == script:* ]]; then
+        # Extract script path after "script:" prefix
+        local script_path="${install_fn#script:}"
+
+        # Make path absolute if relative
+        if [[ ! "$script_path" =~ ^/ ]]; then
+            script_path="${REPO_ROOT}/${script_path}"
+        fi
+
+        # Verify script exists and is executable
+        if [[ ! -f "$script_path" ]]; then
+            log "ERROR" "Modular script not found: $script_path"
+            fail_task "$task_id" "Script not found: $script_path"
+            return 1
+        fi
+
+        if [[ ! -x "$script_path" ]]; then
+            log "ERROR" "Modular script not executable: $script_path"
+            fail_task "$task_id" "Script not executable: $script_path"
+            return 1
+        fi
+
+        # Execute modular script
+        if "$script_path"; then
+            exit_code=$?
+        else
+            exit_code=$?
+        fi
+    else
+        # Execute legacy function
+        if $install_fn; then
+            exit_code=$?
+        else
+            exit_code=$?
+        fi
+    fi
+
+    local task_end
+    task_end=$(get_unix_timestamp)
+    local duration
+    duration=$(calculate_duration "$task_start" "$task_end")
+
+    # Handle exit codes
+    # 0 = success
+    # 1 = failure
+    # 2 = skipped (idempotent - already done)
+    if [ $exit_code -eq 0 ] || [ $exit_code -eq 2 ]; then
         complete_task "$task_id" "$duration"
         mark_task_completed "$task_id" "$duration"
+
+        if [ $exit_code -eq 2 ]; then
+            log "INFO" "Task $task_id skipped (already completed)"
+        fi
+
         return 0
     else
-        fail_task "$task_id" "Installation function failed: $install_fn"
+        fail_task "$task_id" "Installation failed with exit code $exit_code"
         return 1
     fi
 }
