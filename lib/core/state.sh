@@ -117,6 +117,9 @@ load_state() {
         return 1
     fi
 
+    # Temporarily disable strict mode for array operations
+    set +u
+
     # Load completed tasks into associative array
     while IFS= read -r task_id; do
         STATE_COMPLETED_TASKS["$task_id"]=1
@@ -127,12 +130,21 @@ load_state() {
         STATE_FAILED_TASKS["$task_id"]="$error_message"
     done < <(jq -r '.failed_tasks[] | "\(.task_id)|\(.error_message)"' "$STATE_FILE" 2>/dev/null || true)
 
+    set -u
+
     # Load last run timestamp
     STATE_LAST_RUN=$(jq -r '.last_run' "$STATE_FILE")
 
     # Count tasks (safe for empty arrays with set -u)
-    local completed_count="${#STATE_COMPLETED_TASKS[@]}"
-    local failed_count="${#STATE_FAILED_TASKS[@]}"
+    local completed_count=0
+    local failed_count=0
+    # Only count if arrays exist and have elements
+    if [ -v STATE_COMPLETED_TASKS ]; then
+        completed_count="${#STATE_COMPLETED_TASKS[@]}"
+    fi
+    if [ -v STATE_FAILED_TASKS ]; then
+        failed_count="${#STATE_FAILED_TASKS[@]}"
+    fi
 
     log "SUCCESS" "Loaded state: $completed_count completed, $failed_count failed"
 }
@@ -143,6 +155,9 @@ load_state() {
 save_state() {
     local timestamp
     timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ")
+
+    # Temporarily disable strict mode for array operations
+    set +u
 
     # Build completed tasks array
     local completed_json
@@ -164,6 +179,8 @@ save_state() {
     done
     failed_json="${failed_json%,}]"  # Remove trailing comma
 
+    set -u
+
     # Preserve system info and performance from existing state
     local system_info
     local performance
@@ -183,8 +200,15 @@ save_state() {
 EOF
 
     # Count tasks (safe for empty arrays with set -u)
-    local completed_count="${#STATE_COMPLETED_TASKS[@]}"
-    local failed_count="${#STATE_FAILED_TASKS[@]}"
+    local completed_count=0
+    local failed_count=0
+    # Only count if arrays exist and have elements
+    if [ -v STATE_COMPLETED_TASKS ]; then
+        completed_count="${#STATE_COMPLETED_TASKS[@]}"
+    fi
+    if [ -v STATE_FAILED_TASKS ]; then
+        failed_count="${#STATE_FAILED_TASKS[@]}"
+    fi
 
     log "INFO" "State saved: $completed_count completed, $failed_count failed"
 }
@@ -204,13 +228,20 @@ EOF
 #   fi
 #
 is_task_completed() {
-    local task_id="$1"
+    local task_id="${1:-}"
 
-    if [ -n "${STATE_COMPLETED_TASKS[$task_id]:-}" ]; then
-        return 0
-    else
-        return 1
+    # Return false if no task ID provided
+    [ -z "$task_id" ] && return 1
+
+    # Temporarily disable strict mode for this check (set -u causes issues with unset array keys)
+    set +u
+    local result=1
+    if [[ -n "${STATE_COMPLETED_TASKS[$task_id]:-}" ]]; then
+        result=0
     fi
+    set -u
+
+    return $result
 }
 
 #
@@ -227,11 +258,16 @@ mark_task_completed() {
     local task_id="$1"
     local duration="${2:-0}"
 
+    # Temporarily disable strict mode for array operations
+    set +u
+
     # Add to completed tasks
     STATE_COMPLETED_TASKS["$task_id"]=1
 
     # Remove from failed tasks if present
     unset STATE_FAILED_TASKS["$task_id"]
+
+    set -u
 
     # Update performance metrics
     update_task_duration "$task_id" "$duration"
@@ -256,11 +292,16 @@ mark_task_failed() {
     local task_id="$1"
     local error_message="$2"
 
+    # Temporarily disable strict mode for array operations
+    set +u
+
     # Add to failed tasks
     STATE_FAILED_TASKS["$task_id"]="$error_message"
 
     # Remove from completed tasks if present
     unset STATE_COMPLETED_TASKS["$task_id"]
+
+    set -u
 
     # Save state
     save_state
@@ -303,12 +344,17 @@ update_task_duration() {
 resume_installation() {
     load_state
 
+    # Temporarily disable strict mode for array operations
+    set +u
+
     log "INFO" "Resume mode: ${#STATE_COMPLETED_TASKS[@]} tasks already completed"
 
     # Output completed task IDs
     for task_id in "${!STATE_COMPLETED_TASKS[@]}"; do
         echo "$task_id"
     done
+
+    set -u
 }
 
 #

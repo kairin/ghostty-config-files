@@ -304,14 +304,14 @@ post_installation_health_check() {
 
     if command_exists "claude"; then
         log "SUCCESS" "  ✓ Claude CLI"
-        ((ai_tool_count++))
+        ai_tool_count=$((ai_tool_count + 1))
     else
         log "WARNING" "  ⚠ Claude CLI not installed"
     fi
 
     if command_exists "gemini"; then
         log "SUCCESS" "  ✓ Gemini CLI"
-        ((ai_tool_count++))
+        ai_tool_count=$((ai_tool_count + 1))
     else
         log "WARNING" "  ⚠ Gemini CLI not installed"
     fi
