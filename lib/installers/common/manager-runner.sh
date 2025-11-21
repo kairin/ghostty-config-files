@@ -164,17 +164,19 @@ show_component_header() {
 #   $1 - Component name (e.g., "Ghostty")
 #   $2 - Total steps completed
 #   $3 - Status (SUCCESS, FAILED, PARTIAL)
+#   $4 - Component log file path (optional)
 #
 # Output:
-#   Styled footer with installation summary
+#   Styled footer with installation summary and log file location
 #
 # Example:
-#   show_component_footer "Ghostty" 9 "SUCCESS"
+#   show_component_footer "Ghostty" 9 "SUCCESS" "/path/to/ghostty-20251121-123456.log"
 #
 show_component_footer() {
     local component_name="$1"
     local total_steps="$2"
     local status="$3"
+    local component_log="${4:-}"
 
     local status_symbol
     local status_color
@@ -207,12 +209,28 @@ show_component_footer() {
             --align center \
             --width 60 \
             "$status_symbol ${component_name} installation $status ($total_steps/$total_steps steps, $(format_duration "$MR_TOTAL_DURATION") total)"
+
+        # Show log file location if provided
+        if [ -n "$component_log" ]; then
+            echo ""
+            gum style \
+                --foreground 240 \
+                --align center \
+                --width 60 \
+                "Detailed logs: $component_log"
+        fi
         echo ""
     else
         # Fallback: ASCII separator
         echo ""
         echo "═══════════════════════════════════════════════════════════"
         echo "$status_symbol ${component_name} installation $status ($total_steps/$total_steps steps, $(format_duration "$MR_TOTAL_DURATION") total)"
+
+        # Show log file location if provided
+        if [ -n "$component_log" ]; then
+            echo "Detailed logs: $component_log"
+        fi
+
         echo "═══════════════════════════════════════════════════════════"
         echo ""
     fi
@@ -342,6 +360,16 @@ run_install_steps() {
     MR_CURRENT_STEP=0
     MR_START_TIME=$(date +%s)
 
+    # Create component-specific log file
+    local timestamp
+    timestamp=$(date +"%Y%m%d-%H%M%S")
+    local component_log_dir="${LOGGING_REPO_ROOT}/logs/components"
+    mkdir -p "$component_log_dir"
+    local component_log="${component_log_dir}/${component_name,,}-${timestamp}.log"
+    touch "$component_log"
+
+    log "INFO" "Component log: $component_log"
+
     # Validate steps directory exists
     if [ ! -d "$steps_dir" ]; then
         log "ERROR" "Steps directory does not exist: $steps_dir"
@@ -459,18 +487,18 @@ run_install_steps() {
     end_time=$(date +%s)
     MR_TOTAL_DURATION=$((end_time - MR_START_TIME))
 
-    # Show component footer
+    # Show component footer with log file location
     if [ $failed_steps -eq 0 ]; then
-        show_component_footer "$component_name" "$MR_TOTAL_STEPS" "SUCCESS"
+        show_component_footer "$component_name" "$MR_TOTAL_STEPS" "SUCCESS" "$component_log"
         log "SUCCESS" "${component_name} installation complete: ${MR_TOTAL_STEPS}/${MR_TOTAL_STEPS} steps succeeded ($(format_duration "$MR_TOTAL_DURATION"))"
         cleanup_collapsible_output
         return 0
     else
         if [ $failed_steps -eq "$MR_TOTAL_STEPS" ]; then
-            show_component_footer "$component_name" "$MR_TOTAL_STEPS" "FAILED"
+            show_component_footer "$component_name" "$MR_TOTAL_STEPS" "FAILED" "$component_log"
             log "ERROR" "${component_name} installation FAILED: ${failed_steps}/${MR_TOTAL_STEPS} steps failed"
         else
-            show_component_footer "$component_name" "$MR_TOTAL_STEPS" "PARTIAL"
+            show_component_footer "$component_name" "$MR_TOTAL_STEPS" "PARTIAL" "$component_log"
             log "WARNING" "${component_name} installation PARTIAL: ${failed_steps}/${MR_TOTAL_STEPS} steps failed, $((MR_TOTAL_STEPS - failed_steps)) succeeded"
         fi
         cleanup_collapsible_output
