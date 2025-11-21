@@ -19,4 +19,9 @@ This directory contains developer-focused technical documentation for the Ghostt
 
 Technical documentation for developers contributing to or maintaining the project, including system architecture, development processes, and analysis reports.
 
-**Last Updated**: 2025-11-18
+### Key Developer Guides
+
+- **[.zshrc Manager](ZSHRC_MANAGER.md)** - Powerlevel10k-compliant shell configuration utility
+- **[Logging Guide](LOGGING_GUIDE.md)** - Dual-mode logging system (user-friendly + verbose debug)
+
+**Last Updated**: 2025-11-22

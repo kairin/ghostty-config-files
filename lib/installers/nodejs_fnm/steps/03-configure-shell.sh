@@ -3,23 +3,63 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common.sh"
 
+# Source P10k-compliant zshrc manager
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../../../.." && pwd)"
+source "${REPO_ROOT}/lib/utils/zshrc_manager.sh"
+
 main() {
     log "INFO" "Configuring shell integration..."
-    
-    for rc_file in "$HOME/.zshrc" "$HOME/.bashrc"; do
-        [ ! -f "$rc_file" ] && continue
-        
-        if grep -q "fnm env" "$rc_file" 2>/dev/null; then
-            log "INFO" "  ↷ fnm already configured in $rc_file"
+
+    # fnm configuration block
+    local fnm_block
+    read -r -d '' fnm_block <<'EOF' || true
+# fnm (Fast Node Manager) - 2025 Performance Optimized
+# MUST be loaded before Powerlevel10k instant prompt to avoid console output
+# Loads 40x faster than NVM, minimal startup impact (<50ms)
+export FNM_DIR="$HOME/.local/share/fnm"
+if [ -d "$FNM_DIR" ]; then
+  export PATH="$FNM_DIR:$PATH"
+  eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
+fi
+EOF
+
+    # Configure .zshrc (P10k-compliant injection)
+    if [ -f "$HOME/.zshrc" ]; then
+        log "INFO" "  Configuring .zshrc..."
+
+        # Inject before P10k to prevent console output warnings
+        if inject_into_zshrc "fnm initialization" "$fnm_block" "before_p10k" "fnm env"; then
+            log "SUCCESS" "  ✓ Added fnm to .zshrc (before P10k instant prompt)"
         else
-            echo "" >> "$rc_file"
-            echo "# fnm (Fast Node Manager) - CONSTITUTIONAL: <50ms startup required" >> "$rc_file"
-            echo 'eval "$(fnm env --use-on-cd)"' >> "$rc_file"
-            log "INFO" "  ✓ Added fnm to $rc_file"
+            local exit_code=$?
+            if [ $exit_code -eq 2 ]; then
+                log "INFO" "  ↷ fnm already configured in .zshrc"
+            else
+                log "ERROR" "  ✗ Failed to configure .zshrc"
+                exit 1
+            fi
         fi
-    done
-    
-    log "SUCCESS" "✓ Shell integration configured"
+    fi
+
+    # Configure .bashrc (simple append, no P10k concerns)
+    if [ -f "$HOME/.bashrc" ]; then
+        log "INFO" "  Configuring .bashrc..."
+
+        if grep -q "fnm env" "$HOME/.bashrc" 2>/dev/null; then
+            log "INFO" "  ↷ fnm already configured in .bashrc"
+        else
+            echo "" >> "$HOME/.bashrc"
+            echo "# fnm (Fast Node Manager) - CONSTITUTIONAL: <50ms startup required" >> "$HOME/.bashrc"
+            echo 'export FNM_DIR="$HOME/.local/share/fnm"' >> "$HOME/.bashrc"
+            echo 'if [ -d "$FNM_DIR" ]; then' >> "$HOME/.bashrc"
+            echo '  export PATH="$FNM_DIR:$PATH"' >> "$HOME/.bashrc"
+            echo '  eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"' >> "$HOME/.bashrc"
+            echo 'fi' >> "$HOME/.bashrc"
+            log "INFO" "  ✓ Added fnm to .bashrc"
+        fi
+    fi
+
+    log "SUCCESS" "✓ Shell integration configured (P10k-compliant)"
     exit 0
 }
 
