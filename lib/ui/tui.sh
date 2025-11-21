@@ -104,16 +104,16 @@ init_tui() {
     if command_exists "gum"; then
         TUI_AVAILABLE=true
 
-        # Get gum version
-        GUM_VERSION=$(gum --version 2>&1 | grep -oP 'v\d+\.\d+\.\d+' || echo "unknown")
-
-        # Measure gum startup time (nanosecond precision)
-        local start_ns end_ns duration_ns
+        # Measure gum startup time AND get version in single call (nanosecond precision)
+        local start_ns end_ns duration_ns version_output
         start_ns=$(date +%s%N)
-        gum --version >/dev/null 2>&1
+        version_output=$(gum --version 2>&1)
         end_ns=$(date +%s%N)
         duration_ns=$((end_ns - start_ns))
         GUM_STARTUP_MS=$((duration_ns / 1000000))
+
+        # Extract version from output
+        GUM_VERSION=$(echo "$version_output" | grep -oP 'v\d+\.\d+\.\d+' || echo "unknown")
 
         log "SUCCESS" "gum TUI framework detected: $GUM_VERSION (startup: ${GUM_STARTUP_MS}ms)"
 
