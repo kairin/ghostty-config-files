@@ -40,8 +40,11 @@ last-updated: 2025-11-21
 ├── README.md                   # User documentation
 │
 ├── configs/                    # Ghostty config, themes, dircolors, workspace
-├── scripts/                    # Utility scripts (manage.sh, updates, health checks)
-├── lib/                        # Modular task libraries (ghostty/, zsh/, python_uv/, etc.)
+├── scripts/                    # Utility scripts (manage.sh, daily-updates.sh v2.1, health checks)
+├── lib/                        # Modular task libraries with uninstall support
+│   ├── installers/ghostty/     # Ghostty installation modules + uninstall.sh
+│   ├── installers/zig/         # Zig compiler modules + uninstall.sh
+│   └── installers/*/           # Other modular installers
 │
 ├── documentation/              # SINGLE documentation folder (consolidated)
 │   ├── setup/                  # Setup guides (MCP, new-device, zsh-security)
@@ -108,7 +111,7 @@ last-updated: 2025-11-21
 5. **Local CI/CD**: Complete workflow execution without GitHub Actions costs
 6. **AI Tool Integration**: Seamless Claude Code and Gemini CLI setup
 7. **Enhanced Readability**: XDG-compliant dircolors for readable directory listings
-8. **Automated Daily Updates**: System-wide updates run automatically at 9:00 AM daily
+8. **Automated Daily Updates**: System-wide updates with 13-component coverage and modular uninstall → reinstall workflow (v2.1)
 
 ### Local CI/CD Workflows
 
@@ -171,6 +174,96 @@ CI/CD Pipeline Stages:
   - `documentation/specifications/` - Feature specifications (001-modern-tui-system/)
   - `documentation/archive/` - Historical documentation
 - **`archive-spec-kit/`** - **Archived spec-kit materials** (.specify/ folder, no longer active)
+
+---
+
+## Automated Update System (v2.1)
+
+### Update System Overview
+
+**Script**: `scripts/daily-updates.sh` (Version 2.1)
+**Schedule**: Daily at 9:00 AM via cron
+**Components**: 13 total update targets
+**Logging**: Full logging to `/tmp/daily-updates-logs/`
+
+### 13-Component Update Coverage
+
+| Component | Update Method | Version Detection | Notes |
+|-----------|---------------|-------------------|-------|
+| 1. GitHub CLI | `apt upgrade gh` | apt package manager | Official repository |
+| 2. System Packages | `apt update && apt upgrade` | apt package manager | All system packages |
+| 3. Oh My Zsh | `upgrade_oh_my_zsh` | Built-in updater | Framework + plugins |
+| 4. fnm | Latest release install | GitHub releases API | Fast Node Manager |
+| 5. npm | `npm install -g npm@latest` | npm registry | Global packages included |
+| 6. Claude CLI | `npm update -g @anthropic-ai/claude-code` | npm registry | AI assistant CLI |
+| 7. Gemini CLI | `npm update -g @google/generative-ai-cli` | npm registry | AI assistant CLI |
+| 8. Copilot CLI | `npm update -g @githubnext/github-copilot-cli` | npm registry | AI coding assistant |
+| 9. uv | `uv self update` | Built-in updater | Python package installer |
+| 10. Spec-Kit CLI | `uv tool upgrade specify-cli` | uv tool manager | Specification-driven development |
+| 11. Additional uv Tools | `uv tool upgrade <tool>` | uv tool manager | All installed uv tools |
+| 12. Zig Compiler | **Uninstall → Reinstall** | ziglang.org API | See below |
+| 13. Ghostty Terminal | **Uninstall → Reinstall** | Git repository fetch | See below |
+
+### Modular Uninstall → Reinstall Workflow
+
+**For major applications** (Ghostty, Zig), the update system performs complete uninstall → reinstall to ensure clean state:
+
+**Workflow Steps:**
+1. **Version Detection**: Check for available updates
+2. **Uninstall**: Execute `lib/installers/{app}/uninstall.sh`
+3. **Reinstall**: Execute `lib/installers/{app}/install.sh` or equivalent
+4. **Verification**: Confirm new version installed
+5. **Logging**: All operations logged with timestamps
+
+**Uninstall Scripts:**
+- `lib/installers/ghostty/uninstall.sh` - Removes Ghostty binary, source, configs, symlinks
+- `lib/installers/zig/uninstall.sh` - Removes Zig compiler, symlinks, PATH entries
+
+**Benefits:**
+- **Clean State**: No residual files from previous versions
+- **No Conflicts**: Prevents version conflicts or partial updates
+- **Verified Installation**: Fresh installation ensures proper configuration
+- **Exit Code Tracking**: Distinguishes between errors and "not installed" states
+
+### Intelligent Version Detection
+
+**Zig Compiler Detection:**
+```bash
+# Query latest version from ziglang.org
+curl -fsSL https://ziglang.org/download/index.json | grep -oP '"master".*"version":\s*"\K[^"]+'
+
+# Compare with local version
+zig version
+
+# If different → uninstall → reinstall
+```
+
+**Ghostty Terminal Detection:**
+```bash
+# Fetch latest from origin/main
+git -C ~/Apps/ghostty fetch origin
+
+# Compare commit hashes
+local_commit=$(git -C ~/Apps/ghostty rev-parse HEAD)
+remote_commit=$(git -C ~/Apps/ghostty rev-parse origin/main)
+
+# If different → uninstall → reinstall
+```
+
+### Error Handling & Logging
+
+**Graceful Error Handling:**
+- Continues updating other components if one fails
+- Tracks success/fail/skip/already-latest status for each component
+- Exit code tracking distinguishes errors from "not installed" states
+
+**Comprehensive Logging:**
+- `update-TIMESTAMP.log` - Full update log with all output
+- `errors-TIMESTAMP.log` - Errors only
+- `last-update-summary.txt` - Quick summary of last update
+- `latest.log` - Symlink to most recent log
+
+**Complete Documentation**: [DAILY_UPDATES_README.md](../../../../scripts/DAILY_UPDATES_README.md)
 
 ---
 

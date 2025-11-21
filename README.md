@@ -172,14 +172,20 @@ sudo snap install libreoffice
 
 The installation automatically sets up a daily update system that keeps your entire development environment current.
 
-**What Gets Updated:**
+**What Gets Updated (13 Components):**
 - System packages (apt)
 - GitHub CLI
 - Oh My Zsh
+- fnm (Fast Node Manager)
 - npm and all global packages
 - Claude CLI
 - Gemini CLI
 - GitHub Copilot CLI
+- uv (Python package installer)
+- Spec-Kit CLI (via uv)
+- Additional uv tools
+- Zig Compiler (uninstall → reinstall workflow when updates available)
+- Ghostty Terminal (uninstall → reinstall workflow when updates available)
 
 **Automatic Schedule:**
 - Updates run daily at 9:00 AM via cron
@@ -219,6 +225,12 @@ sudo EDITOR=nano visudo
 # Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/apt
 ```
 
+**Advanced Features (v2.1):**
+- **Modular Uninstall → Reinstall Workflow**: Major applications (Ghostty, Zig) are completely uninstalled before reinstalling updates to ensure clean state
+- **Intelligent Version Detection**: Automatic comparison against upstream repositories
+- **Graceful Error Handling**: Continues updating other components if one fails
+- **Comprehensive Logging**: All operations logged to `/tmp/daily-updates-logs/` with timestamps
+
 For complete documentation, see [scripts/DAILY_UPDATES_README.md](scripts/DAILY_UPDATES_README.md).
 
 ### Running the Website
@@ -239,10 +251,14 @@ This will start a development server, and you can view the website at `http://lo
     -   `layouts/`: Layout components for pages.
     -   `pages/`: The pages of the website.
 -   `configs/`: Configuration files for Ghostty, ZSH, and other tools.
--   `scripts/`: Modular utility scripts for installation, configuration, and validation.
-    -   `install_node.sh`: Node.js installation module (Phase 5 - first extracted module)
-    -   `common.sh`, `progress.sh`, `backup_utils.sh`: Shared utilities (Phase 2)
-    -   `.module-template.sh`: Template for creating new modules (Phase 1)
+-   `lib/`: Modular task libraries for installation, configuration, and uninstallation.
+    -   `installers/ghostty/`: Ghostty installation modules and uninstall script
+    -   `installers/zig/`: Zig compiler installation modules and uninstall script
+    -   `installers/*/uninstall.sh`: Clean uninstallation for major applications
+-   `scripts/`: Utility scripts for system management.
+    -   `daily-updates.sh`: Comprehensive update system (v2.1 - 13 components)
+    -   `manage.sh`: Unified management interface
+    -   `common.sh`, `progress.sh`, `backup_utils.sh`: Shared utilities
 -   `website/src/`: **Editable documentation source** (git-tracked)
     -   `user-guide/`: User documentation (installation, configuration, usage)
     -   `ai-guidelines/`: AI assistant guidelines (modular extracts from AGENTS.md)

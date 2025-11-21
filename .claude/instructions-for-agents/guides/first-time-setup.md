@@ -87,8 +87,11 @@ ghostty +show-config
 claude --version
 gemini --version
 
-# Verify daily updates scheduled
-crontab -l | grep "check_updates"
+# Verify daily updates scheduled (v2.1 - 13 components)
+crontab -l | grep "daily-updates"
+
+# Test manual update
+update-all
 ```
 
 ---

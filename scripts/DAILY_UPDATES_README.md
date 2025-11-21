@@ -2,15 +2,23 @@
 
 Automated daily updates for your development environment.
 
-## 📋 What Gets Updated
+## 📋 What Gets Updated (13 Components)
+
+**Version 2.1** - Enhanced with modular uninstall → reinstall workflow for major applications
 
 1. **GitHub CLI (gh)** - Latest version from official repository
 2. **System Packages** - All apt packages (`apt update && apt upgrade`)
 3. **Oh My Zsh** - Zsh framework and plugins
-4. **npm** - npm itself and all globally installed packages
-5. **Claude CLI** - Anthropic's AI assistant CLI
-6. **Gemini CLI** - Google's AI assistant CLI
-7. **Copilot CLI** - GitHub's AI coding assistant
+4. **fnm (Fast Node Manager)** - Latest version with shell integration updates
+5. **npm** - npm itself and all globally installed packages
+6. **Claude CLI** - Anthropic's AI assistant CLI
+7. **Gemini CLI** - Google's AI assistant CLI
+8. **Copilot CLI** - GitHub's AI coding assistant
+9. **uv** - Python package installer and tool manager
+10. **Spec-Kit CLI** - Specification-driven development tool (via uv)
+11. **Additional uv Tools** - All tools installed via `uv tool install`
+12. **Zig Compiler** - Complete uninstall → reinstall when updates detected
+13. **Ghostty Terminal** - Complete uninstall → reinstall when updates detected
 
 ## 🕐 Schedule
 
@@ -181,6 +189,41 @@ Test the update system without waiting for cron:
 update-logs
 ```
 
+## 🚀 Version 2.1 Features
+
+### Modular Uninstall → Reinstall Workflow
+
+For major applications (Ghostty, Zig), the update system now performs complete uninstall → reinstall:
+
+**Benefits:**
+- **Clean State**: Removes all old files before installing new version
+- **No Conflicts**: Prevents version conflicts or partial updates
+- **Verified Installation**: Fresh installation ensures proper configuration
+- **Comprehensive Logging**: All steps logged for troubleshooting
+
+**Uninstall Scripts:**
+- `lib/installers/ghostty/uninstall.sh` - Removes Ghostty binary, source, config symlinks
+- `lib/installers/zig/uninstall.sh` - Removes Zig compiler, symlinks, PATH entries
+
+### Intelligent Version Detection
+
+**Zig Compiler:**
+- Queries `https://ziglang.org/download/index.json` for latest version
+- Compares with local `zig version` output
+- Triggers uninstall → reinstall only when update available
+
+**Ghostty Terminal:**
+- Fetches latest commits from `origin/main` in Ghostty repository
+- Compares local and remote commit hashes
+- Triggers uninstall → reinstall only when new commits available
+
+### Graceful Error Handling
+
+- **Continues on Failure**: If one component fails, others still update
+- **Exit Code Tracking**: Distinguishes between errors and "not installed" states
+- **Comprehensive Logging**: All stdout/stderr captured to log files
+- **Update Summary**: Clear status for each component (success, fail, skip, already latest)
+
 ## 📱 Terminal Startup Notification
 
 When you open a new terminal, you'll see the latest update summary **once per day**. This prevents spam while keeping you informed.
@@ -296,6 +339,34 @@ crontab /tmp/daily-updates-crontab.txt
 
 ---
 
-**Last Updated**: 2025-11-12
-**Version**: 1.0
+## 📦 Uninstall Scripts Reference
+
+### Ghostty Uninstall (`lib/installers/ghostty/uninstall.sh`)
+
+**What it removes:**
+- Ghostty binary from `~/Apps/zig-out/bin/ghostty`
+- Ghostty source directory from `~/Apps/ghostty/`
+- Config symlink at `~/.config/ghostty/config`
+- Desktop application entry
+- PATH entries in shell configs
+
+**Exit codes:**
+- `0` - Successfully uninstalled
+- `2` - Not installed (clean state)
+
+### Zig Uninstall (`lib/installers/zig/uninstall.sh`)
+
+**What it removes:**
+- Zig installation directory from `~/Apps/zig/`
+- Zig symlink from `~/Apps/zig-out/bin/zig`
+- PATH entries from shell configs
+
+**Exit codes:**
+- `0` - Successfully uninstalled
+- `2` - Not installed (clean state)
+
+---
+
+**Last Updated**: 2025-11-22
+**Version**: 2.1
 **Maintainer**: ghostty-config-files automation

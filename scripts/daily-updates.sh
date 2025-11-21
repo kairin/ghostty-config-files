@@ -5,8 +5,8 @@
 # Logs all output for troubleshooting
 #
 # Author: Auto-generated for ghostty-config-files
-# Last Modified: 2025-11-13
-# Version: 2.0 - Enhanced with graceful error handling and existence checks
+# Last Modified: 2025-11-22
+# Version: 2.1 - Added Ghostty/Zig modular uninstall → reinstall workflow
 
 set -uo pipefail  # Removed -e to allow graceful error handling
 
@@ -769,6 +769,200 @@ update_all_uv_tools() {
     fi
 }
 
+update_zig_compiler() {
+    log_section "12. Updating Zig Compiler"
+
+    # Define paths and constants
+    local GHOSTTY_REPO_DIR="/home/kkk/Apps/ghostty"
+    local ZIG_INSTALL_DIR="$HOME/Apps/zig"
+    local REPO_ROOT
+    REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+    if ! software_exists "zig"; then
+        log_skip "Zig compiler not installed"
+        track_update_result "Zig Compiler" "skip"
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        log_info "[DRY RUN] Would check/update Zig compiler"
+        return 0
+    fi
+
+    local current_version=$(zig version 2>/dev/null || echo "unknown")
+    log_info "Current Zig version: $current_version"
+
+    # Get latest Zig version from ziglang.org download page
+    log_info "Checking for latest Zig version..."
+    local latest_version
+    latest_version=$(curl -fsSL https://ziglang.org/download/index.json 2>/dev/null | \
+        grep -oP '"master":\s*\{\s*"version":\s*"\K[^"]+' | head -1 || echo "unknown")
+
+    if [[ "$latest_version" == "unknown" ]]; then
+        log_warning "Could not fetch latest Zig version"
+        track_update_result "Zig Compiler" "fail"
+        return 1
+    fi
+
+    log_info "Latest Zig version: $latest_version"
+
+    # Compare versions (simple string comparison)
+    if [[ "$current_version" == "$latest_version" ]] && [[ "$FORCE_UPDATE" != true ]]; then
+        log_info "Zig compiler already at latest version"
+        track_update_result "Zig Compiler" "latest"
+        return 0
+    fi
+
+    log_info "Zig update available: $current_version → $latest_version"
+    log_info "Starting uninstall → reinstall workflow..."
+
+    # Step 1: Uninstall old Zig
+    log_info "Step 1/2: Uninstalling old Zig..."
+    if [ -f "$REPO_ROOT/lib/installers/zig/uninstall.sh" ]; then
+        if "$REPO_ROOT/lib/installers/zig/uninstall.sh" 2>&1 | tee -a "$LOG_FILE"; then
+            log_success "Old Zig uninstalled"
+        else
+            local exit_code=$?
+            if [ $exit_code -eq 2 ]; then
+                log_info "Zig was not installed (clean state)"
+            else
+                log_error "Failed to uninstall Zig"
+                track_update_result "Zig Compiler" "fail"
+                return 1
+            fi
+        fi
+    else
+        log_warning "Zig uninstall script not found, attempting manual cleanup..."
+        rm -rf "$ZIG_INSTALL_DIR" || true
+    fi
+
+    # Step 2: Reinstall Zig using modular installer (Ghostty's Zig steps)
+    log_info "Step 2/2: Installing latest Zig..."
+    if [ -d "$REPO_ROOT/lib/installers/ghostty/steps" ]; then
+        # Run Zig download and extract steps
+        local zig_steps_dir="$REPO_ROOT/lib/installers/ghostty/steps"
+
+        if [ -f "$zig_steps_dir/01-download-zig.sh" ] && [ -f "$zig_steps_dir/02-extract-zig.sh" ]; then
+            if "$zig_steps_dir/01-download-zig.sh" 2>&1 | tee -a "$LOG_FILE" && \
+               "$zig_steps_dir/02-extract-zig.sh" 2>&1 | tee -a "$LOG_FILE"; then
+                local new_version=$(zig version 2>/dev/null || echo "unknown")
+                log_success "Zig compiler updated: $current_version → $new_version"
+                track_update_result "Zig Compiler" "success"
+                return 0
+            else
+                log_error "Failed to reinstall Zig"
+                track_update_result "Zig Compiler" "fail"
+                return 1
+            fi
+        else
+            log_error "Zig installation scripts not found"
+            track_update_result "Zig Compiler" "fail"
+            return 1
+        fi
+    else
+        log_error "Ghostty installer directory not found"
+        track_update_result "Zig Compiler" "fail"
+        return 1
+    fi
+}
+
+update_ghostty() {
+    log_section "13. Updating Ghostty Terminal"
+
+    # Define paths
+    local GHOSTTY_REPO_DIR="/home/kkk/Apps/ghostty"
+    local REPO_ROOT
+    REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+    if ! software_exists "ghostty"; then
+        log_skip "Ghostty terminal not installed"
+        track_update_result "Ghostty Terminal" "skip"
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        log_info "[DRY RUN] Would check/update Ghostty"
+        return 0
+    fi
+
+    # Get current Ghostty version
+    local current_version
+    current_version=$(ghostty --version 2>&1 | head -1 | awk '{print $2}' || echo "unknown")
+    log_info "Current Ghostty version: $current_version"
+
+    # Check for updates in upstream repository
+    log_info "Checking for Ghostty updates..."
+
+    if [ ! -d "$GHOSTTY_REPO_DIR/.git" ]; then
+        log_warning "Ghostty repository not found at $GHOSTTY_REPO_DIR"
+        track_update_result "Ghostty Terminal" "skip"
+        return 0
+    fi
+
+    # Fetch latest changes
+    if ! git -C "$GHOSTTY_REPO_DIR" fetch origin 2>&1 | tee -a "$LOG_FILE"; then
+        log_warning "Could not fetch updates from Ghostty repository"
+        track_update_result "Ghostty Terminal" "fail"
+        return 1
+    fi
+
+    # Compare local and remote commits
+    local local_commit
+    local remote_commit
+    local_commit=$(git -C "$GHOSTTY_REPO_DIR" rev-parse HEAD 2>/dev/null || echo "unknown")
+    remote_commit=$(git -C "$GHOSTTY_REPO_DIR" rev-parse origin/main 2>/dev/null || echo "unknown")
+
+    if [[ "$local_commit" == "$remote_commit" ]] && [[ "$FORCE_UPDATE" != true ]]; then
+        log_info "Ghostty already at latest version"
+        track_update_result "Ghostty Terminal" "latest"
+        return 0
+    fi
+
+    log_info "Ghostty update available"
+    log_info "Local commit:  ${local_commit:0:8}"
+    log_info "Remote commit: ${remote_commit:0:8}"
+    log_info "Starting uninstall → reinstall workflow..."
+
+    # Step 1: Uninstall old Ghostty
+    log_info "Step 1/2: Uninstalling old Ghostty..."
+    if [ -f "$REPO_ROOT/lib/installers/ghostty/uninstall.sh" ]; then
+        if "$REPO_ROOT/lib/installers/ghostty/uninstall.sh" 2>&1 | tee -a "$LOG_FILE"; then
+            log_success "Old Ghostty uninstalled"
+        else
+            local exit_code=$?
+            if [ $exit_code -eq 2 ]; then
+                log_info "Ghostty was not installed (clean state)"
+            else
+                log_error "Failed to uninstall Ghostty"
+                track_update_result "Ghostty Terminal" "fail"
+                return 1
+            fi
+        fi
+    else
+        log_warning "Ghostty uninstall script not found, skipping uninstall step"
+    fi
+
+    # Step 2: Reinstall Ghostty using modular installer
+    log_info "Step 2/2: Installing latest Ghostty..."
+    if [ -f "$REPO_ROOT/lib/installers/ghostty/install.sh" ]; then
+        if "$REPO_ROOT/lib/installers/ghostty/install.sh" 2>&1 | tee -a "$LOG_FILE"; then
+            local new_version
+            new_version=$(ghostty --version 2>&1 | head -1 | awk '{print $2}' || echo "unknown")
+            log_success "Ghostty terminal updated: $current_version → $new_version"
+            track_update_result "Ghostty Terminal" "success"
+            return 0
+        else
+            log_error "Failed to reinstall Ghostty"
+            track_update_result "Ghostty Terminal" "fail"
+            return 1
+        fi
+    else
+        log_error "Ghostty installer not found at $REPO_ROOT/lib/installers/ghostty/install.sh"
+        track_update_result "Ghostty Terminal" "fail"
+        return 1
+    fi
+}
+
 # ============================================================================
 # Summary Generation
 # ============================================================================
@@ -884,9 +1078,15 @@ EOF
 
 show_help() {
     cat << EOF
-Daily System Updates Script - Enhanced Version 2.0
+Daily System Updates Script - Enhanced Version 2.1
 
 Usage: $(basename "$0") [OPTIONS]
+
+FEATURES:
+  - Automatic version detection for all installed tools
+  - Modular uninstall → reinstall workflow for major updates
+  - Graceful error handling (continues on failure)
+  - Comprehensive logging and summary reports
 
 OPTIONS:
   --dry-run           Show what would be updated without actually updating
@@ -896,6 +1096,21 @@ OPTIONS:
   --only-security     Only apply security updates for apt packages
   --force             Force updates even if already at latest version
   -h, --help          Show this help message
+
+COMPONENTS UPDATED:
+  1. GitHub CLI (gh) - via apt
+  2. System packages - via apt with autoremove
+  3. Oh My Zsh - native updater
+  4. fnm & Node.js - latest version (constitutional requirement)
+  5. npm & global packages - bulk update
+  6. Claude CLI - via npm
+  7. Gemini CLI - via npm
+  8. Copilot CLI - via npm or gh extension
+  9. uv (Python package manager) - self-update
+  10. spec-kit - via uv tool upgrade
+  11. Additional uv tools - bulk upgrade
+  12. Zig Compiler - modular uninstall/reinstall (NEW)
+  13. Ghostty Terminal - modular uninstall/reinstall (NEW)
 
 EXAMPLES:
   $(basename "$0")                  # Normal run - update everything
@@ -912,6 +1127,11 @@ LOG LOCATIONS:
   Errors:   $LOG_DIR/errors-TIMESTAMP.log
   Summary:  $LOG_DIR/last-update-summary.txt
   Latest:   $LOG_DIR/latest.log (symlink)
+
+NOTES:
+  - Ghostty/Zig updates use modular uninstall → reinstall workflow
+  - Configuration files are preserved during reinstallation
+  - All changes are logged to $LOG_DIR for troubleshooting
 
 EOF
 }
@@ -993,6 +1213,8 @@ main() {
     update_uv || true
     update_spec_kit || true
     update_all_uv_tools || true
+    update_zig_compiler || true
+    update_ghostty || true
 
     # Generate summary
     generate_summary
