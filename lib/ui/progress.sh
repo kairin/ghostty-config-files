@@ -119,6 +119,12 @@ show_progress_bar() {
     local total="$2"
     local title="${3:-Installation Progress}"
 
+    # Only show progress bar in verbose mode
+    # In collapsed mode, task rendering handles progress display
+    if [ "${VERBOSE_MODE:-false}" = false ]; then
+        return 0
+    fi
+
     local progress_bar
     progress_bar=$(render_progress_bar "$completed" "$total")
 

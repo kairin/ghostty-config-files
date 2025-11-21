@@ -499,7 +499,8 @@ main() {
             log "SUCCESS" "Parallel group $group_id: All ${group_size} tasks completed"
         fi
 
-        # Show progress after each group
+        # Show progress after each group (only in verbose mode)
+        # In collapsed mode, task rendering shows the progress
         show_progress_bar "$completed_tasks" "$total_tasks"
     done
 
