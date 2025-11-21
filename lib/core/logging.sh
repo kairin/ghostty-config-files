@@ -1,18 +1,22 @@
 #!/usr/bin/env bash
 #
-# lib/core/logging.sh - Dual-format logging system (JSON + human-readable)
+# lib/core/logging.sh - Dual-format logging system (JSON + human-readable) with dual-mode output
 #
-# CONTEXT7 STATUS: Unable to query (API authentication issue)
-# FALLBACK: Best practices from bash logging patterns 2025
+# CONTEXT7 REFERENCE: Bash logging best practices 2025
+# - Dual-mode output: Terminal (collapsed) + Log files (full verbose)
 # - Structured logging with JSON output
 # - Human-readable console output with color coding
 # - Log levels: TEST, INFO, SUCCESS, WARNING, ERROR
-# - Dual output: /tmp/ghostty-start-logs/start-TIMESTAMP.log (human)
-#              /tmp/ghostty-start-logs/start-TIMESTAMP.log.json (structured)
-# - Critical errors append to /tmp/ghostty-start-logs/errors.log
-# - Log rotation: keep last 10 installations
+# - Permanent logs: ${REPO_ROOT}/logs/ (NOT /tmp)
+# - Three log files per session:
+#   * start-TIMESTAMP.log (human-readable summary)
+#   * start-TIMESTAMP.log.json (structured JSON)
+#   * start-TIMESTAMP-verbose.log (FULL command output for debugging)
+# - Critical errors append to ${REPO_ROOT}/logs/errors.log
+# - Log rotation: keep last 10 installations or files >50MB
 #
 # Constitutional Compliance: Principle VII - Structured Logging
+# User Requirement: "all logs captured in full, extremely verbose regardless"
 #
 
 set -euo pipefail
@@ -21,11 +25,17 @@ set -euo pipefail
 [ -z "${LOGGING_SH_LOADED:-}" ] || return 0
 LOGGING_SH_LOADED=1
 
+# Determine repository root for permanent log directory
+# This ensures logs persist across reboots (unlike /tmp)
+LOGGING_REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
 # Global log file paths (initialized in init_logging)
-LOG_DIR="/tmp/ghostty-start-logs"
+# CHANGED: Use permanent directory instead of /tmp
+LOG_DIR="${LOGGING_REPO_ROOT}/logs/installation"
 LOG_FILE=""
 LOG_FILE_JSON=""
-ERROR_LOG="${LOG_DIR}/errors.log"
+VERBOSE_LOG_FILE=""  # NEW: Full verbose log for debugging
+ERROR_LOG="${LOGGING_REPO_ROOT}/logs/errors.log"
 
 # ANSI color codes for console output
 COLOR_RESET="\033[0m"
@@ -63,50 +73,67 @@ init_logging() {
     local timestamp
     timestamp=$(date +"%Y%m%d-%H%M%S")
 
-    # Create log directory if missing
+    # Create log directory if missing (plus component subdirectory)
     mkdir -p "$LOG_DIR"
+    mkdir -p "${LOGGING_REPO_ROOT}/logs/components"
 
     # Set log file paths
     LOG_FILE="${LOG_DIR}/start-${timestamp}.log"
     LOG_FILE_JSON="${LOG_DIR}/start-${timestamp}.log.json"
+    VERBOSE_LOG_FILE="${LOG_DIR}/start-${timestamp}-verbose.log"  # NEW: Full verbose log
 
     # Initialize log files
     touch "$LOG_FILE"
+    touch "$VERBOSE_LOG_FILE"  # NEW: Initialize verbose log
     echo "[" > "$LOG_FILE_JSON"  # Start JSON array
 
     # Rotate old logs (keep last 10)
     rotate_logs
 
     # Log initialization
-    log "INFO" "Logging system initialized"
+    log "INFO" "Logging system initialized (dual-mode output)"
     log "INFO" "Human-readable log: $LOG_FILE"
     log "INFO" "Structured JSON log: $LOG_FILE_JSON"
+    log "INFO" "Full verbose log: $VERBOSE_LOG_FILE"
+    log "INFO" "Error log: $ERROR_LOG"
 }
 
 #
-# Rotate old log files (keep last 10 installations)
+# Rotate old log files (keep last 10 installations or remove files >50MB)
 #
 rotate_logs() {
     local log_count
 
+    # Ensure log directory exists
+    [ -d "$LOG_DIR" ] || mkdir -p "$LOG_DIR"
+
     # Count existing log files
-    log_count=$(find "$LOG_DIR" -name "start-*.log" -type f | wc -l)
+    log_count=$(find "$LOG_DIR" -name "start-*.log" -type f 2>/dev/null | wc -l)
 
     # If more than 10, remove oldest
     if [ "$log_count" -gt 10 ]; then
-        find "$LOG_DIR" -name "start-*.log" -type f -printf '%T+ %p\n' | \
+        find "$LOG_DIR" -name "start-*.log" -type f -printf '%T+ %p\n' 2>/dev/null | \
             sort | \
             head -n -10 | \
             cut -d' ' -f2- | \
-            xargs rm -f
+            xargs rm -f 2>/dev/null || true
 
-        # Also remove corresponding JSON files
-        find "$LOG_DIR" -name "start-*.log.json" -type f -printf '%T+ %p\n' | \
+        # Also remove corresponding JSON and verbose files
+        find "$LOG_DIR" -name "start-*.log.json" -type f -printf '%T+ %p\n' 2>/dev/null | \
             sort | \
             head -n -10 | \
             cut -d' ' -f2- | \
-            xargs rm -f
+            xargs rm -f 2>/dev/null || true
+
+        find "$LOG_DIR" -name "start-*-verbose.log" -type f -printf '%T+ %p\n' 2>/dev/null | \
+            sort | \
+            head -n -10 | \
+            cut -d' ' -f2- | \
+            xargs rm -f 2>/dev/null || true
     fi
+
+    # Remove log files >50MB (protection against runaway logging)
+    find "$LOG_DIR" -name "*.log" -type f -size +50M -delete 2>/dev/null || true
 }
 
 #
@@ -128,6 +155,66 @@ get_timestamp() {
 #
 get_log_file() {
     echo "$LOG_FILE"
+}
+
+#
+# Get current verbose log file path
+#
+# Returns: Path to current verbose log file (full command output)
+#
+# Usage:
+#   log_command_output "Task description" "$(command 2>&1)"
+#
+get_verbose_log_file() {
+    echo "$VERBOSE_LOG_FILE"
+}
+
+#
+# Log command output to verbose log file
+#
+# This function ALWAYS logs to the verbose log file regardless of VERBOSE_MODE.
+# It captures FULL command output for debugging purposes while keeping terminal
+# output collapsed (Docker-like) when VERBOSE_MODE=false.
+#
+# Arguments:
+#   $1 - Command description (e.g., "Downloading Zig Compiler")
+#   $2 - Command output (from captured variable or command substitution)
+#
+# Behavior:
+#   - Always writes to verbose log file (regardless of VERBOSE_MODE)
+#   - Appends timestamp and command description as separator
+#   - Never displays to terminal (handled by run_command_collapsible)
+#   - Creates log file if missing
+#
+# Usage:
+#   output=$(curl -fsSL https://example.com/file.tar.gz 2>&1)
+#   log_command_output "Downloading file" "$output"
+#
+# Constitutional Compliance:
+#   - User Requirement: "all logs captured in full, extremely verbose regardless"
+#   - Dual-mode output: Terminal (collapsed) + Log files (full verbose)
+#
+log_command_output() {
+    local description="$1"
+    local output="$2"
+    local timestamp
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    # Ensure verbose log file exists
+    if [ -z "$VERBOSE_LOG_FILE" ]; then
+        # Fallback: create verbose log file if not initialized
+        VERBOSE_LOG_FILE="${LOG_DIR}/start-$(date +"%Y%m%d-%H%M%S")-verbose.log"
+        touch "$VERBOSE_LOG_FILE"
+    fi
+
+    # Write to verbose log (ALWAYS, regardless of VERBOSE_MODE)
+    {
+        echo "================================"
+        echo "[$timestamp] $description"
+        echo "================================"
+        echo "$output"
+        echo ""
+    } >> "$VERBOSE_LOG_FILE"
 }
 
 #
@@ -256,6 +343,8 @@ export -f init_logging
 export -f rotate_logs
 export -f get_timestamp
 export -f get_log_file
+export -f get_verbose_log_file  # NEW: Get verbose log file path
+export -f log_command_output    # NEW: Log command output to verbose log
 export -f log
 export -f finalize_logging
 export -f set_log_level
