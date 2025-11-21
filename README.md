@@ -114,23 +114,23 @@ The repository includes a unified management interface:
 
 ```bash
 # Install complete environment
-./manage.sh install
+./scripts/manage.sh install
 
 # Update all components
-./manage.sh update
+./scripts/manage.sh update
 
 # Validate system
-./manage.sh validate
+./scripts/manage.sh validate
 
 # Build documentation
-./manage.sh docs build
+./scripts/manage.sh docs build
 
 # Start documentation dev server
-./manage.sh docs dev
+./scripts/manage.sh docs dev
 
 # Get help
-./manage.sh --help
-./manage.sh <command> --help
+./scripts/manage.sh --help
+./scripts/manage.sh <command> --help
 ```
 
 For detailed usage, see [website/src/user-guide/usage.md](website/src/user-guide/usage.md).
@@ -200,7 +200,7 @@ This will start a development server, and you can view the website at `http://lo
 
 ## Project Structure
 
--   `manage.sh`: Unified management interface for all repository operations (Phase 3)
+-   `scripts/manage.sh`: Unified management interface for all repository operations (Phase 3)
 -   `src/`: Contains the source code for the Astro website.
     -   `components/`: Reusable Astro components.
     -   `layouts/`: Layout components for pages.

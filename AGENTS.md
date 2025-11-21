@@ -308,10 +308,10 @@ LOCAL_CI_LOGS="./.runners-local/logs/"
 **Essential Structure** (Restructured 2025-11-20):
 ```
 /home/kkk/Apps/ghostty-config-files/
-├── start.sh, manage.sh         # Installation & management scripts
+├── start.sh                    # Installation orchestrator script
 ├── CLAUDE.md, README.md        # AI instructions & user documentation
 ├── configs/                    # Ghostty config, themes, dircolors, workspace
-├── scripts/                    # Utility scripts (installation, updates, health checks)
+├── scripts/                    # Utility scripts (manage.sh, updates, health checks)
 ├── lib/                        # Modular task libraries (ghostty/, zsh/, python_uv/, etc.)
 ├── documentation/              # SINGLE documentation folder (consolidated)
 │   ├── setup/                  # Setup guides (MCP, new-device, zsh-security)
