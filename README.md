@@ -21,6 +21,10 @@ This repository contains a comprehensive terminal environment setup featuring th
   - **Real Verification**: System state checks (no hard-coded success messages)
   - **Modular Architecture**: Clean lib/ directory structure for maintainability
 - **Astro-Based Website**: A documentation and dashboard website built with Astro.
+- **System Cleanup Utilities**: Automated cleanup scripts for common bloatware
+  - **LibreOffice Removal**: Safe removal of both APT and Snap LibreOffice installations (~700-800 MB freed)
+  - **No System Breakage**: Verified safe - removes only LibreOffice components
+  - **Complete Cleanup**: Removes packages, configs, and desktop entries
 
 ## Getting Started
 
@@ -134,6 +138,35 @@ The repository includes a unified management interface:
 ```
 
 For detailed usage, see [website/src/user-guide/usage.md](website/src/user-guide/usage.md).
+
+### System Cleanup Utilities
+
+#### Remove LibreOffice
+
+Safe removal of LibreOffice (both APT and Snap versions) to free up 700-800 MB:
+
+```bash
+# Remove all LibreOffice installations
+sudo ./scripts/remove_libreoffice.sh
+```
+
+**What it does:**
+- Removes APT LibreOffice packages (~410 MB)
+- Removes Snap LibreOffice package (~300-400 MB)
+- Cleans up all configuration files
+- Removes desktop entries
+- **Guaranteed safe** - no system dependencies
+
+**After removal:**
+- Logout/login to refresh your application menu
+- LibreOffice entries will disappear from launcher
+- System remains fully functional
+
+**To reinstall later:**
+```bash
+sudo apt install libreoffice  # or
+sudo snap install libreoffice
+```
 
 ### Daily Automated Updates
 
