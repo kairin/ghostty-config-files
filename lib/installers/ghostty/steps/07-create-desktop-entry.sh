@@ -12,71 +12,51 @@ source "$(dirname "${BASH_SOURCE[0]}")/../../init.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 #
-# Install Ghostty icon from source repository
+# Install Ghostty icon from build output
 #
-# Searches for icon in common locations within the Ghostty build directory
-# and installs to XDG-compliant icon directory
+# Ghostty's build system installs icons to GHOSTTY_INSTALL_DIR/share/icons/hicolor.
+# This function copies them to the system icon directory ~/.local/share/icons/hicolor
+# so they are properly detected by the desktop environment.
 #
 install_ghostty_icon() {
-    local icon_dir="${HOME}/.local/share/icons/hicolor"
+    local system_icon_dir="${HOME}/.local/share/icons/hicolor"
+    local ghostty_icon_dir="$GHOSTTY_INSTALL_DIR/share/icons/hicolor"
     local icon_installed=false
 
-    # Common icon locations in Ghostty repository
-    local icon_search_paths=(
-        "assets/icon.svg"
-        "assets/ghostty.svg"
-        "assets/icons/icon.svg"
-        "src/assets/icon.svg"
-        "resources/icon.svg"
-        "resources/ghostty.svg"
-    )
+    # Check if Ghostty's build output contains icons
+    if [ -d "$ghostty_icon_dir" ]; then
+        log "INFO" "Found Ghostty icons in build output"
 
-    # Search for icon in build directory
-    for icon_path in "${icon_search_paths[@]}"; do
-        local full_path="$GHOSTTY_BUILD_DIR/$icon_path"
-        if [ -f "$full_path" ]; then
-            # Determine appropriate size directory (SVG goes in scalable)
-            local target_dir="$icon_dir/scalable/apps"
-            mkdir -p "$target_dir"
+        # Copy all icon sizes to system icon directory
+        for size_dir in "$ghostty_icon_dir"/*; do
+            if [ -d "$size_dir" ]; then
+                local size_name=$(basename "$size_dir")
+                local target_dir="$system_icon_dir/$size_name/apps"
 
-            cp "$full_path" "$target_dir/ghostty.svg"
-            log "SUCCESS" "Icon installed from $icon_path"
-
-            # Update icon cache if gtk-update-icon-cache is available
-            if command -v gtk-update-icon-cache &>/dev/null; then
-                gtk-update-icon-cache "$icon_dir" 2>/dev/null || true
-            fi
-
-            icon_installed=true
-            return 0
-        fi
-    done
-
-    # If no SVG found, check for PNG icons
-    for size in 16 22 24 32 48 64 128 256; do
-        for icon_path in "assets/icon_${size}.png" "assets/icons/${size}x${size}/ghostty.png"; do
-            local full_path="$GHOSTTY_BUILD_DIR/$icon_path"
-            if [ -f "$full_path" ]; then
-                local target_dir="$icon_dir/${size}x${size}/apps"
                 mkdir -p "$target_dir"
 
-                cp "$full_path" "$target_dir/ghostty.png"
-                log "SUCCESS" "Icon installed from $icon_path"
-                icon_installed=true
+                # Copy all com.mitchellh.ghostty.png files
+                if [ -d "$size_dir/apps" ]; then
+                    cp -f "$size_dir/apps/com.mitchellh.ghostty.png" "$target_dir/" 2>/dev/null && {
+                        log "INFO" "Installed icon: $size_name"
+                        icon_installed=true
+                    }
+                fi
             fi
         done
-    done
 
-    if [ "$icon_installed" = true ]; then
-        # Update icon cache
-        if command -v gtk-update-icon-cache &>/dev/null; then
-            gtk-update-icon-cache "$icon_dir" 2>/dev/null || true
+        if [ "$icon_installed" = true ]; then
+            # Update icon cache
+            if command -v gtk-update-icon-cache &>/dev/null; then
+                gtk-update-icon-cache "$system_icon_dir" 2>/dev/null || true
+                log "SUCCESS" "Icon cache updated"
+            fi
+            return 0
         fi
-        return 0
-    else
-        log "WARNING" "Ghostty icon not found in build directory, using fallback"
-        return 1
     fi
+
+    log "WARNING" "Ghostty icons not found in build output, using fallback icon"
+    return 1
 }
 
 # 3. Main Logic
@@ -95,8 +75,8 @@ main() {
     # Install icon if available
     local icon_name="utilities-terminal"  # Fallback icon
     if install_ghostty_icon; then
-        icon_name="ghostty"
-        log "INFO" "Using Ghostty-specific icon"
+        icon_name="com.mitchellh.ghostty"
+        log "INFO" "Using Ghostty-specific icon: $icon_name"
     else
         log "INFO" "Using fallback icon: $icon_name"
     fi
@@ -115,6 +95,20 @@ EOF
 
     chmod +x "$desktop_dir/ghostty.desktop"
     log "SUCCESS" "Desktop entry created at $desktop_dir/ghostty.desktop"
+
+    # Fix com.mitchellh.ghostty.desktop file if it exists (Ghostty's build system creates this)
+    local official_desktop="$desktop_dir/com.mitchellh.ghostty.desktop"
+    if [ -f "$official_desktop" ]; then
+        log "INFO" "Fixing Ghostty's official desktop file paths..."
+        # Backup original
+        cp "$official_desktop" "$official_desktop.bak"
+
+        # Fix hardcoded /tmp paths to use actual install directory
+        sed -i "s|Exec=/tmp/ghostty-build/zig-out/bin/ghostty|Exec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
+        sed -i "s|TryExec=/tmp/ghostty-build/zig-out/bin/ghostty|TryExec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
+
+        log "SUCCESS" "Fixed desktop file: $official_desktop"
+    fi
 
     complete_task "$task_id"
     exit 0

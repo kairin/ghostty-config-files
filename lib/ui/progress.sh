@@ -308,7 +308,7 @@ show_summary() {
     )
 
     echo ""
-    draw_box "Summary" "${summary_lines[@]}"
+    draw_box "Summary" 70 "${summary_lines[@]}"
     echo ""
 }
 
