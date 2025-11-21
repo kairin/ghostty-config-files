@@ -177,6 +177,68 @@ flowchart TD
     style Keep fill:#81c784
 ```
 
+### 🚨 CRITICAL: Script Proliferation Prevention (CONSTITUTIONAL PRINCIPLE)
+
+**MANDATORY REQUIREMENT**: All improvements MUST enhance existing scripts, not create new ones.
+
+> "Improve existing scripts directly. Minimize creating scripts to solve other scripts, creating more and more scripts just to solve issues caused by other scripts."
+>
+> — User Constitutional Requirement, 2025-11-21
+
+**Constitutional Rules**:
+1. **NEVER create wrapper scripts** to fix issues in other scripts
+2. **NEVER create helper scripts** when existing scripts can be enhanced
+3. **NEVER create management scripts** that only call other scripts
+4. **Test files are EXEMPT** (`tests/`, `*_test.sh`, `test_*.sh`)
+
+**Before Creating ANY New `.sh` File - MANDATORY Checklist**:
+- [ ] Can this be added to an existing script? (If YES → add it there, DO NOT create new file)
+- [ ] Is this a test file? (Only YES if in `tests/` or testing infrastructure)
+- [ ] Does this violate script proliferation principle? (If YES → STOP immediately)
+- [ ] Is this absolutely necessary as a separate file? (If NO → find alternative approach)
+
+**Validation Requirements**:
+- All agents MUST check `.claude/principles/script-proliferation.md` before creating files
+- constitutional-compliance-agent validates all new script creation
+- Any new script requires explicit justification in commit message
+
+**Examples**:
+
+**❌ VIOLATION - Creating Helper Scripts**:
+```bash
+# Wrong: Creating new helper for version comparison
+lib/utils/version-compare.sh
+lib/verification/test_version_compare.sh  # Exception: test files allowed
+
+# Wrong: Creating wrapper to fix broken script
+scripts/fix-installer.sh  # Wraps installer.sh
+scripts/enhanced-setup.sh  # Wraps setup.sh
+```
+
+**✅ COMPLIANT - Enhancing Existing Scripts**:
+```bash
+# Correct: Add function to existing core library
+lib/core/logging.sh  # Add version_compare() function
+
+# Correct: Enhance existing installer directly
+lib/installers/ghostty/steps/05-install-binary.sh  # Add update detection logic
+
+# Correct: Add to existing prerequisite check
+lib/installers/nodejs_fnm/steps/00-check-prerequisites.sh  # Add snap detection
+```
+
+**Enforcement**:
+- **Detection**: Repository monitors for new `.sh` file creation
+- **Validation**: constitutional-compliance-agent blocks proliferation violations
+- **Override**: Requires explicit user approval with documented justification
+
+**Metrics**:
+- **Baseline (2025-11-21)**: TBD script count
+- **Target**: Stable or decreasing count over time
+- **Alert**: +5 scripts per month triggers review
+
+**Complete Guidelines**: See `.claude/principles/script-proliferation.md` for detailed rules, examples, and enforcement procedures.
+
 ### 🚨 CRITICAL: GitHub Pages Infrastructure (MANDATORY)
 - **`.nojekyll` File**: ABSOLUTELY CRITICAL for GitHub Pages deployment
 - **Location**: `docs/.nojekyll` (empty file, no content needed)

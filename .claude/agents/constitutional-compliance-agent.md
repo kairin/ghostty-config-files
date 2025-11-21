@@ -455,8 +455,192 @@ echo "3. Remove outdated references"
 
 ---
 
-**CRITICAL**: This agent ensures AGENTS.md remains an effective, navigable master index while detailed documentation lives in modular, focused files. Invoke proactively to prevent bloat and maintain constitutional compliance.
+## 🚫 SCRIPT PROLIFERATION PREVENTION (NEW CONSTITUTIONAL REQUIREMENT)
 
-**Version**: 1.0
-**Last Updated**: 2025-11-15
-**Status**: ACTIVE - PROACTIVE SIZE MANAGEMENT
+### Authority
+**User Constitutional Requirement (2025-11-21)**:
+> "Improve existing scripts directly. Minimize creating scripts to solve other scripts, creating more and more scripts just to solve issues caused by other scripts."
+
+### Validation Protocol
+
+**MANDATORY CHECK** before allowing any new `.sh` file creation:
+
+```bash
+# Check for new .sh files in commit
+NEW_SCRIPTS=$(git diff --cached --name-status | grep '^A.*\.sh$')
+
+if [ -n "$NEW_SCRIPTS" ]; then
+    echo "🚨 NEW SCRIPT DETECTED: Constitutional validation required"
+
+    # Run proliferation checklist validation
+    validate_script_proliferation "$NEW_SCRIPTS"
+fi
+```
+
+### Validation Rules
+
+**For EACH new `.sh` file, verify:**
+
+1. **Test File Exception**:
+   - Is file in `tests/` directory? → ALLOWED
+   - Does filename match `*_test.sh`, `test_*.sh`, `*_spec.sh`? → ALLOWED
+   - Otherwise → Continue validation
+
+2. **Enhancement Opportunity**:
+   - Can functionality be added to existing script? → REJECT (provide script name)
+   - Must justify why existing script cannot be enhanced
+
+3. **Wrapper Detection**:
+   - Does new script wrap/call another script? → REJECT
+   - Does new script "fix" another script? → REJECT (fix original)
+
+4. **Helper Function Detection**:
+   - Is new script a single-use utility? → REJECT (add to `lib/core/*.sh`)
+   - Used by only 1-2 scripts? → REJECT (inline function)
+
+5. **Management Script Detection**:
+   - Does new script only orchestrate calls to others? → REJECT
+   - Use existing orchestrator or data-driven system
+
+6. **Justification Required**:
+   - Is there documented justification in commit message? → Required
+   - Does justification address all checklist items? → Required
+
+### Automated Validation Response
+
+```bash
+# Example output when proliferation detected
+validate_script_proliferation() {
+    local new_file="$1"
+
+    echo "🔍 Constitutional Validation: $new_file"
+    echo ""
+    echo "❌ SCRIPT PROLIFERATION DETECTED"
+    echo ""
+    echo "📋 Validation Checklist:"
+    echo "  [ ] Test file exception - NO"
+    echo "  [?] Can functionality be added to existing script?"
+    echo "      → Check: lib/installers/*/steps/*.sh"
+    echo "      → Check: lib/core/*.sh"
+    echo "  [?] Is this wrapping/fixing another script?"
+    echo "      → If YES: Fix original script instead"
+    echo "  [?] Is this a single-use helper?"
+    echo "      → If YES: Add to lib/core/logging.sh"
+    echo ""
+    echo "📖 Required Reading:"
+    echo "  1. .claude/principles/script-proliferation.md"
+    echo "  2. AGENTS.md (lines 180-240)"
+    echo ""
+    echo "🚨 COMMIT BLOCKED until:"
+    echo "  1. Existing script enhanced instead, OR"
+    echo "  2. Detailed justification provided in commit message"
+    echo ""
+    echo "Example justification format:"
+    echo "---"
+    echo "SCRIPT PROLIFERATION JUSTIFICATION:"
+    echo "- Cannot enhance existing script because: [reason]"
+    echo "- Not a wrapper script because: [reason]"
+    echo "- Not a helper function because: [reason]"
+    echo "- Absolute necessity: [detailed explanation]"
+    echo "---"
+
+    return 1  # Block commit
+}
+```
+
+### Integration Points
+
+**Pre-Commit Hook**:
+```bash
+# .git/hooks/pre-commit
+# Check for script proliferation
+if ! constitutional-compliance-agent validate-scripts; then
+    echo "🚨 Constitutional violation: Script proliferation detected"
+    echo "📖 See .claude/principles/script-proliferation.md"
+    exit 1
+fi
+```
+
+**Master Orchestrator**:
+```markdown
+When master-orchestrator receives task requiring file creation:
+1. Check if task involves creating new .sh file
+2. Invoke constitutional-compliance-agent for proliferation validation
+3. If validation fails → Suggest enhancing existing script instead
+4. Only proceed with new file if user explicitly approves with justification
+```
+
+**Git Operations Specialist**:
+```markdown
+Before committing changes:
+1. Detect new .sh files in staging area
+2. Invoke constitutional-compliance-agent for validation
+3. Block commit if proliferation detected without justification
+4. Provide remediation suggestions
+```
+
+### Metrics Tracking
+
+**Repository Health Metrics**:
+```bash
+# Baseline script count (2025-11-21)
+BASELINE_SCRIPT_COUNT=$(find /home/kkk/Apps/ghostty-config-files -name "*.sh" -not -path "*/tests/*" | wc -l)
+
+# Current script count
+CURRENT_SCRIPT_COUNT=$(find /home/kkk/Apps/ghostty-config-files -name "*.sh" -not -path "*/tests/*" | wc -l)
+
+# Alert if increase
+if [ $CURRENT_SCRIPT_COUNT -gt $((BASELINE_SCRIPT_COUNT + 5)) ]; then
+    echo "🚨 ALERT: Script count increased by >5"
+    echo "   Baseline: $BASELINE_SCRIPT_COUNT"
+    echo "   Current:  $CURRENT_SCRIPT_COUNT"
+    echo "   Review required: Check for proliferation"
+fi
+```
+
+### Override Process
+
+**If new script is absolutely necessary**:
+
+1. User must provide explicit approval
+2. Commit message must include:
+   - Complete validation checklist
+   - Detailed justification for each checkpoint
+   - Explanation why alternatives don't work
+3. constitutional-compliance-agent logs override in:
+   - `documentation/developer/script-proliferation-overrides.log`
+4. Monthly review of all overrides
+
+### Example Violations & Remediation
+
+**Violation 1: Helper Script**
+```bash
+# ❌ Detected: lib/utils/version-compare.sh
+Remediation: Add version_compare() to lib/core/logging.sh
+```
+
+**Violation 2: Wrapper Script**
+```bash
+# ❌ Detected: scripts/fix-installer.sh (wraps scripts/installer.sh)
+Remediation: Fix bugs in scripts/installer.sh directly
+```
+
+**Violation 3: Single-Use Icon Installer**
+```bash
+# ❌ Detected: scripts/install-ghostty-icon.sh
+Remediation: Add install_ghostty_icon() to lib/installers/ghostty/steps/07-create-desktop-entry.sh
+```
+
+### References
+
+- **Principle Definition**: `.claude/principles/script-proliferation.md`
+- **AGENTS.md Section**: Lines 180-240
+- **Quick Reference**: `.claude/README.md`
+
+---
+
+**CRITICAL**: This agent ensures AGENTS.md remains an effective, navigable master index while detailed documentation lives in modular, focused files. It also enforces script proliferation prevention to maintain a clean, maintainable codebase. Invoke proactively to prevent bloat and maintain constitutional compliance.
+
+**Version**: 1.1
+**Last Updated**: 2025-11-21
+**Status**: ACTIVE - PROACTIVE SIZE MANAGEMENT + SCRIPT PROLIFERATION ENFORCEMENT

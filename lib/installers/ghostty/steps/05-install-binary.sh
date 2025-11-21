@@ -21,6 +21,32 @@ main() {
     register_task "$task_id" "Installing Ghostty binary"
     start_task "$task_id"
 
+    # Check if already installed and up-to-date
+    local ghostty_bin="$GHOSTTY_INSTALL_DIR/bin/ghostty"
+    if [ -x "$ghostty_bin" ]; then
+        log "INFO" "Ghostty already installed, checking version..."
+        local installed_version
+        if installed_version=$("$ghostty_bin" --version 2>&1 | grep -oP '\d+\.\d+\.\d+' | head -1); then
+            log "INFO" "Currently installed: v$installed_version"
+
+            # Check for updates
+            local latest_version
+            if latest_version=$(curl -sf --max-time 5 https://api.github.com/repos/ghostty-org/ghostty/releases/latest 2>/dev/null | grep -oP '"tag_name":\s*"v?\K[0-9.]+'); then
+                if [ -n "$latest_version" ]; then
+                    if version_equal "$latest_version" "$installed_version"; then
+                        log "SUCCESS" "Ghostty already up-to-date (v$installed_version)"
+                        complete_task "$task_id"
+                        exit 2  # Exit code 2 = skip (already current)
+                    else
+                        log "INFO" "Update available: v$latest_version, proceeding with installation..."
+                    fi
+                fi
+            else
+                log "INFO" "Could not check for updates, proceeding with installation..."
+            fi
+        fi
+    fi
+
     if [ ! -d "$GHOSTTY_BUILD_DIR" ]; then
         log "ERROR" "Build directory not found: $GHOSTTY_BUILD_DIR"
         fail_task "$task_id"

@@ -336,6 +336,114 @@ set_log_level() {
     log "INFO" "Log level threshold set to $level"
 }
 
+#
+# Compare two semantic version strings
+#
+# Arguments:
+#   $1 - First version (e.g., "1.2.3")
+#   $2 - Second version (e.g., "1.2.4")
+#
+# Returns:
+#   0 if versions are equal
+#   1 if first version is greater
+#   2 if second version is greater
+#
+# Usage:
+#   version_compare "1.2.3" "1.2.4"
+#   result=$?
+#   if [ $result -eq 2 ]; then echo "Update available"; fi
+#
+version_compare() {
+    local ver1="$1"
+    local ver2="$2"
+
+    # Strip leading 'v' if present
+    ver1="${ver1#v}"
+    ver2="${ver2#v}"
+
+    # Handle empty versions
+    if [ -z "$ver1" ] || [ "$ver1" = "unknown" ]; then
+        [ -z "$ver2" ] || [ "$ver2" = "unknown" ] && return 0 || return 2
+    fi
+    if [ -z "$ver2" ] || [ "$ver2" = "unknown" ]; then
+        return 1
+    fi
+
+    # If versions are identical, return equal
+    if [ "$ver1" = "$ver2" ]; then
+        return 0
+    fi
+
+    # Split versions into components and compare
+    local IFS='.'
+    local i ver1_arr ver2_arr
+    read -ra ver1_arr <<< "$ver1"
+    read -ra ver2_arr <<< "$ver2"
+
+    # Compare each component
+    for ((i=0; i<${#ver1_arr[@]} || i<${#ver2_arr[@]}; i++)); do
+        local v1=${ver1_arr[i]:-0}
+        local v2=${ver2_arr[i]:-0}
+
+        # Remove non-numeric suffixes (e.g., "1.2.3-beta" -> "1.2.3")
+        # Use parameter expansion to handle non-numeric characters
+        v1=${v1%%[^0-9]*}
+        v2=${v2%%[^0-9]*}
+        v1=${v1:-0}
+        v2=${v2:-0}
+
+        if [ "$v1" -gt "$v2" ]; then
+            return 1  # First version is greater
+        elif [ "$v1" -lt "$v2" ]; then
+            return 2  # Second version is greater
+        fi
+    done
+
+    return 0  # Versions are equal
+}
+
+#
+# Check if first version is greater than second version
+#
+# Arguments:
+#   $1 - First version (e.g., "1.2.4")
+#   $2 - Second version (e.g., "1.2.3")
+#
+# Returns:
+#   0 (true) if first version is greater
+#   1 (false) otherwise
+#
+# Usage:
+#   if version_greater "1.2.4" "1.2.3"; then
+#       echo "Update available"
+#   fi
+#
+version_greater() {
+    version_compare "$1" "$2"
+    [ $? -eq 1 ]
+}
+
+#
+# Check if versions are equal
+#
+# Arguments:
+#   $1 - First version
+#   $2 - Second version
+#
+# Returns:
+#   0 (true) if versions are equal
+#   1 (false) otherwise
+#
+# Usage:
+#   if version_equal "1.2.3" "1.2.3"; then
+#       echo "Already up-to-date"
+#   fi
+#
+version_equal() {
+    version_compare "$1" "$2"
+    [ $? -eq 0 ]
+}
+
 export -f get_level_num
 
 # Export functions for use in other modules
@@ -348,3 +456,6 @@ export -f log_command_output    # NEW: Log command output to verbose log
 export -f log
 export -f finalize_logging
 export -f set_log_level
+export -f version_compare       # NEW: Semantic version comparison
+export -f version_greater       # NEW: Check if version is greater
+export -f version_equal         # NEW: Check if versions are equal
