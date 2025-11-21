@@ -135,26 +135,18 @@ declare -g MR_START_TIME=0
 show_component_header() {
     local component_name="$1"
 
-    if [ "$TUI_AVAILABLE" = true ]; then
-        # Use gum for professional styling
-        echo ""
-        gum style \
-            --border double \
-            --border-foreground 212 \
-            --align center \
-            --width 60 \
-            --margin "0 2" \
-            --padding "1 2" \
-            "Installing ${component_name}"
-        echo ""
-    else
-        # Fallback: ASCII box
-        echo ""
-        echo "╔═══════════════════════════════════════════════════════════╗"
-        printf "║%*s%*s║\n" $(( (59 + ${#component_name} + 12) / 2 )) "Installing ${component_name}" $(( (59 - ${#component_name} - 12) / 2 )) ""
-        echo "╚═══════════════════════════════════════════════════════════╝"
-        echo ""
-    fi
+    # ALWAYS use gum (installed as priority 0, guaranteed available)
+    # Use rounded border for maximum terminal compatibility
+    echo ""
+    gum style \
+        --border rounded \
+        --border-foreground 212 \
+        --align center \
+        --width 60 \
+        --margin "0 2" \
+        --padding "1 2" \
+        "Installing ${component_name}"
+    echo ""
 }
 
 #
@@ -200,40 +192,26 @@ show_component_footer() {
             ;;
     esac
 
-    if [ "$TUI_AVAILABLE" = true ]; then
+    # ALWAYS use gum (installed as priority 0, guaranteed available)
+    echo ""
+    gum style \
+        --border none \
+        --foreground "$status_color" \
+        --bold \
+        --align center \
+        --width 60 \
+        "$status_symbol ${component_name} installation $status ($total_steps/$total_steps steps, $(format_duration \"$MR_TOTAL_DURATION\") total)"
+
+    # Show log file location if provided
+    if [ -n "$component_log" ]; then
         echo ""
         gum style \
-            --border none \
-            --foreground "$status_color" \
-            --bold \
+            --foreground 240 \
             --align center \
             --width 60 \
-            "$status_symbol ${component_name} installation $status ($total_steps/$total_steps steps, $(format_duration "$MR_TOTAL_DURATION") total)"
-
-        # Show log file location if provided
-        if [ -n "$component_log" ]; then
-            echo ""
-            gum style \
-                --foreground 240 \
-                --align center \
-                --width 60 \
-                "Detailed logs: $component_log"
-        fi
-        echo ""
-    else
-        # Fallback: ASCII separator
-        echo ""
-        echo "═══════════════════════════════════════════════════════════"
-        echo "$status_symbol ${component_name} installation $status ($total_steps/$total_steps steps, $(format_duration "$MR_TOTAL_DURATION") total)"
-
-        # Show log file location if provided
-        if [ -n "$component_log" ]; then
-            echo "Detailed logs: $component_log"
-        fi
-
-        echo "═══════════════════════════════════════════════════════════"
-        echo ""
+            "Detailed logs: $component_log"
     fi
+    echo ""
 }
 
 #
