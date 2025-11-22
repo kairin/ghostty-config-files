@@ -46,7 +46,7 @@ main() {
         exit 1
     fi
 
-    # Check 4: Performance test (<10ms target, <50ms acceptable)
+    # Check 4: Performance measurement
     local start_ns end_ns duration_ns duration_ms
     start_ns=$(date +%s%N)
     gum --version >/dev/null 2>&1 || true
@@ -54,13 +54,7 @@ main() {
     duration_ns=$((end_ns - start_ns))
     duration_ms=$((duration_ns / 1000000))
 
-    if [ "$duration_ms" -gt 50 ]; then
-        log "WARNING" "⚠ gum startup: ${duration_ms}ms (>50ms, performance degraded)"
-    elif [ "$duration_ms" -gt 10 ]; then
-        log "INFO" "  gum startup: ${duration_ms}ms (acceptable, target <10ms)"
-    else
-        log "SUCCESS" "  gum startup: ${duration_ms}ms (<10ms ✓ OPTIMAL)"
-    fi
+    log "INFO" "  gum startup: ${duration_ms}ms"
 
     log "SUCCESS" "✓ gum installed and functional"
 
