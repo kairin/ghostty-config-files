@@ -12,6 +12,60 @@ difficulty: "beginner"
 
 This page tracks major improvements, enhancements, and fixes implemented in the ghostty-config-files project.
 
+## 2025-11-22: Desktop Launcher GTK Flag Fix
+
+**Impact**: Critical bug fix - Desktop icon now launches correctly
+**Status**: ✅ COMPLETE (Production)
+
+### Problem Identified
+- Ghostty desktop icon/launcher failed when clicked
+- Context menu "Open Ghostty Here" worked correctly
+- Command line `ghostty` command worked fine
+- Root cause: `--gtk-single-instance=true` flag in desktop entry prevented launcher from working
+
+### Solution Implemented
+**File Modified**: `lib/installers/ghostty/steps/07-create-desktop-entry.sh`
+**Change**: Added sed command to remove problematic GTK flag from desktop entry
+
+```bash
+# CRITICAL FIX: Remove --gtk-single-instance flag
+sed -i "s|--gtk-single-instance=true||g" "$official_desktop"
+```
+
+**Integration Points**:
+1. **Fresh Installations**: Fix automatically applied during step 07 (create-desktop-entry)
+2. **Update Workflow**: `update-all` applies fix to existing installations
+3. **Validation**: Local CI/CD verification passed
+
+### Technical Details
+- **Commit**: 2660abc
+- **Lines Added**: +4 (fix + explanatory comments)
+- **Testing**: Local CI/CD validation passed (gh-workflow-local.sh all)
+- **Deployment**: Immediate effect - desktop entry updated, desktop database refreshed
+
+### Impact Analysis
+**Affected Users**: All installations prior to November 22, 2025
+**Resolution Path**:
+- Fresh installations: Desktop icon works immediately
+- Existing installations: Run `update-all` to apply fix
+- Manual fix: `sed -i 's|--gtk-single-instance=true||g' ~/.local/share/applications/com.mitchellh.ghostty.desktop`
+
+**Verification**:
+```bash
+# Confirm fix applied
+grep "gtk-single-instance" ~/.local/share/applications/com.mitchellh.ghostty.desktop
+# Should return no results
+
+# Test desktop icon
+# Click Ghostty icon in application menu - should launch correctly
+```
+
+### Documentation Updates
+- Installation guide: Added troubleshooting section for desktop launcher
+- Usage guide: Added desktop icon troubleshooting steps
+- Homepage: Updated recent wins section
+- Configuration guide: Noted fix is automatically applied during updates
+
 ## 2025-11-17: Spec 005 Complete Terminal Infrastructure - COMPLETE
 
 **Impact**: Major milestone - Complete terminal infrastructure implementation
