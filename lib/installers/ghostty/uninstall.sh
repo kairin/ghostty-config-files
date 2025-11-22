@@ -28,7 +28,7 @@ uninstall_ghostty() {
     # Check if Ghostty is installed
     if ! command_exists "ghostty"; then
         log "INFO" "Ghostty is not installed"
-        skip_task "$task_id"
+        skip_task "$task_id" "not installed"
         exit 2  # Not installed
     fi
 
@@ -103,7 +103,7 @@ uninstall_ghostty() {
         exit 0
     else
         log "WARNING" "No Ghostty installation found to remove"
-        skip_task "$task_id"
+        skip_task "$task_id" "nothing to remove"
         exit 2
     fi
 }

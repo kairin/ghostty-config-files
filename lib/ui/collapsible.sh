@@ -542,12 +542,14 @@ fail_task() {
 #
 # Args:
 #   $1 - Task ID
+#   $2 - Optional reason (defaults to "already installed")
 #
 skip_task() {
     local task_id="$1"
+    local reason="${2:-already installed}"
 
     update_task_status "$task_id" "skipped"
-    log "INFO" "Skipped task: $task_id (already installed)"
+    log "INFO" "Skipped task: $task_id ($reason)"
 }
 
 #
