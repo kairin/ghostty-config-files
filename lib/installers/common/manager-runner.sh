@@ -136,14 +136,15 @@ show_component_header() {
     local component_name="$1"
 
     # ALWAYS use gum (installed as priority 0, guaranteed available)
-    # Use rounded border for maximum terminal compatibility
+    # Use double border for better terminal compatibility
+    # Match the style from lib/ui/progress.sh for consistency
     echo ""
     gum style \
-        --border rounded \
+        --border double \
         --border-foreground 212 \
         --align center \
-        --width 60 \
-        --margin "0 2" \
+        --width 70 \
+        --margin "1 0" \
         --padding "1 2" \
         "Installing ${component_name}"
     echo ""
@@ -386,10 +387,14 @@ run_install_steps() {
     done
 
     # Start spinner loop for collapsible UI
+    # Spinner disabled to prevent hanging issues
     local spinner_pid=""
-    if [ "$VERBOSE_MODE" = false ]; then
-        spinner_pid=$(start_spinner_loop)
-    fi
+    # if [ "$VERBOSE_MODE" = false ]; then
+    #     start_spinner_loop
+    #     if [ -f "${TMP_DIR:-/tmp}/ghostty_spinner.pid" ]; then
+    #         spinner_pid=$(cat "${TMP_DIR:-/tmp}/ghostty_spinner.pid")
+    #     fi
+    # fi
 
     # Execute steps sequentially
     step_num=1
@@ -426,30 +431,37 @@ run_install_steps() {
         # Log step start
         log "INFO" "Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name} (estimated: $(format_duration "$duration"))"
 
-        # Start task
+        # Start task (update internal state)
         start_task "$task_id"
 
-        # Execute step with timing
+        # Execute step with timing and VISIBLE FEEDBACK
         local step_start
         step_start=$(date +%s)
 
-        if run_command_collapsible "$task_id" "$step_path"; then
+        # Show what we're doing RIGHT NOW
+        echo ""
+        echo "  → Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name}..."
+        echo ""
+
+        # Run the step script directly (output goes to terminal)
+        if "$step_path"; then
             local step_end
             step_end=$(date +%s)
             local step_duration=$((step_end - step_start))
 
             complete_task "$task_id" "$step_duration"
+            echo ""
+            echo "  ✓ Completed: ${display_name} ($(format_duration "$step_duration"))"
+            echo ""
             log "SUCCESS" "Step ${step_num}/${MR_TOTAL_STEPS} complete: ${display_name} ($(format_duration "$step_duration"))"
         else
             local exit_code=$?
+            echo ""
+            echo "  ✗ FAILED: ${display_name} (exit code: $exit_code)"
+            echo ""
             log "ERROR" "Step ${step_num}/${MR_TOTAL_STEPS} FAILED: ${display_name} (exit code: $exit_code)"
             fail_task "$task_id" "Exit code: $exit_code - Check logs for details"
             ((failed_steps++))
-
-            # Show task output on failure (if not in verbose mode)
-            if [ "$VERBOSE_MODE" = false ]; then
-                show_task_output "$task_id"
-            fi
         fi
 
         ((step_num++))

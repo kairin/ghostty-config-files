@@ -16,9 +16,14 @@ CYAN='\033[0;36m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-echo -e "${BLUE}╔══════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║     GHOSTTY CONFIG FILES HEALTH DASHBOARD     ║${NC}"
-echo -e "${BLUE}╚══════════════════════════════════════════════╝${NC}"
+gum style \
+    --border double \
+    --border-foreground 212 \
+    --align center \
+    --width 70 \
+    --margin "1 0" \
+    --padding "1 2" \
+    "GHOSTTY CONFIG FILES HEALTH DASHBOARD"
 echo ""
 
 # Get latest report

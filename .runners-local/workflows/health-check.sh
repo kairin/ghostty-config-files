@@ -610,23 +610,32 @@ display_summary() {
     echo ""
 
     if [ $FAILED_CHECKS -eq 0 ] && [ $WARNING_CHECKS -eq 0 ]; then
-        echo "╔════════════════════════════════════════════════════╗"
-        echo "║                                                    ║"
-        echo "║    ✅  ALL CHECKS PASSED - READY FOR CI/CD  ✅    ║"
-        echo "║                                                    ║"
-        echo "╚════════════════════════════════════════════════════╝"
+        gum style \
+            --border double \
+            --border-foreground 46 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "✅  ALL CHECKS PASSED - READY FOR CI/CD  ✅"
     elif [ $FAILED_CHECKS -eq 0 ]; then
-        echo "╔════════════════════════════════════════════════════╗"
-        echo "║                                                    ║"
-        echo "║    ⚠️  WARNINGS DETECTED - MOSTLY READY  ⚠️       ║"
-        echo "║                                                    ║"
-        echo "╚════════════════════════════════════════════════════╝"
+        gum style \
+            --border double \
+            --border-foreground 214 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "⚠️  WARNINGS DETECTED - MOSTLY READY  ⚠️"
     else
-        echo "╔════════════════════════════════════════════════════╗"
-        echo "║                                                    ║"
-        echo "║    ❌  CRITICAL ISSUES - SETUP NEEDED  ❌         ║"
-        echo "║                                                    ║"
-        echo "╚════════════════════════════════════════════════════╝"
+        gum style \
+            --border double \
+            --border-foreground 196 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "❌  CRITICAL ISSUES - SETUP NEEDED  ❌"
     fi
 
     echo ""

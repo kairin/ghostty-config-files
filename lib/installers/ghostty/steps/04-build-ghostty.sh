@@ -34,8 +34,14 @@ main() {
     }
 
     log "INFO" "Building Ghostty..."
-    # We use collapsible output because build output is verbose
-    if run_command_collapsible "$task_id" zig build -Doptimize=ReleaseFast; then
+    echo "  Build directory: $GHOSTTY_BUILD_DIR"
+    echo "  Build type: ReleaseFast"
+    echo "  This will take 5-10 minutes (compiling C/C++/Zig code)..."
+    echo "  You will see periodic progress updates below:"
+    echo ""
+
+    # Use streaming to show build progress (Zig shows compilation stages)
+    if run_command_streaming "$task_id" zig build -Doptimize=ReleaseFast; then
         log "SUCCESS" "Build completed"
         complete_task "$task_id"
         exit 0

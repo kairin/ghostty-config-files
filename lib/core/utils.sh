@@ -374,6 +374,60 @@ center_text() {
     repeat_string "$pad_char" "$right_padding"
 }
 
+#
+# Setup sudo credentials
+#
+# Prompts for sudo password if not already cached, and starts a background
+# loop to keep the credentials alive.
+#
+# Usage:
+#   setup_sudo
+#
+setup_sudo() {
+    # Check if we already have sudo privileges
+    if sudo -n true 2>/dev/null; then
+        keep_sudo_alive
+        return 0
+    fi
+
+    echo "This script requires sudo privileges to install packages."
+    
+    # Loop until valid password entered or user cancels
+    while ! sudo -v; do
+        echo "Sudo password incorrect or cancelled. Retrying..."
+        sleep 1
+    done
+
+    # Start keep-alive loop
+    keep_sudo_alive
+}
+
+#
+# Keep sudo credentials alive in background
+#
+# Usage:
+#   keep_sudo_alive
+#
+keep_sudo_alive() {
+    # Kill existing keep-alive loop if any (avoid duplicates)
+    if [ -n "${SUDO_KEEP_ALIVE_PID:-}" ]; then
+        kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true
+    fi
+
+    # Start background loop to refresh sudo timestamp every 60s
+    (
+        while true; do
+            sudo -n true
+            sleep 60
+        done
+    ) >/dev/null 2>&1 &
+    
+    SUDO_KEEP_ALIVE_PID=$!
+    
+    # Ensure cleanup on exit
+    trap 'kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true' EXIT
+}
+
 # Export functions for use in other modules
 export -f strip_ansi
 export -f get_visual_width
@@ -390,3 +444,5 @@ export -f is_utf8_terminal
 export -f repeat_string
 export -f truncate_string
 export -f center_text
+export -f setup_sudo
+export -f keep_sudo_alive

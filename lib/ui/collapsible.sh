@@ -63,6 +63,7 @@ declare -gA TASK_ERRORS      # task_id => error message
 declare -gA TASK_DETAILS     # task_id => task name
 declare -gA TASK_OUTPUT      # task_id => buffered command output
 declare -ga TASK_ORDER       # Array of task IDs in execution order
+TASKS_RENDERED=false         # Track if tasks have been rendered at least once
 
 # Verbose mode (T033)
 # DEFAULT: VERBOSE_MODE=false for Docker-like collapsed terminal output
@@ -96,6 +97,9 @@ readonly STATUS_SKIPPED="↷"
 # Sets up terminal for collapsible display
 #
 init_collapsible_output() {
+    # Reset render state
+    TASKS_RENDERED=false
+
     # Hide cursor for cleaner output
     if [ -t 1 ] && [ "$VERBOSE_MODE" = false ]; then
         echo -ne "$ANSI_HIDE_CURSOR"
@@ -114,6 +118,9 @@ cleanup_collapsible_output() {
     if [ -t 1 ]; then
         echo -ne "$ANSI_SHOW_CURSOR"
     fi
+
+    # Reset render state
+    TASKS_RENDERED=false
 }
 
 #
@@ -173,10 +180,42 @@ run_command_collapsible() {
     local output_file
     output_file=$(mktemp)
 
-    # Execute command with output capture
-    if "${cmd[@]}" > "$output_file" 2>&1; then
-        exit_code=0
+    # Execute command with LIVE STREAMING output
+    # Show last line of output periodically so user knows something is happening
+    if [ "$VERBOSE_MODE" = true ]; then
+        # Full verbose mode - stream everything
+        if "${cmd[@]}" 2>&1 | tee "$output_file"; then
+            exit_code=0
+        else
+            exit_code=$?
+        fi
     else
+        # Collapsed mode - show periodic progress indicators
+        "${cmd[@]}" > "$output_file" 2>&1 &
+        local cmd_pid=$!
+
+        # Show progress while command runs
+        local last_line=""
+        while kill -0 "$cmd_pid" 2>/dev/null; do
+            # Get last line of output
+            if [ -f "$output_file" ]; then
+                local current_line
+                current_line=$(tail -n 1 "$output_file" 2>/dev/null || echo "")
+
+                # Only update if line changed (avoid spam)
+                if [ -n "$current_line" ] && [ "$current_line" != "$last_line" ]; then
+                    echo -ne "\r  ⠋ ${current_line:0:70}..."
+                    last_line="$current_line"
+                fi
+            fi
+            sleep 0.3
+        done
+
+        # Clear progress line
+        echo -ne "\r\033[K"
+
+        # Wait for command and get exit code
+        wait "$cmd_pid"
         exit_code=$?
     fi
 
@@ -186,15 +225,98 @@ run_command_collapsible() {
     # ALWAYS log full output to verbose log file (regardless of VERBOSE_MODE)
     log_command_output "$task_id: ${cmd[*]}" "$output"
 
-    # Terminal display depends on VERBOSE_MODE
+    # Store output in task buffer (for expansion on failure)
+    TASK_OUTPUT["$task_id"]="$output"
+
+    # Also append to human-readable log file
+    echo "$output" >> "$(get_log_file)"
+
+    # Cleanup
+    rm -f "$output_file"
+
+    return $exit_code
+}
+
+#
+# Run command with streaming output (for long-running operations)
+#
+# Like run_command_collapsible but shows live progress even in collapsed mode.
+# Use this for: git clone, downloads, builds (operations that take >10 seconds)
+#
+# Args:
+#   $1 - Task ID
+#   $2+ - Command and arguments to execute
+#
+# Returns:
+#   Command exit code
+#
+# Example:
+#   run_command_streaming "clone-ghostty" git clone https://github.com/ghostty-org/ghostty
+#
+run_command_streaming() {
+    local task_id="$1"
+    shift
+    local cmd=("$@")
+
+    local output_file
+    output_file=$(mktemp)
+    local exit_code=0
+
+    # Show streaming output in both verbose and collapsed mode for long operations
+    # This prevents the "stuck" appearance during git clone, builds, etc.
     if [ "$VERBOSE_MODE" = true ]; then
-        # Show full output to terminal
-        echo "$output"
+        # Full output mode - just run command normally
+        if "${cmd[@]}" 2>&1 | tee "$output_file"; then
+            exit_code=0
+        else
+            exit_code=$?
+        fi
     else
-        # Show only collapsed summary (Docker-like)
-        # Output already logged to verbose file, just show status via task rendering
-        :
+        # Collapsed mode - show periodic progress indicators
+        # Run command in background and tail output
+        if "${cmd[@]}" > "$output_file" 2>&1 &
+        then
+            local cmd_pid=$!
+
+            # Show progress indicators while command runs
+            local spinner_chars=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+            local spinner_idx=0
+            local last_size=0
+
+            while kill -0 "$cmd_pid" 2>/dev/null; do
+                # Show spinner and any new output lines
+                local current_size=$(wc -l < "$output_file" 2>/dev/null || echo 0)
+
+                if [ "$current_size" -gt "$last_size" ]; then
+                    # Show last few lines of new output
+                    tail -n +$((last_size + 1)) "$output_file" 2>/dev/null | tail -3 | sed 's/^/  │ /'
+                    last_size=$current_size
+                fi
+
+                # Update spinner
+                echo -ne "\r  ${spinner_chars[$spinner_idx]} Processing..."
+                spinner_idx=$(( (spinner_idx + 1) % ${#spinner_chars[@]} ))
+
+                sleep 0.5
+            done
+
+            # Clear spinner line
+            echo -ne "\r\033[K"
+
+            # Wait for command and get exit code
+            wait "$cmd_pid"
+            exit_code=$?
+        else
+            exit_code=$?
+        fi
     fi
+
+    # Read captured output
+    local output
+    output=$(cat "$output_file")
+
+    # ALWAYS log full output to verbose log file (regardless of VERBOSE_MODE)
+    log_command_output "$task_id: ${cmd[*]}" "$output"
 
     # Store output in task buffer (for expansion on failure)
     TASK_OUTPUT["$task_id"]="$output"
@@ -345,10 +467,18 @@ render_all_tasks() {
     # Clear screen area for tasks
     local task_count=${#TASK_ORDER[@]}
 
-    # Move cursor up to start of task list
-    for (( i=0; i<task_count; i++ )); do
-        echo -ne "$ANSI_MOVE_UP"
-    done
+    # Track if this is the first render
+    # On first render, don't move cursor up (nothing to replace yet)
+    # On subsequent renders, move cursor up to update in-place
+    if [ "${TASKS_RENDERED:-false}" = true ]; then
+        # Move cursor up to start of task list (for in-place updates)
+        for (( i=0; i<task_count; i++ )); do
+            echo -ne "$ANSI_MOVE_UP"
+        done
+    else
+        # Mark that tasks have been rendered
+        TASKS_RENDERED=true
+    fi
 
     # Render each task
     for task_id in "${TASK_ORDER[@]}"; do
@@ -445,14 +575,18 @@ start_spinner_loop() {
         return 0
     fi
 
+    # Start background spinner process
+    # Redirect to /dev/tty to avoid capturing stdout if called in subshell
     (
         while true; do
             update_spinner
             sleep 0.1
         done
-    ) &
+    ) > /dev/tty 2>&1 &
 
-    echo $!  # Return PID
+    local pid=$!
+    # Write PID to temp file to avoid command substitution hang
+    echo "$pid" > "${TMP_DIR:-/tmp}/ghostty_spinner.pid"
 }
 
 #
@@ -579,6 +713,7 @@ export -f init_collapsible_output
 export -f cleanup_collapsible_output
 export -f register_task
 export -f run_command_collapsible
+export -f run_command_streaming
 export -f show_task_output
 export -f update_task_status
 export -f get_status_symbol

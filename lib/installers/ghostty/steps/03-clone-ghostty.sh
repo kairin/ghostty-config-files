@@ -30,7 +30,13 @@ main() {
     fi
 
     log "INFO" "Cloning Ghostty repository..."
-    if run_command_collapsible "$task_id" git clone --depth 1 "$GHOSTTY_REPO" "$GHOSTTY_BUILD_DIR"; then
+    echo "  Repository: $GHOSTTY_REPO"
+    echo "  Destination: $GHOSTTY_BUILD_DIR"
+    echo "  This may take 1-2 minutes depending on your connection..."
+    echo ""
+
+    # Use streaming to show git clone progress
+    if run_command_streaming "$task_id" git clone --progress --depth 1 "$GHOSTTY_REPO" "$GHOSTTY_BUILD_DIR"; then
         log "SUCCESS" "Repository cloned to $GHOSTTY_BUILD_DIR"
         complete_task "$task_id"
         exit 0

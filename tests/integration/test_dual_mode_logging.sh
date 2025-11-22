@@ -231,9 +231,14 @@ test_component_logging() {
 # Main test execution
 #
 main() {
-    echo "╔═══════════════════════════════════════════════════════════╗"
-    echo "║     Dual-Mode Logging System - Integration Tests         ║"
-    echo "╚═══════════════════════════════════════════════════════════╝"
+    gum style \
+        --border double \
+        --border-foreground 212 \
+        --align center \
+        --width 70 \
+        --margin "1 0" \
+        --padding "1 2" \
+        "Dual-Mode Logging System - Integration Tests"
 
     # Run all test suites
     test_syntax_validation
@@ -249,9 +254,14 @@ main() {
 
     # Summary
     echo ""
-    echo "╔═══════════════════════════════════════════════════════════╗"
-    echo "║                   Test Summary                            ║"
-    echo "╚═══════════════════════════════════════════════════════════╝"
+    gum style \
+        --border double \
+        --border-foreground 212 \
+        --align center \
+        --width 70 \
+        --margin "1 0" \
+        --padding "1 2" \
+        "Test Summary"
     echo ""
     echo "Total tests:  $TOTAL_TESTS"
     echo -e "Passed:       ${COLOR_GREEN}${PASSED_TESTS}${COLOR_RESET}"

@@ -72,7 +72,7 @@ source_lib "core/errors.sh"
 source_lib "core/state.sh"
 
 # UI Libraries
-source_lib "ui/boxes.sh"
+# source_lib "ui/boxes.sh"  # DEPRECATED: Now using gum for all box drawing (priority 0)
 source_lib "ui/tui.sh"
 source_lib "ui/collapsible.sh"
 source_lib "ui/progress.sh"

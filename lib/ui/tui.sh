@@ -385,29 +385,30 @@ show_box() {
     shift
     local content=("$@")
 
+    # Build content with newlines
+    local content_text=""
+    for line in "${content[@]}"; do
+        content_text+="$line"$'\n'
+    done
+
     if [ "$TUI_AVAILABLE" = true ]; then
         # Use gum style with border
-        local content_text=""
-        for line in "${content[@]}"; do
-            content_text+="$line"$'\n'
-        done
-
         gum style \
             --border double \
             --border-foreground 212 \
             --padding "1 2" \
             --margin "1 0" \
+            --align center \
+            --width 70 \
             "$title"$'\n\n'"$content_text"
     else
-        # Fallback: ASCII box
+        # Fallback: Simple text output (gum should always be available per constitutional requirements)
         echo ""
-        echo "╔══════════════════════════════════════════════════╗"
-        echo "║ $title"
-        echo "╠══════════════════════════════════════════════════╣"
+        echo "=== $title ==="
+        echo ""
         for line in "${content[@]}"; do
-            echo "║ $line"
+            echo "  $line"
         done
-        echo "╚══════════════════════════════════════════════════╝"
         echo ""
     fi
 }

@@ -20,6 +20,27 @@ main() {
     local task_id="install-ghostty-bin"
     register_task "$task_id" "Installing Ghostty binary"
     start_task "$task_id"
+    
+    # Cleanup conflicting installations
+    log "INFO" "Checking for conflicting installations..."
+    
+    # Check for snap
+    if snap list ghostty >/dev/null 2>&1; then
+        log "INFO" "Removing Ghostty snap..."
+        sudo snap remove ghostty 2>&1 | tee -a "$(get_log_file)" || true
+    fi
+    
+    # Check for apt/deb
+    if dpkg -l ghostty >/dev/null 2>&1; then
+        log "INFO" "Removing Ghostty apt package..."
+        sudo apt-get remove -y ghostty 2>&1 | tee -a "$(get_log_file)" || true
+    fi
+    
+    # Check for manual install in /usr/local/bin
+    if [ -f "/usr/local/bin/ghostty" ]; then
+        log "INFO" "Removing manual installation from /usr/local/bin..."
+        sudo rm -f "/usr/local/bin/ghostty"
+    fi
 
     # Check if already installed and up-to-date
     local ghostty_bin="$GHOSTTY_INSTALL_DIR/bin/ghostty"

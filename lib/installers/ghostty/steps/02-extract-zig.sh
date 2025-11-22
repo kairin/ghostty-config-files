@@ -42,7 +42,11 @@ main() {
     cd "$HOME/Apps"
 
     log "INFO" "Extracting Zig..."
-    if ! run_command_collapsible "$task_id" tar xf "$zig_tarball"; then
+    echo "  Archive: $zig_tarball"
+    echo "  Destination: $HOME/Apps"
+    echo ""
+
+    if ! run_command_streaming "$task_id" tar xvf "$zig_tarball"; then
         log "ERROR" "Failed to extract Zig"
         fail_task "$task_id"
         exit 1

@@ -168,18 +168,24 @@ generate_summary() {
 
     # Overall status
     if [[ $contract_result -eq 0 ]] && [[ $deps_result -eq 0 ]]; then
-        echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-        echo -e "${GREEN}║                                        ║${NC}"
-        echo -e "${GREEN}║    ✅  ALL VALIDATIONS PASSED  ✅     ║${NC}"
-        echo -e "${GREEN}║                                        ║${NC}"
-        echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
+        gum style \
+            --border double \
+            --border-foreground 46 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "✅  ALL VALIDATIONS PASSED  ✅"
         return 0
     else
-        echo -e "${RED}╔════════════════════════════════════════╗${NC}"
-        echo -e "${RED}║                                        ║${NC}"
-        echo -e "${RED}║    ❌  VALIDATION FAILURES  ❌         ║${NC}"
-        echo -e "${RED}║                                        ║${NC}"
-        echo -e "${RED}╚════════════════════════════════════════╝${NC}"
+        gum style \
+            --border double \
+            --border-foreground 196 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "❌  VALIDATION FAILURES  ❌"
         echo ""
         echo "Use --detailed flag for full validation output"
         return 1

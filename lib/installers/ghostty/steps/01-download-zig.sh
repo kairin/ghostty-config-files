@@ -55,7 +55,12 @@ main() {
     fi
 
     log "INFO" "Downloading Zig ${ZIG_MIN_VERSION}..."
-    if run_command_collapsible "$task_id" curl -fsSL "$ZIG_DOWNLOAD_URL" -o "$zig_tarball"; then
+    echo "  Downloading from: $ZIG_DOWNLOAD_URL"
+    echo "  Target: $zig_tarball"
+    echo ""
+
+    # Use curl with progress indicator (not silent)
+    if run_command_streaming "$task_id" curl -L --progress-bar "$ZIG_DOWNLOAD_URL" -o "$zig_tarball"; then
         log "SUCCESS" "Downloaded Zig to $zig_tarball"
         complete_task "$task_id"
         exit 0

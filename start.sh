@@ -286,6 +286,13 @@ execute_single_task() {
     # Execute task
     start_task "$task_id"
 
+    # Show simple progress feedback
+    echo ""
+    echo "══════════════════════════════════════════════════"
+    echo "→ Starting: ${TASK_DETAILS[$task_id]}"
+    echo "══════════════════════════════════════════════════"
+    echo ""
+
     local task_start
     task_start=$(get_unix_timestamp)
 
@@ -332,6 +339,8 @@ execute_single_task() {
     local task_end
     task_end=$(get_unix_timestamp)
     local duration
+
+    echo ""
     duration=$(calculate_duration "$task_start" "$task_end")
 
     # Handle exit codes
@@ -343,11 +352,17 @@ execute_single_task() {
         mark_task_completed "$task_id" "$duration"
 
         if [ $exit_code -eq 2 ]; then
+            echo "↷ Skipped: ${TASK_DETAILS[$task_id]} (already installed)"
             log "INFO" "Task $task_id skipped (already completed)"
+        else
+            echo "✓ Completed: ${TASK_DETAILS[$task_id]} ($(format_duration "$duration"))"
         fi
+        echo ""
 
         return 0
     else
+        echo "✗ FAILED: ${TASK_DETAILS[$task_id]} (exit code: $exit_code)"
+        echo ""
         fail_task "$task_id" "Installation failed with exit code $exit_code"
         return 1
     fi
@@ -358,10 +373,13 @@ execute_single_task() {
 # ═════════════════════════════════════════════════════════════
 
 main() {
+    # Setup sudo credentials early to avoid password prompts during execution
+    setup_sudo
+
     # Initialize systems
     # Note: Logging and TUI are already initialized by init.sh
     # init_logging
-    init_box_drawing "$BOX_STYLE"
+    # init_box_drawing "$BOX_STYLE"  # REMOVED: Now using gum for all boxes (priority 0)
     # init_tui
     init_collapsible_output
     init_progress_tracking
@@ -400,14 +418,44 @@ main() {
         init_state
     fi
 
-    # Register all tasks
+    # Register all tasks with user-friendly display names
     local total_tasks=${#TASK_REGISTRY[@]}
     local completed_tasks=0
 
     for task_entry in "${TASK_REGISTRY[@]}"; do
         IFS='|' read -r task_id deps install_fn verify_fn parallel_group est_seconds <<< "$task_entry"
-        register_task "$task_id" "$(echo "$install_fn" | sed 's/_/ /g' | sed 's/task //')"
+
+        # Generate user-friendly display name from task_id
+        local display_name
+        case "$task_id" in
+            install-gum)           display_name="Installing Gum TUI Framework" ;;
+            verify-prereqs)        display_name="Verifying Prerequisites" ;;
+            install-ghostty)       display_name="Installing Ghostty Terminal" ;;
+            install-zsh)           display_name="Installing ZSH & Oh My ZSH" ;;
+            install-uv)            display_name="Installing Python UV Package Manager" ;;
+            install-fnm)           display_name="Installing Node.js Fast Node Manager" ;;
+            install-ai-tools)      display_name="Installing AI CLI Tools" ;;
+            install-context-menu)  display_name="Installing Context Menu Integration" ;;
+            run-app-audit)         display_name="Running Application Audit" ;;
+            *)                     display_name="$(echo "$task_id" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g')" ;;
+        esac
+
+        register_task "$task_id" "$display_name"
     done
+
+    # Render initial task list (all pending)
+    render_all_tasks
+
+    # Start spinner loop for visual feedback (non-verbose mode only)
+    # Start spinner loop for visual feedback (non-verbose mode only)
+    # Spinner disabled to prevent hanging issues
+    local spinner_pid=""
+    # if [ "$VERBOSE_MODE" = false ]; then
+    #     start_spinner_loop
+    #     if [ -f "${TMP_DIR:-/tmp}/ghostty_spinner.pid" ]; then
+    #         spinner_pid=$(cat "${TMP_DIR:-/tmp}/ghostty_spinner.pid")
+    #     fi
+    # fi
 
     # ═════════════════════════════════════════════════════════════
     # PARALLEL EXECUTION ENGINE (T036)
@@ -425,87 +473,29 @@ main() {
         fi
     done
 
-    # Execute tasks by parallel group (0, 1, 2, 3, ...)
-    log "INFO" "Starting installation (${total_tasks} tasks, parallel execution enabled)..."
+    # Execute tasks sequentially (Parallel execution disabled for stability)
+    log "INFO" "Starting installation (${total_tasks} tasks)..."
 
+    # Sort group IDs
     for group_id in $(printf '%s\n' "${!parallel_groups[@]}" | sort -n); do
         local group_tasks=(${parallel_groups[$group_id]})
-        local group_size=${#group_tasks[@]}
-
-        log "INFO" "═══════════════════════════════════════════════════════════════"
-        log "INFO" "Parallel Group $group_id: ${group_size} task(s)"
-        log "INFO" "═══════════════════════════════════════════════════════════════"
-
-        # TEMPORARY: Disable parallel execution to fix output chaos (TODO: implement output buffering)
-        # Execute all tasks sequentially for now
-        if true; then
-            # Loop through all tasks in this group sequentially
-            for task_id in "${group_tasks[@]}"; do
-                # Find task entry
-                for task_entry in "${TASK_REGISTRY[@]}"; do
-                    IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
-                    if [ "$entry_id" = "$task_id" ]; then
-                        execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn"
-                        if [ $? -eq 0 ]; then
-                            ((completed_tasks += 1))
-                        fi
-                        break
+        
+        # Execute all tasks in this group sequentially
+        for task_id in "${group_tasks[@]}"; do
+            # Find task entry
+            for task_entry in "${TASK_REGISTRY[@]}"; do
+                IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
+                if [ "$entry_id" = "$task_id" ]; then
+                    execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn"
+                    if [ $? -eq 0 ]; then
+                        ((completed_tasks += 1))
                     fi
-                done
-            done
-        else
-            # Multiple tasks - execute in parallel
-            log "INFO" "Launching ${group_size} tasks in parallel..."
-
-            local pids=()
-            local task_ids=()
-
-            # Launch tasks in background
-            for task_id in "${group_tasks[@]}"; do
-                # Find task entry
-                for task_entry in "${TASK_REGISTRY[@]}"; do
-                    IFS='|' read -r entry_id deps install_fn verify_fn pg est <<< "$task_entry"
-
-                    if [ "$entry_id" = "$task_id" ]; then
-                        log "INFO" "  → Launching $task_id..."
-
-                        # Execute in background
-                        (execute_single_task "$task_id" "$deps" "$install_fn" "$verify_fn") &
-                        pids+=($!)
-                        task_ids+=("$task_id")
-                        break
-                    fi
-                done
-            done
-
-            # Wait for all parallel tasks to complete
-            log "INFO" "Waiting for ${#pids[@]} parallel tasks to complete..."
-
-            local failed_count=0
-            for i in "${!pids[@]}"; do
-                local pid=${pids[$i]}
-                local task_id=${task_ids[$i]}
-
-                if wait "$pid"; then
-                    log "SUCCESS" "  ✓ $task_id completed"
-                    ((completed_tasks += 1))
-                else
-                    log "ERROR" "  ✗ $task_id failed"
-                    ((failed_count += 1))
+                    break
                 fi
             done
-
-            # Check if any parallel tasks failed (blocking)
-            if [ "$failed_count" -gt 0 ]; then
-                log "ERROR" "Parallel group $group_id: $failed_count task(s) failed"
-                exit 1
-            fi
-
-            log "SUCCESS" "Parallel group $group_id: All ${group_size} tasks completed"
-        fi
-
-        # Show progress after each group (only in verbose mode)
-        # In collapsed mode, task rendering shows the progress
+        done
+        
+        # Show progress after each group
         show_progress_bar "$completed_tasks" "$total_tasks"
     done
 
@@ -558,6 +548,11 @@ main() {
     done
     fi  # End of disabled sequential loop
 
+    # Stop spinner loop
+    if [ -n "$spinner_pid" ]; then
+        stop_spinner_loop "$spinner_pid"
+    fi
+
     # Post-installation health check
     log "INFO" "Running post-installation health checks..."
     post_installation_health_check
@@ -566,6 +561,9 @@ main() {
     local total_duration
     total_duration=$(calculate_elapsed_time)
     show_summary "$completed_tasks" 0 "$total_duration"
+
+    # Cleanup collapsible output
+    cleanup_collapsible_output
 
     log "SUCCESS" "═══════════════════════════════════════"
     log "SUCCESS" "Installation complete!"

@@ -475,9 +475,14 @@ install_ghostty_from_source() {
 # Side Effects: Installs Ghostty via snap, apt, or source
 # Example: install_ghostty_with_fallback || exit 1
 install_ghostty_with_fallback() {
-    echo "╔════════════════════════════════════════════════════════╗"
-    echo "║   Ghostty Installation (Snap-First Strategy)          ║"
-    echo "╚════════════════════════════════════════════════════════╝"
+    gum style \
+        --border double \
+        --border-foreground 212 \
+        --align center \
+        --width 70 \
+        --margin "1 0" \
+        --padding "1 2" \
+        "Ghostty Installation (Snap-First Strategy)"
     echo ""
 
     # Method 1: Official Snap (PREFERRED, <3 minutes)

@@ -26,7 +26,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../core/logging.sh"
 source "${SCRIPT_DIR}/../core/utils.sh"
 source "${SCRIPT_DIR}/tui.sh"   # gum integration
-source "${SCRIPT_DIR}/boxes.sh" # Box drawing
+# Box drawing now handled by gum (priority 0 installation, always available)
 
 # Progress bar constants
 readonly PROGRESS_BAR_WIDTH=30
@@ -119,12 +119,8 @@ show_progress_bar() {
     local total="$2"
     local title="${3:-Installation Progress}"
 
-    # Only show progress bar in verbose mode
-    # In collapsed mode, task rendering handles progress display
-    if [ "${VERBOSE_MODE:-false}" = false ]; then
-        return 0
-    fi
-
+    # Always show progress bar for visual feedback
+    # Users need to see progress regardless of verbose mode
     local progress_bar
     progress_bar=$(render_progress_bar "$completed" "$total")
 
@@ -217,11 +213,27 @@ show_header() {
     local title="$1"
     local subtitle="${2:-}"
 
-    # Pass title as box title, subtitle as content
+    # ALWAYS use gum (installed as priority 0, guaranteed available)
+    # Use double border for best terminal compatibility
+    echo ""
     if [ -n "$subtitle" ]; then
-        draw_box "$title" 70 "$subtitle"
+        gum style \
+            --border double \
+            --border-foreground 212 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "$title"$'\n\n'"$subtitle"
     else
-        draw_box "$title" 70
+        gum style \
+            --border double \
+            --border-foreground 212 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "$title"
     fi
     echo ""
 }
@@ -256,7 +268,22 @@ show_footer() {
     fi
 
     echo ""
-    draw_box "Installation Progress" "${footer_lines[@]}"
+    # Build content for gum
+    local content="Installation Progress"$'\n\n'
+    for line in "${footer_lines[@]}"; do
+        content+="$line"$'\n'
+    done
+
+    # Use gum for consistent box rendering
+    gum style \
+        --border double \
+        --border-foreground 212 \
+        --align center \
+        --width 70 \
+        --margin "1 0" \
+        --padding "1 2" \
+        "$content"
+    echo ""
 }
 
 #
@@ -314,7 +341,25 @@ show_summary() {
     )
 
     echo ""
-    draw_box "Summary" 70 "${summary_lines[@]}"
+    # Build content for gum
+    local content=""
+    for line in "${summary_lines[@]}"; do
+        if [ -z "$line" ]; then
+            content+=$'\n'
+        else
+            content+="$line"$'\n'
+        fi
+    done
+
+    # Use gum for consistent box rendering
+    gum style \
+        --border double \
+        --border-foreground 212 \
+        --align center \
+        --width 70 \
+        --margin "1 0" \
+        --padding "1 2" \
+        "$content"
     echo ""
 }
 

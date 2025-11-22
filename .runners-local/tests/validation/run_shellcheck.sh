@@ -206,18 +206,24 @@ generate_summary() {
 
     # Overall status
     if [[ $modules_result -eq 0 ]] && [[ $tests_result -eq 0 ]] && [[ $runners_result -eq 0 ]]; then
-        echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-        echo -e "${GREEN}║                                        ║${NC}"
-        echo -e "${GREEN}║  ✅  ALL SHELLCHECK VALIDATION PASSED  ║${NC}"
-        echo -e "${GREEN}║                                        ║${NC}"
-        echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
+        gum style \
+            --border double \
+            --border-foreground 46 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "✅  ALL SHELLCHECK VALIDATION PASSED  ✅"
         return 0
     else
-        echo -e "${RED}╔════════════════════════════════════════╗${NC}"
-        echo -e "${RED}║                                        ║${NC}"
-        echo -e "${RED}║    ❌  SHELLCHECK ISSUES FOUND  ❌     ║${NC}"
-        echo -e "${RED}║                                        ║${NC}"
-        echo -e "${RED}╚════════════════════════════════════════╝${NC}"
+        gum style \
+            --border double \
+            --border-foreground 196 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "❌  SHELLCHECK ISSUES FOUND  ❌"
         echo ""
         echo "Use --detailed flag for full ShellCheck output"
         return 1

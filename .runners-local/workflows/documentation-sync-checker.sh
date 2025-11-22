@@ -429,16 +429,14 @@ generate_summary_report() {
         local warnings=$(jq -r '.summary.warnings' "$REPORT_FILE")
 
         echo ""
-        echo "╔══════════════════════════════════════════════════════════════╗"
-        echo "║          Documentation Synchronization Report              ║"
-        echo "╠══════════════════════════════════════════════════════════════╣"
-        printf "║  Total Checks: %-45s  ║\n" "$total"
-        printf "║  ✅ Passed:    %-45s  ║\n" "$passed"
-        printf "║  ❌ Failed:    %-45s  ║\n" "$failed"
-        printf "║  ⚠️  Warnings:  %-45s  ║\n" "$warnings"
-        echo "╠══════════════════════════════════════════════════════════════╣"
-        printf "║  Report File:  %-43s  ║\n" "$(basename "$REPORT_FILE")"
-        echo "╚══════════════════════════════════════════════════════════════╝"
+        gum style \
+            --border double \
+            --border-foreground 212 \
+            --align center \
+            --width 70 \
+            --margin "1 0" \
+            --padding "1 2" \
+            "Documentation Synchronization Report"$'\n\n'"Total Checks: $total"$'\n'"✅ Passed: $passed"$'\n'"❌ Failed: $failed"$'\n'"⚠️  Warnings: $warnings"$'\n\n'"Report File: $(basename "$REPORT_FILE")"
         echo ""
 
         if [ "$failed" -eq 0 ]; then
