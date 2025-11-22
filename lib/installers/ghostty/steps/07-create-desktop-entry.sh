@@ -72,6 +72,11 @@ main() {
     local desktop_dir="$HOME/.local/share/applications"
     mkdir -p "$desktop_dir"
 
+    # Clean up old/duplicate desktop entries
+    log "INFO" "Cleaning up duplicate desktop entries..."
+    rm -f "$desktop_dir/ghostty.desktop" \
+          "$desktop_dir/com.mitchellh.ghostty.desktop.bak" 2>/dev/null || true
+
     # Install icon if available
     local icon_name="utilities-terminal"  # Fallback icon
     if install_ghostty_icon; then
@@ -81,33 +86,39 @@ main() {
         log "INFO" "Using fallback icon: $icon_name"
     fi
 
-    cat > "$desktop_dir/ghostty.desktop" <<EOF
+    # Fix com.mitchellh.ghostty.desktop file if it exists (Ghostty's build system creates this)
+    # This is the OFFICIAL desktop entry - we use this one exclusively
+    local official_desktop="$desktop_dir/com.mitchellh.ghostty.desktop"
+    if [ -f "$official_desktop" ]; then
+        log "INFO" "Configuring official Ghostty desktop entry..."
+
+        # Fix hardcoded /tmp paths to use actual install directory
+        sed -i "s|Exec=/tmp/ghostty-build/zig-out/bin/ghostty|Exec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
+        sed -i "s|TryExec=/tmp/ghostty-build/zig-out/bin/ghostty|TryExec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
+
+        log "SUCCESS" "Configured desktop entry: $official_desktop"
+    else
+        # Fallback: Create desktop entry if official one doesn't exist
+        log "WARNING" "Official desktop entry not found, creating fallback..."
+        cat > "$official_desktop" <<EOF
 [Desktop Entry]
 Name=Ghostty
 Comment=Fast, native, feature-rich terminal emulator
 Exec=$GHOSTTY_INSTALL_DIR/bin/ghostty
+TryExec=$GHOSTTY_INSTALL_DIR/bin/ghostty
 Icon=$icon_name
 Terminal=false
 Type=Application
 Categories=System;TerminalEmulator;
 StartupNotify=true
 EOF
+        log "SUCCESS" "Created fallback desktop entry: $official_desktop"
+    fi
 
-    chmod +x "$desktop_dir/ghostty.desktop"
-    log "SUCCESS" "Desktop entry created at $desktop_dir/ghostty.desktop"
-
-    # Fix com.mitchellh.ghostty.desktop file if it exists (Ghostty's build system creates this)
-    local official_desktop="$desktop_dir/com.mitchellh.ghostty.desktop"
-    if [ -f "$official_desktop" ]; then
-        log "INFO" "Fixing Ghostty's official desktop file paths..."
-        # Backup original
-        cp "$official_desktop" "$official_desktop.bak"
-
-        # Fix hardcoded /tmp paths to use actual install directory
-        sed -i "s|Exec=/tmp/ghostty-build/zig-out/bin/ghostty|Exec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
-        sed -i "s|TryExec=/tmp/ghostty-build/zig-out/bin/ghostty|TryExec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
-
-        log "SUCCESS" "Fixed desktop file: $official_desktop"
+    # Update desktop database
+    if command -v update-desktop-database &>/dev/null; then
+        update-desktop-database "$desktop_dir" 2>/dev/null || true
+        log "INFO" "Desktop database updated"
     fi
 
     complete_task "$task_id"
