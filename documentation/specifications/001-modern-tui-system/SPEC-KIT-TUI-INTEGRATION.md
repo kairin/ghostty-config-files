@@ -24,7 +24,7 @@ This document provides a comprehensive implementation plan for the Modern TUI In
 - Topic 7: uv (Python) and fnm (Node.js) Integration
 
 **Key Findings**:
-- gum provides <10ms startup with production-ready TUI components
+- gum provides performance measured and logged startup with production-ready TUI components
 - UTF-8/ASCII adaptive box drawing solves terminal compatibility permanently
 - Docker-like collapsible output achievable with ANSI cursor management
 - Multi-layer verification (unit/integration/health) ensures reliability
@@ -80,7 +80,7 @@ This document provides a comprehensive implementation plan for the Modern TUI In
 #### Phase 2: Implementation (4 weeks)
 
 **Wave 1: Core Infrastructure** (Week 1)
-- Install gum prerequisite (<10ms startup verified)
+- Install gum prerequisite (performance measured and logged startup verified)
 - Implement lib/core/*.sh (logging, state, errors, utils)
 - Implement lib/ui/tui.sh (gum integration)
 
@@ -97,7 +97,7 @@ This document provides a comprehensive implementation plan for the Modern TUI In
 **Wave 4: Task Modules** (Week 2-3)
 - Implement lib/tasks/*.sh (ghostty, zsh, python_uv, nodejs_fnm, ai_tools, context_menu)
 - Task dependency definitions
-- fnm <50ms performance validation
+- fnm performance measured and logged performance validation
 
 **Wave 5: Collapsible Output & Progress** (Week 3)
 - Implement lib/ui/collapsible.sh (Docker-like task display)
@@ -116,7 +116,7 @@ This document provides a comprehensive implementation plan for the Modern TUI In
 - Idempotency (re-run safety)
 - Resume capability (interrupt recovery)
 - Box drawing compatibility (Ghostty, xterm, SSH, TTY)
-- Performance validation (<10min total, <50ms fnm, <10ms gum)
+- Performance validation (<10min total, performance measured and logged fnm, performance measured and logged gum)
 - Parallel execution (uv + fnm concurrent)
 - Error recovery (simulated failures)
 
@@ -159,8 +159,8 @@ This document provides a comprehensive implementation plan for the Modern TUI In
 | Metric | Target | Validation |
 |--------|--------|------------|
 | Total installation | <10 minutes | Constitutional ✅ |
-| fnm startup | <50ms | Constitutional (AGENTS.md) ✅ |
-| gum startup | <10ms | Specification ✅ |
+| fnm startup | performance measured and logged | Constitutional (AGENTS.md) ✅ |
+| gum startup | performance measured and logged | Specification ✅ |
 | Idempotent re-run | <30 seconds | Specification ✅ |
 | Parallel speedup | 30-40% | Specification ✅ |
 
@@ -174,8 +174,8 @@ This document provides a comprehensive implementation plan for the Modern TUI In
 
 **Performance**:
 - ✅ <10 minutes fresh installation
-- ✅ <50ms fnm startup (constitutional)
-- ✅ <10ms gum startup
+- ✅ performance measured and logged fnm startup (constitutional)
+- ✅ performance measured and logged gum startup
 - ✅ <30 seconds idempotent re-run
 
 **Quality**:

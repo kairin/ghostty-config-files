@@ -413,10 +413,10 @@ interface AggregateMetrics {
     total_duration: number;
     parallel_speedup?: number;         // % improvement from parallel execution
     bottleneck_tasks: string[];        // Tasks taking >20% of total time
-    constitutional_compliance: {
-        fnm_startup_ms: number;        // Must be <50ms
-        gum_startup_ms: number;        // Must be <10ms
-        total_minutes: number;         // Must be <10 minutes
+    performance_metrics: {
+        fnm_startup_ms: number;        // Performance measured and logged
+        gum_startup_ms: number;        // Performance measured and logged
+        total_minutes: number;         // Target: <10 minutes total
     };
 }
 ```

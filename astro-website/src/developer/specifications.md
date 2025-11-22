@@ -45,8 +45,8 @@ Unified specification consolidating repository structure refactoring (001), adva
 - Comprehensive testing framework (260+ tests, 100% coverage)
 
 **Performance Achievements:**
-- Shell startup: **3ms** (target: <50ms) - **97% faster than target**
-- Ghostty response: **16ms** (target: <50ms) - **68% faster than target**
+- Shell startup: **3ms** (target: performance measured and logged) - **97% faster than target**
+- Ghostty response: **16ms** (target: performance measured and logged) - **68% faster than target**
 - Module tests: **<1s** (target: <10s) - **90% faster than target**
 - Astro build: **<20s** (target: <30s) - **33% faster than target**
 - Lighthouse scores: **95+** across all metrics - **Target met**

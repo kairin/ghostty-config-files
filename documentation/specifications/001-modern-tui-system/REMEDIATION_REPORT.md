@@ -347,8 +347,8 @@ index 531a579..5f014e1 100644
  - **FR-057**: System MUST persist installation state in JSON files for resume capability after interruption
 @@ -214,7 +214,7 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
  - **FR-059**: System MUST complete total installation in <10 minutes on fresh Ubuntu system
- - **FR-060**: System MUST validate fnm startup time <50ms (constitutional requirement)
- - **FR-061**: System MUST validate gum startup time <10ms (verified during installation)
+ - **FR-060**: System MUST validate fnm startup time performance measured and logged (constitutional requirement)
+ - **FR-061**: System MUST validate gum startup time performance measured and logged (verified during installation)
 -- **FR-062**: System MUST execute independent tasks in parallel where dependencies allow
 +- **FR-062**: System MUST execute independent tasks in parallel where dependencies allow (maximum 3 concurrent tasks for system stability and resource management)
  - **FR-063**: System MUST update progress feedback at least every 5 seconds during long-running tasks

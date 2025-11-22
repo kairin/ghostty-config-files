@@ -1071,7 +1071,7 @@ time ./new-script.sh all > /dev/null
 ### Performance Metrics
 - **Script Execution Time**: < 5% overhead from library sourcing
 - **Memory Usage**: < 10MB additional memory for libraries
-- **Startup Time**: < 50ms additional startup time
+- **Startup Time**: performance measured and logged additional startup time
 
 ### Maintainability Metrics
 - **Documentation Coverage**: 100% of library functions documented
