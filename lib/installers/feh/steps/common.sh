@@ -27,5 +27,5 @@ get_feh_version() {
 
 # Helper function to check if apt version installed
 is_feh_apt_installed() {
-    dpkg -l | grep -qw "^ii.*feh"
+    dpkg -l feh 2>/dev/null | grep -q "^ii"
 }
