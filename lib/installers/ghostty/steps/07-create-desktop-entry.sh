@@ -96,6 +96,10 @@ main() {
         sed -i "s|Exec=/tmp/ghostty-build/zig-out/bin/ghostty|Exec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
         sed -i "s|TryExec=/tmp/ghostty-build/zig-out/bin/ghostty|TryExec=$GHOSTTY_INSTALL_DIR/bin/ghostty|g" "$official_desktop"
 
+        # CRITICAL FIX: Remove --gtk-single-instance flag that prevents desktop icon launch
+        # This flag causes the desktop launcher to fail, but context menu works without it
+        sed -i "s|--gtk-single-instance=true||g" "$official_desktop"
+
         log "SUCCESS" "Configured desktop entry: $official_desktop"
     else
         # Fallback: Create desktop entry if official one doesn't exist
