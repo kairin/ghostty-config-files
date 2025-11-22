@@ -11,7 +11,15 @@ source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 # 2. Load Common Utils
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# 3. Main Logic
+# 3. Temp file cleanup on exit
+cleanup_temp_files() {
+    # Cleanup is handled by install-binary.sh after successful build
+    # Individual step scripts don't clean their outputs (needed by next steps)
+    :
+}
+trap cleanup_temp_files EXIT ERR INT TERM
+
+# 4. Main Logic
 main() {
     # Environment Check
     run_environment_checks || exit 1

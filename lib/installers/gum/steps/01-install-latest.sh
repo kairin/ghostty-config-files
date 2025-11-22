@@ -14,7 +14,18 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 # Constants
 readonly GUM_BINARY_URL="https://github.com/charmbracelet/gum/releases/latest/download/gum_Linux_x86_64.tar.gz"
 
-# 3. Main Logic
+# Temp directory tracking
+TEMP_DIR=""
+
+# 3. Temp file cleanup on exit
+cleanup_temp_files() {
+    if [ -n "$TEMP_DIR" ] && [ -d "$TEMP_DIR" ]; then
+        rm -rf "$TEMP_DIR" 2>/dev/null || true
+    fi
+}
+trap cleanup_temp_files EXIT ERR INT TERM
+
+# 4. Main Logic
 main() {
     # Environment Check
     run_environment_checks || exit 1
@@ -48,7 +59,7 @@ main() {
                 ;;
         esac
     fi
-    
+
     # Explicitly check for snap even if not in PATH
     if snap list gum >/dev/null 2>&1; then
         log "INFO" "Removing gum snap..."
@@ -74,9 +85,8 @@ main() {
     log "WARNING" "apt installation failed, using binary download..."
     echo "  ⠋ Downloading latest gum from GitHub releases..."
 
-    local temp_dir
-    temp_dir=$(mktemp -d)
-    local tar_file="$temp_dir/gum.tar.gz"
+    TEMP_DIR=$(mktemp -d)
+    local tar_file="$TEMP_DIR/gum.tar.gz"
 
     if ! curl -fL --progress-bar "$GUM_BINARY_URL" -o "$tar_file" 2>&1; then
         log "ERROR" "Failed to download gum binary"
@@ -86,9 +96,8 @@ main() {
 
     # Extract binary
     echo "  ⠋ Extracting gum binary..."
-    if ! tar -xzf "$tar_file" -C "$temp_dir"; then
+    if ! tar -xzf "$tar_file" -C "$TEMP_DIR"; then
         log "ERROR" "Failed to extract gum binary"
-        rm -rf "$temp_dir"
         complete_task "$task_id" 1
         exit 1
     fi
@@ -96,15 +105,14 @@ main() {
     # Install to ~/.local/bin
     echo "  ⠋ Installing binary to ~/.local/bin..."
     mkdir -p "$HOME/.local/bin"
-    if ! cp "$temp_dir/gum" "$HOME/.local/bin/gum"; then
+    if ! cp "$TEMP_DIR/gum" "$HOME/.local/bin/gum"; then
         log "ERROR" "Failed to install gum binary"
-        rm -rf "$temp_dir"
         complete_task "$task_id" 1
         exit 1
     fi
 
     chmod +x "$HOME/.local/bin/gum"
-    rm -rf "$temp_dir"
+    # Temp dir cleaned by trap
 
     log "SUCCESS" "✓ Installed latest gum via binary download"
 
