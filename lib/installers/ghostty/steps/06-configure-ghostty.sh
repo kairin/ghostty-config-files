@@ -24,37 +24,89 @@ main() {
     local config_dir="$HOME/.config/ghostty"
     mkdir -p "$config_dir"
 
-    # Copy configuration from repository if available
-    local repo_config="${REPO_ROOT}/configs/ghostty/config"
-    
-    if [ -f "$repo_config" ]; then
-        cp "$repo_config" "$config_dir/config"
-        log "SUCCESS" "Configuration copied from repository"
+    # Copy all configuration files from repository
+    local repo_config_dir="${REPO_ROOT}/configs/ghostty"
+
+    if [ -d "$repo_config_dir" ]; then
+        log "INFO" "Copying Ghostty configurations from repository..."
+
+        # List of config files to copy
+        local config_files=(
+            "config"
+            "theme.conf"
+            "scroll.conf"
+            "layout.conf"
+            "keybindings.conf"
+        )
+
+        local copied_count=0
+        for config_file in "${config_files[@]}"; do
+            if [ -f "$repo_config_dir/$config_file" ]; then
+                cp "$repo_config_dir/$config_file" "$config_dir/$config_file"
+                log "SUCCESS" "Copied: $config_file"
+                copied_count=$((copied_count + 1))
+            else
+                log "WARNING" "Template not found: $config_file (will use defaults)"
+            fi
+        done
+
+        log "SUCCESS" "Copied $copied_count configuration files from repository"
     else
-        # Create basic configuration
-        cat > "$config_dir/config" <<EOF
+        # Fallback: Create minimal configurations if repo templates don't exist
+        log "WARNING" "Repository config templates not found, creating minimal configs..."
+
+        # Main config
+        cat > "$config_dir/config" <<'EOF'
 # Ghostty Configuration (Generated)
 # Performance optimizations (2025)
 linux-cgroup = single-instance
 
 # Shell integration
 shell-integration = detect
-shell-integration-features = true
+shell-integration-features = sudo,title,ssh-env
 
+# Security
+clipboard-paste-protection = true
+
+# Modular configuration
+config-file = theme.conf
+config-file = scroll.conf
+config-file = layout.conf
+config-file = keybindings.conf
+EOF
+
+        # Theme
+        cat > "$config_dir/theme.conf" <<'EOF'
 # Theme
 theme = catppuccin-mocha
-
-# Font
-font-family = "JetBrains Mono"
-font-size = 12
-
-# Scrollback
-scrollback-limit = 999999999
-
-# Clipboard
-clipboard-paste-protection = true
+background-opacity = 0.75
 EOF
-        log "SUCCESS" "Basic configuration created"
+
+        # Scroll
+        cat > "$config_dir/scroll.conf" <<'EOF'
+# Scrollback
+scrollback-limit = 10000
+EOF
+
+        # Layout
+        cat > "$config_dir/layout.conf" <<'EOF'
+# Font
+font-family = monospace
+font-size = 14
+
+# Padding
+window-padding-x = 10
+window-padding-y = 10
+EOF
+
+        # Keybindings
+        cat > "$config_dir/keybindings.conf" <<'EOF'
+# Custom Keybindings
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+alt+d=new_split:right
+EOF
+
+        log "SUCCESS" "Created minimal configuration files"
     fi
 
     complete_task "$task_id"
