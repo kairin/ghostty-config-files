@@ -25,12 +25,8 @@ uninstall_ghostty() {
 
     log "INFO" "Starting Ghostty uninstallation..."
 
-    # Check if Ghostty is installed
-    if ! command_exists "ghostty"; then
-        log "INFO" "Ghostty is not installed"
-        skip_task "$task_id" "not installed"
-        exit 2  # Not installed
-    fi
+    # Note: We proceed even if ghostty command is not in PATH
+    # to clean up orphaned installation files and desktop entries
 
     # 1. Remove binary
     local binary_path
@@ -57,17 +53,24 @@ uninstall_ghostty() {
         fi
     fi
 
-    # 3. Remove desktop entry
-    local desktop_file="$HOME/.local/share/applications/ghostty.desktop"
-    if [ -f "$desktop_file" ]; then
-        log "INFO" "Removing desktop entry: $desktop_file"
-        if rm -f "$desktop_file" 2>/dev/null; then
-            log "SUCCESS" "Desktop entry removed: $desktop_file"
-            ((removed_items++))
-        else
-            log "WARNING" "Could not remove desktop entry: $desktop_file"
+    # 3. Remove desktop entries (all variants)
+    local desktop_files=(
+        "$HOME/.local/share/applications/ghostty.desktop"
+        "$HOME/.local/share/applications/com.mitchellh.ghostty.desktop"
+        "$HOME/.local/share/applications/ghostty-here.desktop"
+    )
+
+    for desktop_file in "${desktop_files[@]}"; do
+        if [ -f "$desktop_file" ]; then
+            log "INFO" "Removing desktop entry: $desktop_file"
+            if rm -f "$desktop_file" 2>/dev/null; then
+                log "SUCCESS" "Desktop entry removed: $desktop_file"
+                ((removed_items++))
+            else
+                log "WARNING" "Could not remove desktop entry: $desktop_file"
+            fi
         fi
-    fi
+    done
 
     # 4. Remove build directory (if it exists)
     if [ -d "$GHOSTTY_BUILD_DIR" ]; then
