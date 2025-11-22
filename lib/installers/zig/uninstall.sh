@@ -31,12 +31,8 @@ uninstall_zig() {
 
     log "INFO" "Starting Zig compiler uninstallation..."
 
-    # Check if Zig is installed
-    if ! command_exists "zig" && [ ! -d "$ZIG_INSTALL_DIR" ]; then
-        log "INFO" "Zig compiler is not installed"
-        skip_task "$task_id"
-        exit 2  # Not installed
-    fi
+    # Note: We proceed even if zig command is not in PATH
+    # to clean up orphaned installation files and directories
 
     # 1. Remove Zig directory (symlink)
     if [ -e "$ZIG_INSTALL_DIR" ]; then
@@ -48,19 +44,31 @@ uninstall_zig() {
             target=$(readlink -f "$ZIG_INSTALL_DIR" 2>/dev/null || echo "")
 
             # Remove symlink
-            rm -f "$ZIG_INSTALL_DIR" || log "WARNING" "Could not remove symlink: $ZIG_INSTALL_DIR"
-            ((removed_items++))
+            if rm -f "$ZIG_INSTALL_DIR" 2>/dev/null; then
+                log "SUCCESS" "Symlink removed: $ZIG_INSTALL_DIR"
+                ((removed_items++))
+            else
+                log "WARNING" "Could not remove symlink: $ZIG_INSTALL_DIR"
+            fi
 
             # Remove actual directory
             if [ -n "$target" ] && [ -d "$target" ]; then
                 log "INFO" "Removing actual Zig directory: $target"
-                rm -rf "$target" || log "WARNING" "Could not remove directory: $target"
-                ((removed_items++))
+                if rm -rf "$target" 2>/dev/null; then
+                    log "SUCCESS" "Zig directory removed: $target"
+                    ((removed_items++))
+                else
+                    log "WARNING" "Could not remove directory: $target"
+                fi
             fi
         elif [ -d "$ZIG_INSTALL_DIR" ]; then
             # Direct directory (no symlink)
-            rm -rf "$ZIG_INSTALL_DIR" || log "WARNING" "Could not remove directory: $ZIG_INSTALL_DIR"
-            ((removed_items++))
+            if rm -rf "$ZIG_INSTALL_DIR" 2>/dev/null; then
+                log "SUCCESS" "Zig directory removed: $ZIG_INSTALL_DIR"
+                ((removed_items++))
+            else
+                log "WARNING" "Could not remove directory: $ZIG_INSTALL_DIR"
+            fi
         fi
     fi
 
@@ -70,9 +78,13 @@ uninstall_zig() {
         for backup in "$HOME/Apps"/zig-old-backup-*; do
             if [ -d "$backup" ]; then
                 log "INFO" "Removing backup: $backup"
-                rm -rf "$backup" || log "WARNING" "Could not remove backup: $backup"
-                ((backup_count++))
-                ((removed_items++))
+                if rm -rf "$backup" 2>/dev/null; then
+                    log "SUCCESS" "Backup removed: $backup"
+                    ((backup_count++))
+                    ((removed_items++))
+                else
+                    log "WARNING" "Could not remove backup: $backup"
+                fi
             fi
         done
 
@@ -87,9 +99,13 @@ uninstall_zig() {
         for extracted in "$HOME/Apps"/zig-x86_64-linux-*; do
             if [ -d "$extracted" ]; then
                 log "INFO" "Removing extracted Zig: $extracted"
-                rm -rf "$extracted" || log "WARNING" "Could not remove: $extracted"
-                ((extracted_count++))
-                ((removed_items++))
+                if rm -rf "$extracted" 2>/dev/null; then
+                    log "SUCCESS" "Extracted Zig removed: $extracted"
+                    ((extracted_count++))
+                    ((removed_items++))
+                else
+                    log "WARNING" "Could not remove: $extracted"
+                fi
             fi
         done
 
@@ -104,9 +120,13 @@ uninstall_zig() {
         for tarball in /tmp/zig-*.tar.xz; do
             if [ -f "$tarball" ]; then
                 log "INFO" "Removing tarball: $tarball"
-                rm -f "$tarball" || log "WARNING" "Could not remove: $tarball"
-                ((tarball_count++))
-                ((removed_items++))
+                if rm -f "$tarball" 2>/dev/null; then
+                    log "SUCCESS" "Tarball removed: $tarball"
+                    ((tarball_count++))
+                    ((removed_items++))
+                else
+                    log "WARNING" "Could not remove: $tarball"
+                fi
             fi
         done
 
@@ -122,7 +142,7 @@ uninstall_zig() {
         exit 0
     else
         log "WARNING" "No Zig installation found to remove"
-        skip_task "$task_id"
+        skip_task "$task_id" "nothing to remove"
         exit 2
     fi
 }
