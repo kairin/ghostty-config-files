@@ -38,48 +38,65 @@ uninstall_ghostty() {
 
     if [ -n "$binary_path" ]; then
         log "INFO" "Removing binary: $binary_path"
-        rm -f "$binary_path" || log "WARNING" "Could not remove binary: $binary_path"
-        ((removed_items++))
+        if rm -f "$binary_path" 2>/dev/null; then
+            log "SUCCESS" "Binary removed: $binary_path"
+            ((removed_items++))
+        else
+            log "WARNING" "Could not remove binary: $binary_path"
+        fi
     fi
 
     # 2. Remove installation directory
     if [ -d "$GHOSTTY_INSTALL_DIR" ]; then
         log "INFO" "Removing installation directory: $GHOSTTY_INSTALL_DIR"
-        rm -rf "$GHOSTTY_INSTALL_DIR" || log "WARNING" "Could not remove directory: $GHOSTTY_INSTALL_DIR"
-        ((removed_items++))
+        if rm -rf "$GHOSTTY_INSTALL_DIR" 2>/dev/null; then
+            log "SUCCESS" "Installation directory removed: $GHOSTTY_INSTALL_DIR"
+            ((removed_items++))
+        else
+            log "WARNING" "Could not remove directory: $GHOSTTY_INSTALL_DIR"
+        fi
     fi
 
     # 3. Remove desktop entry
     local desktop_file="$HOME/.local/share/applications/ghostty.desktop"
     if [ -f "$desktop_file" ]; then
         log "INFO" "Removing desktop entry: $desktop_file"
-        rm -f "$desktop_file" || log "WARNING" "Could not remove desktop entry"
-        ((removed_items++))
+        if rm -f "$desktop_file" 2>/dev/null; then
+            log "SUCCESS" "Desktop entry removed: $desktop_file"
+            ((removed_items++))
+        else
+            log "WARNING" "Could not remove desktop entry: $desktop_file"
+        fi
     fi
 
     # 4. Remove build directory (if it exists)
     if [ -d "$GHOSTTY_BUILD_DIR" ]; then
         log "INFO" "Removing build directory: $GHOSTTY_BUILD_DIR"
-        rm -rf "$GHOSTTY_BUILD_DIR" || log "WARNING" "Could not remove build directory"
-        ((removed_items++))
+        if rm -rf "$GHOSTTY_BUILD_DIR" 2>/dev/null; then
+            log "SUCCESS" "Build directory removed: $GHOSTTY_BUILD_DIR"
+            ((removed_items++))
+        else
+            log "WARNING" "Could not remove build directory: $GHOSTTY_BUILD_DIR"
+        fi
     fi
 
-    # 5. Update desktop database
+    # 5. Update desktop database (with timeout protection)
     if command_exists "update-desktop-database"; then
         log "INFO" "Updating desktop database..."
-        update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+        timeout 10 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
     fi
 
-    # 6. Clear icon cache
+    # 6. Clear icon cache (with timeout protection)
     if command_exists "gtk-update-icon-cache"; then
         log "INFO" "Updating icon cache..."
-        gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+        timeout 10 gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
     fi
 
     # Note: Configuration files in ~/.config/ghostty are NOT removed
     # Users may want to preserve their settings for reinstallation
     log "INFO" "Configuration files preserved in ~/.config/ghostty"
 
+    # Summary
     if [ $removed_items -gt 0 ]; then
         log "SUCCESS" "Ghostty uninstalled successfully ($removed_items items removed)"
         complete_task "$task_id"
