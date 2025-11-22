@@ -116,13 +116,6 @@ init_tui() {
         GUM_VERSION=$(echo "$version_output" | grep -oP 'v\d+\.\d+\.\d+' || echo "unknown")
 
         log "SUCCESS" "gum TUI framework detected: $GUM_VERSION (startup: ${GUM_STARTUP_MS}ms)"
-
-        # Constitutional compliance check (<10ms target) - only in debug logs
-        if [ "$GUM_STARTUP_MS" -lt 10 ]; then
-            log "DEBUG" "gum performance: ${GUM_STARTUP_MS}ms (<10ms target met)"
-        else
-            log "DEBUG" "gum performance: ${GUM_STARTUP_MS}ms (target <10ms, acceptable <50ms)"
-        fi
     else
         TUI_AVAILABLE=false
         log "WARNING" "gum not found - using plain text fallback"
