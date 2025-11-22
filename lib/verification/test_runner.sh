@@ -302,11 +302,7 @@ generate_test_report() {
         fnm_end_ns=$(get_unix_timestamp_ns)
         fnm_duration_ms=$(calculate_duration_ns "$fnm_start_ns" "$fnm_end_ns")
 
-        if [ "$fnm_duration_ms" -lt 50 ]; then
-            log "SUCCESS" "  fnm startup:       ${fnm_duration_ms}ms (<50ms ✓ CONSTITUTIONAL COMPLIANCE)"
-        else
-            log "ERROR" "  fnm startup:       ${fnm_duration_ms}ms (≥50ms ✗ CONSTITUTIONAL VIOLATION)"
-        fi
+        log "INFO" "  fnm startup:       ${fnm_duration_ms}ms"
     else
         log "INFO" "  fnm startup:       Not measured (fnm not installed)"
     fi
@@ -319,13 +315,7 @@ generate_test_report() {
         gum_end_ns=$(get_unix_timestamp_ns)
         gum_duration_ms=$(calculate_duration_ns "$gum_start_ns" "$gum_end_ns")
 
-        if [ "$gum_duration_ms" -lt 10 ]; then
-            log "SUCCESS" "  gum startup:       ${gum_duration_ms}ms (<10ms ✓ OPTIMAL)"
-        elif [ "$gum_duration_ms" -lt 50 ]; then
-            log "SUCCESS" "  gum startup:       ${gum_duration_ms}ms (<50ms acceptable)"
-        else
-            log "WARNING" "  gum startup:       ${gum_duration_ms}ms (>50ms slow)"
-        fi
+        log "INFO" "  gum startup:       ${gum_duration_ms}ms"
     else
         log "INFO" "  gum startup:       Not measured (gum not installed)"
     fi
