@@ -53,7 +53,8 @@ cleanup_build_artifacts() {
         log "WARN" "  - Zig source: $HOME/Apps/zig-x86_64-linux-${ZIG_MIN_VERSION}"
     fi
 }
-trap cleanup_build_artifacts EXIT
+# Cleanup is handled by start.sh at the very end
+# trap cleanup_build_artifacts EXIT
 
 # 4. Main Logic
 main() {

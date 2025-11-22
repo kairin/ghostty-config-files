@@ -49,7 +49,14 @@ main() {
     echo ""
 
     # Use streaming to show build progress (Zig shows compilation stages)
-    if run_command_streaming "$task_id" zig build -Doptimize=ReleaseFast; then
+    # Force use of our bootstrap Zig
+    local zig_bin="$ZIG_INSTALL_DIR/zig"
+    if [ ! -x "$zig_bin" ]; then
+        # Fallback to PATH if not found (though it should be there)
+        zig_bin="zig"
+    fi
+
+    if run_command_streaming "$task_id" "$zig_bin" build -Doptimize=ReleaseFast; then
         log "SUCCESS" "Build completed"
         complete_task "$task_id"
         exit 0

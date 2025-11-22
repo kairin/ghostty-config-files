@@ -16,7 +16,7 @@ export GHOSTTY_BUILD_DIR="/tmp/ghostty-build"
 export GHOSTTY_INSTALL_DIR="${GHOSTTY_APP_DIR:-$HOME/.local/share/ghostty}"
 export ZIG_MIN_VERSION="0.15.2"
 export ZIG_DOWNLOAD_URL="https://ziglang.org/download/${ZIG_MIN_VERSION}/zig-x86_64-linux-${ZIG_MIN_VERSION}.tar.xz"
-export ZIG_INSTALL_DIR="$HOME/Apps/zig"
+export ZIG_INSTALL_DIR="/tmp/zig-bootstrap"
 export ZIG_LINK_NAME="zig"
 
 # Add Zig to PATH

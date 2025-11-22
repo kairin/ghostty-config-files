@@ -32,12 +32,15 @@ main() {
     local zig_tarball="/tmp/zig-${ZIG_MIN_VERSION}.tar.xz"
     
     # Check if we need to extract (if zig is already good, skip)
-    local zig_version
-    zig_version=$(get_zig_version)
-    if [[ "$zig_version" == *"$ZIG_MIN_VERSION"* ]] || [[ "$zig_version" > "$ZIG_MIN_VERSION" ]]; then
-         log "INFO" "Zig already installed and up to date"
-         complete_task "$task_id"
-         exit 0
+    # For temp bootstrap, we always check if the specific binary exists
+    if [ -x "$ZIG_INSTALL_DIR/zig" ]; then
+         local installed_ver
+         installed_ver=$("$ZIG_INSTALL_DIR/zig" version 2>/dev/null || echo "none")
+         if [[ "$installed_ver" == *"$ZIG_MIN_VERSION"* ]] || [[ "$installed_ver" > "$ZIG_MIN_VERSION" ]]; then
+             log "INFO" "Zig bootstrap already ready at $ZIG_INSTALL_DIR"
+             complete_task "$task_id"
+             exit 0
+         fi
     fi
 
     if [ ! -f "$zig_tarball" ]; then
@@ -46,42 +49,29 @@ main() {
         exit 1
     fi
 
-    mkdir -p "$HOME/Apps"
-    cd "$HOME/Apps"
-
-    log "INFO" "Extracting Zig..."
+    mkdir -p "$ZIG_INSTALL_DIR"
+    
+    log "INFO" "Extracting Zig to $ZIG_INSTALL_DIR..."
     echo "  Archive: $zig_tarball"
-    echo "  Destination: $HOME/Apps"
+    echo "  Destination: $ZIG_INSTALL_DIR"
     echo ""
 
-    if ! run_command_streaming "$task_id" tar xvf "$zig_tarball"; then
-        log "ERROR" "Failed to extract Zig"
-        fail_task "$task_id"
-        exit 1
-    fi
-
-    # Backup old zig
-    if [ -e "zig" ]; then
-        log "INFO" "Backing up old Zig installation..."
-        if [ -d "zig" ] && [ ! -L "zig" ]; then
-             mv zig "zig-old-backup-$(date +%Y%m%d-%H%M%S)"
-        elif [ -L "zig" ]; then
-             rm -f zig
+    # Extract stripping the first component (zig-linux-x86_64-...)
+    if run_command_streaming "$task_id" tar xvf "$zig_tarball" -C "$ZIG_INSTALL_DIR" --strip-components=1; then
+        log "SUCCESS" "Zig extracted"
+        
+        # Verify
+        if [ -x "$ZIG_INSTALL_DIR/zig" ]; then
+            log "SUCCESS" "Zig binary ready"
+            complete_task "$task_id"
+            exit 0
         else
-             rm -f zig
+            log "ERROR" "Zig binary not found after extraction"
+            fail_task "$task_id"
+            exit 1
         fi
-    fi
-
-    # Create symlink
-    ln -s "zig-x86_64-linux-$ZIG_MIN_VERSION" zig
-    
-    # Verify
-    if [ -L "zig" ]; then
-        log "SUCCESS" "Zig extracted and linked"
-        complete_task "$task_id"
-        exit 0
     else
-        log "ERROR" "Failed to create symlink"
+        log "ERROR" "Failed to extract Zig"
         fail_task "$task_id"
         exit 1
     fi
