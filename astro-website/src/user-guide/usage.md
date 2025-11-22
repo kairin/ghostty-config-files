@@ -431,6 +431,34 @@ echo "Both operations complete"
 
 ## Troubleshooting
 
+### Desktop Icon Not Launching
+
+**Issue**: Ghostty desktop icon/launcher doesn't open terminal when clicked
+
+**Symptoms**:
+- Desktop icon appears in application menu
+- Clicking icon does nothing
+- Context menu "Open Ghostty Here" works correctly
+- Command line `ghostty` works fine
+
+**Root Cause**: The `--gtk-single-instance=true` flag in desktop entry prevents launcher from working (fixed November 2025)
+
+**Solution**:
+```bash
+# Option 1: Run update-all (recommended)
+update-all
+
+# Option 2: Manual fix
+sed -i 's|--gtk-single-instance=true||g' ~/.local/share/applications/com.mitchellh.ghostty.desktop
+update-desktop-database ~/.local/share/applications/
+
+# Verification
+grep "gtk-single-instance" ~/.local/share/applications/com.mitchellh.ghostty.desktop
+# Should return no results
+```
+
+**Note**: This fix is automatically applied in fresh installations and during `update-all` workflow.
+
 ### Command Not Found
 
 **Issue**: `./manage.sh: command not found`

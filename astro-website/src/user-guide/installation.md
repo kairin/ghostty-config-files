@@ -253,6 +253,43 @@ ls -la ~/.config/ghostty/config
 cp configs/ghostty/config ~/.config/ghostty/config
 ```
 
+### Desktop Icon Not Launching
+
+**Issue**: Clicking Ghostty desktop icon/launcher doesn't open terminal
+
+**Symptoms**:
+- Desktop icon exists but nothing happens when clicked
+- Context menu "Open Ghostty Here" works correctly
+- Command line `ghostty` command works
+
+**Root Cause**: The `--gtk-single-instance=true` flag in desktop entry prevents launcher from working
+
+**Solution** (Fixed in November 2025):
+```bash
+# This fix is now automatically applied during installation
+# If you have an older installation, update by running:
+update-all
+
+# OR manually fix the desktop entry:
+sed -i 's|--gtk-single-instance=true||g' ~/.local/share/applications/com.mitchellh.ghostty.desktop
+update-desktop-database ~/.local/share/applications/
+```
+
+**Verification**:
+```bash
+# Check desktop entry doesn't contain the problematic flag
+grep "gtk-single-instance" ~/.local/share/applications/com.mitchellh.ghostty.desktop
+# Should return no results
+
+# Test desktop icon
+# Click the Ghostty icon in your application menu
+```
+
+**Note**: This fix is automatically included in:
+- All fresh installations (start.sh)
+- Update workflow (update-all)
+- Step 07 of Ghostty installation pipeline
+
 ### Context Menu Missing
 
 **Issue**: "Open in Ghostty" not appearing
@@ -352,13 +389,15 @@ chsh -s $(which zsh)
 
 ## Updating
 
-To update your installation:
+### Safe Update Workflow
+
+To update your installation with automatic customization preservation:
 
 ```bash
 # Check for updates
 ./manage.sh update --check-only
 
-# Apply all updates
+# Apply all updates (safest method - preserves user configs)
 ./manage.sh update
 
 # Update specific component
@@ -366,7 +405,58 @@ To update your installation:
 ./manage.sh update --component zsh
 ```
 
-Your user customizations will be automatically preserved during updates.
+### Configuration Persistence
+
+**IMPORTANT**: Your user customizations are automatically preserved during updates:
+
+**What's Preserved**:
+- `~/.config/ghostty/config` - Your custom Ghostty configuration
+- `~/.config/ghostty/*.conf` - All modular config files
+- `~/.zshrc` - Your ZSH customizations
+- Custom keybindings, themes, and preferences
+
+**Update Workflow (update-all)**:
+1. Detects existing configurations in `~/.config/ghostty/`
+2. Backs up current configuration before updates
+3. Reinstalls Ghostty (latest build from source)
+4. Preserves user config files (no overwrite)
+5. Applies latest fixes (e.g., desktop launcher GTK flag fix)
+
+**Example**:
+```bash
+# Run update-all safely
+update-all
+
+# Your custom configurations remain intact
+# Latest Ghostty build installed
+# Desktop entry updated with fixes
+# No manual configuration needed
+```
+
+**Verification After Update**:
+```bash
+# Verify configuration preserved
+ghostty +show-config
+
+# Check desktop entry has latest fixes
+grep "gtk-single-instance" ~/.local/share/applications/com.mitchellh.ghostty.desktop
+# Should return no results (fix applied)
+
+# Verify Ghostty version updated
+ghostty --version
+```
+
+### First-Time vs Updates
+
+**Fresh Installation** (`./start.sh`):
+- Installs default configuration to `~/.config/ghostty/`
+- Creates desktop entry with all fixes
+
+**Updates** (`update-all`):
+- Preserves existing `~/.config/ghostty/` configuration
+- Updates Ghostty binary only
+- Applies desktop entry fixes
+- Never overwrites user customizations
 
 ## Uninstallation
 
