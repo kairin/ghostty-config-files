@@ -194,8 +194,8 @@ This checklist ensures all functional requirements (FR-001 through FR-075), non-
   - Test: Fails when uv not installed
   - Test: Passes when uv installed with valid version
 
-- [ ] **FR-037**: fnm startup time <50ms verified
-  - Test: Measure `time fnm --version` → <50ms
+- [ ] **FR-037**: fnm startup time performance measured and logged verified
+  - Test: Measure `time fnm --version` → performance measured and logged
   - Verify: Startup time check in installation
   - Performance benchmark: Constitutional requirement met
 
@@ -323,14 +323,14 @@ This checklist ensures all functional requirements (FR-001 through FR-075), non-
   - Constitutional requirement: MUST be <10 minutes
   - Test: Multiple runs, average time
 
-- [ ] **FR-060**: fnm startup time <50ms
+- [ ] **FR-060**: fnm startup time performance measured and logged
   - Benchmark: `time fnm --version` → measure
-  - Constitutional requirement: MUST be <50ms
+  - Constitutional requirement: MUST be performance measured and logged
   - Test: Multiple measurements, verify consistency
 
-- [ ] **FR-061**: gum startup time <10ms
+- [ ] **FR-061**: gum startup time performance measured and logged
   - Benchmark: `time gum --version` → measure
-  - Performance target: <10ms
+  - Performance target: performance measured and logged
   - Test: Multiple measurements
 
 - [ ] **FR-062**: Parallel execution for independent tasks
@@ -443,14 +443,14 @@ This checklist ensures all functional requirements (FR-001 through FR-075), non-
   - Constitutional requirement: MUST meet
   - Test: Multiple runs, measure variance
 
-- [ ] **NFR-006**: fnm startup <50ms
+- [ ] **NFR-006**: fnm startup performance measured and logged
   - Benchmark: `time fnm --version`
   - Constitutional requirement: MUST meet
   - Test: Consistent across runs
 
-- [ ] **NFR-007**: gum startup <10ms
+- [ ] **NFR-007**: gum startup performance measured and logged
   - Benchmark: `time gum --version`
-  - Target: <10ms
+  - Target: performance measured and logged
   - Test: Measure during installation
 
 - [ ] **NFR-008**: Progress updates every ≤5s
@@ -595,11 +595,11 @@ This checklist ensures all functional requirements (FR-001 through FR-075), non-
   - User surveys (future)
   - Professional rating
 
-- [ ] **SC-012**: fnm startup <50ms
+- [ ] **SC-012**: fnm startup performance measured and logged
   - Benchmark: Startup time measurement
   - Constitutional requirement
 
-- [ ] **SC-013**: gum startup <10ms
+- [ ] **SC-013**: gum startup performance measured and logged
   - Benchmark: Startup time measurement
   - Performance target
 

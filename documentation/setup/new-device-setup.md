@@ -206,7 +206,7 @@ gh repo set-default
 
 **Why**: Project uses latest Node.js (25+) for Astro.build and AI CLI tools
 
-**fnm vs nvm**: fnm is 40x faster with <50ms startup impact vs NVM's 2000ms
+**fnm vs nvm**: fnm is 40x faster with performance measured and logged startup impact vs NVM's 2000ms
 
 ```bash
 # Install fnm

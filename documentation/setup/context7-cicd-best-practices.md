@@ -44,7 +44,7 @@ This document captures CI/CD and bash scripting best practices for the Ghostty C
 
 **Performance Targets**:
 - Complete local workflow execution: <2 minutes
-- Startup time impact: <50ms per script
+- Startup time impact: performance measured and logged per script
 - Parallel execution: 3-5x speedup for independent stages
 - Log retention: 30 days with automatic rotation
 

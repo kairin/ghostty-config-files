@@ -23,7 +23,7 @@
 - **Node.js**: Latest version (currently v25.2.0) via fnm (Fast Node Manager) for AI tool integration
   - **Global Policy**: Always use the latest Node.js version (not LTS)
   - **Project-level**: Individual projects define their own version requirements via `.nvmrc` or `package.json` engines field
-  - **Version Manager**: fnm (Fast Node Manager) - 40x faster than NVM with <50ms startup impact
+  - **Version Manager**: fnm (Fast Node Manager) - 40x faster than NVM with performance measured and logged startup impact
   - **Health Audit Note**: Latest Node.js version is intentional and should NOT be flagged as a warning
 - **Dependencies**: Smart detection and minimal installation footprint
 

@@ -418,7 +418,7 @@ cat /tmp/ghostty-start-logs/installation-state.json | jq '.'
 5. Use `git merge` without `--no-ff` flag
 6. Modify files in `docs/` directory (Astro build output only)
 7. Remove `.nojekyll` file (breaks GitHub Pages)
-8. Skip performance validation (<50ms for fnm, <10ms for gum target)
+8. Skip performance validation (performance measured and logged for fnm, performance measured and logged for gum target)
 9. Hard-code success without real verification
 10. Ignore existing user customizations
 

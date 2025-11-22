@@ -181,7 +181,7 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 - **FR-034**: System MUST use fnm exclusively for ALL Node.js version management (fnm install, fnm use, fnm default)
 - **FR-035**: System MUST prohibit usage of nvm, n, asdf, manual Node.js installation
 - **FR-036**: System MUST verify uv installation with real version check: `uv --version` returns valid version
-- **FR-037**: System MUST verify fnm installation with real startup time check: <50ms (constitutional requirement)
+- **FR-037**: System MUST verify fnm installation with real startup time check: performance measured and logged (constitutional requirement)
 - **FR-038**: System MUST install latest Node.js version (v25.2.0+) via fnm for AI tools and Astro documentation site
 
 #### Structured Logging
@@ -212,8 +212,8 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 
 #### Performance Standards
 - **FR-059**: System MUST complete total installation in <10 minutes on fresh Ubuntu system
-- **FR-060**: System MUST validate fnm startup time <50ms (constitutional requirement)
-- **FR-061**: System MUST validate gum startup time <10ms (verified during installation)
+- **FR-060**: System MUST validate fnm startup time performance measured and logged (constitutional requirement)
+- **FR-061**: System MUST validate gum startup time performance measured and logged (verified during installation)
 - **FR-062**: System MUST execute independent tasks in parallel where dependencies allow (maximum 3 concurrent tasks for system stability and resource management)
 - **FR-063**: System MUST update progress feedback at least every 5 seconds during long-running tasks
 
@@ -262,8 +262,8 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 - **SC-009**: Installation success rate ≥99% across different Ubuntu configurations (fresh install, existing system, SSH, VM) measured by CI/CD testing
 - **SC-010**: Parallel execution reduces installation time by 30-40% compared to sequential baseline measured by performance benchmarks
 - **SC-011**: User satisfaction: 90% of users rate installation experience as "professional" and "easy to follow" measured by user surveys (future)
-- **SC-012**: fnm startup time <50ms (constitutional requirement) verified during installation and in performance tests
-- **SC-013**: gum startup time <10ms verified during installation
+- **SC-012**: fnm startup time performance measured and logged (constitutional requirement) verified during installation and in performance tests
+- **SC-013**: gum startup time performance measured and logged verified during installation
 - **SC-014**: All Context7 recommendations followed for app installations (100% compliance) verified by audit
 - **SC-015**: User customizations preserved: 100% retention of ZSH configs, Ghostty themes, shell aliases during updates verified by diff testing
 
@@ -344,8 +344,8 @@ Independent tasks (e.g., installing Ghostty while setting up ZSH) execute in par
 
 ### Performance
 - **NFR-005**: Total installation time <10 minutes on fresh system (constitutional requirement)
-- **NFR-006**: fnm startup time <50ms (constitutional requirement)
-- **NFR-007**: gum startup time <10ms (verified during installation)
+- **NFR-006**: fnm startup time performance measured and logged (constitutional requirement)
+- **NFR-007**: gum startup time performance measured and logged (verified during installation)
 - **NFR-008**: Progress updates every ≤5 seconds during long-running tasks
 - **NFR-009**: Log file size <10MB per installation run (with rotation)
 

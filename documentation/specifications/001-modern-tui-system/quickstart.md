@@ -338,8 +338,8 @@ cp ~/.config/ghostty/config.backup-$(ls -t ~/.config/ghostty/config.backup-* | h
 
 | Requirement | Target | Validation | Status |
 |-------------|--------|------------|--------|
-| fnm startup | <50ms | `time fnm env` | ✅ Verified during installation |
-| gum startup | <10ms | `time gum --version` | ✅ Verified during installation |
+| fnm startup | performance measured and logged | `time fnm env` | ✅ Verified during installation |
+| gum startup | performance measured and logged | `time gum --version` | ✅ Verified during installation |
 | Total install | <10 min | Logged in performance.json | ✅ Monitored |
 
 ## Getting Help

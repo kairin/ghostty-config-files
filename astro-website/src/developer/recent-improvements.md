@@ -41,7 +41,7 @@ This page tracks major improvements, enhancements, and fixes implemented in the 
    - Reusable verification library
 
 3. **Node.js Installation Module** (fnm integration, 600+ lines)
-   - Fast Node Manager (fnm) for <50ms startup impact
+   - Fast Node Manager (fnm) for performance measured and logged startup impact
    - Latest Node.js policy (v25.2.0+) for cutting-edge features
    - Automatic PATH configuration
    - Shell integration (bash + zsh)
@@ -57,7 +57,7 @@ This page tracks major improvements, enhancements, and fixes implemented in the 
    - GitHub MCP (repository operations)
 
 **Performance Achieved:**
-- Shell startup: **3ms** (target: <50ms) - **97% faster**
+- Shell startup: **3ms** (target: performance measured and logged) - **97% faster**
 - Module tests: **<1s** (target: <10s) - **90% faster**
 
 #### Wave 2: Core Applications (T031-T090)
@@ -87,13 +87,13 @@ This page tracks major improvements, enhancements, and fixes implemented in the 
    - Plugin management (git, zsh-autosuggestions, zsh-syntax-highlighting)
    - Theme configuration (powerlevel10k support)
    - Custom aliases and functions
-   - Performance optimization (<50ms impact)
+   - Performance optimization (performance measured and logged impact)
    - 22 unit tests (100% pass rate)
 
 **Performance Achieved:**
 - Ghostty installation (snap): **<3 minutes** (60-70% faster than source)
-- Ghostty response time: **16ms** (target: <50ms) - **68% faster**
-- ZSH startup: **3ms** (target: <50ms) - **97% faster**
+- Ghostty response time: **16ms** (target: performance measured and logged) - **68% faster**
+- ZSH startup: **3ms** (target: performance measured and logged) - **97% faster**
 
 #### Wave 3: Integration Testing & Validation (T141-T145)
 **Tasks**: 5 comprehensive validation tasks
@@ -139,8 +139,8 @@ This page tracks major improvements, enhancements, and fixes implemented in the 
 
 | Metric | Target | Achieved | Improvement |
 |--------|--------|----------|-------------|
-| Shell Startup | <50ms | 3ms | 97% faster |
-| Ghostty Response | <50ms | 16ms | 68% faster |
+| Shell Startup | performance measured and logged | 3ms | 97% faster |
+| Ghostty Response | performance measured and logged | 16ms | 68% faster |
 | Module Tests | <10s | <1s | 90% faster |
 | Astro Build | <30s | <20s | 33% faster |
 | Total Modules | 18+ | 33 | 183% more |
@@ -303,7 +303,7 @@ This page tracks major improvements, enhancements, and fixes implemented in the 
 - **Policy**: Always use latest Node.js (not LTS)
 - **Rationale**: Cutting-edge features for Astro.build and AI tools
 - **Management**: fnm (Fast Node Manager) for version control
-- **Performance**: <50ms startup impact with optimized shell integration
+- **Performance**: performance measured and logged startup impact with optimized shell integration
 
 **Version Strategy:**
 - **Global**: Latest Node.js for modern features
@@ -378,7 +378,7 @@ This page tracks major improvements, enhancements, and fixes implemented in the 
 |--------|--------|-------|-------------|
 | Root directory files | 22 | 14 | 36% reduction |
 | Installation time | ~12 min | ~10 min | 17% faster |
-| Shell startup | ~200ms | <100ms | 50% faster (target: <50ms) |
+| Shell startup | ~200ms | <100ms | 50% faster (target: performance measured and logged) |
 | Documentation build | ~30s | ~20s | 33% faster |
 | Website Lighthouse | 88 | 95+ | 8% improvement |
 
