@@ -60,7 +60,7 @@ get_level_num() {
 }
 
 # Current log level threshold (default: TEST - show all)
-LOG_LEVEL_THRESHOLD=0
+export LOG_LEVEL_THRESHOLD=0
 
 #
 # Initialize logging system
