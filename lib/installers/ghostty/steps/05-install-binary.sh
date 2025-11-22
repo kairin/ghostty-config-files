@@ -11,7 +11,51 @@ source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 # 2. Load Common Utils
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
-# 3. Main Logic
+# 3. Temp file cleanup on exit
+cleanup_build_artifacts() {
+    # This is the FINAL step - clean ALL temp build artifacts after successful install
+    local exit_code=$?
+
+    if [ $exit_code -eq 0 ] || [ $exit_code -eq 2 ]; then
+        # Success or skip (already installed) - safe to clean up
+        log "INFO" "Cleaning up build artifacts..."
+
+        # Clean Ghostty build directory
+        if [ -d "${GHOSTTY_BUILD_DIR:-/tmp/ghostty-build}" ]; then
+            log "INFO" "Removing Ghostty build directory: $GHOSTTY_BUILD_DIR"
+            rm -rf "$GHOSTTY_BUILD_DIR" 2>/dev/null || true
+        fi
+
+        # Clean Zig tarball
+        if [ -f "/tmp/zig-${ZIG_MIN_VERSION}.tar.xz" ]; then
+            log "INFO" "Removing Zig tarball: /tmp/zig-${ZIG_MIN_VERSION}.tar.xz"
+            rm -f "/tmp/zig-${ZIG_MIN_VERSION}.tar.xz" 2>/dev/null || true
+        fi
+
+        # Clean Zig source directory from ~/Apps
+        if [ -d "$HOME/Apps/zig-x86_64-linux-${ZIG_MIN_VERSION}" ]; then
+            log "INFO" "Removing Zig source directory: $HOME/Apps/zig-x86_64-linux-${ZIG_MIN_VERSION}"
+            rm -rf "$HOME/Apps/zig-x86_64-linux-${ZIG_MIN_VERSION}" 2>/dev/null || true
+        fi
+
+        # Clean Zig symlink from ~/Apps
+        if [ -L "$HOME/Apps/zig" ]; then
+            log "INFO" "Removing Zig symlink: $HOME/Apps/zig"
+            rm -f "$HOME/Apps/zig" 2>/dev/null || true
+        fi
+
+        log "SUCCESS" "Build artifacts cleaned up"
+    else
+        # Failure - keep artifacts for debugging
+        log "WARN" "Build failed, keeping artifacts for debugging:"
+        log "WARN" "  - Ghostty source: ${GHOSTTY_BUILD_DIR:-/tmp/ghostty-build}"
+        log "WARN" "  - Zig tarball: /tmp/zig-${ZIG_MIN_VERSION}.tar.xz"
+        log "WARN" "  - Zig source: $HOME/Apps/zig-x86_64-linux-${ZIG_MIN_VERSION}"
+    fi
+}
+trap cleanup_build_artifacts EXIT
+
+# 4. Main Logic
 main() {
     # Environment Check
     run_environment_checks || exit 1

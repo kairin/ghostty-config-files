@@ -10,6 +10,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 LOG_DIR="$SCRIPT_DIR/../logs"
 
+# Temp file cleanup tracking
+TEMP_FILES=()
+
+cleanup_temp_files() {
+    for temp_file in "${TEMP_FILES[@]}"; do
+        [ -f "$temp_file" ] && rm -f "$temp_file" 2>/dev/null || true
+    done
+}
+trap cleanup_temp_files EXIT ERR INT TERM
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -66,6 +76,7 @@ add_check_result() {
 
     # Create temporary JSON entry
     local temp_entry=$(mktemp)
+    TEMP_FILES+=("$temp_entry")
     cat > "$temp_entry" <<EOF
 {
   "name": "$check_name",
@@ -77,18 +88,18 @@ EOF
 
     # Append to report (basic JSON array manipulation)
     local temp_report=$(mktemp)
+    TEMP_FILES+=("$temp_report")
     if command -v jq >/dev/null 2>&1; then
         jq --argjson entry "$(cat "$temp_entry")" '.checks += [$entry]' "$REPORT_FILE" > "$temp_report"
         mv "$temp_report" "$REPORT_FILE"
     fi
-
-    rm -f "$temp_entry"
 }
 
 # Update summary counts
 update_summary() {
     if command -v jq >/dev/null 2>&1; then
         local temp_report=$(mktemp)
+        TEMP_FILES+=("$temp_report")
         jq '.summary.total = (.checks | length) |
             .summary.passed = ([.checks[] | select(.status == "pass")] | length) |
             .summary.failed = ([.checks[] | select(.status == "fail")] | length) |
