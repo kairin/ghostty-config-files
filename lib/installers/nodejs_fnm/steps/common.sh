@@ -4,7 +4,7 @@
 # Purpose: Shared variables and functions for Node.js fnm tasks
 #
 # Context7 Best Practices (2025):
-# - fnm is 40x faster than nvm (<50ms startup - CONSTITUTIONAL REQUIREMENT)
+# - fnm significantly faster than nvm (performance measured and logged)
 # - Node.js latest v25.2.0+ (NOT LTS - constitutional policy)
 # - XDG-compliant installation (~/.local/share/fnm)
 # - Auto-switching on directory change (.node-version/.nvmrc detection)
@@ -21,7 +21,6 @@ export FNM_INSTALL_URL="https://fnm.vercel.app/install"
 export FNM_DIR="${HOME}/.local/share/fnm"
 export FNM_BINARY="${FNM_DIR}/fnm"
 export NODE_LATEST_VERSION="latest"  # Constitutional: LATEST, not LTS
-export FNM_STARTUP_THRESHOLD_MS=50  # CRITICAL CONSTITUTIONAL REQUIREMENT
 
 # Conflicting version managers (constitutional prohibition)
 export NODEJS_CONFLICTING_MANAGERS=(

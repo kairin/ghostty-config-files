@@ -15,7 +15,7 @@ main() {
     read -r -d '' fnm_block <<'EOF' || true
 # fnm (Fast Node Manager) - 2025 Performance Optimized
 # MUST be loaded before Powerlevel10k instant prompt to avoid console output
-# Loads 40x faster than NVM, minimal startup impact (<50ms)
+# Significantly faster than NVM, performance measured and logged
 export FNM_DIR="$HOME/.local/share/fnm"
 if [ -d "$FNM_DIR" ]; then
   export PATH="$FNM_DIR:$PATH"
@@ -49,7 +49,7 @@ EOF
             log "INFO" "  ↷ fnm already configured in .bashrc"
         else
             echo "" >> "$HOME/.bashrc"
-            echo "# fnm (Fast Node Manager) - CONSTITUTIONAL: <50ms startup required" >> "$HOME/.bashrc"
+            echo "# fnm (Fast Node Manager) - Performance measured and logged" >> "$HOME/.bashrc"
             echo 'export FNM_DIR="$HOME/.local/share/fnm"' >> "$HOME/.bashrc"
             echo 'if [ -d "$FNM_DIR" ]; then' >> "$HOME/.bashrc"
             echo '  export PATH="$FNM_DIR:$PATH"' >> "$HOME/.bashrc"

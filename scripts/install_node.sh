@@ -4,7 +4,7 @@
 # Dependencies: curl, bash
 # Modules Required: common.sh
 # Exit Codes: 0=success, 1=general failure, 2=fnm installation failed, 3=Node installation failed
-# Constitutional Compliance: AGENTS.md line 23 mandates fnm for 40x faster startup (<50ms vs 500ms-3s)
+# Constitutional Compliance: AGENTS.md mandates fnm for significantly faster startup (performance measured)
 
 set -euo pipefail
 

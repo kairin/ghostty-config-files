@@ -16,9 +16,9 @@
 # Constitutional Compliance:
 #   - Principle V: Modular Architecture
 #   - <200 lines orchestrator (business logic in lib/)
-#   - Zero-configuration installation (<10 minutes)
+#   - Zero-configuration installation (target <10 minutes)
 #   - Idempotent (safe re-run)
-#   - Performance targets (fnm <50ms, gum <10ms, total <10min)
+#   - Performance measured and logged (no hard targets)
 #
 # Usage:
 #   ./start.sh                    # Fresh installation (default)

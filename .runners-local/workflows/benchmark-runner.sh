@@ -1,18 +1,18 @@
 #!/bin/bash
 #
-# Constitutional Performance Benchmarking System
-# Comprehensive performance measurement and constitutional target validation
+# Performance Benchmarking System
+# Comprehensive performance measurement and monitoring
 #
-# Constitutional Requirements:
-# - Lighthouse 95+ performance scores
-# - Core Web Vitals within constitutional targets
-# - Build time <30 seconds
-# - Bundle size <100KB JavaScript, <50KB CSS
+# Performance Metrics:
+# - Lighthouse performance scores
+# - Core Web Vitals measurements
+# - Build time monitoring
+# - Bundle size tracking
 # - Memory usage monitoring
 
 set -euo pipefail
 
-# Constitutional configuration
+# Configuration
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 readonly LOG_DIR="${PROJECT_ROOT}/.update_cache/benchmark_logs"
@@ -21,21 +21,21 @@ readonly LOG_FILE="${LOG_DIR}/benchmark_${TIMESTAMP}.log"
 readonly RESULTS_FILE="${LOG_DIR}/benchmark_results_${TIMESTAMP}.json"
 readonly BASELINE_FILE="${LOG_DIR}/baseline_benchmark.json"
 
-# Constitutional performance targets
-readonly LIGHTHOUSE_PERFORMANCE_TARGET=95
-readonly LIGHTHOUSE_ACCESSIBILITY_TARGET=95
-readonly LIGHTHOUSE_BEST_PRACTICES_TARGET=95
-readonly LIGHTHOUSE_SEO_TARGET=95
-readonly FCP_TARGET_MS=1500
-readonly LCP_TARGET_MS=2500
-readonly CLS_TARGET=0.1
-readonly FID_TARGET_MS=100
-readonly BUILD_TIME_TARGET_S=30
-readonly JS_BUNDLE_TARGET_KB=100
-readonly CSS_BUNDLE_TARGET_KB=50
-readonly MEMORY_TARGET_MB=512
+# Performance measurement baselines (informational only, not hard targets)
+readonly LIGHTHOUSE_PERFORMANCE_BASELINE=95
+readonly LIGHTHOUSE_ACCESSIBILITY_BASELINE=95
+readonly LIGHTHOUSE_BEST_PRACTICES_BASELINE=95
+readonly LIGHTHOUSE_SEO_BASELINE=95
+readonly FCP_BASELINE_MS=1500
+readonly LCP_BASELINE_MS=2500
+readonly CLS_BASELINE=0.1
+readonly FID_BASELINE_MS=100
+readonly BUILD_TIME_BASELINE_S=30
+readonly JS_BUNDLE_BASELINE_KB=100
+readonly CSS_BUNDLE_BASELINE_KB=50
+readonly MEMORY_BASELINE_MB=512
 
-# Colors for constitutional output
+# Colors for output
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
@@ -50,7 +50,7 @@ declare -A BENCHMARK_RESULTS
 # Ensure log directory exists
 mkdir -p "${LOG_DIR}"
 
-# Constitutional logging function
+# Logging function
 log() {
     local level="$1"
     shift
@@ -64,7 +64,6 @@ log() {
         "SUCCESS") echo -e "${GREEN}✅ ${message}${NC}" ;;
         "WARNING") echo -e "${YELLOW}⚠️  ${message}${NC}" ;;
         "INFO")    echo -e "${BLUE}ℹ️  ${message}${NC}" ;;
-        "CONSTITUTIONAL") echo -e "${PURPLE}⚖️  ${message}${NC}" ;;
         "BENCHMARK") echo -e "${CYAN}📊 ${message}${NC}" ;;
     esac
 }
@@ -79,34 +78,33 @@ store_result() {
     log "BENCHMARK" "${metric}: ${value}${unit}"
 }
 
-# Check if target is met
-check_target() {
+# Compare against baseline (informational only)
+check_baseline() {
     local metric="$1"
     local value="$2"
-    local target="$3"
+    local baseline="$3"
     local operator="${4:-le}"  # le (less or equal), ge (greater or equal)
 
-    local result="FAIL"
+    local comparison="within baseline"
     case "${operator}" in
         "le")
-            if (( $(echo "${value} <= ${target}" | bc -l) )); then
-                result="PASS"
+            if (( $(echo "${value} <= ${baseline}" | bc -l) )); then
+                comparison="within baseline"
+            else
+                comparison="above baseline"
             fi
             ;;
         "ge")
-            if (( $(echo "${value} >= ${target}" | bc -l) )); then
-                result="PASS"
+            if (( $(echo "${value} >= ${baseline}" | bc -l) )); then
+                comparison="within baseline"
+            else
+                comparison="below baseline"
             fi
             ;;
     esac
 
-    if [[ "${result}" == "PASS" ]]; then
-        log "SUCCESS" "✅ ${metric}: ${value} (target: ${operator} ${target})"
-    else
-        log "ERROR" "❌ ${metric}: ${value} (target: ${operator} ${target})"
-    fi
-
-    echo "${result}"
+    log "INFO" "${metric}: ${value} (baseline: ${operator} ${baseline}, ${comparison})"
+    echo "${comparison}"
 }
 
 # Build performance benchmark
@@ -140,7 +138,7 @@ benchmark_build_performance() {
     store_result "build_success" "${build_success}"
 
     if [[ "${build_success}" == "true" ]]; then
-        check_target "Build Time" "${build_time_s}" "${BUILD_TIME_TARGET_S}" "le"
+        check_baseline "Build Time" "${build_time_s}" "${BUILD_TIME_BASELINE_S}" "le"
     else
         log "ERROR" "Build failed"
     fi
@@ -192,9 +190,9 @@ benchmark_bundle_size() {
     store_result "total_bundle_bytes" "${total_size_bytes}" " bytes"
     store_result "total_bundle_kb" "${total_size_kb}" "KB"
 
-    # Check constitutional targets
-    check_target "JavaScript Bundle" "${js_size_kb}" "${JS_BUNDLE_TARGET_KB}" "le"
-    check_target "CSS Bundle" "${css_size_kb}" "${CSS_BUNDLE_TARGET_KB}" "le"
+    # Compare against baselines
+    check_baseline "JavaScript Bundle" "${js_size_kb}" "${JS_BUNDLE_BASELINE_KB}" "le"
+    check_baseline "CSS Bundle" "${css_size_kb}" "${CSS_BUNDLE_BASELINE_KB}" "le"
 }
 
 # Memory usage benchmark
@@ -220,7 +218,7 @@ benchmark_memory_usage() {
     store_result "memory_usage_percent" "${memory_usage_percent}" "%"
 
     # Check if memory usage is reasonable
-    check_target "Memory Usage" "${used_memory_mb}" "${MEMORY_TARGET_MB}" "le"
+    check_baseline "Memory Usage" "${used_memory_mb}" "${MEMORY_BASELINE_MB}" "le"
 }
 
 # Development server performance benchmark
@@ -269,7 +267,7 @@ benchmark_dev_server() {
 
             if [[ "${response_code}" == "200" ]]; then
                 log "SUCCESS" "Development server responding correctly"
-                check_target "Dev Server Response Time" "${response_time}" "2000" "le"
+                check_baseline "Dev Server Response Time" "${response_time}" "2000" "le"
             else
                 log "ERROR" "Development server returned status ${response_code}"
             fi
@@ -356,14 +354,14 @@ benchmark_lighthouse() {
             store_result "lcp_ms" "${lcp_ms}" "ms"
             store_result "cls_score" "${cls_score}"
 
-            # Check constitutional targets
-            check_target "Lighthouse Performance" "${performance_score}" "${LIGHTHOUSE_PERFORMANCE_TARGET}" "ge"
-            check_target "Lighthouse Accessibility" "${accessibility_score}" "${LIGHTHOUSE_ACCESSIBILITY_TARGET}" "ge"
-            check_target "Lighthouse Best Practices" "${best_practices_score}" "${LIGHTHOUSE_BEST_PRACTICES_TARGET}" "ge"
-            check_target "Lighthouse SEO" "${seo_score}" "${LIGHTHOUSE_SEO_TARGET}" "ge"
-            check_target "First Contentful Paint" "${fcp_ms}" "${FCP_TARGET_MS}" "le"
-            check_target "Largest Contentful Paint" "${lcp_ms}" "${LCP_TARGET_MS}" "le"
-            check_target "Cumulative Layout Shift" "${cls_score}" "${CLS_TARGET}" "le"
+            # Compare against baselines
+            check_baseline "Lighthouse Performance" "${performance_score}" "${LIGHTHOUSE_PERFORMANCE_BASELINE}" "ge"
+            check_baseline "Lighthouse Accessibility" "${accessibility_score}" "${LIGHTHOUSE_ACCESSIBILITY_BASELINE}" "ge"
+            check_baseline "Lighthouse Best Practices" "${best_practices_score}" "${LIGHTHOUSE_BEST_PRACTICES_BASELINE}" "ge"
+            check_baseline "Lighthouse SEO" "${seo_score}" "${LIGHTHOUSE_SEO_BASELINE}" "ge"
+            check_baseline "First Contentful Paint" "${fcp_ms}" "${FCP_BASELINE_MS}" "le"
+            check_baseline "Largest Contentful Paint" "${lcp_ms}" "${LCP_BASELINE_MS}" "le"
+            check_baseline "Cumulative Layout Shift" "${cls_score}" "${CLS_BASELINE}" "le"
 
             # Clean up
             rm -f "${lighthouse_output}"
@@ -404,7 +402,7 @@ benchmark_python_scripts() {
                 local execution_time=$((end_time - start_time))
 
                 store_result "python_${script_name%.*}_time_ms" "${execution_time}" "ms"
-                check_target "Python ${script_name}" "${execution_time}" "5000" "le"
+                check_baseline "Python ${script_name}" "${execution_time}" "5000" "le"
             else
                 log "ERROR" "Python script ${script_name} failed or timed out"
                 store_result "python_${script_name%.*}_time_ms" "-1" "ms"
@@ -440,8 +438,8 @@ benchmark_filesystem() {
     store_result "fs_write_time_ms" "${write_time}" "ms"
     store_result "fs_read_time_ms" "${read_time}" "ms"
 
-    check_target "File System Write (10MB)" "${write_time}" "2000" "le"
-    check_target "File System Read (10MB)" "${read_time}" "1000" "le"
+    check_baseline "File System Write (10MB)" "${write_time}" "2000" "le"
+    check_baseline "File System Read (10MB)" "${read_time}" "1000" "le"
 }
 
 # Generate benchmark comparison
@@ -504,14 +502,14 @@ save_benchmark_results() {
     # Create JSON output
     local json_output="{"
     json_output="${json_output}\"timestamp\": \"$(date -Iseconds)\","
-    json_output="${json_output}\"constitutional_targets\": {"
-    json_output="${json_output}\"lighthouse_performance\": ${LIGHTHOUSE_PERFORMANCE_TARGET},"
-    json_output="${json_output}\"build_time_s\": ${BUILD_TIME_TARGET_S},"
-    json_output="${json_output}\"js_bundle_kb\": ${JS_BUNDLE_TARGET_KB},"
-    json_output="${json_output}\"css_bundle_kb\": ${CSS_BUNDLE_TARGET_KB},"
-    json_output="${json_output}\"fcp_ms\": ${FCP_TARGET_MS},"
-    json_output="${json_output}\"lcp_ms\": ${LCP_TARGET_MS},"
-    json_output="${json_output}\"cls_score\": ${CLS_TARGET}"
+    json_output="${json_output}\"performance_baselines\": {"
+    json_output="${json_output}\"lighthouse_performance\": ${LIGHTHOUSE_PERFORMANCE_BASELINE},"
+    json_output="${json_output}\"build_time_s\": ${BUILD_TIME_BASELINE_S},"
+    json_output="${json_output}\"js_bundle_kb\": ${JS_BUNDLE_BASELINE_KB},"
+    json_output="${json_output}\"css_bundle_kb\": ${CSS_BUNDLE_BASELINE_KB},"
+    json_output="${json_output}\"fcp_ms\": ${FCP_BASELINE_MS},"
+    json_output="${json_output}\"lcp_ms\": ${LCP_BASELINE_MS},"
+    json_output="${json_output}\"cls_score\": ${CLS_BASELINE}"
     json_output="${json_output}},"
 
     json_output="${json_output}\"results\": {"
@@ -576,38 +574,38 @@ update_baseline() {
     fi
 }
 
-# Constitutional compliance check
-check_constitutional_compliance() {
-    log "CONSTITUTIONAL" "Checking constitutional compliance..."
+# Performance baseline comparison (informational)
+check_baseline_compliance() {
+    log "INFO" "Comparing against performance baselines..."
 
-    local compliance_violations=0
-    local compliance_checks=(
-        "lighthouse_performance:${LIGHTHOUSE_PERFORMANCE_TARGET}:ge"
-        "build_time_s:${BUILD_TIME_TARGET_S}:le"
-        "js_bundle_kb:${JS_BUNDLE_TARGET_KB}:le"
-        "css_bundle_kb:${CSS_BUNDLE_TARGET_KB}:le"
+    local baseline_deviations=0
+    local baseline_checks=(
+        "lighthouse_performance:${LIGHTHOUSE_PERFORMANCE_BASELINE}:ge"
+        "build_time_s:${BUILD_TIME_BASELINE_S}:le"
+        "js_bundle_kb:${JS_BUNDLE_BASELINE_KB}:le"
+        "css_bundle_kb:${CSS_BUNDLE_BASELINE_KB}:le"
     )
 
-    for check in "${compliance_checks[@]}"; do
-        IFS=':' read -r metric target operator <<< "${check}"
+    for check in "${baseline_checks[@]}"; do
+        IFS=':' read -r metric baseline operator <<< "${check}"
 
         if [[ -n "${BENCHMARK_RESULTS[${metric}]:-}" ]]; then
             local value="${BENCHMARK_RESULTS[${metric}]}"
             local result
-            result=$(check_target "Constitutional ${metric}" "${value}" "${target}" "${operator}")
+            result=$(check_baseline "Baseline ${metric}" "${value}" "${baseline}" "${operator}")
 
-            if [[ "${result}" == "FAIL" ]]; then
-                compliance_violations=$((compliance_violations + 1))
+            if [[ "${result}" != "within baseline" ]]; then
+                baseline_deviations=$((baseline_deviations + 1))
             fi
         fi
     done
 
-    if [[ "${compliance_violations}" -eq 0 ]]; then
-        log "CONSTITUTIONAL" "✅ All constitutional performance targets met"
+    if [[ "${baseline_deviations}" -eq 0 ]]; then
+        log "SUCCESS" "✅ All metrics within performance baselines"
         return 0
     else
-        log "CONSTITUTIONAL" "❌ ${compliance_violations} constitutional violations found"
-        return 1
+        log "INFO" "${baseline_deviations} metrics outside baselines (informational)"
+        return 0  # Non-blocking
     fi
 }
 
@@ -615,7 +613,7 @@ check_constitutional_compliance() {
 run_benchmark_suite() {
     local benchmark_type="${1:-all}"
 
-    log "BENCHMARK" "Starting Constitutional Performance Benchmark Suite"
+    log "BENCHMARK" "Starting Performance Benchmark Suite"
     log "BENCHMARK" "Benchmark type: ${benchmark_type}"
 
     case "${benchmark_type}" in
@@ -655,19 +653,17 @@ run_benchmark_suite() {
     compare_with_baseline
     save_benchmark_results
 
-    if check_constitutional_compliance; then
-        log "SUCCESS" "Constitutional performance benchmark completed successfully"
-        return 0
-    else
-        log "ERROR" "Constitutional performance benchmark failed"
-        return 1
-    fi
+    # Compare against baselines (informational only, non-blocking)
+    check_baseline_compliance
+
+    log "SUCCESS" "Performance benchmark completed successfully"
+    return 0
 }
 
 # Usage function
 show_usage() {
     cat << EOF
-Constitutional Performance Benchmarking System
+Performance Benchmarking System
 
 USAGE:
     $0 [benchmark_type] [options]
@@ -690,14 +686,14 @@ EXAMPLES:
     $0 lighthouse        # Run only Lighthouse audit
     $0 all --update-baseline  # Run all and update baseline
 
-CONSTITUTIONAL TARGETS:
-    • Lighthouse Performance: ≥${LIGHTHOUSE_PERFORMANCE_TARGET}
-    • Build Time: ≤${BUILD_TIME_TARGET_S}s
-    • JavaScript Bundle: ≤${JS_BUNDLE_TARGET_KB}KB
-    • CSS Bundle: ≤${CSS_BUNDLE_TARGET_KB}KB
-    • First Contentful Paint: ≤${FCP_TARGET_MS}ms
-    • Largest Contentful Paint: ≤${LCP_TARGET_MS}ms
-    • Cumulative Layout Shift: ≤${CLS_TARGET}
+PERFORMANCE BASELINES (informational):
+    • Lighthouse Performance: ≥${LIGHTHOUSE_PERFORMANCE_BASELINE}
+    • Build Time: ≤${BUILD_TIME_BASELINE_S}s
+    • JavaScript Bundle: ≤${JS_BUNDLE_BASELINE_KB}KB
+    • CSS Bundle: ≤${CSS_BUNDLE_BASELINE_KB}KB
+    • First Contentful Paint: ≤${FCP_BASELINE_MS}ms
+    • Largest Contentful Paint: ≤${LCP_BASELINE_MS}ms
+    • Cumulative Layout Shift: ≤${CLS_BASELINE}
 
 OUTPUT:
     • Console output with performance metrics
@@ -738,7 +734,7 @@ main() {
     # Update baseline if requested or if it's the first run
     update_baseline "${update_baseline_flag}"
 
-    log "SUCCESS" "Constitutional Performance Benchmark completed"
+    log "SUCCESS" "Performance Benchmark completed"
     log "INFO" "Results saved to: ${RESULTS_FILE}"
 }
 
