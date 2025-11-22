@@ -218,6 +218,14 @@ cleanup_on_exit() {
     # Cleanup collapsible output
     cleanup_collapsible_output
 
+    # Cleanup temporary build files (Global cleanup)
+    if [ -d "/tmp/zig-bootstrap" ] || [ -d "/tmp/ghostty-build" ]; then
+        log "INFO" "Cleaning up temporary build files..."
+        rm -rf "/tmp/zig-bootstrap" 2>/dev/null || true
+        rm -rf "/tmp/ghostty-build" 2>/dev/null || true
+        rm -f "/tmp/zig-*.tar.xz" 2>/dev/null || true
+    fi
+
     # Save state
     save_state
 
