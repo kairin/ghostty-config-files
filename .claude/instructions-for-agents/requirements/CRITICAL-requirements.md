@@ -29,7 +29,24 @@ last-updated: 2025-11-21
 
 ## 🚨 CRITICAL: Package Management & Dependencies
 
-- **Ghostty**: Built from source with Zig 0.14.0 (latest stable)
+### Build-from-Source Applications (2025 Edition)
+
+- **Ghostty Terminal**: Built from source with Zig 0.15.2 (latest stable)
+  - Repository: https://github.com/ghostty-org/ghostty
+  - Build method: Zig build system (`zig build -Doptimize=ReleaseFast`)
+  - Installation: `~/.local/share/ghostty/` (modular installer: `lib/installers/ghostty/`)
+  - Build time: ~5-10 minutes
+
+- **Feh Image Viewer**: Built from source (latest stable)
+  - Repository: https://github.com/derf/feh
+  - Build method: GNU Make with feature flags (`make curl=1 exif=1 inotify=1 xinerama=1`)
+  - Installation: `/usr/local/` (modular installer: `lib/installers/feh/`)
+  - Build time: ~2-5 minutes
+  - Rationale: Latest features, EXIF support, inotify auto-reload, HTTPS image loading
+  - Configuration preservation: Custom themes (`~/.config/feh/themes`) and desktop file preserved
+
+### Package Managers & Runtime Tools
+
 - **ZSH**: Oh My ZSH with enhanced plugins for productivity
 - **Node.js**: Latest version (currently v25.2.0) via fnm (Fast Node Manager) for AI tool integration
   - **Global Policy**: Always use the latest Node.js version (not LTS)
