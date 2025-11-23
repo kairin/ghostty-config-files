@@ -10,10 +10,15 @@ if [ -z "${REPO_ROOT:-}" ]; then
 fi
 
 # Ghostty version and download configuration
+# To update: Change GHOSTTY_VERSION to latest from https://github.com/mkasberg/ghostty-ubuntu/releases
 readonly GHOSTTY_VERSION="1.2.3"
+readonly GHOSTTY_PPA_VERSION="0.ppa1"  # PPA build version (usually 0.ppa1)
 readonly GHOSTTY_UBUNTU_VERSION="25.10"
-readonly GHOSTTY_DEB_URL="https://github.com/mkasberg/ghostty-ubuntu/releases/download/${GHOSTTY_VERSION}-0-ppa1/ghostty_${GHOSTTY_VERSION}-0.ppa1_amd64_${GHOSTTY_UBUNTU_VERSION}.deb"
-readonly GHOSTTY_DEB_FILE="/tmp/ghostty_${GHOSTTY_VERSION}.deb"
+
+# Construct filenames (maintains consistency)
+readonly GHOSTTY_DEB_FILENAME="ghostty_${GHOSTTY_VERSION}-${GHOSTTY_PPA_VERSION}_amd64_${GHOSTTY_UBUNTU_VERSION}.deb"
+readonly GHOSTTY_DEB_URL="https://github.com/mkasberg/ghostty-ubuntu/releases/download/${GHOSTTY_VERSION}-0-ppa1/${GHOSTTY_DEB_FILENAME}"
+readonly GHOSTTY_DEB_FILE="/tmp/${GHOSTTY_DEB_FILENAME}"
 
 # Configuration directory
 readonly GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
@@ -29,5 +34,17 @@ get_ghostty_version() {
         ghostty --version 2>/dev/null | awk '{print $2}' || echo "unknown"
     else
         echo "none"
+    fi
+}
+
+# Get latest Ghostty version from GitHub releases
+get_latest_ghostty_version() {
+    # Query GitHub API for latest release
+    if command -v curl &>/dev/null; then
+        curl -s https://api.github.com/repos/mkasberg/ghostty-ubuntu/releases/latest \
+            | grep '"tag_name"' \
+            | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)-.*/\1/' 2>/dev/null || echo "unknown"
+    else
+        echo "unknown"
     fi
 }

@@ -28,7 +28,16 @@ main() {
         exit 0
     fi
 
+    # Check for updates
+    local latest_version
+    latest_version=$(get_latest_ghostty_version)
+    if [ "$latest_version" != "unknown" ] && [ "$latest_version" != "$GHOSTTY_VERSION" ]; then
+        log "WARNING" "Newer version available: $latest_version (installing $GHOSTTY_VERSION)"
+        log "WARNING" "Update GHOSTTY_VERSION in common.sh to get v$latest_version"
+    fi
+
     log "INFO" "Downloading Ghostty v${GHOSTTY_VERSION} for Ubuntu ${GHOSTTY_UBUNTU_VERSION}..."
+    log "INFO" "Filename: $GHOSTTY_DEB_FILENAME"
     log "INFO" "URL: $GHOSTTY_DEB_URL"
 
     # Download with wget -c (resume support)
