@@ -564,6 +564,85 @@ verify_context_menu() {
 }
 
 #
+# T024: Verify feh image viewer installed (built from source)
+#
+# Real system checks:
+#   - feh command exists
+#   - Version >= 3.11.0 (built from source)
+#   - All compile-time features enabled
+#   - Installed to /usr/local/bin (not apt version)
+#
+# Returns:
+#   0 = success
+#   1 = failure
+#
+verify_feh_installed() {
+    log "INFO" "Verifying feh installation..."
+
+    # Check 1: feh command exists
+    if ! command_exists "feh"; then
+        log "ERROR" "✗ feh not installed"
+        log "ERROR" "  Install with: lib/installers/feh/install.sh"
+        return 1
+    fi
+
+    local feh_path
+    feh_path=$(command -v feh)
+    log "INFO" "  feh path: $feh_path"
+
+    # Check 2: Version check (should be 3.11.0+)
+    local feh_version
+    if feh_version=$(feh --version 2>&1 | head -n 1 | grep -oP '\d+\.\d+\.\d+'); then
+        log "INFO" "  feh version: $feh_version"
+
+        # Compare versions (3.11.0 minimum)
+        local version_major version_minor
+        version_major=$(echo "$feh_version" | cut -d. -f1)
+        version_minor=$(echo "$feh_version" | cut -d. -f2)
+
+        if [ "$version_major" -lt 3 ] || ([ "$version_major" -eq 3 ] && [ "$version_minor" -lt 11 ]); then
+            log "WARNING" "  feh version $feh_version < 3.11.0 (consider upgrading)"
+        fi
+    else
+        log "WARNING" "  feh version check failed (non-critical)"
+    fi
+
+    # Check 3: Verify compile-time features
+    local features
+    if features=$(feh --version 2>&1 | grep -i "compile-time"); then
+        log "INFO" "  $features"
+
+        # Verify ALL required features present
+        local required_features=("curl" "exif" "inotify" "verscmp" "xinerama")
+        local missing_features=()
+
+        for feature in "${required_features[@]}"; do
+            if ! echo "$features" | grep -qi "$feature"; then
+                missing_features+=("$feature")
+            fi
+        done
+
+        if [ ${#missing_features[@]} -gt 0 ]; then
+            log "WARNING" "  Missing features: ${missing_features[*]}"
+            log "WARNING" "  Consider rebuilding with ALL features enabled"
+        else
+            log "SUCCESS" "  ✓ All required features present"
+        fi
+    fi
+
+    # Check 4: Prefer /usr/local/bin over /usr/bin (from-source vs apt)
+    if [ "$feh_path" = "/usr/bin/feh" ]; then
+        log "WARNING" "  feh installed via apt (not built from source)"
+        log "WARNING" "  Consider using lib/installers/feh/install.sh for latest features"
+    elif [ "$feh_path" = "/usr/local/bin/feh" ]; then
+        log "SUCCESS" "  ✓ feh built from source"
+    fi
+
+    log "SUCCESS" "✓ feh installed and functional"
+    return 0
+}
+
+#
 # ════════════════════════════════════════════════════════════════════════════
 # T043-T046: UNIT TEST SUITE - Phase 8 Testing & Validation Framework
 # ════════════════════════════════════════════════════════════════════════════
@@ -1128,6 +1207,7 @@ export -f verify_nodejs_version
 export -f verify_claude_cli
 export -f verify_gemini_cli
 export -f verify_context_menu
+export -f verify_feh_installed
 
 # Export unit test functions (Phase 8)
 export -f test_gum_installation

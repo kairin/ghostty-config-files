@@ -56,6 +56,7 @@ source "${LIB_DIR}/tasks/python_uv.sh"
 source "${LIB_DIR}/tasks/nodejs_fnm.sh"
 source "${LIB_DIR}/tasks/ai_tools.sh"
 source "${LIB_DIR}/tasks/context_menu.sh"
+source "${LIB_DIR}/tasks/feh.sh"
 source "${LIB_DIR}/tasks/app_audit.sh"
 source "${LIB_DIR}/verification/duplicate_detection.sh"
 source "${LIB_DIR}/verification/unit_tests.sh"
@@ -103,6 +104,9 @@ readonly TASK_REGISTRY=(
 
     # Context Menu Integration (3 steps: Nautilus right-click menu)
     "install-context-menu|install-ghostty|script:lib/installers/context_menu/install.sh|verify_context_menu|3|20"
+
+    # Feh Image Viewer (5 steps: build from source with ALL features)
+    "install-feh|verify-prereqs|script:lib/installers/feh/install.sh|verify_feh_installed|2|130"
 
     # ═══════════════════════════════════════════════════════════════
     # Priority 5: App Audit (Final validation)
