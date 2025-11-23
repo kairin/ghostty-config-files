@@ -375,6 +375,24 @@ task_pre_installation_audit() {
     log "INFO" "════════════════════════════════════════"
     echo ""
 
+    # Display system information using fastfetch (if available)
+    if command_exists "fastfetch"; then
+        log "INFO" "System Information:"
+        echo ""
+
+        # Run fastfetch with minimal output (key system info only)
+        if command_exists "gum"; then
+            # Beautiful bordered output with gum
+            fastfetch --pipe --logo none --structure Title:Separator:OS:Host:Kernel:Uptime:Packages:Shell:CPU:GPU:Memory:Disk 2>/dev/null | \
+                gum style --border rounded --border-foreground 6 --padding "0 1" --width 80 || \
+                fastfetch --logo none --structure Title:Separator:OS:Host:Kernel:Uptime:Packages:Shell:CPU:GPU:Memory:Disk 2>/dev/null
+        else
+            # Plain output without gum
+            fastfetch --logo none --structure Title:Separator:OS:Host:Kernel:Uptime:Packages:Shell:CPU:GPU:Memory:Disk 2>/dev/null
+        fi
+        echo ""
+    fi
+
     log "INFO" "Scanning current system state..."
     echo ""
 
@@ -386,6 +404,9 @@ task_pre_installation_audit() {
 
     # Note: Enhanced format includes APT and source versions
     # Format: name|current|path|method|min_required|apt_avail|source_latest|status
+
+    # fastfetch System Info Tool
+    audit_data+=("$(detect_app_status_enhanced "fastfetch" "fastfetch" "fastfetch --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "2.0.0" "fastfetch" "fastfetch")")
 
     # Gum TUI Framework (built from source)
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
@@ -458,8 +479,8 @@ task_pre_installation_audit() {
         log "INFO" "Current System State:"
         echo ""
 
-        # Create table header (simplified for basic view - only first 6 fields)
-        local table_header="App/Tool|Current Version|Path|Method|Min Required|Action"
+        # Create table header with clearer labels
+        local table_header="App/Tool|Current Version|Path|Install Source|Min Version|Status"
 
         # Combine header + data (extract first 6 fields only)
         {
@@ -479,7 +500,7 @@ task_pre_installation_audit() {
         log "INFO" "Current System State (install gum for better formatting):"
         echo ""
         printf "%-20s %-20s %-35s %-15s %-18s %-10s\n" \
-            "App/Tool" "Current Version" "Path" "Method" "Min Required" "Action"
+            "App/Tool" "Current Version" "Path" "Install Source" "Min Version" "Status"
         printf "%-20s %-20s %-35s %-15s %-18s %-10s\n" \
             "--------------------" "--------------------" "-----------------------------------" "---------------" "------------------" "----------"
 
@@ -580,6 +601,7 @@ task_pre_installation_audit() {
 # Maps app names to their GitHub repositories for version checking
 #
 declare -gA SOURCE_REPOS=(
+    ["fastfetch"]="fastfetch-cli/fastfetch"
     ["gum"]="charmbracelet/gum"
     ["glow"]="charmbracelet/glow"
     ["vhs"]="charmbracelet/vhs"
@@ -1017,6 +1039,7 @@ display_installation_strategy_groups() {
 
     # Group tools by installation strategy
     local -a npm_tools=()
+    local -a curl_installer_tools=()
     local -a apt_tools=()
     local -a source_tools=()
     local -a other_tools=()
@@ -1029,12 +1052,26 @@ display_installation_strategy_groups() {
         local strategy=""
         local reason=""
 
+        # Check if it's a Snap package first
+        if [ "$method" = "snap" ]; then
+            reason="Snap: ${source_latest:-latest} (Universal Linux package)"
+            other_tools+=("${app_name}|${current_ver}|N/A|${source_latest}|${reason}")
+        # Check if it's a curl-based installer
+        elif [ "$app_name" = "fnm" ]; then
+            reason="fnm.vercel.app::curl -fsSL fnm.vercel.app/install"
+            curl_installer_tools+=("${app_name}|${current_ver}|${reason}")
+        elif [ "$app_name" = "Python UV" ]; then
+            reason="astral.sh/uv::curl -LsSf astral.sh/uv/install.sh"
+            curl_installer_tools+=("${app_name}|${current_ver}|${reason}")
+        elif [ "$app_name" = "Oh My ZSH" ]; then
+            reason="ohmyz.sh::sh -c \$(curl -fsSL ohmyz.sh/install)"
+            curl_installer_tools+=("${app_name}|${current_ver}|${reason}")
         # Check if it's npm/fnm managed
-        if [ "$method" = "npm" ] || [ "$app_name" = "fnm" ] || [ "$app_name" = "Node.js" ]; then
-            if [ "$app_name" = "fnm" ]; then
-                reason="Node.js version manager"
-            elif [ "$app_name" = "Node.js" ]; then
+        elif [ "$method" = "npm" ] || [ "$app_name" = "Node.js" ] || [ "$app_name" = "npm" ]; then
+            if [ "$app_name" = "Node.js" ]; then
                 reason="Managed by fnm"
+            elif [ "$app_name" = "npm" ]; then
+                reason="Installed with Node.js via fnm"
             else
                 reason="Global npm package"
             fi
@@ -1069,9 +1106,39 @@ display_installation_strategy_groups() {
         fi
     done
 
-    # Display Group 1: Node.js Ecosystem (npm/fnm)
+    # Display Group 1: Official curl Installers
+    if [ ${#curl_installer_tools[@]} -gt 0 ]; then
+        log "INFO" "🌐 Group 1: Official curl-Based Installers"
+        log "INFO" "Tools installed via official curl installation scripts"
+        echo ""
+
+        if command_exists "gum"; then
+            {
+                echo "Tool|Current Ver|Official Source|Installation Command"
+                for row in "${curl_installer_tools[@]}"; do
+                    IFS='|' read -r name ver reason <<< "$row"
+                    # Split on :: delimiter
+                    source="${reason%%::*}"
+                    cmd="${reason#*::}"
+                    echo "${name}|${ver}|${source}|${cmd}"
+                done
+            } | gum table --separator "|" --border rounded --border.foreground "5" --height 0 --print
+        else
+            printf "%-15s | %-15s | %-15s | %-15s | %-80s\n" \
+                "Tool" "Current Ver" "APT Available" "Source Latest" "Official Installation Command"
+            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+            for row in "${curl_installer_tools[@]}"; do
+                IFS='|' read -r name ver apt src reason <<< "$row"
+                printf "%-15s | %-15s | %-15s | %-15s | %-80s\n" \
+                    "$name" "$ver" "$apt" "$src" "$reason"
+            done
+        fi
+        echo ""
+    fi
+
+    # Display Group 2: Node.js Ecosystem (npm/fnm)
     if [ ${#npm_tools[@]} -gt 0 ]; then
-        log "INFO" "📦 Group 1: Node.js Ecosystem (npm/fnm)"
+        log "INFO" "📦 Group 2: Node.js Ecosystem (npm/fnm)"
         log "INFO" "Tools managed by Node.js package manager or fnm"
         echo ""
 
@@ -1093,9 +1160,9 @@ display_installation_strategy_groups() {
         echo ""
     fi
 
-    # Display Group 2: APT Packages (good enough versions)
+    # Display Group 3: APT Packages (good enough versions)
     if [ ${#apt_tools[@]} -gt 0 ]; then
-        log "INFO" "📦 Group 2: APT Packages (Recommended)"
+        log "INFO" "📦 Group 3: APT Packages (Recommended)"
         log "INFO" "Tools with good enough versions available via APT"
         echo ""
 
@@ -1117,9 +1184,9 @@ display_installation_strategy_groups() {
         echo ""
     fi
 
-    # Display Group 3: Build from Source (best versions)
+    # Display Group 4: Build from Source (best versions)
     if [ ${#source_tools[@]} -gt 0 ]; then
-        log "INFO" "🔨 Group 3: Build from Source (Best Versions)"
+        log "INFO" "🔨 Group 4: Build from Source (Best Versions)"
         log "INFO" "Tools requiring source build for optimal versions"
         echo ""
 
@@ -1141,10 +1208,10 @@ display_installation_strategy_groups() {
         echo ""
     fi
 
-    # Display Group 4: Other/Custom
+    # Display Group 5: Snap Packages & Custom Installations
     if [ ${#other_tools[@]} -gt 0 ]; then
-        log "INFO" "⚙️  Group 4: Custom Installations"
-        log "INFO" "Tools with specialized installation requirements"
+        log "INFO" "⚙️  Group 5: Snap Packages & Custom Installations"
+        log "INFO" "Tools installed via Snap or specialized methods"
         echo ""
 
         if command_exists "gum"; then
