@@ -37,12 +37,20 @@ last-updated: 2025-11-21
   - Installation: `~/.local/share/ghostty/` (modular installer: `lib/installers/ghostty/`)
   - Build time: ~5-10 minutes
 
-- **Feh Image Viewer**: Built from source (latest stable)
+- **Feh Image Viewer**: Built from source (latest stable) with ALL features enabled
   - Repository: https://github.com/derf/feh
-  - Build method: GNU Make with feature flags (`make curl=1 exif=1 inotify=1 xinerama=1`)
+  - Build method: GNU Make with ALL feature flags enabled
+    - `curl=1` - HTTPS image loading
+    - `exif=1` - EXIF metadata display
+    - `help=1` - Built-in help text
+    - `inotify=1` - Auto-reload on file changes
+    - `magic=1` - libmagic file type detection
+    - `xinerama=1` - Multi-monitor support
+    - `verscmp=1` - Version comparison support
+    - `mkstemps=1` - Secure temp file handling
   - Installation: `/usr/local/` (modular installer: `lib/installers/feh/`)
   - Build time: ~2-5 minutes
-  - Rationale: Latest features, EXIF support, inotify auto-reload, HTTPS image loading
+  - Rationale: Maximum versatility with all available features for professional image viewing
   - Configuration preservation: Custom themes (`~/.config/feh/themes`) and desktop file preserved
 
 ### Package Managers & Runtime Tools
