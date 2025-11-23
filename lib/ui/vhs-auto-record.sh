@@ -163,7 +163,7 @@ generate_vhs_tape() {
 # Script: ${script_path}
 
 # Output Configuration
-Output ${output_file}
+Output "${output_file}"
 Set Shell "bash"
 Set FontSize 14
 Set Width 1400
