@@ -12,6 +12,7 @@ video/*.webm
 # Exclude installation logs (generated on each run)
 installation/*.log
 installation/*.json
+installation/*.md
 
 # Exclude component logs (generated on each run)
 components/*.log
