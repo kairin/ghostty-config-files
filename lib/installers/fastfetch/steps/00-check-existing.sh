@@ -5,7 +5,7 @@
 # Exit Codes: 0=success (found or not found), non-zero=error
 #
 
-set -euo pipefail
+set -eo pipefail
 
 # Source common functions
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -4,7 +4,7 @@
 # Purpose: Shared utilities for fastfetch installation steps
 #
 
-set -euo pipefail
+set -eo pipefail
 
 # Source core libraries if not already sourced
 if [ -z "${REPO_ROOT:-}" ]; then
