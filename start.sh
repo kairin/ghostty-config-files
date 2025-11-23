@@ -57,6 +57,8 @@ source "${LIB_DIR}/tasks/nodejs_fnm.sh"
 source "${LIB_DIR}/tasks/ai_tools.sh"
 source "${LIB_DIR}/tasks/context_menu.sh"
 source "${LIB_DIR}/tasks/feh.sh"
+source "${LIB_DIR}/tasks/glow.sh"
+source "${LIB_DIR}/tasks/vhs.sh"
 source "${LIB_DIR}/tasks/app_audit.sh"
 source "${LIB_DIR}/tasks/system_audit.sh"
 source "${LIB_DIR}/verification/duplicate_detection.sh"
@@ -109,10 +111,16 @@ readonly TASK_REGISTRY=(
     # Feh Image Viewer (5 steps: build from source with ALL features)
     "install-feh|verify-prereqs|script:lib/installers/feh/install.sh|verify_feh_installed|2|130"
 
+    # Glow Markdown Viewer (3 steps: Charm ecosystem, markdown display)
+    "install-glow|install-gum|script:lib/installers/glow/install.sh|verify_glow_installed|2|30"
+
+    # VHS Terminal Recorder (5 steps: ffmpeg, ttyd, VHS, demo generation)
+    "install-vhs|install-glow|script:lib/installers/vhs/install.sh|verify_vhs_installed|3|85"
+
     # ═══════════════════════════════════════════════════════════════
     # Priority 5: App Audit (Final validation)
     # ═══════════════════════════════════════════════════════════════
-    "run-app-audit|install-ai-tools,install-context-menu|task_run_app_audit|verify_app_audit_report|5|20"
+    "run-app-audit|install-ai-tools,install-context-menu,install-vhs|task_run_app_audit|verify_app_audit_report|5|20"
 )
 
 # ═════════════════════════════════════════════════════════════
@@ -477,6 +485,8 @@ main() {
             install-ai-tools)      display_name="Installing AI CLI Tools" ;;
             install-context-menu)  display_name="Installing Context Menu Integration" ;;
             install-feh)           display_name="Installing Feh Image Viewer" ;;
+            install-glow)          display_name="Installing Glow Markdown Viewer" ;;
+            install-vhs)           display_name="Installing VHS Terminal Recorder" ;;
             run-app-audit)         display_name="Running Application Audit" ;;
             *)                     display_name="$(echo "$task_id" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g')" ;;
         esac

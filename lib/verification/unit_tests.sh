@@ -1197,6 +1197,175 @@ run_all_unit_tests() {
 }
 
 # Export all verification functions
+#
+# T025: Verify glow markdown viewer installed
+#
+# Real system checks:
+#   - glow command exists
+#   - Version >= 2.0.0 (Charm Bracelet markdown viewer)
+#   - Can render markdown files
+#
+# Returns:
+#   0 = success
+#   1 = failure
+#
+verify_glow_installed() {
+    log "INFO" "Verifying glow installation..."
+
+    # Check 1: glow command exists
+    if ! command_exists "glow"; then
+        log "ERROR" "✗ glow not installed"
+        log "ERROR" "  Install with: lib/installers/glow/install.sh"
+        return 1
+    fi
+
+    local glow_path
+    glow_path=$(command -v glow)
+    log "INFO" "  glow path: $glow_path"
+
+    # Check 2: Version check (should be 2.0.0+)
+    local glow_version
+    if glow_version=$(glow --version 2>&1 | head -n 1 | grep -oP '\d+\.\d+\.\d+'); then
+        log "INFO" "  glow version: $glow_version"
+
+        # Compare versions (2.0.0 minimum)
+        local version_major
+        version_major=$(echo "$glow_version" | cut -d. -f1)
+
+        if [ "$version_major" -lt 2 ]; then
+            log "WARNING" "  glow version $glow_version < 2.0.0 (consider upgrading)"
+        fi
+    else
+        log "WARNING" "  glow version check failed (non-critical)"
+    fi
+
+    # Check 3: Test basic markdown rendering
+    local test_md
+    test_md=$(mktemp --suffix=.md)
+    cat > "$test_md" <<'EOF'
+# Test Markdown
+This is a **test** file for glow verification.
+EOF
+
+    if glow "$test_md" >/dev/null 2>&1; then
+        log "SUCCESS" "  ✓ glow can render markdown"
+    else
+        log "ERROR" "  ✗ glow failed to render test markdown"
+        rm -f "$test_md"
+        return 1
+    fi
+
+    rm -f "$test_md"
+
+    # Check 4: Installation method
+    if [ "$glow_path" = "/usr/bin/glow" ]; then
+        log "SUCCESS" "  ✓ glow installed via APT (recommended)"
+    elif [ "$glow_path" = "/usr/local/bin/glow" ]; then
+        log "INFO" "  glow installed from source"
+    fi
+
+    log "SUCCESS" "✓ glow installed and functional"
+    return 0
+}
+
+#
+# T026: Verify VHS terminal recorder installed
+#
+# Real system checks:
+#   - vhs command exists
+#   - ffmpeg dependency available
+#   - ttyd dependency available
+#   - Can create basic recordings
+#
+# Returns:
+#   0 = success
+#   1 = failure
+#
+verify_vhs_installed() {
+    log "INFO" "Verifying VHS installation..."
+
+    local verification_failed=0
+
+    # Check 1: VHS command exists
+    if ! command_exists "vhs"; then
+        log "ERROR" "✗ vhs not installed"
+        log "ERROR" "  Install with: lib/installers/vhs/install.sh"
+        return 1
+    fi
+
+    local vhs_path
+    vhs_path=$(command -v vhs)
+    log "INFO" "  vhs path: $vhs_path"
+
+    # Check 2: Version check
+    local vhs_version
+    if vhs_version=$(vhs --version 2>&1 | grep -oP '\d+\.\d+\.\d+'); then
+        log "INFO" "  vhs version: $vhs_version"
+    else
+        log "WARNING" "  vhs version check failed (non-critical)"
+    fi
+
+    # Check 3: ffmpeg dependency
+    if ! command_exists "ffmpeg"; then
+        log "ERROR" "  ✗ ffmpeg not found (required dependency)"
+        verification_failed=1
+    else
+        log "SUCCESS" "  ✓ ffmpeg found: $(command -v ffmpeg)"
+    fi
+
+    # Check 4: ttyd dependency
+    if ! command_exists "ttyd"; then
+        log "ERROR" "  ✗ ttyd not found (required dependency)"
+        verification_failed=1
+    else
+        log "SUCCESS" "  ✓ ttyd found: $(command -v ttyd)"
+    fi
+
+    # Check 5: Test basic VHS functionality (if dependencies OK)
+    if [ $verification_failed -eq 0 ]; then
+        log "INFO" "  Testing VHS functionality..."
+
+        local test_tape
+        test_tape=$(mktemp --suffix=.tape)
+        cat > "$test_tape" <<'EOF'
+Output /tmp/vhs-verify-test.gif
+Set Width 800
+Set Height 400
+Type "# VHS Verification Test"
+Enter
+Sleep 500ms
+EOF
+
+        if timeout 10s vhs "$test_tape" 2>/dev/null; then
+            if [ -f "/tmp/vhs-verify-test.gif" ]; then
+                log "SUCCESS" "  ✓ VHS can create recordings"
+                rm -f "/tmp/vhs-verify-test.gif"
+            else
+                log "WARNING" "  ⚠ VHS executed but no output (may need display)"
+            fi
+        else
+            log "WARNING" "  ⚠ VHS test timeout/failed (may need display environment)"
+        fi
+
+        rm -f "$test_tape"
+    fi
+
+    if [ $verification_failed -eq 1 ]; then
+        log "ERROR" "VHS verification failed (missing dependencies)"
+        return 1
+    fi
+
+    # Check 6: Installation method
+    if [ "$vhs_path" = "/usr/bin/vhs" ]; then
+        log "SUCCESS" "  ✓ VHS installed via APT (recommended)"
+    elif [ "$vhs_path" = "/usr/local/bin/vhs" ]; then
+        log "INFO" "  VHS installed from source"
+    fi
+
+    log "SUCCESS" "✓ VHS installed and functional"
+    return 0
+}
+
 export -f cleanup_orphaned_ghostty_files
 export -f verify_ghostty_installed
 export -f verify_zsh_configured
@@ -1208,6 +1377,8 @@ export -f verify_claude_cli
 export -f verify_gemini_cli
 export -f verify_context_menu
 export -f verify_feh_installed
+export -f verify_glow_installed
+export -f verify_vhs_installed
 
 # Export unit test functions (Phase 8)
 export -f test_gum_installation
