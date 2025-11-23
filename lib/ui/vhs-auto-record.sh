@@ -86,19 +86,19 @@ is_under_vhs() {
 # Check if VHS auto-recording is enabled
 #
 # Respects VHS_AUTO_RECORD environment variable.
-# Default: enabled (true)
+# Default: DISABLED (false) - opt-in for demo recording
 #
 # Returns:
 #   0 - Auto-recording enabled
 #   1 - Auto-recording disabled
 #
 is_vhs_auto_record_enabled() {
-    # Check if explicitly disabled
-    if [[ "${VHS_AUTO_RECORD:-true}" == "false" ]]; then
-        return 1
+    # Check if explicitly enabled
+    if [[ "${VHS_AUTO_RECORD:-false}" == "true" ]]; then
+        return 0
     fi
 
-    return 0
+    return 1
 }
 
 # ═══════════════════════════════════════════════════════════════
