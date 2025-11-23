@@ -29,9 +29,8 @@ main() {
     start_task "$task_id"
 
     log "INFO" "Cloning feh repository to $FEH_BUILD_DIR..."
-    echo "  Repository: $FEH_REPO"
-    echo "  Build directory: $FEH_BUILD_DIR"
-    echo ""
+    log "INFO" "Repository: $FEH_REPO"
+    log "INFO" "Build directory: $FEH_BUILD_DIR"
 
     # Remove existing build directory if present
     if [ -d "$FEH_BUILD_DIR" ]; then

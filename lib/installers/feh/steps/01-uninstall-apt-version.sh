@@ -22,7 +22,6 @@ main() {
     start_task "$task_id"
 
     log "INFO" "Checking for APT-installed feh..."
-    echo ""
 
     # Check if feh is installed via apt
     if ! is_feh_apt_installed; then
@@ -34,7 +33,6 @@ main() {
     local current_version
     current_version=$(get_feh_version)
     log "INFO" "Found APT-installed feh version: $current_version"
-    echo ""
 
     # Uninstall via apt
     log "INFO" "Uninstalling APT version to replace with build-from-source..."

@@ -40,14 +40,21 @@ main() {
         exit 1
     }
 
-    log "INFO" "Building feh..."
-    echo "  Build directory: $FEH_BUILD_DIR"
-    echo "  Build flags: curl=1 exif=1 inotify=1 xinerama=1"
-    echo "  This will take 2-5 minutes..."
-    echo ""
+    log "INFO" "Building feh with ALL features enabled..."
+    log "INFO" "Build directory: $FEH_BUILD_DIR"
+    log "INFO" "Build flags (ALL FEATURES):"
+    log "INFO" "  - curl=1      (HTTPS image loading)"
+    log "INFO" "  - exif=1      (EXIF metadata display)"
+    log "INFO" "  - help=1      (Built-in help text)"
+    log "INFO" "  - inotify=1   (Auto-reload on file changes)"
+    log "INFO" "  - magic=1     (libmagic file type detection)"
+    log "INFO" "  - xinerama=1  (Multi-monitor support)"
+    log "INFO" "  - verscmp=1   (Version comparison support)"
+    log "INFO" "  - mkstemps=1  (Secure temp files)"
+    log "INFO" "This will take 2-5 minutes..."
 
-    # Build with recommended flags (following feh README)
-    if run_command_streaming "$task_id" make curl=1 exif=1 inotify=1 xinerama=1; then
+    # Build with ALL features enabled for maximum versatility
+    if run_command_streaming "$task_id" make curl=1 exif=1 help=1 inotify=1 magic=1 xinerama=1 verscmp=1 mkstemps=1; then
         log "SUCCESS" "Build completed"
         complete_task "$task_id"
         exit 0
