@@ -30,20 +30,14 @@ source "${INSTALL_CHECK_DIR}/utils.sh"
 #   2 = installed but outdated
 #
 check_ghostty_installed() {
-    local ghostty_bin="/home/kkk/.local/share/ghostty/bin/ghostty"
-
-    # Check if binary exists
-    if [ ! -f "$ghostty_bin" ]; then
-        return 1  # Not installed
+    # Use command -v to detect Ghostty regardless of installation location
+    # This works for both Snap installations (/usr/bin/ghostty) and
+    # manual builds (~/.local/share/ghostty/bin/ghostty)
+    if command -v ghostty >/dev/null 2>&1; then
+        return 0  # Installed and in PATH
     fi
 
-    # Check if executable
-    if [ ! -x "$ghostty_bin" ]; then
-        return 1  # Binary exists but not executable
-    fi
-
-    # Binary exists and is executable
-    return 0  # Installed
+    return 1  # Not installed
 }
 
 #
