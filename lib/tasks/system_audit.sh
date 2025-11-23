@@ -487,6 +487,9 @@ task_pre_installation_audit() {
     log "INFO" "════════════════════════════════════════"
     echo ""
 
+    # Display tools grouped by installation strategy
+    display_installation_strategy_groups "${audit_data[@]}"
+
     # Display enhanced version analysis
     display_version_analysis "${audit_data[@]}"
 
@@ -939,6 +942,180 @@ detect_app_status_enhanced() {
 }
 
 #
+# Display installation strategy groups
+#
+# Groups tools by their optimal installation method:
+# 1. npm/fnm (Node.js ecosystem)
+# 2. APT (good enough versions available)
+# 3. Source (best versions require building from source)
+# 4. Shows current system version clearly
+#
+# Args:
+#   $@ - Array of enhanced audit data (pipe-delimited strings with 8 fields)
+#
+display_installation_strategy_groups() {
+    local -a audit_data=("$@")
+
+    log "INFO" "════════════════════════════════════════"
+    log "INFO" "Installation Strategy by Tool Category"
+    log "INFO" "════════════════════════════════════════"
+    echo ""
+
+    # Group tools by installation strategy
+    local -a npm_tools=()
+    local -a apt_tools=()
+    local -a source_tools=()
+    local -a other_tools=()
+
+    # Categorize each tool
+    for data in "${audit_data[@]}"; do
+        IFS='|' read -r app_name current_ver path method min_required apt_avail source_latest status <<< "$data"
+
+        # Determine optimal installation strategy
+        local strategy=""
+        local reason=""
+
+        # Check if it's npm/fnm managed
+        if [ "$method" = "npm" ] || [ "$app_name" = "fnm" ] || [ "$app_name" = "Node.js" ]; then
+            if [ "$app_name" = "fnm" ]; then
+                reason="Node.js version manager"
+            elif [ "$app_name" = "Node.js" ]; then
+                reason="Managed by fnm"
+            else
+                reason="Global npm package"
+            fi
+            npm_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+        # Check if APT version is sufficient
+        elif [ "$apt_avail" != "N/A" ] && [ "$apt_avail" != "unknown" ]; then
+            # Compare APT vs Source to determine best strategy
+            if [ "$source_latest" != "N/A" ] && [ "$source_latest" != "unknown" ]; then
+                # If source is significantly newer, recommend source
+                local apt_major=$(echo "$apt_avail" | cut -d. -f1 2>/dev/null || echo "0")
+                local src_major=$(echo "$source_latest" | cut -d. -f1 2>/dev/null || echo "0")
+
+                if [ "$src_major" != "$apt_major" ] && [ "$src_major" -gt "$apt_major" ] 2>/dev/null; then
+                    reason="Source: $source_latest (APT: $apt_avail - major version upgrade)"
+                    source_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+                else
+                    reason="APT: $apt_avail sufficient (Source: $source_latest)"
+                    apt_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+                fi
+            else
+                reason="APT: $apt_avail (recommended)"
+                apt_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+            fi
+        # Must build from source
+        elif [ "$source_latest" != "N/A" ] && [ "$source_latest" != "unknown" ]; then
+            reason="Source: $source_latest (APT not available)"
+            source_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+        else
+            # Other/custom installation
+            reason="Custom installation"
+            other_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+        fi
+    done
+
+    # Display Group 1: Node.js Ecosystem (npm/fnm)
+    if [ ${#npm_tools[@]} -gt 0 ]; then
+        log "INFO" "📦 Group 1: Node.js Ecosystem (npm/fnm)"
+        log "INFO" "Tools managed by Node.js package manager or fnm"
+        echo ""
+
+        if command_exists "gum"; then
+            {
+                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
+                printf '%s\n' "${npm_tools[@]}"
+            } | gum table --separator "|" --border rounded --border.foreground "4" --height 0 --print
+        else
+            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
+            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
+            for row in "${npm_tools[@]}"; do
+                IFS='|' read -r name ver apt src reason <<< "$row"
+                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                    "$name" "$ver" "$apt" "$src" "$reason"
+            done
+        fi
+        echo ""
+    fi
+
+    # Display Group 2: APT Packages (good enough versions)
+    if [ ${#apt_tools[@]} -gt 0 ]; then
+        log "INFO" "📦 Group 2: APT Packages (Recommended)"
+        log "INFO" "Tools with good enough versions available via APT"
+        echo ""
+
+        if command_exists "gum"; then
+            {
+                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
+                printf '%s\n' "${apt_tools[@]}"
+            } | gum table --separator "|" --border rounded --border.foreground "2" --height 0 --print
+        else
+            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
+            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
+            for row in "${apt_tools[@]}"; do
+                IFS='|' read -r name ver apt src reason <<< "$row"
+                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                    "$name" "$ver" "$apt" "$src" "$reason"
+            done
+        fi
+        echo ""
+    fi
+
+    # Display Group 3: Build from Source (best versions)
+    if [ ${#source_tools[@]} -gt 0 ]; then
+        log "INFO" "🔨 Group 3: Build from Source (Best Versions)"
+        log "INFO" "Tools requiring source build for optimal versions"
+        echo ""
+
+        if command_exists "gum"; then
+            {
+                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
+                printf '%s\n' "${source_tools[@]}"
+            } | gum table --separator "|" --border rounded --border.foreground "3" --height 0 --print
+        else
+            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
+            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
+            for row in "${source_tools[@]}"; do
+                IFS='|' read -r name ver apt src reason <<< "$row"
+                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                    "$name" "$ver" "$apt" "$src" "$reason"
+            done
+        fi
+        echo ""
+    fi
+
+    # Display Group 4: Other/Custom
+    if [ ${#other_tools[@]} -gt 0 ]; then
+        log "INFO" "⚙️  Group 4: Custom Installations"
+        log "INFO" "Tools with specialized installation requirements"
+        echo ""
+
+        if command_exists "gum"; then
+            {
+                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
+                printf '%s\n' "${other_tools[@]}"
+            } | gum table --separator "|" --border rounded --border.foreground "5" --height 0 --print
+        else
+            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
+            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
+            for row in "${other_tools[@]}"; do
+                IFS='|' read -r name ver apt src reason <<< "$row"
+                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
+                    "$name" "$ver" "$apt" "$src" "$reason"
+            done
+        fi
+        echo ""
+    fi
+
+    log "INFO" "════════════════════════════════════════"
+    echo ""
+}
+
+#
 # Display version analysis table
 #
 # Args:
@@ -1274,4 +1451,5 @@ export -f detect_apt_version
 export -f detect_source_version
 export -f generate_recommendation
 export -f detect_app_status_enhanced
+export -f display_installation_strategy_groups
 export -f display_version_analysis
