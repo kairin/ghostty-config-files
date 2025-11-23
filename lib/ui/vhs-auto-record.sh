@@ -172,11 +172,9 @@ Set Theme "Catppuccin Mocha"
 Set TypingSpeed 50ms
 
 # Set marker environment variable so script knows it's under VHS
-Env VHS_RECORDING "true"
-Env VHS_OUTPUT "${output_file}"
-
-# Execute the script
-Type "${cmd}"
+# Note: We set VHS_RECORDING in the command itself for reliable detection
+# Execute the script with VHS_RECORDING environment variable
+Type "VHS_RECORDING=true VHS_OUTPUT='${output_file}' ${cmd}"
 Sleep 500ms
 Enter
 
