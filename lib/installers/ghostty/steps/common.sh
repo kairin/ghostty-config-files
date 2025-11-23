@@ -1,34 +1,58 @@
 #!/usr/bin/env bash
 #
-# Module: Ghostty Common
-# Purpose: Shared variables and functions for Ghostty tasks
+# Common utilities for Ghostty Snap installation
 #
 set -euo pipefail
 
-# Source core libraries if not already sourced
-if [ -z "${REPO_ROOT:-}" ]; then
-    source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
-fi
+# Ghostty Snap package name
+readonly GHOSTTY_SNAP_NAME="ghostty"
 
-# Installation constants
-export GHOSTTY_REPO="https://github.com/ghostty-org/ghostty.git"
-export GHOSTTY_BUILD_DIR="/tmp/ghostty-build"
-export GHOSTTY_INSTALL_DIR="${GHOSTTY_APP_DIR:-$HOME/.local/share/ghostty}"
-export ZIG_MIN_VERSION="0.15.2"
-export ZIG_DOWNLOAD_URL="https://ziglang.org/download/${ZIG_MIN_VERSION}/zig-x86_64-linux-${ZIG_MIN_VERSION}.tar.xz"
-export ZIG_INSTALL_DIR="/tmp/zig-bootstrap"
-export ZIG_LINK_NAME="zig"
+# Configuration directory
+readonly GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 
-# Add Zig to PATH
-if [ -d "$ZIG_INSTALL_DIR" ]; then
-    export PATH="$ZIG_INSTALL_DIR:$PATH"
-fi
+# Check if Ghostty is installed via Snap
+is_ghostty_installed() {
+    snap list 2>/dev/null | grep -q "^${GHOSTTY_SNAP_NAME}\s"
+}
 
-# Helper function to get Zig version
-get_zig_version() {
-    if command_exists "zig"; then
-        zig version 2>&1 | head -n 1
+# Get installed Ghostty version from Snap
+get_ghostty_version() {
+    if is_ghostty_installed; then
+        snap list "${GHOSTTY_SNAP_NAME}" 2>/dev/null | awk 'NR==2 {print $2}'
     else
         echo "none"
     fi
+}
+
+# Get latest available Ghostty version from Snap store
+get_ghostty_latest_version() {
+    snap info "${GHOSTTY_SNAP_NAME}" 2>/dev/null | grep "^latest/stable:" | awk '{print $2}' || echo "unknown"
+}
+
+# Check if Ghostty update is available
+is_ghostty_update_available() {
+    local current_version
+    local latest_version
+
+    current_version=$(get_ghostty_version)
+    latest_version=$(get_ghostty_latest_version)
+
+    if [ "$current_version" = "none" ]; then
+        return 0  # Not installed, so "update" means install
+    fi
+
+    if [ "$current_version" != "$latest_version" ] && [ "$latest_version" != "unknown" ]; then
+        return 0  # Update available
+    fi
+
+    return 1  # Already latest
+}
+
+# Check if there's a manual Ghostty installation to clean up
+has_manual_ghostty_installation() {
+    # Check for manually built Ghostty in common locations
+    if [ -f "/usr/local/bin/ghostty" ] || [ -f "$HOME/.local/bin/ghostty" ] || [ -d "$HOME/Apps/ghostty" ]; then
+        return 0
+    fi
+    return 1
 }

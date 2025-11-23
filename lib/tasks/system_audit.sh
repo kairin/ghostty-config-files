@@ -313,6 +313,57 @@ EOF
 }
 
 #
+# Detect Snap package status for audit table
+#
+# Args:
+#   $1 - Display name (e.g., "Ghostty Terminal")
+#   $2 - Snap package name (e.g., "ghostty")
+#   $3 - Minimum required version (typically "latest" or specific version)
+#
+# Returns:
+#   Pipe-delimited string: "Name|Version|Path|Method|MinReq|AptAvail|SnapLatest|Status"
+#
+detect_snap_package_status() {
+    local display_name="$1"
+    local snap_package="$2"
+    local min_required="${3:-latest}"
+
+    local installed_version="not installed"
+    local install_path="N/A"
+    local install_method="missing"
+    local snap_latest="N/A"
+    local status="INSTALL"
+
+    # Check if snap is installed
+    if ! command_exists "snap"; then
+        # Snap not available on system
+        echo "${display_name}|${installed_version}|${install_path}|${install_method}|${min_required}|N/A|${snap_latest}|${status}"
+        return 0
+    fi
+
+    # Check if package is installed
+    if snap list "$snap_package" >/dev/null 2>&1; then
+        # Get installed version
+        installed_version=$(snap list "$snap_package" 2>/dev/null | awk 'NR==2 {print $2}' || echo "unknown")
+        install_path="/snap/bin/$snap_package"
+        install_method="snap"
+
+        # Determine status
+        if [ "$installed_version" != "unknown" ]; then
+            status="OK"
+        fi
+    fi
+
+    # Try to get latest version from snap store
+    if snap info "$snap_package" >/dev/null 2>&1; then
+        snap_latest=$(snap info "$snap_package" 2>/dev/null | grep -oP 'latest/stable:\s+\K[\d.]+' | head -1 || echo "N/A")
+    fi
+
+    # Format: Name|Version|Path|Method|MinReq|AptAvail|SnapLatest|Status
+    echo "${display_name}|${installed_version}|${install_path}|${install_method}|${min_required}|N/A|${snap_latest}|${status}"
+}
+
+#
 # Display pre-installation system audit table (enhanced with version analysis)
 #
 # Shows current state of all apps that will be installed
@@ -339,11 +390,8 @@ task_pre_installation_audit() {
     # Gum TUI Framework (built from source)
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
 
-    # Zig Compiler (Ghostty dependency)
-    audit_data+=("$(detect_app_status_enhanced "Zig Compiler" "zig" "zig version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.13.0" "zig" "zig")")
-
-    # Ghostty Terminal (no GitHub releases support)
-    audit_data+=("$(detect_app_status_enhanced "Ghostty Terminal" "ghostty" "ghostty --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "1.1.4" "none" "none")")
+    # Ghostty Terminal (Snap package)
+    audit_data+=("$(detect_snap_package_status "Ghostty Terminal" "ghostty" "1.1.4")")
 
     # ZSH
     audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
@@ -1248,11 +1296,8 @@ task_post_installation_verification() {
     # Gum TUI Framework
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
 
-    # Zig Compiler
-    audit_data+=("$(detect_app_status_enhanced "Zig Compiler" "zig" "zig version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.13.0" "zig" "zig")")
-
-    # Ghostty Terminal
-    audit_data+=("$(detect_app_status_enhanced "Ghostty Terminal" "ghostty" "ghostty --version 2>&1 | grep -oP '\d+\.\d+\.\d+' | head -1" "1.1.4" "none" "none")")
+    # Ghostty Terminal (Snap package)
+    audit_data+=("$(detect_snap_package_status "Ghostty Terminal" "ghostty" "1.1.4")")
 
     # ZSH Shell
     audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
@@ -1457,5 +1502,7 @@ export -f detect_apt_version
 export -f detect_source_version
 export -f generate_recommendation
 export -f detect_app_status_enhanced
+export -f detect_snap_package_status
+export -f detect_npm_package_status
 export -f display_installation_strategy_groups
 export -f display_version_analysis

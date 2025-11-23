@@ -75,7 +75,7 @@ last-updated: 2025-11-21
 ## Technology Stack (NON-NEGOTIABLE)
 
 ### Terminal Environment
-- **Ghostty**: Latest from source (Zig 0.14.0) with 2025 optimizations
+- **Ghostty**: Latest via Snap package with 2025 optimizations
 - **ZSH**: Oh My ZSH with productivity plugins
 - **Context Menu**: Nautilus integration for "Open in Ghostty"
 
@@ -181,12 +181,12 @@ CI/CD Pipeline Stages:
 
 ### Update System Overview
 
-**Script**: `scripts/daily-updates.sh` (Version 2.1)
+**Script**: `scripts/daily-updates.sh` (Version 3.0)
 **Schedule**: Daily at 9:00 AM via cron
-**Components**: 13 total update targets
+**Components**: 12 total update targets
 **Logging**: Full logging to `/tmp/daily-updates-logs/`
 
-### 13-Component Update Coverage
+### 12-Component Update Coverage
 
 | Component | Update Method | Version Detection | Notes |
 |-----------|---------------|-------------------|-------|
@@ -201,54 +201,29 @@ CI/CD Pipeline Stages:
 | 9. uv | `uv self update` | Built-in updater | Python package installer |
 | 10. Spec-Kit CLI | `uv tool upgrade specify-cli` | uv tool manager | Specification-driven development |
 | 11. Additional uv Tools | `uv tool upgrade <tool>` | uv tool manager | All installed uv tools |
-| 12. Zig Compiler | **Uninstall → Reinstall** | ziglang.org API | See below |
-| 13. Ghostty Terminal | **Uninstall → Reinstall** | Git repository fetch | See below |
+| 12. Ghostty Terminal | `snap refresh ghostty` | Snap store | Official Snap package auto-updates |
 
-### Modular Uninstall → Reinstall Workflow
+### Snap Package Auto-Updates
 
-**For major applications** (Ghostty, Zig), the update system performs complete uninstall → reinstall to ensure clean state:
+**Ghostty Terminal** is managed via Snap, which provides automatic updates:
 
-**Workflow Steps:**
-1. **Version Detection**: Check for available updates
-2. **Uninstall**: Execute `lib/installers/{app}/uninstall.sh`
-3. **Reinstall**: Execute `lib/installers/{app}/install.sh` or equivalent
-4. **Verification**: Confirm new version installed
-5. **Logging**: All operations logged with timestamps
+**Update Detection:**
+```bash
+# Check for Snap updates
+snap refresh --list
 
-**Uninstall Scripts:**
-- `lib/installers/ghostty/uninstall.sh` - Removes Ghostty binary, source, configs, symlinks
-- `lib/installers/zig/uninstall.sh` - Removes Zig compiler, symlinks, PATH entries
+# Manual refresh (if needed)
+snap refresh ghostty
+
+# Verify installed version
+snap list ghostty
+```
 
 **Benefits:**
-- **Clean State**: No residual files from previous versions
-- **No Conflicts**: Prevents version conflicts or partial updates
-- **Verified Installation**: Fresh installation ensures proper configuration
-- **Exit Code Tracking**: Distinguishes between errors and "not installed" states
-
-### Intelligent Version Detection
-
-**Zig Compiler Detection:**
-```bash
-# Query latest version from ziglang.org
-curl -fsSL https://ziglang.org/download/index.json | grep -oP '"master".*"version":\s*"\K[^"]+'
-
-# Compare with local version
-zig version
-
-# If different → uninstall → reinstall
-```
-
-**Ghostty Terminal Detection:**
-```bash
-# Fetch latest from origin/main
-git -C ~/Apps/ghostty fetch origin
-
-# Compare commit hashes
-local_commit=$(git -C ~/Apps/ghostty rev-parse HEAD)
-remote_commit=$(git -C ~/Apps/ghostty rev-parse origin/main)
-
-# If different → uninstall → reinstall
-```
+- **Automatic Updates**: Snap handles updates in the background
+- **Official Builds**: Direct from Ghostty developers via Snap store
+- **Zero Compilation**: Pre-built binaries, instant installation
+- **Rollback Support**: `snap revert ghostty` if needed
 
 ### Error Handling & Logging
 

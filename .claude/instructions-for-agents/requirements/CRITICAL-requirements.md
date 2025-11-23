@@ -31,11 +31,11 @@ last-updated: 2025-11-21
 
 ### Build-from-Source Applications (2025 Edition)
 
-- **Ghostty Terminal**: Built from source with Zig 0.15.2 (latest stable)
-  - Repository: https://github.com/ghostty-org/ghostty
-  - Build method: Zig build system (`zig build -Doptimize=ReleaseFast`)
-  - Installation: `~/.local/share/ghostty/` (modular installer: `lib/installers/ghostty/`)
-  - Build time: ~5-10 minutes
+- **Ghostty Terminal**: Installed via Snap (official package)
+  - Package: `ghostty` (snap store)
+  - Installation: `snap install ghostty` (modular installer: `lib/installers/ghostty/`)
+  - Installation time: ~30-60 seconds
+  - Rationale: Official Snap package provides latest stable builds with zero compilation time
 
 - **Feh Image Viewer**: Built from source (latest stable) with ALL features enabled
   - Repository: https://github.com/derf/feh

@@ -121,20 +121,11 @@ echo "=========================================="
 # Test 1: Module loaded successfully
 assert_equals "1" "${INSTALL_GHOSTTY_SH_LOADED}" "Module loaded with guard variable"
 
-# Test 2: Zig version constant
-assert_equals "0.14.0" "${ZIG_VERSION}" "Zig version constant correct"
+# Test 2: Snap package constant
+assert_equals "ghostty" "${GHOSTTY_SNAP_PACKAGE}" "Ghostty snap package name correct"
 
-# Test 3: Ghostty repository constant
-assert_equals "https://github.com/ghostty-org/ghostty.git" "${GHOSTTY_REPO}" "Ghostty repo URL correct"
-
-# Test 4: Minimum Ghostty version constant
+# Test 3: Minimum Ghostty version constant
 assert_contains "${MIN_GHOSTTY_VERSION}" "1." "Minimum version is 1.x+"
-
-# Test 5: Build directory constant
-assert_contains "${GHOSTTY_BUILD_DIR}" ".cache/ghostty-build" "Build directory in cache"
-
-# Test 6: Install directory constant
-assert_contains "${GHOSTTY_INSTALL_DIR}" ".local/bin" "Install directory in .local/bin"
 
 echo ""
 
@@ -145,18 +136,11 @@ echo ""
 echo "TEST GROUP 2: Function Existence"
 echo "================================="
 
-# Snap-first functions
+# Snap installation functions
 assert_function_exists "detect_snap_installation" "detect_snap_installation exists"
 assert_function_exists "verify_snap_publisher" "verify_snap_publisher exists"
 assert_function_exists "install_via_snap" "install_via_snap exists"
-assert_function_exists "install_via_apt" "install_via_apt exists"
-
-# Source build functions
-assert_function_exists "install_build_dependencies" "install_build_dependencies exists"
-assert_function_exists "install_zig" "install_zig exists"
-assert_function_exists "build_ghostty" "build_ghostty exists"
-assert_function_exists "install_ghostty_binary" "install_ghostty_binary exists"
-assert_function_exists "install_ghostty_from_source" "install_ghostty_from_source exists"
+assert_function_exists "cleanup_manual_installation" "cleanup_manual_installation exists"
 
 # Multi-file manager functions
 assert_function_exists "detect_file_manager" "detect_file_manager exists"
@@ -170,7 +154,6 @@ assert_function_exists "configure_context_menu" "configure_context_menu exists"
 assert_function_exists "verify_performance_optimizations" "verify_performance_optimizations exists"
 
 # Master functions
-assert_function_exists "install_ghostty_with_fallback" "install_ghostty_with_fallback exists"
 assert_function_exists "install_ghostty" "install_ghostty (main entry) exists"
 
 echo ""
@@ -316,17 +299,6 @@ echo ""
 echo "TEST GROUP 7: Installation Status"
 echo "=================================="
 
-# Check if Zig is already installed (informational)
-if command -v zig &> /dev/null; then
-    assert_command_exists "zig" "Zig compiler available in PATH"
-
-    # Check version if available
-    zig_version=$(zig version 2>&1 | grep -oP '\d+\.\d+\.\d+' | head -1 || echo "unknown")
-    echo "  Installed Zig version: ${zig_version}"
-else
-    echo "ℹ INFO: Zig not installed (expected before module execution)"
-fi
-
 # Check if Ghostty is already installed (informational)
 if command -v ghostty &> /dev/null; then
     assert_command_exists "ghostty" "Ghostty binary available in PATH"
@@ -338,11 +310,9 @@ if command -v ghostty &> /dev/null; then
     # Check installation method
     ghostty_path=$(command -v ghostty)
     if [[ "$ghostty_path" == "/snap/bin/ghostty" ]]; then
-        echo "  Installation method: Snap"
-    elif [[ "$ghostty_path" == "${HOME}/.local/bin/ghostty" ]]; then
-        echo "  Installation method: Source build"
+        echo "  Installation method: Snap (OFFICIAL)"
     else
-        echo "  Installation method: System package"
+        echo "  Installation method: Other (should be Snap)"
     fi
 else
     echo "ℹ INFO: Ghostty not installed (expected before module execution)"

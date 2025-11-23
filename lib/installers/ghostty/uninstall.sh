@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Ghostty Uninstallation Manager
-# Purpose: Complete removal of Ghostty installation (binary, config, desktop entry)
+# Ghostty Uninstallation Manager (Snap Version)
+# Purpose: Complete removal of Ghostty Snap installation
 # Exit Codes: 0=success, 1=failure, 2=not_installed
 #
 # Architecture: Modular uninstallation with TUI integration
@@ -25,79 +25,68 @@ uninstall_ghostty() {
 
     log "INFO" "Starting Ghostty uninstallation..."
 
-    # Note: We proceed even if ghostty command is not in PATH
-    # to clean up orphaned installation files and desktop entries
+    # Check if Ghostty Snap is installed
+    if ! is_ghostty_installed; then
+        log "WARNING" "Ghostty Snap is not installed"
 
-    # 1. Remove binary
-    local binary_path
-    binary_path=$(command -v ghostty 2>/dev/null || echo "")
+        # Still check for manual installations to clean up
+        if has_manual_ghostty_installation; then
+            log "INFO" "Found manual installations to clean up"
+        else
+            log "INFO" "No Ghostty installations found"
+            skip_task "$task_id" "not installed"
+            exit 2
+        fi
+    fi
 
-    if [ -n "$binary_path" ]; then
-        log "INFO" "Removing binary: $binary_path"
-        if rm -f "$binary_path" 2>/dev/null; then
-            log "SUCCESS" "Binary removed: $binary_path"
+    # Remove Snap package
+    if is_ghostty_installed; then
+        log "INFO" "Removing Ghostty Snap package..."
+        if sudo snap remove "${GHOSTTY_SNAP_NAME}" 2>&1 | tee -a "$(get_log_file)"; then
+            log "SUCCESS" "Ghostty Snap package removed"
             ((removed_items++))
         else
-            log "WARNING" "Could not remove binary: $binary_path"
+            log "ERROR" "Failed to remove Ghostty Snap package"
+            fail_task "$task_id" "snap remove failed"
+            exit 1
         fi
     fi
 
-    # 2. Remove installation directory
-    if [ -d "$GHOSTTY_INSTALL_DIR" ]; then
-        log "INFO" "Removing installation directory: $GHOSTTY_INSTALL_DIR"
-        if rm -rf "$GHOSTTY_INSTALL_DIR" 2>/dev/null; then
-            log "SUCCESS" "Installation directory removed: $GHOSTTY_INSTALL_DIR"
-            ((removed_items++))
-        else
-            log "WARNING" "Could not remove directory: $GHOSTTY_INSTALL_DIR"
+    # Clean up any remaining manual installations
+    if has_manual_ghostty_installation; then
+        log "INFO" "Cleaning up manual installation remnants..."
+
+        # Remove binary from /usr/local/bin
+        if [ -f "/usr/local/bin/ghostty" ]; then
+            log "INFO" "Removing /usr/local/bin/ghostty"
+            sudo rm -f "/usr/local/bin/ghostty" 2>/dev/null && ((removed_items++))
         fi
-    fi
 
-    # 3. Remove desktop entries (all variants)
-    local desktop_files=(
-        "$HOME/.local/share/applications/ghostty.desktop"
-        "$HOME/.local/share/applications/com.mitchellh.ghostty.desktop"
-        "$HOME/.local/share/applications/ghostty-here.desktop"
-    )
-
-    for desktop_file in "${desktop_files[@]}"; do
-        if [ -f "$desktop_file" ]; then
-            log "INFO" "Removing desktop entry: $desktop_file"
-            if rm -f "$desktop_file" 2>/dev/null; then
-                log "SUCCESS" "Desktop entry removed: $desktop_file"
-                ((removed_items++))
-            else
-                log "WARNING" "Could not remove desktop entry: $desktop_file"
-            fi
+        # Remove binary from ~/.local/bin
+        if [ -f "$HOME/.local/bin/ghostty" ]; then
+            log "INFO" "Removing $HOME/.local/bin/ghostty"
+            rm -f "$HOME/.local/bin/ghostty" 2>/dev/null && ((removed_items++))
         fi
-    done
 
-    # 4. Remove build directory (if it exists)
-    if [ -d "$GHOSTTY_BUILD_DIR" ]; then
-        log "INFO" "Removing build directory: $GHOSTTY_BUILD_DIR"
-        if rm -rf "$GHOSTTY_BUILD_DIR" 2>/dev/null; then
-            log "SUCCESS" "Build directory removed: $GHOSTTY_BUILD_DIR"
-            ((removed_items++))
-        else
-            log "WARNING" "Could not remove build directory: $GHOSTTY_BUILD_DIR"
+        # Remove build directory
+        if [ -d "$HOME/Apps/ghostty" ]; then
+            log "INFO" "Removing $HOME/Apps/ghostty"
+            rm -rf "$HOME/Apps/ghostty" 2>/dev/null && ((removed_items++))
         fi
-    fi
 
-    # 5. Update desktop database (with timeout protection)
-    if command_exists "update-desktop-database"; then
-        log "INFO" "Updating desktop database..."
-        timeout 10 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
-    fi
-
-    # 6. Clear icon cache (with timeout protection)
-    if command_exists "gtk-update-icon-cache"; then
-        log "INFO" "Updating icon cache..."
-        timeout 10 gtk-update-icon-cache -f "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+        # Remove Zig compiler
+        if [ -d "$HOME/Apps/zig" ]; then
+            log "INFO" "Removing Zig compiler (no longer needed)"
+            rm -rf "$HOME/Apps/zig" 2>/dev/null && ((removed_items++))
+        fi
     fi
 
     # Note: Configuration files in ~/.config/ghostty are NOT removed
     # Users may want to preserve their settings for reinstallation
-    log "INFO" "Configuration files preserved in ~/.config/ghostty"
+    if [ -d "$GHOSTTY_CONFIG_DIR" ]; then
+        log "INFO" "Configuration files preserved in $GHOSTTY_CONFIG_DIR"
+        log "INFO" "To remove configs: rm -rf $GHOSTTY_CONFIG_DIR"
+    fi
 
     # Summary
     if [ $removed_items -gt 0 ]; then

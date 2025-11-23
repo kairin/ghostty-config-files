@@ -45,11 +45,11 @@ flowchart TD
     CloneRepo --> RunInstall[Run: ./start.sh]
     RunInstall --> CheckDeps{All dependencies<br/>available?}
 
-    CheckDeps -->|Missing| InstallDeps[Install: Zig, Git, build tools]
-    CheckDeps -->|Present| BuildGhostty[Build Ghostty from source]
-    InstallDeps --> BuildGhostty
+    CheckDeps -->|Missing| InstallDeps[Install: snapd, Git, build tools]
+    CheckDeps -->|Present| InstallGhostty[Install Ghostty via Snap]
+    InstallDeps --> InstallGhostty
 
-    BuildGhostty --> ConfigZsh[Setup ZSH + Oh My ZSH]
+    InstallGhostty --> ConfigZsh[Setup ZSH + Oh My ZSH]
     ConfigZsh --> InstallNode{Node.js<br/>installation}
 
     InstallNode -->|fnm success| InstallAI[Install AI tools<br/>Claude, Gemini]
@@ -172,7 +172,7 @@ sudo snap install libreoffice
 
 The installation automatically sets up a daily update system that keeps your entire development environment current.
 
-**What Gets Updated (13 Components):**
+**What Gets Updated (12 Components):**
 - System packages (apt)
 - GitHub CLI
 - Oh My Zsh
@@ -184,8 +184,7 @@ The installation automatically sets up a daily update system that keeps your ent
 - uv (Python package installer)
 - Spec-Kit CLI (via uv)
 - Additional uv tools
-- Zig Compiler (uninstall → reinstall workflow when updates available)
-- Ghostty Terminal (uninstall → reinstall workflow when updates available)
+- Ghostty Terminal (via Snap refresh)
 
 **Automatic Schedule:**
 - Updates run daily at 9:00 AM via cron
@@ -225,8 +224,8 @@ sudo EDITOR=nano visudo
 # Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/apt
 ```
 
-**Advanced Features (v2.1):**
-- **Modular Uninstall → Reinstall Workflow**: Major applications (Ghostty, Zig) are completely uninstalled before reinstalling updates to ensure clean state
+**Advanced Features (v3.0):**
+- **Snap-Based Updates**: Ghostty updates via Snap package manager for simplicity and reliability
 - **Intelligent Version Detection**: Automatic comparison against upstream repositories
 - **Graceful Error Handling**: Continues updating other components if one fails
 - **Comprehensive Logging**: All operations logged to `/tmp/daily-updates-logs/` with timestamps
@@ -252,11 +251,10 @@ This will start a development server, and you can view the website at `http://lo
     -   `pages/`: The pages of the website.
 -   `configs/`: Configuration files for Ghostty, ZSH, and other tools.
 -   `lib/`: Modular task libraries for installation, configuration, and uninstallation.
-    -   `installers/ghostty/`: Ghostty installation modules and uninstall script
-    -   `installers/zig/`: Zig compiler installation modules and uninstall script
+    -   `installers/ghostty/`: Ghostty Snap installation modules and uninstall script
     -   `installers/*/uninstall.sh`: Clean uninstallation for major applications
 -   `scripts/`: Utility scripts for system management.
-    -   `daily-updates.sh`: Comprehensive update system (v2.1 - 13 components)
+    -   `daily-updates.sh`: Comprehensive update system (v3.0 - 12 components)
     -   `manage.sh`: Unified management interface
     -   `common.sh`, `progress.sh`, `backup_utils.sh`: Shared utilities
 -   `website/src/`: **Editable documentation source** (git-tracked)
