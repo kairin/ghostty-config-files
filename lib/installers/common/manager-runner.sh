@@ -439,9 +439,7 @@ run_install_steps() {
         step_start=$(date +%s)
 
         # Show what we're doing RIGHT NOW
-        echo ""
-        echo "  → Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name}..."
-        echo ""
+        log "INFO" "→ Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name}..."
 
         # Run the step script directly (output goes to terminal)
         if "$step_path"; then
@@ -450,15 +448,11 @@ run_install_steps() {
             local step_duration=$((step_end - step_start))
 
             complete_task "$task_id" "$step_duration"
-            echo ""
-            echo "  ✓ Completed: ${display_name} ($(format_duration "$step_duration"))"
-            echo ""
+            log "SUCCESS" "✓ Completed: ${display_name} ($(format_duration "$step_duration"))"
             log "SUCCESS" "Step ${step_num}/${MR_TOTAL_STEPS} complete: ${display_name} ($(format_duration "$step_duration"))"
         else
             local exit_code=$?
-            echo ""
-            echo "  ✗ FAILED: ${display_name} (exit code: $exit_code)"
-            echo ""
+            log "ERROR" "✗ FAILED: ${display_name} (exit code: $exit_code)"
             log "ERROR" "Step ${step_num}/${MR_TOTAL_STEPS} FAILED: ${display_name} (exit code: $exit_code)"
             fail_task "$task_id" "Exit code: $exit_code - Check logs for details"
             ((failed_steps++))

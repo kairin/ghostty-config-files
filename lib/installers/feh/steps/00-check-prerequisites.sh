@@ -22,9 +22,8 @@ main() {
     start_task "$task_id"
 
     log "INFO" "Checking feh build prerequisites..."
-    echo ""
 
-    # Required build dependencies
+    # Required build dependencies (for ALL features)
     local required_packages=(
         "build-essential"
         "libimlib2-dev"
@@ -34,6 +33,7 @@ main() {
         "libxt-dev"
         "libxinerama-dev"
         "libexif-dev"
+        "libmagic-dev"
         "git"
     )
 
@@ -53,7 +53,6 @@ main() {
     fi
 
     log "INFO" "Installing missing build dependencies: ${missing_packages[*]}"
-    echo ""
 
     # Update package list
     if ! sudo apt update; then
