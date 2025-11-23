@@ -45,6 +45,9 @@ else
     source "$(git rev-parse --show-toplevel)/lib/init.sh"
 fi
 
+# Source installation check module (check ACTUAL status, not state file)
+source "${LIB_DIR}/core/installation-check.sh"
+
 # Source task modules (not yet in init.sh as they are specific to start.sh)
 source "${LIB_DIR}/tasks/gum.sh"
 source "${LIB_DIR}/tasks/ghostty.sh"
@@ -272,11 +275,27 @@ execute_single_task() {
     local install_fn="$3"
     local verify_fn="$4"
 
-    # Skip if already completed (idempotency)
+    # Check ACTUAL installation status (not state file)
     # EXCEPTION: gum is ALWAYS reinstalled (constitutional requirement)
-    if [ "$task_id" != "install-gum" ] && is_task_completed "$task_id" && [ "$FORCE_ALL" = false ]; then
-        skip_task "$task_id"
-        return 0
+    if [ "$task_id" != "install-gum" ] && [ "$FORCE_ALL" = false ]; then
+        # Map task_id to component name
+        local component_name
+        case "$task_id" in
+            "install-ghostty") component_name="ghostty" ;;
+            "install-zsh") component_name="zsh" ;;
+            "install-uv") component_name="uv" ;;
+            "install-fnm") component_name="fnm" ;;
+            "install-ai-tools") component_name="ai-tools" ;;
+            "install-context-menu") component_name="context-menu" ;;
+            *) component_name="" ;;
+        esac
+
+        # Check if component is actually installed
+        if [ -n "$component_name" ] && check_component_installed "$component_name"; then
+            log "INFO" "Component $component_name is already installed - skipping"
+            skip_task "$task_id"
+            return 0
+        fi
     fi
 
     # Check dependencies
@@ -512,11 +531,28 @@ main() {
     for task_entry in "${TASK_REGISTRY[@]}"; do
         IFS='|' read -r task_id deps install_fn verify_fn parallel_group est_seconds <<< "$task_entry"
 
-        # Skip if already completed (idempotency)
-        if is_task_completed "$task_id" && [ "$FORCE_ALL" = false ]; then
-            skip_task "$task_id"
-            ((completed_tasks += 1))
-            continue
+        # Check ACTUAL installation status (not state file)
+        # EXCEPTION: gum is ALWAYS reinstalled
+        if [ "$task_id" != "install-gum" ] && [ "$FORCE_ALL" = false ]; then
+            # Map task_id to component name
+            local component_name
+            case "$task_id" in
+                "install-ghostty") component_name="ghostty" ;;
+                "install-zsh") component_name="zsh" ;;
+                "install-uv") component_name="uv" ;;
+                "install-fnm") component_name="fnm" ;;
+                "install-ai-tools") component_name="ai-tools" ;;
+                "install-context-menu") component_name="context-menu" ;;
+                *) component_name="" ;;
+            esac
+
+            # Check if component is actually installed
+            if [ -n "$component_name" ] && check_component_installed "$component_name"; then
+                log "INFO" "Component $component_name is already installed - skipping"
+                skip_task "$task_id"
+                ((completed_tasks += 1))
+                continue
+            fi
         fi
 
         # Check dependencies
