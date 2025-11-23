@@ -367,14 +367,15 @@ task_pre_installation_audit() {
     # npm
     audit_data+=("$(detect_app_status_enhanced "npm" "npm" "npm --version 2>&1" "11.0.0" "npm" "none")")
 
-    # Claude CLI
-    audit_data+=("$(detect_app_status_enhanced "Claude CLI" "claude" "claude --version 2>&1 | head -n1" "latest" "none" "none")")
+    # Claude CLI (npm global package: @anthropic-ai/claude-code)
+    audit_data+=("Claude CLI|$(command -v claude >/dev/null 2>&1 && claude --version 2>&1 | head -n1 || echo 'not installed')|$(command -v claude 2>/dev/null || echo 'N/A')|$(command -v claude >/dev/null 2>&1 && echo 'npm' || echo 'missing')|latest|N/A|npm install -g @anthropic-ai/claude-code|$(command -v claude >/dev/null 2>&1 && echo 'OK' || echo 'INSTALL')")
 
-    # Gemini CLI
-    audit_data+=("$(detect_app_status_enhanced "Gemini CLI" "gemini" "gemini --version 2>&1 | head -n1" "latest" "none" "none")")
+    # Gemini CLI (npm global package: @google/gemini-cli)
+    audit_data+=("Gemini CLI|$(command -v gemini >/dev/null 2>&1 && gemini --version 2>&1 | head -n1 || echo 'not installed')|$(command -v gemini 2>/dev/null || echo 'N/A')|$(command -v gemini >/dev/null 2>&1 && echo 'npm' || echo 'missing')|latest|N/A|npm install -g @google/gemini-cli|$(command -v gemini >/dev/null 2>&1 && echo 'OK' || echo 'INSTALL')")
 
-    # GitHub Copilot CLI (command is github-copilot-cli, not gh-copilot)
-    audit_data+=("$(detect_app_status_enhanced "Copilot CLI" "github-copilot-cli" "github-copilot-cli --version 2>&1 | head -n1" "latest" "none" "none")")
+    # GitHub Copilot CLI (npm global package: @github/copilot)
+    # Command is 'copilot' NOT 'github-copilot-cli'
+    audit_data+=("Copilot CLI|$(command -v copilot >/dev/null 2>&1 && copilot --version 2>&1 | head -n1 || echo 'not installed')|$(command -v copilot 2>/dev/null || echo 'N/A')|$(command -v copilot >/dev/null 2>&1 && echo 'npm' || echo 'missing')|latest|N/A|npm install -g @github/copilot|$(command -v copilot >/dev/null 2>&1 && echo 'OK' || echo 'INSTALL')")
 
     # Feh Image Viewer
     audit_data+=("$(detect_app_status_enhanced "Feh Viewer" "feh" "feh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "3.11.0" "feh" "feh")")
@@ -703,7 +704,11 @@ generate_recommendation() {
 
     # Handle "not installed" case
     if [ "$installed" = "not installed" ] || [ "$installed" = "unknown" ] || [ "$installed" = "built-from-source" ]; then
-        if [ "$apt_avail" != "N/A" ] && [ "$apt_avail" != "unknown" ]; then
+        # Check if source_latest contains npm install command
+        if [[ "$source_latest" == "npm install"* ]]; then
+            echo "INSTALL via npm: $source_latest"
+            return 0
+        elif [ "$apt_avail" != "N/A" ] && [ "$apt_avail" != "unknown" ]; then
             echo "INSTALL (APT available)"
             return 0
         else
