@@ -112,6 +112,12 @@ temp/
 CLEANUP_EXECUTION_SCRIPT.sh
 ROOT_CLEANUP_PLAN.md
 
+# Generated analysis reports (should be in documentation/ or logs/)
+*_ANALYSIS_REPORT.md
+*_REPORT.md
+FUNCTION_ANALYSIS*.md
+DEAD_CODE*.md
+
 # Installation state (runtime data)
 .installation-state.json
 
