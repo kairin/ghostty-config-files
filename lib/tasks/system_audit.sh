@@ -1043,11 +1043,230 @@ display_version_analysis() {
     echo ""
 }
 
+#
+# Post-Installation Verification (Same audit as pre-install, but without confirmation)
+#
+# Purpose: Show final system state after installation completes
+# Compare with pre-installation state to verify all tasks completed successfully
+#
+# Returns:
+#   0 - Always succeeds (verification only, no confirmation needed)
+#
+task_post_installation_verification() {
+    log "INFO" "Scanning final system state..."
+    echo ""
+
+    # Initialize version cache
+    init_version_cache
+
+    # Build audit data (same as pre-installation)
+    local -a audit_data
+
+    # Gum TUI Framework
+    audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
+
+    # Zig Compiler
+    audit_data+=("$(detect_app_status_enhanced "Zig Compiler" "zig" "zig version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.13.0" "zig" "zig")")
+
+    # Ghostty Terminal
+    audit_data+=("$(detect_app_status_enhanced "Ghostty Terminal" "ghostty" "ghostty --version 2>&1 | grep -oP '\d+\.\d+\.\d+' | head -1" "1.1.4" "none" "none")")
+
+    # ZSH Shell
+    audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
+
+    # Oh My ZSH
+    audit_data+=("$(detect_app_status_enhanced "Oh My ZSH" "oh-my-zsh" "[ -d ~/.oh-my-zsh ] && echo 'installed' || echo 'not installed'" "latest" "none" "none")")
+
+    # Python UV
+    audit_data+=("$(detect_app_status_enhanced "Python UV" "uv" "uv --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.5.0" "none" "uv")")
+
+    # fnm (Fast Node Manager)
+    audit_data+=("$(detect_app_status_enhanced "fnm" "fnm" "fnm --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "1.38.0" "none" "fnm")")
+
+    # Node.js
+    audit_data+=("$(detect_app_status_enhanced "Node.js" "node" "node --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "25.2.0" "nodejs" "node")")
+
+    # npm
+    audit_data+=("$(detect_app_status_enhanced "npm" "npm" "npm --version 2>&1" "11.0.0" "npm" "none")")
+
+    # Claude CLI (npm global package: @anthropic-ai/claude-code)
+    audit_data+=("$(detect_npm_package_status "Claude CLI" "@anthropic-ai/claude-code" "claude" "latest")")
+
+    # Gemini CLI (npm global package: @google/gemini-cli)
+    audit_data+=("$(detect_npm_package_status "Gemini CLI" "@google/gemini-cli" "gemini" "latest")")
+
+    # GitHub Copilot CLI (npm global package: @github/copilot)
+    # Command is 'copilot' NOT 'github-copilot-cli'
+    audit_data+=("$(detect_npm_package_status "Copilot CLI" "@github/copilot" "copilot" "latest")")
+
+    # Feh Image Viewer
+    audit_data+=("$(detect_app_status_enhanced "Feh Viewer" "feh" "feh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "3.11.0" "feh" "feh")")
+
+    # Glow Markdown Viewer
+    audit_data+=("$(detect_app_status_enhanced "Glow Markdown" "glow" "glow --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "2.0.0" "glow" "glow")")
+
+    # VHS Terminal Recorder
+    audit_data+=("$(detect_app_status_enhanced "VHS Recorder" "vhs" "vhs --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.7.0" "vhs" "vhs")")
+
+    # ffmpeg (VHS dependency - no GitHub releases support)
+    audit_data+=("$(detect_app_status_enhanced "ffmpeg" "ffmpeg" "ffmpeg -version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "4.0" "ffmpeg" "none")")
+
+    # ttyd (VHS dependency)
+    audit_data+=("$(detect_app_status_enhanced "ttyd" "ttyd" "ttyd --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "1.7.0" "ttyd" "ttyd")")
+
+    # Context Menu Integration
+    audit_data+=("$(detect_app_status_enhanced "Context Menu" "nautilus-scripts" "[ -d ~/.local/share/nautilus/scripts ] && echo 'installed' || echo 'not installed'" "latest" "none" "none")")
+
+    # Display final system state table
+    log "INFO" "Final System State:"
+    echo ""
+
+    if command_exists "gum"; then
+        # Beautiful table with gum
+        {
+            echo "App/Tool|Current Version|Path|Method|Min Required|Status"
+            for data in "${audit_data[@]}"; do
+                echo "$data"
+            done
+        } | gum table --border rounded --separator "|" --widths 18,19,62,13,14,9 || {
+            # Fallback to text table if gum fails
+            printf "%-18s | %-19s | %-62s | %-13s | %-14s | %-9s\n" "App/Tool" "Current Version" "Path" "Method" "Min Required" "Status"
+            echo "─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+            for data in "${audit_data[@]}"; do
+                IFS='|' read -r name version path method min_req apt_ver src_ver status <<< "$data"
+                printf "%-18s | %-19s | %-62s | %-13s | %-14s | %-9s\n" "$name" "$version" "$path" "$method" "$min_req" "$status"
+            done
+        }
+    else
+        # Text-only table if gum not available
+        printf "%-18s | %-19s | %-62s | %-13s | %-14s | %-9s\n" "App/Tool" "Current Version" "Path" "Method" "Min Required" "Status"
+        echo "─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+        for data in "${audit_data[@]}"; do
+            IFS='|' read -r name version path method min_req apt_ver src_ver status <<< "$data"
+            printf "%-18s | %-19s | %-62s | %-13s | %-14s | %-9s\n" "$name" "$version" "$path" "$method" "$min_req" "$status"
+        done
+    fi
+
+    echo ""
+
+    # Summary statistics
+    local total_apps="${#audit_data[@]}"
+    local installed_count=0
+    local upgrade_count=0
+    local install_count=0
+
+    for data in "${audit_data[@]}"; do
+        IFS='|' read -r _ _ _ _ _ _ _ status <<< "$data"
+        case "$status" in
+            "OK") ((installed_count++)) ;;
+            "UPGRADE") ((upgrade_count++)) ;;
+            "INSTALL") ((install_count++)) ;;
+        esac
+    done
+
+    log "INFO" "════════════════════════════════════════"
+    log "INFO" "Verification Summary"
+    log "INFO" "════════════════════════════════════════"
+    log "INFO" "Total apps/tools: $total_apps"
+    log "SUCCESS" "Successfully installed: $installed_count"
+    [ "$install_count" -gt 0 ] && log "WARNING" "Still missing: $install_count"
+    [ "$upgrade_count" -gt 0 ] && log "WARNING" "Need upgrades: $upgrade_count"
+    echo ""
+
+    # Display version analysis
+    log "INFO" "════════════════════════════════════════"
+    log "INFO" "Final Version Analysis"
+    log "INFO" "════════════════════════════════════════"
+    echo ""
+
+    display_version_analysis "${audit_data[@]}"
+
+    # Generate final markdown report
+    local timestamp
+    timestamp=$(date +%Y%m%d-%H%M%S)
+    local markdown_file="${REPO_ROOT}/logs/installation/post-install-verification-${timestamp}.md"
+
+    # Ensure logs directory exists
+    mkdir -p "${REPO_ROOT}/logs/installation"
+
+    # Generate markdown content
+    cat > "$markdown_file" <<EOF
+# Post-Installation Verification Report
+**Generated:** $(date '+%Y-%m-%d %H:%M:%S')
+
+## Final System State
+
+| App/Tool | Current Version | Path | Method | Min Required | Status |
+|----------|----------------|------|--------|--------------|--------|
+EOF
+
+    # Add table data
+    for data in "${audit_data[@]}"; do
+        IFS='|' read -r name current path method min_req apt_ver src_ver status <<< "$data"
+        echo "| $name | $current | $path | $method | $min_req | $status |" >> "$markdown_file"
+    done
+
+    # Add version analysis section
+    cat >> "$markdown_file" <<EOF
+
+## Version Analysis & Recommendations
+
+| App/Tool | Min Required | APT Available | Installed | Source Latest | Recommendation |
+|----------|--------------|---------------|-----------|---------------|----------------|
+EOF
+
+    # Add version analysis rows
+    for data in "${audit_data[@]}"; do
+        IFS='|' read -r app_name current_ver path method min_required apt_avail source_latest status <<< "$data"
+
+        # Generate recommendation
+        local recommendation
+        recommendation=$(generate_recommendation "$app_name" "$min_required" "$apt_avail" "$current_ver" "$source_latest" "$method")
+
+        # Add version check mark
+        local installed_mark="✗"
+        if [ "$current_ver" != "not installed" ] && [ "$current_ver" != "unknown" ]; then
+            if [ "$min_required" = "unknown" ] || [ "$min_required" = "latest" ] || version_compare "$current_ver" "$min_required"; then
+                installed_mark="✓"
+            else
+                installed_mark="⚠"
+            fi
+        fi
+
+        echo "| $app_name | $min_required | $apt_avail | $current_ver $installed_mark | $source_latest | $recommendation |" >> "$markdown_file"
+    done
+
+    # Add summary
+    cat >> "$markdown_file" <<EOF
+
+## Verification Summary
+
+- **Total apps/tools:** $total_apps
+- **Successfully installed:** $installed_count
+- **Still missing:** $install_count
+- **Need upgrades:** $upgrade_count
+
+---
+
+*This verification report confirms the final state after installation completed.*
+*Compare with pre-installation report to see what changed.*
+
+EOF
+
+    log "INFO" "Post-installation verification report saved: $markdown_file"
+    log "INFO" "View detailed report: glow $markdown_file"
+    echo ""
+
+    # Always return success (verification only)
+    return 0
+}
+
 # Export functions
 export -f detect_app_status
 export -f version_compare
 export -f generate_markdown_report
 export -f task_pre_installation_audit
+export -f task_post_installation_verification
 export -f init_version_cache
 export -f get_cached_version
 export -f set_cached_version

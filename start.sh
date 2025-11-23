@@ -625,6 +625,23 @@ main() {
     log "INFO" "Running post-installation health checks..."
     post_installation_health_check
 
+    # Post-installation verification audit
+    log "INFO" ""
+    log "INFO" "════════════════════════════════════════"
+    log "INFO" "Post-Installation Verification"
+    log "INFO" "════════════════════════════════════════"
+    log "INFO" ""
+    log "INFO" "Running post-installation system audit to verify all installations..."
+    log "INFO" ""
+
+    # Run the same audit as pre-installation to show final state
+    if source "${REPO_ROOT}/lib/tasks/system_audit.sh" 2>/dev/null; then
+        # Run audit but skip the confirmation prompt
+        task_post_installation_verification || true
+    else
+        log "WARNING" "Could not run post-installation verification audit"
+    fi
+
     # Show summary
     local total_duration
     total_duration=$(calculate_elapsed_time)
