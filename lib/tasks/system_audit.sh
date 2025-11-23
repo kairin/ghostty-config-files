@@ -368,14 +368,14 @@ task_pre_installation_audit() {
     audit_data+=("$(detect_app_status_enhanced "npm" "npm" "npm --version 2>&1" "11.0.0" "npm" "none")")
 
     # Claude CLI (npm global package: @anthropic-ai/claude-code)
-    audit_data+=("Claude CLI|$(command -v claude >/dev/null 2>&1 && claude --version 2>&1 | head -n1 || echo 'not installed')|$(command -v claude 2>/dev/null || echo 'N/A')|$(command -v claude >/dev/null 2>&1 && echo 'npm' || echo 'missing')|latest|N/A|npm install -g @anthropic-ai/claude-code|$(command -v claude >/dev/null 2>&1 && echo 'OK' || echo 'INSTALL')")
+    audit_data+=("$(detect_npm_package_status "Claude CLI" "@anthropic-ai/claude-code" "claude" "latest")")
 
     # Gemini CLI (npm global package: @google/gemini-cli)
-    audit_data+=("Gemini CLI|$(command -v gemini >/dev/null 2>&1 && gemini --version 2>&1 | head -n1 || echo 'not installed')|$(command -v gemini 2>/dev/null || echo 'N/A')|$(command -v gemini >/dev/null 2>&1 && echo 'npm' || echo 'missing')|latest|N/A|npm install -g @google/gemini-cli|$(command -v gemini >/dev/null 2>&1 && echo 'OK' || echo 'INSTALL')")
+    audit_data+=("$(detect_npm_package_status "Gemini CLI" "@google/gemini-cli" "gemini" "latest")")
 
     # GitHub Copilot CLI (npm global package: @github/copilot)
     # Command is 'copilot' NOT 'github-copilot-cli'
-    audit_data+=("Copilot CLI|$(command -v copilot >/dev/null 2>&1 && copilot --version 2>&1 | head -n1 || echo 'not installed')|$(command -v copilot 2>/dev/null || echo 'N/A')|$(command -v copilot >/dev/null 2>&1 && echo 'npm' || echo 'missing')|latest|N/A|npm install -g @github/copilot|$(command -v copilot >/dev/null 2>&1 && echo 'OK' || echo 'INSTALL')")
+    audit_data+=("$(detect_npm_package_status "Copilot CLI" "@github/copilot" "copilot" "latest")")
 
     # Feh Image Viewer
     audit_data+=("$(detect_app_status_enhanced "Feh Viewer" "feh" "feh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "3.11.0" "feh" "feh")")
@@ -681,6 +681,109 @@ detect_source_version() {
 }
 
 #
+# Detect npm package version (both installed and latest available)
+#
+# Args:
+#   $1 - Package name on npm (e.g., "@anthropic-ai/claude-code")
+#   $2 - Command name to check for installed version (e.g., "claude")
+#
+# Returns:
+#   "installed_version|latest_version" or "not installed|latest_version"
+#
+detect_npm_version() {
+    local package_name="$1"
+    local command_name="$2"
+    local cache_key="npm-${package_name//\//-}"
+
+    local installed_version="not installed"
+    local latest_version="N/A"
+
+    # Detect installed version by checking the command
+    if command -v "$command_name" >/dev/null 2>&1; then
+        # Try to get version from command --version
+        installed_version=$("$command_name" --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+
+        # If command --version doesn't work, try npm list to get the installed package version
+        if [ "$installed_version" = "unknown" ]; then
+            installed_version=$(npm list -g "$package_name" --depth=0 2>/dev/null | \
+                grep "$package_name" | \
+                grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+        fi
+    fi
+
+    # Check cache for latest version
+    local cached_latest
+    if cached_latest=$(get_cached_version "$cache_key"); then
+        latest_version="$cached_latest"
+    else
+        # Query npm registry for latest version (with timeout)
+        if command -v npm >/dev/null 2>&1; then
+            local npm_response
+            if npm_response=$(timeout 5s npm view "$package_name" version 2>&1); then
+                latest_version=$(echo "$npm_response" | grep -oP '^\d+\.\d+\.\d+' || echo "N/A")
+                set_cached_version "$cache_key" "$latest_version"
+            fi
+        fi
+    fi
+
+    echo "${installed_version}|${latest_version}"
+}
+
+#
+# Detect npm package status for audit table
+#
+# Args:
+#   $1 - Display name (e.g., "Claude CLI")
+#   $2 - npm package name (e.g., "@anthropic-ai/claude-code")
+#   $3 - Command name (e.g., "claude")
+#   $4 - Minimum required version (typically "latest" for npm packages)
+#
+# Returns:
+#   Pipe-delimited string: "Name|Version|Path|Method|MinReq|AptAvail|SourceLatest|Status"
+#
+detect_npm_package_status() {
+    local display_name="$1"
+    local npm_package="$2"
+    local command_name="$3"
+    local min_required="${4:-latest}"
+
+    # Get npm version info (installed|latest)
+    local npm_info
+    npm_info=$(detect_npm_version "$npm_package" "$command_name")
+
+    local installed_version="${npm_info%%|*}"
+    local latest_version="${npm_info##*|}"
+
+    # Determine installation path
+    local install_path="N/A"
+    if command -v "$command_name" >/dev/null 2>&1; then
+        install_path=$(command -v "$command_name")
+    fi
+
+    # Determine installation method
+    local install_method="missing"
+    if [ "$installed_version" != "not installed" ]; then
+        install_method="npm"
+    fi
+
+    # Determine status
+    local status="INSTALL"
+    if [ "$installed_version" != "not installed" ] && [ "$installed_version" != "unknown" ]; then
+        # Check if meets minimum (if specified)
+        if [ "$min_required" = "latest" ]; then
+            status="OK"
+        elif version_compare "$installed_version" "$min_required"; then
+            status="OK"
+        else
+            status="UPGRADE"
+        fi
+    fi
+
+    # Format: Name|Version|Path|Method|MinReq|AptAvail|SourceLatest|Status
+    echo "${display_name}|${installed_version}|${install_path}|${install_method}|${min_required}|N/A|${latest_version}|${status}"
+}
+
+#
 # Generate recommendation based on version comparison
 #
 # Args:
@@ -704,13 +807,15 @@ generate_recommendation() {
 
     # Handle "not installed" case
     if [ "$installed" = "not installed" ] || [ "$installed" = "unknown" ] || [ "$installed" = "built-from-source" ]; then
-        # Check if source_latest contains npm install command
-        if [[ "$source_latest" == "npm install"* ]]; then
-            echo "INSTALL via npm: $source_latest"
+        # Check if this is an npm package (method="npm")
+        if [ "$install_method" = "npm" ]; then
+            echo "INSTALL via npm"
             return 0
+        # Check if APT has a good version available
         elif [ "$apt_avail" != "N/A" ] && [ "$apt_avail" != "unknown" ]; then
             echo "INSTALL (APT available)"
             return 0
+        # Default to build from source
         else
             echo "INSTALL (build from source)"
             return 0
