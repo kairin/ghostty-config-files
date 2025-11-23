@@ -49,30 +49,30 @@ readonly AUDIT_LOG="/tmp/ghostty-start-logs/app-audit-${AUDIT_TIMESTAMP}.log"
 scan_apt_packages() {
     log "INFO" "Scanning APT packages..."
 
-    local packages_json="[]"
-    local count=0
+    # Use awk to parse dpkg output efficiently in one pass
+    # This generates a TSV file: name\tversion\tsize_mb
+    local tmp_data="/tmp/apt-scan-$$.tsv"
 
-    # Get installed packages with dpkg
-    while IFS= read -r line; do
-        # Parse dpkg -l output: ii  package-name  version  arch  description
-        local status=$(echo "$line" | awk '{print $1}')
-        local name=$(echo "$line" | awk '{print $2}')
-        local version=$(echo "$line" | awk '{print $3}')
+    dpkg -query -W -f='${Package}\t${Version}\t${Installed-Size}\n' 2>/dev/null | \
+        awk -F'\t' 'BEGIN {OFS="\t"} {
+            size_kb = $3;
+            if (size_kb == "") size_kb = 0;
+            size_mb = int(size_kb / 1024);
+            print $1, $2, size_mb "MB"
+        }' > "$tmp_data"
 
-        # Only process installed packages (status "ii")
-        if [ "$status" = "ii" ]; then
-            # Get installed size in KB
-            local size_kb=$(dpkg-query -W -f='${Installed-Size}' "$name" 2>/dev/null || echo "0")
-            local size_mb=$((size_kb / 1024))
-
-            # Add to JSON array
-            packages_json=$(echo "$packages_json" | jq --arg name "$name" --arg version "$version" --arg size "${size_mb}MB" \
-                '. += [{"name": $name, "version": $version, "size": $size, "method": "apt"}]')
-            ((count++))
-        fi
-    done < <(dpkg -l 2>/dev/null | grep '^ii')
-
+    local count=$(wc -l < "$tmp_data")
     log "INFO" "  Found $count APT packages"
+
+    # Build JSON using jq's slurpfile which handles large datasets efficiently
+    local packages_json="[]"
+    if [ "$count" -gt 0 ]; then
+        packages_json=$(awk -F'\t' '{
+            printf "{\"name\":\"%s\",\"version\":\"%s\",\"size\":\"%s\",\"method\":\"apt\"}\n", $1, $2, $3
+        }' "$tmp_data" | jq -s '.')
+    fi
+
+    rm -f "$tmp_data"
     echo "$packages_json"
 }
 
@@ -86,8 +86,6 @@ scan_snap_packages() {
     log "INFO" "Scanning Snap packages..."
 
     local packages_json="[]"
-    local count=0
-    local disabled_count=0
 
     # Check if snapd is installed
     if ! command -v snap &>/dev/null; then
@@ -96,40 +94,45 @@ scan_snap_packages() {
         return 0
     fi
 
-    # Get all snap packages (including disabled)
-    while IFS= read -r line; do
-        # Parse snap list output: name version rev tracking publisher notes
-        local name=$(echo "$line" | awk '{print $1}')
-        local version=$(echo "$line" | awk '{print $2}')
-        local rev=$(echo "$line" | awk '{print $3}')
-        local notes=$(echo "$line" | awk '{print $NF}')
+    # Parse snap list output with awk (fast)
+    local tmp_data="/tmp/snap-scan-$$.tsv"
 
-        # Skip header line
-        if [ "$name" = "Name" ]; then
-            continue
-        fi
+    snap list --all 2>/dev/null | awk '
+        NR==1 {next}  # Skip header
+        {
+            name = $1
+            version = $2
+            rev = $3
+            notes = $NF
 
-        # Check if disabled
-        local disabled=false
-        if [[ "$notes" == *"disabled"* ]]; then
-            disabled=true
-            ((disabled_count++))
-        fi
+            # Check if disabled
+            disabled = (notes ~ /disabled/) ? "true" : "false"
 
-        # Calculate disk usage for snap
-        local size="unknown"
-        if [ -d "/snap/$name/$rev" ]; then
-            size=$(du -sh "/snap/$name/$rev" 2>/dev/null | awk '{print $1}' || echo "unknown")
-        fi
+            # Get size (approximate from du -sh)
+            size = "unknown"
+            cmd = "du -sh /snap/" name "/" rev " 2>/dev/null | awk '\''{print $1}'\''"
+            cmd | getline size
+            close(cmd)
+            if (size == "") size = "unknown"
 
-        # Add to JSON array
-        packages_json=$(echo "$packages_json" | jq --arg name "$name" --arg version "$version" \
-            --arg size "$size" --argjson disabled "$disabled" \
-            '. += [{"name": $name, "version": $version, "size": $size, "method": "snap", "disabled": $disabled}]')
-        ((count++))
-    done < <(snap list --all 2>/dev/null || echo "")
+            printf "%s\t%s\t%s\t%s\n", name, version, size, disabled
+        }
+    ' > "$tmp_data"
+
+    local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
+    local disabled_count=$(awk -F'\t' '$4 == "true"' "$tmp_data" | wc -l 2>/dev/null || echo "0")
 
     log "INFO" "  Found $count Snap packages ($disabled_count disabled)"
+
+    # Build JSON
+    if [ "$count" -gt 0 ]; then
+        packages_json=$(awk -F'\t' '{
+            disabled_bool = ($4 == "true") ? "true" : "false"
+            printf "{\"name\":\"%s\",\"version\":\"%s\",\"size\":\"%s\",\"method\":\"snap\",\"disabled\":%s}\n", $1, $2, $3, disabled_bool
+        }' "$tmp_data" | jq -s '.')
+    fi
+
+    rm -f "$tmp_data"
     echo "$packages_json"
 }
 
@@ -142,8 +145,7 @@ scan_snap_packages() {
 scan_desktop_files() {
     log "INFO" "Scanning desktop files..."
 
-    local apps_json="[]"
-    local count=0
+    local tmp_data="/tmp/desktop-scan-$$.tsv"
 
     # Scan system and user desktop file locations
     local desktop_dirs=(
@@ -153,27 +155,41 @@ scan_desktop_files() {
         "/var/lib/snapd/desktop/applications"
     )
 
+    # Use find + awk to process all desktop files efficiently
     for dir in "${desktop_dirs[@]}"; do
         if [ ! -d "$dir" ]; then
             continue
         fi
 
-        while IFS= read -r desktop_file; do
-            # Parse desktop file
-            local name=$(grep -E "^Name=" "$desktop_file" 2>/dev/null | head -1 | cut -d= -f2- || echo "")
-            local exec=$(grep -E "^Exec=" "$desktop_file" 2>/dev/null | head -1 | cut -d= -f2- || echo "")
-            local icon=$(grep -E "^Icon=" "$desktop_file" 2>/dev/null | head -1 | cut -d= -f2- || echo "")
+        find "$dir" -maxdepth 1 -name "*.desktop" -type f 2>/dev/null | while read -r desktop_file; do
+            # Extract Name, Exec, Icon with awk (faster than grep)
+            awk -F= '
+                /^Name=/ && !name {name = $2}
+                /^Exec=/ && !exec {exec = $2}
+                /^Icon=/ && !icon {icon = $2}
+                END {
+                    if (name != "") {
+                        printf "%s\t%s\t%s\t%s\n", name, exec, icon, FILENAME
+                    }
+                }
+            ' FILENAME="$(basename "$desktop_file")" "$desktop_file"
+        done
+    done > "$tmp_data"
 
-            if [ -n "$name" ]; then
-                apps_json=$(echo "$apps_json" | jq --arg name "$name" --arg exec "$exec" \
-                    --arg icon "$icon" --arg file "$(basename "$desktop_file")" \
-                    '. += [{"name": $name, "exec": $exec, "icon": $icon, "desktop_file": $file}]')
-                ((count++))
-            fi
-        done < <(find "$dir" -maxdepth 1 -name "*.desktop" -type f 2>/dev/null || true)
-    done
-
+    local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
     log "INFO" "  Found $count desktop applications"
+
+    # Build JSON
+    local apps_json="[]"
+    if [ "$count" -gt 0 ]; then
+        apps_json=$(awk -F'\t' '{
+            # Escape double quotes in fields
+            gsub(/"/, "\\\"", $1); gsub(/"/, "\\\"", $2); gsub(/"/, "\\\"", $3); gsub(/"/, "\\\"", $4)
+            printf "{\"name\":\"%s\",\"exec\":\"%s\",\"icon\":\"%s\",\"desktop_file\":\"%s\"}\n", $1, $2, $3, $4
+        }' "$tmp_data" | jq -s '.')
+    fi
+
+    rm -f "$tmp_data"
     echo "$apps_json"
 }
 
