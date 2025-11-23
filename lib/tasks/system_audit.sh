@@ -386,6 +386,12 @@ task_pre_installation_audit() {
     # VHS Terminal Recorder
     audit_data+=("$(detect_app_status_enhanced "VHS Recorder" "vhs" "vhs --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.7.0" "vhs" "vhs")")
 
+    # asciinema Terminal Recorder
+    audit_data+=("$(detect_app_status_enhanced "asciinema" "asciinema" "asciinema --version 2>&1 | grep -oP '\d+\.\d+'" "2.0" "asciinema" "asciinema")")
+
+    # script command (util-linux - always available on Linux)
+    audit_data+=("$(detect_app_status_enhanced "script (util-linux)" "script" "script --version 2>&1 | grep -oP 'util-linux \K[\d.]+'" "2.0" "util-linux" "none")")
+
     # ffmpeg (VHS dependency - no GitHub releases support)
     audit_data+=("$(detect_app_status_enhanced "ffmpeg" "ffmpeg" "ffmpeg -version 2>&1 | head -n1 | grep -oP 'version \K[\d.]+'" "4.0" "ffmpeg" "none")")
 
