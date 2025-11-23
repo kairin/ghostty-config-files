@@ -11,7 +11,7 @@
 # - State file locking/validation
 #
 
-set -euo pipefail
+set -eo pipefail
 
 # Source guard
 [ -z "${ENVIRONMENT_SH_LOADED:-}" ] || return 0
