@@ -37,7 +37,7 @@ main() {
         log "INFO" "Removing /usr/local/bin/ghostty"
         if sudo rm -f "/usr/local/bin/ghostty" 2>/dev/null; then
             log "SUCCESS" "Removed /usr/local/bin/ghostty"
-            ((cleaned++))
+            : $((cleaned++))
         else
             log "WARNING" "Could not remove /usr/local/bin/ghostty"
         fi
@@ -48,7 +48,7 @@ main() {
         log "INFO" "Removing $HOME/.local/bin/ghostty"
         if rm -f "$HOME/.local/bin/ghostty" 2>/dev/null; then
             log "SUCCESS" "Removed $HOME/.local/bin/ghostty"
-            ((cleaned++))
+            : $((cleaned++))
         else
             log "WARNING" "Could not remove $HOME/.local/bin/ghostty"
         fi
@@ -59,7 +59,7 @@ main() {
         log "INFO" "Removing $HOME/Apps/ghostty build directory"
         if rm -rf "$HOME/Apps/ghostty" 2>/dev/null; then
             log "SUCCESS" "Removed $HOME/Apps/ghostty"
-            ((cleaned++))
+            : $((cleaned++))
         else
             log "WARNING" "Could not remove $HOME/Apps/ghostty"
         fi
@@ -70,7 +70,7 @@ main() {
         log "INFO" "Removing Zig compiler (no longer needed)"
         if rm -rf "$HOME/Apps/zig" 2>/dev/null; then
             log "SUCCESS" "Removed $HOME/Apps/zig"
-            ((cleaned++))
+            : $((cleaned++))
         else
             log "WARNING" "Could not remove $HOME/Apps/zig"
         fi
@@ -89,7 +89,7 @@ main() {
                 log "INFO" "Removing manual desktop entry: $desktop_file"
                 if rm -f "$desktop_file" 2>/dev/null; then
                     log "SUCCESS" "Removed $desktop_file"
-                    ((cleaned++))
+                    : $((cleaned++))
                 fi
             fi
         fi

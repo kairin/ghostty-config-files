@@ -48,7 +48,7 @@ main() {
             log "INFO" "Copying $filename..."
             if cp "$config_file" "$GHOSTTY_CONFIG_DIR/$filename" 2>/dev/null; then
                 log "SUCCESS" "Applied $filename"
-                ((copied++))
+                : $((copied++))  # Prefix with : to avoid exit 1 when value is 0 (set -e compatibility)
             else
                 log "WARNING" "Could not copy $filename"
             fi
@@ -62,7 +62,7 @@ main() {
     else
         log "WARNING" "No configuration files were copied"
         skip_task "$task_id" "no files copied"
-        exit 2
+        exit 0  # Success - nothing to configure
     fi
 }
 
