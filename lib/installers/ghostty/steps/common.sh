@@ -17,7 +17,7 @@ readonly GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 
 # Check if Ghostty is installed via Snap
 is_ghostty_installed() {
-    snap list 2>/dev/null | grep -q "^${GHOSTTY_SNAP_NAME}\s"
+    snap list 2>/dev/null | grep -q "^${GHOSTTY_SNAP_NAME}[[:space:]]"
 }
 
 # Get installed Ghostty version from Snap
