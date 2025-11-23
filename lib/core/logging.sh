@@ -267,9 +267,28 @@ log() {
         *)       color="$COLOR_RESET" ;;
     esac
 
-    # Console output (with color)
-    printf "${COLOR_BOLD}[%s]${COLOR_RESET} ${color}%s${COLOR_RESET} %s\n" \
-        "$timestamp" "$level" "$message"
+    # Console output (with color) - use gum if available for better styling
+    if command -v gum >/dev/null 2>&1; then
+        # Use gum style for enhanced colors (Catppuccin Mocha palette)
+        local gum_color
+        case "$level" in
+            DEBUG)   gum_color="#89b4fa" ;;  # Blue
+            TEST)    gum_color="#89b4fa" ;;  # Blue
+            INFO)    gum_color="#89b4fa" ;;  # Blue
+            SUCCESS) gum_color="#a6e3a1" ;;  # Green
+            WARNING) gum_color="#f9e2af" ;;  # Yellow
+            ERROR)   gum_color="#f38ba8" ;;  # Red
+            *)       gum_color="#cdd6f4" ;;  # Default text
+        esac
+
+        printf "[%s] " "$timestamp"
+        gum style --foreground="$gum_color" --bold "$level"
+        printf " %s\n" "$message"
+    else
+        # Fallback to ANSI colors
+        printf "${COLOR_BOLD}[%s]${COLOR_RESET} ${color}%s${COLOR_RESET} %s\n" \
+            "$timestamp" "$level" "$message"
+    fi
 
     # Human-readable log file output (no color codes)
     if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
