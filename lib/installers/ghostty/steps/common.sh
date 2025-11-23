@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Common utilities for Ghostty Snap installation
+# Common utilities for Ghostty .deb installation
 #
 set -eo pipefail
 
@@ -9,55 +9,25 @@ if [ -z "${REPO_ROOT:-}" ]; then
     source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 fi
 
-# Ghostty Snap package name
-readonly GHOSTTY_SNAP_NAME="ghostty"
+# Ghostty version and download configuration
+readonly GHOSTTY_VERSION="1.2.3"
+readonly GHOSTTY_UBUNTU_VERSION="25.10"
+readonly GHOSTTY_DEB_URL="https://github.com/mkasberg/ghostty-ubuntu/releases/download/${GHOSTTY_VERSION}-0-ppa1/ghostty_${GHOSTTY_VERSION}-0.ppa1_amd64_${GHOSTTY_UBUNTU_VERSION}.deb"
+readonly GHOSTTY_DEB_FILE="/tmp/ghostty_${GHOSTTY_VERSION}.deb"
 
 # Configuration directory
 readonly GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 
-# Check if Ghostty is installed via Snap
+# Check if Ghostty is installed
 is_ghostty_installed() {
-    snap list 2>/dev/null | grep -q "^${GHOSTTY_SNAP_NAME}[[:space:]]"
+    command -v ghostty >/dev/null 2>&1
 }
 
-# Get installed Ghostty version from Snap
+# Get installed Ghostty version
 get_ghostty_version() {
     if is_ghostty_installed; then
-        snap list "${GHOSTTY_SNAP_NAME}" 2>/dev/null | awk 'NR==2 {print $2}'
+        ghostty --version 2>/dev/null | awk '{print $2}' || echo "unknown"
     else
         echo "none"
     fi
-}
-
-# Get latest available Ghostty version from Snap store
-get_ghostty_latest_version() {
-    snap info "${GHOSTTY_SNAP_NAME}" 2>/dev/null | grep "^latest/stable:" | awk '{print $2}' || echo "unknown"
-}
-
-# Check if Ghostty update is available
-is_ghostty_update_available() {
-    local current_version
-    local latest_version
-
-    current_version=$(get_ghostty_version)
-    latest_version=$(get_ghostty_latest_version)
-
-    if [ "$current_version" = "none" ]; then
-        return 0  # Not installed, so "update" means install
-    fi
-
-    if [ "$current_version" != "$latest_version" ] && [ "$latest_version" != "unknown" ]; then
-        return 0  # Update available
-    fi
-
-    return 1  # Already latest
-}
-
-# Check if there's a manual Ghostty installation to clean up
-has_manual_ghostty_installation() {
-    # Check for manually built Ghostty in common locations
-    if [ -f "/usr/local/bin/ghostty" ] || [ -f "$HOME/.local/bin/ghostty" ] || [ -d "$HOME/Apps/ghostty" ]; then
-        return 0
-    fi
-    return 1
 }
