@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Module: Ghostty - Check Prerequisites
-# Purpose: Verify build dependencies (Zig)
+# Module: Ghostty - Check Prerequisites (Snap Installation)
+# Purpose: Verify Snap is available and check for manual installations to clean
 #
 set -euo pipefail
 
@@ -21,41 +21,33 @@ main() {
     register_task "$task_id" "Checking Ghostty prerequisites"
     start_task "$task_id"
 
-    # Check Zig
-    log "INFO" "Checking Zig compiler..."
-    local zig_version
-    zig_version=$(get_zig_version)
-
-    if [ "$zig_version" == "none" ]; then
-        log "WARNING" "Zig compiler not found"
-        # We don't fail here because the next steps will install it
-        # But we should probably indicate that installation is needed
-        complete_task "$task_id"
-        exit 0
+    # Check if Snap is installed
+    log "INFO" "Checking for Snap package manager..."
+    if ! command -v snap &>/dev/null; then
+        log "ERROR" "Snap is not installed. Please install snapd first:"
+        log "ERROR" "  sudo apt update && sudo apt install snapd"
+        fail_task "$task_id" "Snap not available"
+        exit 1
     fi
 
-    log "INFO" "Zig version: $zig_version"
-    
-    # Version check logic (simplified from original)
-    # We just check if it exists for now, strict version check can be in build step or here
-    # Original script checked version >= 0.15.2
-    
-    # Extract version for comparison
-    local zig_major zig_minor zig_patch
-    zig_major=$(echo "$zig_version" | cut -d. -f1)
-    zig_minor=$(echo "$zig_version" | cut -d. -f2 | cut -d- -f1)
-    
-    # Check if version >= 0.15.2
-    if [ "$zig_major" -eq 0 ] && [ "$zig_minor" -ge 15 ]; then
-        log "SUCCESS" "Zig compiler ready ($zig_version)"
-        complete_task "$task_id"
-        exit 0
+    log "SUCCESS" "Snap package manager is available"
+
+    # Check for manual Ghostty installations
+    if has_manual_ghostty_installation; then
+        log "WARNING" "Detected manual Ghostty installation(s)"
+        log "WARNING" "Found manual Ghostty installations in:"
+
+        [ -f "/usr/local/bin/ghostty" ] && log "WARNING" "  - /usr/local/bin/ghostty"
+        [ -f "$HOME/.local/bin/ghostty" ] && log "WARNING" "  - $HOME/.local/bin/ghostty"
+        [ -d "$HOME/Apps/ghostty" ] && log "WARNING" "  - $HOME/Apps/ghostty (build directory)"
+
+        log "INFO" "These will be removed to avoid conflicts with Snap installation"
     else
-        log "WARNING" "Zig version too old: $zig_version (need >= $ZIG_MIN_VERSION)"
-        # Again, we don't fail because we can upgrade
-        complete_task "$task_id"
-        exit 0
+        log "INFO" "No conflicting manual installations detected"
     fi
+
+    complete_task "$task_id"
+    exit 0
 }
 
 main "$@"

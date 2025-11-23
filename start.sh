@@ -62,7 +62,7 @@ source "${LIB_DIR}/core/installation-check.sh"
 
 # Source task modules (not yet in init.sh as they are specific to start.sh)
 source "${LIB_DIR}/tasks/gum.sh"
-source "${LIB_DIR}/tasks/ghostty.sh"
+# ghostty.sh - REMOVED: Using modular installer lib/installers/ghostty/install.sh
 source "${LIB_DIR}/tasks/zsh.sh"
 source "${LIB_DIR}/tasks/python_uv.sh"
 source "${LIB_DIR}/tasks/nodejs_fnm.sh"
@@ -102,8 +102,8 @@ readonly TASK_REGISTRY=(
     # ═══════════════════════════════════════════════════════════════
     # Priority 2: Component Managers (each orchestrates its own sub-steps)
     # ═══════════════════════════════════════════════════════════════
-    # Ghostty Terminal (9 steps: Zig build, Ghostty installation)
-    "install-ghostty|verify-prereqs|script:lib/installers/ghostty/install.sh|verify_ghostty_installed|2|185"
+    # Ghostty Terminal (5 steps: Snap installation, configuration)
+    "install-ghostty|verify-prereqs|script:lib/installers/ghostty/install.sh|verify_ghostty_installed|2|55"
 
     # ZSH + Oh My ZSH (6 steps: OMZ, plugins, zshrc config, security)
     "install-zsh|verify-prereqs|script:lib/installers/zsh/install.sh|verify_zsh_configured|2|70"

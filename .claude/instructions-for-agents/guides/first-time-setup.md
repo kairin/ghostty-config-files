@@ -67,7 +67,7 @@ cd ghostty-config-files
 ```
 
 **What Gets Installed:**
-- Ghostty (built from source with Zig 0.14.0)
+- Ghostty (via Snap package - official distribution)
 - ZSH with Oh My ZSH framework
 - Node.js (latest) via fnm
 - AI tools (Claude Code, Gemini CLI)
