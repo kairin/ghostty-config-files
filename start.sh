@@ -61,6 +61,7 @@ fi
 source "${LIB_DIR}/core/installation-check.sh"
 
 # Source task modules (not yet in init.sh as they are specific to start.sh)
+source "${LIB_DIR}/tasks/fastfetch.sh"
 source "${LIB_DIR}/tasks/gum.sh"
 # ghostty.sh - REMOVED: Using modular installer lib/installers/ghostty/install.sh
 source "${LIB_DIR}/tasks/zsh.sh"
@@ -90,9 +91,14 @@ export SCRIPT_DIR="${REPO_ROOT}"
 #   - A modular script path: "script:lib/tasks/ghostty/00-check-prerequisites.sh"
 readonly TASK_REGISTRY=(
     # ═══════════════════════════════════════════════════════════════
+    # Priority -1: fastfetch (System Info - BEFORE gum for system audit)
+    # ═══════════════════════════════════════════════════════════════
+    "install-fastfetch||script:lib/installers/fastfetch/install.sh|verify_fastfetch_installed|-1|25"
+
+    # ═══════════════════════════════════════════════════════════════
     # Priority 0: Gum TUI Framework (ALWAYS FIRST, ALWAYS REINSTALLED)
     # ═══════════════════════════════════════════════════════════════
-    "install-gum||script:lib/installers/gum/install.sh|verify_gum_installed|0|40"
+    "install-gum|install-fastfetch|script:lib/installers/gum/install.sh|verify_gum_installed|0|40"
 
     # ═══════════════════════════════════════════════════════════════
     # Priority 1: Prerequisites
