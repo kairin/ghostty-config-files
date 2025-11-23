@@ -43,10 +43,9 @@ main() {
         exit 1
     }
 
-    log "INFO" "Installing feh to $FEH_INSTALL_PREFIX..."
-    echo "  Install prefix: $FEH_INSTALL_PREFIX"
-    echo "  Binary location: $FEH_INSTALL_PREFIX/bin/feh"
-    echo ""
+    log "INFO" "Installing feh to $FEH_INSTALL_PREFIX"
+    log "INFO" "Install prefix: $FEH_INSTALL_PREFIX"
+    log "INFO" "Binary location: $FEH_INSTALL_PREFIX/bin/feh"
 
     # Install using make (requires sudo for /usr/local)
     if sudo make PREFIX="$FEH_INSTALL_PREFIX" install; then
