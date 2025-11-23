@@ -121,31 +121,10 @@ show_progress_bar() {
 
     # Always show progress bar for visual feedback
     # Users need to see progress regardless of verbose mode
+    # PLAIN TEXT ONLY - no colors, no escape sequences
     local progress_bar
     progress_bar=$(render_progress_bar "$completed" "$total")
-
-    # Use gum for colored progress if available
-    if command -v gum >/dev/null 2>&1; then
-        local percentage
-        percentage=$(calculate_progress_percentage "$completed" "$total")
-
-        # Color based on progress: red < 33%, yellow < 66%, green >= 66%
-        local bar_color
-        if [ "$percentage" -lt 33 ]; then
-            bar_color="#f38ba8"  # Red (Catppuccin Mocha)
-        elif [ "$percentage" -lt 66 ]; then
-            bar_color="#f9e2af"  # Yellow
-        else
-            bar_color="#a6e3a1"  # Green
-        fi
-
-        # Display colored progress
-        printf "%s: " "$title"
-        gum style --foreground="$bar_color" "$progress_bar"
-    else
-        # Fallback to plain text
-        echo "$title: $progress_bar"
-    fi
+    echo "$title: $progress_bar"
 }
 
 #
@@ -234,28 +213,21 @@ show_header() {
     local title="$1"
     local subtitle="${2:-}"
 
-    # ALWAYS use gum (installed as priority 0, guaranteed available)
-    # Use double border for best terminal compatibility
     echo ""
+
+    # PLAIN TEXT ONLY - no gum, no escape sequences
+    # User requirement: copy/paste from terminal must be readable
+    local width=70
+    local border_line=$(printf '=%.0s' $(seq 1 $width))
+
+    echo ""
+    echo "$border_line"
+    printf "  %-${width}s\n" "$title"
     if [ -n "$subtitle" ]; then
-        gum style \
-            --border double \
-            --border-foreground 212 \
-            --align center \
-            --width 70 \
-            --margin "1 0" \
-            --padding "1 2" \
-            "$title"$'\n\n'"$subtitle"
-    else
-        gum style \
-            --border double \
-            --border-foreground 212 \
-            --align center \
-            --width 70 \
-            --margin "1 0" \
-            --padding "1 2" \
-            "$title"
+        echo ""
+        printf "  %-${width}s\n" "$subtitle"
     fi
+    echo "$border_line"
     echo ""
 }
 
@@ -289,21 +261,18 @@ show_footer() {
     fi
 
     echo ""
-    # Build content for gum
-    local content="Installation Progress"$'\n\n'
-    for line in "${footer_lines[@]}"; do
-        content+="$line"$'\n'
-    done
 
-    # Use gum for consistent box rendering
-    gum style \
-        --border double \
-        --border-foreground 212 \
-        --align center \
-        --width 70 \
-        --margin "1 0" \
-        --padding "1 2" \
-        "$content"
+    # PLAIN TEXT ONLY - no gum, no escape sequences
+    local width=70
+    local border_line=$(printf '=%.0s' $(seq 1 $width))
+
+    echo "$border_line"
+    printf "  %-${width}s\n" "Installation Progress"
+    echo ""
+    for line in "${footer_lines[@]}"; do
+        printf "  %-${width}s\n" "$line"
+    done
+    echo "$border_line"
     echo ""
 }
 
@@ -362,25 +331,20 @@ show_summary() {
     )
 
     echo ""
-    # Build content for gum
-    local content=""
+
+    # PLAIN TEXT ONLY - no gum, no escape sequences
+    local width=70
+    local border_line=$(printf '=%.0s' $(seq 1 $width))
+
+    echo "$border_line"
     for line in "${summary_lines[@]}"; do
         if [ -z "$line" ]; then
-            content+=$'\n'
+            echo ""
         else
-            content+="$line"$'\n'
+            printf "  %-${width}s\n" "$line"
         fi
     done
-
-    # Use gum for consistent box rendering
-    gum style \
-        --border double \
-        --border-foreground 212 \
-        --align center \
-        --width 70 \
-        --margin "1 0" \
-        --padding "1 2" \
-        "$content"
+    echo "$border_line"
     echo ""
 }
 

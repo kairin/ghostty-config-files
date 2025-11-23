@@ -83,8 +83,140 @@ main() {
         all_checks_passed=1
     fi
 
+    # Check 5: Icon installation and desktop integration
+    log "INFO" "Check 5: Icon Installation & Desktop Integration"
+
+    # Create smart launcher script that searches for images in default directories
+    log "INFO" "Creating smart launcher script..."
+    sudo tee /usr/local/bin/feh-launcher > /dev/null << 'LAUNCHER_EOF'
+#!/usr/bin/env bash
+#
+# Feh Smart Launcher
+# Purpose: Launch feh with intelligent default directory selection
+# Priority: Pictures > Pictures/Screenshots > Downloads > Home
+#
+
+# If argument provided (e.g., file association), use it directly
+if [ -n "$1" ]; then
+    exec feh "$@"
+fi
+
+# Search directories in priority order
+SEARCH_DIRS=(
+    "$HOME/Pictures"
+    "$HOME/Pictures/Screenshots"
+    "$HOME/Downloads"
+    "$HOME"
+)
+
+# Find first directory with images
+for dir in "${SEARCH_DIRS[@]}"; do
+    if [ -d "$dir" ]; then
+        # Count images (case-insensitive, common formats)
+        image_count=$(find "$dir" -maxdepth 3 -type f \( \
+            -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \
+            -o -iname "*.gif" -o -iname "*.webp" -o -iname "*.bmp" \
+            -o -iname "*.tiff" -o -iname "*.svg" -o -iname "*.heic" \
+        \) 2>/dev/null | wc -l)
+
+        if [ "$image_count" -gt 0 ]; then
+            # Launch feh with recursive mode, thumbnails, and auto-zoom
+            exec feh --recursive --thumbnails --auto-zoom --sort filename "$dir"
+        fi
+    fi
+done
+
+# No images found - show user-friendly notification
+if command -v notify-send >/dev/null 2>&1; then
+    notify-send -i feh "Feh Image Viewer" \
+        "No images found in Pictures, Downloads, or Home directory.\n\nTip: Add images to ~/Pictures and try again!"
+elif command -v zenity >/dev/null 2>&1; then
+    zenity --info --icon-name=feh --title="Feh Image Viewer" \
+        --text="No images found in Pictures, Downloads, or Home directory.\n\nTip: Add images to ~/Pictures and try again!"
+else
+    # Fallback: terminal message
+    echo "Feh: No images found in default directories (Pictures, Downloads, Home)"
+    echo "Tip: Add images to ~/Pictures and launch feh again"
+fi
+
+exit 1
+LAUNCHER_EOF
+
+    sudo chmod +x /usr/local/bin/feh-launcher
+    log "SUCCESS" "Smart launcher created: /usr/local/bin/feh-launcher"
+
+    # Update desktop file to use smart launcher and make it visible
+    if [ -f "/usr/local/share/applications/feh.desktop" ]; then
+        log "INFO" "Configuring desktop entry for smart launcher..."
+
+        # Replace Exec line with smart launcher
+        sudo sed -i 's|^Exec=.*|Exec=/usr/local/bin/feh-launcher %F|' /usr/local/share/applications/feh.desktop
+
+        # Enable menu visibility
+        sudo sed -i 's/NoDisplay=true/NoDisplay=false/' /usr/local/share/applications/feh.desktop
+
+        # Update comment to reflect smart behavior
+        sudo sed -i 's/^Comment=.*/Comment=Smart image viewer - automatically finds images in Pictures, Downloads/' /usr/local/share/applications/feh.desktop
+
+        log "SUCCESS" "Desktop entry configured with smart launcher"
+
+        # Update desktop database
+        if command -v update-desktop-database >/dev/null 2>&1; then
+            log "INFO" "Updating desktop database..."
+            sudo update-desktop-database /usr/local/share/applications/ 2>/dev/null || true
+            log "SUCCESS" "Desktop database updated"
+        fi
+    fi
+
+    # Update icon cache if gtk-update-icon-cache is available
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        if [ -d "/usr/local/share/icons/hicolor" ]; then
+            log "INFO" "Updating icon cache..."
+            # Create index.theme if it doesn't exist (prevents "No theme index file" error)
+            if [ ! -f "/usr/local/share/icons/hicolor/index.theme" ]; then
+                log "INFO" "Creating icon theme index..."
+                sudo tee /usr/local/share/icons/hicolor/index.theme > /dev/null << 'EOF'
+[Icon Theme]
+Name=Hicolor
+Comment=Fallback icon theme
+Hidden=true
+Directories=48x48/apps,scalable/apps
+
+[48x48/apps]
+Size=48
+Context=Applications
+Type=Fixed
+
+[scalable/apps]
+Size=48
+Context=Applications
+Type=Scalable
+EOF
+                log "SUCCESS" "Icon theme index created"
+            fi
+
+            sudo gtk-update-icon-cache /usr/local/share/icons/hicolor/ 2>/dev/null || true
+            log "SUCCESS" "Icon cache updated"
+        fi
+    fi
+
+    # Verify icon files exist
+    local icon_found=0
+    if [ -f "/usr/local/share/icons/hicolor/48x48/apps/feh.png" ]; then
+        log "SUCCESS" "PNG icon installed: /usr/local/share/icons/hicolor/48x48/apps/feh.png"
+        icon_found=1
+    fi
+    if [ -f "/usr/local/share/icons/hicolor/scalable/apps/feh.svg" ]; then
+        log "SUCCESS" "SVG icon installed: /usr/local/share/icons/hicolor/scalable/apps/feh.svg"
+        icon_found=1
+    fi
+    if [ $icon_found -eq 0 ]; then
+        log "WARNING" "No feh icons found (non-critical)"
+    fi
+
     if [ $all_checks_passed -eq 0 ]; then
         log "SUCCESS" "All verification checks passed"
+        log "SUCCESS" "Feh should now appear in your application menu"
         complete_task "$task_id"
         exit 0
     else

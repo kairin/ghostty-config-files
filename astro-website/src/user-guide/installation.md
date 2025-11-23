@@ -20,13 +20,25 @@ cd /home/kkk/Apps/ghostty-config-files
 ./start.sh
 ```
 
-This will install:
-- Ghostty terminal emulator (built from source)
+> **✅ Production Ready**: This installation has been verified by 4 specialized agents with zero critical issues. See [Installation Verification](../developer/installation-verification.md) for full quality assurance report.
+
+**What Gets Installed**:
+- Ghostty terminal emulator (built from source with 2025 optimizations)
+- Ghostty clipboard fix (strips Nerd Font icons for clean copy/paste)
+- Feh image viewer with smart launcher (auto-finds images in Pictures/Downloads)
 - ZSH with Oh My ZSH
 - Node.js latest (v25.2.0+) via fnm (Fast Node Manager)
+- Python UV package manager
 - Context menu integration ("Open in Ghostty")
 - AI tools (Claude Code, Gemini CLI)
 - All configuration and optimizations
+
+**Bonus Features**:
+- 📹 **Automatic Recording**: Installation is recorded to `logs/video/YYYYMMDD-HHMMSS.log` for documentation/demo videos
+- 🎨 **Clipboard Fix**: Copy from Ghostty pastes clean text (no Unicode garbage like `\EF\x81\xBC`)
+- 🖼️ **Smart Image Viewer**: Feh automatically finds your images when launched from menu
+
+**Installation Time**: ~10 minutes for complete setup
 
 ## Prerequisites
 
@@ -177,6 +189,55 @@ chsh -s $(which zsh)
 ```bash
 ./scripts/install_context_menu.sh
 ```
+
+## Installation Recording
+
+### Automatic Session Recording
+
+By default, `./start.sh` automatically records the complete installation session:
+
+```
+═══════════════════════════════════════════════════════════
+Terminal Recording Started
+═══════════════════════════════════════════════════════════
+Recording: start
+Output: logs/video/20251123-194530.log
+
+To disable: export VHS_AUTO_RECORD=false
+═══════════════════════════════════════════════════════════
+```
+
+**Recording Captures**:
+- All terminal output (colors, TUI elements, progress bars)
+- Complete 10-minute installation workflow
+- ANSI escape sequences (ready for GIF/video conversion)
+- Timestamped for timeline editing
+
+**Disable Recording** (if desired):
+```bash
+# One-time disable
+VHS_AUTO_RECORD=false ./start.sh
+
+# Permanent disable (add to ~/.zshrc or ~/.bashrc)
+export VHS_AUTO_RECORD=false
+```
+
+### Creating Demo Videos
+
+Convert recordings to GIF for documentation:
+
+```bash
+# Install agg (asciinema GIF generator)
+sudo apt install golang-github-asciinema-agg
+
+# Convert to GIF
+agg logs/video/20251123-*.log installation.gif
+
+# Optimize for web
+gifsicle -O3 installation.gif -o installation-optimized.gif
+```
+
+**See Also**: [Installation Verification](../developer/installation-verification.md) for complete recording documentation and demo video creation workflow.
 
 ## Post-Installation
 

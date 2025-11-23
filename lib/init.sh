@@ -88,8 +88,68 @@ source_lib "verification/environment.sh"
 # Initialize logging
 init_logging
 
+# ═════════════════════════════════════════════════════════════
+# CRITICAL: Install gum IMMEDIATELY if missing
+# ═════════════════════════════════════════════════════════════
+# Gum is a critical dependency for the entire TUI system.
+# If missing, install it immediately via apt before anything else.
+if ! command -v gum >/dev/null 2>&1; then
+    log "WARNING" "gum TUI framework not found - installing immediately (CRITICAL DEPENDENCY)"
+
+    # Try apt installation (fastest method)
+    if command -v apt-get >/dev/null 2>&1; then
+        log "INFO" "Installing gum via apt..."
+
+        # Silent apt update and install
+        if sudo apt-get update >/dev/null 2>&1 && sudo apt-get install -y gum >/dev/null 2>&1; then
+            log "SUCCESS" "✓ Emergency gum installation successful via apt"
+        else
+            # Fallback: binary download
+            log "WARNING" "apt failed, attempting binary download..."
+
+            local temp_dir
+            temp_dir=$(mktemp -d)
+            trap "rm -rf '$temp_dir'" EXIT
+
+            if curl -fsSL "https://github.com/charmbracelet/gum/releases/latest/download/gum_Linux_x86_64.tar.gz" -o "$temp_dir/gum.tar.gz" && \
+               tar -xzf "$temp_dir/gum.tar.gz" -C "$temp_dir" && \
+               mkdir -p "$HOME/.local/bin" && \
+               cp "$temp_dir/gum" "$HOME/.local/bin/gum" && \
+               chmod +x "$HOME/.local/bin/gum"; then
+                export PATH="$HOME/.local/bin:$PATH"
+                log "SUCCESS" "✓ Emergency gum installation successful via binary"
+            else
+                log "ERROR" "Failed to install gum - TUI will use plain text fallback"
+            fi
+        fi
+    else
+        log "WARNING" "apt-get not available - TUI will use plain text fallback"
+    fi
+fi
+
 # Initialize TUI (auto-detect)
 init_tui
+
+# ═════════════════════════════════════════════════════════════
+# SUDO CREDENTIAL PERSISTENCE
+# ═════════════════════════════════════════════════════════════
+# DISABLED: Causes process hanging issues with script recording
+# The background sudo refresh process prevents parent scripts from exiting
+#
+# Alternative: Refresh sudo credentials at the start of each major operation
+# This is handled by individual installer scripts as needed
+#
+# if [ "${SUDO_REFRESH_ENABLED:-false}" = "true" ]; then
+#     # Initial sudo authentication (if needed)
+#     if ! sudo -n true 2>/dev/null; then
+#         log "INFO" "Sudo authentication required for installation"
+#         sudo -v || {
+#             log "ERROR" "Sudo authentication failed"
+#             exit 1
+#         }
+#     fi
+#     log "DEBUG" "Sudo credentials refreshed"
+# fi
 
 # Export common variables
 export VERBOSE_MODE=${VERBOSE_MODE:-false}
