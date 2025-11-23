@@ -3,7 +3,7 @@
 # Module: Ghostty - Cleanup Manual Installation
 # Purpose: Remove any manually built Ghostty installations to avoid conflicts
 #
-set -euo pipefail
+set -eo pipefail
 
 # 1. Bootstrap
 source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
@@ -27,7 +27,7 @@ main() {
     if ! has_manual_ghostty_installation; then
         log "INFO" "No manual installations to clean up"
         skip_task "$task_id" "nothing to clean"
-        exit 2  # Skipped
+        exit 0  # Success - nothing to clean
     fi
 
     log "INFO" "Removing manual Ghostty installations..."
@@ -102,7 +102,7 @@ main() {
     else
         log "INFO" "No items needed cleanup"
         skip_task "$task_id" "nothing to clean"
-        exit 2
+        exit 0  # Success - nothing to clean
     fi
 }
 

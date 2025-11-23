@@ -9,7 +9,7 @@
 # CRITICAL: Gum is ALWAYS reinstalled (latest version) regardless of existing installation
 #
 
-set -euo pipefail
+set -eo pipefail
 
 # Get script directory and repository root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -3,7 +3,7 @@
 # Module: Ghostty - Check Prerequisites (Snap Installation)
 # Purpose: Verify Snap is available and check for manual installations to clean
 #
-set -euo pipefail
+set -eo pipefail
 
 # 1. Bootstrap
 source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"

@@ -3,7 +3,7 @@
 # Module: Ghostty - Configure Settings
 # Purpose: Apply Ghostty configuration from repository
 #
-set -euo pipefail
+set -eo pipefail
 
 # 1. Bootstrap
 source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
