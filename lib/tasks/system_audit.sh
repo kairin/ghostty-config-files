@@ -23,6 +23,7 @@ set -euo pipefail
 
 # Source required utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 source "${SCRIPT_DIR}/../core/logging.sh"
 source "${SCRIPT_DIR}/../core/utils.sh"
 
@@ -148,6 +149,135 @@ version_compare() {
 }
 
 #
+# Generate markdown report of system state
+#
+# Args:
+#   $@ - Array of audit data (pipe-delimited strings)
+#
+# Output:
+#   Markdown file saved to logs/installation/system-state-YYYYMMDD-HHMMSS.md
+#
+generate_markdown_report() {
+    local -a audit_data=("$@")
+    local timestamp
+    timestamp=$(date +%Y%m%d-%H%M%S)
+    local markdown_file="${REPO_ROOT}/logs/installation/system-state-${timestamp}.md"
+
+    # Ensure logs directory exists
+    mkdir -p "${REPO_ROOT}/logs/installation"
+
+    # Generate markdown content
+    cat > "$markdown_file" <<EOF
+# System State Audit
+**Generated:** $(date '+%Y-%m-%d %H:%M:%S')
+
+## Installation Status
+
+| App/Tool | Current Version | Path | Method | Latest Version | Action |
+|----------|----------------|------|--------|----------------|--------|
+EOF
+
+    # Add table data
+    for data in "${audit_data[@]}"; do
+        # Replace pipes with markdown table separators
+        echo "$data" | sed 's/|/ | /g' | sed 's/^/| /' | sed 's/$/ |/' >> "$markdown_file"
+    done
+
+    # Add summary section
+    local total_apps="${#audit_data[@]}"
+    local installed_count=0
+    local upgrade_count=0
+    local install_count=0
+
+    for data in "${audit_data[@]}"; do
+        IFS='|' read -r _ _ _ _ _ action <<< "$data"
+        case "$action" in
+            "OK") ((installed_count++)) ;;
+            "UPGRADE") ((upgrade_count++)) ;;
+            "INSTALL") ((install_count++)) ;;
+        esac
+    done
+
+    cat >> "$markdown_file" <<EOF
+
+## Summary Statistics
+
+- **Total apps/tools:** $total_apps
+- **Already installed (OK):** $installed_count
+- **Will upgrade:** $upgrade_count
+- **Will install:** $install_count
+
+## Installation Methods
+
+EOF
+
+    # Installation method breakdown
+    local method_apt=0 method_source=0 method_binary=0 method_npm=0 method_missing=0
+
+    for data in "${audit_data[@]}"; do
+        IFS='|' read -r _ _ _ method _ _ <<< "$data"
+        case "$method" in
+            "apt") ((method_apt++)) ;;
+            "source") ((method_source++)) ;;
+            "binary"|"user-binary") ((method_binary++)) ;;
+            "npm") ((method_npm++)) ;;
+            "missing") ((method_missing++)) ;;
+        esac
+    done
+
+    [ "$method_apt" -gt 0 ] && echo "- **APT packages:** $method_apt" >> "$markdown_file"
+    [ "$method_source" -gt 0 ] && echo "- **Built from source:** $method_source" >> "$markdown_file"
+    [ "$method_binary" -gt 0 ] && echo "- **Binary installations:** $method_binary" >> "$markdown_file"
+    [ "$method_npm" -gt 0 ] && echo "- **NPM global packages:** $method_npm" >> "$markdown_file"
+    [ "$method_missing" -gt 0 ] && echo "- **Not installed:** $method_missing" >> "$markdown_file"
+
+    # Add Charm Bracelet ecosystem note
+    cat >> "$markdown_file" <<'EOF'
+
+## Charm Bracelet TUI Ecosystem
+
+This project uses the following Charm Bracelet tools:
+
+### CLI Tools (Directly Usable in Bash)
+- **gum** - Complete TUI framework wrapping bubbletea, bubbles, and lipgloss
+- **glow** - Markdown viewer for beautiful documentation display
+- **vhs** - Terminal recorder for creating demo GIFs and videos
+
+### Dependencies (VHS)
+- **ffmpeg** - Multimedia framework for video encoding
+- **ttyd** - Terminal over HTTP for VHS recording
+
+### NOT Installed (Go Libraries - Not Bash Compatible)
+The following are Go libraries that are **already wrapped** by the CLI tools above:
+- `bubbletea` - TUI framework (wrapped by gum)
+- `bubbles` - TUI components (wrapped by gum)
+- `lipgloss` - Styling library (wrapped by gum)
+- `glamour` - Markdown rendering (wrapped by glow)
+- `huh` - Forms library (equivalent functionality in gum)
+- `ultraviolet` - Low-level primitives (internal use only)
+- `colorprofile` - Color handling (internal library)
+
+Installing these Go libraries separately would provide **zero additional functionality**
+for bash scripts. The gum and glow CLI tools already expose all their features.
+
+---
+
+*This report is automatically generated during each installation/update run.*
+*View with: `glow logs/installation/system-state-*.md`*
+EOF
+
+    log "INFO" "Markdown report saved: $markdown_file"
+
+    # Display with glow if available
+    if command_exists "glow"; then
+        echo ""
+        log "INFO" "Displaying detailed report with glow..."
+        echo ""
+        glow "$markdown_file" --pager
+    fi
+}
+
+#
 # Display pre-installation system audit table
 #
 # Shows current state of all apps that will be installed
@@ -165,8 +295,8 @@ task_pre_installation_audit() {
     # Collect app statuses
     local -a audit_data
 
-    # Gum TUI Framework
-    audit_data+=("$(detect_app_status "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "0.14.5")")
+    # Gum TUI Framework (built from source, version says "unknown")
+    audit_data+=("$(detect_app_status "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5")")
 
     # Zig Compiler (Ghostty dependency)
     audit_data+=("$(detect_app_status "Zig Compiler" "zig" "zig version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.13.0")")
@@ -202,11 +332,23 @@ task_pre_installation_audit() {
     # Gemini CLI
     audit_data+=("$(detect_app_status "Gemini CLI" "gemini" "gemini --version 2>&1 | head -n1" "latest")")
 
-    # GitHub Copilot CLI
-    audit_data+=("$(detect_app_status "Copilot CLI" "gh-copilot" "gh copilot --version 2>&1" "latest")")
+    # GitHub Copilot CLI (command is github-copilot-cli, not gh-copilot)
+    audit_data+=("$(detect_app_status "Copilot CLI" "github-copilot-cli" "github-copilot-cli --version 2>&1 | head -n1" "latest")")
 
     # Feh Image Viewer
     audit_data+=("$(detect_app_status "Feh Viewer" "feh" "feh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "3.11.0")")
+
+    # Glow Markdown Viewer
+    audit_data+=("$(detect_app_status "Glow Markdown" "glow" "glow --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "2.0.0")")
+
+    # VHS Terminal Recorder
+    audit_data+=("$(detect_app_status "VHS Recorder" "vhs" "vhs --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.7.0")")
+
+    # ffmpeg (VHS dependency)
+    audit_data+=("$(detect_app_status "ffmpeg" "ffmpeg" "ffmpeg -version 2>&1 | head -n1 | grep -oP 'version \K[\d.]+'" "4.0")")
+
+    # ttyd (VHS dependency)
+    audit_data+=("$(detect_app_status "ttyd" "ttyd" "ttyd --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "1.7.0")")
 
     # Nautilus Context Menu (check script)
     if [ -f "$HOME/.local/share/nautilus/scripts/Open in Ghostty" ]; then
@@ -300,6 +442,9 @@ task_pre_installation_audit() {
     log "INFO" "════════════════════════════════════════"
     echo ""
 
+    # Generate markdown report and save to logs
+    generate_markdown_report "${audit_data[@]}"
+
     # Ask user to confirm before proceeding
     if command_exists "gum"; then
         log "INFO" "Ready to proceed with installation?"
@@ -327,4 +472,5 @@ task_pre_installation_audit() {
 # Export functions
 export -f detect_app_status
 export -f version_compare
+export -f generate_markdown_report
 export -f task_pre_installation_audit
