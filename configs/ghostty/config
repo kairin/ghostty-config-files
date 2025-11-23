@@ -34,4 +34,5 @@ config-file = theme.conf
 config-file = scroll.conf
 config-file = layout.conf
 config-file = keybindings.conf
+config-file = clipboard.conf
 keybind = shift+enter=text:\x1b\r

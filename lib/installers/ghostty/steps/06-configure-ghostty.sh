@@ -37,6 +37,7 @@ main() {
             "scroll.conf"
             "layout.conf"
             "keybindings.conf"
+            "clipboard.conf"
         )
 
         local copied_count=0
@@ -73,6 +74,7 @@ config-file = theme.conf
 config-file = scroll.conf
 config-file = layout.conf
 config-file = keybindings.conf
+config-file = clipboard.conf
 EOF
 
         # Theme
@@ -104,6 +106,19 @@ EOF
 # Custom Keybindings
 keybind = ctrl+shift+t=new_tab
 keybind = ctrl+alt+d=new_split:right
+EOF
+
+        # Clipboard (Nerd Font icon stripping)
+        cat > "$config_dir/clipboard.conf" <<'EOF'
+# Clipboard Configuration
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = true
+copy-on-select = true
+
+# Strip Nerd Font icons when copying (prevents \EF\x81\xBC in pastes)
+clipboard-codepoint-map = U+F07C=      # Folder icon
+clipboard-codepoint-map = U+F113=      # Git branch icon
+clipboard-codepoint-map = U+276F=>     # Prompt arrow → >
 EOF
 
         log "SUCCESS" "Created minimal configuration files"

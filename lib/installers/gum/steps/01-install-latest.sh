@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Module: Gum - Install Latest Version
-# Purpose: Install latest gum from apt or GitHub releases
+# Purpose: Intelligently install gum using best method (apt/source/binary)
 #
 set -euo pipefail
 
@@ -10,9 +10,12 @@ source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 
 # 2. Load Common Utils
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+source "${LIB_DIR}/core/version-intelligence.sh"
+source "${LIB_DIR}/core/uninstaller.sh"
 
 # Constants
 readonly GUM_BINARY_URL="https://github.com/charmbracelet/gum/releases/latest/download/gum_Linux_x86_64.tar.gz"
+readonly GUM_GITHUB_REPO="charmbracelet/gum"
 
 # Temp directory tracking
 TEMP_DIR=""
@@ -32,108 +35,149 @@ main() {
 
     # TUI Integration
     local task_id="gum-install"
-    register_task "$task_id" "Installing latest gum"
+    register_task "$task_id" "Installing gum with intelligent strategy"
     start_task "$task_id"
 
-    log "INFO" "Installing latest gum TUI framework..."
+    log "INFO" "Installing gum TUI framework with intelligent strategy..."
 
-    # Remove old gum if it exists
-    # Remove old gum if it exists
+    # Step 1: Determine best installation strategy
+    log "INFO" "Analyzing installation options..."
+    local strategy_json
+    strategy_json=$(determine_installation_strategy "gum" "gum" "$GUM_GITHUB_REPO" "N/A")
+
+    local install_method
+    install_method=$(echo "$strategy_json" | grep -oP '"method": "\K[^"]+')
+    local reason
+    reason=$(echo "$strategy_json" | grep -oP '"reason": "\K[^"]+')
+    local version_target
+    version_target=$(echo "$strategy_json" | grep -oP '"version_target": "\K[^"]+')
+
+    log "INFO" "Strategy: $install_method - $reason"
+    log "INFO" "Target version: $version_target"
+
+    # Step 2: Remove old installation completely
     if command -v gum >/dev/null 2>&1; then
-        log "INFO" "Removing old gum installation..."
-        local old_path
-        old_path=$(command -v gum)
-
-        case "$old_path" in
-            /usr/bin/gum)
-                sudo apt-get remove -y gum 2>&1 | tee -a "$(get_log_file)" || true
-                ;;
-            /snap/bin/gum)
-                sudo snap remove gum 2>&1 | tee -a "$(get_log_file)" || true
-                ;;
-            "$HOME/.local/bin/gum")
-                rm -f "$HOME/.local/bin/gum"
-                ;;
-            "/usr/local/bin/gum")
-                sudo rm -f "/usr/local/bin/gum"
-                ;;
-        esac
+        log "INFO" "Removing existing gum installation..."
+        uninstall_tool_complete "gum" false
     fi
 
-    # Explicitly check for snap even if not in PATH
-    if snap list gum >/dev/null 2>&1; then
-        log "INFO" "Removing gum snap..."
-        sudo snap remove gum 2>&1 | tee -a "$(get_log_file)" || true
+    # Step 3: Install using determined method
+    case "$install_method" in
+        apt)
+            install_via_apt
+            ;;
+        github_binary|source)
+            install_via_binary
+            ;;
+        *)
+            log "ERROR" "Unknown installation method: $install_method"
+            complete_task "$task_id" 1
+            exit 1
+            ;;
+    esac
+
+    # Step 4: Verify installation
+    if ! command -v gum >/dev/null 2>&1; then
+        log "ERROR" "gum installation failed - binary not found in PATH"
+        complete_task "$task_id" 1
+        exit 1
     fi
 
-    # Try apt first (official package)
-    log "INFO" "Attempting installation via apt..."
+    local installed_version
+    installed_version=$(gum --version 2>&1 | grep -oP 'v?\d+\.\d+\.\d+' | head -1 || echo "unknown")
+    log "SUCCESS" "✓ gum installed successfully: version $installed_version"
+
+    complete_task "$task_id" 0
+    exit 0
+}
+
+#
+# Install via APT package manager
+#
+install_via_apt() {
+    log "INFO" "Installing via apt..."
     echo "  ⠋ Updating package lists..."
 
-    if sudo apt-get update 2>&1 | tee -a "$(get_log_file)" | grep -E "Reading package lists|Building dependency tree|Get:"; then
-        :
-    fi
+    # Update package lists (silent, non-blocking)
+    sudo apt-get update >/dev/null 2>&1 || true
 
     echo "  ⠋ Installing gum package..."
-    if sudo apt-get install -y gum 2>&1 | tee -a "$(get_log_file)" | grep -E "Unpacking|Setting up|Processing"; then
-        log "SUCCESS" "✓ Installed latest gum via apt"
-        complete_task "$task_id" 0
-        exit 0
-    fi
 
-    # Fallback: Binary installation
-    log "WARNING" "apt installation failed, using binary download..."
+    # Install gum via apt
+    if sudo apt-get install -y gum >/dev/null 2>&1; then
+        log "SUCCESS" "✓ Installed gum via apt"
+        return 0
+    else
+        log "WARNING" "apt installation failed, falling back to binary..."
+        install_via_binary
+        return $?
+    fi
+}
+
+#
+# Install via GitHub binary download
+#
+install_via_binary() {
+    log "INFO" "Installing via GitHub binary download..."
     echo "  ⠋ Downloading latest gum from GitHub releases..."
 
     TEMP_DIR=$(mktemp -d)
     local tar_file="$TEMP_DIR/gum.tar.gz"
 
+    # Download with progress bar
     if ! curl -fL --progress-bar "$GUM_BINARY_URL" -o "$tar_file" 2>&1; then
         log "ERROR" "Failed to download gum binary"
-        complete_task "$task_id" 1
-        exit 1
+        return 1
     fi
 
     # Extract binary
     echo "  ⠋ Extracting gum binary..."
     if ! tar -xzf "$tar_file" -C "$TEMP_DIR"; then
         log "ERROR" "Failed to extract gum binary"
-        complete_task "$task_id" 1
-        exit 1
+        return 1
     fi
 
     # Install to ~/.local/bin
     echo "  ⠋ Installing binary to ~/.local/bin..."
     mkdir -p "$HOME/.local/bin"
+
     if ! cp "$TEMP_DIR/gum" "$HOME/.local/bin/gum"; then
         log "ERROR" "Failed to install gum binary"
-        complete_task "$task_id" 1
-        exit 1
+        return 1
     fi
 
     chmod +x "$HOME/.local/bin/gum"
-    # Temp dir cleaned by trap
+    log "SUCCESS" "✓ Installed gum via binary download"
 
-    log "SUCCESS" "✓ Installed latest gum via binary download"
+    # Ensure ~/.local/bin is in PATH
+    ensure_local_bin_in_path
+    return 0
+}
 
-    # Add to PATH if not already
+#
+# Ensure ~/.local/bin is in PATH and shell config
+#
+ensure_local_bin_in_path() {
+    # Add to current session
     if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
         export PATH="$HOME/.local/bin:$PATH"
-
-        for rc_file in "$HOME/.zshrc" "$HOME/.bashrc"; do
-            if [ -f "$rc_file" ] && ! grep -q "\.local/bin" "$rc_file"; then
-                {
-                    echo ""
-                    echo "# gum TUI framework (added by installer)"
-                    echo "export PATH=\"\$HOME/.local/bin:\$PATH\""
-                } >> "$rc_file"
-                log "INFO" "  ✓ Updated $rc_file"
-            fi
-        done
+        log "INFO" "Added ~/.local/bin to PATH for current session"
     fi
 
-    complete_task "$task_id" 0
-    exit 0
+    # Add to shell config files if not already present
+    for rc_file in "$HOME/.zshrc" "$HOME/.bashrc"; do
+        if [ -f "$rc_file" ]; then
+            # Check if PATH modification already exists
+            if ! grep -q 'HOME/.local/bin' "$rc_file"; then
+                {
+                    echo ""
+                    echo "# User binaries (added by ghostty-config installer)"
+                    echo 'export PATH="$HOME/.local/bin:$PATH"'
+                } >> "$rc_file"
+                log "INFO" "  ✓ Updated $rc_file with PATH modification"
+            fi
+        fi
+    done
 }
 
 main "$@"
