@@ -45,6 +45,18 @@ else
     source "$(git rev-parse --show-toplevel)/lib/init.sh"
 fi
 
+# ═════════════════════════════════════════════════════════════
+# VHS AUTO-RECORDING (if available)
+# ═════════════════════════════════════════════════════════════
+# Enable automatic VHS recording for demo creation
+# This must be AFTER lib/init.sh (needs REPO_ROOT) but BEFORE any work
+# If VHS available and enabled: execs into VHS (NO RETURN)
+# If VHS not available or disabled: continues normally (graceful degradation)
+if [[ -f "${LIB_DIR}/ui/vhs-auto-record.sh" ]]; then
+    source "${LIB_DIR}/ui/vhs-auto-record.sh"
+    maybe_start_vhs_recording "start" "$0" "$@"
+fi
+
 # Source installation check module (check ACTUAL status, not state file)
 source "${LIB_DIR}/core/installation-check.sh"
 

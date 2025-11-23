@@ -5,10 +5,26 @@
 # Logs all output for troubleshooting
 #
 # Author: Auto-generated for ghostty-config-files
-# Last Modified: 2025-11-22
-# Version: 2.1 - Added Ghostty/Zig modular uninstall → reinstall workflow
+# Last Modified: 2025-11-23
+# Version: 2.2 - Added VHS auto-recording support
 
 set -uo pipefail  # Removed -e to allow graceful error handling
+
+# ============================================================================
+# VHS Auto-Recording Setup (if available)
+# ============================================================================
+# Enable automatic VHS recording for demo creation
+# If VHS available and enabled: execs into VHS (NO RETURN)
+# If VHS not available or disabled: continues normally (graceful degradation)
+
+# Discover repository root (needed for vhs-auto-record.sh)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+if [[ -f "${REPO_ROOT}/lib/ui/vhs-auto-record.sh" ]]; then
+    source "${REPO_ROOT}/lib/ui/vhs-auto-record.sh"
+    maybe_start_vhs_recording "daily-updates" "$0" "$@"
+fi
 
 # ============================================================================
 # Configuration
