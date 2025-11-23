@@ -3,7 +3,7 @@
 # Module: Ghostty - Install from Snap
 # Purpose: Install or upgrade Ghostty using Snap package manager
 #
-set -euo pipefail
+set -eo pipefail
 
 # 1. Bootstrap
 source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"

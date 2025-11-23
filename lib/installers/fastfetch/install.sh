@@ -9,7 +9,7 @@
 # CRITICAL: fastfetch is installed BEFORE gum (Priority -1) for system audit display
 #
 
-set -euo pipefail
+set -eo pipefail
 
 # Get script directory and repository root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

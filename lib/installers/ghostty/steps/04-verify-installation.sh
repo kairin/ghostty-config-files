@@ -3,7 +3,7 @@
 # Module: Ghostty - Verify Installation
 # Purpose: Verify Ghostty is properly installed and functional
 #
-set -euo pipefail
+set -eo pipefail
 
 # 1. Bootstrap
 source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"

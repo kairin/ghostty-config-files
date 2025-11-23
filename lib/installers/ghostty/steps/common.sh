@@ -2,7 +2,12 @@
 #
 # Common utilities for Ghostty Snap installation
 #
-set -euo pipefail
+set -eo pipefail
+
+# Source core libraries if not already sourced
+if [ -z "${REPO_ROOT:-}" ]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
+fi
 
 # Ghostty Snap package name
 readonly GHOSTTY_SNAP_NAME="ghostty"
