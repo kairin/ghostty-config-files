@@ -279,15 +279,18 @@ log() {
 
     # Structured JSON log output
     if [ -n "${LOG_FILE_JSON:-}" ] && [ -f "$LOG_FILE_JSON" ]; then
-        # Escape special characters in message for JSON
-        local escaped_message
+        # Escape special characters for JSON using jq -Rs (raw string input, properly quoted output)
+        local escaped_timestamp escaped_level escaped_message
+        escaped_timestamp=$(printf '%s' "$timestamp" | jq -Rs .)
+        escaped_level=$(printf '%s' "$level" | jq -Rs .)
         escaped_message=$(printf '%s' "$message" | jq -Rs .)
 
         # Append JSON entry (comma-separated, array format)
+        # Note: jq -Rs . returns properly quoted JSON strings, so we don't add additional quotes
         cat >> "$LOG_FILE_JSON" <<EOF
 {
-  "timestamp": "$timestamp",
-  "level": "$level",
+  "timestamp": $escaped_timestamp,
+  "level": $escaped_level,
   "message": $escaped_message
 },
 EOF
@@ -306,11 +309,12 @@ EOF
 #
 finalize_logging() {
     if [ -n "${LOG_FILE_JSON:-}" ] && [ -f "$LOG_FILE_JSON" ]; then
+        # Log finalization message BEFORE closing array (so it's included in JSON)
+        log "INFO" "Logging finalized"
+
         # Remove trailing comma and close JSON array
         sed -i '$ s/,$//' "$LOG_FILE_JSON"
         echo "]" >> "$LOG_FILE_JSON"
-
-        log "INFO" "Logging finalized"
     fi
 }
 
