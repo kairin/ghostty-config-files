@@ -86,19 +86,19 @@ is_under_vhs() {
 # Check if VHS auto-recording is enabled
 #
 # Respects VHS_AUTO_RECORD environment variable.
-# Default: DISABLED (false) - opt-in for demo recording
+# Default: ENABLED (true) - automatic background recording
 #
 # Returns:
 #   0 - Auto-recording enabled
 #   1 - Auto-recording disabled
 #
 is_vhs_auto_record_enabled() {
-    # Check if explicitly enabled
-    if [[ "${VHS_AUTO_RECORD:-false}" == "true" ]]; then
-        return 0
+    # Check if explicitly disabled
+    if [[ "${VHS_AUTO_RECORD:-true}" == "false" ]]; then
+        return 1
     fi
 
-    return 1
+    return 0
 }
 
 # ═══════════════════════════════════════════════════════════════
@@ -227,51 +227,48 @@ maybe_start_vhs_recording() {
     shift 2
     local script_args=("$@")
 
-    # Check 1: Already under VHS?
+    # Check 1: Already recording?
     if is_under_vhs; then
         # We're already recording - continue normally
         return 0
     fi
 
-    # Check 2: VHS auto-recording enabled?
+    # Check 2: Auto-recording enabled?
     if ! is_vhs_auto_record_enabled; then
         # User disabled auto-recording
         return 0
     fi
 
-    # Check 3: VHS available?
-    if ! check_vhs_available; then
-        # VHS not installed - continue normally (graceful degradation)
-        return 0
-    fi
+    # Generate output filename
+    local repo_root="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local output_dir="${repo_root}/logs/video"
+    local output_file="${output_dir}/${timestamp}.log"
 
-    # All checks passed - start VHS recording
-    local tape_file
-    tape_file=$(generate_vhs_tape "$recording_name" "$script_path" "${script_args[@]}")
+    # Create output directory
+    mkdir -p "$output_dir" 2>/dev/null || return 0
 
-    if [[ $? -ne 0 ]] || [[ ! -f "$tape_file" ]]; then
-        # Failed to generate tape file - continue without recording
-        return 0
-    fi
+    # Set marker so nested calls know we're recording
+    export VHS_RECORDING="true"
+    export VHS_OUTPUT="$output_file"
 
-    # Print notification (will be visible in terminal, not in recording)
+    # Print notification
     echo ""
     echo "═══════════════════════════════════════════════════════════"
-    echo "VHS Auto-Recording Enabled"
+    echo "Terminal Recording Started"
     echo "═══════════════════════════════════════════════════════════"
     echo "Recording: ${recording_name}"
-    echo "Output: logs/video/$(date +%Y%m%d-%H%M%S).gif"
+    echo "Output: logs/video/${timestamp}.log"
     echo ""
     echo "To disable: export VHS_AUTO_RECORD=false"
     echo "═══════════════════════════════════════════════════════════"
     echo ""
-    sleep 2
 
-    # CRITICAL: exec replaces current process - NO RETURN
-    # The script will restart inside VHS session
-    exec vhs "$tape_file"
+    # Use script command to record terminal session
+    # This replaces current process but shows output in real-time
+    exec script -q -f -c "$script_path ${script_args[*]}" "$output_file"
 
-    # If exec fails (VHS error), continue without recording
+    # If exec fails, continue without recording
     return 0
 }
 
