@@ -58,6 +58,7 @@ source "${LIB_DIR}/tasks/ai_tools.sh"
 source "${LIB_DIR}/tasks/context_menu.sh"
 source "${LIB_DIR}/tasks/feh.sh"
 source "${LIB_DIR}/tasks/app_audit.sh"
+source "${LIB_DIR}/tasks/system_audit.sh"
 source "${LIB_DIR}/verification/duplicate_detection.sh"
 source "${LIB_DIR}/verification/unit_tests.sh"
 source "${LIB_DIR}/verification/integration_tests.sh"
@@ -404,16 +405,24 @@ execute_single_task() {
 # ═════════════════════════════════════════════════════════════
 
 main() {
-    # Setup sudo credentials early to avoid password prompts during execution
-    setup_sudo
-
-    # Initialize systems
+    # Initialize systems first (NO sudo yet)
     # Note: Logging and TUI are already initialized by init.sh
     # init_logging
     # init_box_drawing "$BOX_STYLE"  # REMOVED: Now using gum for all boxes (priority 0)
     # init_tui
     init_collapsible_output
     init_progress_tracking
+
+    # Run pre-installation system audit (BEFORE sudo, zero privileges)
+    # This shows current state and asks user to confirm
+    if ! task_pre_installation_audit; then
+        log "WARNING" "Installation cancelled by user"
+        exit 0
+    fi
+
+    # Setup sudo credentials AFTER user confirms installation
+    # This ensures sudo prompts come AFTER the audit table
+    setup_sudo
 
     # Run robust environment verification
     if ! run_environment_checks; then
@@ -467,6 +476,7 @@ main() {
             install-fnm)           display_name="Installing Node.js Fast Node Manager" ;;
             install-ai-tools)      display_name="Installing AI CLI Tools" ;;
             install-context-menu)  display_name="Installing Context Menu Integration" ;;
+            install-feh)           display_name="Installing Feh Image Viewer" ;;
             run-app-audit)         display_name="Running Application Audit" ;;
             *)                     display_name="$(echo "$task_id" | sed 's/-/ /g' | sed 's/\b\(.\)/\u\1/g')" ;;
         esac
