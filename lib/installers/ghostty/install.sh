@@ -24,6 +24,7 @@ main() {
     # Format: "script.sh|Display Name|Estimated Duration (seconds)"
     declare -a INSTALL_STEPS=(
         "00-check-prerequisites.sh|Check Prerequisites|5"
+        "01-cleanup-manual-installation.sh|Cleanup Previous Installations|10"
         "01-download-deb.sh|Download Ghostty .deb|15"
         "02-install-deb.sh|Install Ghostty Package|10"
         "03-configure-ghostty.sh|Configure Ghostty|5"

@@ -219,13 +219,14 @@ post_installation_health_check() {
 
     # Check 2: Ghostty installed
     log "INFO" "Checking Ghostty installation..."
-    local ghostty_path="${GHOSTTY_APP_DIR:-$HOME/.local/share/ghostty}/bin/ghostty"
-    if [ -x "$ghostty_path" ]; then
+    if command -v ghostty &>/dev/null; then
+        local ghostty_path
+        ghostty_path=$(command -v ghostty)
         local ghostty_version
-        ghostty_version=$("$ghostty_path" --version 2>&1 | head -n 1)
+        ghostty_version=$(ghostty --version 2>&1 | head -n 1)
         log "SUCCESS" "✓ Ghostty: Installed at $ghostty_path ($ghostty_version)"
     else
-        log "ERROR" "✗ Ghostty: Not found at $ghostty_path"
+        log "ERROR" "✗ Ghostty: Not found in PATH"
         ((failures++))
     fi
 

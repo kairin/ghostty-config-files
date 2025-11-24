@@ -10,8 +10,8 @@
 #
 # Constitutional Compliance:
 # - Principle V: Modular Architecture
-# - Ghostty from source (not snap/apt) for latest features
-# - Installation to $HOME/.local/share/ghostty (XDG compliant)
+# - Ghostty from official .deb package (simplified installation)
+# - Configuration in $HOME/.config/ghostty (XDG compliant)
 #
 # User Stories: US1 (Fresh Installation), US3 (Re-run Safety)
 #
