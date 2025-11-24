@@ -48,3 +48,34 @@ get_latest_ghostty_version() {
         echo "unknown"
     fi
 }
+
+# Check if manual Ghostty installation exists
+# Returns 0 (true) if any manual/legacy installation is detected
+# Returns 1 (false) if no manual installations found
+has_manual_ghostty_installation() {
+    # Check for manual build binaries
+    [ -f "/usr/local/bin/ghostty" ] && return 0
+    [ -f "$HOME/.local/bin/ghostty" ] && return 0
+    [ -f "$HOME/.local/share/ghostty/bin/ghostty" ] && return 0
+
+    # Check for build directories
+    [ -d "$HOME/Apps/ghostty" ] && return 0
+    [ -d "$HOME/Apps/zig" ] && return 0
+
+    # Check for Snap installation (legacy)
+    if command -v snap &>/dev/null; then
+        snap list ghostty &>/dev/null 2>&1 && return 0
+    fi
+    [ -f "/snap/bin/ghostty" ] && return 0
+    [ -d "/snap/ghostty" ] && return 0
+    [ -d "$HOME/snap/ghostty" ] && return 0
+
+    # Check for manual desktop files
+    [ -f "$HOME/.local/share/applications/ghostty.desktop" ] && return 0
+    [ -f "$HOME/.local/share/applications/com.mitchellh.ghostty.desktop" ] && return 0
+    [ -f "/usr/share/applications/ghostty.desktop" ] && return 0
+    [ -f "/usr/share/applications/com.mitchellh.ghostty.desktop" ] && return 0
+
+    # Nothing found
+    return 1
+}

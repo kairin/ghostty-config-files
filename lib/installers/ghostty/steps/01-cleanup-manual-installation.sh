@@ -54,6 +54,25 @@ main() {
         fi
     fi
 
+    # Remove binary from ~/.local/share/ghostty/bin
+    if [ -f "$HOME/.local/share/ghostty/bin/ghostty" ]; then
+        log "INFO" "Removing $HOME/.local/share/ghostty/bin/ghostty"
+        if rm -f "$HOME/.local/share/ghostty/bin/ghostty" 2>/dev/null; then
+            log "SUCCESS" "Removed $HOME/.local/share/ghostty/bin/ghostty"
+            : $((cleaned++))
+        else
+            log "WARNING" "Could not remove $HOME/.local/share/ghostty/bin/ghostty"
+        fi
+
+        # Remove empty parent directories if they exist
+        if [ -d "$HOME/.local/share/ghostty/bin" ] && [ -z "$(ls -A "$HOME/.local/share/ghostty/bin")" ]; then
+            rmdir "$HOME/.local/share/ghostty/bin" 2>/dev/null || true
+        fi
+        if [ -d "$HOME/.local/share/ghostty" ] && [ -z "$(ls -A "$HOME/.local/share/ghostty")" ]; then
+            rmdir "$HOME/.local/share/ghostty" 2>/dev/null || true
+        fi
+    fi
+
     # Remove build directory
     if [ -d "$HOME/Apps/ghostty" ]; then
         log "INFO" "Removing $HOME/Apps/ghostty build directory"
@@ -76,7 +95,35 @@ main() {
         fi
     fi
 
-    # Remove any orphaned desktop entries from manual build
+    # Remove Snap installation if present (legacy cleanup)
+    if command -v snap &>/dev/null && snap list ghostty &>/dev/null 2>&1; then
+        log "INFO" "Removing Snap-based Ghostty installation"
+        if sudo snap remove ghostty 2>/dev/null; then
+            log "SUCCESS" "Removed Ghostty Snap package"
+            : $((cleaned++))
+        else
+            log "WARNING" "Could not remove Ghostty Snap package"
+        fi
+    fi
+
+    # Remove Snap directories if present
+    if [ -d "/snap/ghostty" ]; then
+        log "INFO" "Removing Snap system directory: /snap/ghostty"
+        if sudo rm -rf "/snap/ghostty" 2>/dev/null; then
+            log "SUCCESS" "Removed /snap/ghostty"
+            : $((cleaned++))
+        fi
+    fi
+
+    if [ -d "$HOME/snap/ghostty" ]; then
+        log "INFO" "Removing Snap user directory: ~/snap/ghostty"
+        if rm -rf "$HOME/snap/ghostty" 2>/dev/null; then
+            log "SUCCESS" "Removed ~/snap/ghostty"
+            : $((cleaned++))
+        fi
+    fi
+
+    # Remove any orphaned desktop entries from manual build (user-specific)
     local manual_desktop_files=(
         "$HOME/.local/share/applications/ghostty.desktop"
         "$HOME/.local/share/applications/com.mitchellh.ghostty.desktop"
@@ -84,13 +131,26 @@ main() {
 
     for desktop_file in "${manual_desktop_files[@]}"; do
         if [ -f "$desktop_file" ]; then
-            # Check if it's a manual build entry (not from Snap)
-            if ! grep -q "Exec=/snap/bin/ghostty" "$desktop_file" 2>/dev/null; then
-                log "INFO" "Removing manual desktop entry: $desktop_file"
-                if rm -f "$desktop_file" 2>/dev/null; then
-                    log "SUCCESS" "Removed $desktop_file"
-                    : $((cleaned++))
-                fi
+            log "INFO" "Removing manual desktop entry: $desktop_file"
+            if rm -f "$desktop_file" 2>/dev/null; then
+                log "SUCCESS" "Removed $desktop_file"
+                : $((cleaned++))
+            fi
+        fi
+    done
+
+    # Remove system-wide desktop entries (if installed manually with sudo)
+    local system_desktop_files=(
+        "/usr/share/applications/ghostty.desktop"
+        "/usr/share/applications/com.mitchellh.ghostty.desktop"
+    )
+
+    for desktop_file in "${system_desktop_files[@]}"; do
+        if [ -f "$desktop_file" ]; then
+            log "INFO" "Removing system desktop entry: $desktop_file"
+            if sudo rm -f "$desktop_file" 2>/dev/null; then
+                log "SUCCESS" "Removed $desktop_file"
+                : $((cleaned++))
             fi
         fi
     done

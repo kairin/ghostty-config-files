@@ -270,7 +270,8 @@ log() {
     # Console output - PLAIN TEXT ONLY (no colors, no escape sequences)
     # This ensures copy/paste from terminal produces readable text
     # Visual styling is NOT worth breaking copy/paste functionality
-    printf "[%s] %-7s %s\n" "$timestamp" "$level" "$message"
+    # Output to stderr to avoid polluting stdout (which may be captured by command substitution)
+    printf "[%s] %-7s %s\n" "$timestamp" "$level" "$message" >&2
 
     # Human-readable log file output (no color codes)
     if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then

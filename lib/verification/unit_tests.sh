@@ -35,8 +35,7 @@ source "${SCRIPT_DIR}/../core/utils.sh"
 #
 # Removes:
 #   - Orphaned desktop entries (when binary missing)
-#   - Snap installations (conflicts with from-source)
-#   - APT installations (conflicts with from-source)
+#   - Manual build installations (conflicts with .deb package)
 #
 cleanup_orphaned_ghostty_files() {
     log "INFO" "Checking for orphaned Ghostty files..."
@@ -55,20 +54,11 @@ cleanup_orphaned_ghostty_files() {
         fi
     fi
 
-    # Check for snap installation
-    if snap list 2>/dev/null | grep -q "ghostty"; then
-        log "WARNING" "⚠ Snap version of Ghostty detected"
-        log "WARNING" "  Snap installations conflict with from-source builds"
-        log "INFO" "  Removing snap version..."
-        snap remove ghostty 2>/dev/null || log "WARNING" "  Failed to remove snap (may need sudo)"
-    fi
-
-    # Check for apt installation
-    if dpkg -l 2>/dev/null | grep -q "^ii.*ghostty"; then
-        log "WARNING" "⚠ APT version of Ghostty detected"
-        log "WARNING" "  APT installations conflict with from-source builds"
-        log "INFO" "  Removing apt version..."
-        sudo apt remove --purge -y ghostty 2>/dev/null || log "WARNING" "  Failed to remove apt package (may need sudo)"
+    # Check for manual build installations (conflicts with .deb)
+    if [ -f "$HOME/.local/share/ghostty/bin/ghostty" ] || [ -f "$HOME/.local/bin/ghostty" ]; then
+        log "WARNING" "⚠ Manual build of Ghostty detected"
+        log "WARNING" "  Manual installations conflict with .deb package"
+        log "INFO" "  Consider removing manual build: rm -rf $HOME/.local/share/ghostty $HOME/.local/bin/ghostty"
     fi
 }
 

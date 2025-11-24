@@ -64,12 +64,12 @@ scan_apt_packages() {
     local count=$(wc -l < "$tmp_data")
     log "INFO" "  Found $count APT packages"
 
-    # Build JSON using jq's slurpfile which handles large datasets efficiently
+    # Build JSON using jq to properly escape all fields
     local packages_json="[]"
     if [ "$count" -gt 0 ]; then
-        packages_json=$(awk -F'\t' '{
-            printf "{\"name\":\"%s\",\"version\":\"%s\",\"size\":\"%s\",\"method\":\"apt\"}\n", $1, $2, $3
-        }' "$tmp_data" | jq -s '.')
+        # Use jq to build JSON array from TSV, properly escaping all fields
+        packages_json=$(awk -F'\t' 'BEGIN {OFS="\t"} {print $1, $2, $3}' "$tmp_data" | \
+            jq -R -s 'split("\n")[:-1] | map(split("\t") | {name: .[0], version: .[1], size: .[2], method: "apt"})')
     fi
 
     rm -f "$tmp_data"
@@ -124,12 +124,11 @@ scan_snap_packages() {
 
     log "INFO" "  Found $count Snap packages ($disabled_count disabled)"
 
-    # Build JSON
+    # Build JSON using jq to properly escape all fields
     if [ "$count" -gt 0 ]; then
-        packages_json=$(awk -F'\t' '{
-            disabled_bool = ($4 == "true") ? "true" : "false"
-            printf "{\"name\":\"%s\",\"version\":\"%s\",\"size\":\"%s\",\"method\":\"snap\",\"disabled\":%s}\n", $1, $2, $3, disabled_bool
-        }' "$tmp_data" | jq -s '.')
+        # Use jq to build JSON array from TSV, properly escaping all fields
+        packages_json=$(awk -F'\t' 'BEGIN {OFS="\t"} {print $1, $2, $3, $4}' "$tmp_data" | \
+            jq -R -s 'split("\n")[:-1] | map(split("\t") | {name: .[0], version: .[1], size: .[2], method: "snap", disabled: (.[3] == "true")})')
     fi
 
     rm -f "$tmp_data"
@@ -179,14 +178,12 @@ scan_desktop_files() {
     local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
     log "INFO" "  Found $count desktop applications"
 
-    # Build JSON
+    # Build JSON using jq to properly escape all fields
     local apps_json="[]"
     if [ "$count" -gt 0 ]; then
-        apps_json=$(awk -F'\t' '{
-            # Escape double quotes in fields
-            gsub(/"/, "\\\"", $1); gsub(/"/, "\\\"", $2); gsub(/"/, "\\\"", $3); gsub(/"/, "\\\"", $4)
-            printf "{\"name\":\"%s\",\"exec\":\"%s\",\"icon\":\"%s\",\"desktop_file\":\"%s\"}\n", $1, $2, $3, $4
-        }' "$tmp_data" | jq -s '.')
+        # Use jq to build JSON array from TSV, properly escaping all fields
+        apps_json=$(awk -F'\t' 'BEGIN {OFS="\t"} {print $1, $2, $3, $4}' "$tmp_data" | \
+            jq -R -s 'split("\n")[:-1] | map(split("\t") | {name: .[0], exec: .[1], icon: .[2], desktop_file: .[3]})')
     fi
 
     rm -f "$tmp_data"

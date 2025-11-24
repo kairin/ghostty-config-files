@@ -411,8 +411,8 @@ task_pre_installation_audit() {
     # Gum TUI Framework (built from source)
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
 
-    # Ghostty Terminal (Snap package)
-    audit_data+=("$(detect_snap_package_status "Ghostty Terminal" "ghostty" "1.1.4")")
+    # Ghostty Terminal (.deb package)
+    audit_data+=("$(detect_app_status_enhanced "Ghostty Terminal" "ghostty" "ghostty --version 2>&1 | head -n1 | awk '{print \$2}'" "1.2.3" "ghostty" "ghostty")")
 
     # ZSH
     audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
@@ -1363,8 +1363,8 @@ task_post_installation_verification() {
     # Gum TUI Framework
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
 
-    # Ghostty Terminal (Snap package)
-    audit_data+=("$(detect_snap_package_status "Ghostty Terminal" "ghostty" "1.1.4")")
+    # Ghostty Terminal (.deb package)
+    audit_data+=("$(detect_app_status_enhanced "Ghostty Terminal" "ghostty" "ghostty --version 2>&1 | head -n1 | awk '{print \$2}'" "1.2.3" "ghostty" "ghostty")")
 
     # ZSH Shell
     audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
