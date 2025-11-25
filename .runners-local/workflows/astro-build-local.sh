@@ -7,6 +7,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+PROJECT_DIR="$REPO_DIR/astro-website"
 LOG_DIR="$SCRIPT_DIR/../logs"
 BUILD_DIR="$REPO_DIR/docs"
 
@@ -130,13 +131,13 @@ check_prerequisites() {
     fi
 
     # Check package.json exists
-    if [ -f "$REPO_DIR/package.json" ]; then
+    if [ -f "$PROJECT_DIR/package.json" ]; then
         log "SUCCESS" "✅ package.json found"
 
         # Verify Astro is in dependencies
-        if grep -q '"astro"' "$REPO_DIR/package.json"; then
+        if grep -q '"astro"' "$PROJECT_DIR/package.json"; then
             local astro_version
-            astro_version=$(grep '"astro"' "$REPO_DIR/package.json" | sed 's/.*"astro": *"\([^"]*\)".*/\1/')
+            astro_version=$(grep '"astro"' "$PROJECT_DIR/package.json" | sed 's/.*"astro": *"\([^"]*\)".*/\1/')
             log "SUCCESS" "✅ Astro $astro_version configured"
         else
             log "ERROR" "❌ Astro not found in package.json"
@@ -148,14 +149,15 @@ check_prerequisites() {
     fi
 
     # Check astro.config.mjs
-    if [ -f "$REPO_DIR/astro.config.mjs" ]; then
+    if [ -f "$PROJECT_DIR/astro.config.mjs" ]; then
         log "SUCCESS" "✅ astro.config.mjs found"
 
         # Verify GitHub Pages configuration
-        if grep -q 'outDir.*docs' "$REPO_DIR/astro.config.mjs"; then
+        if grep -q 'outDir.*docs' "$PROJECT_DIR/astro.config.mjs"; then
             log "SUCCESS" "✅ GitHub Pages configuration (outDir: docs) verified"
         else
-            log "WARNING" "⚠️ GitHub Pages configuration not found in astro.config.mjs"
+            # Default is dist, which is fine too
+            log "INFO" "ℹ️ Using default output directory (dist)"
         fi
     else
         log "ERROR" "❌ astro.config.mjs not found"
@@ -177,7 +179,7 @@ install_dependencies() {
     log "STEP" "📦 Installing dependencies..."
     start_timer
 
-    cd "$REPO_DIR"
+    cd "$PROJECT_DIR"
 
     # Use npm ci for faster, reproducible builds in CI/runner environments
     if [ -f "package-lock.json" ] && [ "${RUNNER_TYPE}" = "github-actions" ]; then
@@ -207,7 +209,7 @@ validate_typescript() {
     log "STEP" "🔍 Running TypeScript validation..."
     start_timer
 
-    cd "$REPO_DIR"
+    cd "$PROJECT_DIR"
 
     if npm run check >/dev/null 2>&1; then
         log "SUCCESS" "✅ TypeScript validation passed"
@@ -226,7 +228,7 @@ build_astro() {
     log "STEP" "🏗️ Building Astro site..."
     start_timer
 
-    cd "$REPO_DIR"
+    cd "$PROJECT_DIR"
 
     # Clean previous build
     if [ -d "$BUILD_DIR" ]; then
@@ -298,7 +300,7 @@ validate_github_pages() {
     fi
 
     # Validate asset paths for GitHub Pages base path
-    if grep -q 'base.*ghostty-config-files' "$REPO_DIR/astro.config.mjs"; then
+    if grep -q 'base.*ghostty-config-files' "$PROJECT_DIR/astro.config.mjs"; then
         log "SUCCESS" "✅ GitHub Pages base path configured"
     else
         log "WARNING" "⚠️ GitHub Pages base path not configured"
