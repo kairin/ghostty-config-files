@@ -64,9 +64,11 @@ show_date_log() {
     local date="$1"
     local log_file="${LOG_DIR}/update-${date}*.log"
 
+    # shellcheck disable=SC2086
     if ls $log_file 1>/dev/null 2>&1; then
         echo "=== Update Log for $date ==="
         echo ""
+        # shellcheck disable=SC2086
         cat $log_file
     else
         echo "⚠️  No log found for date: $date"

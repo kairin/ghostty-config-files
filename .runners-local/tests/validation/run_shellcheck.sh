@@ -17,6 +17,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 # Directories to check
 MODULES_DIR="$REPO_ROOT/scripts"
+LIB_DIR="$REPO_ROOT/lib"
 TESTS_DIR="$REPO_ROOT/.runners-local/tests"
 RUNNERS_DIR="$REPO_ROOT/.runners-local/workflows"
 
@@ -172,8 +173,9 @@ detailed_check() {
 # Generate summary report
 generate_summary() {
     local modules_result="$1"
-    local tests_result="$2"
-    local runners_result="$3"
+    local lib_result="$2"
+    local tests_result="$3"
+    local runners_result="$4"
 
     echo ""
     echo "════════════════════════════════════════════════════════"
@@ -186,6 +188,13 @@ generate_summary() {
         echo -e "  Module Scripts:  ${GREEN}✅ PASS${NC}"
     else
         echo -e "  Module Scripts:  ${RED}❌ FAIL${NC}"
+    fi
+
+    # Library scripts
+    if [[ $lib_result -eq 0 ]]; then
+        echo -e "  Library Scripts: ${GREEN}✅ PASS${NC}"
+    else
+        echo -e "  Library Scripts: ${RED}❌ FAIL${NC}"
     fi
 
     # Test scripts
@@ -205,7 +214,7 @@ generate_summary() {
     echo ""
 
     # Overall status
-    if [[ $modules_result -eq 0 ]] && [[ $tests_result -eq 0 ]] && [[ $runners_result -eq 0 ]]; then
+    if [[ $modules_result -eq 0 ]] && [[ $lib_result -eq 0 ]] && [[ $tests_result -eq 0 ]] && [[ $runners_result -eq 0 ]]; then
         gum style \
             --border double \
             --border-foreground 46 \
@@ -256,6 +265,7 @@ OPTIONS:
 
 CHECKS:
     - Module scripts (scripts/*.sh)
+    - Library scripts (lib/**/*.sh)
     - Test scripts (.runners-local/tests/**/*.sh)
     - Runner scripts (.runners-local/workflows/*.sh)
 
@@ -293,22 +303,25 @@ EOF
 
     # Run checks
     local modules_result=0
+    local lib_result=0
     local tests_result=0
     local runners_result=0
 
     check_directory "$MODULES_DIR" "Module Scripts (scripts/)" || modules_result=$?
+    check_directory "$LIB_DIR" "Library Scripts (lib/)" || lib_result=$?
     check_directory "$TESTS_DIR" "Test Scripts (.runners-local/tests/)" || tests_result=$?
     check_directory "$RUNNERS_DIR" "Runner Scripts (.runners-local/workflows/)" || runners_result=$?
 
     # Show detailed output if requested
     if [[ $detailed -eq 1 ]]; then
         [[ $modules_result -ne 0 ]] && detailed_check "$MODULES_DIR"
+        [[ $lib_result -ne 0 ]] && detailed_check "$LIB_DIR"
         [[ $tests_result -ne 0 ]] && detailed_check "$TESTS_DIR"
         [[ $runners_result -ne 0 ]] && detailed_check "$RUNNERS_DIR"
     fi
 
     # Generate summary
-    generate_summary "$modules_result" "$tests_result" "$runners_result"
+    generate_summary "$modules_result" "$lib_result" "$tests_result" "$runners_result"
     return $?
 }
 
