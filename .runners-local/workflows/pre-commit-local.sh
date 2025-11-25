@@ -1,9 +1,6 @@
 #!/bin/bash
-# Local CI/CD Infrastructure - Pre-commit Validation Script
-# Implements /local-cicd/pre-commit endpoint from OpenAPI contract
-# Constitutional requirement: Zero GitHub Actions consumption
+# pre-commit-local.sh - Pre-commit validation script (zero GitHub Actions consumption)
 
-set -euo pipefail
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

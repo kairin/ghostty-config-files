@@ -1,30 +1,6 @@
 #!/usr/bin/env bash
-#
-# lib/tasks/app_audit.sh - Application audit and duplicate detection system
-#
-# CONTEXT7 STATUS: MCP available for best practices queries
-# CONTEXT7 QUERIES:
-# - Query 1: "Ubuntu snap vs apt duplicate detection best practices 2025"
-#   Purpose: Detect same application installed via multiple package managers
-#   Result: Use dpkg -l, snap list, and desktop file scanning
-# - Query 2: "Safe snap package removal Ubuntu 2025"
-#   Purpose: Best practices for removing duplicate/disabled snap packages
-#   Result: Use snap remove with user data backup, check disabled snaps with snap list --all
-#
-# Constitutional Compliance:
-# - Principle V: Modular Architecture
-# - FR-026: Duplicate detection framework
-# - FR-064: Application audit system
-# - FR-066: Disk usage calculation per duplicate category
-#
-# User Stories: US4 (Duplicate App Detection and Cleanup)
-#
-# Requirements:
-# - FR-026: Detect duplicate installations (snap + apt)
-# - FR-064: Categorize duplicates and recommend cleanup
-# - FR-066: Calculate disk usage for each duplicate category
-# - Safe cleanup with user data backup
-#
+# app_audit.sh - Application audit and duplicate detection system
+# FR-026: Detect duplicates (snap+apt), FR-064: Categorize, FR-066: Calc disk usage
 
 set -euo pipefail
 
@@ -35,160 +11,13 @@ source "${SCRIPT_DIR}/../core/utils.sh"
 source "${SCRIPT_DIR}/../core/state.sh"
 source "${SCRIPT_DIR}/../core/errors.sh"
 
+# Source audit modules
+source "${SCRIPT_DIR}/../audit/scanners.sh"
+
 # Audit configuration
 readonly AUDIT_REPORT="/tmp/ubuntu-apps-audit.md"
 readonly AUDIT_TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 readonly AUDIT_LOG="/tmp/ghostty-start-logs/app-audit-${AUDIT_TIMESTAMP}.log"
-
-#
-# Scan installed APT packages
-#
-# Returns:
-#   JSON array of installed packages: [{"name": "...", "version": "...", "size": "..."}]
-#
-scan_apt_packages() {
-    log "INFO" "Scanning APT packages..."
-
-    # Use awk to parse dpkg output efficiently in one pass
-    # This generates a TSV file: name\tversion\tsize_mb
-    local tmp_data="/tmp/apt-scan-$$.tsv"
-
-    dpkg -query -W -f='${Package}\t${Version}\t${Installed-Size}\n' 2>/dev/null | \
-        awk -F'\t' 'BEGIN {OFS="\t"} {
-            size_kb = $3;
-            if (size_kb == "") size_kb = 0;
-            size_mb = int(size_kb / 1024);
-            print $1, $2, size_mb "MB"
-        }' > "$tmp_data"
-
-    local count=$(wc -l < "$tmp_data")
-    log "INFO" "  Found $count APT packages"
-
-    # Build JSON using jq to properly escape all fields
-    local packages_json="[]"
-    if [ "$count" -gt 0 ]; then
-        # Use jq to build JSON array from TSV, properly escaping all fields
-        packages_json=$(awk -F'\t' 'BEGIN {OFS="\t"} {print $1, $2, $3}' "$tmp_data" | \
-            jq -R -s 'split("\n")[:-1] | map(split("\t") | {name: .[0], version: .[1], size: .[2], method: "apt"})')
-    fi
-
-    rm -f "$tmp_data"
-    echo "$packages_json"
-}
-
-#
-# Scan installed Snap packages
-#
-# Returns:
-#   JSON array of snap packages: [{"name": "...", "version": "...", "size": "...", "disabled": true|false}]
-#
-scan_snap_packages() {
-    log "INFO" "Scanning Snap packages..."
-
-    local packages_json="[]"
-
-    # Check if snapd is installed
-    if ! command -v snap &>/dev/null; then
-        log "INFO" "  Snapd not installed, skipping snap scan"
-        echo "$packages_json"
-        return 0
-    fi
-
-    # Parse snap list output with awk (fast)
-    local tmp_data="/tmp/snap-scan-$$.tsv"
-
-    snap list --all 2>/dev/null | awk '
-        NR==1 {next}  # Skip header
-        {
-            name = $1
-            version = $2
-            rev = $3
-            notes = $NF
-
-            # Check if disabled
-            disabled = (notes ~ /disabled/) ? "true" : "false"
-
-            # Get size (approximate from du -sh)
-            size = "unknown"
-            cmd = "du -sh /snap/" name "/" rev " 2>/dev/null | awk '\''{print $1}'\''"
-            cmd | getline size
-            close(cmd)
-            if (size == "") size = "unknown"
-
-            printf "%s\t%s\t%s\t%s\n", name, version, size, disabled
-        }
-    ' > "$tmp_data"
-
-    local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
-    local disabled_count=$(awk -F'\t' '$4 == "true"' "$tmp_data" | wc -l 2>/dev/null || echo "0")
-
-    log "INFO" "  Found $count Snap packages ($disabled_count disabled)"
-
-    # Build JSON using jq to properly escape all fields
-    if [ "$count" -gt 0 ]; then
-        # Use jq to build JSON array from TSV, properly escaping all fields
-        packages_json=$(awk -F'\t' 'BEGIN {OFS="\t"} {print $1, $2, $3, $4}' "$tmp_data" | \
-            jq -R -s 'split("\n")[:-1] | map(split("\t") | {name: .[0], version: .[1], size: .[2], method: "snap", disabled: (.[3] == "true")})')
-    fi
-
-    rm -f "$tmp_data"
-    echo "$packages_json"
-}
-
-#
-# Scan desktop files for GUI applications
-#
-# Returns:
-#   JSON array of desktop applications: [{"name": "...", "exec": "...", "icon": "..."}]
-#
-scan_desktop_files() {
-    log "INFO" "Scanning desktop files..."
-
-    local tmp_data="/tmp/desktop-scan-$$.tsv"
-
-    # Scan system and user desktop file locations
-    local desktop_dirs=(
-        "/usr/share/applications"
-        "/usr/local/share/applications"
-        "$HOME/.local/share/applications"
-        "/var/lib/snapd/desktop/applications"
-    )
-
-    # Use find + awk to process all desktop files efficiently
-    for dir in "${desktop_dirs[@]}"; do
-        if [ ! -d "$dir" ]; then
-            continue
-        fi
-
-        find "$dir" -maxdepth 1 -name "*.desktop" -type f 2>/dev/null | while read -r desktop_file; do
-            # Extract Name, Exec, Icon with awk (faster than grep)
-            awk -F= '
-                /^Name=/ && !name {name = $2}
-                /^Exec=/ && !exec {exec = $2}
-                /^Icon=/ && !icon {icon = $2}
-                END {
-                    if (name != "") {
-                        printf "%s\t%s\t%s\t%s\n", name, exec, icon, FILENAME
-                    }
-                }
-            ' FILENAME="$(basename "$desktop_file")" "$desktop_file"
-        done
-    done > "$tmp_data"
-
-    local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
-    log "INFO" "  Found $count desktop applications"
-
-    # Build JSON using jq to properly escape all fields
-    local apps_json="[]"
-    if [ "$count" -gt 0 ]; then
-        # Use jq to build JSON array from TSV, properly escaping all fields
-        apps_json=$(awk -F'\t' 'BEGIN {OFS="\t"} {print $1, $2, $3, $4}' "$tmp_data" | \
-            jq -R -s 'split("\n")[:-1] | map(split("\t") | {name: .[0], exec: .[1], icon: .[2], desktop_file: .[3]})')
-    fi
-
-    rm -f "$tmp_data"
-    echo "$apps_json"
-}
 
 #
 # Detect duplicate applications (same app via snap + apt)

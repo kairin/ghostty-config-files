@@ -208,9 +208,9 @@ EOF
 # automatic VHS recording support.
 #
 # Behavior:
-#   - If already under VHS: Return immediately (script continues)
-#   - If VHS not available: Return immediately (script continues)
-#   - If VHS available and enabled: Generate tape, exec into VHS (NO RETURN)
+#   - Layer 1 (Outer): If VHS enabled and not active -> Exec into VHS
+#   - Layer 2 (Inner): If Text recording not active -> Exec into script
+#   - Layer 3 (Core): Run the actual workload
 #
 # Args:
 #   $1 - Recording name (e.g., "start", "daily-updates")
@@ -218,8 +218,8 @@ EOF
 #   $3+ - Script arguments ($@ from caller)
 #
 # Returns:
-#   0 - Not recording (continue normally)
-#   NEVER RETURNS - If exec into VHS succeeds
+#   0 - Continue execution (we are in the core layer)
+#   NEVER RETURNS - If exec into VHS or script occurs
 #
 maybe_start_vhs_recording() {
     local recording_name="$1"
@@ -227,48 +227,171 @@ maybe_start_vhs_recording() {
     shift 2
     local script_args=("$@")
 
-    # Check 1: Already recording?
-    if is_under_vhs; then
-        # We're already recording - continue normally
-        return 0
+    # Ensure script path is absolute
+    local abs_script_path
+    if [[ "$script_path" = /* ]]; then
+        abs_script_path="$script_path"
+    else
+        abs_script_path="$(cd "$(dirname "$script_path")" && pwd)/$(basename "$script_path")"
     fi
 
-    # Check 2: Auto-recording enabled?
-    if ! is_vhs_auto_record_enabled; then
-        # User disabled auto-recording
-        return 0
-    fi
-
-    # Generate output filename
+    # Generate output filenames
     local repo_root="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
     local timestamp=$(date +%Y%m%d-%H%M%S)
     local output_dir="${repo_root}/logs/video"
-    local output_file="${output_dir}/${timestamp}.log"
+    local log_file="${output_dir}/${timestamp}.log"
+    local tape_file="${output_dir}/${timestamp}.tape"
+    local gif_file="${output_dir}/${timestamp}.gif"
 
     # Create output directory
     mkdir -p "$output_dir" 2>/dev/null || return 0
 
-    # Set marker so nested calls know we're recording
-    export VHS_RECORDING="true"
-    export VHS_OUTPUT="$output_file"
+    # ═══════════════════════════════════════════════════════════════
+    # Layer 1: Recording Wrapper (Script + VHS Post-Processing)
+    # ═══════════════════════════════════════════════════════════════
+    # If we are not yet recording text logs:
+    if [[ -z "${TEXT_RECORDING:-}" ]]; then
+        # If VHS is enabled, we will generate a GIF after the script finishes
+        local vhs_enabled=false
+        if is_vhs_auto_record_enabled && check_vhs_available && ! is_under_vhs; then
+            vhs_enabled=true
+        fi
 
-    # Print notification
-    echo ""
-    echo "═══════════════════════════════════════════════════════════"
-    echo "Terminal Recording Started"
-    echo "═══════════════════════════════════════════════════════════"
-    echo "Recording: ${recording_name}"
-    echo "Output: logs/video/${timestamp}.log"
-    echo ""
-    echo "To disable: export VHS_AUTO_RECORD=false"
-    echo "═══════════════════════════════════════════════════════════"
-    echo ""
+        # Prepare output files
+        local timing_file="${output_dir}/${timestamp}.timing"
+        
+        # Capture current terminal dimensions
+        local term_cols=$(tput cols 2>/dev/null || echo "120")
+        local term_lines=$(tput lines 2>/dev/null || echo "40")
+        
+        echo ""
+        echo "═══════════════════════════════════════════════════════════"
+        echo "Session Recording Initiated"
+        echo "═══════════════════════════════════════════════════════════"
+        echo "Recording: ${recording_name}"
+        echo "Log Output: logs/video/${timestamp}.log"
+        if [ "$vhs_enabled" = true ]; then
+            echo "Video Output: logs/video/${timestamp}.gif (Generated after completion)"
+        fi
+        echo ""
+        echo "To disable: export VHS_AUTO_RECORD=false"
+        echo "═══════════════════════════════════════════════════════════"
+        echo ""
+        
+        # Construct command to run
+        local cmd="TEXT_RECORDING=true \"$abs_script_path\""
+        for arg in "${script_args[@]}"; do
+            cmd="$cmd \"$arg\""
+        done
+        
+        # Run script with timing information
+        # We use -e to return the exit code of the child process
+        # We use -T to save timing info for replay
+        export TEXT_RECORDING=true
+        
+        # We cannot use exec here because we need to run post-processing
+        # Run script and capture exit code
+        script -q -e -c "$cmd" -T "$timing_file" "$log_file"
+        local exit_code=$?
+        
+        # Post-processing: Generate GIF if VHS enabled
+        if [ "$vhs_enabled" = true ] && [ -f "$timing_file" ] && [ -f "$log_file" ]; then
+            echo ""
+            echo "═══════════════════════════════════════════════════════════"
+            echo "Generating Video Recording..."
+            echo "═══════════════════════════════════════════════════════════"
+            
+            # Calculate VHS dimensions based on terminal size
+            # FontSize 14 approx metrics:
+            # Width:  ~9-10px per char -> Use 12px to be safe + padding
+            # Height: ~20-22px per line -> Use 24px to be safe + padding
+            local vhs_width=$(( term_cols * 12 + 100 ))
+            local vhs_height=$(( term_lines * 24 + 100 ))
 
-    # Use script command to record terminal session
-    # This replaces current process but shows output in real-time
-    exec script -q -f -c "$script_path ${script_args[*]}" "$output_file"
+            # Create a tape file that replays the script
+            cat > "$tape_file" <<EOF
+# VHS Tape - Replay of ${recording_name}
+Output "${gif_file}"
+Set Shell "bash"
+Set FontSize 14
+Set Width ${vhs_width}
+Set Height ${vhs_height}
+Set Theme "Catppuccin Mocha"
+Set PlaybackSpeed 1.0
+Set Padding 20
 
-    # If exec fails, continue without recording
+# Replay the recorded session
+# We use scriptreplay to play back the timing and log files
+Hide
+Type "scriptreplay --timing='${timing_file}' '${log_file}'"
+Enter
+Show
+Sleep 100ms
+# Wait for replay to finish (scriptreplay exits when done)
+# But VHS needs to know when to stop. 
+# Since we can't easily know the duration in the tape without parsing,
+# we rely on the fact that scriptreplay will exit, and then we exit the shell.
+# However, VHS records the *shell*. If scriptreplay finishes, the shell prompt returns.
+# We want to capture the replay, then stop.
+
+# Better approach: Run scriptreplay directly? 
+# No, VHS runs a shell.
+# We can just sleep for the duration? No, dynamic.
+
+# Trick: We run scriptreplay, then exit.
+# VHS will record until the shell exits if we don't put Sleep?
+# No, VHS tape needs explicit commands.
+
+# Actually, we can just use the 'Type' command to run scriptreplay
+# and then Sleep for a bit? No.
+
+# Let's try a different approach for the tape:
+# We don't use Type. We just want to render the output.
+# But VHS is a driver.
+
+# Alternative: Use 'asciinema' if available? No, requirement is VHS.
+
+# Back to scriptreplay:
+# If we run scriptreplay, it outputs to stdout.
+# VHS records the terminal.
+# So if we Type "scriptreplay ...", VHS will record the playback!
+# We just need to know how long to sleep.
+# We can parse the timing file to get total duration!
+EOF
+
+            # Calculate total duration from timing file
+            # Timing file format: "delay_duration block_size" per line
+            # We sum up the first column
+            local total_duration
+            if command -v awk >/dev/null; then
+                total_duration=$(awk '{sum += $1} END {print sum}' "$timing_file")
+                # Add a buffer
+                total_duration=$(echo "$total_duration + 2" | bc 2>/dev/null || echo "${total_duration%.*}+2" | bc 2>/dev/null || echo "300")
+            else
+                total_duration=300 # Fallback
+            fi
+            
+            # Append sleep to tape
+            echo "Sleep ${total_duration}s" >> "$tape_file"
+            
+            # Render GIF
+            if vhs "$tape_file" >/dev/null 2>&1; then
+                echo "Video saved to: $gif_file"
+                # Cleanup intermediate files
+                rm -f "$tape_file" "$timing_file"
+            else
+                echo "Warning: Video rendering failed."
+            fi
+        fi
+        
+        exit $exit_code
+    fi
+
+    # ═══════════════════════════════════════════════════════════════
+    # Layer 2: Core Execution
+    # ═══════════════════════════════════════════════════════════════
+    # If we reached here, we are inside all necessary recording layers.
+    # Continue with normal execution.
     return 0
 }
 

@@ -1,24 +1,6 @@
 #!/usr/bin/env bash
-#
-# lib/verification/integration_tests.sh - Cross-component validation tests
-#
-# CONTEXT7 STATUS: Unable to query (API authentication issue)
-# FALLBACK: Best practices for integration testing bash scripts 2025
-#
-# Constitutional Compliance: Principle V - Modular Architecture
-# User Story: US1 (Fresh Installation)
-#
-# Requirements:
-# - FR-011: Multi-layer verification (integration tests for cross-component)
-# - FR-034: fnm + ZSH shell integration
-# - Tests verify components work TOGETHER, not just individually
-#
-# Integration Tests:
-#   1. ZSH + fnm integration (auto-switching on cd)
-#   2. Ghostty + ZSH (default shell)
-#   3. AI tools + Node.js (CLIs work with installed Node)
-#   4. Context menu + Ghostty (right-click integration)
-#
+# integration_tests.sh - Cross-component validation tests
+# Tests: ZSH+fnm, Ghostty+ZSH, AI+Node.js, Context menu, Phase 8
 
 set -euo pipefail
 

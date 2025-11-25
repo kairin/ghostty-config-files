@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
-#
 # generate_dashboard.sh - Generate project status dashboard
-# Feature: 006-task-archive-consolidation
-# Version: 1.0.0
-#
-# Usage: generate_dashboard.sh [OPTIONS]
-#
-# Exit codes:
-#   0 - Success
-#   1 - General error
-#   4 - No specifications found
 
-set -euo pipefail
 
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
