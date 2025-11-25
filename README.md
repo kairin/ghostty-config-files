@@ -4,27 +4,33 @@ This repository contains a comprehensive terminal environment setup featuring th
 
 ## Features
 
-- **Ghostty Terminal**: Pre-configured for performance and aesthetics with 2025 optimizations.
+- **Ghostty Terminal v1.2.3+**: Installed via official .deb package with 2025 optimizations.
+  - **Fast Installation**: ~2 minutes via .deb (80% faster than source builds)
   - **Performance**: linux-cgroup single-instance for optimal responsiveness
   - **Unlimited History**: 999,999,999 lines of scrollback (~1 billion lines)
   - **Memory Management**: CGroup limits prevent excessive memory consumption
   - **Shell Integration**: Auto-detection with advanced features
+- **Charm TUI Ecosystem**: Beautiful terminal UI components
+  - **gum**: Tables, spinners, prompts, styled output
+  - **glow**: Markdown viewer for documentation
+  - **VHS**: Terminal session recorder for demos
 - **ZSH + Oh My ZSH**: A powerful shell with useful plugins.
-- **Modern Unix Tools**: `eza`, `bat`, `ripgrep`, `fzf`, `zoxide`, and `fd`.
-- **AI Integration**: Claude Code and Gemini CLI are integrated (Node.js latest (v25.2.0) via fnm - 40x faster than NVM, with system Node.js fallback).
+- **Modern Unix Tools**: `eza`, `fzf`, `zoxide`, and `fastfetch`.
+- **AI Integration**: Claude Code and Gemini CLI (Node.js latest via fnm with system Node.js fallback).
 - **Context Menu**: "Open in Ghostty" right-click option in your file manager.
 - **Automated Daily Updates**: System-wide updates run automatically every day at 9:00 AM.
 - **Modern TUI Installation System**: Intelligent installation with gum TUI framework
-  - **Adaptive Box Drawing**: UTF-8 (┌─┐) or ASCII (+--+) auto-detected for terminal compatibility
-  - **Duplicate Detection**: Automatic detection and cleanup of conflicting installations
+  - **Pre-Installation Audit**: System state table shows all tools with versions
+  - **Colored Progress Bars**: Beautiful visual feedback during installation
+  - **VHS Auto-Recording**: Automatic demo capture (opt-in)
+  - **Duplicate Detection**: Automatic cleanup of conflicting installations
   - **Idempotent Re-runs**: Safe to run multiple times - preserves user customizations
   - **Real Verification**: System state checks (no hard-coded success messages)
   - **Modular Architecture**: Clean lib/ directory structure for maintainability
 - **Astro-Based Website**: A documentation and dashboard website built with Astro.
 - **System Cleanup Utilities**: Automated cleanup scripts for common bloatware
   - **LibreOffice Removal**: Safe removal of both APT and Snap LibreOffice installations (~700-800 MB freed)
-  - **No System Breakage**: Verified safe - removes only LibreOffice components
-  - **Complete Cleanup**: Removes packages, configs, and desktop entries
+  - **Legacy Ghostty Cleanup**: Removes Snap/source builds when migrating to .deb
 
 ## Getting Started
 
@@ -39,16 +45,18 @@ flowchart TD
     CheckSudo -->|No| ConfigSudo[Configure passwordless sudo<br/>sudo visudo]
     CheckSudo -->|Yes| CloneRepo[Clone repository<br/>git clone ghostty-config-files]
     ConfigSudo --> TestSudo{Test: sudo -n apt update}
-    TestSudo -->|Fails| ShowError[❌ Show setup instructions]
+    TestSudo -->|Fails| ShowError[Show setup instructions]
     TestSudo -->|Success| CloneRepo
 
     CloneRepo --> RunInstall[Run: ./start.sh]
-    RunInstall --> CheckDeps{All dependencies<br/>available?}
+    RunInstall --> SystemAudit[Display system audit table<br/>Show current tool status]
+    SystemAudit --> CheckDeps{All dependencies<br/>available?}
 
-    CheckDeps -->|Missing| InstallDeps[Install: snapd, Git, build tools]
-    CheckDeps -->|Present| InstallGhostty[Install Ghostty via Snap]
-    InstallDeps --> InstallGhostty
+    CheckDeps -->|Missing| InstallDeps[Install: gum, glow, vhs, Git]
+    CheckDeps -->|Present| CleanupLegacy[Cleanup legacy installations<br/>Snap/source builds]
+    InstallDeps --> CleanupLegacy
 
+    CleanupLegacy --> InstallGhostty[Install Ghostty via .deb<br/>~2 minutes]
     InstallGhostty --> ConfigZsh[Setup ZSH + Oh My ZSH]
     ConfigZsh --> InstallNode{Node.js<br/>installation}
 
@@ -58,7 +66,7 @@ flowchart TD
 
     InstallAI --> ConfigContext[Setup context menu<br/>Right-click integration]
     ConfigContext --> DailyUpdates[Configure daily updates<br/>9:00 AM cron]
-    DailyUpdates --> Complete([✅ Installation Complete<br/>Restart terminal])
+    DailyUpdates --> Complete([Installation Complete<br/>Restart terminal])
 
     ShowError --> Manual[Manual installation<br/>with interactive sudo]
     Manual --> CloneRepo
@@ -68,6 +76,7 @@ flowchart TD
     style ShowError fill:#ffcdd2
     style CheckSudo fill:#fff9c4
     style InstallNode fill:#fff9c4
+    style SystemAudit fill:#e8f5e9
 ```
 
 ### Prerequisites
@@ -172,8 +181,10 @@ sudo snap install libreoffice
 
 The installation automatically sets up a daily update system that keeps your entire development environment current.
 
-**What Gets Updated (12 Components):**
+**What Gets Updated (12+ Components):**
 - System packages (apt)
+- Ghostty Terminal (version check against GitHub releases)
+- Charm TUI tools (gum, glow, vhs)
 - GitHub CLI
 - Oh My Zsh
 - fnm (Fast Node Manager)
@@ -183,8 +194,6 @@ The installation automatically sets up a daily update system that keeps your ent
 - GitHub Copilot CLI
 - uv (Python package installer)
 - Spec-Kit CLI (via uv)
-- Additional uv tools
-- Ghostty Terminal (via Snap refresh)
 
 **Automatic Schedule:**
 - Updates run daily at 9:00 AM via cron
@@ -224,11 +233,12 @@ sudo EDITOR=nano visudo
 # Add: kkk ALL=(ALL) NOPASSWD: /usr/bin/apt
 ```
 
-**Advanced Features (v3.0):**
-- **Snap-Based Updates**: Ghostty updates via Snap package manager for simplicity and reliability
-- **Intelligent Version Detection**: Automatic comparison against upstream repositories
+**Advanced Features (v4.0):**
+- **.deb Package Updates**: Ghostty updates via official .deb from mkasberg/ghostty-ubuntu
+- **Intelligent Version Detection**: Automatic comparison against upstream GitHub releases
 - **Graceful Error Handling**: Continues updating other components if one fails
 - **Comprehensive Logging**: All operations logged to `/tmp/daily-updates-logs/` with timestamps
+- **VHS Recording**: Update sessions can be recorded for demo purposes
 
 For complete documentation, see [scripts/DAILY_UPDATES_README.md](scripts/DAILY_UPDATES_README.md).
 
@@ -251,12 +261,15 @@ This will start a development server, and you can view the website at `http://lo
     -   `pages/`: The pages of the website.
 -   `configs/`: Configuration files for Ghostty, ZSH, and other tools.
 -   `lib/`: Modular task libraries for installation, configuration, and uninstallation.
-    -   `installers/ghostty/`: Ghostty Snap installation modules and uninstall script
-    -   `installers/*/uninstall.sh`: Clean uninstallation for major applications
--   `scripts/`: Utility scripts for system management.
-    -   `daily-updates.sh`: Comprehensive update system (v3.0 - 12 components)
-    -   `manage.sh`: Unified management interface
-    -   `common.sh`, `progress.sh`, `backup_utils.sh`: Shared utilities
+    -   `installers/ghostty/`: Ghostty .deb installation modules and uninstall script
+    -   `installers/gum/`, `installers/glow/`, `installers/vhs/`: Charm TUI tools
+    -   `installers/fastfetch/`, `installers/feh/`: System tools
+    -   `ui/vhs-auto-record.sh`: VHS auto-recording library
+    -   `tasks/system_audit.sh`: Pre-installation system audit
+-   `scripts/`: Utility scripts organized by function.
+    -   `updates/daily-updates.sh`: Comprehensive update system (v4.0)
+    -   `mcp/`: MCP server scripts
+    -   `vhs/`: VHS recording utilities
 -   `website/src/`: **Editable documentation source** (git-tracked)
     -   `user-guide/`: User documentation (installation, configuration, usage)
     -   `ai-guidelines/`: AI assistant guidelines (modular extracts from AGENTS.md)

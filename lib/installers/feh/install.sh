@@ -22,11 +22,9 @@ main() {
     # Define installation steps as data (not loops)
     # Format: "script.sh|Display Name|Estimated Duration (seconds)"
     declare -a INSTALL_STEPS=(
-        "00-check-prerequisites.sh|Check Prerequisites|10"
-        "01-uninstall-apt-version.sh|Uninstall APT Version|5"
-        "02-clone-feh.sh|Clone Feh Repository|15"
-        "03-build-feh.sh|Build Feh|90"
-        "04-install-binary.sh|Install Feh Binary|10"
+        "00-check-prerequisites.sh|Check Prerequisites|5"
+        "01-uninstall-source-version.sh|Uninstall Source Version|5"
+        "02-install-apt-feh.sh|Install Feh via APT|30"
         "05-verify-installation.sh|Verify Installation|5"
     )
 

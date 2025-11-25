@@ -23,22 +23,26 @@ cd /home/kkk/Apps/ghostty-config-files
 > **✅ Production Ready**: This installation has been verified by 4 specialized agents with zero critical issues. See [Installation Verification](../developer/installation-verification.md) for full quality assurance report.
 
 **What Gets Installed**:
-- Ghostty terminal emulator (built from source with 2025 optimizations)
+- Ghostty terminal emulator v1.2.3+ (via official .deb package - fast and reliable)
 - Ghostty clipboard fix (strips Nerd Font icons for clean copy/paste)
-- Feh image viewer with smart launcher (auto-finds images in Pictures/Downloads)
+- Feh image viewer (apt package - simplified installation)
+- Charm TUI ecosystem (gum, glow, vhs for beautiful terminal UI)
 - ZSH with Oh My ZSH
 - Node.js latest (v25.2.0+) via fnm (Fast Node Manager)
 - Python UV package manager
 - Context menu integration ("Open in Ghostty")
 - AI tools (Claude Code, Gemini CLI)
+- Fastfetch system information tool
 - All configuration and optimizations
 
 **Bonus Features**:
-- 📹 **Automatic Recording**: Installation is recorded to `logs/video/YYYYMMDD-HHMMSS.log` for documentation/demo videos
-- 🎨 **Clipboard Fix**: Copy from Ghostty pastes clean text (no Unicode garbage like `\EF\x81\xBC`)
-- 🖼️ **Smart Image Viewer**: Feh automatically finds your images when launched from menu
+- **Automatic Recording**: VHS auto-recording captures installation demos (opt-in)
+- **Beautiful TUI**: Colored progress bars, spinners, and styled output via gum
+- **System Audit Table**: Pre-installation state display showing all tools
+- **Clipboard Fix**: Copy from Ghostty pastes clean text (no Unicode garbage)
+- **Smart Image Viewer**: Feh with context menu integration
 
-**Installation Time**: ~10 minutes for complete setup
+**Installation Time**: ~5 minutes for complete setup (faster with .deb package)
 
 ## Prerequisites
 
@@ -77,10 +81,10 @@ If the test command runs without prompting for a password, you're ready to proce
 
 ### Required Packages
 The installation script will automatically install required dependencies:
-- Build tools (gcc, make, pkg-config, cmake)
-- Zig compiler (0.14.0) for Ghostty compilation
 - Git for repository management
 - curl/wget for downloads
+- gum, glow, vhs (Charm TUI tools)
+- ffmpeg and ttyd (for VHS recording)
 
 ## Installation Methods
 
@@ -98,14 +102,16 @@ cd ghostty-config-files
 ```
 
 **What this does**:
-1. Checks for required dependencies
-2. Installs Node.js latest (v25.2.0+) via fnm (Fast Node Manager)
-3. Installs Zig compiler 0.14.0
-4. Builds Ghostty from source
-5. Configures ZSH with Oh My ZSH
-6. Installs context menu integration
-7. Applies all optimizations
-8. Sets up AI tools
+1. Displays pre-installation system audit table (shows current tool status)
+2. Installs Charm TUI tools (gum, glow, vhs) for beautiful terminal UI
+3. Downloads and installs Ghostty v1.2.3+ via official .deb package
+4. Cleans up any legacy installations (Snap, source builds)
+5. Installs Node.js latest (v25.2.0+) via fnm (Fast Node Manager)
+6. Configures ZSH with Oh My ZSH
+7. Installs context menu integration ("Open in Ghostty")
+8. Sets up AI tools (Claude Code, Gemini CLI)
+9. Installs Feh image viewer and Fastfetch
+10. Applies all optimizations and configurations
 
 ### Method 2: Using manage.sh (New Unified Interface)
 
@@ -117,8 +123,7 @@ For more control over what gets installed:
 
 # Install with specific components
 ./manage.sh install --skip-node      # Skip Node.js
-./manage.sh install --skip-zig       # Skip Zig
-./manage.sh install --skip-ghostty   # Skip Ghostty build
+./manage.sh install --skip-ghostty   # Skip Ghostty installation
 ./manage.sh install --skip-zsh       # Skip ZSH setup
 ./manage.sh install --skip-theme     # Skip theme configuration
 ./manage.sh install --skip-context-menu  # Skip context menu
@@ -143,34 +148,36 @@ fnm install --latest
 fnm use latest
 ```
 
-#### Step 2: Install Zig Compiler
+#### Step 2: Install Ghostty via .deb Package
 ```bash
-# Download and install Zig 0.14.0
-wget https://ziglang.org/download/0.14.0/zig-linux-x86_64-0.14.0.tar.xz
-tar -xf zig-linux-x86_64-0.14.0.tar.xz
-sudo mv zig-linux-x86_64-0.14.0 /usr/local/zig-0.14.0
-sudo ln -s /usr/local/zig-0.14.0/zig /usr/local/bin/zig
+# Download official .deb package from mkasberg/ghostty-ubuntu releases
+# Check https://github.com/mkasberg/ghostty-ubuntu/releases for latest version
+wget https://github.com/mkasberg/ghostty-ubuntu/releases/download/1.2.3-0-ppa1/ghostty_1.2.3-0.ppa1_amd64_25.10.deb
+
+# Install the .deb package
+sudo dpkg -i ghostty_1.2.3-0.ppa1_amd64_25.10.deb
+
+# Fix any dependency issues
+sudo apt --fix-broken install
 ```
 
-#### Step 3: Build Ghostty
-```bash
-# Clone Ghostty repository
-git clone https://github.com/ghostty-org/ghostty.git
-cd ghostty
-
-# Build with Zig
-zig build -Doptimize=ReleaseFast
-
-# Install binary
-sudo cp zig-out/bin/ghostty /usr/local/bin/
-```
-
-#### Step 4: Install Configuration
+#### Step 3: Install Configuration
 ```bash
 # Copy Ghostty configuration
 mkdir -p ~/.config/ghostty
 cp configs/ghostty/config ~/.config/ghostty/
 cp configs/ghostty/*.conf ~/.config/ghostty/
+```
+
+#### Step 4: Install Charm TUI Tools
+```bash
+# Add Charm repository
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+
+# Install gum, glow, vhs
+sudo apt update && sudo apt install gum glow vhs
 ```
 
 #### Step 5: Setup ZSH
@@ -187,7 +194,7 @@ chsh -s $(which zsh)
 
 #### Step 6: Context Menu Integration
 ```bash
-./scripts/install_context_menu.sh
+./lib/installers/context_menu/install.sh
 ```
 
 ## Installation Recording
@@ -283,19 +290,46 @@ gemini-cli auth
 
 ## Troubleshooting
 
-### Ghostty Build Fails
+### Ghostty .deb Installation Fails
 
-**Issue**: Zig compilation errors
+**Issue**: dpkg installation errors
 
 **Solution**:
 ```bash
-# Ensure correct Zig version
-zig version  # Should be 0.14.0
+# Fix broken dependencies
+sudo apt --fix-broken install
 
-# Clean and rebuild
-cd ghostty
-rm -rf zig-cache zig-out
-zig build -Doptimize=ReleaseFast
+# If package conflicts exist, remove conflicting package first
+sudo dpkg --remove ghostty
+sudo apt autoremove
+
+# Re-download and install
+wget https://github.com/mkasberg/ghostty-ubuntu/releases/download/1.2.3-0-ppa1/ghostty_1.2.3-0.ppa1_amd64_25.10.deb
+sudo dpkg -i ghostty_1.2.3-0.ppa1_amd64_25.10.deb
+```
+
+### Legacy Installation Cleanup
+
+**Issue**: Old Snap or source-built Ghostty conflicts with .deb installation
+
+**Solution**:
+```bash
+# Remove Snap installation (if present)
+sudo snap remove ghostty
+
+# Remove source-built binaries (if present)
+sudo rm -f /usr/local/bin/ghostty
+rm -f ~/.local/bin/ghostty
+
+# Remove manual desktop entries
+rm -f ~/.local/share/applications/ghostty.desktop
+rm -f ~/.local/share/applications/com.mitchellh.ghostty.desktop
+
+# Clean up old build directories
+rm -rf ~/Apps/ghostty ~/Apps/zig
+
+# Now install via .deb
+./start.sh
 ```
 
 ### Configuration Not Applied
@@ -479,7 +513,7 @@ To update your installation with automatic customization preservation:
 **Update Workflow (update-all)**:
 1. Detects existing configurations in `~/.config/ghostty/`
 2. Backs up current configuration before updates
-3. Reinstalls Ghostty (latest build from source)
+3. Downloads and installs latest Ghostty .deb package
 4. Preserves user config files (no overwrite)
 5. Applies latest fixes (e.g., desktop launcher GTK flag fix)
 
@@ -524,14 +558,20 @@ ghostty --version
 To remove Ghostty and related components:
 
 ```bash
-# Remove Ghostty binary
-sudo rm /usr/local/bin/ghostty
+# Remove Ghostty .deb package
+sudo apt remove ghostty
 
-# Remove configuration
+# Or use the uninstaller script
+./lib/installers/ghostty/uninstall.sh
+
+# Remove configuration (optional - keeps your settings)
 rm -rf ~/.config/ghostty
 
 # Remove context menu
 rm ~/.local/share/nautilus/scripts/"Open in Ghostty"
+
+# Remove Charm tools (optional)
+sudo apt remove gum glow vhs
 
 # Remove ZSH (optional)
 sudo apt remove zsh

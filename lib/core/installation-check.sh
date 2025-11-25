@@ -64,6 +64,16 @@ check_zsh_installed() {
 }
 
 #
+# Check if Go is actually installed
+#
+check_go_installed() {
+    if command_exists "go"; then
+        return 0  # Installed
+    fi
+    return 1  # Not installed
+}
+
+#
 # Check if Python UV is actually installed
 #
 check_uv_installed() {
@@ -134,6 +144,9 @@ check_component_installed() {
         zsh)
             check_zsh_installed
             ;;
+        go)
+            check_go_installed
+            ;;
         uv)
             check_uv_installed
             ;;
@@ -183,6 +196,7 @@ get_component_action() {
 export -f check_ghostty_installed
 export -f check_gum_installed
 export -f check_zsh_installed
+export -f check_go_installed
 export -f check_uv_installed
 export -f check_fnm_installed
 export -f check_ai_tools_installed

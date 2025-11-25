@@ -42,15 +42,20 @@ main() {
 
     # Step 1: Determine best installation strategy
     log "INFO" "Analyzing installation options..."
-    local strategy_json
-    strategy_json=$(determine_installation_strategy "gum" "gum" "$GUM_GITHUB_REPO" "N/A")
+    
+    # Force Go strategy if Go is available (Constitutional requirement)
+    local install_method="go"
+    local reason="Preferred method via go install"
+    local version_target="latest"
 
-    local install_method
-    install_method=$(echo "$strategy_json" | grep -oP '"method": "\K[^"]+')
-    local reason
-    reason=$(echo "$strategy_json" | grep -oP '"reason": "\K[^"]+')
-    local version_target
-    version_target=$(echo "$strategy_json" | grep -oP '"version_target": "\K[^"]+')
+    if ! command -v go >/dev/null 2>&1; then
+        # Fallback to existing intelligence if Go is missing
+        local strategy_json
+        strategy_json=$(determine_installation_strategy "gum" "gum" "$GUM_GITHUB_REPO" "N/A")
+        install_method=$(echo "$strategy_json" | grep -oP '"method": "\K[^"]+')
+        reason=$(echo "$strategy_json" | grep -oP '"reason": "\K[^"]+')
+        version_target=$(echo "$strategy_json" | grep -oP '"version_target": "\K[^"]+')
+    fi
 
     log "INFO" "Strategy: $install_method - $reason"
     log "INFO" "Target version: $version_target"
@@ -63,6 +68,9 @@ main() {
 
     # Step 3: Install using determined method
     case "$install_method" in
+        go)
+            install_via_go
+            ;;
         apt)
             install_via_apt
             ;;
@@ -89,6 +97,52 @@ main() {
 
     complete_task "$task_id" 0
     exit 0
+}
+
+#
+# Install via Go
+#
+install_via_go() {
+    log "INFO" "Installing via go install..."
+    
+    if ! command -v go >/dev/null 2>&1; then
+        log "WARNING" "Go not found, falling back to binary..."
+        install_via_binary
+        return $?
+    fi
+
+    echo "  ⠋ Running go install github.com/charmbracelet/gum@latest..."
+    if go install github.com/charmbracelet/gum@latest; then
+        log "SUCCESS" "✓ Installed gum via go install"
+        
+        # Ensure GOPATH/bin is in PATH
+        local go_bin
+        go_bin=$(go env GOPATH)/bin
+        if [[ -z "$go_bin" ]]; then
+            go_bin="$HOME/go/bin"
+        fi
+        
+        if [[ ":$PATH:" != *":$go_bin:"* ]]; then
+            export PATH="$go_bin:$PATH"
+            log "INFO" "Added $go_bin to PATH for current session"
+            
+            # Add to shell config
+            for rc_file in "$HOME/.zshrc" "$HOME/.bashrc"; do
+                if [ -f "$rc_file" ]; then
+                    if ! grep -q "$go_bin" "$rc_file"; then
+                        echo "" >> "$rc_file"
+                        echo "# Go binaries" >> "$rc_file"
+                        echo "export PATH=\"$go_bin:\$PATH\"" >> "$rc_file"
+                        log "INFO" "  ✓ Updated $rc_file with GOPATH/bin"
+                    fi
+                fi
+            done
+        fi
+        return 0
+    else
+        log "ERROR" "go install failed"
+        return 1
+    fi
 }
 
 #

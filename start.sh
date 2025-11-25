@@ -62,6 +62,7 @@ source "${LIB_DIR}/core/installation-check.sh"
 
 # Source task modules (not yet in init.sh as they are specific to start.sh)
 source "${LIB_DIR}/tasks/fastfetch.sh"
+source "${LIB_DIR}/tasks/go.sh"
 source "${LIB_DIR}/tasks/gum.sh"
 # ghostty.sh - REMOVED: Using modular installer lib/installers/ghostty/install.sh
 source "${LIB_DIR}/tasks/zsh.sh"
@@ -96,9 +97,14 @@ readonly TASK_REGISTRY=(
     "install-fastfetch||script:lib/installers/fastfetch/install.sh|verify_fastfetch_installed|-1|25"
 
     # ═══════════════════════════════════════════════════════════════
+    # Priority -0.5: Go Programming Language (Required for Gum)
+    # ═══════════════════════════════════════════════════════════════
+    "install-go||script:lib/installers/go/install.sh|verify_go_installed|-1|60"
+
+    # ═══════════════════════════════════════════════════════════════
     # Priority 0: Gum TUI Framework (ALWAYS FIRST, ALWAYS REINSTALLED)
     # ═══════════════════════════════════════════════════════════════
-    "install-gum|install-fastfetch|script:lib/installers/gum/install.sh|verify_gum_installed|0|40"
+    "install-gum|install-fastfetch,install-go|script:lib/installers/gum/install.sh|verify_gum_installed|0|40"
 
     # ═══════════════════════════════════════════════════════════════
     # Priority 1: Prerequisites
@@ -312,6 +318,7 @@ execute_single_task() {
         # Map task_id to component name
         local component_name
         case "$task_id" in
+            "install-go") component_name="go" ;;
             "install-ghostty") component_name="ghostty" ;;
             "install-zsh") component_name="zsh" ;;
             "install-uv") component_name="uv" ;;
@@ -494,6 +501,7 @@ main() {
         # Generate user-friendly display name from task_id
         local display_name
         case "$task_id" in
+            install-go)            display_name="Installing Go Programming Language" ;;
             install-gum)           display_name="Installing Gum TUI Framework" ;;
             verify-prereqs)        display_name="Verifying Prerequisites" ;;
             install-ghostty)       display_name="Installing Ghostty Terminal" ;;

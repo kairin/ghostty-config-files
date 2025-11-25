@@ -1,9 +1,9 @@
 ---
 title: 'Automated Daily Updates'
 description: 'Smart system-wide updates at 9:00 AM daily with full logging and passwordless execution'
-pubDate: 2025-11-13
+pubDate: 2025-11-25
 author: 'System Documentation'
-tags: ['updates', 'automation', 'cron', 'maintenance', 'system']
+tags: ['updates', 'automation', 'cron', 'maintenance', 'system', 'ghostty', 'charm']
 order: 5
 ---
 
@@ -13,14 +13,20 @@ Keep your system and tools up-to-date automatically with intelligent daily updat
 
 ## Overview
 
-The configuration includes a smart automated update system that runs daily at 9:00 AM. All system packages, development tools, and AI assistants are updated automatically with full logging.
+The configuration includes a smart automated update system (v4.0) that runs daily at 9:00 AM. All system packages, development tools, and AI assistants are updated automatically with full logging.
 
 ## What Gets Updated
 
 ### System Packages (apt)
 - GitHub CLI (`gh`)
+- Charm TUI tools (`gum`, `glow`, `vhs`)
 - All installed system packages
 - Automatic cleanup with `autoremove`
+
+### Ghostty Terminal
+- Version check against GitHub releases (mkasberg/ghostty-ubuntu)
+- Downloads and installs latest .deb package when update available
+- Preserves user configuration during updates
 
 ### Development Tools
 - Oh My Zsh framework
