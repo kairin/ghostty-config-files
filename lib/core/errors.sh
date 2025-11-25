@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 #
 # lib/core/errors.sh - Error handling with recovery suggestions
-#
-# CONTEXT7 STATUS: Unable to query (API authentication issue)
-# FALLBACK: Best practices from bash error handling patterns 2025
-# - Structured error handling with diagnostics
-# - Recovery suggestions for common failure modes
-# - Continue-or-abort prompts
-# - Error auto-expansion in collapsible output
-#
 # Constitutional Compliance: Principle VIII - Error Handling & Recovery
 #
 

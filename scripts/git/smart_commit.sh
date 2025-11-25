@@ -1,9 +1,6 @@
 #!/bin/bash
+# Smart Commit Strategy - MetaSpec-Kyocera-style branch management with preservation
 
-# Smart Commit Strategy for ghostty-config-files
-# Implements MetaSpec-Kyocera-style branch management with preservation
-
-set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"

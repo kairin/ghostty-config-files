@@ -1,9 +1,5 @@
 #!/bin/bash
-# Module: validate-modules.sh
-# Purpose: Comprehensive module validation runner (contract + dependencies)
-# Dependencies: validate_module_contract.sh, validate_module_deps.sh
-# Modules Required: None
-# Exit Codes: 0=all validations passed, 1=validation failed, 2=usage error
+# validate-modules.sh - Module validation runner (contract + dependencies)
 
 set -euo pipefail
 
