@@ -74,7 +74,8 @@ EOF
 
     log_info "Installation will complete $total_steps steps"
 
-    local backup_marker="/tmp/manage-install-backup-$(date +%s)"
+    local backup_marker
+    backup_marker="/tmp/manage-install-backup-$(date +%s)"
     if ! _create_backup_marker "$backup_marker"; then
         show_progress "error" "Failed to create backup marker"
         return 1

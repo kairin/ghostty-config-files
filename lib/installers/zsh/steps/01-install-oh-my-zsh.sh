@@ -40,7 +40,7 @@ main() {
     # Download and run official installer (non-interactive)
     log "INFO" "Downloading Oh My ZSH installer..."
 
-    if ! sh -c "$(curl -fsSL $OH_MY_ZSH_URL)" "" --unattended; then
+    if ! sh -c "$(curl -fsSL "$OH_MY_ZSH_URL")" "" --unattended 2>&1 | tee -a "$(get_log_file)"; then
         log "ERROR" "✗ Oh My ZSH installation failed"
         log "ERROR" "  Check internet connection and GitHub access"
         log "ERROR" "  Manual installation: https://ohmyz.sh/"

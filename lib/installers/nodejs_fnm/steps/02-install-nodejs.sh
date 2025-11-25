@@ -6,7 +6,8 @@ source "${SCRIPT_DIR}/common.sh"
 main() {
     log "INFO" "Installing Node.js (latest version)..."
     if verify_nodejs_installed; then
-        local node_version=$(node --version 2>/dev/null || echo "unknown")
+        local node_version
+        node_version=$(node --version 2>/dev/null || echo "unknown")
         log "INFO" "↷ Node.js already installed: $node_version"
         exit 2
     fi
@@ -26,7 +27,8 @@ main() {
     fi
     
     if verify_nodejs_installed; then
-        local node_version=$(node --version 2>/dev/null)
+        local node_version
+        node_version=$(node --version 2>/dev/null)
         log "SUCCESS" "✓ Node.js installed: $node_version (LATEST, not LTS - constitutional)"
         exit 0
     else

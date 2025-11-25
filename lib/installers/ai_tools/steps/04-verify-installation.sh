@@ -9,7 +9,8 @@ main() {
     local tools_to_check=()
 
     if verify_claude_cli; then
-        local claude_version=$(claude --version 2>/dev/null || echo "unknown")
+        local claude_version
+        claude_version=$(claude --version 2>/dev/null || echo "unknown")
         log "SUCCESS" "✓ Claude CLI: $claude_version"
         tools_to_check+=("@anthropic-ai/claude-code")
     else
@@ -17,7 +18,8 @@ main() {
     fi
 
     if verify_gemini_cli; then
-        local gemini_version=$(gemini --version 2>/dev/null || echo "unknown")
+        local gemini_version
+        gemini_version=$(gemini --version 2>/dev/null || echo "unknown")
         log "SUCCESS" "✓ Gemini CLI: $gemini_version"
         tools_to_check+=("@google/gemini-cli")
     else

@@ -43,7 +43,7 @@ compare_versions() {
 
     # Compare each component
     local max_parts=${#v1_parts[@]}
-    [ ${#v2_parts[@]} -gt $max_parts ] && max_parts=${#v2_parts[@]}
+    [ ${#v2_parts[@]} -gt "$max_parts" ] && max_parts=${#v2_parts[@]}
 
     for ((i=0; i<max_parts; i++)); do
         local part1=${v1_parts[i]:-0}
@@ -169,8 +169,9 @@ determine_installation_strategy() {
                 local major_diff=false
 
                 # Extract major version numbers
-                local apt_major=$(echo "$apt_version" | cut -d. -f1)
-                local gh_major=$(echo "$github_version" | cut -d. -f1)
+                local apt_major gh_major
+                apt_major=$(echo "$apt_version" | cut -d. -f1)
+                gh_major=$(echo "$github_version" | cut -d. -f1)
 
                 if [ "$apt_major" -lt "$gh_major" ]; then
                     major_diff=true
@@ -252,8 +253,9 @@ recommend_source_build() {
     # Compare versions
     if compare_versions "$apt_version" "$github_version"; then
         # APT is older - check if difference is significant
-        local apt_major=$(echo "$apt_version" | cut -d. -f1)
-        local gh_major=$(echo "$github_version" | cut -d. -f1)
+        local apt_major gh_major
+        apt_major=$(echo "$apt_version" | cut -d. -f1)
+        gh_major=$(echo "$github_version" | cut -d. -f1)
 
         # Major version difference = recommend source
         [ "$apt_major" -lt "$gh_major" ] && return 0
