@@ -1,10 +1,6 @@
 #!/bin/bash
-# Module: task_manager.sh
-# Purpose: Parallel task orchestration with max 4 concurrent tasks
-# Dependencies: task_display.sh, common.sh
-# Exit Codes: 0=success, 1=orchestration failed
+# task_manager.sh - Parallel task orchestration with max 4 concurrent tasks
 
-set -euo pipefail
 
 # Prevent multiple sourcing
 [[ -n "${TASK_MANAGER_SH_LOADED:-}" ]] && return 0
