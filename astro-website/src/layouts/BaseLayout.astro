@@ -39,16 +39,16 @@ const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
   </head>
   <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg">
     <!-- Modern Glass Morphism Navigation -->
-    <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300">
+    <nav id="main-nav" class="fixed top-0 w-full z-50 transition-all duration-300 nav-collapsed">
       <div class="full-width-section">
         <div class="navbar">
           <div class="flex-1">
-            <a href={`${base}/`} class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all">
+            <a id="nav-logo" href={`${base}/`} class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all relative z-50">
               <span class="hidden md:inline">Ghostty Config Files</span>
               <span class="md:hidden">Ghostty</span>
             </a>
           </div>
-          <div class="flex-none gap-2">
+          <div id="nav-menu-container" class="flex-none gap-2 transition-all duration-300 origin-left">
             <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4">
               <li><a href={`${base}/user-guide`} class="nav-link">User Guide</a></li>
               <li><a href={`${base}/ai-guidelines`} class="nav-link">AI Guidelines</a></li>
@@ -178,6 +178,76 @@ const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
       .prose td {
         @apply border border-gray-200 dark:border-gray-700 px-4 py-2;
       }
+      .prose td {
+        @apply border border-gray-200 dark:border-gray-700 px-4 py-2;
+      }
+
+      /* Collapsible Nav Styles */
+      #main-nav.nav-collapsed {
+        @apply bg-transparent shadow-none border-transparent backdrop-blur-none pointer-events-none;
+      }
+
+      #main-nav.nav-expanded {
+        @apply bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 backdrop-blur-xl pointer-events-auto;
+      }
+
+      #nav-logo {
+        @apply pointer-events-auto;
+      }
+
+      #main-nav.nav-collapsed #nav-menu-container {
+        @apply opacity-0 -translate-x-4 pointer-events-none;
+      }
+
+      #main-nav.nav-expanded #nav-menu-container {
+        @apply opacity-100 translate-x-0 pointer-events-auto;
+      }
     </style>
+
+    <script>
+      const nav = document.getElementById('main-nav');
+      const logo = document.getElementById('nav-logo');
+      const menuContainer = document.getElementById('nav-menu-container');
+
+      if (nav && logo && menuContainer) {
+        // Toggle menu on logo click
+        logo.addEventListener('click', (e) => {
+          // If we are on the home page, prevent default and toggle
+          // If we are NOT on home page, allow default (navigate home) UNLESS we want the menu to expand first?
+          // User request: "clicking on the main logo, the menu bar will expand"
+          // This implies the primary action is expansion.
+          
+          // Let's check if it's already expanded.
+          const isExpanded = nav.classList.contains('nav-expanded');
+          
+          if (!isExpanded) {
+            e.preventDefault();
+            nav.classList.remove('nav-collapsed');
+            nav.classList.add('nav-expanded');
+          } else {
+            // If already expanded, allow default behavior (go to home) or collapse?
+            // "otherwise, menu bar will collapse with no interaction"
+            // If I click logo again, maybe it should collapse? 
+            // But logo usually goes home. 
+            // Let's make it toggle.
+            e.preventDefault();
+            nav.classList.remove('nav-expanded');
+            nav.classList.add('nav-collapsed');
+          }
+        });
+
+        // Collapse on click outside
+        document.addEventListener('click', (e) => {
+          const isExpanded = nav.classList.contains('nav-expanded');
+          if (isExpanded && !nav.contains(e.target as Node)) {
+            nav.classList.remove('nav-expanded');
+            nav.classList.add('nav-collapsed');
+          }
+        });
+
+        // Collapse on scroll? "collapse with no interaction"
+        // Maybe not scroll, that might be annoying.
+      }
+    </script>
   </body>
 </html>
