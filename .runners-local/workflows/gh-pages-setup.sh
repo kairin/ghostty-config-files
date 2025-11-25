@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
-
-#######################################
-# Script: gh-pages-setup.sh
-# Purpose: Zero-cost GitHub Pages setup with Astro for ghostty-config-files
-# Usage: ./gh-pages-setup.sh [--verify|--configure|--help]
-# Dependencies: gh (GitHub CLI), npx (Node Package Execute), jq (optional)
-#######################################
+# gh-pages-setup.sh - Zero-cost GitHub Pages setup with Astro
 
 set -euo pipefail
 IFS=$'\n\t'

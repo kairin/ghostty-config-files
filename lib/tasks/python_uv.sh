@@ -1,27 +1,7 @@
 #!/usr/bin/env bash
-#
 # lib/tasks/python_uv.sh - Python + uv package manager installation
-#
-# CONTEXT7 STATUS: API authentication failed (invalid key)
-# FALLBACK STRATEGY: Use constitutional compliance from CLAUDE.md/AGENTS.md
-# - uv EXCLUSIVE (prohibit pip/poetry/pipenv per constitutional requirement)
-# - Latest uv version from Astral Systems
-# - XDG-compliant installation (~/.local/bin/uv)
-# - Performance: uv is 10-100x faster than pip
-#
-# Constitutional Compliance:
-# - Principle V: Modular Architecture
-# - CRITICAL: uv exclusive (FR-032-033) - NO pip/poetry/pipenv allowed
-# - XDG Base Directory compliance
-# - Shell integration for ZSH/Bash
-#
-# User Stories: US1 (Fresh Installation), US3 (Re-run Safety), US5 (Best Practices)
-#
-# Requirements:
-# - FR-032: uv exclusive (prohibit pip/pip3/python -m pip)
-# - FR-033: Performance benchmarking (uv vs pip comparison)
-# - FR-053: Idempotency (skip if already installed)
-#
+# Constitutional: uv EXCLUSIVE (prohibit pip/poetry/pipenv)
+# Performance: uv is 10-100x faster than pip
 
 set -euo pipefail
 
