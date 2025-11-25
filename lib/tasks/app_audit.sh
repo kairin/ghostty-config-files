@@ -23,7 +23,8 @@ source "${SCRIPT_DIR}/../audit/app-report.sh"
 
 # Audit configuration
 readonly AUDIT_REPORT="/tmp/ubuntu-apps-audit.md"
-readonly AUDIT_TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+readonly AUDIT_TIMESTAMP
+AUDIT_TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 readonly AUDIT_LOG="/tmp/ghostty-start-logs/app-audit-${AUDIT_TIMESTAMP}.log"
 
 #

@@ -111,6 +111,7 @@ update_system_packages() {
         log_info "Applying security updates only"
     fi
 
+    # shellcheck disable=SC2086
     if sudo -n apt upgrade $upgrade_flags 2>&1 | tee -a "$LOG_FILE"; then
         log_success "System packages upgraded"
         track_update_result "System Packages" "success"

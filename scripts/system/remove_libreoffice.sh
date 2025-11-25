@@ -87,6 +87,7 @@ CLEANED_DIRS=0
 
 # Clean for current sudo user (get real user, not root)
 REAL_USER="${SUDO_USER:-$USER}"
+# shellcheck disable=SC2086
 REAL_HOME=$(eval echo ~$REAL_USER)
 
 if [ -d "$REAL_HOME/.config/libreoffice" ]; then

@@ -19,7 +19,8 @@ scan_apt_packages() {
             print $1, $2, size_mb "MB"
         }' > "$tmp_data"
     
-    local count=$(wc -l < "$tmp_data")
+    local count
+    count=$(wc -l < "$tmp_data")
     log "INFO" "  Found $count APT packages"
     
     local packages_json="[]"
@@ -58,8 +59,10 @@ scan_snap_packages() {
         }
     ' > "$tmp_data"
     
-    local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
-    local disabled_count=$(awk -F'\t' '$4 == "true"' "$tmp_data" | wc -l 2>/dev/null || echo "0")
+    local count
+    count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
+    local disabled_count
+    disabled_count=$(awk -F'\t' '$4 == "true"' "$tmp_data" | wc -l 2>/dev/null || echo "0")
     log "INFO" "  Found $count Snap packages ($disabled_count disabled)"
     
     if [ "$count" -gt 0 ]; then
@@ -96,7 +99,8 @@ scan_desktop_files() {
         done
     done > "$tmp_data"
     
-    local count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
+    local count
+    count=$(wc -l < "$tmp_data" 2>/dev/null || echo "0")
     log "INFO" "  Found $count desktop applications"
     
     local apps_json="[]"

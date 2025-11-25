@@ -16,8 +16,9 @@ main() {
         exit 1
     fi
     
-    local node_version=$(node --version 2>/dev/null)
-    local npm_version=$(npm --version 2>/dev/null)
+    local node_version npm_version
+    node_version=$(node --version 2>/dev/null)
+    npm_version=$(npm --version 2>/dev/null)
     log "SUCCESS" "✓ Node.js $node_version, npm v$npm_version available"
     log "SUCCESS" "✓ Prerequisites check passed"
     exit 0

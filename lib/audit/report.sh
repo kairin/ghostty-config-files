@@ -187,8 +187,9 @@ display_installation_strategy_groups() {
         elif [ "$method" = "npm" ] || [ "$app_name" = "Node.js" ] || [ "$app_name" = "npm" ]; then npm_tools+=("$row");
         elif [ "$apt_avail" != "N/A" ] && [ "$apt_avail" != "unknown" ]; then
             if [ "$source_latest" != "N/A" ] && [ "$source_latest" != "unknown" ]; then
-                local apt_major=$(echo "$apt_avail" | cut -d. -f1 2>/dev/null || echo "0")
-                local src_major=$(echo "$source_latest" | cut -d. -f1 2>/dev/null || echo "0")
+                local apt_major src_major
+                apt_major=$(echo "$apt_avail" | cut -d. -f1 2>/dev/null || echo "0")
+                src_major=$(echo "$source_latest" | cut -d. -f1 2>/dev/null || echo "0")
                 if [ "$src_major" != "$apt_major" ] && [ "$src_major" -gt "$apt_major" ] 2>/dev/null; then source_tools+=("$row"); else apt_tools+=("$row"); fi
             else apt_tools+=("$row"); fi
         elif [ "$source_latest" != "N/A" ] && [ "$source_latest" != "unknown" ]; then source_tools+=("$row");

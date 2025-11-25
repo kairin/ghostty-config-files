@@ -241,7 +241,8 @@ EOF
     fi
 
     if [[ "$force" -eq 0 ]]; then
-        local reset_type=$([[ "$full" -eq 1 ]] && echo "FULL" || echo "config-only")
+        local reset_type
+        reset_type=$([[ "$full" -eq 1 ]] && echo "FULL" || echo "config-only")
         echo "WARNING: This will perform a $reset_type reset."
         echo "A backup will be created before any changes."
         echo "Continue? [y/N]"
@@ -251,7 +252,8 @@ EOF
 
     show_progress "start" "Starting reset"
 
-    local backup_dir="${SCRIPT_DIR}/backups/reset-$(date +%Y%m%d-%H%M%S)"
+    local backup_dir
+    backup_dir="${SCRIPT_DIR}/backups/reset-$(date +%Y%m%d-%H%M%S)"
     mkdir -p "$backup_dir"
     show_progress "info" "Backup directory: $backup_dir"
 

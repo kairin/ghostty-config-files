@@ -104,7 +104,7 @@ spin_with_color() {
     local command="${3:-sleep 1}"
 
     if ! command_exists "gum"; then
-        echo "⠋ $message..."
+        echo -e "${RESET}${message}..."
         eval "$command"
         return $?
     fi
