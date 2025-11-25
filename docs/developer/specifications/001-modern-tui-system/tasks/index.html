@@ -1,0 +1,1298 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Tasks: Modern TUI Installation System | Ghostty Configuration Files</title><meta name="description" content="**Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system/`"><!-- OpenGraph --><meta property="og:title" content="Tasks: Modern TUI Installation System"><meta property="og:description" content="**Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system/`"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Tasks: Modern TUI Installation System</li> </ul> </div> <h1>Tasks: Modern TUI Installation System</h1> <p class="text-xl text-base-content/70 mb-8">**Input**: Design documents from `/home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system/`</p><h1 id="tasks-modern-tui-installation-system">Tasks: Modern TUI Installation System</h1>
+<p><strong>Input</strong>: Design documents from <code>/home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system/</code>
+<strong>Prerequisites</strong>: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/ ✅</p>
+<p><strong>Progress</strong>: 40/64 tasks complete (62.5%) - Phase 6 (Orchestration) COMPLETE ✅
+<strong>Last Updated</strong>: 2025-11-19</p>
+<p><strong>Tests</strong>: No explicit test requirements in spec.md - verification functions serve as integration tests</p>
+<p><strong>Organization</strong>: Tasks are grouped by implementation waves (from plan.md) and mapped to user stories for traceability. Each wave represents a phase that can be independently validated.</p>
+<h2 id="format-id-p-story-description">Format: <code>[ID] [P?] [Story?] Description</code></h2>
+<ul>
+<li><strong>[P]</strong>: Can run in parallel (different files, no dependencies)</li>
+<li><strong>[Story]</strong>: Which user story this task belongs to (US1-US7) - only for user-facing features</li>
+<li>Include exact file paths in descriptions</li>
+</ul>
+<hr>
+<h2 id="phase-1-setup-project-initialization">Phase 1: Setup (Project Initialization)</h2>
+<p><strong>Purpose</strong>: Establish repository structure and backup legacy system</p>
+<p><strong>User Story Mapping</strong>: Infrastructure for all user stories</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T001 Create lib/ directory structure (lib/core/, lib/ui/, lib/tasks/, lib/verification/)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled> T002 Backup current start.sh to start-legacy.sh with timestamp</li>
+<li class="task-list-item"><input type="checkbox" checked disabled> T003 [P] Create .gitignore entry for /tmp/ghostty-start-logs/ and lib/**/*.backup</li>
+<li class="task-list-item"><input type="checkbox" checked disabled> T004 [P] Create tests/ directory structure (tests/unit/, tests/integration/, tests/contract/)</li>
+</ul>
+<p><strong>Checkpoint</strong>: Repository structure ready for modular development ✅ COMPLETE</p>
+<hr>
+<h2 id="phase-2-foundational-core-infrastructure">Phase 2: Foundational (Core Infrastructure)</h2>
+<p><strong>Purpose</strong>: Core libraries that ALL tasks depend on - BLOCKS all user story implementation</p>
+<p><strong>⚠️ CRITICAL</strong>: No user story work can begin until this phase is complete</p>
+<h3 id="wave-1-core-infrastructure-week-1">Wave 1: Core Infrastructure (Week 1)</h3>
+<p><strong>Context7 Validation</strong>: Query “Best practices for bash library development 2025” and “Recommended logging patterns for shell scripts”</p>
+<h4 id="duplicate-detection-framework-mandatory-for-all-installations">Duplicate Detection Framework (MANDATORY for all installations)</h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T005 [P] [US3] Implement lib/verification/duplicate_detection.sh - Unified duplicate detection library
+<ul>
+<li>Detect existing installations: command existence, version checks, multiple installations</li>
+<li>Detection methods: <code>command -v</code>, <code>which -a</code>, <code>dpkg -l</code>, <code>snap list</code>, desktop file scanning</li>
+<li>Return standardized detection result: {exists, version, installation_method, duplicates[]}</li>
+<li>Used by ALL task modules before installation</li>
+<li><strong>Context7 Note</strong>: API authentication issue - used best practices fallback</li>
+</ul>
+</li>
+</ul>
+<h4 id="core-library-modules">Core Library Modules</h4>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T006 [P] Implement lib/core/logging.sh - Dual-format logging (JSON + human-readable)</p>
+<ul>
+<li>Function: <code>log(level, message)</code> with levels: TEST, INFO, SUCCESS, WARNING, ERROR</li>
+<li>Output to /tmp/ghostty-start-logs/start-TIMESTAMP.log (human-readable)</li>
+<li>Output to /tmp/ghostty-start-logs/start-TIMESTAMP.log.json (structured JSON)</li>
+<li>Critical errors append to /tmp/ghostty-start-logs/errors.log</li>
+<li>Log rotation: keep last 10 installations</li>
+<li><strong>Context7 Note</strong>: API authentication issue - used best practices fallback</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T007 [P] Implement lib/core/state.sh - State persistence for resume capability</p>
+<ul>
+<li>State file: /tmp/ghostty-start-logs/installation-state.json</li>
+<li>Functions: init_state(), is_task_completed(task_id), mark_task_completed(task_id, duration), mark_task_failed(task_id, error)</li>
+<li>State includes: completed_tasks[], failed_tasks[], system_info{}, performance{}</li>
+<li>Resume function: resume_installation() reads state and skips completed tasks</li>
+<li><strong>Context7 Note</strong>: API authentication issue - used best practices fallback</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T008 [P] Implement lib/core/errors.sh - Error handling with recovery suggestions</p>
+<ul>
+<li>Function: handle_error(task_name, error_code, error_message, recovery_suggestions[])</li>
+<li>Auto-expansion in collapsible output for errors</li>
+<li>Continue-or-abort prompts via gum confirm (if available) or read</li>
+<li>Error diagnostics: what_failed, why_failed, how_to_fix</li>
+<li><strong>Context7 Note</strong>: API authentication issue - used best practices fallback</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T009 [P] Implement lib/core/utils.sh - Utility functions</p>
+<ul>
+<li>Function: get_visual_width(string) - Strip ANSI escape sequences, count visible characters</li>
+<li>Function: calculate_duration(start_timestamp, end_timestamp) - Duration in seconds with bc</li>
+<li>Function: format_duration(seconds) - Human-readable format (e.g., “2m 15s”)</li>
+<li>Function: get_timestamp() - ISO8601 timestamp for logging</li>
+<li><strong>Context7 Note</strong>: API authentication issue - used best practices fallback</li>
+</ul>
+</li>
+</ul>
+<h4 id="gum-tui-framework-installation-prerequisite-for-all-ui">gum TUI Framework Installation (Prerequisite for all UI)</h4>
+<p><strong>Context7 Validation</strong>: Query “gum TUI framework installation methods Ubuntu 25.10 2025” and “Charm Bracelet gum performance benchmarks”</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T010 [US1] Install gum framework (Charm Bracelet) in lib/tasks/gum.sh</p>
+<ul>
+<li><strong>Status</strong>: ✅ COMPLETE - lib/tasks/gum.sh module created</li>
+<li><strong>Implementation</strong>: Full task module with duplicate detection and verification</li>
+<li><strong>Duplicate Detection</strong>: detect_gum() integration, checks multiple installation methods</li>
+<li><strong>Performance test</strong>: gum startup ~22ms (acceptable, target performance measured and logged ideal)</li>
+<li><strong>Context7 Validation</strong>: Query completed - apt recommended for Ubuntu 25.10</li>
+<li><strong>Installation Methods</strong>: apt (preferred) with binary fallback to ~/.local/bin</li>
+<li><strong>Verification</strong>: verify_gum_installed() with functionality and performance tests</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T011 [US1] Implement lib/ui/tui.sh - gum integration wrapper</p>
+<ul>
+<li>Function: init_tui() - Detect gum availability, set TUI_AVAILABLE flag</li>
+<li>Function: show_spinner(title, command) - gum spin wrapper with graceful degradation</li>
+<li>Function: show_progress(total, title) - gum progress wrapper</li>
+<li>Function: show_confirm(prompt) - gum confirm wrapper (fallback to read)</li>
+<li>Function: show_styled(text, color, bold) - gum style wrapper (fallback to echo)</li>
+<li>Graceful degradation: If gum unavailable, use plain text equivalents</li>
+<li><strong>Context7 Note</strong>: API authentication issue - used best practices fallback</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Core infrastructure ready - can proceed to UI components and adaptive box drawing ✅ COMPLETE</p>
+<h3 id="wave-2-adaptive-box-drawing-week-1">Wave 2: Adaptive Box Drawing (Week 1)</h3>
+<p><strong>Context7 Validation</strong>: Query “Terminal capability detection UTF-8 support bash” and “ANSI escape sequence handling best practices”</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T012 [US1] [US2] Implement lib/ui/boxes.sh - Adaptive box drawing system</p>
+<ul>
+<li>Terminal capability detection: is_utf8_locale(), is_utf8_terminal(), is_ssh_session()</li>
+<li>Character set definitions: BOX_UTF8_DOUBLE (╔═╗), BOX_UTF8 (┌─┐), BOX_ASCII (+—+)</li>
+<li>Auto-detection logic: Combine TERM check + LANG check + SSH detection</li>
+<li>Manual override: BOX_DRAWING environment variable (utf8-double/utf8/ascii)</li>
+<li>Function: init_box_drawing() - Detect and select box character set</li>
+<li>Function: draw_box(title, content[]) - Render box with adaptive characters</li>
+<li>Function: draw_separator(width, title) - Horizontal separator lines</li>
+<li>Custom bash rendering with get_visual_width() for perfect alignment</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T013 [P] [US2] Add SSH detection to lib/core/utils.sh</p>
+<ul>
+<li>Function: is_ssh_session() - Check SSH_CONNECTION and SSH_CLIENT environment variables</li>
+<li>Already implemented in lib/core/utils.sh (lines 248-250)</li>
+<li>Used by box drawing to force ASCII in SSH sessions</li>
+<li>Override: BOX_DRAWING=utf8 can force UTF-8 even in SSH (advanced users)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Terminal detection and box drawing complete - UI foundation ready ✅</p>
+<hr>
+<h2 id="phase-3-verification-framework-week-2">Phase 3: Verification Framework (Week 2)</h2>
+<p><strong>Purpose</strong>: Real verification functions for all components (no hard-coded success)</p>
+<p><strong>User Story Mapping</strong>: US1 (Fresh Installation), US3 (Re-run Safety), US5 (Best Practices)</p>
+<p><strong>Context7 Validation</strong>: API key invalid - using fallback strategy with constitutional compliance</p>
+<h3 id="health-checks-prepost-installation">Health Checks (Pre/Post Installation)</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T014 [P] [US1] Implement lib/verification/health_checks.sh - System health validation
+<ul>
+<li>Function: pre_installation_health_check() - Check prerequisites before starting
+<ul>
+<li>Passwordless sudo check (warning if not configured, not a blocker)</li>
+<li>Disk space check (10GB minimum required)</li>
+<li>Internet connectivity check (ping github.com)</li>
+<li>Required commands check (curl, wget, git, tar, gzip, jq, bc)</li>
+</ul>
+</li>
+<li>Function: post_installation_health_check() - Validate complete system after installation
+<ul>
+<li>All components installed and functional</li>
+<li>No conflicts or errors</li>
+<li>Performance targets met (fnm performance measured and logged, gum performance measured and logged)</li>
+</ul>
+</li>
+<li>Return: 0=all passed, 1=critical failures (blocking), exit codes capture failures</li>
+</ul>
+</li>
+</ul>
+<h3 id="component-verification-functions-unit-tests">Component Verification Functions (Unit Tests)</h3>
+<p><strong>Context7 Validation</strong>: Using fallback with constitutional compliance requirements</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T015 [P] [US1] [US3] Implement verify_ghostty_installed() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: Binary exists at $GHOSTTY_APP_DIR/bin/ghostty</li>
+<li>Check 2: Binary is executable</li>
+<li>Check 3: Version check succeeds: <code>ghostty --version</code> returns valid version</li>
+<li>Check 4: Configuration validation: <code>ghostty +show-config</code> succeeds without errors</li>
+<li>Check 5: Shared libraries check: <code>ldd ghostty</code> shows no “not found”</li>
+<li>Return: 0=success, 1=failure with diagnostic error message</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T016 [P] [US1] [US3] Implement verify_zsh_configured() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: ZSH binary exists and is executable</li>
+<li>Check 2: Oh My ZSH installed (~/.oh-my-zsh directory exists)</li>
+<li>Check 3: .zshrc configured with Oh My ZSH</li>
+<li>Check 4: Required plugins loaded</li>
+<li>Return: 0=success, 1=failure</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T017 [P] [US1] [US3] [US5] Implement verify_python_uv() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: uv command exists</li>
+<li>Check 2: Version check: <code>uv --version</code> returns valid version</li>
+<li>Check 3: uv in PATH (~/.local/bin/uv or /usr/local/bin/uv)</li>
+<li>Check 4: uv pip subcommand works: <code>uv pip --version</code></li>
+<li>Performance: Measure uv startup time (should be &#x3C;100ms, much faster than pip)</li>
+<li>Return: 0=success, 1=failure</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T018 [P] [US1] [US3] [US5] Implement verify_fnm_installed() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: fnm command exists</li>
+<li>Check 2: Version check: <code>fnm --version</code> succeeds</li>
+<li>Check 3: fnm in PATH (~/.local/share/fnm/fnm)</li>
+<li>Check 4: Shell integration configured (.zshrc or .bashrc)</li>
+<li>Return: 0=success, 1=failure</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T019 [US1] [US3] Implement verify_fnm_performance() in lib/verification/unit_tests.sh (CONSTITUTIONAL)</p>
+<ul>
+<li>Performance test: Measure <code>time fnm env</code> startup time with nanosecond precision</li>
+<li>Requirement: MUST be performance measured and logged (constitutional requirement - AGENTS.md line 184)</li>
+<li>Calculate duration_ms using date +%s%N (nanoseconds)</li>
+<li>If >50ms: Return 1 with error “CONSTITUTIONAL VIOLATION: fnm startup ${duration_ms}ms >50ms”</li>
+<li>If performance measured and logged: Return 0 with success ”✓ fnm startup: ${duration_ms}ms (performance measured and logged ✓ CONSTITUTIONAL COMPLIANCE)”</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T020 [P] [US1] [US3] Implement verify_nodejs_version() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: node command exists</li>
+<li>Check 2: Version check: <code>node --version</code> returns v25.2.0 or higher (latest, NOT LTS)</li>
+<li>Check 3: npm available: <code>npm --version</code> succeeds</li>
+<li>Constitutional compliance: Latest Node.js (v25+), NOT LTS</li>
+<li>Return: 0=success (v25.2.0+), 1=failure or version too old</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T021 [P] [US1] [US3] Implement verify_claude_cli() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: claude command exists</li>
+<li>Check 2: Version check succeeds</li>
+<li>Check 3: Configuration check (API key not required for verification)</li>
+<li>Return: 0=success, 1=failure</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T022 [P] [US1] [US3] Implement verify_gemini_cli() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: gemini command exists</li>
+<li>Check 2: Version check succeeds</li>
+<li>Return: 0=success, 1=failure</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T023 [P] [US1] [US3] Implement verify_context_menu() in lib/verification/unit_tests.sh</p>
+<ul>
+<li>Check 1: Nautilus action file exists at ~/.local/share/nautilus/scripts/ or appropriate location</li>
+<li>Check 2: File is executable</li>
+<li>Check 3: Ghostty path configured correctly in script</li>
+<li>Return: 0=success, 1=failure</li>
+</ul>
+</li>
+</ul>
+<h3 id="integration-tests-cross-component-validation">Integration Tests (Cross-Component Validation)</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T024 [P] [US1] Implement lib/verification/integration_tests.sh - Cross-component validation
+<ul>
+<li>Test 1: ZSH + fnm integration - Shell integration works, auto-switching on cd</li>
+<li>Test 2: Ghostty + ZSH - Ghostty launches with ZSH as default shell</li>
+<li>Test 3: AI tools + Node.js - Claude/Gemini CLIs work with installed Node.js</li>
+<li>Test 4: Context menu + Ghostty - Right-click integration functional</li>
+<li>Each test returns 0=success, 1=failure with diagnostic info</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Verification framework complete - All components have real system state checks ✅</p>
+<p><strong>Files Created (Phase 3)</strong>:</p>
+<ul>
+<li>lib/ui/boxes.sh (379 lines) - Adaptive UTF-8/ASCII box drawing</li>
+<li>lib/verification/health_checks.sh (349 lines) - Pre/post health checks</li>
+<li>lib/verification/unit_tests.sh (533 lines) - 9 verification functions</li>
+<li>lib/verification/integration_tests.sh (331 lines) - 4 integration tests
+<strong>Total</strong>: 1,592 lines</li>
+</ul>
+<hr>
+<h2 id="phase-4-task-modules-week-2-3">Phase 4: Task Modules (Week 2-3)</h2>
+<p><strong>Purpose</strong>: Individual installation task modules with duplicate detection</p>
+<p><strong>User Story Mapping</strong>: US1 (Fresh Installation), US3 (Re-run Safety), US4 (Duplicate Detection), US5 (Best Practices)</p>
+<p><strong>CRITICAL</strong>: EVERY task module MUST implement duplicate detection BEFORE installation</p>
+<h3 id="duplicate-detection-pattern-template-for-all-tasks">Duplicate Detection Pattern (Template for all tasks)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># MANDATORY: Check existing installation BEFORE proceeding</span></span>
+<span class="line"><span style="color:#B392F0">task_install_COMPONENT</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Checking for existing COMPONENT installation..."</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Use duplicate detection library</span></span>
+<span class="line"><span style="color:#79B8FF">    source</span><span style="color:#9ECBFF"> lib/verification/duplicate_detection.sh</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> detection_result</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">detect_COMPONENT_installation</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Parse result: {exists, version, installation_method, duplicates[]}</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$detection_result</span><span style="color:#9ECBFF">.exists"</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "true"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> version</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$detection_result</span><span style="color:#9ECBFF">.version"</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#B392F0"> version_meets_requirements</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$version</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">            log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "↷ COMPONENT </span><span style="color:#E1E4E8">$version</span><span style="color:#9ECBFF"> already installed via </span><span style="color:#E1E4E8">$detection_result</span><span style="color:#9ECBFF">.installation_method"</span></span>
+<span class="line"><span style="color:#B392F0">            mark_task_completed</span><span style="color:#9ECBFF"> "install-COMPONENT"</span><span style="color:#79B8FF"> 0</span><span style="color:#6A737D">  # 0 seconds (skipped)</span></span>
+<span class="line"><span style="color:#F97583">            return</span><span style="color:#79B8FF"> 0</span><span style="color:#6A737D">  # Idempotent - skip installation</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Check for duplicates</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ ${</span><span style="color:#F97583">#</span><span style="color:#E1E4E8">detection_result.duplicates[</span><span style="color:#F97583">@</span><span style="color:#E1E4E8">]} </span><span style="color:#F97583">-gt</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "Multiple COMPONENT installations detected:"</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> dup </span><span style="color:#F97583">in</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">detection_result</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">duplicates</span><span style="color:#9ECBFF">[</span><span style="color:#F97583">@</span><span style="color:#9ECBFF">]}"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#B392F0">            log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "  - </span><span style="color:#E1E4E8">$dup</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        done</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Will clean up duplicates after successful installation"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Proceed with installation...</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="task-module-ghostty-installation">Task Module: Ghostty Installation</h3>
+<p><strong>Context7 Validation</strong>: Query “Ghostty terminal emulator installation Ubuntu 25.10 source build 2025” and “Zig compiler version requirements for Ghostty”</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T025 [US1] [US3] Implement lib/tasks/ghostty.sh - Ghostty installation from source</p>
+<ul>
+<li><strong>Duplicate Detection</strong>: Check <code>command -v ghostty</code>, verify version, detect multiple installations</li>
+<li><strong>Context7</strong>: Query recommended Ghostty installation method (source vs package)</li>
+<li>Dependency: Zig 0.14.0+ compiler (install if missing)</li>
+<li>Clone Ghostty repository (or use existing clone)</li>
+<li>Build with Zig: <code>zig build -Doptimize=ReleaseFast</code></li>
+<li>Install to $GHOSTTY_APP_DIR/bin/ghostty</li>
+<li>Configuration: Copy configs/ghostty/config to ~/.config/ghostty/</li>
+<li>Desktop file: Create .desktop file for app menu</li>
+<li>Cleanup: Remove duplicates if detected during duplicate detection</li>
+<li>Verify: Call verify_ghostty_installed() before marking complete</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T026 [P] [US1] Implement lib/tasks/zsh.sh - ZSH + Oh My ZSH setup</p>
+<ul>
+<li><strong>Duplicate Detection</strong>: Check ZSH installed, Oh My ZSH directory exists</li>
+<li><strong>Context7</strong>: Query “Oh My ZSH installation best practices Ubuntu 2025”</li>
+<li>Install ZSH via apt (if not already installed)</li>
+<li>Install Oh My ZSH framework (if not already installed)</li>
+<li>Configure .zshrc with plugins (git, docker, kubectl, zsh-autosuggestions, zsh-syntax-highlighting)</li>
+<li>Preserve existing user customizations (backup .zshrc first)</li>
+<li>Set ZSH as default shell (if user confirms)</li>
+<li>Verify: Call verify_zsh_configured()</li>
+</ul>
+</li>
+</ul>
+<h3 id="task-module-python-package-manager-uv">Task Module: Python Package Manager (uv)</h3>
+<p><strong>Context7 Validation</strong>: Query “uv Python package manager Astral installation Ubuntu 2025” and “uv vs pip performance benchmarks”</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T027 [US1] [US3] [US5] Implement lib/tasks/python_uv.sh - Python + uv installation
+<ul>
+<li><strong>Duplicate Detection</strong>: Check <code>command -v uv</code>, check for pip/poetry/pipenv conflicts</li>
+<li><strong>Context7</strong>: Query “uv installation best practices and security 2025”</li>
+<li>Check for conflicting package managers: pip, poetry, pipenv (warn if detected, offer cleanup)</li>
+<li>Install uv via official installer: <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></li>
+<li>Add to PATH: ~/.local/bin/uv</li>
+<li>Shell integration: Add uv completion to .zshrc/.bashrc</li>
+<li>Constitutional compliance: Prohibit pip/pip3/python -m pip usage (add warning in .zshrc)</li>
+<li>Verify: Call verify_python_uv()</li>
+<li>Performance benchmark: Test uv speed vs pip (for documentation)</li>
+</ul>
+</li>
+</ul>
+<h3 id="task-module-nodejs-package-manager-fnm">Task Module: Node.js Package Manager (fnm)</h3>
+<p><strong>Context7 Validation</strong>: Query “fnm Fast Node Manager installation Ubuntu 2025” and “fnm vs nvm performance comparison”</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T028 [US1] [US3] [US5] Implement lib/tasks/nodejs_fnm.sh - Node.js + fnm installation
+<ul>
+<li><strong>Duplicate Detection</strong>: Check <code>command -v fnm</code>, detect nvm/n/asdf conflicts</li>
+<li><strong>Context7</strong>: Query “fnm installation method and shell integration 2025”</li>
+<li>Check for conflicting version managers: nvm, n, asdf (warn if detected, offer cleanup)</li>
+<li>Install fnm via official installer: <code>curl -fsSL https://fnm.vercel.app/install | bash</code></li>
+<li>XDG-compliant installation: ~/.local/share/fnm</li>
+<li>Shell integration: Add <code>eval "$(fnm env --use-on-cd)"</code> to .zshrc/.bashrc</li>
+<li>Install latest Node.js: <code>fnm install latest &#x26;&#x26; fnm default latest</code></li>
+<li>Constitutional requirement: Latest Node.js (v25.2.0+), NOT LTS</li>
+<li>Auto-switching: Configure fnm to auto-switch on directory change (.node-version/.nvmrc detection)</li>
+<li>Verify: Call verify_fnm_installed() AND verify_fnm_performance()</li>
+<li>Performance validation: CRITICAL - fnm startup MUST be performance measured and logged (constitutional)</li>
+</ul>
+</li>
+</ul>
+<h3 id="task-module-ai-tools-installation">Task Module: AI Tools Installation</h3>
+<p><strong>Context7 Validation</strong>: Query for each tool:</p>
+<ul class="contains-task-list">
+<li>
+<p>“anthropic-ai/claude-code CLI installation npm 2025”</p>
+</li>
+<li>
+<p>“google/gemini-cli installation npm 2025”</p>
+</li>
+<li>
+<p>“github/copilot CLI installation npm 2025”</p>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T029 [US1] [US3] Implement lib/tasks/ai_tools.sh - Claude/Gemini/Copilot CLI installation</p>
+<ul>
+<li><strong>Duplicate Detection</strong>: Check each CLI command exists, verify versions, detect duplicates</li>
+<li><strong>Context7</strong>: Query installation methods for each AI tool</li>
+<li>Prerequisite: Node.js v25.2.0+ via fnm (verify before proceeding)</li>
+<li>Install Claude CLI: <code>npm install -g @anthropic-ai/claude-code</code></li>
+<li>Install Gemini CLI: <code>npm install -g @google/gemini-cli</code></li>
+<li>Install GitHub Copilot CLI: <code>npm install -g @github/copilot</code></li>
+<li>Verify each installation: verify_claude_cli(), verify_gemini_cli()</li>
+<li>Desktop duplicates: Check for duplicate icons, clean up if found</li>
+<li>Configuration: .env file setup for API keys (template, not actual keys)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T030 [P] [US1] Implement lib/tasks/context_menu.sh - Nautilus “Open in Ghostty” integration</p>
+<ul>
+<li><strong>Duplicate Detection</strong>: Check existing Nautilus actions/scripts</li>
+<li>Create Nautilus action file (or script, depending on Nautilus version)</li>
+<li>Configure to launch Ghostty with current directory</li>
+<li>Make executable</li>
+<li>Verify: Call verify_context_menu()</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: All installation task modules complete with duplicate detection and verification</p>
+<hr>
+<h2 id="phase-5-progressive-summarization--collapsible-output-week-3">Phase 5: Progressive Summarization &#x26; Collapsible Output (Week 3)</h2>
+<p><strong>Purpose</strong>: Docker-like UI with collapsible output</p>
+<p><strong>User Story Mapping</strong>: US1 (Fresh Installation), US6 (Verbose Mode Toggle), US7 (Parallel Tasks)</p>
+<p><strong>Context7 Validation</strong>: Query “ANSI cursor management bash scripts” and “Terminal output collapsing patterns”</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T031 [US1] [US6] Implement lib/ui/collapsible.sh - Docker-like progressive summarization</p>
+<ul>
+<li>Task status tracking: Global arrays TASK_STATUS[], TASK_TIMES[], TASK_ERRORS[], TASK_ORDER[]</li>
+<li>Function: register_task(task_id, task_name) - Initialize task</li>
+<li>Function: render_task(task_id) - Render single task based on status
+<ul>
+<li>pending: ”⏸ Task name (queued)”</li>
+<li>running: ”⠋ Task name…” with gum spinner (or plain spinner)</li>
+<li>success: ”✓ Task name (duration)”</li>
+<li>failed: ”✗ Task name (FAILED)” + auto-expanded error details</li>
+<li>skipped: ”↷ Task name (already installed)”</li>
+</ul>
+</li>
+<li>ANSI cursor management: clear_lines(count), update_display()</li>
+<li>Collapsing: Completed tasks collapse to single line</li>
+<li>Expansion: Errors auto-expand with recovery suggestions</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T032 [P] [US1] [US7] Implement lib/ui/progress.sh - Progress bars and spinners</p>
+<ul>
+<li>Function: show_progress_bar() - Calculate and display overall progress
+<ul>
+<li>Progress bar width: 30 characters</li>
+<li>Filled: ● (completed tasks), Empty: ○ (remaining tasks)</li>
+<li>Percentage: (completed / total) * 100</li>
+<li>Task count: “7/20 tasks”</li>
+</ul>
+</li>
+<li>Function: show_spinner(task_id) - Launch gum spinner for active task</li>
+<li>Function: show_header() - Box with installation title</li>
+<li>Function: show_footer() - Time elapsed + estimated remaining</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T033 [US6] Implement verbose mode toggle in lib/ui/collapsible.sh</p>
+<ul>
+<li>Global: VERBOSE_MODE=false</li>
+<li>Function: toggle_verbose() - Switch between collapsed and expanded output</li>
+<li>Trap: Catch USR1 signal (or keyboard input) to toggle</li>
+<li>Verbose mode: Show full output for all tasks (no collapsing)</li>
+<li>Collapsed mode: Standard Docker-like output (default)</li>
+<li>Command-line flag: —verbose sets VERBOSE_MODE=true at start</li>
+<li>Key press: ‘v’ toggles during execution (if terminal supports)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: UI system complete - Collapsible output and progress bars functional</p>
+<hr>
+<h2 id="phase-6-orchestration--main-entry-point-week-4">Phase 6: Orchestration &#x26; Main Entry Point (Week 4)</h2>
+<p><strong>Purpose</strong>: Refactor start.sh to use modular lib/ architecture</p>
+<p><strong>User Story Mapping</strong>: US1 (Fresh Installation), US3 (Re-run Safety), US7 (Parallel Tasks)</p>
+<h3 id="task-registry-and-dependency-resolution">Task Registry and Dependency Resolution</h3>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T034 [US1] [US7] Create task registry in new start.sh</p>
+<ul>
+<li>Task definitions: Array of {id, name, install_function, verify_function, dependencies[], estimated_duration}</li>
+<li>All tasks from lib/tasks/*.sh: gum, ghostty, zsh, python_uv, nodejs_fnm, ai_tools, context_menu</li>
+<li>Dependency graph:
+<ul>
+<li>verify-prereqs → no dependencies</li>
+<li>install-gum → verify-prereqs</li>
+<li>install-ghostty → verify-prereqs</li>
+<li>install-zsh → verify-prereqs</li>
+<li>install-uv → verify-prereqs (parallel with fnm)</li>
+<li>install-fnm → verify-prereqs (parallel with uv)</li>
+<li>install-nodejs → install-fnm</li>
+<li>install-ai-tools → install-nodejs</li>
+<li>install-context-menu → install-ghostty</li>
+</ul>
+</li>
+<li>Topological sort: Resolve dependencies, determine execution order</li>
+<li>Independent tasks marked for parallel execution</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T035 [US3] Implement state management in start.sh orchestrator</p>
+<ul>
+<li>Load installation state: Call init_state() from lib/core/state.sh</li>
+<li>Resume mode: —resume flag calls resume_installation()</li>
+<li>Idempotency: Check is_task_completed() before each task</li>
+<li>Skip completed tasks: Mark as “skipped”, show ”↷ Already installed”</li>
+<li>Track failures: Retry failed tasks from previous run</li>
+</ul>
+</li>
+</ul>
+<h3 id="parallel-execution-engine">Parallel Execution Engine</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T036 [US7] Implement parallel task execution in start.sh
+<ul>
+<li>Function: execute_parallel_tasks(task_ids[]) - Launch independent tasks in background</li>
+<li>Background jobs: Use <code>task &#x26;</code> to launch parallel tasks</li>
+<li>PID tracking: Capture PIDs, wait for all to complete</li>
+<li>Error aggregation: Collect errors from parallel tasks</li>
+<li>Progress monitoring: monitor_parallel_tasks() updates display for all active tasks</li>
+<li>Example: uv and fnm install in parallel (independent, different package managers)</li>
+</ul>
+</li>
+</ul>
+<h3 id="command-line-interface">Command-Line Interface</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> T037 [US1] [US2] [US6] Implement CLI argument parsing in start.sh
+<ul>
+<li>—help: Show usage information and examples</li>
+<li>—verbose: Enable verbose mode (no collapsing)</li>
+<li>—resume: Resume from last checkpoint</li>
+<li>—force-all: Force reinstall all components (ignore idempotency)</li>
+<li>—skip-checks: Skip pre-installation health checks (not recommended)</li>
+<li>—box-style &#x3C;ascii|utf8|utf8-double>: Force box drawing style</li>
+<li>Parse arguments, set flags, validate combinations</li>
+</ul>
+</li>
+</ul>
+<h3 id="main-orchestrator-logic">Main Orchestrator Logic</h3>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T038 [US1] Create new start.sh orchestrator (replaces monolithic script)</p>
+<ul>
+<li>Load all lib/ modules: source lib/core/<em>.sh, lib/ui/</em>.sh, lib/tasks/<em>.sh, lib/verification/</em>.sh</li>
+<li>Initialize systems: logging, state, TUI, box drawing</li>
+<li>Pre-installation health check: Run pre_installation_health_check() unless —skip-checks</li>
+<li>Capture system state: system_state_before.json</li>
+<li>Execute task registry: Topological sort → parallel execution where possible</li>
+<li>Post-installation health check: Run post_installation_health_check()</li>
+<li>Capture system state: system_state_after.json</li>
+<li>Final summary: Show completed tasks, failed tasks, performance metrics</li>
+<li>Total duration: Validate &#x3C;10 minutes on fresh installation (constitutional)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" checked disabled> T039 [US1] Add interrupt handling (SIGINT, SIGTERM) to start.sh</p>
+<ul>
+<li>Trap: cleanup_on_exit() saves state on interrupt</li>
+<li>Kill background spinners/tasks gracefully</li>
+<li>Save installation state to JSON</li>
+<li>Display: “Installation interrupted, run ’./start.sh —resume’ to continue”</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Orchestration complete - start.sh is modular, parallel-capable, resume-safe</p>
+<hr>
+<h2 id="phase-7-app-duplicate-detection--cleanup-user-story-4">Phase 7: App Duplicate Detection &#x26; Cleanup (User Story 4)</h2>
+<p><strong>Purpose</strong>: Detect and clean up duplicate applications (snap vs apt, disabled snaps)</p>
+<p><strong>User Story Mapping</strong>: US4 (Duplicate App Detection and Cleanup)</p>
+<p><strong>Context7 Validation</strong>: Query “Ubuntu snap vs apt duplicate detection 2025” and “Safe snap package removal best practices”</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T040 [P] [US4] Implement lib/tasks/app_audit.sh - Duplicate app detection system with disk usage calculation (FR-064, FR-066)</p>
+<ul>
+<li><strong>Context7</strong>: Query “Ubuntu application duplicate detection methods 2025”</li>
+<li>Scan installed packages: <code>dpkg -l</code>, <code>snap list</code>, desktop file scanning</li>
+<li>Detect duplicates: Same app installed via snap + apt</li>
+<li>Detect disabled snaps: <code>snap list --all | grep disabled</code></li>
+<li>Detect unnecessary browsers: Firefox, Chromium, Chrome, Edge (if 4 browsers, recommend keeping 1-2)</li>
+<li><strong>FR-066</strong>: Calculate disk usage per duplicate: <code>du -sh /snap/&#x3C;package></code> for snaps, <code>dpkg-query -W -f='${Installed-Size}' &#x3C;package></code> for apt packages</li>
+<li>Aggregate total disk usage by category (snap-duplicates, apt-duplicates, disabled-snaps)</li>
+<li>Generate report: /tmp/ubuntu-apps-audit.md with categorized duplicates and disk usage metrics</li>
+<li><strong>Acceptance</strong>: Disk usage calculated and reported for each duplicate category</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T041 [US4] Implement duplicate categorization in lib/tasks/app_audit.sh</p>
+<ul>
+<li>Category 1: Enabled duplicates (snap + apt both active) - HIGH priority</li>
+<li>Category 2: Disabled snaps (old versions taking space) - MEDIUM priority</li>
+<li>Category 3: Unnecessary browsers (4 browsers installed) - LOW priority</li>
+<li>For each category: List apps, disk usage, recommendations</li>
+<li>Risk assessment: low/medium/high for each cleanup action</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T042 [P] [US4] Implement safe cleanup commands in lib/tasks/app_audit.sh</p>
+<ul>
+<li>Function: cleanup_duplicate(app_name, removal_method) - Remove duplicate safely</li>
+<li>Check user data: Identify config/data locations before removal</li>
+<li>Backup user data: Create backup if removing package with user data</li>
+<li>Removal methods: <code>sudo apt remove</code>, <code>sudo snap remove</code>, desktop file deletion</li>
+<li>Preserve preferences: Move bookmarks/settings before browser removal</li>
+<li>Verification: Confirm app icon no longer appears in “Show Apps”</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T043 [US4] Create CLI for app audit and cleanup</p>
+<ul>
+<li>Command: <code>./scripts/app-audit.sh</code> - Run duplicate detection, generate report</li>
+<li>Command: <code>./scripts/app-audit.sh --cleanup</code> - Interactive cleanup (confirm each action)</li>
+<li>Command: <code>./scripts/app-audit.sh --cleanup --auto</code> - Automatic cleanup (non-interactive, follows recommendations)</li>
+<li>Command: <code>./scripts/app-audit.sh --report-only</code> - Generate report without cleanup</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T044 [US4] Desktop icon verification after cleanup</p>
+<ul>
+<li>Check: <code>ls ~/.local/share/applications/*.desktop</code> for duplicates</li>
+<li>Check: GNOME app drawer shows single icon per app (manual visual inspection)</li>
+<li>Verify: No broken .desktop files (validate Exec= paths)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: App duplicate detection and cleanup system complete - User can audit and clean system</p>
+<hr>
+<h2 id="phase-8-context7-integration-for-best-practices-user-story-5">Phase 8: Context7 Integration for Best Practices (User Story 5)</h2>
+<p><strong>Purpose</strong>: Validate installations against Context7 best practices</p>
+<p><strong>User Story Mapping</strong>: US5 (Best Practice App Installation)</p>
+<p><strong>Context7 Validation</strong>: Query “Context7 MCP integration patterns bash 2025”</p>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T045 [P] [US5] Implement lib/tasks/context7_validation.sh - Context7 best practices queries</p>
+<ul>
+<li>Function: query_context7(library_name) - Query recommended installation method</li>
+<li>Use Context7 MCP tools: mcp__context7__resolve-library-id, mcp__context7__get-library-docs</li>
+<li>Parse response: Recommended method (snap/apt/source), version, security notes</li>
+<li>Cache results: Store Context7 responses to avoid repeated queries</li>
+<li>Return: {recommended_method, recommended_version, security_notes, known_issues}</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T046 [US5] Implement installation method validation in lib/tasks/context7_validation.sh</p>
+<ul>
+<li>Function: validate_installation(app_name, current_method, current_version) - Compare against Context7</li>
+<li>Check: Is current_method the recommended method?</li>
+<li>Check: Is current_version up-to-date?</li>
+<li>Check: Are security recommendations followed?</li>
+<li>Generate compliance report: /tmp/context7-compliance-report.md</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T047 [P] [US5] Implement migration suggestions in lib/tasks/context7_validation.sh</p>
+<ul>
+<li>Function: suggest_migration(app_name, current_method, recommended_method) - Generate migration steps</li>
+<li>Example: “Ghostty installed via snap, Context7 recommends source build”</li>
+<li>Migration steps: Backup data, remove old installation, install via recommended method</li>
+<li>Risk assessment: Data loss potential, downtime, complexity</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T048 [US5] Integrate Context7 pre-installation queries into task modules (FR-071)</p>
+<ul>
+<li><strong>File</strong>: <code>lib/tasks/*.sh</code> (all task modules: ghostty.sh, zsh.sh, python_uv.sh, nodejs_fnm.sh, ai_tools.sh)</li>
+<li><strong>Implementation</strong>:
+<ul>
+<li>BEFORE installation: Query Context7 via mcp__context7__resolve-library-id and mcp__context7__get-library-docs</li>
+<li>Extract recommended installation method (apt/snap/source), version, configuration</li>
+<li>If Context7 available: Use recommended method; else: Use fallback defaults</li>
+<li>Log Context7 recommendation and chosen method</li>
+</ul>
+</li>
+<li><strong>Pattern</strong>: In each install_<component>() function:
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Query Context7 for latest recommendations</span></span>
+<span class="line"><span style="color:#E1E4E8">CONTEXT7_REC</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">query_context7_for_component</span><span style="color:#9ECBFF"> "&#x3C;component>"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#F97583">-n</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$CONTEXT7_REC</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">  # Use Context7 recommended method</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#6A737D">  # Use default method</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+</component></li>
+<li><strong>Acceptance</strong>: All 6 task modules query Context7 before installation, FR-071 satisfied</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Context7 integration complete - All installations follow best practices</p>
+<hr>
+<h2 id="phase-9-testing--validation-week-4-5">Phase 9: Testing &#x26; Validation (Week 4-5)</h2>
+<p><strong>Purpose</strong>: Comprehensive testing across environments</p>
+<p><strong>User Story Mapping</strong>: All user stories (US1-US7)</p>
+<h3 id="test-scripts-constitutional-compliance">Test Scripts (Constitutional Compliance)</h3>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T049 [P] Create tests/test-fresh-install.sh - Docker-based fresh installation test</p>
+<ul>
+<li>Docker image: ubuntu:25.10</li>
+<li>Clone repository into container</li>
+<li>Run <code>./start.sh</code></li>
+<li>Verify: All tasks complete, &#x3C;10 minutes, all verifications pass</li>
+<li>Capture logs for analysis</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T050 [P] [US3] Create tests/test-idempotency.sh - Re-run safety validation</p>
+<ul>
+<li>Run <code>./start.sh</code> twice in succession</li>
+<li>First run: Complete installation</li>
+<li>Second run: All tasks skipped, &#x3C;30 seconds</li>
+<li>Verify: User customizations preserved (diff .zshrc, ghostty config)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T051 [P] [US3] Create tests/test-resume.sh - Interrupt and resume capability</p>
+<ul>
+<li>Run <code>./start.sh</code></li>
+<li>Kill process at 50% completion (simulate power loss)</li>
+<li>Run <code>./start.sh --resume</code></li>
+<li>Verify: Resumes from checkpoint, skips completed tasks, completes successfully</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T052 [P] [US1] [US2] Create tests/test-cross-terminal.sh - Terminal compatibility</p>
+<ul>
+<li>Test UTF-8 mode: BOX_DRAWING=utf8 ./start.sh</li>
+<li>Test ASCII mode: BOX_DRAWING=ascii ./start.sh</li>
+<li>Test SSH: ssh localhost ./start.sh (verify ASCII auto-detection)</li>
+<li>Test TTY: Simulate Linux console (TERM=linux)</li>
+<li>Verify: No broken characters in any environment</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T053 [P] Create tests/test-performance.sh - Performance benchmarks</p>
+<ul>
+<li>Measure total installation time: <code>time ./start.sh</code></li>
+<li>Measure fnm startup: <code>time fnm env</code> (MUST be performance measured and logged)</li>
+<li>Measure gum startup: <code>time gum --version</code> (MUST be performance measured and logged)</li>
+<li>Measure re-run time: <code>time ./start.sh</code> (MUST be &#x3C;30s when all tasks complete)</li>
+<li>Parallel vs sequential: Compare total time with parallel execution enabled/disabled</li>
+<li>Generate performance report: /tmp/performance-benchmark-results.md</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T054 [P] Create tests/test-error-recovery.sh - Error injection and handling</p>
+<ul>
+<li>Inject failures: Simulate network errors, missing dependencies, permission errors</li>
+<li>Verify: Errors auto-expand with recovery suggestions</li>
+<li>Verify: Continue-or-abort prompts work correctly</li>
+<li>Verify: Rollback capability functions (if implemented)</li>
+</ul>
+</li>
+</ul>
+<h3 id="integration-with-local-cicd">Integration with Local CI/CD</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> T055 [US1] Integrate with .runners-local/workflows/gh-workflow-local.sh
+<ul>
+<li>Add TUI system validation to local workflow</li>
+<li>Run all test scripts as part of workflow</li>
+<li>Validate performance targets (fnm performance measured and logged, gum performance measured and logged, total &#x3C;10min)</li>
+<li>Generate workflow report with test results</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Testing complete - All environments validated, performance targets met</p>
+<hr>
+<h2 id="phase-10-documentation--deployment-week-5">Phase 10: Documentation &#x26; Deployment (Week 5)</h2>
+<p><strong>Purpose</strong>: Complete documentation and prepare for main branch merge</p>
+<p><strong>User Story Mapping</strong>: All user stories (documentation for complete system)</p>
+<h3 id="documentation-updates">Documentation Updates</h3>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T056 [P] Update README.md with Modern TUI system highlights</p>
+<ul>
+<li>Add: One-command installation instructions</li>
+<li>Add: New command-line options (—verbose, —resume, —box-style)</li>
+<li>Add: Troubleshooting section for TUI-specific issues (box drawing, SSH)</li>
+<li>Add: Performance expectations (10 min fresh install, performance measured and logged fnm, performance measured and logged gum)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T057 [P] Create ARCHITECTURE.md for lib/ modular design</p>
+<ul>
+<li>Explain lib/ directory structure (core, ui, tasks, verification)</li>
+<li>Data flow diagrams: spec → plan → implementation</li>
+<li>Component interaction diagrams (orchestrator → task modules → verification)</li>
+<li>Design decisions and rationale (why gum, why uv/fnm, why modular)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T058 [P] Update AGENTS.md with TUI system references</p>
+<ul>
+<li>Reference new lib/ architecture</li>
+<li>Update installation instructions to use new start.sh</li>
+<li>Add troubleshooting for TUI-specific issues</li>
+<li>Constitutional compliance: fnm performance measured and logged, gum exclusive, modular architecture</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T059 [P] Create MIGRATION-GUIDE.md</p>
+<ul>
+<li>Differences between start.sh and start-legacy.sh</li>
+<li>How to rollback if needed: <code>./start-legacy.sh</code></li>
+<li>User customization preservation guarantees</li>
+<li>Feature comparison table (old vs new)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T060 [P] Update SPEC-KIT-TUI-INTEGRATION.md</p>
+<ul>
+<li>Document how TUI system integrates with Spec-Kit workflow</li>
+<li>References to spec.md, plan.md, tasks.md, contracts/</li>
+<li>Usage examples for future features</li>
+</ul>
+</li>
+</ul>
+<h3 id="final-validation-and-deployment">Final Validation and Deployment</h3>
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T061 Run complete test suite and validate all success criteria</p>
+<ul>
+<li>All tests pass (fresh install, idempotency, resume, performance)</li>
+<li>Constitutional compliance verified (10/10 principles)</li>
+<li>Local CI/CD workflows pass (<code>./.runners-local/workflows/gh-workflow-local.sh all</code>)</li>
+<li>Performance benchmarks meet targets (&#x3C;10min, performance measured and logged fnm, performance measured and logged gum)</li>
+<li>Documentation complete (README, ARCHITECTURE, quickstart)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T062 Create conversation log for implementation</p>
+<ul>
+<li>Save complete conversation log to documentations/development/conversation_logs/</li>
+<li>Include system state snapshots (before/after)</li>
+<li>Include CI/CD logs from local workflows</li>
+<li>Name: CONVERSATION_LOG_YYYYMMDD_modern_tui_implementation.md</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T063 Constitutional branch workflow merge to main</p>
+<ul>
+<li>Final local CI/CD validation: <code>./.runners-local/workflows/gh-workflow-local.sh all</code></li>
+<li>Commit with constitutional format (feat: message with performance metrics)</li>
+<li>Push to branch: <code>git push -u origin 001-modern-tui-system</code></li>
+<li>Merge to main: <code>git checkout main &#x26;&#x26; git merge 001-modern-tui-system --no-ff</code></li>
+<li>Push to main: <code>git push origin main</code></li>
+<li>DO NOT DELETE BRANCH (constitutional requirement - branch preservation)</li>
+</ul>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled> T064 Post-merge validation</p>
+<ul>
+<li>Verify GitHub Pages still works (docs/.nojekyll preserved)</li>
+<li>Test installation on fresh Ubuntu 25.10 VM</li>
+<li>Monitor for issues in first 48 hours</li>
+<li>Create GitHub release tag (optional)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Checkpoint</strong>: Documentation complete, deployment successful, system production-ready</p>
+<hr>
+<h2 id="dependencies--execution-order">Dependencies &#x26; Execution Order</h2>
+<h3 id="phase-dependencies">Phase Dependencies</h3>
+<ol>
+<li><strong>Setup (Phase 1)</strong>: No dependencies - start immediately</li>
+<li><strong>Foundational (Phase 2)</strong>: Depends on Setup completion - BLOCKS all user story implementation
+<ul>
+<li>Wave 1 (Core Infrastructure): CRITICAL - Required for ALL subsequent work</li>
+<li>Wave 2 (Adaptive Box Drawing): Depends on Wave 1 core libraries</li>
+</ul>
+</li>
+<li><strong>Verification Framework (Phase 3)</strong>: Depends on Foundational (can run in parallel with task modules)</li>
+<li><strong>Task Modules (Phase 4)</strong>: Depends on Foundational + Verification Framework</li>
+<li><strong>Collapsible Output (Phase 5)</strong>: Depends on Core Infrastructure (Wave 1)</li>
+<li><strong>Orchestration (Phase 6)</strong>: Depends on ALL previous phases (final integration)</li>
+<li><strong>App Duplicate Detection (Phase 7)</strong>: Independent feature, can run in parallel with Phases 3-5</li>
+<li><strong>Context7 Integration (Phase 8)</strong>: Independent feature, can run in parallel with Phases 3-5</li>
+<li><strong>Testing (Phase 9)</strong>: Depends on Orchestration (Phase 6) - Full system must be complete</li>
+<li><strong>Documentation (Phase 10)</strong>: Depends on Testing (Phase 9) - Final validation before deployment</li>
+</ol>
+<h3 id="user-story-dependencies">User Story Dependencies</h3>
+<p><strong>User Story 1 - Fresh Installation (P1)</strong>:</p>
+<ul>
+<li>Phases 1-6 (Setup → Orchestration)</li>
+<li>All core functionality required</li>
+<li>Can proceed after Phase 2 (Foundational) for initial development</li>
+</ul>
+<p><strong>User Story 2 - SSH Installation (P1)</strong>:</p>
+<ul>
+<li>Phase 2 Wave 2 (Adaptive Box Drawing)</li>
+<li>Can develop in parallel with US1</li>
+</ul>
+<p><strong>User Story 3 - Re-run Safety (P1)</strong>:</p>
+<ul>
+<li>Phase 2 Wave 1 (State Management)</li>
+<li>Phase 4 (Duplicate Detection in all task modules)</li>
+<li>Can develop in parallel with US1</li>
+</ul>
+<p><strong>User Story 4 - Duplicate Detection (P2)</strong>:</p>
+<ul>
+<li>Phase 7 (App Duplicate Detection)</li>
+<li>Independent of installation system, can develop in parallel with US1-US3</li>
+</ul>
+<p><strong>User Story 5 - Best Practices (P2)</strong>:</p>
+<ul>
+<li>Phase 8 (Context7 Integration)</li>
+<li>Independent of core installation, can develop in parallel</li>
+</ul>
+<p><strong>User Story 6 - Verbose Mode (P3)</strong>:</p>
+<ul>
+<li>Phase 5 (Collapsible Output) - Toggle mechanism</li>
+<li>Depends on collapsible output being implemented first</li>
+</ul>
+<p><strong>User Story 7 - Parallel Execution (P3)</strong>:</p>
+<ul>
+<li>Phase 6 (Orchestration) - Parallel engine</li>
+<li>Depends on task registry and dependency resolution</li>
+</ul>
+<h3 id="within-each-phase">Within Each Phase</h3>
+<p><strong>Phase 2 (Foundational)</strong>:</p>
+<ul>
+<li>Wave 1 Core Infrastructure: T005-T011 (all can run in parallel except T010→T011)</li>
+<li>Wave 2 Box Drawing: T012-T013 (depends on T006-T009 from Wave 1)</li>
+</ul>
+<p><strong>Phase 3 (Verification)</strong>:</p>
+<ul>
+<li>T014 (health checks) can run in parallel with T015-T023 (verification functions)</li>
+<li>T024 (integration tests) depends on T015-T023 completion</li>
+</ul>
+<p><strong>Phase 4 (Task Modules)</strong>:</p>
+<ul>
+<li>T025 (Ghostty), T026 (ZSH), T027 (uv), T028 (fnm): All can run in parallel</li>
+<li>T029 (AI tools) depends on T028 (fnm/Node.js)</li>
+<li>T030 (context menu) depends on T025 (Ghostty)</li>
+</ul>
+<p><strong>Phase 5 (Collapsible Output)</strong>:</p>
+<ul>
+<li>T031-T033 sequential (collapsible → progress → verbose toggle)</li>
+</ul>
+<p><strong>Phase 6 (Orchestration)</strong>:</p>
+<ul>
+<li>T034-T039 sequential (task registry → state → parallel → CLI → orchestrator → interrupts)</li>
+</ul>
+<p><strong>Phase 7 (App Audit)</strong>:</p>
+<ul>
+<li>T040-T042 can run in parallel</li>
+<li>T043-T044 sequential (CLI → verification)</li>
+</ul>
+<p><strong>Phase 8 (Context7)</strong>:</p>
+<ul>
+<li>T045-T047 can run in parallel</li>
+<li>T048 integration after T045-T047</li>
+</ul>
+<p><strong>Phase 9 (Testing)</strong>:</p>
+<ul>
+<li>T049-T054 all independent, can run in parallel</li>
+<li>T055 depends on T049-T054 completion</li>
+</ul>
+<p><strong>Phase 10 (Documentation)</strong>:</p>
+<ul>
+<li>T056-T060 all independent, can run in parallel</li>
+<li>T061-T064 sequential (validation → log → merge → post-merge)</li>
+</ul>
+<h3 id="parallel-opportunities-multi-agent-execution">Parallel Opportunities (Multi-Agent Execution)</h3>
+<p><strong>Agent 1: project-health-auditor</strong></p>
+<ul>
+<li>T045-T047 (Context7 validation)</li>
+<li>T055 (CI/CD integration)</li>
+</ul>
+<p><strong>Agent 2: documentation-guardian</strong></p>
+<ul>
+<li>T005 (Duplicate detection library)</li>
+<li>T014 (Health checks)</li>
+</ul>
+<p><strong>Agent 3: Component Installation (Ghostty)</strong></p>
+<ul>
+<li>T010 (gum installation)</li>
+<li>T025 (Ghostty installation)</li>
+</ul>
+<p><strong>Agent 4: Component Installation (ZSH)</strong></p>
+<ul>
+<li>T026 (ZSH configuration)</li>
+</ul>
+<p><strong>Agent 5: Component Installation (Python)</strong></p>
+<ul>
+<li>T027 (uv installation)</li>
+<li>T017 (uv verification)</li>
+</ul>
+<p><strong>Agent 6: Component Installation (Node.js)</strong></p>
+<ul>
+<li>T028 (fnm installation)</li>
+<li>T018-T019 (fnm verification + performance)</li>
+</ul>
+<p><strong>Agent 7: Component Installation (AI Tools)</strong></p>
+<ul>
+<li>T029 (Claude/Gemini/Copilot)</li>
+<li>T021-T022 (verification)</li>
+</ul>
+<p><strong>Agent 8: App Audit System</strong></p>
+<ul>
+<li>T040-T044 (Duplicate detection and cleanup)</li>
+</ul>
+<p><strong>Agent 9: constitutional-compliance-agent</strong></p>
+<ul>
+<li>T049-T054 (All test scripts)</li>
+<li>T061 (Final validation)</li>
+</ul>
+<p><strong>Wave Execution Strategy</strong>:</p>
+<ol>
+<li><strong>Wave 1 (Week 1)</strong>: 5 agents in parallel
+<ul>
+<li>Agents 2, 3, 5, 6: Core infrastructure setup</li>
+<li>Agent 1: Context7 preparation</li>
+</ul>
+</li>
+<li><strong>Wave 2 (Week 2)</strong>: 6 agents in parallel
+<ul>
+<li>Agents 2, 3, 4, 5, 6, 7: Component installations + verifications</li>
+</ul>
+</li>
+<li><strong>Wave 3 (Week 3)</strong>: 3 agents in parallel
+<ul>
+<li>Agents 1, 8: Special features (Context7, App Audit)</li>
+<li>Agent 9: UI and orchestration</li>
+</ul>
+</li>
+<li><strong>Wave 4 (Week 4)</strong>: Agent 9 final integration and testing</li>
+<li><strong>Wave 5 (Week 5)</strong>: All agents documentation + deployment</li>
+</ol>
+<hr>
+<h2 id="implementation-strategy">Implementation Strategy</h2>
+<h3 id="mvp-first-user-stories-1-3-only">MVP First (User Stories 1-3 Only)</h3>
+<p><strong>Minimum Viable Product</strong> includes:</p>
+<ol>
+<li>Phase 1: Setup ✅</li>
+<li>Phase 2: Foundational (Core Infrastructure + Box Drawing) ✅</li>
+<li>Phase 3: Verification Framework ✅</li>
+<li>Phase 4: Task Modules (Ghostty, ZSH, uv, fnm, AI tools) ✅</li>
+<li>Phase 5: Collapsible Output ✅</li>
+<li>Phase 6: Orchestration ✅</li>
+<li>Phase 9: Testing (validation only) ✅</li>
+</ol>
+<p><strong>Delivers</strong>:</p>
+<ul>
+<li>Fresh installation (US1) ✅</li>
+<li>SSH support (US2) ✅</li>
+<li>Re-run safety (US3) ✅</li>
+<li>&#x3C;10 minute installation ✅</li>
+<li>performance measured and logged fnm, performance measured and logged gum ✅</li>
+</ul>
+<p><strong>Timeline</strong>: 4 weeks (Phases 1-6)</p>
+<h3 id="incremental-delivery">Incremental Delivery</h3>
+<p>After MVP:</p>
+<ol>
+<li><strong>Phase 7</strong>: Add duplicate detection (US4) - 3 days</li>
+<li><strong>Phase 8</strong>: Add Context7 integration (US5) - 3 days</li>
+<li><strong>Phase 5 Enhancement</strong>: Add verbose toggle (US6) - 1 day</li>
+<li><strong>Phase 6 Enhancement</strong>: Optimize parallel execution (US7) - 2 days</li>
+<li><strong>Phase 9</strong>: Complete testing - 3 days</li>
+<li><strong>Phase 10</strong>: Documentation and deployment - 2 days</li>
+</ol>
+<p><strong>Total Timeline</strong>: 5-6 weeks for complete system</p>
+<h3 id="parallel-team-strategy">Parallel Team Strategy</h3>
+<p><strong>With 3 developers</strong>:</p>
+<p><strong>Week 1</strong>:</p>
+<ul>
+<li>Developer A: Core infrastructure (T005-T009, T011)</li>
+<li>Developer B: gum + Ghostty installation (T010, T025)</li>
+<li>Developer C: Box drawing + verification (T012-T014)</li>
+</ul>
+<p><strong>Week 2</strong>:</p>
+<ul>
+<li>Developer A: Task modules (T027-T028 - uv/fnm)</li>
+<li>Developer B: Task modules (T026, T030 - ZSH, context menu)</li>
+<li>Developer C: Verification functions (T015-T024)</li>
+</ul>
+<p><strong>Week 3</strong>:</p>
+<ul>
+<li>Developer A: Collapsible output (T031-T033)</li>
+<li>Developer B: App audit (T040-T044)</li>
+<li>Developer C: Context7 integration (T045-T048)</li>
+</ul>
+<p><strong>Week 4</strong>:</p>
+<ul>
+<li>Developer A: AI tools + orchestration (T029, T034-T039)</li>
+<li>Developer B: Testing (T049-T054)</li>
+<li>Developer C: CI/CD integration (T055)</li>
+</ul>
+<p><strong>Week 5</strong>:</p>
+<ul>
+<li>All: Documentation (T056-T060)</li>
+<li>All: Final validation and deployment (T061-T064)</li>
+</ul>
+<hr>
+<h2 id="constitutional-compliance-checkpoints">Constitutional Compliance Checkpoints</h2>
+<p><strong>CRITICAL</strong>: Validate these at EVERY phase</p>
+<ol>
+<li>
+<p><strong>TUI Framework</strong>: gum used exclusively (FR-001) ✅</p>
+<ul>
+<li>Verify: No whiptail, dialog, rich-cli in code</li>
+<li>Graceful degradation to plain text if gum unavailable</li>
+</ul>
+</li>
+<li>
+<p><strong>Box Drawing</strong>: Adaptive UTF-8/ASCII (FR-002-005) ✅</p>
+<ul>
+<li>Verify: Terminal detection logic implemented</li>
+<li>Test: UTF-8 works in Ghostty, ASCII works in SSH</li>
+</ul>
+</li>
+<li>
+<p><strong>Verification</strong>: Real tests only (FR-007-012) ✅</p>
+<ul>
+<li>Verify: NO hard-coded success messages</li>
+<li>Test: Verification functions check actual system state</li>
+</ul>
+</li>
+<li>
+<p><strong>Package Managers</strong>: uv exclusive (FR-032-033), fnm exclusive (FR-034-035) ✅</p>
+<ul>
+<li>Verify: NO pip/poetry/pipenv usage</li>
+<li>Verify: NO nvm/n/asdf usage</li>
+<li>Test: fnm startup performance measured and logged (constitutional requirement)</li>
+</ul>
+</li>
+<li>
+<p><strong>Architecture</strong>: Modular lib/ structure (FR-020-031) ✅</p>
+<ul>
+<li>Verify: lib/core/, lib/ui/, lib/tasks/, lib/verification/ all exist</li>
+<li>Verify: start.sh is orchestrator only (&#x3C;200 lines)</li>
+</ul>
+</li>
+<li>
+<p><strong>Performance</strong>: &#x3C;10 min total, performance measured and logged fnm, performance measured and logged gum (FR-059-061) ✅</p>
+<ul>
+<li>Test: <code>time ./start.sh</code> on fresh Ubuntu 25.10</li>
+<li>Test: <code>time fnm env</code> for constitutional compliance</li>
+<li>Test: <code>time gum --version</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Critical Files</strong>: docs/.nojekyll preserved ✅</p>
+<ul>
+<li>Verify: File exists after implementation</li>
+<li>Not in scope for this spec but related infrastructure</li>
+</ul>
+</li>
+<li>
+<p><strong>Directory Naming</strong>: .runners-local/ used (not local-infra/) ✅</p>
+<ul>
+<li>Verify: All references use .runners-local/</li>
+</ul>
+</li>
+<li>
+<p><strong>Node.js Version</strong>: Latest v25.2.0+ (FR-038) ✅</p>
+<ul>
+<li>Verify: fnm installs latest, NOT LTS</li>
+<li>Test: <code>node --version</code> shows v25+</li>
+</ul>
+</li>
+<li>
+<p><strong>Idempotency</strong>: Safe re-run (FR-053-058) ✅</p>
+<ul>
+<li>Test: Run <code>./start.sh</code> twice, second run &#x3C;30s</li>
+<li>Verify: User customizations preserved</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="success-metrics">Success Metrics</h2>
+<h3 id="performance-targets-constitutional">Performance Targets (Constitutional)</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Target</th><th>Validation Method</th><th>Task</th></tr></thead><tbody><tr><td>Total installation</td><td>&#x3C;10 minutes</td><td><code>time ./start.sh</code></td><td>T053</td></tr><tr><td>fnm startup</td><td>performance measured and logged</td><td><code>time fnm env</code></td><td>T019, T053</td></tr><tr><td>gum startup</td><td>performance measured and logged</td><td><code>time gum --version</code></td><td>T053</td></tr><tr><td>Re-run (idempotent)</td><td>&#x3C;30 seconds</td><td><code>time ./start.sh</code> (2nd run)</td><td>T050, T053</td></tr><tr><td>Parallel speedup</td><td>30-40% faster</td><td>Sequential vs parallel comparison</td><td>T053</td></tr></tbody></table>
+<h3 id="functional-requirements-all-fr--from-specmd">Functional Requirements (All FR-* from spec.md)</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Requirement</th><th>Validation</th><th>Task</th></tr></thead><tbody><tr><td>FR-001: gum exclusive</td><td>Code inspection, no whiptail/dialog</td><td>T010, T061</td></tr><tr><td>FR-007: Real verification</td><td>NO hard-coded success</td><td>T015-T023, T061</td></tr><tr><td>FR-032: uv exclusive</td><td>NO pip usage</td><td>T027, T061</td></tr><tr><td>FR-034: fnm exclusive</td><td>NO nvm usage</td><td>T028, T061</td></tr><tr><td>FR-038: Node.js latest</td><td>v25.2.0+ installed</td><td>T020, T028, T061</td></tr><tr><td>FR-053: Idempotency</td><td>Safe re-run test</td><td>T050, T061</td></tr></tbody></table>
+<h3 id="quality-gates">Quality Gates</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> Zero broken box characters across all terminals (T052)</li>
+<li class="task-list-item"><input type="checkbox" disabled> 100% task verification coverage (T015-T023)</li>
+<li class="task-list-item"><input type="checkbox" disabled> Verification accuracy ≥99% (T049-T054)</li>
+<li class="task-list-item"><input type="checkbox" disabled> Installation success rate ≥99% (T049)</li>
+<li class="task-list-item"><input type="checkbox" disabled> User customizations preserved 100% (T050)</li>
+</ul>
+<hr>
+<h2 id="notes">Notes</h2>
+<ul>
+<li><strong>[P]</strong> tasks = different files, no dependencies on incomplete work, can run in parallel</li>
+<li><strong>[Story]</strong> label (US1-US7) maps task to specific user story for traceability</li>
+<li><strong>Context7 queries</strong>: MANDATORY for every component before installation</li>
+<li><strong>Duplicate detection</strong>: MANDATORY for every installation task</li>
+<li><strong>Real verification</strong>: MANDATORY - no hard-coded success messages</li>
+<li><strong>Performance validation</strong>: MANDATORY - fnm performance measured and logged is constitutional requirement</li>
+<li>Each wave/phase should be independently testable</li>
+<li>Stop at any checkpoint to validate independently</li>
+<li>Commit after each task or logical group of parallel tasks</li>
+<li>Constitutional violations = BLOCKER (must fix immediately)</li>
+</ul>
+<hr>
+<p><strong>Total Tasks</strong>: 64 tasks organized in 10 phases (6 implementation waves)
+<strong>Estimated Duration</strong>: 5-6 weeks full implementation, 4 weeks for MVP
+<strong>Parallel Opportunities</strong>: 40+ tasks marked [P] for parallel execution
+<strong>Context7 Queries</strong>: 15+ component validation queries required
+<strong>Verification Functions</strong>: 10 verification functions with real system checks
+<strong>Constitutional Compliance</strong>: 10/10 principles validated at every phase</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

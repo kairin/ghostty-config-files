@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Refactoring Lessons Learned | Ghostty Configuration Files</title><meta name="description" content="**Document Version**: 1.0"><!-- OpenGraph --><meta property="og:title" content="Refactoring Lessons Learned"><meta property="og:description" content="**Document Version**: 1.0"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Refactoring Lessons Learned</li> </ul> </div> <h1>Refactoring Lessons Learned</h1> <p class="text-xl text-base-content/70 mb-8">**Document Version**: 1.0</p><h1 id="refactoring-lessons-learned">Refactoring Lessons Learned</h1>
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-11-25
+<strong>Status</strong>: Active Reference</p>
+<h2 id="overview">Overview</h2>
+<p>This document captures lessons learned from the Modularity Constitution Implementation (Phases 3-7), which refactored large scripts into modular components following the 300-line constitutional limit.</p>
+<hr>
+<h2 id="the-orchestrator-pattern">The Orchestrator Pattern</h2>
+<h3 id="definition">Definition</h3>
+<p>An <strong>orchestrator</strong> is a thin parent script that:</p>
+<ol>
+<li>Sources modular components from subdirectories</li>
+<li>Acts as a router/dispatcher for functionality</li>
+<li>Re-exports functions for backward compatibility</li>
+<li>Contains only minimal coordination logic</li>
+</ol>
+<h3 id="structure-template">Structure Template</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D"># lib/example/parent.sh - Example orchestrator</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source guard - prevent redundant loading</span></span>
+<span class="line"><span style="color:#E1E4E8">[[ </span><span style="color:#F97583">-n</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">_EXAMPLE_SOURCED</span><span style="color:#F97583">:-</span><span style="color:#9ECBFF">}"</span><span style="color:#E1E4E8"> ]] &#x26;&#x26; </span><span style="color:#F97583">return</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> _EXAMPLE_SOURCED</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Determine script directory for relative sourcing</span></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]</span><span style="color:#F97583">%/*</span><span style="color:#9ECBFF">}"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source modular components</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/submodule/component.sh"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/submodule/component.sh"</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Orchestrator-specific functions (minimal)</span></span>
+<span class="line"><span style="color:#B392F0">orchestrate_workflow</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    component_function_a</span></span>
+<span class="line"><span style="color:#B392F0">    component_function_b</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Export and re-export for backward compatibility</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> orchestrate_workflow</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> component_function_a 2</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null </span><span style="color:#F97583">||</span><span style="color:#79B8FF"> true</span></span></code></pre>
+<h3 id="key-characteristics">Key Characteristics</h3>
+<ul>
+<li><strong>Line count</strong>: &#x3C;150 lines (ideally &#x3C;100)</li>
+<li><strong>Primary role</strong>: Coordination, not implementation</li>
+<li><strong>Sourcing</strong>: Uses <code>${BASH_SOURCE[0]%/*}</code> for reliable relative paths</li>
+<li><strong>Backward compatibility</strong>: Re-exports sourced functions</li>
+</ul>
+<hr>
+<h2 id="source-guard-implementation">Source Guard Implementation</h2>
+<h3 id="standard-pattern">Standard Pattern</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Source guard - prevent redundant loading</span></span>
+<span class="line"><span style="color:#E1E4E8">[[ </span><span style="color:#F97583">-n</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">_MODULE_NAME_SOURCED</span><span style="color:#F97583">:-</span><span style="color:#9ECBFF">}"</span><span style="color:#E1E4E8"> ]] &#x26;&#x26; </span><span style="color:#F97583">return</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> _MODULE_NAME_SOURCED</span><span style="color:#F97583">=</span><span style="color:#79B8FF">1</span></span></code></pre>
+<h3 id="naming-convention">Naming Convention</h3>
+<ul>
+<li>Use uppercase with underscores: <code>_MODULE_NAME_SOURCED</code></li>
+<li>Include the module’s purpose in the name</li>
+<li>Use <code>readonly</code> to prevent accidental modification</li>
+</ul>
+<h3 id="why-source-guards-matter">Why Source Guards Matter</h3>
+<ol>
+<li>Prevent function redefinition warnings</li>
+<li>Avoid duplicate initialization</li>
+<li>Enable safe circular sourcing patterns</li>
+<li>Improve script load performance</li>
+</ol>
+<hr>
+<h2 id="function-documentation-headers">Function Documentation Headers</h2>
+<h3 id="minimal-header-preferred-for-space">Minimal Header (Preferred for space)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Brief description of function</span></span>
+<span class="line"><span style="color:#B392F0">function_name</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # implementation</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="standard-header-when-space-permits">Standard Header (When space permits)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#######################################</span></span>
+<span class="line"><span style="color:#6A737D"># Description: What the function does</span></span>
+<span class="line"><span style="color:#6A737D"># Arguments:</span></span>
+<span class="line"><span style="color:#6A737D">#   $1 - First argument description</span></span>
+<span class="line"><span style="color:#6A737D">#   $2 - Second argument (optional)</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: What it writes to stdout</span></span>
+<span class="line"><span style="color:#6A737D"># Returns: Exit codes</span></span>
+<span class="line"><span style="color:#6A737D">#######################################</span></span>
+<span class="line"><span style="color:#B392F0">function_name</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # implementation</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="compact-documentation">Compact Documentation</h3>
+<p>When fighting the 300-line limit, prefer inline comments:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Function: brief purpose (Args: $1=name, $2=value; Returns: 0/1)</span></span>
+<span class="line"><span style="color:#B392F0">function_name</span><span style="color:#E1E4E8">() { </span><span style="color:#79B8FF">...</span><span style="color:#9ECBFF"> }</span></span></code></pre>
+<hr>
+<h2 id="variable-scope-best-practices">Variable Scope Best Practices</h2>
+<h3 id="local-variables">Local Variables</h3>
+<p>Always declare loop variables and temporary values as local:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">function_name</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> file line count</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span></span>
+<span class="line"><span style="color:#F97583">    while</span><span style="color:#E1E4E8"> IFS</span><span style="color:#F97583">=</span><span style="color:#79B8FF"> read</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> line</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#E1E4E8">        count</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$((</span><span style="color:#B392F0">count</span><span style="color:#9ECBFF"> +</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">    done</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="exported-functions">Exported Functions</h3>
+<p>Use <code>export -f</code> at the end of the module:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Export functions</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> function_a function_b function_c</span></span></code></pre>
+<h3 id="conditional-re-export">Conditional Re-export</h3>
+<p>For backward compatibility when sourcing might fail:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> function_from_submodule 2</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null </span><span style="color:#F97583">||</span><span style="color:#79B8FF"> true</span></span></code></pre>
+<hr>
+<h2 id="tui-integration-patterns">TUI Integration Patterns</h2>
+<h3 id="separation-of-concerns">Separation of Concerns</h3>
+<p>Split TUI modules into:</p>
+<ol>
+<li><strong>Rendering</strong> (<code>render.sh</code>): Visual output, progress bars, headers</li>
+<li><strong>Input</strong> (<code>input.sh</code>): User prompts, selections, confirmations</li>
+</ol>
+<h3 id="gum-dependency-pattern">Gum Dependency Pattern</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for gum, provide fallback</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> gum</span><span style="color:#E1E4E8"> &#x26;</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    gum</span><span style="color:#9ECBFF"> confirm</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$prompt</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#79B8FF">    read</span><span style="color:#79B8FF"> -rp</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$prompt</span><span style="color:#9ECBFF"> [y/N]: "</span><span style="color:#9ECBFF"> response</span></span>
+<span class="line"><span style="color:#E1E4E8">    [[ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$response</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> =~</span><span style="color:#E1E4E8"> ^[Yy] ]]</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h3 id="progress-display">Progress Display</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">show_progress_bar</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> current</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> total</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$2</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> description</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">${3</span><span style="color:#F97583">:-</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> percentage</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$((</span><span style="color:#B392F0">current</span><span style="color:#79B8FF"> *</span><span style="color:#79B8FF"> 100</span><span style="color:#9ECBFF"> /</span><span style="color:#9ECBFF"> total</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> completed</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$((</span><span style="color:#B392F0">current</span><span style="color:#79B8FF"> *</span><span style="color:#79B8FF"> 40</span><span style="color:#9ECBFF"> /</span><span style="color:#9ECBFF"> total</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> bar</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">printf</span><span style="color:#9ECBFF"> '%*s'</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$completed</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> ''</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> tr</span><span style="color:#9ECBFF"> ' '</span><span style="color:#9ECBFF"> '#'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">    printf</span><span style="color:#9ECBFF"> "\r[%-40s] %3d%% %s"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$bar</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$percentage</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$description</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<hr>
+<h2 id="refactoring-strategies-by-violation-size">Refactoring Strategies by Violation Size</h2>
+<h3 id="small-violations-300-330-lines">Small Violations (300-330 lines)</h3>
+<p><strong>Strategy</strong>: Inline optimization</p>
+<ul>
+<li>Remove verbose comments</li>
+<li>Consolidate export statements</li>
+<li>Merge related small functions</li>
+<li>Remove unnecessary blank lines</li>
+</ul>
+<h3 id="medium-violations-330-400-lines">Medium Violations (330-400 lines)</h3>
+<p><strong>Strategy</strong>: Extract one module</p>
+<ul>
+<li>Identify logical grouping (e.g., input vs output)</li>
+<li>Create single subdirectory module</li>
+<li>Keep orchestrator minimal</li>
+</ul>
+<h3 id="large-violations-400-lines">Large Violations (400+ lines)</h3>
+<p><strong>Strategy</strong>: Full modularization</p>
+<ul>
+<li>Create subdirectory for modules</li>
+<li>Split by functional domain</li>
+<li>Multiple extraction passes</li>
+<li>Example: <code>dashboard.sh</code> -> <code>dashboard/{stats,render}.sh</code></li>
+</ul>
+<hr>
+<h2 id="module-hierarchy-examples">Module Hierarchy Examples</h2>
+<h3 id="updates-domain">Updates Domain</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/updates/</span></span>
+<span class="line"><span>    ghostty-specific.sh          # Orchestrator (141 lines)</span></span>
+<span class="line"><span>    ghostty/</span></span>
+<span class="line"><span>        build.sh                 # Build operations (188 lines)</span></span>
+<span class="line"><span>        install.sh               # Install operations (209 lines)</span></span></code></pre>
+<h3 id="documentation-domain">Documentation Domain</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/docs/</span></span>
+<span class="line"><span>    dashboard.sh                 # Orchestrator (141 lines)</span></span>
+<span class="line"><span>    dashboard/</span></span>
+<span class="line"><span>        stats.sh                 # Statistics (234 lines)</span></span>
+<span class="line"><span>        render.sh                # Output formatting (293 lines)</span></span></code></pre>
+<h3 id="validation-domain">Validation Domain</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/core/</span></span>
+<span class="line"><span>    validation.sh                # Orchestrator (61 lines)</span></span>
+<span class="line"><span>    validation/</span></span>
+<span class="line"><span>        files.sh                 # File/directory validation (214 lines)</span></span>
+<span class="line"><span>        input.sh                 # Input/data validation (253 lines)</span></span></code></pre>
+<h3 id="tui-domain">TUI Domain</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/installers/common/</span></span>
+<span class="line"><span>    tui-helpers.sh               # Orchestrator (67 lines)</span></span>
+<span class="line"><span>lib/ui/tui/</span></span>
+<span class="line"><span>    render.sh                    # Visual rendering (225 lines)</span></span>
+<span class="line"><span>    input.sh                     # User input (260 lines)</span></span></code></pre>
+<hr>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="1-breaking-sourcing-chains">1. Breaking Sourcing Chains</h3>
+<p><strong>Problem</strong>: Child module can’t find sibling
+<strong>Solution</strong>: Use <code>${BASH_SOURCE[0]%/*}</code> for consistent paths</p>
+<h3 id="2-export-timing">2. Export Timing</h3>
+<p><strong>Problem</strong>: Functions not available to callers
+<strong>Solution</strong>: Export at end of module, after all definitions</p>
+<h3 id="3-circular-dependencies">3. Circular Dependencies</h3>
+<p><strong>Problem</strong>: Module A sources B, B sources A
+<strong>Solution</strong>: Source guards prevent infinite loops</p>
+<h3 id="4-lost-backward-compatibility">4. Lost Backward Compatibility</h3>
+<p><strong>Problem</strong>: Refactoring breaks existing callers
+<strong>Solution</strong>: Re-export all functions from orchestrator</p>
+<h3 id="5-over-modularization">5. Over-Modularization</h3>
+<p><strong>Problem</strong>: Too many tiny files
+<strong>Solution</strong>: Only split when >300 lines or clear domain separation</p>
+<hr>
+<h2 id="verification-checklist">Verification Checklist</h2>
+<p>After refactoring, verify:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> All modules &#x3C;300 lines</li>
+<li class="task-list-item"><input type="checkbox" disabled> Syntax validates: <code>bash -n &#x3C;file></code></li>
+<li class="task-list-item"><input type="checkbox" disabled> Source guards present</li>
+<li class="task-list-item"><input type="checkbox" disabled> Functions documented</li>
+<li class="task-list-item"><input type="checkbox" disabled> Exports configured</li>
+<li class="task-list-item"><input type="checkbox" disabled> Module map updated</li>
+<li class="task-list-item"><input type="checkbox" disabled> Integration tests pass</li>
+<li class="task-list-item"><input type="checkbox" disabled> Constitutional compliance test passes</li>
+</ul>
+<hr>
+<h2 id="constitutional-compliance">Constitutional Compliance</h2>
+<h3 id="the-300-line-limit">The 300-Line Limit</h3>
+<ul>
+<li><strong>Hard limit</strong>: No script may exceed 300 lines</li>
+<li><strong>Verification</strong>: <code>tests/constitutional/test_script_line_limits.sh</code></li>
+<li><strong>Grace period</strong>: Existing violations documented in catalog</li>
+<li><strong>New code</strong>: Must be compliant from creation</li>
+</ul>
+<h3 id="compliance-test">Compliance Test</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./tests/constitutional/test_script_line_limits.sh</span></span></code></pre>
+<h3 id="log-output">Log Output</h3>
+<p>Results saved to: <code>logs/constitutional_check.log</code></p>
+<hr>
+<h2 id="references">References</h2>
+<ul>
+<li><strong>Module Map</strong>: <code>docs/developer/module_map.md</code></li>
+<li><strong>Violations Catalog</strong>: <code>violations-catalog.md</code></li>
+<li><strong>Constitutional Principles</strong>: <code>.claude/instructions-for-agents/principles/</code></li>
+<li><strong>Test Script</strong>: <code>tests/constitutional/test_script_line_limits.sh</code></li>
+</ul>
+<hr>
+<p><strong>Document Maintainer</strong>: System Architecture Team
+<strong>Review Cycle</strong>: After each major refactoring effort</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

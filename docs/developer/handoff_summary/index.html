@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>LLM Handoff Summary - How to Instruct Another LLM | Ghostty Configuration Files</title><meta name="description" content="**Created**: 2025-11-19 07:19 UTC"><!-- OpenGraph --><meta property="og:title" content="LLM Handoff Summary - How to Instruct Another LLM"><meta property="og:description" content="**Created**: 2025-11-19 07:19 UTC"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>LLM Handoff Summary - How to Instruct Another LLM</li> </ul> </div> <h1>LLM Handoff Summary - How to Instruct Another LLM</h1> <p class="text-xl text-base-content/70 mb-8">**Created**: 2025-11-19 07:19 UTC</p><h1 id="llm-handoff-summary---how-to-instruct-another-llm">LLM Handoff Summary - How to Instruct Another LLM</h1>
+<p><strong>Created</strong>: 2025-11-19 07:19 UTC
+<strong>Repository</strong>: <a href="https://github.com/kairin/ghostty-config-files">https://github.com/kairin/ghostty-config-files</a>
+<strong>Current Commit</strong>: af5f091 (main branch)</p>
+<hr>
+<h2 id="-quick-answer-copy-paste-this-to-another-llm">🎯 Quick Answer: Copy-Paste This to Another LLM</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Hi! I need you to continue development on the ghostty-config-files repository.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Repository: https://github.com/kairin/ghostty-config-files</span></span>
+<span class="line"><span>Current State: MVP Complete (30/64 tasks - 46.9%)</span></span>
+<span class="line"><span>Your Task: Pick any task from Phase 7-10 and implement it</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>CRITICAL FIRST STEPS:</span></span>
+<span class="line"><span>1. Clone the repository: git clone https://github.com/kairin/ghostty-config-files.git</span></span>
+<span class="line"><span>2. Read LLM_HANDOFF_INSTRUCTIONS.md (COMPREHENSIVE guide - START HERE)</span></span>
+<span class="line"><span>3. Read QUICK_START_FOR_LLM.md (quick reference)</span></span>
+<span class="line"><span>4. Read CLAUDE.md (constitutional requirements - MANDATORY compliance)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>PICK A TASK:</span></span>
+<span class="line"><span>- Review specs/001-modern-tui-system/tasks.md</span></span>
+<span class="line"><span>- Pick any uncompleted task from Phase 7-10 (34 tasks available)</span></span>
+<span class="line"><span>- Follow the step-by-step guide in LLM_HANDOFF_INSTRUCTIONS.md</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>CONSTITUTIONAL REQUIREMENTS (NON-NEGOTIABLE):</span></span>
+<span class="line"><span>1. Use timestamped branch names: YYYYMMDD-HHMMSS-feat-description</span></span>
+<span class="line"><span>2. NEVER delete branches (preservation is MANDATORY)</span></span>
+<span class="line"><span>3. Always use "git merge --no-ff" when merging to main</span></span>
+<span class="line"><span>4. Always install LATEST versions (NOT LTS)</span></span>
+<span class="line"><span>5. Follow the commit message format in the guides</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>EXAMPLE WORKFLOW:</span></span>
+<span class="line"><span>DATETIME=$(date +"%Y%m%d-%H%M%S")</span></span>
+<span class="line"><span>git checkout main</span></span>
+<span class="line"><span>git pull origin main</span></span>
+<span class="line"><span>git checkout -b "${DATETIME}-feat-your-feature"</span></span>
+<span class="line"><span># ... implement your changes ...</span></span>
+<span class="line"><span>git add .</span></span>
+<span class="line"><span>git commit -m "feat: Your message</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>🤖 Generated with [Claude Code](https://claude.com/claude-code)</span></span>
+<span class="line"><span>Co-Authored-By: Claude &#x3C;noreply@anthropic.com>"</span></span>
+<span class="line"><span>git push -u origin "${DATETIME}-feat-your-feature"</span></span>
+<span class="line"><span>git checkout main</span></span>
+<span class="line"><span>git merge "${DATETIME}-feat-your-feature" --no-ff</span></span>
+<span class="line"><span>git push origin main</span></span>
+<span class="line"><span># DO NOT DELETE BRANCH!</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>CODE PATTERNS:</span></span>
+<span class="line"><span>- Follow patterns in lib/tasks/gum.sh (perfect recent example)</span></span>
+<span class="line"><span>- Use lib/verification/duplicate_detection.sh for duplicate detection</span></span>
+<span class="line"><span>- Use lib/core/logging.sh for all logging</span></span>
+<span class="line"><span>- Implement real verification tests (not hard-coded success)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>AVAILABLE TASKS (Pick One):</span></span>
+<span class="line"><span>- Phase 7: App Audit System (T040-T044) - 5 tasks</span></span>
+<span class="line"><span>- Phase 8: Context7 Integration (T045-T048) - 4 tasks</span></span>
+<span class="line"><span>- Phase 9: Testing Infrastructure (T049-T054) - 6 tasks</span></span>
+<span class="line"><span>- Phase 10: Documentation (T055-T064) - 7 tasks</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Questions? Read the comprehensive guides in the repository.</span></span></code></pre>
+<hr>
+<h2 id="-what-ive-prepared-for-the-next-llm">📋 What I’ve Prepared for the Next LLM</h2>
+<h3 id="documentation-created-3-files">Documentation Created (3 Files)</h3>
+<p><strong>1. LLM_HANDOFF_INSTRUCTIONS.md (496 lines)</strong></p>
+<ul>
+<li>Comprehensive handoff guide</li>
+<li>Current repository state and branch structure</li>
+<li>Constitutional requirements with detailed explanations</li>
+<li>Step-by-step task implementation guide (with example: T040)</li>
+<li>Code patterns and templates</li>
+<li>Testing and validation procedures</li>
+<li>Troubleshooting section</li>
+<li>Complete pre-flight checklist</li>
+</ul>
+<p><strong>2. QUICK_START_FOR_LLM.md (241 lines)</strong></p>
+<ul>
+<li>30-second quick start</li>
+<li>Available tasks by phase</li>
+<li>Copy-paste constitutional workflow</li>
+<li>Code templates</li>
+<li>Essential reading list</li>
+<li>Quick help commands</li>
+</ul>
+<p><strong>3. This file (HANDOFF_SUMMARY.md)</strong></p>
+<ul>
+<li>How to instruct another LLM</li>
+<li>Quick copy-paste instructions</li>
+<li>Context for you (the human)</li>
+</ul>
+<h3 id="repository-state">Repository State</h3>
+<p><strong>Branch</strong>: main (commit: af5f091)
+<strong>Status</strong>: All documentation committed and pushed to remote
+<strong>Branches Preserved</strong>:</p>
+<ul>
+<li>001-modern-tui-system (MVP implementation)</li>
+<li>20251119-071931-docs-llm-handoff-guide (handoff docs)</li>
+</ul>
+<p><strong>Progress</strong>: 30/64 tasks complete (46.9%)
+<strong>Outstanding</strong>: 34 tasks across Phases 7-10</p>
+<hr>
+<h2 id="-how-to-use-this-with-different-llm-platforms">💡 How to Use This with Different LLM Platforms</h2>
+<h3 id="for-claude-code-claudeai">For Claude Code (Claude.ai)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Share the repository link</span></span>
+<span class="line"><span>2. Say: "Read LLM_HANDOFF_INSTRUCTIONS.md and QUICK_START_FOR_LLM.md"</span></span>
+<span class="line"><span>3. Say: "Pick task T040 (or any other) and implement it following the guide"</span></span></code></pre>
+<h3 id="for-chatgpt-openai">For ChatGPT (OpenAI)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Share the repository link</span></span>
+<span class="line"><span>2. Upload LLM_HANDOFF_INSTRUCTIONS.md as context</span></span>
+<span class="line"><span>3. Say: "Follow this guide to continue development. Start with task T040."</span></span></code></pre>
+<h3 id="for-gemini-google">For Gemini (Google)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Share the repository link</span></span>
+<span class="line"><span>2. Say: "Clone this repo and read the handoff instructions in LLM_HANDOFF_INSTRUCTIONS.md"</span></span>
+<span class="line"><span>3. Say: "Implement task T040 following the constitutional workflow documented in the guide"</span></span></code></pre>
+<h3 id="for-any-ai-code-assistant">For Any AI Code Assistant</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Key Points to Communicate:</span></span>
+<span class="line"><span>1. Repository: https://github.com/kairin/ghostty-config-files</span></span>
+<span class="line"><span>2. MUST read: LLM_HANDOFF_INSTRUCTIONS.md (full guide)</span></span>
+<span class="line"><span>3. Quick reference: QUICK_START_FOR_LLM.md</span></span>
+<span class="line"><span>4. Constitutional requirements: CLAUDE.md</span></span>
+<span class="line"><span>5. Pick any task from specs/001-modern-tui-system/tasks.md (Phases 7-10)</span></span>
+<span class="line"><span>6. CRITICAL: Never delete branches, always use --no-ff, timestamped branch names</span></span></code></pre>
+<hr>
+<h2 id="-recommended-task-assignment-strategy">🎯 Recommended Task Assignment Strategy</h2>
+<h3 id="option-1-sequential-single-llm">Option 1: Sequential (Single LLM)</h3>
+<p>Best for: Ensuring dependencies are properly handled</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Assign tasks in order:</span></span>
+<span class="line"><span>- T040 → T041 → T042 → T043 → T044 (Phase 7)</span></span>
+<span class="line"><span>- Then T045 → T046 → T047 → T048 (Phase 8)</span></span>
+<span class="line"><span>- Then T049-T054 (Phase 9)</span></span>
+<span class="line"><span>- Finally T055-T064 (Phase 10)</span></span></code></pre>
+<h3 id="option-2-parallel-multiple-llms">Option 2: Parallel (Multiple LLMs)</h3>
+<p>Best for: Faster completion, independent tasks</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LLM 1: Phase 7 (App Audit System) - T040-T044</span></span>
+<span class="line"><span>LLM 2: Phase 8 (Context7 Integration) - T045-T048</span></span>
+<span class="line"><span>LLM 3: Phase 9 (Testing Infrastructure) - T049-T054</span></span>
+<span class="line"><span>LLM 4: Phase 10 (Documentation) - T055-T064</span></span></code></pre>
+<h3 id="option-3-task-by-task-on-demand">Option 3: Task-by-Task (On-Demand)</h3>
+<p>Best for: Incremental progress, review between tasks</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Assign T040</span></span>
+<span class="line"><span>2. Review implementation</span></span>
+<span class="line"><span>3. Assign T041 if T040 looks good</span></span>
+<span class="line"><span>4. Repeat</span></span></code></pre>
+<hr>
+<h2 id="-whats-been-verified">✅ What’s Been Verified</h2>
+<ul>
+<li>✅ All handoff documentation committed to main branch</li>
+<li>✅ Pushed to remote (origin/main at commit af5f091)</li>
+<li>✅ Branch 20251119-071931-docs-llm-handoff-guide preserved</li>
+<li>✅ Constitutional workflow followed (timestamped branch, —no-ff merge)</li>
+<li>✅ Documentation comprehensive (737 lines total)</li>
+<li>✅ Code patterns provided (lib/tasks/gum.sh reference)</li>
+<li>✅ Task list current (30/64 complete, 34 outstanding)</li>
+</ul>
+<hr>
+<h2 id="-current-repository-statistics">📊 Current Repository Statistics</h2>
+<p><strong>Files Structure</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ghostty-config-files/</span></span>
+<span class="line"><span>├── LLM_HANDOFF_INSTRUCTIONS.md    ← NEW: Comprehensive guide</span></span>
+<span class="line"><span>├── QUICK_START_FOR_LLM.md         ← NEW: Quick reference</span></span>
+<span class="line"><span>├── HANDOFF_SUMMARY.md             ← NEW: This file</span></span>
+<span class="line"><span>├── CLAUDE.md                      ← Constitutional requirements</span></span>
+<span class="line"><span>├── ARCHITECTURE.md                ← System architecture</span></span>
+<span class="line"><span>├── README.md                      ← User documentation</span></span>
+<span class="line"><span>├── start.sh                       ← Main orchestrator</span></span>
+<span class="line"><span>├── lib/                           ← 18 modules, 5,754 lines</span></span>
+<span class="line"><span>│   ├── core/                      ← 4 modules (logging, state, errors, utils)</span></span>
+<span class="line"><span>│   ├── ui/                        ← 4 modules (tui, boxes, collapsible, progress)</span></span>
+<span class="line"><span>│   ├── tasks/                     ← 7 modules (all task installers)</span></span>
+<span class="line"><span>│   └── verification/              ← 3 modules (tests, health, duplicate detection)</span></span>
+<span class="line"><span>├── specs/001-modern-tui-system/   ← Specification</span></span>
+<span class="line"><span>│   ├── spec.md                    ← Requirements</span></span>
+<span class="line"><span>│   ├── plan.md                    ← Implementation plan</span></span>
+<span class="line"><span>│   ├── tasks.md                   ← Task breakdown (30/64 complete)</span></span>
+<span class="line"><span>│   └── contracts/                 ← Interface contracts</span></span>
+<span class="line"><span>└── ... (other files)</span></span></code></pre>
+<p><strong>Git Status</strong>:</p>
+<ul>
+<li>Current branch: main</li>
+<li>Latest commit: af5f091</li>
+<li>Remote: origin (<a href="https://github.com/kairin/ghostty-config-files.git">https://github.com/kairin/ghostty-config-files.git</a>)</li>
+<li>Branches preserved: 140+ branches (never deleted per constitution)</li>
+</ul>
+<hr>
+<h2 id="-next-steps-for-you-the-human">🎬 Next Steps (For You, The Human)</h2>
+<h3 id="if-you-want-one-llm-to-continue">If You Want One LLM to Continue:</h3>
+<ol>
+<li>Start a new conversation with your preferred LLM</li>
+<li>Copy-paste the “Quick Answer” section above</li>
+<li>Let the LLM read the guides and pick a task</li>
+<li>Review their implementation before they push</li>
+</ol>
+<h3 id="if-you-want-multiple-llms-in-parallel">If You Want Multiple LLMs in Parallel:</h3>
+<ol>
+<li>Assign specific phases to each LLM:
+<ul>
+<li>LLM A: “Work on Phase 7 (T040-T044)”</li>
+<li>LLM B: “Work on Phase 8 (T045-T048)”</li>
+<li>LLM C: “Work on Phase 9 (T049-T054)”</li>
+<li>LLM D: “Work on Phase 10 (T055-T064)”</li>
+</ul>
+</li>
+<li>Each LLM follows the handoff guide independently</li>
+<li>They’ll each create timestamped branches and merge to main</li>
+<li>No conflicts because they work on different files</li>
+</ol>
+<h3 id="if-you-want-to-review-first">If You Want to Review First:</h3>
+<ol>
+<li>Ask the LLM to create the branch and commit</li>
+<li>Review the implementation on GitHub</li>
+<li>Approve the merge to main</li>
+<li>LLM completes the workflow</li>
+</ol>
+<hr>
+<h2 id="-important-links">🔗 Important Links</h2>
+<ul>
+<li><strong>Repository</strong>: <a href="https://github.com/kairin/ghostty-config-files">https://github.com/kairin/ghostty-config-files</a></li>
+<li><strong>Latest Commit</strong>: <a href="https://github.com/kairin/ghostty-config-files/commit/af5f091">https://github.com/kairin/ghostty-config-files/commit/af5f091</a></li>
+<li><strong>Task List</strong>: <a href="https://github.com/kairin/ghostty-config-files/blob/main/specs/001-modern-tui-system/tasks.md">https://github.com/kairin/ghostty-config-files/blob/main/specs/001-modern-tui-system/tasks.md</a></li>
+<li><strong>Handoff Guide</strong>: <a href="https://github.com/kairin/ghostty-config-files/blob/main/LLM_HANDOFF_INSTRUCTIONS.md">https://github.com/kairin/ghostty-config-files/blob/main/LLM_HANDOFF_INSTRUCTIONS.md</a></li>
+<li><strong>Quick Start</strong>: <a href="https://github.com/kairin/ghostty-config-files/blob/main/QUICK_START_FOR_LLM.md">https://github.com/kairin/ghostty-config-files/blob/main/QUICK_START_FOR_LLM.md</a></li>
+</ul>
+<hr>
+<p><strong>That’s it!</strong> The repository is now ready for seamless handoff to any LLM. Just share the “Quick Answer” section above and they’ll have everything they need to continue development.</p>
+<p><strong>Questions?</strong> Everything is documented in the guides. The next LLM should be able to self-serve.</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

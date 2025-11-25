@@ -1,0 +1,611 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>SPEC-KIT ANALYSIS REPORT: Requirement Evolution Issues &amp; Breaking Changes | Ghostty Configuration Files</title><meta name="description" content="**Analysis Date**: 2025-11-17"><!-- OpenGraph --><meta property="og:title" content="SPEC-KIT ANALYSIS REPORT: Requirement Evolution Issues &#38; Breaking Changes"><meta property="og:description" content="**Analysis Date**: 2025-11-17"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>SPEC-KIT ANALYSIS REPORT: Requirement Evolution Issues &amp; Breaking Changes</li> </ul> </div> <h1>SPEC-KIT ANALYSIS REPORT: Requirement Evolution Issues &amp; Breaking Changes</h1> <p class="text-xl text-base-content/70 mb-8">**Analysis Date**: 2025-11-17</p><h1 id="spec-kit-analysis-report-requirement-evolution-issues--breaking-changes">SPEC-KIT ANALYSIS REPORT: Requirement Evolution Issues &#x26; Breaking Changes</h1>
+<p><strong>Analysis Date</strong>: 2025-11-17
+<strong>Repository</strong>: /home/kkk/Apps/ghostty-config-files
+<strong>Scope</strong>: Complete spec-kit directory analysis (guides + templates)
+<strong>Status</strong>: CRITICAL ISSUES FOUND</p>
+<hr>
+<h2 id="executive-summary">EXECUTIVE SUMMARY</h2>
+<p>The spec-kit guides contain <strong>multiple critical contradictions</strong> between:</p>
+<ol>
+<li><strong>OLD SPEC-KIT REQUIREMENTS</strong> (uv + Astro + shadcn/ui + .runners-local/)</li>
+<li><strong>CURRENT PROJECT STATE</strong> (Ghostty terminal + .runners-local/ + DaisyUI + manage.sh)</li>
+<li><strong>CLAUDE.md PROJECT MANDATES</strong> (Node.js latest, branch preservation, .runners-local infrastructure)</li>
+</ol>
+<p>These contradictions create <strong>broken workflows</strong> when users follow spec-kit commands, as they will:</p>
+<ul>
+<li>Create wrong directory structure (<code>.runners-local/</code> instead of <code>.runners-local/</code>)</li>
+<li>Recommend outdated component libraries (shadcn/ui instead of DaisyUI)</li>
+<li>Miss node version requirements (specifies Node.js 18+ instead of latest)</li>
+<li>Reference non-existent scripts and workflows</li>
+<li>Introduce obsolete implementation patterns</li>
+</ul>
+<p><strong>Risk Level</strong>: HIGH - Users following spec-kit will implement outdated architecture</p>
+<hr>
+<h2 id="1-requirement-evolution-issues">1. REQUIREMENT EVOLUTION ISSUES</h2>
+<h3 id="issue-11-directory-structure-mismatch-critical">ISSUE 1.1: Directory Structure Mismatch (CRITICAL)</h3>
+<p><strong>Location</strong>: ALL spec-kit guides reference <code>.runners-local/</code></p>
+<ul>
+<li><code>spec-kit/guides/SPEC_KIT_INDEX.md:31, 103, 116</code></li>
+<li><code>spec-kit/guides/2-spec-kit-specify.md:65-71, 87-99</code></li>
+<li><code>spec-kit/guides/3-spec-kit-plan.md:14, 99, 177-179</code></li>
+<li><code>spec-kit/guides/4-spec-kit-tasks.md:14, 54, 93-97, 164-186</code></li>
+<li><code>spec-kit/guides/5-spec-kit-implement.md:15, 32-36, 56-59, 68, 102</code></li>
+</ul>
+<p><strong>Current Requirement</strong> (CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>./.runners-local/                      # CONSOLIDATED LOCAL CI/CD (actual structure)</span></span>
+<span class="line"><span>├── workflows/                         # Workflow execution scripts (committed)</span></span>
+<span class="line"><span>├── self-hosted/                       # Self-hosted runner management</span></span>
+<span class="line"><span>├── tests/                             # Complete test infrastructure</span></span>
+<span class="line"><span>├── logs/                              # Execution logs</span></span>
+<span class="line"><span>├── docs/                              # Infrastructure documentation</span></span>
+<span class="line"><span>└── README.md</span></span></code></pre>
+<p><strong>What spec-kit Teaches</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>./.runners-local/                         # WRONG DIRECTORY NAME</span></span>
+<span class="line"><span>├── .runners-local/workflows/</span></span>
+<span class="line"><span>├── logs/</span></span>
+<span class="line"><span>├── config/</span></span>
+<span class="line"><span>└── tests/</span></span></code></pre>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users create <code>.runners-local/</code> directory when <code>.runners-local/</code> already exists</li>
+<li>Duplicate infrastructure scattered across codebase</li>
+<li>Scripts in wrong location won’t be found</li>
+<li>CI/CD pipelines fail silently</li>
+</ul>
+<p><strong>Example Contradiction</strong> (4-spec-kit-tasks.md:186):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> exit</span><span style="color:#79B8FF"> 1</span><span style="color:#6A737D">  # WRONG PATH</span></span>
+<span class="line"><span style="color:#6A737D"># Should be:</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> exit</span><span style="color:#79B8FF"> 1</span><span style="color:#6A737D">  # CORRECT PATH</span></span></code></pre>
+<hr>
+<h3 id="issue-12-component-library-evolution-significant">ISSUE 1.2: Component Library Evolution (SIGNIFICANT)</h3>
+<p><strong>Location</strong>:</p>
+<ul>
+<li><code>spec-kit/guides/SPEC_KIT_INDEX.md:15, 82, 158</code></li>
+<li><code>spec-kit/guides/1-spec-kit-constitution.md:18</code></li>
+<li><code>spec-kit/guides/2-spec-kit-specify.md:40-46</code></li>
+<li><code>spec-kit/guides/4-spec-kit-tasks.md:69-77</code></li>
+</ul>
+<p><strong>Current Requirement</strong> (Spec 005 - Complete Terminal Infrastructure):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>- **Component Library**: DaisyUI (latest stable) with Tailwind CSS (>=4.0)</span></span>
+<span class="line"><span>- shadcn/ui reserved for future consideration if deeper customization needed</span></span></code></pre>
+<p><strong>What spec-kit Still Teaches</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>- UI Components: shadcn/ui for all interactive components</span></span>
+<span class="line"><span>- Styling: Tailwind CSS with full utility-first approach</span></span>
+<span class="line"><span>- Initialize shadcn/ui: `npx shadcn-ui@latest init`</span></span></code></pre>
+<p><strong>Spec 005 Evidence</strong> (spec.md:142):</p>
+<blockquote>
+<p>“System MUST provide UI components through <strong>DaisyUI (latest stable)</strong> with Tailwind CSS (>=4.0, latest stable) and <strong>full accessibility (shadcn/ui reserved for future consideration if deeper customization needed)</strong>”</p>
+</blockquote>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users install wrong component library</li>
+<li>DaisyUI + shadcn/ui mixture creates conflicts</li>
+<li>Component examples won’t work</li>
+<li>Team onboarding follows wrong stack</li>
+</ul>
+<p><strong>Contradiction Example</strong> (4-spec-kit-tasks.md:72):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">npx</span><span style="color:#9ECBFF"> shadcn-ui@latest</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> button</span><span style="color:#9ECBFF"> card</span><span style="color:#9ECBFF"> input</span><span style="color:#6A737D">  # OUTDATED - DaisyUI is now standard</span></span></code></pre>
+<hr>
+<h3 id="issue-13-nodejs-version-policy-mismatch-moderate">ISSUE 1.3: Node.js Version Policy Mismatch (MODERATE)</h3>
+<p><strong>Location</strong>:</p>
+<ul>
+<li><code>spec-kit/guides/3-spec-kit-plan.md:169</code> - “Node.js 18+: Required for Astro”</li>
+<li><code>spec-kit/guides/5-spec-kit-implement.md:26</code> - “Python 3.12+, Node.js 18+”</li>
+</ul>
+<p><strong>Current Policy</strong> (CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>- **Global Policy**: Always use the latest Node.js version (not LTS)</span></span>
+<span class="line"><span>- **Health Audit Note**: Latest Node.js version is intentional and should NOT be flagged as a warning</span></span></code></pre>
+<p><strong>What spec-kit Says</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Node.js 18+: Required for Astro and npm packages</span></span>
+<span class="line"><span>(Implies minimum 18, doesn't mention "latest" requirement)</span></span></code></pre>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users may stick with Node.js 18 LTS instead of upgrading to latest (25.2.0+)</li>
+<li>Misses cutting-edge JavaScript features</li>
+<li>Contradicts global fnm policy stated in CLAUDE.md</li>
+<li>Performance and feature gap from outdated Node.js</li>
+</ul>
+<hr>
+<h3 id="issue-14-project-purpose-confusion-critical">ISSUE 1.4: Project Purpose Confusion (CRITICAL)</h3>
+<p><strong>Location</strong>: <code>spec-kit/guides/SPEC_KIT_INDEX.md</code> and all spec-kit prompts</p>
+<p><strong>Current Project Context</strong> (CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Ghostty Configuration Files is a comprehensive TERMINAL ENVIRONMENT SETUP</span></span>
+<span class="line"><span>featuring Ghostty terminal emulator with 2025 performance optimizations,</span></span>
+<span class="line"><span>right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI)</span></span></code></pre>
+<p><strong>What spec-kit Presents</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Complete Implementation Guide: uv + Astro + GitHub Pages + Local CI/CD Stack</span></span></code></pre>
+<p><strong>The Problem</strong>:
+Spec-kit guides focus ENTIRELY on building a documentation website with Astro.build.
+They completely omit the Ghostty terminal configuration aspects:</p>
+<ul>
+<li>No Ghostty performance optimization (linux-cgroup, shell integration)</li>
+<li>No Ghostty theming (Catppuccin, light/dark mode)</li>
+<li>No context menu integration</li>
+<li>No Ghostty configuration validation (<code>ghostty +show-config</code>)</li>
+<li>No terminal-focused CI/CD pipelines</li>
+<li>No dircolors XDG-compliant setup</li>
+<li>No shell integration features</li>
+</ul>
+<p><strong>Where Spec 005 Defines This</strong>: Complete Terminal Infrastructure</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User Story 1: Unified Development Environment</span></span>
+<span class="line"><span>- Ghostty terminal emulator with 2025 optimizations</span></span>
+<span class="line"><span>- ZSH + Oh My Zsh with productivity plugins</span></span>
+<span class="line"><span>- Node.js latest via fnm</span></span>
+<span class="line"><span>- Modern Unix tools (bat, exa, ripgrep, fd, zoxide)</span></span>
+<span class="line"><span>- Claude Code integration</span></span>
+<span class="line"><span>- Gemini CLI integration</span></span></code></pre>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users following spec-kit miss 70% of project value</li>
+<li>Terminal configuration requirements completely undocumented in spec-kit</li>
+<li>Users won’t install/configure Ghostty properly</li>
+<li>AI assistant integration missing from guidance</li>
+</ul>
+<hr>
+<h2 id="2-breaking-changes">2. BREAKING CHANGES</h2>
+<h3 id="issue-21-script-path-incompatibility-critical">ISSUE 2.1: Script Path Incompatibility (CRITICAL)</h3>
+<p><strong>All spec-kit commands reference scripts that won’t exist if users follow other guidance</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># SPEC-KIT SAYS (wrong paths):</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/astro-build-local.sh</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/performance-monitor.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># ACTUAL PROJECT HAS (correct paths):</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/astro-build-local.sh</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/performance-monitor.sh</span></span></code></pre>
+<p><strong>Evidence</strong>:</p>
+<ul>
+<li>All 5 spec-kit guide files (1-5) contain >100 references to wrong paths</li>
+<li><code>.runners-local/</code> directory ALREADY EXISTS with correct scripts</li>
+<li>No <code>.runners-local/</code> directory in project</li>
+</ul>
+<p><strong>User Experience</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">User:</span><span style="color:#9ECBFF"> ./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"><span style="color:#B392F0">Error:</span><span style="color:#9ECBFF"> No</span><span style="color:#9ECBFF"> such</span><span style="color:#9ECBFF"> file</span><span style="color:#9ECBFF"> or</span><span style="color:#9ECBFF"> directory</span></span>
+<span class="line"><span style="color:#E1E4E8">(</span><span style="color:#B392F0">User</span><span style="color:#9ECBFF"> is</span><span style="color:#9ECBFF"> confused</span><span style="color:#9ECBFF"> -</span><span style="color:#9ECBFF"> thinks</span><span style="color:#9ECBFF"> they</span><span style="color:#9ECBFF"> did</span><span style="color:#9ECBFF"> something</span><span style="color:#9ECBFF"> wrong,</span><span style="color:#9ECBFF"> but</span><span style="color:#9ECBFF"> actually</span><span style="color:#9ECBFF"> spec-kit</span><span style="color:#9ECBFF"> was</span><span style="color:#9ECBFF"> wrong</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<hr>
+<h3 id="issue-22-divergent-implementation-strategy-high">ISSUE 2.2: Divergent Implementation Strategy (HIGH)</h3>
+<p><strong>Spec-kit teaches PHASE 0 approach</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Phase 0 (BEFORE ALL OTHERS): Local CI/CD Infrastructure Setup</span></span>
+<span class="line"><span>- Create complete .runners-local/ directory structure</span></span>
+<span class="line"><span>- Build and test all runner scripts</span></span>
+<span class="line"><span>- Configure git hooks for automatic execution</span></span></code></pre>
+<p><strong>Actual Implementation</strong> (per CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>LOCAL CI/CD REQUIREMENTS:</span></span>
+<span class="line"><span>- Use existing ./.runners-local/ infrastructure (already built and tested)</span></span>
+<span class="line"><span>- Integrate with `.runners-local/workflows/gh-workflow-local.sh all`</span></span>
+<span class="line"><span>- No Phase 0 needed - infrastructure ready to use</span></span></code></pre>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users waste 4-6 hours building duplicate CI/CD infrastructure</li>
+<li>Creates competing systems (<code>.runners-local/</code> vs <code>.runners-local/</code>)</li>
+<li>Branch workflow examples won’t work</li>
+<li>Performance monitoring integrations fail</li>
+</ul>
+<hr>
+<h3 id="issue-23-missing-context7-integration-high">ISSUE 2.3: Missing Context7 Integration (HIGH)</h3>
+<p><strong>Location</strong>: NONE of spec-kit mentions Context7 MCP</p>
+<p><strong>Current Requirement</strong> (CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>### 🚨 CRITICAL: Context7 MCP Integration &#x26; Documentation Synchronization</span></span>
+<span class="line"><span>**MANDATORY**: Query Context7 before major configuration changes</span></span>
+<span class="line"><span>**RECOMMENDED**: Add Context7 validation to local CI/CD workflows</span></span>
+<span class="line"><span>**BEST PRACTICE**: Document Context7 queries in conversation logs</span></span></code></pre>
+<p><strong>What Spec-kit Says</strong>: NOTHING about Context7</p>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users won’t integrate documentation synchronization</li>
+<li>Miss up-to-date library documentation</li>
+<li>Spec-kit examples become outdated faster</li>
+<li>No knowledge base synchronization</li>
+</ul>
+<hr>
+<h3 id="issue-24-missing-github-mcp-integration-high">ISSUE 2.4: Missing GitHub MCP Integration (HIGH)</h3>
+<p><strong>Location</strong>: NONE of spec-kit mentions GitHub MCP</p>
+<p><strong>Current Requirement</strong> (CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>### 🚨 CRITICAL: GitHub MCP Integration &#x26; Repository Operations</span></span>
+<span class="line"><span>**MANDATORY**: Use GitHub MCP for all repository operations</span></span>
+<span class="line"><span>Branch preservation strategy with timestamped naming</span></span></code></pre>
+<p><strong>What Spec-kit Says</strong>: Uses manual git commands and basic gh CLI</p>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users won’t use proper GitHub MCP functions</li>
+<li>Manual repository operations instead of safe API integration</li>
+<li>No branch preservation enforcement</li>
+<li>Higher risk of accidental branch deletion</li>
+</ul>
+<hr>
+<h2 id="3-specification-consistency-issues">3. SPECIFICATION CONSISTENCY ISSUES</h2>
+<h3 id="issue-31-branch-strategy-contradiction-moderate">ISSUE 3.1: Branch Strategy Contradiction (MODERATE)</h3>
+<p><strong>Spec-kit Version</strong> (4-spec-kit-tasks.md:183-200):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#E1E4E8">DATETIME</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +"%Y%m%d-%H%M%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">BRANCH_NAME</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">DATETIME</span><span style="color:#9ECBFF">}-task-X-description"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 1. MANDATORY: Local CI/CD validation</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> exit</span><span style="color:#79B8FF"> 1</span></span></code></pre>
+<p><strong>CLAUDE.md Version</strong> (requires .runners-local, not local-infra):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#E1E4E8">DATETIME</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +"%Y%m%d-%H%M%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">BRANCH_NAME</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">DATETIME</span><span style="color:#9ECBFF">}-type-short-description"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Correct workflow uses .runners-local</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> exit</span><span style="color:#79B8FF"> 1</span></span></code></pre>
+<p><strong>Additional Contradiction</strong>:</p>
+<ul>
+<li>Spec-kit shows: <code>task-X-description</code> (task-focused naming)</li>
+<li>CLAUDE.md shows: <code>type-short-description</code> (type-focused: feat, fix, docs)</li>
+</ul>
+<hr>
+<h3 id="issue-32-sizecontext-issues-moderate">ISSUE 3.2: Size/Context Issues (MODERATE)</h3>
+<p><strong>Large Monolithic Prompts</strong>:</p>
+<ul>
+<li><code>SPEC_KIT_GUIDE.md</code>: 892 lines (too large for single LLM context window)</li>
+<li>Each constitution/specify/plan prompt exceeds 100+ lines in code blocks</li>
+</ul>
+<p><strong>Problem for LLM Usage</strong>:</p>
+<ul>
+<li>Easy to miss key requirements buried in long prompts</li>
+<li>Copy-paste errors likely with such long blocks</li>
+<li>Context window wasted on verbose formatting</li>
+<li>Templates could be split into smaller, focused modules</li>
+</ul>
+<p><strong>Missing Prompts</strong>:</p>
+<ul>
+<li>No Context7 integration prompt</li>
+<li>No GitHub MCP integration prompt</li>
+<li>No Ghostty-focused configuration prompt</li>
+<li>No terminal-first development workflow prompt</li>
+</ul>
+<hr>
+<h3 id="issue-33-test-coverage-gap-high">ISSUE 3.3: Test Coverage Gap (HIGH)</h3>
+<p><strong>Spec-kit References</strong>:</p>
+<ul>
+<li>Mentions tests should exist in <code>.runners-local/tests/</code></li>
+<li>No guidance on HOW to write tests</li>
+<li>No test templates provided</li>
+<li>Test structure conflicts with <code>.runners-local/tests/</code> reality</li>
+</ul>
+<p><strong>Current Reality</strong>:</p>
+<ul>
+<li><code>.runners-local/tests/</code> directory exists with contract/unit/integration structure</li>
+<li>Spec-kit doesn’t document this structure</li>
+<li>Users won’t know about existing test infrastructure</li>
+</ul>
+<hr>
+<h3 id="issue-34-missing-nojekyll-documentation-high">ISSUE 3.4: Missing .nojekyll Documentation (HIGH)</h3>
+<p><strong>CLAUDE.md Critical Requirement</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>- **`.nojekyll` File**: ABSOLUTELY CRITICAL for GitHub Pages deployment</span></span>
+<span class="line"><span>- **Location**: `docs/.nojekyll` (empty file, no content needed)</span></span>
+<span class="line"><span>- **Purpose**: Disables Jekyll processing to allow `_astro/` directory assets</span></span>
+<span class="line"><span>- **WARNING**: This file is ESSENTIAL - never remove during cleanup operations</span></span></code></pre>
+<p><strong>What Spec-kit Says</strong>: NOTHING about .nojekyll file</p>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>Users deploy to GitHub Pages without .nojekyll</li>
+<li>CSS/JS assets return 404 errors</li>
+<li>Site appears broken despite code being correct</li>
+<li>Critical failure with no debugging guidance</li>
+</ul>
+<hr>
+<h2 id="4-context-and-size-issues">4. CONTEXT AND SIZE ISSUES</h2>
+<h3 id="issue-41-disconnected-guide-sequence-moderate">ISSUE 4.1: Disconnected Guide Sequence (MODERATE)</h3>
+<p><strong>Current Index</strong> (SPEC_KIT_INDEX.md):</p>
+<ul>
+<li>Constitution → Specify → Plan → Tasks → Implement</li>
+</ul>
+<p><strong>Problem</strong>:</p>
+<ul>
+<li>No transition guidance between steps</li>
+<li>No “what you should have at this point” verification</li>
+<li>Users don’t know if previous step succeeded</li>
+<li>Missing integration checkpoints</li>
+</ul>
+<p><strong>Missing Content</strong>:</p>
+<ul>
+<li>Checklist of expected outputs after each command</li>
+<li>Troubleshooting for common failures</li>
+<li>How to recover if a step partially completes</li>
+<li>What to do if spec-kit requirements conflict with project policy</li>
+</ul>
+<hr>
+<h3 id="issue-42-orphaned-documentation-moderate">ISSUE 4.2: Orphaned Documentation (MODERATE)</h3>
+<p><strong>Large files with overlapping content</strong>:</p>
+<ul>
+<li><code>SPEC_KIT_GUIDE.md</code> (892 lines) - comprehensive but unwieldy</li>
+<li><code>SPEC_KIT_INDEX.md</code> (162 lines) - navigation guide</li>
+<li>Individual guides 1-5 (177-231 lines each)</li>
+</ul>
+<p><strong>Result</strong>: Multiple sources of truth, easy to get lost</p>
+<p><strong>What’s Missing</strong>:</p>
+<ul>
+<li>Quick reference card (1-page)</li>
+<li>FAQ addressing common contradictions</li>
+<li>Troubleshooting guide</li>
+<li>When NOT to use spec-kit guidance</li>
+</ul>
+<hr>
+<h3 id="issue-43-file-structure-documentation-gaps-high">ISSUE 4.3: File Structure Documentation Gaps (HIGH)</h3>
+<p><strong>Spec-kit teaches</strong> (2-spec-kit-specify.md:73-113):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>project-root/</span></span>
+<span class="line"><span>├── .runners-local/        # WRONG: Should be .runners-local</span></span>
+<span class="line"><span>├── scripts/            # Only Python scripts mentioned</span></span>
+<span class="line"><span>├── src/                # Astro source (missing Ghostty config details)</span></span></code></pre>
+<p><strong>Actual Structure</strong> (from CLAUDE.md):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/home/kkk/Apps/ghostty-config-files/</span></span>
+<span class="line"><span>├── configs/            # Ghostty config, themes, dircolors, workspace</span></span>
+<span class="line"><span>├── scripts/            # Installation AND management scripts  </span></span>
+<span class="line"><span>├── documentations/     # User, developer, specifications, archive</span></span>
+<span class="line"><span>├── .runners-local/     # Local CI/CD (not local-infra)</span></span>
+<span class="line"><span>├── website/src/        # Astro documentation source</span></span>
+<span class="line"><span>├── docs/               # GitHub Pages build output</span></span>
+<span class="line"><span>├── specs/              # Feature specifications</span></span></code></pre>
+<p><strong>Gap</strong>: Spec-kit completely ignores <code>configs/</code>, <code>documentations/</code>, <code>specs/</code> directories</p>
+<hr>
+<h2 id="5-critical-recommendations">5. CRITICAL RECOMMENDATIONS</h2>
+<h3 id="fix-1-create-spec-kit-reconciliation-guide-urgent">FIX 1: Create “Spec-Kit Reconciliation Guide” (URGENT)</h3>
+<p><strong>File</strong>: <code>spec-kit/guides/0-spec-kit-reconciliation.md</code></p>
+<p><strong>Content</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#79B8FF;font-weight:bold"># Spec-Kit Reconciliation with Current Project State</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## KNOWN DIVERGENCES (Updated 2025-11-17)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">### Directory Structure</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> SPEC-KIT SAYS: .runners-local/</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTUAL PROJECT: .runners-local/</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTION: Replace all .runners-local/ with .runners-local/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">### Component Library</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> SPEC-KIT SAYS: shadcn/ui</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTUAL PROJECT: DaisyUI (shadcn/ui reserved for future)</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTION: Use DaisyUI installation commands</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">### Node.js Version</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> SPEC-KIT SAYS: Node.js 18+</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTUAL PROJECT: Node.js latest (v25.2.0+) via fnm</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTION: Use </span><span style="color:#79B8FF">`fnm default node`</span><span style="color:#E1E4E8"> to get latest version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">### Project Scope</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> SPEC-KIT SAYS: uv + Astro + GitHub Pages stack only</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTUAL PROJECT: Includes Ghostty terminal, AI tools, modern Unix tools</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> ACTION: See CLAUDE.md for complete project requirements</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## When to Use This Guide</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">Use spec-kit for: Building modern web development stacks with Astro</span></span>
+<span class="line"><span style="color:#E1E4E8">USE CLAUDE.md for: Terminal configuration and complete project requirements</span></span></code></pre>
+<hr>
+<h3 id="fix-2-update-all-path-references-urgent">FIX 2: Update All Path References (URGENT)</h3>
+<p><strong>Script</strong>: Create automated path replacement</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Update all local-infra references to .runners-local</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> spec-kit/guides</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.md"</span><span style="color:#79B8FF"> -exec</span><span style="color:#9ECBFF"> sed</span><span style="color:#79B8FF"> -i</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">  's|./.runners-local/.runners-local/workflows/|./.runners-local/workflows/|g'</span><span style="color:#9ECBFF"> {}</span><span style="color:#79B8FF"> \;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> spec-kit/guides</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.md"</span><span style="color:#79B8FF"> -exec</span><span style="color:#9ECBFF"> sed</span><span style="color:#79B8FF"> -i</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">  's|./.runners-local/|./.runners-local/|g'</span><span style="color:#9ECBFF"> {}</span><span style="color:#79B8FF"> \;</span></span></code></pre>
+<p><strong>Files affected</strong>:</p>
+<ul>
+<li><code>1-spec-kit-constitution.md</code> - 0 mentions (constitution phase doesn’t reference paths)</li>
+<li><code>2-spec-kit-specify.md</code> - 5 critical path mentions</li>
+<li><code>3-spec-kit-plan.md</code> - 3 critical path mentions</li>
+<li><code>4-spec-kit-tasks.md</code> - 8 critical path mentions</li>
+<li><code>5-spec-kit-implement.md</code> - 7 critical path mentions</li>
+<li><code>SPEC_KIT_INDEX.md</code> - 3 critical path mentions</li>
+<li><code>SPEC_KIT_GUIDE.md</code> - 40+ path mentions</li>
+</ul>
+<hr>
+<h3 id="fix-3-add-context7--github-mcp-integration-high">FIX 3: Add Context7 &#x26; GitHub MCP Integration (HIGH)</h3>
+<p><strong>Create</strong>: <code>spec-kit/guides/0-spec-kit-prerequisites.md</code></p>
+<p><strong>Content</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#79B8FF;font-weight:bold"># Spec-Kit Prerequisites: Context7 &#x26; GitHub MCP</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">Before running spec-kit commands, configure:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## Context7 MCP Integration</span></span>
+<span class="line"><span style="color:#E1E4E8">cp .env.example .env  # Add CONTEXT7_API_KEY</span></span>
+<span class="line"><span style="color:#E1E4E8">./scripts/check_context7_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## GitHub MCP Integration  </span></span>
+<span class="line"><span style="color:#E1E4E8">gh auth status  # Verify authentication</span></span>
+<span class="line"><span style="color:#E1E4E8">./scripts/check_github_mcp_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## Why These Matter</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> Context7 keeps library docs up-to-date during implementation</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> GitHub MCP ensures safe branch management and operations</span></span>
+<span class="line"><span style="color:#FFAB70">-</span><span style="color:#E1E4E8"> Both are NON-NEGOTIABLE for constitutional compliance</span></span></code></pre>
+<hr>
+<h3 id="fix-4-add-ghostty-aware-guidance-high">FIX 4: Add Ghostty-Aware Guidance (HIGH)</h3>
+<p><strong>Create</strong>: <code>spec-kit/guides/6-spec-kit-terminal-integration.md</code></p>
+<p><strong>Content</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#79B8FF;font-weight:bold"># Spec-Kit Step 6: Terminal Environment Integration</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">After completing Astro/web stack, integrate with Ghostty terminal environment:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## Validate Ghostty Configuration</span></span>
+<span class="line"><span style="color:#E1E4E8">ghostty +show-config | grep linux-cgroup</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## Add Terminal Performance Baseline</span></span>
+<span class="line"><span style="color:#E1E4E8">./.runners-local/workflows/performance-monitor.sh --baseline</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## Integrate Documentation with Terminal</span></span>
+<span class="line"><span style="color:#E1E4E8">./manage.sh docs build  # Uses local CI/CD</span></span></code></pre>
+<hr>
+<h3 id="fix-5-create-reconciliation-matrix-immediate">FIX 5: Create Reconciliation Matrix (IMMEDIATE)</h3>
+<p><strong>File</strong>: <code>spec-kit/guides/RECONCILIATION_MATRIX.md</code></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Aspect</th><th>Spec-Kit Says</th><th>Actual Project</th><th>Status</th><th>Fix</th></tr></thead><tbody><tr><td>Local CI/CD dir</td><td><code>.runners-local/</code></td><td><code>.runners-local/</code></td><td>CRITICAL</td><td>Replace all paths</td></tr><tr><td>Components</td><td>shadcn/ui</td><td>DaisyUI</td><td>CRITICAL</td><td>Update tasks</td></tr><tr><td>Node.js</td><td>18+</td><td>latest</td><td>MODERATE</td><td>Add fnm guidance</td></tr><tr><td>Project scope</td><td>Web stack only</td><td>Terminal + Web</td><td>HIGH</td><td>Add Ghostty section</td></tr><tr><td>Scripts location</td><td>.runners-local/runners</td><td>.runners-local/workflows</td><td>CRITICAL</td><td>Update 40+ refs</td></tr><tr><td>Test location</td><td>.runners-local/tests</td><td>.runners-local/tests</td><td>MODERATE</td><td>Update structure</td></tr><tr><td>.nojekyll</td><td>Not mentioned</td><td>CRITICAL file</td><td>HIGH</td><td>Add to deploy docs</td></tr></tbody></table>
+<hr>
+<h3 id="fix-6-add-validation-checkpoints-moderate">FIX 6: Add Validation Checkpoints (MODERATE)</h3>
+<p><strong>Create</strong>: <code>spec-kit/guides/validation-checkpoints.md</code></p>
+<p><strong>Content</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#79B8FF;font-weight:bold"># Spec-Kit Validation Checkpoints</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">After each spec-kit phase, verify actual project state:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## After /constitution</span></span>
+<span class="line"><span style="color:#E1E4E8">✓ Core values documented</span></span>
+<span class="line"><span style="color:#E1E4E8">✓ Tech stack constraints clear</span></span>
+<span class="line"><span style="color:#E1E4E8">  → MUST include: Local CI/CD, Ghostty focus, Latest Node.js</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## After /specify</span></span>
+<span class="line"><span style="color:#E1E4E8">✓ Tech specifications created</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Uses .runners-local, not local-infra</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: DaisyUI in components, not shadcn/ui</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Node.js latest in requirements</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## After /plan</span></span>
+<span class="line"><span style="color:#E1E4E8">✓ 7-phase implementation plan created</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Phase 0 uses existing .runners-local infrastructure</span></span>
+<span class="line"><span style="color:#E1E4E8">  → CHECK: No "create local-infra from scratch" steps</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## After /tasks</span></span>
+<span class="line"><span style="color:#E1E4E8">✓ Actionable task list generated</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: All script paths reference .runners-local</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Component setup uses DaisyUI</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Includes Ghostty integration tasks</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF;font-weight:bold">## After /implement</span></span>
+<span class="line"><span style="color:#E1E4E8">✓ Implementation underway</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Zero GitHub Actions consumed (local CI/CD worked)</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: docs/.nojekyll exists and wasn't removed</span></span>
+<span class="line"><span style="color:#E1E4E8">  → VERIFY: Branch preservation policy followed</span></span></code></pre>
+<hr>
+<h2 id="6-priority-fixes-roadmap">6. PRIORITY FIXES ROADMAP</h2>
+<h3 id="immediate-this-week">IMMEDIATE (This Week)</h3>
+<ol>
+<li>Update all <code>.runners-local/</code> to <code>.runners-local/</code> paths in spec-kit guides</li>
+<li>Add reconciliation matrix to spec-kit</li>
+<li>Add prerequisites guide (Context7, GitHub MCP)</li>
+<li>Document .nojekyll critical file requirement</li>
+</ol>
+<h3 id="short-term-this-month">SHORT TERM (This Month)</h3>
+<ol>
+<li>Create full Ghostty-aware spec-kit section</li>
+<li>Update component library references (shadcn/ui → DaisyUI)</li>
+<li>Add comprehensive troubleshooting guide</li>
+<li>Create validation checkpoints document</li>
+</ol>
+<h3 id="medium-term-next-phase">MEDIUM TERM (Next Phase)</h3>
+<ol>
+<li>Refactor SPEC_KIT_GUIDE.md into smaller focused modules</li>
+<li>Create quick reference cards for each phase</li>
+<li>Add FAQ addressing common contradictions</li>
+<li>Integrate Context7 library documentation examples</li>
+</ol>
+<h3 id="long-term-architecture">LONG TERM (Architecture)</h3>
+<ol>
+<li>Separate “web development stack” spec-kit from “terminal configuration”</li>
+<li>Create terminal-focused spec-kit guidelines</li>
+<li>Merge all reconciliation into single source of truth</li>
+<li>Make spec-kit generation-aware (don’t conflict with generated docs)</li>
+</ol>
+<hr>
+<h2 id="7-evidence-compilation">7. EVIDENCE COMPILATION</h2>
+<h3 id="contradiction-1-directory-names">Contradiction #1: Directory Names</h3>
+<ul>
+<li><strong>Spec-kit</strong>: <code>.runners-local/.runners-local/workflows/gh-workflow-local.sh</code> (100+ occurrences)</li>
+<li><strong>Actual</strong>: <code>.runners-local/workflows/gh-workflow-local.sh</code> (confirmed existing)</li>
+<li><strong>File</strong>: <code>/home/kkk/Apps/ghostty-config-files/.runners-local/workflows/gh-workflow-local.sh</code></li>
+</ul>
+<h3 id="contradiction-2-components">Contradiction #2: Components</h3>
+<ul>
+<li><strong>Spec-kit</strong>: “shadcn/ui for all interactive components” (4-spec-kit-tasks.md:70)</li>
+<li><strong>Spec 005</strong>: “DaisyUI (latest stable)…shadcn/ui reserved for future” (spec.md:142)</li>
+<li><strong>Evidence</strong>: specs/005-complete-terminal-infrastructure/spec.md:14, 142</li>
+</ul>
+<h3 id="contradiction-3-nodejs">Contradiction #3: Node.js</h3>
+<ul>
+<li><strong>Spec-kit</strong>: “Node.js 18+: Required” (3-spec-kit-plan.md:169)</li>
+<li><strong>CLAUDE.md</strong>: “Always use the latest Node.js version (not LTS)” (CLAUDE.md:24)</li>
+<li><strong>Evidence</strong>: Current v25.2.0+ in use, fnm configured for latest</li>
+</ul>
+<h3 id="contradiction-4-project-purpose">Contradiction #4: Project Purpose</h3>
+<ul>
+<li><strong>Spec-kit</strong>: “uv + Astro + GitHub Pages + Local CI/CD Stack”</li>
+<li><strong>CLAUDE.md</strong>: “Ghostty terminal emulator with 2025 optimizations, right-click context menu, AI tools”</li>
+<li><strong>Evidence</strong>: CLAUDE.md project overview vs SPEC_KIT_INDEX.md overview</li>
+</ul>
+<h3 id="contradiction-5-script-paths">Contradiction #5: Script Paths</h3>
+<ul>
+<li><strong>Spec-kit</strong>: ”./.runners-local/.runners-local/workflows/gh-workflow-local.sh all” (4-spec-kit-tasks.md:186)</li>
+<li><strong>CLAUDE.md</strong>: ”./.runners-local/workflows/gh-workflow-local.sh all” (CLAUDE.md:148)</li>
+<li><strong>Evidence</strong>: Both files explicitly state these paths</li>
+</ul>
+<hr>
+<h2 id="conclusion">CONCLUSION</h2>
+<p><strong>Severity</strong>: HIGH - Multiple breaking changes that could introduce weeks of wasted effort</p>
+<p><strong>Primary Issue</strong>: Spec-kit documents an OLD implementation plan for a web development stack, while the actual project has evolved to include Ghostty terminal configuration with <code>.runners-local/</code> CI/CD infrastructure.</p>
+<p><strong>Recommended Action</strong>: Apply FIX recommendations in priority order, starting with path reconciliation and adding prerequisite documentation.</p>
+<p><strong>Timeline</strong>: Fixes should be applied before any users attempt to follow spec-kit guidance for this repository.</p>
+<hr>
+<p><strong>Report Generated</strong>: 2025-11-17
+<strong>Analysis Scope</strong>: /home/kkk/Apps/ghostty-config-files/spec-kit (complete directory)
+<strong>Files Analyzed</strong>: 8 markdown files, 1974 total lines
+<strong>Issues Found</strong>: 14 major + multiple supporting issues</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

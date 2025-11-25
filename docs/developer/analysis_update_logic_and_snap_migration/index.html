@@ -1,0 +1,1193 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Comprehensive Analysis: Update Logic and Snap-to-APT Migration | Ghostty Configuration Files</title><meta name="description" content="**Date**: 2025-11-21"><!-- OpenGraph --><meta property="og:title" content="Comprehensive Analysis: Update Logic and Snap-to-APT Migration"><meta property="og:description" content="**Date**: 2025-11-21"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Comprehensive Analysis: Update Logic and Snap-to-APT Migration</li> </ul> </div> <h1>Comprehensive Analysis: Update Logic and Snap-to-APT Migration</h1> <p class="text-xl text-base-content/70 mb-8">**Date**: 2025-11-21</p><h1 id="comprehensive-analysis-update-logic-and-snap-to-apt-migration">Comprehensive Analysis: Update Logic and Snap-to-APT Migration</h1>
+<p><strong>Date</strong>: 2025-11-21
+<strong>Analyst</strong>: Claude Code (Multi-Agent Orchestrator)
+<strong>Status</strong>: Investigation Complete - NO IMPLEMENTATION</p>
+<hr>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This investigation analyzes two critical aspects of the Modern TUI Installation System:</p>
+<ol>
+<li><strong>Update/Upgrade Logic</strong>: How already-installed applications are detected and updated</li>
+<li><strong>Snap-to-APT Migration</strong>: Whether the system handles migration from snap-installed to apt-installed packages</li>
+</ol>
+<h3 id="key-findings">Key Findings</h3>
+<h4 id="update-logic-status">Update Logic Status</h4>
+<ul>
+<li><strong>Current Behavior</strong>: IDEMPOTENT DETECTION ONLY - Re-running <code>start.sh</code> SKIPS already-installed components</li>
+<li><strong>Gap Identified</strong>: NO AUTOMATIC UPDATE MECHANISM for existing installations</li>
+<li><strong>Impact</strong>: Users must manually update components or use external update scripts</li>
+</ul>
+<h4 id="snap-to-apt-migration-status">Snap-to-APT Migration Status</h4>
+<ul>
+<li><strong>Current Behavior</strong>: NO SNAP DETECTION OR MIGRATION LOGIC EXISTS</li>
+<li><strong>Package Strategy</strong>: All components use custom installation methods (no apt/snap usage)</li>
+<li><strong>Risk Level</strong>: LOW - System does not rely on package managers that would conflict</li>
+</ul>
+<h4 id="ghostty-icon-issue-specific-investigation">Ghostty Icon Issue (Specific Investigation)</h4>
+<ul>
+<li><strong>Root Cause</strong>: Desktop entry uses generic icon <code>utilities-terminal</code> instead of Ghostty-specific icon</li>
+<li><strong>Current Location</strong>: <code>/home/kkk/.local/share/applications/ghostty.desktop</code> (line 32)</li>
+<li><strong>Missing Component</strong>: No Ghostty icon file installed to standard icon directories</li>
+<li><strong>Fix Required</strong>: Extract and install Ghostty icon from build artifacts or repository</li>
+</ul>
+<hr>
+<h2 id="task-1-findings-updateupgrade-logic-analysis">Task 1 Findings: Update/Upgrade Logic Analysis</h2>
+<h3 id="component-by-component-analysis">Component-by-Component Analysis</h3>
+<h4 id="1-ghostty-terminal-component">1. Ghostty Terminal Component</h4>
+<p><strong>File</strong>: <code>lib/installers/ghostty/install.sh</code></p>
+<p><strong>Idempotency Check Location</strong>: <code>lib/installers/ghostty/steps/00-check-prerequisites.sh</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 29-34: Checks if Zig is installed but does NOT check Ghostty version</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$zig_version</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> ==</span><span style="color:#9ECBFF"> "none"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "Zig compiler not found"</span></span>
+<span class="line"><span style="color:#6A737D">    # We don't fail here because the next steps will install it</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Verification Logic</strong>: <code>lib/installers/ghostty/steps/08-verify-installation.sh</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 24-30: Binary existence check only, no version comparison</span></span>
+<span class="line"><span style="color:#F97583">local</span><span style="color:#E1E4E8"> ghostty_bin</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$GHOSTTY_INSTALL_DIR</span><span style="color:#9ECBFF">/bin/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">!</span><span style="color:#F97583"> -x</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ghostty_bin</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "ERROR"</span><span style="color:#9ECBFF"> "Ghostty binary not found or not executable at </span><span style="color:#E1E4E8">$ghostty_bin</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">    fail_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Update Behavior</strong>:</p>
+<ul>
+<li><strong>Detection</strong>: Checks if binary exists at <code>~/.local/share/ghostty/bin/ghostty</code></li>
+<li><strong>Re-run behavior</strong>: SKIPS installation if binary exists (exit code 2)</li>
+<li><strong>Version check</strong>: NONE - does not compare installed version vs available version</li>
+<li><strong>Update trigger</strong>: NO automatic update mechanism</li>
+</ul>
+<p><strong>Gap Analysis</strong>:</p>
+<ul>
+<li>No version detection for installed Ghostty</li>
+<li>No comparison with upstream repository tags/releases</li>
+<li>No update prompts or automatic upgrade logic</li>
+<li>Re-running <code>start.sh</code> will NOT update existing Ghostty installation</li>
+</ul>
+<hr>
+<h4 id="2-zsh-component">2. ZSH Component</h4>
+<p><strong>File</strong>: <code>lib/installers/zsh/install.sh</code></p>
+<p><strong>Idempotency Check</strong>: <code>lib/installers/zsh/steps/00-check-prerequisites.sh</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 28-31: Full configuration check before proceeding</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> verify_zsh_configured</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "↷ ZSH + Oh My ZSH already installed and configured"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span><span style="color:#6A737D">  # Skip code</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Verification Function</strong>: Called from common.sh (need to trace)</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Line 29: verify_zsh_configured function</span></span>
+<span class="line"><span style="color:#6A737D"># Checks: ZSH binary, Oh My ZSH directory, .zshrc, plugins</span></span></code></pre>
+<p><strong>Update Behavior</strong>:</p>
+<ul>
+<li><strong>Detection</strong>: Comprehensive check (binary + framework + config + plugins)</li>
+<li><strong>Re-run behavior</strong>: SKIPS if all components detected</li>
+<li><strong>Version check</strong>: NONE - checks existence only</li>
+<li><strong>Update trigger</strong>: NO automatic update mechanism</li>
+</ul>
+<p><strong>Gap Analysis</strong>:</p>
+<ul>
+<li>No Oh My ZSH update logic (OMZ has <code>upgrade_oh_my_zsh</code> command)</li>
+<li>No plugin update logic</li>
+<li>No detection of outdated ZSH version</li>
+<li>Re-running <code>start.sh</code> will NOT update existing ZSH configuration</li>
+</ul>
+<hr>
+<h4 id="3-python-uv-component">3. Python UV Component</h4>
+<p><strong>File</strong>: <code>lib/installers/python_uv/install.sh</code></p>
+<p><strong>Idempotency Check</strong>: <code>lib/installers/python_uv/steps/00-check-prerequisites.sh</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 27-32: Version-aware check</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> verify_python_uv</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> uv_version</span></span>
+<span class="line"><span style="color:#E1E4E8">    uv_version</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">uv</span><span style="color:#79B8FF"> --version</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> "unknown"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "↷ UV already installed: </span><span style="color:#E1E4E8">$uv_version</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Update Behavior</strong>:</p>
+<ul>
+<li><strong>Detection</strong>: Binary existence check with version display</li>
+<li><strong>Re-run behavior</strong>: SKIPS if UV command exists</li>
+<li><strong>Version check</strong>: DISPLAYS version but does NOT compare with latest</li>
+<li><strong>Update trigger</strong>: NO automatic update mechanism</li>
+</ul>
+<p><strong>Conflict Detection</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 34-55: Detects conflicting package managers</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> manager </span><span style="color:#F97583">in</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">PYTHON_CONFLICTING_MANAGERS</span><span style="color:#9ECBFF">[</span><span style="color:#F97583">@</span><span style="color:#9ECBFF">]}"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> command_exists</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$manager</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "⚠ Conflicting package manager detected: </span><span style="color:#E1E4E8">$manager</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "  Constitutional requirement: UV EXCLUSIVE"</span></span>
+<span class="line"><span style="color:#6A737D">        # WARNING ONLY - does not remove conflicts</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">done</span></span></code></pre>
+<p><strong>Gap Analysis</strong>:</p>
+<ul>
+<li>Displays current version but no comparison with latest release</li>
+<li>No <code>uv self-update</code> trigger</li>
+<li>Conflict detection is WARNING ONLY (does not auto-remove conflicts)</li>
+<li>Re-running <code>start.sh</code> will NOT update existing UV installation</li>
+</ul>
+<hr>
+<h4 id="4-nodejs-fnm-component">4. Node.js FNM Component</h4>
+<p><strong>File</strong>: <code>lib/installers/nodejs_fnm/install.sh</code></p>
+<p><strong>Idempotency Check</strong>: <code>lib/installers/nodejs_fnm/steps/00-check-prerequisites.sh</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 8-11: Binary existence check</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> verify_nodejs_fnm</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "↷ fnm and Node.js already installed"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Update Behavior</strong>:</p>
+<ul>
+<li><strong>Detection</strong>: Binary existence check for fnm + Node.js</li>
+<li><strong>Re-run behavior</strong>: SKIPS if both detected</li>
+<li><strong>Version check</strong>: NONE</li>
+<li><strong>Update trigger</strong>: NO automatic update mechanism</li>
+</ul>
+<p><strong>Conflict Detection</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 13-19: Warns about conflicting version managers</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> manager </span><span style="color:#F97583">in</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">NODEJS_CONFLICTING_MANAGERS</span><span style="color:#9ECBFF">[</span><span style="color:#F97583">@</span><span style="color:#9ECBFF">]}"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> command_exists</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$manager</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "⚠ Conflicting version manager: </span><span style="color:#E1E4E8">$manager</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">done</span></span>
+<span class="line"><span style="color:#E1E4E8">[ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">HOME</span><span style="color:#9ECBFF">}/.nvm"</span><span style="color:#E1E4E8"> ] &#x26;&#x26; </span><span style="color:#B392F0">log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "⚠ nvm directory detected: ${</span><span style="color:#E1E4E8">HOME</span><span style="color:#9ECBFF">}/.nvm"</span></span></code></pre>
+<p><strong>Gap Analysis</strong>:</p>
+<ul>
+<li>No Node.js version comparison (current vs latest)</li>
+<li>No fnm version check</li>
+<li>Conflict detection is WARNING ONLY</li>
+<li>Re-running <code>start.sh</code> will NOT update Node.js to latest version</li>
+</ul>
+<hr>
+<h4 id="5-ai-tools-component">5. AI Tools Component</h4>
+<p><strong>File</strong>: <code>lib/installers/ai_tools/install.sh</code></p>
+<p><strong>Orchestration</strong>: 5 steps including Claude CLI, Gemini CLI, Copilot CLI</p>
+<p><strong>Idempotency Logic</strong>: Each installation script checks npm global list</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Pattern used in 01-install-claude-cli.sh (inferred):</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> npm</span><span style="color:#9ECBFF"> list</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @anthropic-ai/claude-code</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "↷ Claude CLI already installed"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Update Behavior</strong>:</p>
+<ul>
+<li><strong>Detection</strong>: npm global package list check</li>
+<li><strong>Re-run behavior</strong>: SKIPS if package detected in npm globals</li>
+<li><strong>Version check</strong>: NONE - does not compare versions</li>
+<li><strong>Update trigger</strong>: NO automatic update mechanism</li>
+</ul>
+<p><strong>Gap Analysis</strong>:</p>
+<ul>
+<li>No <code>npm update -g</code> trigger for AI tools</li>
+<li>No version comparison with npm registry</li>
+<li>Re-running <code>start.sh</code> will NOT update Claude/Gemini/Copilot CLI</li>
+</ul>
+<hr>
+<h4 id="6-context-menu-component">6. Context Menu Component</h4>
+<p><strong>File</strong>: <code>lib/installers/context_menu/install.sh</code></p>
+<p><strong>Idempotency Check</strong>: Checks for script file existence</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Pattern (inferred from verification):</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/.local/share/nautilus/scripts/Open in Ghostty"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "↷ Context menu already installed"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Update Behavior</strong>:</p>
+<ul>
+<li><strong>Detection</strong>: Script file existence check</li>
+<li><strong>Re-run behavior</strong>: SKIPS if script exists</li>
+<li><strong>Version check</strong>: NONE</li>
+<li><strong>Update trigger</strong>: NO automatic update mechanism</li>
+</ul>
+<p><strong>Gap Analysis</strong>:</p>
+<ul>
+<li>No content comparison (script could be outdated)</li>
+<li>No detection of changes in repository version</li>
+<li>Re-running <code>start.sh</code> will NOT update context menu script</li>
+</ul>
+<hr>
+<h3 id="orchestrator-level-idempotency-logic">Orchestrator-Level Idempotency Logic</h3>
+<p><strong>File</strong>: <code>start.sh</code> (lines 257-349)</p>
+<p><strong>Main Execution Flow</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Lines 264-267: Task completion check</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> is_task_completed</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> &#x26;&#x26; [ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$FORCE_ALL</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    skip_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Key Behaviors</strong>:</p>
+<ol>
+<li><strong>State Persistence</strong>: Task completion stored in state file</li>
+<li><strong>Skip Logic</strong>: Completed tasks skipped unless <code>--force-all</code> flag used</li>
+<li><strong>No Version Tracking</strong>: State only tracks completion, not versions</li>
+<li><strong>Modular Script Execution</strong>: Delegates to component-specific scripts</li>
+</ol>
+<p><strong>Update Commands Available</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#6A737D">                    # Fresh install or skip completed</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --force-all</span><span style="color:#6A737D">        # Force reinstall ALL components (nuclear option)</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --resume</span><span style="color:#6A737D">           # Resume interrupted installation</span></span></code></pre>
+<hr>
+<h3 id="external-update-mechanism">External Update Mechanism</h3>
+<p><strong>File</strong>: <code>scripts/check_updates.sh</code></p>
+<p>This script provides SEPARATE update functionality:</p>
+<p><strong>Repository Update Logic</strong> (lines 56-98):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">check_repo_updates</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#79B8FF">    cd</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$REPO_DIR</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> local_commit</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> rev-parse</span><span style="color:#9ECBFF"> HEAD</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> remote_commit</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> rev-parse</span><span style="color:#9ECBFF"> origin/main</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$local_commit</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> !=</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$remote_commit</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "🆕 Repository updates available!"</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Configuration Update Logic</strong> (lines 100-179):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">check_config_updates</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> needs_update</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">false</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Check for key optimizations</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#F97583"> !</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "linux-cgroup.*single-instance"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$config_file</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "📋 Missing: Linux CGroup single-instance optimization"</span></span>
+<span class="line"><span style="color:#E1E4E8">        needs_update</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">true</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#6A737D">    # ... more checks</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>CRITICAL FINDING</strong>:</p>
+<ul>
+<li><code>check_updates.sh</code> is a SEPARATE SCRIPT - NOT integrated into <code>start.sh</code></li>
+<li>Updates ONLY Ghostty configuration files, not binaries or other components</li>
+<li>Does NOT update: ZSH plugins, UV, fnm, Node.js, AI tools, context menu</li>
+</ul>
+<hr>
+<h3 id="summary-current-update-behavior">Summary: Current Update Behavior</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Component</th><th>Idempotent?</th><th>Version Check?</th><th>Auto-Update?</th><th>Update Method</th></tr></thead><tbody><tr><td>Ghostty</td><td>✅ Yes (binary exists)</td><td>❌ No</td><td>❌ No</td><td>Manual rebuild required</td></tr><tr><td>ZSH</td><td>✅ Yes (comprehensive)</td><td>❌ No</td><td>❌ No</td><td>Manual <code>upgrade_oh_my_zsh</code></td></tr><tr><td>Python UV</td><td>✅ Yes (binary exists)</td><td>⚠️ Display only</td><td>❌ No</td><td>Manual <code>uv self-update</code></td></tr><tr><td>Node.js FNM</td><td>✅ Yes (binary exists)</td><td>❌ No</td><td>❌ No</td><td>Manual <code>fnm install latest</code></td></tr><tr><td>AI Tools</td><td>✅ Yes (npm check)</td><td>❌ No</td><td>❌ No</td><td>Manual <code>npm update -g</code></td></tr><tr><td>Context Menu</td><td>✅ Yes (file exists)</td><td>❌ No</td><td>❌ No</td><td>Manual re-copy script</td></tr></tbody></table>
+<p><strong>Conclusion</strong>: Re-running <code>./start.sh</code> will <strong>SKIP ALL already-installed components</strong>. No automatic update mechanism exists.</p>
+<hr>
+<h2 id="task-2-findings-snap-to-apt-migration-assessment">Task 2 Findings: Snap-to-APT Migration Assessment</h2>
+<h3 id="investigation-methodology">Investigation Methodology</h3>
+<ol>
+<li>Searched all prerequisite check scripts for snap/apt/dpkg references</li>
+<li>Analyzed installation scripts for package manager usage</li>
+<li>Reviewed component installation methods</li>
+<li>Assessed package conflict detection logic</li>
+</ol>
+<h3 id="search-results">Search Results</h3>
+<p><strong>Snap References</strong>: NONE FOUND in any installation script</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Search command executed:</span></span>
+<span class="line"><span style="color:#B392F0">grep</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> "snap"</span><span style="color:#9ECBFF"> lib/installers/</span><span style="color:#79B8FF">**</span><span style="color:#9ECBFF">/01-install-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.sh</span></span>
+<span class="line"><span style="color:#6A737D"># Result: No matches found</span></span></code></pre>
+<p><strong>APT/DPKG References</strong>: MINIMAL - only in warnings/suggestions</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Only occurrence: Context menu prerequisites check</span></span>
+<span class="line"><span style="color:#B392F0">lib/installers/context_menu/steps/00-check-prerequisites.sh:16:</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "ERROR"</span><span style="color:#9ECBFF"> "  Install with: sudo apt install nautilus"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Python UV prerequisites check - removal suggestion</span></span>
+<span class="line"><span style="color:#B392F0">lib/installers/python_uv/steps/00-check-prerequisites.sh:54:</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "  - To remove conflicts: sudo apt remove python3-pip python3-poetry"</span></span></code></pre>
+<hr>
+<h3 id="component-by-component-package-manager-analysis">Component-by-Component Package Manager Analysis</h3>
+<h4 id="1-ghostty---source-build-no-package-manager">1. Ghostty - Source Build (NO package manager)</h4>
+<p><strong>Installation Method</strong>:</p>
+<ul>
+<li>Manual Zig compiler download (tarball from ziglang.org)</li>
+<li>Git clone from GitHub</li>
+<li>Zig build from source</li>
+<li>Binary installed to <code>~/.local/share/ghostty/bin/</code></li>
+</ul>
+<p><strong>Package Manager Usage</strong>: NONE
+<strong>Snap Conflict Risk</strong>: ZERO</p>
+<hr>
+<h4 id="2-zsh---assumes-system-package-no-management">2. ZSH - Assumes System Package (NO management)</h4>
+<p><strong>Installation Method</strong>:</p>
+<ul>
+<li>Assumes ZSH already installed (Ubuntu 25.10 default)</li>
+<li>Oh My ZSH installed via official installer script</li>
+<li>Plugins cloned from GitHub repositories</li>
+</ul>
+<p><strong>Package Manager Usage</strong>: NONE (assumes pre-existing)
+<strong>Snap Conflict Risk</strong>: LOW - ZSH typically installed via apt by Ubuntu</p>
+<p><strong>Potential Conflict Scenario</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># If ZSH was installed via snap (unlikely):</span></span>
+<span class="line"><span style="color:#B392F0">snap</span><span style="color:#9ECBFF"> list</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> zsh</span></span>
+<span class="line"><span style="color:#6A737D"># System would NOT detect this - no snap check exists</span></span></code></pre>
+<hr>
+<h4 id="3-python-uv---standalone-installer-no-package-manager">3. Python UV - Standalone Installer (NO package manager)</h4>
+<p><strong>Installation Method</strong>:</p>
+<ul>
+<li>Official UV installer script (curl | bash)</li>
+<li>Self-contained binary installation</li>
+</ul>
+<p><strong>Package Manager Usage</strong>: NONE
+<strong>Snap Conflict Risk</strong>: ZERO</p>
+<p><strong>Conflict Detection</strong>: Warns about conflicting tools (pip, poetry, pipenv) but does NOT check snap</p>
+<hr>
+<h4 id="4-nodejs-fnm---standalone-installer-no-package-manager">4. Node.js FNM - Standalone Installer (NO package manager)</h4>
+<p><strong>Installation Method</strong>:</p>
+<ul>
+<li>Official fnm installer script</li>
+<li>Node.js installed via fnm (not system package manager)</li>
+</ul>
+<p><strong>Package Manager Usage</strong>: NONE
+<strong>Snap Conflict Risk</strong>: LOW - fnm manages its own Node.js versions</p>
+<p><strong>Conflict Detection</strong>: Warns about nvm/n/asdf but does NOT check snap Node.js</p>
+<p><strong>Potential Conflict Scenario</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># If Node.js installed via snap:</span></span>
+<span class="line"><span style="color:#B392F0">snap</span><span style="color:#9ECBFF"> list</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> node</span></span>
+<span class="line"><span style="color:#6A737D"># System would NOT detect this - no snap check exists</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># fnm would install its own Node.js parallel to snap version</span></span>
+<span class="line"><span style="color:#6A737D"># PATH priority would determine which version is used</span></span></code></pre>
+<hr>
+<h4 id="5-ai-tools---npm-global-installation-no-package-manager">5. AI Tools - npm Global Installation (NO package manager)</h4>
+<p><strong>Installation Method</strong>:</p>
+<ul>
+<li>npm global install (@anthropic-ai/claude-code, etc.)</li>
+<li>Requires Node.js (via fnm from step 4)</li>
+</ul>
+<p><strong>Package Manager Usage</strong>: npm (NOT system package manager)
+<strong>Snap Conflict Risk</strong>: ZERO (npm-only packages)</p>
+<hr>
+<h4 id="6-context-menu---manual-script-copy-no-package-manager">6. Context Menu - Manual Script Copy (NO package manager)</h4>
+<p><strong>Installation Method</strong>:</p>
+<ul>
+<li>Bash script copied to <code>~/.local/share/nautilus/scripts/</code></li>
+</ul>
+<p><strong>Package Manager Usage</strong>: NONE
+<strong>Snap Conflict Risk</strong>: ZERO</p>
+<p><strong>Dependency</strong>: Nautilus file manager (assumes installed, suggests <code>apt install nautilus</code> if missing)</p>
+<hr>
+<h3 id="snap-to-apt-migration-logic-review">Snap-to-APT Migration Logic Review</h3>
+<p><strong>FINDING</strong>: <strong>ZERO snap detection or migration logic exists anywhere in the codebase</strong></p>
+<p><strong>Search Scope</strong>:</p>
+<ul>
+<li>All prerequisite check scripts (00-check-prerequisites.sh)</li>
+<li>All installation scripts (01-install-*.sh)</li>
+<li>All verification scripts</li>
+<li>Orchestrator logic (start.sh)</li>
+<li>Update checker (scripts/check_updates.sh)</li>
+</ul>
+<p><strong>Code References Where Snap Detection SHOULD Exist (but doesn’t)</strong>:</p>
+<ol>
+<li>
+<p><strong>Ghostty Prerequisites</strong> (<code>lib/installers/ghostty/steps/00-check-prerequisites.sh</code>):</p>
+<ul>
+<li>SHOULD check: <code>snap list | grep ghostty</code></li>
+<li>SHOULD check: <code>which ghostty</code> (to detect snap-installed binary)</li>
+<li>Currently: Only checks Zig compiler version</li>
+</ul>
+</li>
+<li>
+<p><strong>Node.js Prerequisites</strong> (<code>lib/installers/nodejs_fnm/steps/00-check-prerequisites.sh</code>):</p>
+<ul>
+<li>SHOULD check: <code>snap list | grep node</code></li>
+<li>Currently: Only warns about nvm/n/asdf, NOT snap</li>
+</ul>
+</li>
+<li>
+<p><strong>ZSH Prerequisites</strong> (<code>lib/installers/zsh/steps/00-check-prerequisites.sh</code>):</p>
+<ul>
+<li>SHOULD check: <code>snap list | grep zsh</code></li>
+<li>Currently: Only checks if ZSH command exists</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="risk-assessment-snap-to-apt-migration">Risk Assessment: Snap-to-APT Migration</h3>
+<h4 id="scenario-1-ghostty-installed-via-snap">Scenario 1: Ghostty Installed via Snap</h4>
+<p><strong>Likelihood</strong>: LOW (Ghostty snap package status unknown)</p>
+<p><strong>Current System Behavior</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># User has: snap install ghostty</span></span>
+<span class="line"><span style="color:#6A737D"># System checks:</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">!</span><span style="color:#F97583"> -x</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_INSTALL_DIR</span><span style="color:#9ECBFF">/bin/ghostty"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">    # Would FAIL - snap ghostty is at /snap/bin/ghostty</span></span>
+<span class="line"><span style="color:#6A737D">    # System would proceed with source build installation</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>Two Ghostty installations coexist (snap + source-built)</li>
+<li>Desktop launcher might point to wrong version</li>
+<li>User confusion about which version is running</li>
+</ul>
+<p><strong>Data Loss Risk</strong>: ZERO (snap installation untouched)
+<strong>Config Conflict Risk</strong>: MEDIUM (both try to use ~/.config/ghostty/)</p>
+<hr>
+<h4 id="scenario-2-nodejs-installed-via-snap">Scenario 2: Node.js Installed via Snap</h4>
+<p><strong>Likelihood</strong>: MEDIUM (Ubuntu sometimes auto-installs Node.js via snap)</p>
+<p><strong>Current System Behavior</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># User has: snap install node</span></span>
+<span class="line"><span style="color:#6A737D"># System checks:</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> verify_nodejs_fnm</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">    # Checks: fnm binary exists AND node command exists</span></span>
+<span class="line"><span style="color:#6A737D">    # Would PASS if snap node is in PATH</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span><span style="color:#6A737D">  # Skip installation</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>fnm NOT installed (system thinks Node.js already exists)</li>
+<li>Snap Node.js continues running</li>
+<li>AI tools installation may use snap Node.js instead of fnm-managed version</li>
+<li>Constitutional violation: fnm EXCLUSIVE requirement not enforced</li>
+</ul>
+<p><strong>Data Loss Risk</strong>: ZERO
+<strong>Config Conflict Risk</strong>: LOW
+<strong>Constitutional Compliance Risk</strong>: HIGH (fnm exclusivity violated)</p>
+<hr>
+<h4 id="scenario-3-pythonuv-installed-via-snap">Scenario 3: Python/UV Installed via Snap</h4>
+<p><strong>Likelihood</strong>: LOW (UV not typically distributed via snap)</p>
+<p><strong>Current System Behavior</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># User has: snap install python3-pip</span></span>
+<span class="line"><span style="color:#6A737D"># System checks:</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> command_exists</span><span style="color:#9ECBFF"> "pip"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "⚠ Conflicting package manager detected: pip"</span></span>
+<span class="line"><span style="color:#6A737D">    # WARNING ONLY - continues with UV installation</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Result</strong>:</p>
+<ul>
+<li>UV installed successfully (snap pip ignored)</li>
+<li>Both pip (snap) and UV coexist</li>
+<li>Constitutional warning displayed</li>
+</ul>
+<p><strong>Data Loss Risk</strong>: ZERO
+<strong>Config Conflict Risk</strong>: LOW (UV and pip can coexist)</p>
+<hr>
+<h3 id="snap-migration-strategy-analysis">Snap Migration Strategy Analysis</h3>
+<p><strong>Current Approach</strong>: NONE - System assumes clean installation or compatible package manager usage</p>
+<p><strong>Recommended Approach</strong> (NOT implemented):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Pseudo-code for proper snap-to-apt migration</span></span>
+<span class="line"><span style="color:#B392F0">migrate_from_snap</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> package_name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> apt_alternative</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$2</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Step 1: Detect snap installation</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> snap</span><span style="color:#9ECBFF"> list</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "^${</span><span style="color:#E1E4E8">package_name</span><span style="color:#9ECBFF">} "</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "Snap package detected: </span><span style="color:#E1E4E8">$package_name</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        # Step 2: Backup snap data/config</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> snap_data_dir</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/home/</span><span style="color:#E1E4E8">$USER</span><span style="color:#9ECBFF">/snap/</span><span style="color:#E1E4E8">$package_name</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$snap_data_dir</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#E1E4E8">            backup_dir</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/tmp/snap-migration-backup-$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%s)"</span></span>
+<span class="line"><span style="color:#B392F0">            cp</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$snap_data_dir</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$backup_dir</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">            log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Backed up snap data to: </span><span style="color:#E1E4E8">$backup_dir</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        # Step 3: Remove snap package</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Removing snap package: </span><span style="color:#E1E4E8">$package_name</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        sudo</span><span style="color:#9ECBFF"> snap</span><span style="color:#9ECBFF"> remove</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$package_name</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        # Step 4: Install apt alternative</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Installing apt package: </span><span style="color:#E1E4E8">$apt_alternative</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -y</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$apt_alternative</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">        # Step 5: Restore config (if compatible)</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$backup_dir</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">            # Copy config to appropriate location</span></span>
+<span class="line"><span style="color:#6A737D">            # (location varies by package)</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "SUCCESS"</span><span style="color:#9ECBFF"> "Migrated from snap to apt: </span><span style="color:#E1E4E8">$package_name</span><span style="color:#9ECBFF"> → </span><span style="color:#E1E4E8">$apt_alternative</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Why This Is NOT Implemented</strong>:</p>
+<ol>
+<li>System uses custom installation methods (source builds, installer scripts)</li>
+<li>No components rely on apt/snap package managers</li>
+<li>Low conflict risk due to installation method choice</li>
+<li>Constitutional preference for source builds over packages</li>
+</ol>
+<hr>
+<h3 id="best-practices-from-package-management-research-based">Best Practices from Package Management (Research-Based)</h3>
+<h4 id="snap-to-apt-migration-best-practices-linux-community-standards">Snap-to-APT Migration Best Practices (Linux Community Standards)</h4>
+<ol>
+<li>
+<p><strong>Detection Phase</strong>:</p>
+<ul>
+<li>Check <code>snap list</code> for package presence</li>
+<li>Verify snap service status: <code>systemctl is-active snapd</code></li>
+<li>Detect snap mount points: <code>/snap/$package/current</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Data Preservation Phase</strong>:</p>
+<ul>
+<li>Backup snap data: <code>/home/$USER/snap/$package/</code></li>
+<li>Backup snap config: <code>/var/snap/$package/</code></li>
+<li>Document installed version: <code>snap info $package</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Migration Phase</strong>:</p>
+<ul>
+<li>Stop services: <code>sudo systemctl stop snap.$package.*</code></li>
+<li>Remove snap package: <code>sudo snap remove $package</code></li>
+<li>Install apt alternative: <code>sudo apt install $package</code></li>
+<li>Verify apt installation: <code>dpkg -l | grep $package</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Restoration Phase</strong>:</p>
+<ul>
+<li>Map snap config paths to apt config paths</li>
+<li>Copy/convert configuration files</li>
+<li>Restart services: <code>sudo systemctl start $package</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Validation Phase</strong>:</p>
+<ul>
+<li>Verify functionality: Test core features</li>
+<li>Compare versions: Ensure apt version >= snap version</li>
+<li>Monitor for issues: Check logs for compatibility errors</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="ghostty-icon-issue-specific-investigation-1">Ghostty Icon Issue (Specific Investigation)</h2>
+<h3 id="current-state-analysis">Current State Analysis</h3>
+<p><strong>Desktop Entry File</strong>: <code>/home/kkk/.local/share/applications/ghostty.desktop</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ini"><code><span class="line"><span style="color:#B392F0">[Desktop Entry]</span></span>
+<span class="line"><span style="color:#F97583">Name</span><span style="color:#E1E4E8">=Ghostty</span></span>
+<span class="line"><span style="color:#F97583">Comment</span><span style="color:#E1E4E8">=Fast, native, feature-rich terminal emulator</span></span>
+<span class="line"><span style="color:#F97583">Exec</span><span style="color:#E1E4E8">=/home/kkk/.local/share/ghostty/bin/ghostty</span></span>
+<span class="line"><span style="color:#F97583">Icon</span><span style="color:#E1E4E8">=utilities-terminal    </span><span style="color:#6A737D"># ← PROBLEM: Generic icon, not Ghostty-specific</span></span>
+<span class="line"><span style="color:#F97583">Terminal</span><span style="color:#E1E4E8">=false</span></span>
+<span class="line"><span style="color:#F97583">Type</span><span style="color:#E1E4E8">=Application</span></span>
+<span class="line"><span style="color:#F97583">Categories</span><span style="color:#E1E4E8">=System</span><span style="color:#6A737D">;TerminalEmulator;</span></span>
+<span class="line"><span style="color:#F97583">StartupNotify</span><span style="color:#E1E4E8">=true</span></span></code></pre>
+<p><strong>Problem Identified</strong>:</p>
+<ul>
+<li>Line 32 of <code>lib/installers/ghostty/steps/07-create-desktop-entry.sh</code>:
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#E1E4E8">Icon</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">utilities-terminal</span></span></code></pre>
+</li>
+<li>This uses the system’s generic terminal emulator icon</li>
+<li>No Ghostty-specific icon installed or referenced</li>
+</ul>
+<hr>
+<h3 id="icon-search-results">Icon Search Results</h3>
+<p><strong>System Icon Directories Checked</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># User-local icons</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> /home/kkk/.local/share/icons</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*ghostty*"</span></span>
+<span class="line"><span style="color:#6A737D"># Result: No ghostty icons found</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># System icons (not checked - would require root)</span></span>
+<span class="line"><span style="color:#6A737D"># /usr/share/icons/</span></span>
+<span class="line"><span style="color:#6A737D"># /usr/share/pixmaps/</span></span></code></pre>
+<p><strong>Repository Icon Search</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.png"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.svg"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.ico"</span></span>
+<span class="line"><span style="color:#6A737D"># Result: No output (likely no icon files in repo)</span></span></code></pre>
+<p><strong>Ghostty Installation Directory</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /home/kkk/.local/share/ghostty/</span></span>
+<span class="line"><span style="color:#6A737D"># Result:</span></span>
+<span class="line"><span style="color:#6A737D"># drwxrwxr-x bin/</span></span>
+<span class="line"><span style="color:#6A737D"># drwxrwxr-x share/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> /home/kkk/.local/share/ghostty/share</span><span style="color:#79B8FF"> -type</span><span style="color:#9ECBFF"> f</span></span>
+<span class="line"><span style="color:#6A737D"># Result: No output (share directory empty or no files)</span></span></code></pre>
+<hr>
+<h3 id="root-cause-analysis">Root Cause Analysis</h3>
+<p><strong>Why Icon Is Missing</strong>:</p>
+<ol>
+<li>
+<p><strong>Desktop Entry Creation Script</strong> (<code>lib/installers/ghostty/steps/07-create-desktop-entry.sh</code>):</p>
+<ul>
+<li>Hardcodes generic icon name: <code>Icon=utilities-terminal</code></li>
+<li>Does NOT extract icon from Ghostty build artifacts</li>
+<li>Does NOT download icon from Ghostty repository</li>
+</ul>
+</li>
+<li>
+<p><strong>Build Process</strong> (<code>lib/installers/ghostty/steps/04-build-ghostty.sh</code> - not read yet):</p>
+<ul>
+<li>Likely builds binary only</li>
+<li>May NOT install icon files during build</li>
+<li>Ghostty repository may include icon in <code>assets/</code> or <code>resources/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Installation Process</strong> (<code>lib/installers/ghostty/steps/05-install-binary.sh</code> - not read yet):</p>
+<ul>
+<li>Installs binary to <code>~/.local/share/ghostty/bin/</code></li>
+<li>May NOT copy icon files to standard icon directories</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="icon-resolution-strategies">Icon Resolution Strategies</h3>
+<h4 id="strategy-1-extract-icon-from-ghostty-repository-recommended">Strategy 1: Extract Icon from Ghostty Repository (RECOMMENDED)</h4>
+<p><strong>Implementation Steps</strong>:</p>
+<ol>
+<li>
+<p>Locate icon in Ghostty repository:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># After git clone in 03-clone-ghostty.sh</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> /tmp/ghostty-build/ghostty</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.png"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.svg"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.ico"</span></span></code></pre>
+</li>
+<li>
+<p>Copy icon to standard location:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># In new step or expanded 07-create-desktop-entry.sh</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> ~/.local/share/icons/hicolor/scalable/apps/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> /tmp/ghostty-build/ghostty/assets/icon.svg</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">   ~/.local/share/icons/hicolor/scalable/apps/ghostty.svg</span></span></code></pre>
+</li>
+<li>
+<p>Update desktop entry:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ini"><code><span class="line"><span style="color:#F97583">Icon</span><span style="color:#E1E4E8">=ghostty  </span><span style="color:#6A737D"># System will auto-resolve to ~/.local/share/icons/.../ghostty.svg</span></span></code></pre>
+</li>
+<li>
+<p>Refresh icon cache:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">gtk-update-icon-cache</span><span style="color:#9ECBFF"> ~/.local/share/icons/hicolor/</span></span></code></pre>
+</li>
+</ol>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Uses official Ghostty icon (brand consistency)</li>
+<li>Follows XDG standards (hicolor theme)</li>
+<li>Scalable SVG format (resolution-independent)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Requires icon file exists in Ghostty repository</li>
+<li>Adds complexity to installation script</li>
+</ul>
+<hr>
+<h4 id="strategy-2-embed-icon-in-repository-alternative">Strategy 2: Embed Icon in Repository (ALTERNATIVE)</h4>
+<p><strong>Implementation Steps</strong>:</p>
+<ol>
+<li>
+<p>Download Ghostty icon to repository:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Manual one-time step</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> configs/ghostty/icons/</span></span>
+<span class="line"><span style="color:#B392F0">wget</span><span style="color:#79B8FF"> -O</span><span style="color:#9ECBFF"> configs/ghostty/icons/ghostty.svg</span><span style="color:#9ECBFF"> https://github.com/ghostty-org/ghostty/raw/main/assets/icon.svg</span></span></code></pre>
+</li>
+<li>
+<p>Copy icon during installation:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># In 07-create-desktop-entry.sh</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> ~/.local/share/icons/hicolor/scalable/apps/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$REPO_ROOT</span><span style="color:#9ECBFF">/configs/ghostty/icons/ghostty.svg"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">   ~/.local/share/icons/hicolor/scalable/apps/ghostty.svg</span></span></code></pre>
+</li>
+<li>
+<p>Update desktop entry (same as Strategy 1)</p>
+</li>
+</ol>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Icon always available (no dependency on external source)</li>
+<li>Faster installation (no download during build)</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Icon may become outdated if Ghostty updates branding</li>
+<li>Increases repository size (minor)</li>
+</ul>
+<hr>
+<h4 id="strategy-3-use-embedded-icon-path-workaround">Strategy 3: Use Embedded Icon Path (WORKAROUND)</h4>
+<p><strong>Implementation Steps</strong>:</p>
+<ol>
+<li>
+<p>If Ghostty binary includes embedded icon, reference absolute path:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ini"><code><span class="line"><span style="color:#F97583">Icon</span><span style="color:#E1E4E8">=/home/kkk/.local/share/ghostty/share/icons/ghostty.svg</span></span></code></pre>
+</li>
+<li>
+<p>Update desktop entry to use absolute path</p>
+</li>
+</ol>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Simple modification to desktop entry</li>
+<li>No additional file copying</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Icon may not exist (requires investigation)</li>
+<li>Absolute path makes desktop entry non-portable</li>
+</ul>
+<hr>
+<h3 id="recommended-fix-summary">Recommended Fix (Summary)</h3>
+<p><strong>Immediate Fix</strong> (Manual):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Find icon in Ghostty repository</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /tmp/ghostty-build/ghostty</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> .</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.svg"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.png"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -i</span><span style="color:#9ECBFF"> icon</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Copy to standard location</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> ~/.local/share/icons/hicolor/scalable/apps/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> path/to/icon.svg</span><span style="color:#9ECBFF"> ~/.local/share/icons/hicolor/scalable/apps/ghostty.svg</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Update desktop entry</span></span>
+<span class="line"><span style="color:#B392F0">sed</span><span style="color:#79B8FF"> -i</span><span style="color:#9ECBFF"> 's/Icon=utilities-terminal/Icon=ghostty/'</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">    ~/.local/share/applications/ghostty.desktop</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Refresh icon cache</span></span>
+<span class="line"><span style="color:#B392F0">gtk-update-icon-cache</span><span style="color:#9ECBFF"> ~/.local/share/icons/hicolor/</span></span></code></pre>
+<p><strong>Long-term Fix</strong> (Requires Implementation):</p>
+<ul>
+<li>Modify <code>lib/installers/ghostty/steps/07-create-desktop-entry.sh</code></li>
+<li>Add icon extraction/installation logic</li>
+<li>Update desktop entry template to use <code>Icon=ghostty</code></li>
+</ul>
+<hr>
+<h2 id="context7-best-practices-summary">Context7 Best Practices Summary</h2>
+<p><strong>NOTE</strong>: Context7 MCP server is configured but command-line invocation failed. Best practices below are based on Linux community standards research.</p>
+<h3 id="package-management-best-practices">Package Management Best Practices</h3>
+<ol>
+<li>
+<p><strong>Idempotent Installation Scripts</strong>:</p>
+<ul>
+<li>Always check if component exists before installation</li>
+<li>Use exit code 2 for “already installed” (skip) vs 0 for “proceed”</li>
+<li>Store version information for comparison</li>
+</ul>
+</li>
+<li>
+<p><strong>Update Detection</strong>:</p>
+<ul>
+<li>Compare installed version with latest available version</li>
+<li>Use semantic versioning for comparison</li>
+<li>Trigger updates only when new version available</li>
+</ul>
+</li>
+<li>
+<p><strong>Snap-to-APT Migration</strong>:</p>
+<ul>
+<li>Always backup data before package removal</li>
+<li>Verify apt alternative exists before removing snap</li>
+<li>Test functionality after migration</li>
+<li>Provide rollback mechanism</li>
+</ul>
+</li>
+<li>
+<p><strong>Desktop Entry Icons</strong>:</p>
+<ul>
+<li>Follow XDG Base Directory Specification</li>
+<li>Use standard icon paths: <code>~/.local/share/icons/hicolor/{size}/apps/{name}.{ext}</code></li>
+<li>Provide multiple sizes (16x16, 32x32, 48x48, scalable SVG)</li>
+<li>Reference icon by name (not absolute path) in desktop entry</li>
+<li>Refresh icon cache after installation: <code>gtk-update-icon-cache</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Conflict Detection</strong>:</p>
+<ul>
+<li>Check for all possible package managers: apt, snap, flatpak, appimage</li>
+<li>Warn user about conflicts before proceeding</li>
+<li>Provide clear removal instructions</li>
+<li>Log all detected conflicts for debugging</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="risk-analysis">Risk Analysis</h2>
+<h3 id="update-logic-risks">Update Logic Risks</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead><tbody><tr><td>Outdated components</td><td>HIGH</td><td>MEDIUM</td><td>Users must manually track updates</td></tr><tr><td>Security vulnerabilities</td><td>MEDIUM</td><td>HIGH</td><td>No automatic security patch mechanism</td></tr><tr><td>Feature gap</td><td>HIGH</td><td>LOW</td><td>Users miss new features until manual update</td></tr><tr><td>Dependency version mismatch</td><td>LOW</td><td>MEDIUM</td><td>Components use standalone installers</td></tr></tbody></table>
+<p><strong>Overall Risk Level</strong>: MEDIUM - Functional but requires manual maintenance</p>
+<hr>
+<h3 id="snap-to-apt-migration-risks">Snap-to-APT Migration Risks</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead><tbody><tr><td>Conflicting package installations</td><td>LOW</td><td>MEDIUM</td><td>System uses custom installers</td></tr><tr><td>Constitutional violations (fnm/UV exclusivity)</td><td>MEDIUM</td><td>MEDIUM</td><td>Add snap detection to prerequisites</td></tr><tr><td>Data loss during migration</td><td>VERY LOW</td><td>HIGH</td><td>No migration logic exists (no risk)</td></tr><tr><td>User confusion with parallel installs</td><td>MEDIUM</td><td>LOW</td><td>Better documentation needed</td></tr></tbody></table>
+<p><strong>Overall Risk Level</strong>: LOW - Minimal package manager reliance</p>
+<hr>
+<h3 id="ghostty-icon-risks">Ghostty Icon Risks</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead><tbody><tr><td>Generic icon confuses users</td><td>HIGH</td><td>LOW</td><td>User experience issue only</td></tr><tr><td>Desktop launcher not easily identifiable</td><td>HIGH</td><td>LOW</td><td>Functional impact minimal</td></tr><tr><td>Brand inconsistency</td><td>HIGH</td><td>VERY LOW</td><td>Aesthetic issue only</td></tr></tbody></table>
+<p><strong>Overall Risk Level</strong>: VERY LOW - Cosmetic issue</p>
+<hr>
+<h2 id="recommendations-for-future-implementation">Recommendations (For Future Implementation)</h2>
+<h3 id="priority-1-update-detection-mechanism-high-priority">Priority 1: Update Detection Mechanism (HIGH PRIORITY)</h3>
+<p><strong>Create New Script</strong>: <code>scripts/check_component_updates.sh</code></p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Check each component’s installed version</li>
+<li>Compare with latest release (GitHub API, npm registry, etc.)</li>
+<li>Display update recommendations</li>
+<li>Optional: <code>--auto-update</code> flag for automatic upgrades</li>
+</ul>
+<p><strong>Integration</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Add to daily cron or user prompt</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_component_updates.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Output example:</span></span>
+<span class="line"><span style="color:#6A737D"># ✓ Ghostty: 1.1.4 (latest)</span></span>
+<span class="line"><span style="color:#6A737D"># ⚠ Claude CLI: 0.5.2 (0.6.0 available) - run: npm update -g @anthropic-ai/claude-code</span></span>
+<span class="line"><span style="color:#6A737D"># ⚠ Node.js: v25.2.0 (v25.3.0 available) - run: fnm install latest &#x26;&#x26; fnm use latest</span></span></code></pre>
+<hr>
+<h3 id="priority-2-snap-detection-medium-priority">Priority 2: Snap Detection (MEDIUM PRIORITY)</h3>
+<p><strong>Modify All Prerequisite Check Scripts</strong>:</p>
+<p>Add snap detection function to <code>lib/init.sh</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">check_snap_installed</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> package_name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> snap</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        snap</span><span style="color:#9ECBFF"> list</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "^${</span><span style="color:#E1E4E8">package_name</span><span style="color:#9ECBFF">} "</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#F97583">return</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>Update each component’s prerequisite check:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># In lib/installers/ghostty/steps/00-check-prerequisites.sh</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> check_snap_installed</span><span style="color:#9ECBFF"> "ghostty"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "⚠ Ghostty installed via snap detected"</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "  System will install source-built version in parallel"</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "  Recommendation: sudo snap remove ghostty"</span></span>
+<span class="line"><span style="color:#6A737D">    # Continue with installation (warning only)</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<hr>
+<h3 id="priority-3-ghostty-icon-fix-low-priority---cosmetic">Priority 3: Ghostty Icon Fix (LOW PRIORITY - Cosmetic)</h3>
+<p><strong>Modify</strong>: <code>lib/installers/ghostty/steps/07-create-desktop-entry.sh</code></p>
+<p><strong>Add Icon Installation Logic</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># After cloning Ghostty repository (step 03)</span></span>
+<span class="line"><span style="color:#B392F0">log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Installing Ghostty icon..."</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Find icon in Ghostty repository</span></span>
+<span class="line"><span style="color:#F97583">local</span><span style="color:#E1E4E8"> icon_file</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> icon_path </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">    "</span><span style="color:#E1E4E8">$GHOSTTY_BUILD_DIR</span><span style="color:#9ECBFF">/ghostty/assets/icon.svg"</span><span style="color:#E1E4E8"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">    "</span><span style="color:#E1E4E8">$GHOSTTY_BUILD_DIR</span><span style="color:#9ECBFF">/ghostty/resources/ghostty.svg"</span><span style="color:#E1E4E8"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">    "</span><span style="color:#E1E4E8">$GHOSTTY_BUILD_DIR</span><span style="color:#9ECBFF">/ghostty/src/apprt/gtk/resources/com.mitchellh.ghostty.svg"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$icon_path</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#E1E4E8">        icon_file</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$icon_path</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        break</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">done</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-n</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$icon_file</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">    # Install icon to XDG standard location</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> icon_dir</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/.local/share/icons/hicolor/scalable/apps"</span></span>
+<span class="line"><span style="color:#B392F0">    mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$icon_dir</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">    cp</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$icon_file</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$icon_dir</span><span style="color:#9ECBFF">/ghostty.svg"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Refresh icon cache</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> gtk-update-icon-cache</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        gtk-update-icon-cache</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/.local/share/icons/hicolor/"</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> true</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "SUCCESS"</span><span style="color:#9ECBFF"> "✓ Ghostty icon installed"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Update desktop entry to use specific icon</span></span>
+<span class="line"><span style="color:#E1E4E8">    Icon</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">ghostty</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "⚠ Ghostty icon not found in repository, using generic icon"</span></span>
+<span class="line"><span style="color:#E1E4E8">    Icon</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">utilities-terminal</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Create desktop entry with appropriate icon</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$desktop_dir</span><span style="color:#9ECBFF">/ghostty.desktop"</span><span style="color:#F97583"> &#x3C;&#x3C;</span><span style="color:#9ECBFF">EOF</span></span>
+<span class="line"><span style="color:#9ECBFF">[Desktop Entry]</span></span>
+<span class="line"><span style="color:#9ECBFF">Name=Ghostty</span></span>
+<span class="line"><span style="color:#9ECBFF">Comment=Fast, native, feature-rich terminal emulator</span></span>
+<span class="line"><span style="color:#9ECBFF">Exec=</span><span style="color:#E1E4E8">$GHOSTTY_INSTALL_DIR</span><span style="color:#9ECBFF">/bin/ghostty</span></span>
+<span class="line"><span style="color:#9ECBFF">Icon=</span><span style="color:#E1E4E8">$Icon</span></span>
+<span class="line"><span style="color:#9ECBFF">Terminal=false</span></span>
+<span class="line"><span style="color:#9ECBFF">Type=Application</span></span>
+<span class="line"><span style="color:#9ECBFF">Categories=System;TerminalEmulator;</span></span>
+<span class="line"><span style="color:#9ECBFF">StartupNotify=true</span></span>
+<span class="line"><span style="color:#9ECBFF">EOF</span></span></code></pre>
+<hr>
+<h3 id="priority-4-integration-with-startsh-future">Priority 4: Integration with start.sh (FUTURE)</h3>
+<p><strong>Add Update Check Flag</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># New flag: --check-updates</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --check-updates</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Behavior:</span></span>
+<span class="line"><span style="color:#6A737D"># 1. Run through all components</span></span>
+<span class="line"><span style="color:#6A737D"># 2. Compare installed vs available versions</span></span>
+<span class="line"><span style="color:#6A737D"># 3. Offer to update outdated components</span></span>
+<span class="line"><span style="color:#6A737D"># 4. Use --force-all for components needing updates</span></span></code></pre>
+<hr>
+<h3 id="priority-5-automated-update-cron-job-future">Priority 5: Automated Update Cron Job (FUTURE)</h3>
+<p><strong>Create</strong>: <code>scripts/auto_update_components.sh</code></p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Silent update check (weekly cron)</li>
+<li>Email notification if updates available</li>
+<li>Optional: Automatic non-breaking updates</li>
+<li>Manual confirmation for breaking changes</li>
+</ul>
+<hr>
+<h2 id="code-references">Code References</h2>
+<h3 id="files-analyzed-complete-list">Files Analyzed (Complete List)</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File Path</th><th>Purpose</th><th>Lines Read</th></tr></thead><tbody><tr><td><code>lib/installers/ghostty/install.sh</code></td><td>Ghostty orchestrator</td><td>1-42 (full)</td></tr><tr><td><code>lib/installers/ghostty/steps/00-check-prerequisites.sh</code></td><td>Ghostty prereq check</td><td>1-62 (full)</td></tr><tr><td><code>lib/installers/ghostty/steps/07-create-desktop-entry.sh</code></td><td>Desktop entry creation</td><td>1-47 (full)</td></tr><tr><td><code>lib/installers/ghostty/steps/08-verify-installation.sh</code></td><td>Ghostty verification</td><td>1-53 (full)</td></tr><tr><td><code>lib/installers/zsh/install.sh</code></td><td>ZSH orchestrator</td><td>1-39 (full)</td></tr><tr><td><code>lib/installers/zsh/steps/00-check-prerequisites.sh</code></td><td>ZSH prereq check</td><td>1-57 (full)</td></tr><tr><td><code>lib/installers/zsh/steps/05-verify-installation.sh</code></td><td>ZSH verification</td><td>1-99 (full)</td></tr><tr><td><code>lib/installers/python_uv/install.sh</code></td><td>Python UV orchestrator</td><td>1-38 (full)</td></tr><tr><td><code>lib/installers/python_uv/steps/00-check-prerequisites.sh</code></td><td>UV prereq check</td><td>1-62 (full)</td></tr><tr><td><code>lib/installers/nodejs_fnm/install.sh</code></td><td>Node.js FNM orchestrator</td><td>1-38 (full)</td></tr><tr><td><code>lib/installers/nodejs_fnm/steps/00-check-prerequisites.sh</code></td><td>FNM prereq check</td><td>1-26 (full)</td></tr><tr><td><code>lib/installers/nodejs_fnm/steps/04-verify-installation.sh</code></td><td>FNM verification</td><td>1-49 (full)</td></tr><tr><td><code>lib/installers/ai_tools/install.sh</code></td><td>AI tools orchestrator</td><td>1-38 (full)</td></tr><tr><td><code>lib/installers/context_menu/install.sh</code></td><td>Context menu orchestrator</td><td>1-36 (full)</td></tr><tr><td><code>start.sh</code></td><td>Main installation orchestrator</td><td>1-602 (full)</td></tr><tr><td><code>scripts/check_updates.sh</code></td><td>Separate update checker</td><td>1-262 (full)</td></tr></tbody></table>
+<hr>
+<h2 id="appendix-investigation-commands-executed">Appendix: Investigation Commands Executed</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Component manager analysis</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/ghostty/install.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/ghostty/steps/00-check-prerequisites.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/ghostty/steps/07-create-desktop-entry.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/ghostty/steps/08-verify-installation.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/zsh/install.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/python_uv/install.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/nodejs_fnm/install.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/ai_tools/install.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> lib/installers/context_menu/install.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verification logic analysis</span></span>
+<span class="line"><span style="color:#B392F0">Glob</span><span style="color:#79B8FF"> **</span><span style="color:#9ECBFF">/00-check-prerequisites.sh</span></span>
+<span class="line"><span style="color:#B392F0">Glob</span><span style="color:#79B8FF"> **</span><span style="color:#9ECBFF">/verify</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.sh</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> start.sh</span><span style="color:#E1E4E8"> (orchestrator </span><span style="color:#9ECBFF">idempotency</span><span style="color:#9ECBFF"> logic</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">Read</span><span style="color:#9ECBFF"> scripts/check_updates.sh</span><span style="color:#E1E4E8"> (separate </span><span style="color:#9ECBFF">update</span><span style="color:#9ECBFF"> mechanism</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Snap/APT detection analysis</span></span>
+<span class="line"><span style="color:#B392F0">Grep</span><span style="color:#9ECBFF"> "snap"</span><span style="color:#9ECBFF"> lib/installers/</span><span style="color:#79B8FF">**</span><span style="color:#9ECBFF">/01-install-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.sh</span></span>
+<span class="line"><span style="color:#B392F0">Grep</span><span style="color:#9ECBFF"> "apt|dpkg|package"</span><span style="color:#9ECBFF"> lib/installers/</span><span style="color:#79B8FF">**</span><span style="color:#9ECBFF">/00-check-prerequisites.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Icon investigation</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> ~/.local/share/applications/ghostty.desktop</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> ~/.local/share/icons</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*ghostty*"</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.png"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.svg"</span><span style="color:#79B8FF"> -o</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.ico"</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> ~/.local/share/ghostty/</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> ~/.local/share/ghostty/share</span><span style="color:#79B8FF"> -type</span><span style="color:#9ECBFF"> f</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Context7 verification (failed - MCP not available in bash)</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> .env</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> CONTEXT7</span></span></code></pre>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>This comprehensive analysis reveals that the Modern TUI Installation System:</p>
+<ol>
+<li><strong>Is Fully Idempotent</strong>: Re-running <code>start.sh</code> safely skips already-installed components</li>
+<li><strong>Has NO Automatic Update Logic</strong>: Users must manually update components or force reinstall</li>
+<li><strong>Has NO Snap Migration Logic</strong>: System uses custom installation methods, minimal package manager conflict risk</li>
+<li><strong>Has a Cosmetic Icon Issue</strong>: Ghostty uses generic terminal icon instead of brand-specific icon</li>
+</ol>
+<p><strong>Next Steps</strong>: User should decide which recommendations to prioritize for implementation based on actual user pain points and usage patterns.</p>
+<hr>
+<p><strong>Report Generated</strong>: 2025-11-21
+<strong>Analysis Complete</strong>: 7/7 tasks completed
+<strong>Status</strong>: NO IMPLEMENTATION - Investigation Only</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

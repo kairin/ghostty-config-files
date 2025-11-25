@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Package Management Verification - Quick Reference | Ghostty Configuration Files</title><meta name="description" content="**Related**: [Full Design Document](package-management-verification-design.md)"><!-- OpenGraph --><meta property="og:title" content="Package Management Verification - Quick Reference"><meta property="og:description" content="**Related**: [Full Design Document](package-management-verification-design.md)"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Package Management Verification - Quick Reference</li> </ul> </div> <h1>Package Management Verification - Quick Reference</h1> <p class="text-xl text-base-content/70 mb-8">**Related**: [Full Design Document](package-management-verification-design.md)</p><h1 id="package-management-verification---quick-reference">Package Management Verification - Quick Reference</h1>
+<p><strong>Related</strong>: <a href="package-management-verification-design.md">Full Design Document</a></p>
+<hr>
+<h2 id="quick-command-reference">Quick Command Reference</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verify package state</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/manage-packages.sh</span><span style="color:#9ECBFF"> verify</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">packag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Migrate package to optimal source</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/manage-packages.sh</span><span style="color:#9ECBFF"> migrate</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">packag</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify all key packages</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/manage-packages.sh</span><span style="color:#9ECBFF"> verify-all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Generate audit report</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/manage-packages.sh</span><span style="color:#9ECBFF"> audit</span><span style="color:#79B8FF"> --json</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF"> audit-report.json</span></span></code></pre>
+<hr>
+<h2 id="core-functions">Core Functions</h2>
+<h3 id="query-package-state">Query Package State</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Get complete package information</span></span>
+<span class="line"><span style="color:#E1E4E8">state_json</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Query individual sources</span></span>
+<span class="line"><span style="color:#E1E4E8">apt_info</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">query_apt_package_info</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">snap_info</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">query_snap_package_info</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">current</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">query_current_installation</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="compare-versions">Compare Versions</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Use dpkg for accurate version comparison</span></span>
+<span class="line"><span style="color:#B392F0">compare_versions</span><span style="color:#9ECBFF"> "2.82.1"</span><span style="color:#9ECBFF"> "gt"</span><span style="color:#9ECBFF"> "2.46.0"</span><span style="color:#6A737D">  # Returns 0 (true)</span></span>
+<span class="line"><span style="color:#B392F0">compare_versions</span><span style="color:#9ECBFF"> "1.5.3"</span><span style="color:#9ECBFF"> "eq"</span><span style="color:#9ECBFF"> "1.5.3"</span><span style="color:#6A737D">    # Returns 0 (true)</span></span></code></pre>
+<h3 id="decide-preferred-source">Decide Preferred Source</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Automatically determine best package source</span></span>
+<span class="line"><span style="color:#E1E4E8">state_json</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">preferred_source</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">decide_preferred_source</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<hr>
+<h2 id="decision-priority-matrix">Decision Priority Matrix</h2>
+<ol>
+<li>
+<p><strong>Constitutional Requirements</strong> (CLAUDE.md)</p>
+<ul>
+<li>Node.js → fnm (mandatory)</li>
+<li>Ghostty → source build or verified snap</li>
+</ul>
+</li>
+<li>
+<p><strong>Official Source Preference</strong></p>
+<ul>
+<li>GitHub CLI → Official apt repository</li>
+<li>Check for publisher verification</li>
+</ul>
+</li>
+<li>
+<p><strong>Version Currency</strong></p>
+<ul>
+<li>Always prefer newer versions</li>
+<li>Compare: apt vs snap vs upstream</li>
+</ul>
+</li>
+<li>
+<p><strong>Security &#x26; Verification</strong></p>
+<ul>
+<li>Snap: Check publisher verification</li>
+<li>Snap: Avoid strict confinement for terminal apps</li>
+</ul>
+</li>
+<li>
+<p><strong>System Integration</strong></p>
+<ul>
+<li>Consider confinement model</li>
+<li>Check permission requirements</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="migration-workflow">Migration Workflow</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>1. Capture pre-migration state</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>2. Remove old installation completely</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>3. Verify complete removal (no leftovers)</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>4. Install from new source</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>5. Verify successful installation</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>6. Restore user configuration</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>7. Capture post-migration state</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>8. Generate migration report</span></span></code></pre>
+<p><strong>Automatic Rollback on Failure at Any Step</strong></p>
+<hr>
+<h2 id="state-capture-structure">State Capture Structure</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/tmp/package-migration-YYYYMMDD-HHMMSS-package-pid/</span></span>
+<span class="line"><span>├── metadata.json                 # Migration metadata</span></span>
+<span class="line"><span>├── pre_state.json               # Complete state before migration</span></span>
+<span class="line"><span>├── post_state.json              # Complete state after migration</span></span>
+<span class="line"><span>├── dependencies.txt             # Package dependencies</span></span>
+<span class="line"><span>├── reverse_dependencies.txt     # Packages depending on this</span></span>
+<span class="line"><span>├── config_backup.tar.gz        # System configuration backup</span></span>
+<span class="line"><span>├── config_USER_backup.tar.gz   # Per-user configuration backups</span></span>
+<span class="line"><span>├── file_list.txt               # Installed files list</span></span>
+<span class="line"><span>├── removed_files.txt           # Files removed during uninstall</span></span>
+<span class="line"><span>├── removal_log.txt             # Removal operation log</span></span>
+<span class="line"><span>├── installation_log.txt        # Installation operation log</span></span>
+<span class="line"><span>├── verification_log.txt        # Verification checks log</span></span>
+<span class="line"><span>├── migration_summary.json      # Machine-readable summary</span></span>
+<span class="line"><span>├── MIGRATION_SUMMARY.txt       # Human-readable summary</span></span>
+<span class="line"><span>└── MIGRATION_REPORT.md         # Complete migration report</span></span></code></pre>
+<hr>
+<h2 id="real-world-examples">Real-World Examples</h2>
+<h3 id="example-1-github-cli-verification">Example 1: GitHub CLI Verification</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6A737D"># Check if GitHub CLI is using optimal source</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">state_json</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Current State:"</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#9ECBFF"> '{</span></span>
+<span class="line"><span style="color:#9ECBFF">    current: .current_installation.installation_source,</span></span>
+<span class="line"><span style="color:#9ECBFF">    current_version: .current_installation.installed_version,</span></span>
+<span class="line"><span style="color:#9ECBFF">    apt_version: .apt.candidate,</span></span>
+<span class="line"><span style="color:#9ECBFF">    snap_version: .snap.stable_version,</span></span>
+<span class="line"><span style="color:#9ECBFF">    upstream_latest: .upstream.latest_version</span></span>
+<span class="line"><span style="color:#9ECBFF">}'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Determine optimal source</span></span>
+<span class="line"><span style="color:#E1E4E8">preferred</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">decide_preferred_source</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">current</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installation_source'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$current</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> !=</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$preferred</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Migration recommended: </span><span style="color:#E1E4E8">$current</span><span style="color:#9ECBFF"> → </span><span style="color:#E1E4E8">$preferred</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Already using optimal source: </span><span style="color:#E1E4E8">$current</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>Sample Output:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "current"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"apt"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "current_version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2.82.1"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "apt_version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2.82.1"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "snap_version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"unknown"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "upstream_latest"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2.83.1"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="example-2-nodejs-constitutional-compliance">Example 2: Node.js Constitutional Compliance</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6A737D"># Verify Node.js is managed via fnm (CLAUDE.md requirement)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> node</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#E1E4E8">    node_path</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">which</span><span style="color:#9ECBFF"> node</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$node_path</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "fnm"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "✅ Node.js correctly managed via fnm"</span></span>
+<span class="line"><span style="color:#B392F0">        fnm</span><span style="color:#9ECBFF"> list</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "❌ VIOLATION: Node.js not managed via fnm"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "Current source: $(</span><span style="color:#B392F0">query_current_installation</span><span style="color:#9ECBFF"> nodejs </span><span style="color:#F97583">|</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#B392F0">                            jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.installation_source')"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> ""</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "Action required:"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "  1. Remove current installation"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "  2. Install via fnm: fnm install --lts"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h3 id="example-3-complete-migration">Example 3: Complete Migration</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6A737D"># Complete migration with all safeguards</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">PACKAGE</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"gh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Step 1: Get current state</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Querying current state..."</span></span>
+<span class="line"><span style="color:#E1E4E8">state_json</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$PACKAGE</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">current_source</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installation_source'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">current_version</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installed_version'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Current: </span><span style="color:#E1E4E8">$current_source</span><span style="color:#E1E4E8"> $current_version</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Step 2: Determine preferred source</span></span>
+<span class="line"><span style="color:#E1E4E8">preferred_source</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">decide_preferred_source</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$PACKAGE</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Preferred: </span><span style="color:#E1E4E8">$preferred_source</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Step 3: Check if migration needed</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$current_source</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> ==</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$preferred_source</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "No migration needed"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Step 4: Confirm with user</span></span>
+<span class="line"><span style="color:#79B8FF">read</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> "Migrate </span><span style="color:#E1E4E8">$PACKAGE</span><span style="color:#9ECBFF">: </span><span style="color:#E1E4E8">$current_source</span><span style="color:#9ECBFF"> → </span><span style="color:#E1E4E8">$preferred_source</span><span style="color:#9ECBFF">? (y/N): "</span><span style="color:#9ECBFF"> confirm</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$confirm</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> !=</span><span style="color:#9ECBFF"> "y"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Cancelled"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Step 5: Execute migration</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#B392F0"> migrate_package</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$PACKAGE</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "✅ Migration successful"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Verify new state</span></span>
+<span class="line"><span style="color:#E1E4E8">    new_state</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$PACKAGE</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    new_source</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$new_state</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installation_source'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    new_version</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$new_state</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installed_version'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "New state: </span><span style="color:#E1E4E8">$new_source</span><span style="color:#E1E4E8"> $new_version</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "❌ Migration failed (automatic rollback performed)"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<hr>
+<h2 id="integration-points">Integration Points</h2>
+<h3 id="daily-updates-script">Daily Updates Script</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Add to scripts/daily-updates.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_package_sources</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log_section</span><span style="color:#9ECBFF"> "Package Source Verification"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> package </span><span style="color:#F97583">in</span><span style="color:#9ECBFF"> gh</span><span style="color:#9ECBFF"> git</span><span style="color:#9ECBFF"> curl</span><span style="color:#9ECBFF"> jq</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">do</span></span>
+<span class="line"><span style="color:#E1E4E8">        state_json</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$package</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        current</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installation_source'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">        preferred</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">decide_preferred_source</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$package</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$state_json</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$current</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> !=</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$preferred</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">            log_warning</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$package</span><span style="color:#9ECBFF">: suboptimal source (</span><span style="color:#E1E4E8">$current</span><span style="color:#9ECBFF">, prefer </span><span style="color:#E1E4E8">$preferred</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#F97583">        else</span></span>
+<span class="line"><span style="color:#B392F0">            log_success</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$package</span><span style="color:#9ECBFF">: optimal source (</span><span style="color:#E1E4E8">$current</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"><span style="color:#F97583">    done</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="health-check-script">Health Check Script</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Add to .runners-local/workflows/health-check.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">check_package_management</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "STEP"</span><span style="color:#9ECBFF"> "🔧 Checking package management"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # GitHub CLI source check</span></span>
+<span class="line"><span style="color:#E1E4E8">    gh_state</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    gh_source</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$gh_state</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.current_installation.installation_source'</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    gh_preferred</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">decide_preferred_source</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$gh_state</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$gh_source</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> ==</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$gh_preferred</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        record_check</span><span style="color:#9ECBFF"> "package_management"</span><span style="color:#9ECBFF"> "gh_source"</span><span style="color:#9ECBFF"> "passed"</span><span style="color:#9ECBFF"> "optimal: </span><span style="color:#E1E4E8">$gh_source</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#B392F0">        record_check</span><span style="color:#9ECBFF"> "package_management"</span><span style="color:#9ECBFF"> "gh_source"</span><span style="color:#9ECBFF"> "warning"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">                    "suboptimal: </span><span style="color:#E1E4E8">$gh_source</span><span style="color:#9ECBFF"> (prefer: </span><span style="color:#E1E4E8">$gh_preferred</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Node.js fnm compliance check</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> node</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#79B8FF"> which</span><span style="color:#9ECBFF"> node</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "fnm"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">            record_check</span><span style="color:#9ECBFF"> "package_management"</span><span style="color:#9ECBFF"> "nodejs_fnm"</span><span style="color:#9ECBFF"> "passed"</span><span style="color:#9ECBFF"> "via fnm"</span></span>
+<span class="line"><span style="color:#F97583">        else</span></span>
+<span class="line"><span style="color:#B392F0">            record_check</span><span style="color:#9ECBFF"> "package_management"</span><span style="color:#9ECBFF"> "nodejs_fnm"</span><span style="color:#9ECBFF"> "failed"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">                        "not via fnm (CLAUDE.md violation)"</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="constitutional-compliance-check">Constitutional Compliance Check</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Add to .runners-local/workflows/constitutional-compliance-check.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">check_package_management_compliance</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "=== Package Management Compliance ==="</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Node.js fnm requirement (CLAUDE.md)</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> node</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#79B8FF"> which</span><span style="color:#9ECBFF"> node</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "fnm"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">            echo</span><span style="color:#9ECBFF"> "✅ Node.js managed via fnm"</span></span>
+<span class="line"><span style="color:#F97583">        else</span></span>
+<span class="line"><span style="color:#79B8FF">            echo</span><span style="color:#9ECBFF"> "❌ VIOLATION: Node.js not managed via fnm (CLAUDE.md required)"</span></span>
+<span class="line"><span style="color:#E1E4E8">            VIOLATIONS</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$((</span><span style="color:#B392F0">VIOLATIONS</span><span style="color:#9ECBFF"> +</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # GitHub CLI official source preference</span></span>
+<span class="line"><span style="color:#E1E4E8">    gh_state</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_package_full_state</span><span style="color:#9ECBFF"> "gh"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$gh_state</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> jq</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> '.apt.repository_info'</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#79B8FF"> -q</span><span style="color:#9ECBFF"> "cli.github.com"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "✅ GitHub CLI from official repository"</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "⚠️  WARNING: GitHub CLI not from official repository"</span></span>
+<span class="line"><span style="color:#E1E4E8">        WARNINGS</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$((</span><span style="color:#B392F0">WARNINGS</span><span style="color:#9ECBFF"> +</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<hr>
+<h2 id="test-cases-summary">Test Cases Summary</h2>
+<h3 id="unit-tests">Unit Tests</h3>
+<ul>
+<li>✅ Version comparison (gt, lt, eq, with epochs)</li>
+<li>✅ Package state queries (apt, snap, current)</li>
+<li>✅ Decision logic (constitutional, official, version)</li>
+<li>✅ State capture and restoration</li>
+</ul>
+<h3 id="integration-tests">Integration Tests</h3>
+<ul>
+<li>✅ Complete migration workflow</li>
+<li>✅ Rollback mechanism</li>
+<li>✅ Configuration preservation</li>
+<li>✅ Verification after migration</li>
+</ul>
+<h3 id="system-tests">System Tests</h3>
+<ul>
+<li>✅ Real package migration (figlet test)</li>
+<li>✅ Cross-source migration (apt ↔ snap)</li>
+<li>✅ Audit trail verification</li>
+</ul>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="issue-migration-fails-at-removal-step">Issue: Migration fails at removal step</h3>
+<p><strong>Solution</strong>: Check removal logs in state directory</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /tmp/package-migration-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">/removal_log.txt</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /tmp/package-migration-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">/verification_log.txt</span></span></code></pre>
+<h3 id="issue-automatic-rollback-triggered">Issue: Automatic rollback triggered</h3>
+<p><strong>Solution</strong>: Check rollback summary and post-state</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /tmp/package-migration-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">/rollback_summary.json</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /tmp/package-migration-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">/post_state.json</span></span></code></pre>
+<h3 id="issue-version-comparison-fails">Issue: Version comparison fails</h3>
+<p><strong>Solution</strong>: Verify dpkg is available and version strings are valid</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">dpkg</span><span style="color:#79B8FF"> --compare-versions</span><span style="color:#9ECBFF"> "2.0.0"</span><span style="color:#9ECBFF"> gt</span><span style="color:#9ECBFF"> "1.0.0"</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "Working"</span></span></code></pre>
+<h3 id="issue-constitutional-violation-detected">Issue: Constitutional violation detected</h3>
+<p><strong>Solution</strong>: Check CLAUDE.md for package-specific requirements</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">grep</span><span style="color:#79B8FF"> -A</span><span style="color:#79B8FF"> 5</span><span style="color:#9ECBFF"> "package_name"</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files/CLAUDE.md</span></span></code></pre>
+<hr>
+<h2 id="performance-tips">Performance Tips</h2>
+<ol>
+<li><strong>Use Caching</strong>: Query results cached for 5 minutes</li>
+<li><strong>Parallel Queries</strong>: Use <code>get_package_full_state_parallel</code> for faster state retrieval</li>
+<li><strong>Batch Operations</strong>: Verify multiple packages in single run</li>
+<li><strong>Scheduled Audits</strong>: Run weekly audits instead of continuous checks</li>
+</ol>
+<hr>
+<h2 id="security-checklist">Security Checklist</h2>
+<ul>
+<li>✅ Verify snap publisher before installation</li>
+<li>✅ Check confinement mode for terminal applications</li>
+<li>✅ Validate package integrity after installation</li>
+<li>✅ Maintain complete audit trail</li>
+<li>✅ Automatic rollback on failure</li>
+</ul>
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+<li><strong>Review Full Design</strong>: <a href="package-management-verification-design.md">package-management-verification-design.md</a></li>
+<li><strong>Implement Library</strong>: Create <code>scripts/package_migration_lib.sh</code></li>
+<li><strong>Implement CLI</strong>: Create <code>scripts/manage-packages.sh</code></li>
+<li><strong>Write Tests</strong>: Implement test suite from design</li>
+<li><strong>Integrate</strong>: Add to daily updates and health checks</li>
+<li><strong>Document</strong>: Add to repository documentation</li>
+</ol>
+<hr>
+<p><strong>Last Updated</strong>: 2025-11-17
+<strong>Design Version</strong>: 1.0
+<strong>Status</strong>: Design Phase - Ready for Implementation</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

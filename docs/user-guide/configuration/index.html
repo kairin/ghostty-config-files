@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Configuration Guide | Ghostty Configuration Files</title><meta name="description" content="Comprehensive guide to configuring and customizing Ghostty terminal"><!-- OpenGraph --><meta property="og:title" content="Configuration Guide"><meta property="og:description" content="Comprehensive guide to configuring and customizing Ghostty terminal"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.CTFyD-d5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex"> <li><a href="/ghostty-config-files/user-guide/installation" class="hover:text-blue-600 dark:hover:text-cyan-400 transition-all">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines/core-principles" class="hover:text-purple-600 dark:hover:text-purple-400 transition-all">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer/architecture" class="hover:text-amber-600 dark:hover:text-amber-400 transition-all">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-cyan-400 transition-all">
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Configuration Guide | Ghostty Configuration Files</title><meta name="description" content="Comprehensive guide to configuring and customizing Ghostty terminal"><!-- OpenGraph --><meta property="og:title" content="Configuration Guide"><meta property="og:description" content="Comprehensive guide to configuring and customizing Ghostty terminal"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
 GitHub
 </a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-10-27T00:00:00.000Z"> October 27, 2025 </time> <span> by Ghostty Configuration Files Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/user-guide/installation">User Guide</a></li> <li>Configuration Guide</li> </ul> </div> <h1>Configuration Guide</h1> <p class="text-xl text-base-content/70 mb-8">Comprehensive guide to configuring and customizing Ghostty terminal</p><p>This guide explains how to customize your Ghostty terminal configuration and manage settings.</p>
 <h2 id="configuration-files">Configuration Files</h2>
@@ -20,15 +20,15 @@ GitHub
 <h2 id="core-settings">Core Settings</h2>
 <h3 id="performance-optimizations-2025">Performance Optimizations (2025)</h3>
 <p>The configuration includes mandatory 2025 performance optimizations:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Linux CGroup single-instance (MANDATORY)</span></span>
-<span class="line"><span>linux-cgroup = single-instance</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Enhanced shell integration</span></span>
-<span class="line"><span>shell-integration = detect</span></span>
-<span class="line"><span>shell-integration-features = cursor,sudo,title</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Memory management (unlimited scrollback)</span></span>
-<span class="line"><span>scrollback-limit = 999999999</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Linux CGroup single-instance (MANDATORY)</span></span>
+<span class="line"><span style="color:#F97583">linux-cgroup</span><span style="color:#E1E4E8"> = single-instance</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Enhanced shell integration</span></span>
+<span class="line"><span style="color:#F97583">shell-integration</span><span style="color:#E1E4E8"> = detect</span></span>
+<span class="line"><span style="color:#F97583">shell-integration-features</span><span style="color:#E1E4E8"> = cursor,sudo,title</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Memory management (unlimited scrollback)</span></span>
+<span class="line"><span style="color:#F97583">scrollback-limit</span><span style="color:#E1E4E8"> = 999999999</span></span></code></pre>
 <p><strong>Do not disable these</strong> - they are required for optimal performance.</p>
 <h3 id="scrollback-buffer-configuration">Scrollback Buffer Configuration</h3>
 <p>The repository configures <strong>unlimited scrollback</strong> (effectively) for complete terminal history retention.</p>
@@ -104,14 +104,14 @@ GitHub
 <p><strong>Restart Required</strong>: Changes take effect on next Ghostty window launch.</p>
 <h3 id="theme-configuration">Theme Configuration</h3>
 <p>Automatic theme switching based on system preference:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># In theme.conf</span></span>
-<span class="line"><span>theme = catppuccin-mocha      # Dark theme</span></span>
-<span class="line"><span>theme-light = catppuccin-latte # Light theme</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># System will automatically switch based on:</span></span>
-<span class="line"><span># - GNOME dark mode preference</span></span>
-<span class="line"><span># - Time of day (if configured)</span></span>
-<span class="line"><span># - Manual override</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># In theme.conf</span></span>
+<span class="line"><span style="color:#F97583">theme</span><span style="color:#E1E4E8"> = catppuccin-mocha      </span><span style="color:#6A737D"># Dark theme</span></span>
+<span class="line"><span style="color:#F97583">theme-light</span><span style="color:#E1E4E8"> = catppuccin-latte </span><span style="color:#6A737D"># Light theme</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># System will automatically switch based on:</span></span>
+<span class="line"><span style="color:#6A737D"># - GNOME dark mode preference</span></span>
+<span class="line"><span style="color:#6A737D"># - Time of day (if configured)</span></span>
+<span class="line"><span style="color:#6A737D"># - Manual override</span></span></code></pre>
 <p><strong>Supported themes</strong>:</p>
 <ul>
 <li><code>catppuccin-mocha</code> (Dark)</li>
@@ -121,17 +121,17 @@ GitHub
 </ul>
 <h3 id="font-configuration">Font Configuration</h3>
 <p>Configure fonts in <code>layout.conf</code>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Font family</span></span>
-<span class="line"><span>font-family = "JetBrains Mono"</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Font size</span></span>
-<span class="line"><span>font-size = 12</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Font features</span></span>
-<span class="line"><span>font-feature = +liga +calt +ss01</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Line height</span></span>
-<span class="line"><span>adjust-cell-height = 10%</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Font family</span></span>
+<span class="line"><span style="color:#F97583">font-family</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">"JetBrains Mono"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Font size</span></span>
+<span class="line"><span style="color:#F97583">font-size</span><span style="color:#E1E4E8"> = 12</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Font features</span></span>
+<span class="line"><span style="color:#F97583">font-feature</span><span style="color:#E1E4E8"> = +liga +calt +ss01</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Line height</span></span>
+<span class="line"><span style="color:#F97583">adjust-cell-height</span><span style="color:#E1E4E8"> = 10%</span></span></code></pre>
 <p><strong>Recommended fonts</strong>:</p>
 <ul>
 <li>JetBrains Mono (default)</li>
@@ -140,95 +140,95 @@ GitHub
 <li>IBM Plex Mono</li>
 </ul>
 <h3 id="window-layout">Window Layout</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Window padding</span></span>
-<span class="line"><span>window-padding-x = 8</span></span>
-<span class="line"><span>window-padding-y = 8</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Window decorations</span></span>
-<span class="line"><span>window-decoration = true</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Initial window size</span></span>
-<span class="line"><span>window-width = 100</span></span>
-<span class="line"><span>window-height = 30</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Window padding</span></span>
+<span class="line"><span style="color:#F97583">window-padding-x</span><span style="color:#E1E4E8"> = 8</span></span>
+<span class="line"><span style="color:#F97583">window-padding-y</span><span style="color:#E1E4E8"> = 8</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Window decorations</span></span>
+<span class="line"><span style="color:#F97583">window-decoration</span><span style="color:#E1E4E8"> = true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Initial window size</span></span>
+<span class="line"><span style="color:#F97583">window-width</span><span style="color:#E1E4E8"> = 100</span></span>
+<span class="line"><span style="color:#F97583">window-height</span><span style="color:#E1E4E8"> = 30</span></span></code></pre>
 <h3 id="scrollback-settings">Scrollback Settings</h3>
 <p>Configure scroll behavior in <code>scroll.conf</code>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Scrollback limit (lines)</span></span>
-<span class="line"><span>scrollback-limit = 100000</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Scroll multiplier</span></span>
-<span class="line"><span>mouse-scroll-multiplier = 3</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Shift+PageUp/PageDown scrolling</span></span>
-<span class="line"><span>scrollback-key = shift+page_up</span></span>
-<span class="line"><span>scrollback-key = shift+page_down</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Scrollback limit (lines)</span></span>
+<span class="line"><span style="color:#F97583">scrollback-limit</span><span style="color:#E1E4E8"> = 100000</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Scroll multiplier</span></span>
+<span class="line"><span style="color:#F97583">mouse-scroll-multiplier</span><span style="color:#E1E4E8"> = 3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Shift+PageUp/PageDown scrolling</span></span>
+<span class="line"><span style="color:#F97583">scrollback-key</span><span style="color:#E1E4E8"> = shift+page_up</span></span>
+<span class="line"><span style="color:#F97583">scrollback-key</span><span style="color:#E1E4E8"> = shift+page_down</span></span></code></pre>
 <h2 id="keybindings">Keybindings</h2>
 <h3 id="default-keybindings">Default Keybindings</h3>
 <p>Core keybindings are defined in <code>keybindings.conf</code>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Tab management</span></span>
-<span class="line"><span>keybind = ctrl+shift+t=new_tab</span></span>
-<span class="line"><span>keybind = ctrl+shift+w=close_tab</span></span>
-<span class="line"><span>keybind = ctrl+tab=next_tab</span></span>
-<span class="line"><span>keybind = ctrl+shift+tab=previous_tab</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Split management</span></span>
-<span class="line"><span>keybind = ctrl+shift+e=new_split:right</span></span>
-<span class="line"><span>keybind = ctrl+shift+o=new_split:down</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Font size</span></span>
-<span class="line"><span>keybind = ctrl+plus=increase_font_size</span></span>
-<span class="line"><span>keybind = ctrl+minus=decrease_font_size</span></span>
-<span class="line"><span>keybind = ctrl+0=reset_font_size</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Copy/Paste</span></span>
-<span class="line"><span>keybind = ctrl+shift+c=copy</span></span>
-<span class="line"><span>keybind = ctrl+shift+v=paste</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Tab management</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">t</span><span style="color:#E1E4E8">=new_tab</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">w</span><span style="color:#E1E4E8">=close_tab</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+</span><span style="color:#F97583">tab</span><span style="color:#E1E4E8">=next_tab</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">tab</span><span style="color:#E1E4E8">=previous_tab</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Split management</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">e</span><span style="color:#E1E4E8">=new_split:right</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">o</span><span style="color:#E1E4E8">=new_split:down</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Font size</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+</span><span style="color:#F97583">plus</span><span style="color:#E1E4E8">=increase_font_size</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+</span><span style="color:#F97583">minus</span><span style="color:#E1E4E8">=decrease_font_size</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+</span><span style="color:#F97583">0</span><span style="color:#E1E4E8">=reset_font_size</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Copy/Paste</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">c</span><span style="color:#E1E4E8">=copy</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">v</span><span style="color:#E1E4E8">=paste</span></span></code></pre>
 <h3 id="custom-keybindings">Custom Keybindings</h3>
 <p>Add your own keybindings to <code>keybindings.conf</code>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Example: Quick access to frequently used commands</span></span>
-<span class="line"><span>keybind = ctrl+shift+h=write_text:htop\r</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Example: Custom split navigation</span></span>
-<span class="line"><span>keybind = alt+left=goto_split:left</span></span>
-<span class="line"><span>keybind = alt+right=goto_split:right</span></span>
-<span class="line"><span>keybind = alt+up=goto_split:up</span></span>
-<span class="line"><span>keybind = alt+down=goto_split:down</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Example: Quick access to frequently used commands</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">h</span><span style="color:#E1E4E8">=write_text:htop\r</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Example: Custom split navigation</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = alt+</span><span style="color:#F97583">left</span><span style="color:#E1E4E8">=goto_split:left</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = alt+</span><span style="color:#F97583">right</span><span style="color:#E1E4E8">=goto_split:right</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = alt+</span><span style="color:#F97583">up</span><span style="color:#E1E4E8">=goto_split:up</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = alt+</span><span style="color:#F97583">down</span><span style="color:#E1E4E8">=goto_split:down</span></span></code></pre>
 <h2 id="advanced-configuration">Advanced Configuration</h2>
 <h3 id="shell-integration">Shell Integration</h3>
 <p>Enhanced shell integration features:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Enable all shell integration features</span></span>
-<span class="line"><span>shell-integration = detect</span></span>
-<span class="line"><span>shell-integration-features = cursor,sudo,title,jump</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># OSC sequences</span></span>
-<span class="line"><span>shell-integration-features += osc</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Custom prompt marker</span></span>
-<span class="line"><span>shell-integration-prompt-mark = true</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Enable all shell integration features</span></span>
+<span class="line"><span style="color:#F97583">shell-integration</span><span style="color:#E1E4E8"> = detect</span></span>
+<span class="line"><span style="color:#F97583">shell-integration-features</span><span style="color:#E1E4E8"> = cursor,sudo,title,jump</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># OSC sequences</span></span>
+<span class="line"><span style="color:#E1E4E8">shell-integration-features += osc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Custom prompt marker</span></span>
+<span class="line"><span style="color:#F97583">shell-integration-prompt-mark</span><span style="color:#E1E4E8"> = true</span></span></code></pre>
 <h3 id="clipboard-protection">Clipboard Protection</h3>
 <p>Security feature to prevent clipboard paste attacks:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Clipboard paste protection</span></span>
-<span class="line"><span>clipboard-paste-protection = true</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Paste bracketing</span></span>
-<span class="line"><span>clipboard-paste-bracketing = true</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Clipboard paste protection</span></span>
+<span class="line"><span style="color:#F97583">clipboard-paste-protection</span><span style="color:#E1E4E8"> = true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Paste bracketing</span></span>
+<span class="line"><span style="color:#F97583">clipboard-paste-bracketing</span><span style="color:#E1E4E8"> = true</span></span></code></pre>
 <h3 id="url-handling">URL Handling</h3>
 <p>Configure how URLs are opened:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># URL detection</span></span>
-<span class="line"><span>url-trigger = true</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># URL click action</span></span>
-<span class="line"><span>click-action = open</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Custom URL opener</span></span>
-<span class="line"><span>url-opener = xdg-open</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># URL detection</span></span>
+<span class="line"><span style="color:#F97583">url-trigger</span><span style="color:#E1E4E8"> = true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># URL click action</span></span>
+<span class="line"><span style="color:#F97583">click-action</span><span style="color:#E1E4E8"> = open</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Custom URL opener</span></span>
+<span class="line"><span style="color:#F97583">url-opener</span><span style="color:#E1E4E8"> = xdg-open</span></span></code></pre>
 <h3 id="bell-configuration">Bell Configuration</h3>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Visual bell instead of audible</span></span>
-<span class="line"><span>visual-bell = true</span></span>
-<span class="line"><span>visual-bell-color = #ff5555</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Or disable bell entirely</span></span>
-<span class="line"><span>audible-bell = false</span></span>
-<span class="line"><span>visual-bell = false</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Visual bell instead of audible</span></span>
+<span class="line"><span style="color:#F97583">visual-bell</span><span style="color:#E1E4E8"> = true</span></span>
+<span class="line"><span style="color:#F97583">visual-bell-color</span><span style="color:#E1E4E8"> = </span><span style="color:#6A737D">#ff5555</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Or disable bell entirely</span></span>
+<span class="line"><span style="color:#F97583">audible-bell</span><span style="color:#E1E4E8"> = false</span></span>
+<span class="line"><span style="color:#F97583">visual-bell</span><span style="color:#E1E4E8"> = false</span></span></code></pre>
 <h2 id="managing-configuration">Managing Configuration</h2>
 <h3 id="using-managesh">Using manage.sh</h3>
 <p>The <code>manage.sh</code> tool provides commands for configuration management:</p>
@@ -353,12 +353,12 @@ GitHub
 <h3 id="theme-not-switching">Theme Not Switching</h3>
 <p><strong>Issue</strong>: Theme doesn’t change with system preference</p>
 <p><strong>Solution</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Ensure theme-light is set</span></span>
-<span class="line"><span>theme = catppuccin-mocha</span></span>
-<span class="line"><span>theme-light = catppuccin-latte</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Check system theme integration</span></span>
-<span class="line"><span>gsettings get org.gnome.desktop.interface color-scheme</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Ensure theme-light is set</span></span>
+<span class="line"><span style="color:#F97583">theme</span><span style="color:#E1E4E8"> = catppuccin-mocha</span></span>
+<span class="line"><span style="color:#F97583">theme-light</span><span style="color:#E1E4E8"> = catppuccin-latte</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check system theme integration</span></span>
+<span class="line"><span style="color:#E1E4E8">gsettings get org.gnome.desktop.interface color-scheme</span></span></code></pre>
 <h3 id="keybindings-not-working">Keybindings Not Working</h3>
 <p><strong>Issue</strong>: Custom keybindings ignored</p>
 <p><strong>Solution</strong>:</p>
@@ -388,37 +388,37 @@ GitHub
 <h2 id="configuration-templates">Configuration Templates</h2>
 <h3 id="minimal-configuration">Minimal Configuration</h3>
 <p>For users who prefer minimal setup:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Minimal config - performance only</span></span>
-<span class="line"><span>linux-cgroup = single-instance</span></span>
-<span class="line"><span>shell-integration = detect</span></span>
-<span class="line"><span>theme = catppuccin-mocha</span></span>
-<span class="line"><span>font-family = "JetBrains Mono"</span></span>
-<span class="line"><span>font-size = 12</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Minimal config - performance only</span></span>
+<span class="line"><span style="color:#F97583">linux-cgroup</span><span style="color:#E1E4E8"> = single-instance</span></span>
+<span class="line"><span style="color:#F97583">shell-integration</span><span style="color:#E1E4E8"> = detect</span></span>
+<span class="line"><span style="color:#F97583">theme</span><span style="color:#E1E4E8"> = catppuccin-mocha</span></span>
+<span class="line"><span style="color:#F97583">font-family</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">"JetBrains Mono"</span></span>
+<span class="line"><span style="color:#F97583">font-size</span><span style="color:#E1E4E8"> = 12</span></span></code></pre>
 <h3 id="power-user-configuration">Power User Configuration</h3>
 <p>For advanced users:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># Performance</span></span>
-<span class="line"><span>linux-cgroup = single-instance</span></span>
-<span class="line"><span>shell-integration = detect</span></span>
-<span class="line"><span>shell-integration-features = cursor,sudo,title,jump,osc</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Appearance</span></span>
-<span class="line"><span>theme = catppuccin-mocha</span></span>
-<span class="line"><span>theme-light = catppuccin-latte</span></span>
-<span class="line"><span>font-family = "JetBrains Mono"</span></span>
-<span class="line"><span>font-size = 12</span></span>
-<span class="line"><span>font-feature = +liga +calt</span></span>
-<span class="line"><span>window-padding-x = 12</span></span>
-<span class="line"><span>window-padding-y = 12</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Behavior</span></span>
-<span class="line"><span>scrollback-limit = 100000</span></span>
-<span class="line"><span>clipboard-paste-protection = true</span></span>
-<span class="line"><span>url-trigger = true</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span># Keybindings (extensive)</span></span>
-<span class="line"><span>keybind = ctrl+shift+t=new_tab</span></span>
-<span class="line"><span>keybind = ctrl+shift+w=close_tab</span></span>
-<span class="line"><span># ... many more custom bindings</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="conf"><code><span class="line"><span style="color:#6A737D"># Performance</span></span>
+<span class="line"><span style="color:#F97583">linux-cgroup</span><span style="color:#E1E4E8"> = single-instance</span></span>
+<span class="line"><span style="color:#F97583">shell-integration</span><span style="color:#E1E4E8"> = detect</span></span>
+<span class="line"><span style="color:#F97583">shell-integration-features</span><span style="color:#E1E4E8"> = cursor,sudo,title,jump,osc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Appearance</span></span>
+<span class="line"><span style="color:#F97583">theme</span><span style="color:#E1E4E8"> = catppuccin-mocha</span></span>
+<span class="line"><span style="color:#F97583">theme-light</span><span style="color:#E1E4E8"> = catppuccin-latte</span></span>
+<span class="line"><span style="color:#F97583">font-family</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">"JetBrains Mono"</span></span>
+<span class="line"><span style="color:#F97583">font-size</span><span style="color:#E1E4E8"> = 12</span></span>
+<span class="line"><span style="color:#F97583">font-feature</span><span style="color:#E1E4E8"> = +liga +calt</span></span>
+<span class="line"><span style="color:#F97583">window-padding-x</span><span style="color:#E1E4E8"> = 12</span></span>
+<span class="line"><span style="color:#F97583">window-padding-y</span><span style="color:#E1E4E8"> = 12</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Behavior</span></span>
+<span class="line"><span style="color:#F97583">scrollback-limit</span><span style="color:#E1E4E8"> = 100000</span></span>
+<span class="line"><span style="color:#F97583">clipboard-paste-protection</span><span style="color:#E1E4E8"> = true</span></span>
+<span class="line"><span style="color:#F97583">url-trigger</span><span style="color:#E1E4E8"> = true</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Keybindings (extensive)</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">t</span><span style="color:#E1E4E8">=new_tab</span></span>
+<span class="line"><span style="color:#F97583">keybind</span><span style="color:#E1E4E8"> = ctrl+shift+</span><span style="color:#F97583">w</span><span style="color:#E1E4E8">=close_tab</span></span>
+<span class="line"><span style="color:#6A737D"># ... many more custom bindings</span></span></code></pre>
 <h2 id="next-steps">Next Steps</h2>
 <ul>
 <li><strong><a href="usage.md">Usage Guide</a></strong> - Learn manage.sh commands</li>

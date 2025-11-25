@@ -1,0 +1,849 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Modular Task Architecture Design | Ghostty Configuration Files</title><meta name="description" content="**Date**: 2025-11-20"><!-- OpenGraph --><meta property="og:title" content="Modular Task Architecture Design"><meta property="og:description" content="**Date**: 2025-11-20"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Modular Task Architecture Design</li> </ul> </div> <h1>Modular Task Architecture Design</h1> <p class="text-xl text-base-content/70 mb-8">**Date**: 2025-11-20</p><h1 id="modular-task-architecture-design">Modular Task Architecture Design</h1>
+<p><strong>Date</strong>: 2025-11-20
+<strong>Purpose</strong>: Break down monolithic task files into single-purpose modular scripts
+<strong>Status</strong>: Design Phase
+<strong>Location</strong>: <code>/documentation/architecture/MODULAR_TASK_ARCHITECTURE.md</code> (restructured 2025-11-20)
+<strong>User Requirement</strong>: “Each step is calling a script that does the one thing for that segment of the process”</p>
+<p><strong>Note</strong>: Repository restructured on 2025-11-20 to consolidate fragmented documentation:</p>
+<ul>
+<li>✅ Single <code>/documentation/</code> folder (was: <code>/docs-setup/</code>, <code>/documentations/</code>, <code>/specs/</code>)</li>
+<li>✅ Single <code>/astro-website/</code> folder (was: <code>/website/</code> + root <code>/src/</code> + root <code>/public/</code>)</li>
+<li>✅ Archived spec-kit to <code>/archive-spec-kit/.specify/</code></li>
+<li>✅ Deleted obsolete <code>/delete/</code> folder</li>
+</ul>
+<hr>
+<h2 id="problem-statement">Problem Statement</h2>
+<h3 id="current-issues">Current Issues</h3>
+<ol>
+<li>
+<p><strong>Monolithic Task Files</strong>: Each lib/tasks/*.sh file contains hundreds of lines doing multiple things</p>
+<ul>
+<li><code>lib/tasks/ghostty.sh</code>: Check, download Zig, build Zig, clone Ghostty, build Ghostty, install, verify</li>
+<li><code>lib/tasks/python_uv.sh</code>: Check, download, extract, install, verify</li>
+<li><code>lib/tasks/nodejs_fnm.sh</code>: Check, download, install, setup, verify</li>
+</ul>
+</li>
+<li>
+<p><strong>Output Visibility</strong>: Users cannot see real-time progress during long operations</p>
+<ul>
+<li>Git clone operations</li>
+<li>Zig builds</li>
+<li>tar extractions</li>
+<li>npm installations</li>
+</ul>
+</li>
+<li>
+<p><strong>Lack of Granularity</strong>: Cannot track individual sub-steps in TUI</p>
+<ul>
+<li>Task shows “Installing Ghostty…” for 3+ minutes</li>
+<li>No visibility into “Downloading Zig”, “Building Zig”, “Cloning Ghostty”, etc.</li>
+</ul>
+</li>
+<li>
+<p><strong>Difficult Debugging</strong>: When something fails, unclear which specific step failed</p>
+<ul>
+<li>Was it the download? The extraction? The build?</li>
+</ul>
+</li>
+</ol>
+<h3 id="users-vision">User’s Vision</h3>
+<blockquote>
+<p>“the whole point of the tui and gum and bracelet was that user will see the full verbose steps even the section such as what’s going on with the cloning of ghostty. and that when the segment completes, the segment will be collapsed with the tui / gum / bracelet.”</p>
+</blockquote>
+<p><strong>Key Requirements</strong>:</p>
+<ul>
+<li>Real-time output visibility during long operations</li>
+<li>Automatic collapsing when segment completes</li>
+<li>Each step is a separate script doing ONE thing</li>
+<li>Modular, maintainable, debuggable</li>
+</ul>
+<hr>
+<h2 id="design-principles">Design Principles</h2>
+<h3 id="1-single-responsibility">1. Single Responsibility</h3>
+<p>Each script does <strong>exactly one thing</strong>:</p>
+<ul>
+<li>✅ <code>00-check-prerequisites.sh</code> - Only checks if Ghostty already installed</li>
+<li>✅ <code>01-download-zig.sh</code> - Only downloads Zig compiler</li>
+<li>✅ <code>02-extract-zig.sh</code> - Only extracts Zig tarball</li>
+<li>✅ <code>03-build-ghostty.sh</code> - Only builds Ghostty</li>
+<li>❌ <code>install-ghostty.sh</code> - Does everything (anti-pattern)</li>
+</ul>
+<h3 id="2-standardized-interface">2. Standardized Interface</h3>
+<p>All scripts follow the same contract:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Module: [Task Name]</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: [One-sentence description of what this script does]</span></span>
+<span class="line"><span style="color:#6A737D"># Prerequisites: [What must exist before this runs]</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: [What this script creates/modifies]</span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes:</span></span>
+<span class="line"><span style="color:#6A737D">#   0 - Success</span></span>
+<span class="line"><span style="color:#6A737D">#   1 - Failure (fatal)</span></span>
+<span class="line"><span style="color:#6A737D">#   2 - Skip (already done, idempotent)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Input validation</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#79B8FF">$#</span><span style="color:#F97583"> -lt</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Usage: </span><span style="color:#79B8FF">$0</span><span style="color:#9ECBFF"> &#x3C;required-arg>"</span><span style="color:#F97583"> >&#x26;2</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Main logic (single responsibility)</span></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Do ONE thing</span></span>
+<span class="line"><span style="color:#6A737D">    # Use run_command_collapsible for long operations</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h3 id="3-collapsible-output-integration">3. Collapsible Output Integration</h3>
+<p>Every script uses <code>run_command_collapsible</code> for long operations:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># In ghostty/03-clone-repository.sh</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../../lib/ui/collapsible.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ghostty-clone"</span></span>
+<span class="line"><span style="color:#B392F0">register_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Cloning Ghostty repository"</span></span>
+<span class="line"><span style="color:#B392F0">start_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">run_command_collapsible</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> git</span><span style="color:#9ECBFF"> clone</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">    --depth</span><span style="color:#79B8FF"> 1</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">    https://github.com/ghostty-org/ghostty</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">    "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">complete_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h3 id="4-task-registry-integration">4. Task Registry Integration</h3>
+<p>start.sh registers each modular step as a separate task:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> TASK_REGISTRY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#6A737D">    # Ghostty installation broken into granular steps</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-00-check|verify-prereqs|ghostty/00-check-prerequisites.sh|verify_ghostty_not_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-01-download-zig|ghostty-00-check|ghostty/01-download-zig.sh|verify_zig_tarball|1|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-02-extract-zig|ghostty-01-download-zig|ghostty/02-extract-zig.sh|verify_zig_extracted|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-03-build-zig|ghostty-02-extract-zig|ghostty/03-build-zig.sh|verify_zig_binary|1|60"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-04-clone-repo|ghostty-03-build-zig|ghostty/04-clone-repository.sh|verify_ghostty_repo|1|20"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-05-build-ghostty|ghostty-04-clone-repo|ghostty/05-build-ghostty.sh|verify_ghostty_binary|1|90"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-06-install|ghostty-05-build-ghostty|ghostty/06-install-binary.sh|verify_ghostty_installed|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-07-verify|ghostty-06-install|ghostty/07-verify-installation.sh|verify_ghostty_version|1|5"</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="5-idempotency">5. Idempotency</h3>
+<p>Each script checks if its work is already done:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># In ghostty/01-download-zig.sh</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">    echo</span><span style="color:#9ECBFF"> "Zig tarball already downloaded: </span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 2</span><span style="color:#6A737D">  # Skip code</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<hr>
+<h2 id="directory-structure">Directory Structure</h2>
+<h3 id="current-monolithic-structure">Current Monolithic Structure</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/tasks/</span></span>
+<span class="line"><span>├── ghostty.sh          # 500+ lines, does everything</span></span>
+<span class="line"><span>├── zsh.sh              # 300+ lines, does everything</span></span>
+<span class="line"><span>├── python_uv.sh        # 200+ lines, does everything</span></span>
+<span class="line"><span>├── nodejs_fnm.sh       # 150+ lines, does everything</span></span>
+<span class="line"><span>├── ai_tools.sh         # 100+ lines, does everything</span></span>
+<span class="line"><span>├── context_menu.sh     # 50+ lines</span></span>
+<span class="line"><span>├── gum.sh              # 100+ lines</span></span>
+<span class="line"><span>└── app_audit.sh        # 200+ lines</span></span></code></pre>
+<h3 id="proposed-modular-structure">Proposed Modular Structure</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/tasks/</span></span>
+<span class="line"><span>├── ghostty/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 50 lines - Check if already installed</span></span>
+<span class="line"><span>│   ├── 01-download-zig.sh             # 80 lines - Download Zig compiler</span></span>
+<span class="line"><span>│   ├── 02-extract-zig.sh              # 60 lines - Extract Zig tarball</span></span>
+<span class="line"><span>│   ├── 03-build-zig.sh                # 100 lines - Build Zig from source (if needed)</span></span>
+<span class="line"><span>│   ├── 04-clone-repository.sh         # 70 lines - Clone Ghostty repo</span></span>
+<span class="line"><span>│   ├── 05-build-ghostty.sh            # 120 lines - Build Ghostty with Zig</span></span>
+<span class="line"><span>│   ├── 06-install-binary.sh           # 80 lines - Install to system</span></span>
+<span class="line"><span>│   ├── 07-verify-installation.sh      # 60 lines - Verify Ghostty works</span></span>
+<span class="line"><span>│   └── common.sh                      # 100 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── zsh/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines - Check ZSH installed</span></span>
+<span class="line"><span>│   ├── 01-install-oh-my-zsh.sh        # 100 lines - Install Oh My ZSH</span></span>
+<span class="line"><span>│   ├── 02-install-plugins.sh          # 120 lines - Install plugins</span></span>
+<span class="line"><span>│   ├── 03-configure-zshrc.sh          # 150 lines - Update .zshrc</span></span>
+<span class="line"><span>│   ├── 04-install-security-check.sh   # 80 lines - ZSH security integration</span></span>
+<span class="line"><span>│   ├── 05-verify-installation.sh      # 60 lines - Verify ZSH works</span></span>
+<span class="line"><span>│   └── common.sh                      # 80 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── python_uv/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines - Check UV not installed</span></span>
+<span class="line"><span>│   ├── 01-download-uv.sh              # 70 lines - Download UV tarball</span></span>
+<span class="line"><span>│   ├── 02-extract-uv.sh               # 60 lines - Extract UV</span></span>
+<span class="line"><span>│   ├── 03-install-uv.sh               # 80 lines - Install to ~/.local/bin</span></span>
+<span class="line"><span>│   ├── 04-verify-installation.sh      # 60 lines - Verify UV works</span></span>
+<span class="line"><span>│   └── common.sh                      # 50 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── nodejs_fnm/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines - Check fnm not installed</span></span>
+<span class="line"><span>│   ├── 01-download-fnm.sh             # 70 lines - Download fnm binary</span></span>
+<span class="line"><span>│   ├── 02-install-fnm.sh              # 80 lines - Install fnm</span></span>
+<span class="line"><span>│   ├── 03-install-nodejs.sh           # 100 lines - Install Node.js via fnm</span></span>
+<span class="line"><span>│   ├── 04-configure-shell.sh          # 90 lines - Add to .zshrc/.bashrc</span></span>
+<span class="line"><span>│   ├── 05-verify-installation.sh      # 60 lines - Verify fnm and Node.js</span></span>
+<span class="line"><span>│   └── common.sh                      # 60 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── ai_tools/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines - Check Node.js available</span></span>
+<span class="line"><span>│   ├── 01-install-claude-cli.sh       # 80 lines - Install @anthropic-ai/claude-code</span></span>
+<span class="line"><span>│   ├── 02-install-gemini-cli.sh       # 80 lines - Install @google/gemini-cli</span></span>
+<span class="line"><span>│   ├── 03-install-copilot-cli.sh      # 80 lines - Install @github/copilot</span></span>
+<span class="line"><span>│   ├── 04-verify-installation.sh      # 70 lines - Verify all CLIs work</span></span>
+<span class="line"><span>│   └── common.sh                      # 50 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── context_menu/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines - Check Nautilus installed</span></span>
+<span class="line"><span>│   ├── 01-install-context-menu.sh     # 100 lines - Install Nautilus script</span></span>
+<span class="line"><span>│   ├── 02-verify-installation.sh      # 60 lines - Verify context menu works</span></span>
+<span class="line"><span>│   └── common.sh                      # 40 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── gum/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines - Check gum not installed</span></span>
+<span class="line"><span>│   ├── 01-download-gum.sh             # 70 lines - Download gum binary</span></span>
+<span class="line"><span>│   ├── 02-install-gum.sh              # 80 lines - Install gum</span></span>
+<span class="line"><span>│   ├── 03-verify-installation.sh      # 60 lines - Verify gum works</span></span>
+<span class="line"><span>│   └── common.sh                      # 50 lines - Shared functions</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>└── app_audit/</span></span>
+<span class="line"><span>    ├── 00-check-prerequisites.sh      # 40 lines - Check prerequisites</span></span>
+<span class="line"><span>    ├── 01-scan-apt-packages.sh        # 100 lines - Scan APT packages</span></span>
+<span class="line"><span>    ├── 02-scan-snap-packages.sh       # 100 lines - Scan Snap packages</span></span>
+<span class="line"><span>    ├── 03-scan-desktop-files.sh       # 100 lines - Scan .desktop files</span></span>
+<span class="line"><span>    ├── 04-detect-duplicates.sh        # 120 lines - Detect duplicate apps</span></span>
+<span class="line"><span>    ├── 05-generate-report.sh          # 100 lines - Generate audit report</span></span>
+<span class="line"><span>    ├── 06-verify-report.sh            # 60 lines - Verify report generated</span></span>
+<span class="line"><span>    └── common.sh                      # 80 lines - Shared functions</span></span></code></pre>
+<p><strong>Total Scripts</strong>: ~50 modular scripts (vs 8 monolithic files)</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Each script is &#x3C;150 lines (highly maintainable)</li>
+<li>Clear single responsibility</li>
+<li>Easy to debug (failures pinpoint exact step)</li>
+<li>Idempotent (can re-run individual steps)</li>
+<li>TUI shows granular progress</li>
+</ul>
+<hr>
+<h2 id="example-breakdown-ghostty-installation">Example Breakdown: Ghostty Installation</h2>
+<h3 id="before-monolithic">Before (Monolithic)</h3>
+<p><strong>File</strong>: <code>lib/tasks/ghostty.sh</code> (500+ lines)</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">task_install_ghostty</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # 1. Check if installed (50 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 2. Download Zig (80 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 3. Extract Zig (60 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 4. Build Zig (100 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 5. Clone Ghostty (70 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 6. Build Ghostty (120 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 7. Install binary (80 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 8. Verify installation (60 lines)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # User sees: "⠋ Installing Ghostty..." for 3+ minutes</span></span>
+<span class="line"><span style="color:#6A737D">    # No visibility into sub-steps</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>User Experience</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>⠋ Installing Ghostty...</span></span>
+<span class="line"><span>[3 minutes of silence, no output]</span></span>
+<span class="line"><span>✓ Installing Ghostty (180s)</span></span></code></pre>
+<h3 id="after-modular">After (Modular)</h3>
+<p><strong>Directory</strong>: <code>lib/tasks/ghostty/</code></p>
+<p><strong>8 separate scripts</strong>, each doing ONE thing:</p>
+<h4 id="00-check-prerequisitessh"><code>00-check-prerequisites.sh</code></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Module: Ghostty Prerequisites Check</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: Check if Ghostty is already installed (idempotency)</span></span>
+<span class="line"><span style="color:#6A737D"># Prerequisites: None</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: Exit code 2 if already installed, 0 if not installed</span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes:</span></span>
+<span class="line"><span style="color:#6A737D">#   0 - Not installed (proceed with installation)</span></span>
+<span class="line"><span style="color:#6A737D">#   1 - Error checking</span></span>
+<span class="line"><span style="color:#6A737D">#   2 - Already installed (skip installation)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source common utilities</span></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"$(</span><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")" &#x26;&#x26; </span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/common.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> ghostty</span><span style="color:#E1E4E8"> &#x26;</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> version</span></span>
+<span class="line"><span style="color:#E1E4E8">        version</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">ghostty</span><span style="color:#79B8FF"> --version</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> "unknown"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">        log_info</span><span style="color:#9ECBFF"> "Ghostty already installed: </span><span style="color:#E1E4E8">$version</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 2</span><span style="color:#6A737D">  # Skip code</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">    log_info</span><span style="color:#9ECBFF"> "Ghostty not found - installation required"</span></span>
+<span class="line"><span style="color:#79B8FF">    exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h4 id="01-download-zigsh"><code>01-download-zig.sh</code></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Module: Download Zig Compiler</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: Download Zig 0.14.0 tarball for Ghostty build</span></span>
+<span class="line"><span style="color:#6A737D"># Prerequisites: curl or wget installed</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: $HOME/Downloads/zig-linux-x86_64-0.14.0.tar.xz</span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes:</span></span>
+<span class="line"><span style="color:#6A737D">#   0 - Download successful</span></span>
+<span class="line"><span style="color:#6A737D">#   1 - Download failed</span></span>
+<span class="line"><span style="color:#6A737D">#   2 - Already downloaded (skip)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"$(</span><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")" &#x26;&#x26; </span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/common.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../../ui/collapsible.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_VERSION</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"0.14.0"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_URL</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://ziglang.org/download/${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}.tar.xz"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_TARBALL</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Downloads/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}.tar.xz"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Idempotency check</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log_info</span><span style="color:#9ECBFF"> "Zig tarball already downloaded: </span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Register task for TUI</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ghostty-download-zig"</span></span>
+<span class="line"><span style="color:#B392F0">    register_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Downloading Zig ${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#B392F0">    start_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Download with collapsible output</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> start_time</span></span>
+<span class="line"><span style="color:#E1E4E8">    start_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> run_command_collapsible</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> curl</span><span style="color:#79B8FF"> -fsSL</span><span style="color:#79B8FF"> -o</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_URL</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> end_time</span></span>
+<span class="line"><span style="color:#E1E4E8">        end_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> duration</span></span>
+<span class="line"><span style="color:#E1E4E8">        duration</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">calculate_duration</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$start_time</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$end_time</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">        complete_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log_success</span><span style="color:#9ECBFF"> "Downloaded Zig to </span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#B392F0">        fail_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Download failed: </span><span style="color:#E1E4E8">$ZIG_URL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log_error</span><span style="color:#9ECBFF"> "Failed to download Zig from </span><span style="color:#E1E4E8">$ZIG_URL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h4 id="04-clone-repositorysh"><code>04-clone-repository.sh</code></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Module: Clone Ghostty Repository</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: Clone Ghostty source code from GitHub</span></span>
+<span class="line"><span style="color:#6A737D"># Prerequisites: git installed, Zig compiler ready</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: $HOME/Apps/ghostty/ repository</span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes:</span></span>
+<span class="line"><span style="color:#6A737D">#   0 - Clone successful</span></span>
+<span class="line"><span style="color:#6A737D">#   1 - Clone failed</span></span>
+<span class="line"><span style="color:#6A737D">#   2 - Already cloned (skip)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"$(</span><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")" &#x26;&#x26; </span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/common.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../../ui/collapsible.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_REPO</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://github.com/ghostty-org/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_SRC</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Apps/ghostty"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Idempotency check</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">/.git"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log_info</span><span style="color:#9ECBFF"> "Ghostty repository already cloned: </span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Clean up partial clones</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ] &#x26;&#x26; [ </span><span style="color:#F97583">!</span><span style="color:#F97583"> -d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">/.git"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log_warning</span><span style="color:#9ECBFF"> "Removing incomplete clone: </span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        rm</span><span style="color:#79B8FF"> -rf</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Register task for TUI</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ghostty-clone-repo"</span></span>
+<span class="line"><span style="color:#B392F0">    register_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Cloning Ghostty repository"</span></span>
+<span class="line"><span style="color:#B392F0">    start_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Clone with collapsible output (user sees real-time git output)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> start_time</span></span>
+<span class="line"><span style="color:#E1E4E8">    start_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> run_command_collapsible</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> git</span><span style="color:#9ECBFF"> clone</span><span style="color:#79B8FF"> --depth</span><span style="color:#79B8FF"> 1</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_REPO</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> end_time</span></span>
+<span class="line"><span style="color:#E1E4E8">        end_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> duration</span></span>
+<span class="line"><span style="color:#E1E4E8">        duration</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">calculate_duration</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$start_time</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$end_time</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">        complete_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log_success</span><span style="color:#9ECBFF"> "Cloned Ghostty to </span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#B392F0">        fail_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Git clone failed: </span><span style="color:#E1E4E8">$GHOSTTY_REPO</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log_error</span><span style="color:#9ECBFF"> "Failed to clone Ghostty from </span><span style="color:#E1E4E8">$GHOSTTY_REPO</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<h4 id="05-build-ghosttysh"><code>05-build-ghostty.sh</code></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Module: Build Ghostty with Zig</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: Build Ghostty binary using Zig compiler</span></span>
+<span class="line"><span style="color:#6A737D"># Prerequisites: Zig compiler installed, Ghostty repo cloned</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: $HOME/Apps/ghostty/zig-out/bin/ghostty binary</span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes:</span></span>
+<span class="line"><span style="color:#6A737D">#   0 - Build successful</span></span>
+<span class="line"><span style="color:#6A737D">#   1 - Build failed</span></span>
+<span class="line"><span style="color:#6A737D">#   2 - Already built (skip)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"$(</span><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")" &#x26;&#x26; </span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/common.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../../ui/collapsible.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_SRC</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Apps/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_BINARY</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">/zig-out/bin/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_BINARY</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Apps/zig/zig"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Idempotency check</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log_info</span><span style="color:#9ECBFF"> "Ghostty already built: </span><span style="color:#E1E4E8">$GHOSTTY_BINARY</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Verify prerequisites</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">!</span><span style="color:#F97583"> -f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log_error</span><span style="color:#9ECBFF"> "Zig compiler not found: </span><span style="color:#E1E4E8">$ZIG_BINARY</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">!</span><span style="color:#F97583"> -d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log_error</span><span style="color:#9ECBFF"> "Ghostty source not found: </span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Register task for TUI</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ghostty-build"</span></span>
+<span class="line"><span style="color:#B392F0">    register_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Building Ghostty with Zig"</span></span>
+<span class="line"><span style="color:#B392F0">    start_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Build with collapsible output (user sees real-time Zig build output)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> start_time</span></span>
+<span class="line"><span style="color:#E1E4E8">    start_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">    cd</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> run_command_collapsible</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -Doptimize=ReleaseFast</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> end_time</span></span>
+<span class="line"><span style="color:#E1E4E8">        end_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> duration</span></span>
+<span class="line"><span style="color:#E1E4E8">        duration</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">calculate_duration</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$start_time</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$end_time</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">        complete_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log_success</span><span style="color:#9ECBFF"> "Built Ghostty: </span><span style="color:#E1E4E8">$GHOSTTY_BINARY</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#B392F0">        fail_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Zig build failed"</span></span>
+<span class="line"><span style="color:#B392F0">        log_error</span><span style="color:#9ECBFF"> "Failed to build Ghostty with Zig"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<p><strong>User Experience with Modular Scripts</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ Ghostty Prerequisites Check (0s)</span></span>
+<span class="line"><span>⠋ Downloading Zig 0.14.0...</span></span>
+<span class="line"><span>  [Real-time curl progress bar visible]</span></span>
+<span class="line"><span>✓ Downloading Zig 0.14.0 (30s)</span></span>
+<span class="line"><span>⠋ Extracting Zig tarball...</span></span>
+<span class="line"><span>  [Real-time tar extraction output]</span></span>
+<span class="line"><span>✓ Extracting Zig tarball (10s)</span></span>
+<span class="line"><span>⠋ Cloning Ghostty repository...</span></span>
+<span class="line"><span>  Cloning into '/home/kkk/Apps/ghostty'...</span></span>
+<span class="line"><span>  remote: Enumerating objects: 1234, done.</span></span>
+<span class="line"><span>  remote: Counting objects: 100% (1234/1234), done.</span></span>
+<span class="line"><span>  remote: Compressing objects: 100% (567/567), done.</span></span>
+<span class="line"><span>  Receiving objects: 100% (1234/1234), 2.34 MiB | 5.67 MiB/s, done.</span></span>
+<span class="line"><span>✓ Cloning Ghostty repository (20s)</span></span>
+<span class="line"><span>⠋ Building Ghostty with Zig...</span></span>
+<span class="line"><span>  [Real-time Zig build output]</span></span>
+<span class="line"><span>  info: building ghostty (release-fast)</span></span>
+<span class="line"><span>  info: compiling src/main.zig</span></span>
+<span class="line"><span>  ...</span></span>
+<span class="line"><span>✓ Building Ghostty with Zig (90s)</span></span>
+<span class="line"><span>⠋ Installing Ghostty binary...</span></span>
+<span class="line"><span>✓ Installing Ghostty binary (10s)</span></span>
+<span class="line"><span>✓ Verifying Ghostty installation (5s)</span></span></code></pre>
+<hr>
+<h2 id="task-registry-integration">Task Registry Integration</h2>
+<h3 id="orchestrator-changes-startsh">Orchestrator Changes (start.sh)</h3>
+<p><strong>Replace monolithic task entries</strong> with granular modular steps:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> TASK_REGISTRY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Prerequisites</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "verify-prereqs||pre_installation_health_check|verify_health|0|10"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Gum TUI Framework (parallel group 1)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "gum-00-check|verify-prereqs|gum/00-check-prerequisites.sh|verify_gum_not_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "gum-01-download|gum-00-check|gum/01-download-gum.sh|verify_gum_tarball|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "gum-02-install|gum-01-download|gum/02-install-gum.sh|verify_gum_binary|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "gum-03-verify|gum-02-install|gum/03-verify-installation.sh|verify_gum_version|1|5"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Ghostty Terminal (parallel group 1)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-00-check|verify-prereqs|ghostty/00-check-prerequisites.sh|verify_ghostty_not_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-01-download-zig|ghostty-00-check|ghostty/01-download-zig.sh|verify_zig_tarball|1|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-02-extract-zig|ghostty-01-download-zig|ghostty/02-extract-zig.sh|verify_zig_extracted|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-03-build-zig|ghostty-02-extract-zig|ghostty/03-build-zig.sh|verify_zig_binary|1|60"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-04-clone-repo|ghostty-03-build-zig|ghostty/04-clone-repository.sh|verify_ghostty_repo|1|20"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-05-build|ghostty-04-clone-repo|ghostty/05-build-ghostty.sh|verify_ghostty_binary|1|90"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-06-install|ghostty-05-build|ghostty/06-install-binary.sh|verify_ghostty_installed|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-07-verify|ghostty-06-install|ghostty/07-verify-installation.sh|verify_ghostty_version|1|5"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # ZSH Configuration (parallel group 1)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-00-check|verify-prereqs|zsh/00-check-prerequisites.sh|verify_zsh_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-01-oh-my-zsh|zsh-00-check|zsh/01-install-oh-my-zsh.sh|verify_oh_my_zsh|1|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-02-plugins|zsh-01-oh-my-zsh|zsh/02-install-plugins.sh|verify_plugins|1|20"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-03-configure|zsh-02-plugins|zsh/03-configure-zshrc.sh|verify_zshrc|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-04-security|zsh-03-configure|zsh/04-install-security-check.sh|verify_security|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-05-verify|zsh-04-security|zsh/05-verify-installation.sh|verify_zsh_config|1|5"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Python UV (parallel group 1)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "uv-00-check|verify-prereqs|python_uv/00-check-prerequisites.sh|verify_uv_not_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "uv-01-download|uv-00-check|python_uv/01-download-uv.sh|verify_uv_tarball|1|15"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "uv-02-extract|uv-01-download|python_uv/02-extract-uv.sh|verify_uv_extracted|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "uv-03-install|uv-02-extract|python_uv/03-install-uv.sh|verify_uv_binary|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "uv-04-verify|uv-03-install|python_uv/04-verify-installation.sh|verify_uv_version|1|10"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Node.js FNM (parallel group 1)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "fnm-00-check|verify-prereqs|nodejs_fnm/00-check-prerequisites.sh|verify_fnm_not_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "fnm-01-download|fnm-00-check|nodejs_fnm/01-download-fnm.sh|verify_fnm_tarball|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "fnm-02-install-fnm|fnm-01-download|nodejs_fnm/02-install-fnm.sh|verify_fnm_binary|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "fnm-03-install-nodejs|fnm-02-install-fnm|nodejs_fnm/03-install-nodejs.sh|verify_nodejs_installed|1|60"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "fnm-04-configure-shell|fnm-03-install-nodejs|nodejs_fnm/04-configure-shell.sh|verify_shell_config|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "fnm-05-verify|fnm-04-configure-shell|nodejs_fnm/05-verify-installation.sh|verify_fnm_version|1|10"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # AI Tools (parallel group 3 - depends on Node.js)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ai-00-check|fnm-05-verify|ai_tools/00-check-prerequisites.sh|verify_nodejs_available|3|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ai-01-claude|ai-00-check|ai_tools/01-install-claude-cli.sh|verify_claude_cli|3|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ai-02-gemini|ai-00-check|ai_tools/02-install-gemini-cli.sh|verify_gemini_cli|3|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ai-03-copilot|ai-00-check|ai_tools/03-install-copilot-cli.sh|verify_copilot_cli|3|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ai-04-verify|ai-01-claude,ai-02-gemini,ai-03-copilot|ai_tools/04-verify-installation.sh|verify_all_ai_tools|3|10"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Context Menu (parallel group 2 - depends on Ghostty)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "context-00-check|ghostty-07-verify|context_menu/00-check-prerequisites.sh|verify_nautilus_installed|2|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "context-01-install|context-00-check|context_menu/01-install-context-menu.sh|verify_context_menu_script|2|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "context-02-verify|context-01-install|context_menu/02-verify-installation.sh|verify_context_menu_works|2|5"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # App Audit (parallel group 4 - final step)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-00-check|ai-04-verify,context-02-verify|app_audit/00-check-prerequisites.sh|verify_audit_ready|4|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-01-apt|audit-00-check|app_audit/01-scan-apt-packages.sh|verify_apt_scan|4|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-02-snap|audit-00-check|app_audit/02-scan-snap-packages.sh|verify_snap_scan|4|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-03-desktop|audit-00-check|app_audit/03-scan-desktop-files.sh|verify_desktop_scan|4|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-04-duplicates|audit-01-apt,audit-02-snap,audit-03-desktop|app_audit/04-detect-duplicates.sh|verify_duplicates|4|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-05-report|audit-04-duplicates|app_audit/05-generate-report.sh|verify_report|4|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "audit-06-verify|audit-05-report|app_audit/06-verify-report.sh|verify_audit_complete|4|5"</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p><strong>Total Tasks</strong>:</p>
+<ul>
+<li>Before: 9 tasks</li>
+<li>After: 50+ granular tasks</li>
+</ul>
+<p><strong>User Benefit</strong>: TUI shows 50+ individual steps with real-time output visibility</p>
+<hr>
+<h2 id="script-execution-model">Script Execution Model</h2>
+<h3 id="orchestrator-logic-startsh">Orchestrator Logic (start.sh)</h3>
+<p>Replace <code>execute_single_task()</code> to call modular scripts:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">execute_single_task</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> deps</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$2</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> script_path</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$3</span><span style="color:#9ECBFF">"</span><span style="color:#6A737D">      # Changed from function name to script path</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> verify_fn</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$4</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Skip if already completed (idempotency)</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> is_task_completed</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> &#x26;&#x26; [ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$FORCE_ALL</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        skip_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Check dependencies</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-n</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$deps</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#E1E4E8">        IFS</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">','</span><span style="color:#79B8FF"> read</span><span style="color:#79B8FF"> -ra</span><span style="color:#9ECBFF"> dep_array</span><span style="color:#F97583"> &#x3C;&#x3C;&#x3C;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$deps</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> dep </span><span style="color:#F97583">in</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">dep_array</span><span style="color:#9ECBFF">[</span><span style="color:#F97583">@</span><span style="color:#9ECBFF">]}</span><span style="color:#79B8FF">\"</span><span style="color:#9ECBFF">; do</span></span>
+<span class="line"><span style="color:#9ECBFF">            if ! is_task_completed "</span><span style="color:#E1E4E8">$dep</span><span style="color:#9ECBFF">"; then</span></span>
+<span class="line"><span style="color:#9ECBFF">                log "ERROR" "Dependency</span><span style="color:#9ECBFF"> not</span><span style="color:#9ECBFF"> met:</span><span style="color:#E1E4E8"> $task_id </span><span style="color:#9ECBFF">requires</span><span style="color:#E1E4E8"> $dep</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#9ECBFF">                fail_task "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">" "Dependency</span><span style="color:#9ECBFF"> not</span><span style="color:#9ECBFF"> met:</span><span style="color:#E1E4E8"> $dep</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#9ECBFF">                return 1</span></span>
+<span class="line"><span style="color:#9ECBFF">            fi</span></span>
+<span class="line"><span style="color:#9ECBFF">        done</span></span>
+<span class="line"><span style="color:#9ECBFF">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">    # Execute modular script</span></span>
+<span class="line"><span style="color:#9ECBFF">    start_task "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">    local task_start</span></span>
+<span class="line"><span style="color:#9ECBFF">    task_start=$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#9ECBFF">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">    local full_script_path="</span><span style="color:#E1E4E8">${ORCHESTRATOR_DIR}</span><span style="color:#9ECBFF">/lib/tasks/</span><span style="color:#E1E4E8">${script_path}</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">    # Run modular script</span></span>
+<span class="line"><span style="color:#9ECBFF">    local exit_code=0</span></span>
+<span class="line"><span style="color:#9ECBFF">    if bash "</span><span style="color:#E1E4E8">$full_script_path</span><span style="color:#9ECBFF">"; then</span></span>
+<span class="line"><span style="color:#9ECBFF">        exit_code=0</span></span>
+<span class="line"><span style="color:#9ECBFF">    else</span></span>
+<span class="line"><span style="color:#9ECBFF">        exit_code=</span><span style="color:#79B8FF">$?</span></span>
+<span class="line"><span style="color:#9ECBFF">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">    local task_end</span></span>
+<span class="line"><span style="color:#9ECBFF">    task_end=$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#9ECBFF">)</span></span>
+<span class="line"><span style="color:#9ECBFF">    local duration</span></span>
+<span class="line"><span style="color:#9ECBFF">    duration=$(</span><span style="color:#B392F0">calculate_duration</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_start</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">$task_end</span><span style="color:#9ECBFF">")</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">    # Handle exit codes</span></span>
+<span class="line"><span style="color:#9ECBFF">    case </span><span style="color:#E1E4E8">$exit_code</span><span style="color:#9ECBFF"> in</span></span>
+<span class="line"><span style="color:#9ECBFF">        0)</span></span>
+<span class="line"><span style="color:#9ECBFF">            # Success</span></span>
+<span class="line"><span style="color:#9ECBFF">            complete_task "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#9ECBFF">            mark_task_completed "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#9ECBFF">            return 0</span></span>
+<span class="line"><span style="color:#9ECBFF">            ;;</span></span>
+<span class="line"><span style="color:#9ECBFF">        2)</span></span>
+<span class="line"><span style="color:#9ECBFF">            # Skip (idempotent - already done)</span></span>
+<span class="line"><span style="color:#9ECBFF">            skip_task "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#9ECBFF">            mark_task_completed "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">" "0"</span></span>
+<span class="line"><span style="color:#9ECBFF">            return 0</span></span>
+<span class="line"><span style="color:#9ECBFF">            ;;</span></span>
+<span class="line"><span style="color:#9ECBFF">        *)</span></span>
+<span class="line"><span style="color:#9ECBFF">            # Failure</span></span>
+<span class="line"><span style="color:#9ECBFF">            fail_task "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">" "Script</span><span style="color:#9ECBFF"> failed:</span><span style="color:#E1E4E8"> $script_path (</span><span style="color:#79B8FF">exit</span><span style="color:#9ECBFF"> code:</span><span style="color:#E1E4E8"> $exit_code)</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#9ECBFF">            return 1</span></span>
+<span class="line"><span style="color:#9ECBFF">            ;;</span></span>
+<span class="line"><span style="color:#9ECBFF">    esac</span></span>
+<span class="line"><span style="color:#9ECBFF">}</span></span></code></pre>
+<hr>
+<h2 id="common-utilities-commonsh">Common Utilities (common.sh)</h2>
+<p>Each task category has a <code>common.sh</code> with shared functions:</p>
+<h3 id="example-libtasksghosttycommonsh">Example: <code>lib/tasks/ghostty/common.sh</code></h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Common utilities for Ghostty installation modules</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Source core libraries</span></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"$(</span><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")" &#x26;&#x26; </span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../../core/logging.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../../core/utils.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Ghostty installation paths</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_REPO</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://github.com/ghostty-org/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_SRC</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Apps/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_BINARY</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">/zig-out/bin/ghostty"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> GHOSTTY_INSTALL_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/.local/bin"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Zig compiler paths</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_VERSION</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"0.14.0"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_URL</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://ziglang.org/download/${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}.tar.xz"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_TARBALL</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Downloads/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}.tar.xz"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_EXTRACT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Apps"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$ZIG_EXTRACT_DIR</span><span style="color:#9ECBFF">/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_BINARY</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$ZIG_DIR</span><span style="color:#9ECBFF">/zig"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Logging helpers</span></span>
+<span class="line"><span style="color:#B392F0">log_info</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">log_success</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "SUCCESS"</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">log_warning</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "WARNING"</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">log_error</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    log</span><span style="color:#9ECBFF"> "ERROR"</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verification functions</span></span>
+<span class="line"><span style="color:#B392F0">verify_ghostty_not_installed</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    !</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> ghostty</span><span style="color:#E1E4E8"> &#x26;</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_zig_tarball</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_zig_extracted</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_DIR</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_zig_binary</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ] &#x26;&#x26; [ </span><span style="color:#F97583">-x</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_ghostty_repo</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_SRC</span><span style="color:#9ECBFF">/.git"</span><span style="color:#E1E4E8"> ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_ghostty_binary</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ] &#x26;&#x26; [ </span><span style="color:#F97583">-x</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$GHOSTTY_BINARY</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_ghostty_installed</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#79B8FF">    command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> ghostty</span><span style="color:#E1E4E8"> &#x26;</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">verify_ghostty_version</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> version</span></span>
+<span class="line"><span style="color:#E1E4E8">    version</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">ghostty</span><span style="color:#79B8FF"> --version</span><span style="color:#F97583"> 2></span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> ""</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    [ </span><span style="color:#F97583">-n</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$version</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Export all verification functions</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_ghostty_not_installed</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_zig_tarball</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_zig_extracted</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_zig_binary</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_ghostty_repo</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_ghostty_binary</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_ghostty_installed</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#79B8FF"> -f</span><span style="color:#E1E4E8"> verify_ghostty_version</span></span></code></pre>
+<hr>
+<h2 id="migration-strategy">Migration Strategy</h2>
+<h3 id="phase-1-create-modular-scripts-week-1">Phase 1: Create Modular Scripts (Week 1)</h3>
+<ol>
+<li>Create directory structure (<code>lib/tasks/ghostty/</code>, <code>lib/tasks/zsh/</code>, etc.)</li>
+<li>Extract Ghostty installation into 8 modular scripts</li>
+<li>Create <code>common.sh</code> for each task category</li>
+<li>Add comprehensive comments and documentation</li>
+</ol>
+<h3 id="phase-2-update-orchestrator-week-1-2">Phase 2: Update Orchestrator (Week 1-2)</h3>
+<ol>
+<li>Modify <code>execute_single_task()</code> to call scripts instead of functions</li>
+<li>Update TASK_REGISTRY with granular task definitions</li>
+<li>Add exit code handling (0=success, 1=failure, 2=skip)</li>
+<li>Test with Ghostty installation only</li>
+</ol>
+<h3 id="phase-3-migrate-remaining-tasks-week-2-3">Phase 3: Migrate Remaining Tasks (Week 2-3)</h3>
+<ol>
+<li>Break down ZSH installation (6 scripts)</li>
+<li>Break down Python UV (5 scripts)</li>
+<li>Break down Node.js FNM (6 scripts)</li>
+<li>Break down AI Tools (5 scripts)</li>
+<li>Break down Context Menu (3 scripts)</li>
+<li>Break down App Audit (7 scripts)</li>
+</ol>
+<h3 id="phase-4-testing--validation-week-3-4">Phase 4: Testing &#x26; Validation (Week 3-4)</h3>
+<ol>
+<li>Test fresh installation with modular scripts</li>
+<li>Test idempotency (re-run installation)</li>
+<li>Test error recovery (interrupt during build)</li>
+<li>Test output visibility (collapsible UI)</li>
+<li>Performance benchmarking</li>
+</ol>
+<h3 id="phase-5-documentation--cleanup-week-4">Phase 5: Documentation &#x26; Cleanup (Week 4)</h3>
+<ol>
+<li>Update README.md with modular architecture</li>
+<li>Update CLAUDE.md with new structure</li>
+<li>Create migration guide for contributors</li>
+<li>Archive old monolithic scripts</li>
+<li>Update local CI/CD workflows</li>
+</ol>
+<hr>
+<h2 id="benefits-summary">Benefits Summary</h2>
+<h3 id="for-users">For Users</h3>
+<p>✅ <strong>Real-time Output Visibility</strong>: See exactly what’s happening during long operations
+✅ <strong>Granular Progress Tracking</strong>: 50+ individual steps instead of 9 monolithic tasks
+✅ <strong>Docker-like UX</strong>: Collapsible output with automatic summarization
+✅ <strong>Better Error Messages</strong>: Failures pinpoint exact step (e.g., “Zig download failed” vs “Ghostty installation failed”)
+✅ <strong>Resume Capability</strong>: Re-run failed steps without redoing completed work</p>
+<h3 id="for-developers">For Developers</h3>
+<p>✅ <strong>Maintainability</strong>: Each script &#x3C;150 lines, single responsibility
+✅ <strong>Debuggability</strong>: Easy to isolate and fix issues in specific steps
+✅ <strong>Testability</strong>: Each script can be tested independently
+✅ <strong>Reusability</strong>: Common utilities shared via <code>common.sh</code>
+✅ <strong>Constitutional Compliance</strong>: Modular architecture principle satisfied</p>
+<h3 id="for-ai-assistants">For AI Assistants</h3>
+<p>✅ <strong>Clear Context</strong>: Each script has focused purpose
+✅ <strong>Easy Modification</strong>: Change one step without affecting others
+✅ <strong>Pattern Recognition</strong>: Standardized interface across all scripts
+✅ <strong>Documentation</strong>: Self-documenting code with clear headers</p>
+<hr>
+<h2 id="constitutional-compliance">Constitutional Compliance</h2>
+<h3 id="principle-v-modular-architecture">Principle V: Modular Architecture ✅</h3>
+<p><strong>Before</strong>:</p>
+<ul>
+<li>❌ Monolithic 500-line task files</li>
+<li>❌ Difficult to maintain and debug</li>
+<li>❌ No granular progress visibility</li>
+</ul>
+<p><strong>After</strong>:</p>
+<ul>
+<li>✅ Modular &#x3C;150-line scripts</li>
+<li>✅ Single responsibility per script</li>
+<li>✅ Granular progress tracking</li>
+<li>✅ Clean separation of concerns</li>
+</ul>
+<h3 id="performance-targets">Performance Targets ✅</h3>
+<ul>
+<li><strong>Startup Impact</strong>: Zero (scripts only run during installation)</li>
+<li><strong>Build Performance</strong>: Unchanged (same Zig builds, just better visibility)</li>
+<li><strong>Idempotency</strong>: Improved (each step checks if already done)</li>
+<li><strong>Resume Capability</strong>: Improved (granular state tracking)</li>
+</ul>
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+<li><strong>User Approval</strong>: Review this design and provide feedback</li>
+<li><strong>Start Implementation</strong>: Begin Phase 1 (create modular scripts for Ghostty)</li>
+<li><strong>Iterative Testing</strong>: Test each phase before moving to next</li>
+<li><strong>Documentation</strong>: Update all docs as we progress</li>
+</ol>
+<hr>
+<p><strong>End of Design Document</strong></p>
+<p><strong>Author</strong>: Claude Code (Sonnet 4.5)
+<strong>User Requirement</strong>: “Each step is calling a script that does the one thing for that segment of the process”
+<strong>Status</strong>: Ready for Implementation
+<strong>Estimated Effort</strong>: 4 weeks for complete migration</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

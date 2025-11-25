@@ -1,0 +1,1060 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Complete Refactoring Roadmap: Infrastructure + Task Modularity | Ghostty Configuration Files</title><meta name="description" content="**Date**: 2025-11-20"><!-- OpenGraph --><meta property="og:title" content="Complete Refactoring Roadmap: Infrastructure + Task Modularity"><meta property="og:description" content="**Date**: 2025-11-20"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Complete Refactoring Roadmap: Infrastructure + Task Modularity</li> </ul> </div> <h1>Complete Refactoring Roadmap: Infrastructure + Task Modularity</h1> <p class="text-xl text-base-content/70 mb-8">**Date**: 2025-11-20</p><h1 id="complete-refactoring-roadmap-infrastructure--task-modularity">Complete Refactoring Roadmap: Infrastructure + Task Modularity</h1>
+<p><strong>Date</strong>: 2025-11-20
+<strong>Latest Verification</strong>: ✅ Verified by Claude (Phase 2 Stream 1 Complete)
+<strong>Status</strong>: Phase 1 (Infrastructure) ✅ COMPLETED | Phase 2 (Task Modularity) 🚀 IN PROGRESS
+<strong>Purpose</strong>: Comprehensive repository restructuring and modular task architecture implementation
+<strong>User’s Vision</strong>: “Each step is calling a script that does the one thing for that segment of the process”</p>
+<hr>
+<h2 id="overview-two-phase-refactoring">Overview: Two-Phase Refactoring</h2>
+<h3 id="phase-1-infrastructure-refactoring--completed">Phase 1: Infrastructure Refactoring ✅ COMPLETED</h3>
+<p><strong>Implementer</strong>: Gemini
+<strong>Focus</strong>: Foundation layer (bootstrap, verification, TUI)
+<strong>Status</strong>: ✅ Complete and tested</p>
+<h3 id="phase-2-task-modularity--in-progress">Phase 2: Task Modularity 🚀 IN PROGRESS</h3>
+<p><strong>Implementer</strong>: Claude (Parallel Execution)
+<strong>Focus</strong>: Application layer (50+ single-purpose task scripts)
+<strong>Status</strong>: 🚀 Stream 1 (Ghostty) COMPLETE | Streams 2-8 PENDING
+<strong>Plan</strong>: <a href="PHASE_2_PARALLEL_EXECUTION_PLAN.md">PHASE_2_PARALLEL_EXECUTION_PLAN.md</a></p>
+<hr>
+<h2 id="phase-1-infrastructure-refactoring--completed-1">Phase 1: Infrastructure Refactoring ✅ COMPLETED</h2>
+<h3 id="11-documentation-consolidation--completed">1.1 Documentation Consolidation ✅ COMPLETED</h3>
+<p><strong>User Feedback Addressed</strong>:</p>
+<blockquote>
+<p>“why are the 3 folders with documents in root folder? why can’t it just be 1 folder and various sub folders for various purposes?”</p>
+</blockquote>
+<h4 id="before-fragmented---7-folders">BEFORE (Fragmented - 7 folders):</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/home/kkk/Apps/ghostty-config-files/</span></span>
+<span class="line"><span>├── /delete/                    # Old files</span></span>
+<span class="line"><span>├── /docs-setup/                # Setup guides</span></span>
+<span class="line"><span>├── /documentations/            # Developer/user docs</span></span>
+<span class="line"><span>├── /specs/                     # Feature specifications</span></span>
+<span class="line"><span>├── /website/                   # Astro source</span></span>
+<span class="line"><span>├── /src/                       # OLD Astro duplicate (root)</span></span>
+<span class="line"><span>└── /public/                    # OLD Astro duplicate (root)</span></span></code></pre>
+<h4 id="after-consolidated---2-folders">AFTER (Consolidated - 2 folders):</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/home/kkk/Apps/ghostty-config-files/</span></span>
+<span class="line"><span>├── /documentation/             # ✅ SINGLE documentation folder</span></span>
+<span class="line"><span>│   ├── setup/                  # [Link: documentation/setup/]</span></span>
+<span class="line"><span>│   │   ├── context7-mcp.md</span></span>
+<span class="line"><span>│   │   ├── github-mcp.md</span></span>
+<span class="line"><span>│   │   ├── new-device-setup.md</span></span>
+<span class="line"><span>│   │   ├── zsh-security-check.md</span></span>
+<span class="line"><span>│   │   └── constitutional-compliance-criteria.md</span></span>
+<span class="line"><span>│   ├── architecture/           # [Link: documentation/architecture/]</span></span>
+<span class="line"><span>│   │   └── MODULAR_TASK_ARCHITECTURE.md</span></span>
+<span class="line"><span>│   ├── developer/              # [Link: documentation/developer/]</span></span>
+<span class="line"><span>│   │   ├── HANDOFF_SUMMARY_20251120_ZSH_SECURITY.md</span></span>
+<span class="line"><span>│   │   ├── LLM_HANDOFF_INSTRUCTIONS.md</span></span>
+<span class="line"><span>│   │   └── conversation_logs/</span></span>
+<span class="line"><span>│   ├── user/                   # [Link: documentation/user/]</span></span>
+<span class="line"><span>│   ├── specifications/         # [Link: documentation/specifications/]</span></span>
+<span class="line"><span>│   │   └── 001-modern-tui-system/</span></span>
+<span class="line"><span>│   └── archive/                # [Link: documentation/archive/]</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>└── /astro-website/             # ✅ SINGLE Astro.build folder</span></span>
+<span class="line"><span>    ├── src/                    # [Link: astro-website/src/]</span></span>
+<span class="line"><span>    ├── public/                 # [Link: astro-website/public/]</span></span>
+<span class="line"><span>    ├── astro.config.mjs        # [File: astro-website/astro.config.mjs]</span></span>
+<span class="line"><span>    └── package.json            # [File: astro-website/package.json]</span></span></code></pre>
+<p><strong>Changes Summary</strong>:</p>
+<ul>
+<li>✅ Deleted: <code>/delete/</code>, <code>/docs-setup/</code>, <code>/documentations/</code>, <code>/specs/</code>, <code>/src/</code>, <code>/public/</code></li>
+<li>✅ Created: <code>/documentation/</code> (consolidated all docs)</li>
+<li>✅ Renamed: <code>/website/</code> → <code>/astro-website/</code></li>
+<li>✅ Archived: <code>/.specify/</code> → <code>/archive-spec-kit/.specify/</code></li>
+</ul>
+<p><strong>Commit</strong>: <code>20251120-063630-refactor-consolidate-documentation</code>
+<strong>Files Changed</strong>: 166 files (+452 insertions, -14,331 deletions)</p>
+<hr>
+<h3 id="12-modular-infrastructure--completed">1.2 Modular Infrastructure ✅ COMPLETED</h3>
+<p><strong>User Feedback Addressed</strong>:</p>
+<blockquote>
+<p>“can we make the project even more modular”</p>
+</blockquote>
+<p><strong>Implementer</strong>: Gemini
+<strong>Handoff Document</strong>: <code>/home/kkk/.gemini/antigravity/brain/bf36cf23-d569-4c6b-8ab9-7a0edc74495c/handoff_summary.md</code></p>
+<h4 id="new-infrastructure-files-created">New Infrastructure Files Created:</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Purpose</th><th>Status</th><th>Link</th></tr></thead><tbody><tr><td><strong>lib/init.sh</strong></td><td>Centralized bootstrap for location-independent execution</td><td>✅ COMPLETE</td><td><a href="lib/init.sh">File: lib/init.sh</a></td></tr><tr><td><strong>lib/verification/environment.sh</strong></td><td>Robust environment checks (lock files, conflicts, PATH)</td><td>✅ COMPLETE</td><td><a href="lib/verification/environment.sh">File: lib/verification/environment.sh</a></td></tr><tr><td><strong>scripts/.template.sh</strong></td><td>Template for creating new modular scripts</td><td>✅ COMPLETE</td><td><a href="scripts/.template.sh">File: scripts/.template.sh</a></td></tr><tr><td><strong>tests/test_modularity.sh</strong></td><td>Test suite verifying location-independence</td><td>✅ COMPLETE</td><td><a href="tests/test_modularity.sh">File: tests/test_modularity.sh</a></td></tr></tbody></table>
+<h4 id="modified-core-files">Modified Core Files:</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>File</th><th>Changes</th><th>Status</th><th>Link</th></tr></thead><tbody><tr><td><strong>lib/ui/tui.sh</strong></td><td>Added <code>ensure_gum()</code> with auto-install</td><td>✅ COMPLETE</td><td><a href="lib/ui/tui.sh">File: lib/ui/tui.sh</a></td></tr><tr><td><strong>lib/core/logging.sh</strong></td><td>Refactored for subshell compatibility, added DEBUG level</td><td>✅ COMPLETE</td><td><a href="lib/core/logging.sh">File: lib/core/logging.sh</a></td></tr><tr><td><strong>start.sh</strong></td><td>Integrated lib/init.sh and environment checks</td><td>✅ COMPLETE</td><td><a href="start.sh">File: start.sh</a></td></tr></tbody></table>
+<h4 id="key-features-implemented">Key Features Implemented:</h4>
+<h5 id="-1-centralized-bootstrap-libinitsh">✅ 1. Centralized Bootstrap (<code>lib/init.sh</code>)</h5>
+<p><strong>Purpose</strong>: Single entry point for all scripts, location-independent execution</p>
+<p><strong>Before</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Each script had to manually:</span></span>
+<span class="line"><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"$(</span><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")" &#x26;&#x26; </span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../lib/core/logging.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">SCRIPT_DIR</span><span style="color:#9ECBFF">}/../lib/core/utils.sh"</span></span>
+<span class="line"><span style="color:#6A737D"># ... source 10+ libraries manually</span></span></code></pre>
+<p><strong>After</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># One line in any script:</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")/../lib/init.sh"</span></span>
+<span class="line"><span style="color:#6A737D"># All libraries loaded, environment initialized</span></span></code></pre>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Scripts can run from ANY directory (root, subdirectories, etc.)</li>
+<li>Automatic repository root detection via <code>.git</code> traversal</li>
+<li>All libraries sourced in correct order</li>
+<li>Exports <code>REPO_ROOT</code>, <code>LIB_DIR</code>, <code>SCRIPTS_DIR</code>, <code>CONFIG_DIR</code></li>
+</ul>
+<p><strong>Usage Example</strong>: <a href="scripts/.template.sh">See: scripts/.template.sh lines 17-22</a></p>
+<hr>
+<h5 id="-2-enhanced-tui-with-auto-install-libuituish">✅ 2. Enhanced TUI with Auto-Install (<code>lib/ui/tui.sh</code>)</h5>
+<p><strong>Purpose</strong>: Zero-config TUI setup for new users</p>
+<p><strong>Before</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># If gum missing, scripts failed or fell back to plain text</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> gum</span><span style="color:#E1E4E8"> &#x26;</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">    # Use TUI</span></span>
+<span class="line"><span style="color:#F97583">else</span></span>
+<span class="line"><span style="color:#6A737D">    # Plain text fallback</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<p><strong>After</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Auto-attempts installation if gum missing:</span></span>
+<span class="line"><span style="color:#B392F0">ensure_gum</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    1.</span><span style="color:#9ECBFF"> Check</span><span style="color:#9ECBFF"> if</span><span style="color:#9ECBFF"> gum</span><span style="color:#9ECBFF"> exists</span><span style="color:#9ECBFF"> →</span><span style="color:#9ECBFF"> return</span><span style="color:#9ECBFF"> if</span><span style="color:#9ECBFF"> yes</span></span>
+<span class="line"><span style="color:#B392F0">    2.</span><span style="color:#9ECBFF"> Try:</span><span style="color:#9ECBFF"> go</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> github.com/charmbracelet/gum@latest</span></span>
+<span class="line"><span style="color:#B392F0">    3.</span><span style="color:#9ECBFF"> Try:</span><span style="color:#9ECBFF"> sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -y</span><span style="color:#9ECBFF"> gum</span></span>
+<span class="line"><span style="color:#B392F0">    4.</span><span style="color:#9ECBFF"> Fallback</span><span style="color:#9ECBFF"> to</span><span style="color:#9ECBFF"> plain</span><span style="color:#9ECBFF"> text</span><span style="color:#9ECBFF"> if</span><span style="color:#9ECBFF"> both</span><span style="color:#9ECBFF"> fail</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Automatic installation on first run</li>
+<li>Tries multiple installation methods (go, apt)</li>
+<li>Graceful degradation to plain text</li>
+<li>No manual intervention needed</li>
+</ul>
+<p><strong>Implementation</strong>: <a href="lib/ui/tui.sh">See: lib/ui/tui.sh lines 46-76</a></p>
+<hr>
+<h5 id="-3-robust-environment-verification-libverificationenvironmentsh">✅ 3. Robust Environment Verification (<code>lib/verification/environment.sh</code>)</h5>
+<p><strong>Purpose</strong>: Deep environment health checks before execution</p>
+<p><strong>Checks Performed</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Check</th><th>Purpose</th><th>Auto-Remediation</th></tr></thead><tbody><tr><td><strong>Clean State</strong></td><td>Detect stale lock files from crashed installations</td><td>✅ Removes stale locks if process not running</td></tr><tr><td><strong>Conflicts</strong></td><td>Warn about conflicting tools (pip vs uv)</td><td>ℹ️ Informational warnings only</td></tr><tr><td><strong>PATH Sanity</strong></td><td>Ensure <code>~/.local/bin</code> in PATH</td><td>✅ Auto-adds to PATH for current session</td></tr></tbody></table>
+<p><strong>Before</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># No checks - scripts could fail due to:</span></span>
+<span class="line"><span style="color:#6A737D"># - Stale lock files from previous crashes</span></span>
+<span class="line"><span style="color:#6A737D"># - Missing PATH entries</span></span>
+<span class="line"><span style="color:#6A737D"># - Conflicting installations</span></span></code></pre>
+<p><strong>After</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Automatic verification before execution:</span></span>
+<span class="line"><span style="color:#B392F0">run_environment_checks</span></span>
+<span class="line"><span style="color:#B392F0">├──</span><span style="color:#9ECBFF"> verify_clean_state</span><span style="color:#E1E4E8">()      </span><span style="color:#6A737D"># Check lock files</span></span>
+<span class="line"><span style="color:#B392F0">├──</span><span style="color:#9ECBFF"> verify_conflicts</span><span style="color:#E1E4E8">()         </span><span style="color:#6A737D"># Check conflicting tools</span></span>
+<span class="line"><span style="color:#B392F0">└──</span><span style="color:#9ECBFF"> verify_path_sanity</span><span style="color:#E1E4E8">()       </span><span style="color:#6A737D"># Check PATH entries</span></span></code></pre>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Prevents cascading failures</li>
+<li>Auto-cleanup of stale state</li>
+<li>Clear diagnostic messages</li>
+<li>Safe auto-remediation where possible</li>
+</ul>
+<p><strong>Implementation</strong>: <a href="lib/verification/environment.sh">See: lib/verification/environment.sh</a></p>
+<hr>
+<h5 id="-4-robust-logging-libcoreloggingsh">✅ 4. Robust Logging (<code>lib/core/logging.sh</code>)</h5>
+<p><strong>Fix</strong>: Replaced associative arrays with case statements</p>
+<p><strong>Problem Before</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Associative arrays caused "unbound variable" errors in subshells</span></span>
+<span class="line"><span style="color:#F97583">declare</span><span style="color:#79B8FF"> -A</span><span style="color:#E1E4E8"> LOG_LEVELS</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">([</span><span style="color:#B392F0">DEBUG</span><span style="color:#E1E4E8">]=</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> [</span><span style="color:#B392F0">INFO</span><span style="color:#E1E4E8">]=</span><span style="color:#79B8FF">1</span><span style="color:#9ECBFF"> ...</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">log</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> level_num</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">LOG_LEVELS</span><span style="color:#9ECBFF">[</span><span style="color:#E1E4E8">$level</span><span style="color:#9ECBFF">]}"</span><span style="color:#6A737D">  # ❌ Fails in subshell</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Solution After</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Case statements work correctly in all contexts</span></span>
+<span class="line"><span style="color:#B392F0">log</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    case</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$level</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> in</span></span>
+<span class="line"><span style="color:#DBEDFF">        DEBUG</span><span style="color:#F97583">)</span><span style="color:#E1E4E8">   level_num</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#DBEDFF">        INFO</span><span style="color:#F97583">)</span><span style="color:#E1E4E8">    level_num</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#DBEDFF">        SUCCESS</span><span style="color:#F97583">)</span><span style="color:#E1E4E8"> level_num</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">2</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#DBEDFF">        ...</span></span>
+<span class="line"><span style="color:#F97583">    esac</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>Works in subshells (critical for piped commands)</li>
+<li>Added DEBUG level for granular tracing</li>
+<li>Better performance in tight loops</li>
+<li>More maintainable code</li>
+</ul>
+<p><strong>Implementation</strong>: <a href="lib/core/logging.sh">See: lib/core/logging.sh</a></p>
+<hr>
+<h3 id="13-testing--verification--completed">1.3 Testing &#x26; Verification ✅ COMPLETED</h3>
+<p><strong>Test Suite</strong>: <a href="tests/test_modularity.sh">tests/test_modularity.sh</a></p>
+<p><strong>Test Coverage</strong>:</p>
+<ol>
+<li>✅ <strong>Repo Root Execution</strong>: Scripts run from repository root</li>
+<li>✅ <strong>Subdirectory Execution</strong>: Scripts run from any subdirectory</li>
+<li>✅ <strong>TUI Auto-Install</strong>: Verifies <code>init_tui</code> logic (mocked)</li>
+<li>✅ <strong>Environment Checks</strong>: Verifies <code>run_environment_checks</code> passes</li>
+</ol>
+<p><strong>Run Tests</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files</span></span>
+<span class="line"><span style="color:#B392F0">./tests/test_modularity.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Expected output:</span></span>
+<span class="line"><span style="color:#6A737D"># SUCCESS: Ran from repo root</span></span>
+<span class="line"><span style="color:#6A737D"># SUCCESS: Ran from subdirectory</span></span>
+<span class="line"><span style="color:#6A737D"># SUCCESS: TUI initialized</span></span>
+<span class="line"><span style="color:#6A737D"># SUCCESS: Environment checks passed</span></span>
+<span class="line"><span style="color:#6A737D"># ALL TESTS PASSED</span></span></code></pre>
+<hr>
+<h3 id="14-known-issues-️">1.4 Known Issues ⚠️</h3>
+<h4 id="-issue-1-config_dir-typo---fixed">✅ Issue 1: CONFIG_DIR Typo - FIXED</h4>
+<p><strong>File</strong>: <a href="lib/init.sh">lib/init.sh line 47</a>
+<strong>Previous</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> CONFIG_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">REPO_ROOT</span><span style="color:#9ECBFF">}/config"</span></span></code></pre>
+<p><strong>Problem</strong>: Actual directory is <code>configs/</code> (plural), not <code>config/</code></p>
+<p><strong>Impact</strong>: Low (variable not yet used extensively)</p>
+<p><strong>Fix Applied</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> CONFIG_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">REPO_ROOT</span><span style="color:#9ECBFF">}/configs"</span></span></code></pre>
+<p><strong>Status</strong>: ✅ Fixed and tested (all modularity tests pass)
+<strong>Date</strong>: 2025-11-20</p>
+<hr>
+<h2 id="phase-2-task-modularity--in-progress-1">Phase 2: Task Modularity 🚀 IN PROGRESS</h2>
+<h3 id="21-overview">2.1 Overview</h3>
+<p><strong>User’s Original Request</strong>:</p>
+<blockquote>
+<p>“can we make the project even more modular. so that each step is calling a script that does the one thing for that segment of the process?”</p>
+</blockquote>
+<p><strong>Current State</strong>: Transitioning from Monolithic to Modular (Stream 1 Complete)</p>
+<p><strong>Proposed State</strong>: 50+ single-purpose scripts (&#x3C;150 lines each)</p>
+<p><strong>Implementer</strong>: Claude
+<strong>Design Document</strong>: <a href="PHASE_2_PARALLEL_EXECUTION_PLAN.md">PHASE_2_PARALLEL_EXECUTION_PLAN.md</a></p>
+<hr>
+<h3 id="22-progress-tracker">2.2 Progress Tracker</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Stream</th><th>Focus</th><th>Status</th><th>Scripts</th></tr></thead><tbody><tr><td><strong>1</strong></td><td><strong>Ghostty Modularity</strong></td><td>✅ <strong>COMPLETE</strong></td><td>9/9 Created &#x26; Verified</td></tr><tr><td><strong>2</strong></td><td>ZSH Modularity</td><td>⏸️ PENDING</td><td>0/7</td></tr><tr><td><strong>3</strong></td><td>Python UV Modularity</td><td>⏸️ PENDING</td><td>0/6</td></tr><tr><td><strong>4</strong></td><td>Node.js FNM Modularity</td><td>⏸️ PENDING</td><td>0/7</td></tr><tr><td><strong>5</strong></td><td>AI Tools Modularity</td><td>⏸️ PENDING</td><td>0/6</td></tr><tr><td><strong>6</strong></td><td>Context Menu Modularity</td><td>⏸️ PENDING</td><td>0/4</td></tr><tr><td><strong>7</strong></td><td>Gum Modularity</td><td>⏸️ PENDING</td><td>0/5</td></tr><tr><td><strong>8</strong></td><td>App Audit Modularity</td><td>⏸️ PENDING</td><td>0/8</td></tr></tbody></table>
+<hr>
+<h3 id="22-current-problems-with-monolithic-tasks">2.2 Current Problems with Monolithic Tasks</h3>
+<h4 id="problem-1-no-output-visibility">Problem 1: No Output Visibility</h4>
+<p><strong>User Feedback</strong>:</p>
+<blockquote>
+<p>“during this section, user is unable to see what’s going on when you are installing zig and doing whatever it is with uv. the whole point of the tui and gum and bracelet was that user will see the full verbose steps”</p>
+</blockquote>
+<p><strong>Current Experience</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>⠋ Installing Ghostty...</span></span>
+<span class="line"><span>[3 minutes of silence, no output]</span></span>
+<span class="line"><span>✓ Installing Ghostty (180s)</span></span></code></pre>
+<p><strong>Desired Experience</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ Ghostty Prerequisites Check (0s)</span></span>
+<span class="line"><span>⠋ Downloading Zig 0.14.0...</span></span>
+<span class="line"><span>  [Real-time curl progress bar]</span></span>
+<span class="line"><span>✓ Downloading Zig 0.14.0 (30s)</span></span>
+<span class="line"><span>⠋ Extracting Zig tarball...</span></span>
+<span class="line"><span>  [Real-time tar extraction output]</span></span>
+<span class="line"><span>✓ Extracting Zig tarball (10s)</span></span>
+<span class="line"><span>⠋ Cloning Ghostty repository...</span></span>
+<span class="line"><span>  Cloning into '/home/kkk/Apps/ghostty'...</span></span>
+<span class="line"><span>  remote: Enumerating objects: 1234, done.</span></span>
+<span class="line"><span>  [Real-time git output]</span></span>
+<span class="line"><span>✓ Cloning Ghostty repository (20s)</span></span>
+<span class="line"><span>⠋ Building Ghostty with Zig...</span></span>
+<span class="line"><span>  [Real-time Zig build output]</span></span>
+<span class="line"><span>✓ Building Ghostty with Zig (90s)</span></span></code></pre>
+<hr>
+<h4 id="problem-2-monolithic-files-doing-multiple-things">Problem 2: Monolithic Files Doing Multiple Things</h4>
+<p><strong>Current Structure</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/tasks/</span></span>
+<span class="line"><span>├── ghostty.sh          # 500+ lines - does 8 different things</span></span>
+<span class="line"><span>├── zsh.sh              # 300+ lines - does 6 different things</span></span>
+<span class="line"><span>├── python_uv.sh        # 200+ lines - does 5 different things</span></span>
+<span class="line"><span>├── nodejs_fnm.sh       # 150+ lines - does 6 different things</span></span>
+<span class="line"><span>├── ai_tools.sh         # 100+ lines - does 5 different things</span></span>
+<span class="line"><span>├── context_menu.sh     # 50+ lines  - does 3 different things</span></span>
+<span class="line"><span>├── gum.sh              # 100+ lines - does 4 different things</span></span>
+<span class="line"><span>└── app_audit.sh        # 200+ lines - does 7 different things</span></span></code></pre>
+<p><strong>What Each File Does</strong> (Example: ghostty.sh):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">task_install_ghostty</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # 1. Check if already installed (50 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 2. Download Zig compiler (80 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 3. Extract Zig tarball (60 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 4. Build Zig from source (100 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 5. Clone Ghostty repo (70 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 6. Build Ghostty with Zig (120 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 7. Install binary to system (80 lines)</span></span>
+<span class="line"><span style="color:#6A737D">    # 8. Verify installation works (60 lines)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Total: 620 lines in ONE function</span></span>
+<span class="line"><span style="color:#6A737D">    # Violates Single Responsibility Principle</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Issues</strong>:</p>
+<ul>
+<li>❌ Hard to debug (which specific step failed?)</li>
+<li>❌ No granular progress tracking</li>
+<li>❌ Cannot re-run individual steps</li>
+<li>❌ No idempotency at step level</li>
+<li>❌ Difficult to maintain (500+ line functions)</li>
+</ul>
+<hr>
+<h3 id="23-proposed-modular-architecture">2.3 Proposed Modular Architecture</h3>
+<h4 id="design-principle-single-responsibility">Design Principle: Single Responsibility</h4>
+<p><strong>Each script does EXACTLY ONE thing</strong>:</p>
+<ul>
+<li>✅ <code>00-check-prerequisites.sh</code> - Only checks if Ghostty already installed</li>
+<li>✅ <code>01-download-zig.sh</code> - Only downloads Zig compiler</li>
+<li>✅ <code>02-extract-zig.sh</code> - Only extracts Zig tarball</li>
+<li>✅ <code>03-build-zig.sh</code> - Only builds Zig from source</li>
+<li>✅ <code>04-clone-repository.sh</code> - Only clones Ghostty repo</li>
+<li>✅ <code>05-build-ghostty.sh</code> - Only builds Ghostty with Zig</li>
+<li>✅ <code>06-install-binary.sh</code> - Only installs binary to system</li>
+<li>✅ <code>07-verify-installation.sh</code> - Only verifies installation works</li>
+</ul>
+<h4 id="proposed-directory-structure">Proposed Directory Structure</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>lib/tasks/</span></span>
+<span class="line"><span>├── ghostty/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 50 lines</span></span>
+<span class="line"><span>│   ├── 01-download-zig.sh             # 80 lines</span></span>
+<span class="line"><span>│   ├── 02-extract-zig.sh              # 60 lines</span></span>
+<span class="line"><span>│   ├── 03-build-zig.sh                # 100 lines</span></span>
+<span class="line"><span>│   ├── 04-clone-repository.sh         # 70 lines</span></span>
+<span class="line"><span>│   ├── 05-build-ghostty.sh            # 120 lines</span></span>
+<span class="line"><span>│   ├── 06-install-binary.sh           # 80 lines</span></span>
+<span class="line"><span>│   ├── 07-verify-installation.sh      # 60 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 100 lines - Shared utilities</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── zsh/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>│   ├── 01-install-oh-my-zsh.sh        # 100 lines</span></span>
+<span class="line"><span>│   ├── 02-install-plugins.sh          # 120 lines</span></span>
+<span class="line"><span>│   ├── 03-configure-zshrc.sh          # 150 lines</span></span>
+<span class="line"><span>│   ├── 04-install-security-check.sh   # 80 lines</span></span>
+<span class="line"><span>│   ├── 05-verify-installation.sh      # 60 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 80 lines</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── python_uv/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>│   ├── 01-download-uv.sh              # 70 lines</span></span>
+<span class="line"><span>│   ├── 02-extract-uv.sh               # 60 lines</span></span>
+<span class="line"><span>│   ├── 03-install-uv.sh               # 80 lines</span></span>
+<span class="line"><span>│   ├── 04-verify-installation.sh      # 60 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 50 lines</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── nodejs_fnm/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>│   ├── 01-download-fnm.sh             # 70 lines</span></span>
+<span class="line"><span>│   ├── 02-install-fnm.sh              # 80 lines</span></span>
+<span class="line"><span>│   ├── 03-install-nodejs.sh           # 100 lines</span></span>
+<span class="line"><span>│   ├── 04-configure-shell.sh          # 90 lines</span></span>
+<span class="line"><span>│   ├── 05-verify-installation.sh      # 60 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 60 lines</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── ai_tools/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>│   ├── 01-install-claude-cli.sh       # 80 lines</span></span>
+<span class="line"><span>│   ├── 02-install-gemini-cli.sh       # 80 lines</span></span>
+<span class="line"><span>│   ├── 03-install-copilot-cli.sh      # 80 lines</span></span>
+<span class="line"><span>│   ├── 04-verify-installation.sh      # 70 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 50 lines</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── context_menu/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>│   ├── 01-install-context-menu.sh     # 100 lines</span></span>
+<span class="line"><span>│   ├── 02-verify-installation.sh      # 60 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 40 lines</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── gum/</span></span>
+<span class="line"><span>│   ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>│   ├── 01-download-gum.sh             # 70 lines</span></span>
+<span class="line"><span>│   ├── 02-install-gum.sh              # 80 lines</span></span>
+<span class="line"><span>│   ├── 03-verify-installation.sh      # 60 lines</span></span>
+<span class="line"><span>│   └── common.sh                      # 50 lines</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>└── app_audit/</span></span>
+<span class="line"><span>    ├── 00-check-prerequisites.sh      # 40 lines</span></span>
+<span class="line"><span>    ├── 01-scan-apt-packages.sh        # 100 lines</span></span>
+<span class="line"><span>    ├── 02-scan-snap-packages.sh       # 100 lines</span></span>
+<span class="line"><span>    ├── 03-scan-desktop-files.sh       # 100 lines</span></span>
+<span class="line"><span>    ├── 04-detect-duplicates.sh        # 120 lines</span></span>
+<span class="line"><span>    ├── 05-generate-report.sh          # 100 lines</span></span>
+<span class="line"><span>    ├── 06-verify-report.sh            # 60 lines</span></span>
+<span class="line"><span>    └── common.sh                      # 80 lines</span></span></code></pre>
+<p><strong>Total</strong>: 50+ modular scripts (vs 8 monolithic files)</p>
+<hr>
+<h3 id="24-example-modular-script">2.4 Example Modular Script</h3>
+<h4 id="file-libtasksghostty01-download-zigsh">File: <code>lib/tasks/ghostty/01-download-zig.sh</code></h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/usr/bin/env bash</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Module: Download Zig Compiler</span></span>
+<span class="line"><span style="color:#6A737D"># Purpose: Download Zig 0.14.0 tarball for Ghostty build</span></span>
+<span class="line"><span style="color:#6A737D"># Prerequisites: curl or wget installed</span></span>
+<span class="line"><span style="color:#6A737D"># Outputs: $HOME/Downloads/zig-linux-x86_64-0.14.0.tar.xz</span></span>
+<span class="line"><span style="color:#6A737D"># Exit Codes:</span></span>
+<span class="line"><span style="color:#6A737D">#   0 - Download successful</span></span>
+<span class="line"><span style="color:#6A737D">#   1 - Download failed</span></span>
+<span class="line"><span style="color:#6A737D">#   2 - Already downloaded (skip)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">set</span><span style="color:#79B8FF"> -euo</span><span style="color:#9ECBFF"> pipefail</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Bootstrap using Gemini's infrastructure</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")/../../lib/init.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Load common utilities for Ghostty tasks</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">dirname</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">BASH_SOURCE</span><span style="color:#9ECBFF">[0]}")/common.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_VERSION</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"0.14.0"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_URL</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://ziglang.org/download/${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}.tar.xz"</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> ZIG_TARBALL</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Downloads/zig-linux-x86_64-${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}.tar.xz"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D">    # Verify environment (Gemini's infrastructure)</span></span>
+<span class="line"><span style="color:#B392F0">    run_environment_checks</span><span style="color:#F97583"> ||</span><span style="color:#79B8FF"> exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Idempotency check</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "INFO"</span><span style="color:#9ECBFF"> "Zig tarball already downloaded: </span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 2</span><span style="color:#6A737D">  # Skip code</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Register task for TUI (collapsible output)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ghostty-download-zig"</span></span>
+<span class="line"><span style="color:#B392F0">    register_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Downloading Zig ${</span><span style="color:#E1E4E8">ZIG_VERSION</span><span style="color:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#B392F0">    start_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Download with collapsible output (user sees real-time curl progress)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> start_time</span></span>
+<span class="line"><span style="color:#E1E4E8">    start_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> run_command_collapsible</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> curl</span><span style="color:#79B8FF"> -fsSL</span><span style="color:#79B8FF"> -o</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$ZIG_URL</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> end_time</span></span>
+<span class="line"><span style="color:#E1E4E8">        end_time</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">get_unix_timestamp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">        local</span><span style="color:#E1E4E8"> duration</span></span>
+<span class="line"><span style="color:#E1E4E8">        duration</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">calculate_duration</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$start_time</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$end_time</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">        complete_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "SUCCESS"</span><span style="color:#9ECBFF"> "Downloaded Zig to </span><span style="color:#E1E4E8">$ZIG_TARBALL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#B392F0">        fail_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Download failed: </span><span style="color:#E1E4E8">$ZIG_URL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#B392F0">        log</span><span style="color:#9ECBFF"> "ERROR"</span><span style="color:#9ECBFF"> "Failed to download Zig from </span><span style="color:#E1E4E8">$ZIG_URL</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<p><strong>Benefits of This Approach</strong>:</p>
+<ul>
+<li>✅ Uses Gemini’s <code>lib/init.sh</code> (location-independent)</li>
+<li>✅ Uses Gemini’s <code>run_environment_checks</code> (robust verification)</li>
+<li>✅ Uses collapsible output system (real-time visibility)</li>
+<li>✅ Single responsibility (only downloads Zig)</li>
+<li>✅ Idempotent (checks if already downloaded)</li>
+<li>✅ Clear exit codes (0=success, 1=fail, 2=skip)</li>
+<li>✅ Comprehensive logging</li>
+<li>✅ &#x3C;100 lines (easy to maintain)</li>
+</ul>
+<hr>
+<h3 id="25-integration-with-startsh">2.5 Integration with start.sh</h3>
+<p><strong>Current</strong> (Monolithic):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># start.sh lines 55-62</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/gum.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/ghostty.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/zsh.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/python_uv.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/nodejs_fnm.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/ai_tools.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/context_menu.sh"</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/app_audit.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Task registry (9 monolithic tasks)</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> TASK_REGISTRY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">    "verify-prereqs||pre_installation_health_check|verify_health|0|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "install-gum|verify-prereqs|task_install_gum|verify_gum_installed|1|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "install-ghostty|verify-prereqs|task_install_ghostty|verify_ghostty_installed|1|180"</span></span>
+<span class="line"><span style="color:#9ECBFF">    ...</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p><strong>Proposed</strong> (Modular):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># start.sh - NO MORE SOURCING MONOLITHIC FILES</span></span>
+<span class="line"><span style="color:#6A737D"># Scripts are called directly, location-independent via lib/init.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Task registry (50+ granular tasks)</span></span>
+<span class="line"><span style="color:#F97583">readonly</span><span style="color:#E1E4E8"> TASK_REGISTRY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Prerequisites</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "verify-prereqs||pre_installation_health_check|verify_health|0|10"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # Ghostty Installation (8 granular steps)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-00-check|verify-prereqs|ghostty/00-check-prerequisites.sh|verify_ghostty_not_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-01-download-zig|ghostty-00-check|ghostty/01-download-zig.sh|verify_zig_tarball|1|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-02-extract-zig|ghostty-01-download-zig|ghostty/02-extract-zig.sh|verify_zig_extracted|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-03-build-zig|ghostty-02-extract-zig|ghostty/03-build-zig.sh|verify_zig_binary|1|60"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-04-clone-repo|ghostty-03-build-zig|ghostty/04-clone-repository.sh|verify_ghostty_repo|1|20"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-05-build|ghostty-04-clone-repo|ghostty/05-build-ghostty.sh|verify_ghostty_binary|1|90"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-06-install|ghostty-05-build|ghostty/06-install-binary.sh|verify_ghostty_installed|1|10"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "ghostty-07-verify|ghostty-06-install|ghostty/07-verify-installation.sh|verify_ghostty_version|1|5"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#6A737D">    # ZSH Configuration (6 granular steps)</span></span>
+<span class="line"><span style="color:#6A737D">    # ═══════════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-00-check|verify-prereqs|zsh/00-check-prerequisites.sh|verify_zsh_installed|1|5"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "zsh-01-oh-my-zsh|zsh-00-check|zsh/01-install-oh-my-zsh.sh|verify_oh_my_zsh|1|30"</span></span>
+<span class="line"><span style="color:#9ECBFF">    ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Continue for all tasks (50+ total)</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p><strong>Modified Script Execution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># start.sh execute_single_task() function</span></span>
+<span class="line"><span style="color:#B392F0">execute_single_task</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> deps</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$2</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> script_path</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$3</span><span style="color:#9ECBFF">"</span><span style="color:#6A737D">      # Changed from function name to script path</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> verify_fn</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$4</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ... dependency checking logic ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Execute modular script (location-independent)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> full_script_path</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">LIB_DIR</span><span style="color:#9ECBFF">}/tasks/${</span><span style="color:#E1E4E8">script_path</span><span style="color:#9ECBFF">}"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#B392F0"> bash</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$full_script_path</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">        # Handle exit codes: 0=success, 2=skip</span></span>
+<span class="line"><span style="color:#B392F0">        complete_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$duration</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#B392F0">        fail_task</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "Script failed: </span><span style="color:#E1E4E8">$script_path</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<hr>
+<h3 id="26-user-experience-comparison">2.6 User Experience Comparison</h3>
+<h4 id="before-current---monolithic">BEFORE (Current - Monolithic):</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>⠋ Installing Ghostty...</span></span>
+<span class="line"><span>[180 seconds of silence]</span></span>
+<span class="line"><span>✓ Installing Ghostty (180s)</span></span></code></pre>
+<p><strong>Problems</strong>:</p>
+<ul>
+<li>❌ No visibility into what’s happening</li>
+<li>❌ Can’t tell if it’s hung or working</li>
+<li>❌ No progress indication</li>
+<li>❌ If fails, unclear which step failed</li>
+</ul>
+<hr>
+<h4 id="after-proposed---modular">AFTER (Proposed - Modular):</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>✓ Ghostty Prerequisites Check (0s)</span></span>
+<span class="line"><span>⠋ Downloading Zig 0.14.0...</span></span>
+<span class="line"><span>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span></span>
+<span class="line"><span>                                 Dload  Upload   Total   Spent    Left  Speed</span></span>
+<span class="line"><span>  45 89.2M   45 40.1M    0     0  5678k      0  0:00:16  0:00:07  0:00:09 5890k</span></span>
+<span class="line"><span>✓ Downloading Zig 0.14.0 (30s)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>⠋ Extracting Zig tarball...</span></span>
+<span class="line"><span>  zig-linux-x86_64-0.14.0/</span></span>
+<span class="line"><span>  zig-linux-x86_64-0.14.0/zig</span></span>
+<span class="line"><span>  zig-linux-x86_64-0.14.0/lib/</span></span>
+<span class="line"><span>  ...</span></span>
+<span class="line"><span>✓ Extracting Zig tarball (10s)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>⠋ Building Zig from source...</span></span>
+<span class="line"><span>  [Real-time Zig compilation output]</span></span>
+<span class="line"><span>✓ Building Zig from source (60s)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>⠋ Cloning Ghostty repository...</span></span>
+<span class="line"><span>  Cloning into '/home/kkk/Apps/ghostty'...</span></span>
+<span class="line"><span>  remote: Enumerating objects: 1234, done.</span></span>
+<span class="line"><span>  remote: Counting objects: 100% (1234/1234), done.</span></span>
+<span class="line"><span>  remote: Compressing objects: 100% (567/567), done.</span></span>
+<span class="line"><span>  Receiving objects: 100% (1234/1234), 2.34 MiB | 5.67 MiB/s, done.</span></span>
+<span class="line"><span>  Resolving deltas: 100% (789/789), done.</span></span>
+<span class="line"><span>✓ Cloning Ghostty repository (20s)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>⠋ Building Ghostty with Zig...</span></span>
+<span class="line"><span>  info: building ghostty (release-fast)</span></span>
+<span class="line"><span>  info: compiling src/main.zig</span></span>
+<span class="line"><span>  info: compiling src/terminal.zig</span></span>
+<span class="line"><span>  info: linking ghostty</span></span>
+<span class="line"><span>  ...</span></span>
+<span class="line"><span>✓ Building Ghostty with Zig (90s)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>⠋ Installing Ghostty binary...</span></span>
+<span class="line"><span>  Installing to /home/kkk/.local/bin/ghostty</span></span>
+<span class="line"><span>✓ Installing Ghostty binary (10s)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>✓ Verifying Ghostty installation (5s)</span></span>
+<span class="line"><span>  Ghostty version: 1.1.4</span></span></code></pre>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li>✅ Real-time output visibility</li>
+<li>✅ Clear progress tracking (7 steps visible)</li>
+<li>✅ User knows exactly what’s happening</li>
+<li>✅ If fails, pinpoint which step failed</li>
+<li>✅ Can re-run failed step individually</li>
+<li>✅ Docker-like collapsible output</li>
+</ul>
+<hr>
+<h3 id="27-implementation-phases">2.7 Implementation Phases</h3>
+<h4 id="phase-2a-ghostty-modularity-week-1">Phase 2A: Ghostty Modularity (Week 1)</h4>
+<p><strong>Create 8 modular scripts</strong>:</p>
+<ol>
+<li>✅ Create <code>lib/tasks/ghostty/</code> directory</li>
+<li>✅ Create <code>common.sh</code> with shared utilities</li>
+<li>✅ Split <code>task_install_ghostty()</code> into 8 scripts</li>
+<li>✅ Update <code>start.sh</code> task registry</li>
+<li>✅ Test complete Ghostty installation</li>
+<li>✅ Commit: <code>feat-ghostty-modular-tasks</code></li>
+</ol>
+<p><strong>Files to Create</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/01-download-zig.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/02-extract-zig.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/03-build-zig.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/04-clone-repository.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/05-build-ghostty.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/06-install-binary.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/07-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty/common.sh</code></li>
+</ul>
+<p><strong>Files to Delete</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ghostty.sh</code> (replaced by modular scripts)</li>
+</ul>
+<hr>
+<h4 id="phase-2b-zsh-modularity-week-2">Phase 2B: ZSH Modularity (Week 2)</h4>
+<p><strong>Create 6 modular scripts</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/01-install-oh-my-zsh.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/02-install-plugins.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/03-configure-zshrc.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/04-install-security-check.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/05-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh/common.sh</code></li>
+</ul>
+<p><strong>Files to Delete</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/zsh.sh</code></li>
+</ul>
+<hr>
+<h4 id="phase-2c-python-uv-modularity-week-2">Phase 2C: Python UV Modularity (Week 2)</h4>
+<p><strong>Create 5 modular scripts</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv/01-download-uv.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv/02-extract-uv.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv/03-install-uv.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv/04-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv/common.sh</code></li>
+</ul>
+<p><strong>Files to Delete</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/python_uv.sh</code></li>
+</ul>
+<hr>
+<h4 id="phase-2d-nodejs-fnm-modularity-week-3">Phase 2D: Node.js FNM Modularity (Week 3)</h4>
+<p><strong>Create 6 modular scripts</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/01-download-fnm.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/02-install-fnm.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/03-install-nodejs.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/04-configure-shell.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/05-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm/common.sh</code></li>
+</ul>
+<p><strong>Files to Delete</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/nodejs_fnm.sh</code></li>
+</ul>
+<hr>
+<h4 id="phase-2e-remaining-tasks-week-3-4">Phase 2E: Remaining Tasks (Week 3-4)</h4>
+<p><strong>AI Tools (5 scripts)</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools/01-install-claude-cli.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools/02-install-gemini-cli.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools/03-install-copilot-cli.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools/04-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools/common.sh</code></li>
+</ul>
+<p><strong>Context Menu (3 scripts)</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/context_menu/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/context_menu/01-install-context-menu.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/context_menu/02-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/context_menu/common.sh</code></li>
+</ul>
+<p><strong>Gum (4 scripts)</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/gum/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/gum/01-download-gum.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/gum/02-install-gum.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/gum/03-verify-installation.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/gum/common.sh</code></li>
+</ul>
+<p><strong>App Audit (7 scripts)</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/00-check-prerequisites.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/01-scan-apt-packages.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/02-scan-snap-packages.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/03-scan-desktop-files.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/04-detect-duplicates.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/05-generate-report.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/06-verify-report.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit/common.sh</code></li>
+</ul>
+<p><strong>Files to Delete</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/ai_tools.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/context_menu.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/gum.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled> <code>lib/tasks/app_audit.sh</code></li>
+</ul>
+<hr>
+<h2 id="quick-reference-what-needs-to-be-done">Quick Reference: What Needs to Be Done</h2>
+<h3 id="-completed-phase-1---infrastructure">✅ Completed (Phase 1 - Infrastructure)</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Task</th><th>Status</th><th>Implementer</th><th>Files</th></tr></thead><tbody><tr><td>Documentation consolidation</td><td>✅ DONE</td><td>Claude</td><td><a href="RESTRUCTURING_PLAN.md">RESTRUCTURING_PLAN.md</a></td></tr><tr><td>Centralized bootstrap</td><td>✅ DONE</td><td>Gemini</td><td><a href="lib/init.sh">lib/init.sh</a></td></tr><tr><td>Environment verification</td><td>✅ DONE</td><td>Gemini</td><td><a href="lib/verification/environment.sh">lib/verification/environment.sh</a></td></tr><tr><td>Enhanced TUI auto-install</td><td>✅ DONE</td><td>Gemini</td><td><a href="lib/ui/tui.sh">lib/ui/tui.sh</a></td></tr><tr><td>Robust logging</td><td>✅ DONE</td><td>Gemini</td><td><a href="lib/core/logging.sh">lib/core/logging.sh</a></td></tr><tr><td>Script template</td><td>✅ DONE</td><td>Gemini</td><td><a href="scripts/.template.sh">scripts/.template.sh</a></td></tr><tr><td>Test suite</td><td>✅ DONE</td><td>Gemini</td><td><a href="tests/test_modularity.sh">tests/test_modularity.sh</a></td></tr></tbody></table>
+<hr>
+<h3 id="️-pending-phase-2---task-modularity">⏸️ Pending (Phase 2 - Task Modularity)</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Task</th><th>Status</th><th>Implementer</th><th>Estimated Time</th></tr></thead><tbody><tr><td>Fix CONFIG_DIR typo</td><td>✅ DONE</td><td>Claude</td><td>Complete (2025-11-20)</td></tr><tr><td>Ghostty modularity</td><td>⏸️ PENDING</td><td>Claude</td><td>Week 1</td></tr><tr><td>ZSH modularity</td><td>⏸️ PENDING</td><td>Claude</td><td>Week 2</td></tr><tr><td>Python UV modularity</td><td>⏸️ PENDING</td><td>Claude</td><td>Week 2</td></tr><tr><td>Node.js FNM modularity</td><td>⏸️ PENDING</td><td>Claude</td><td>Week 3</td></tr><tr><td>Remaining tasks modularity</td><td>⏸️ PENDING</td><td>Claude</td><td>Week 3-4</td></tr></tbody></table>
+<p><strong>Total Estimated Time</strong>: 4 weeks for complete Phase 2 implementation</p>
+<hr>
+<h2 id="final-directory-structure-after-both-phases">Final Directory Structure (After Both Phases)</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/home/kkk/Apps/ghostty-config-files/</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── lib/</span></span>
+<span class="line"><span>│   ├── init.sh                         # ✅ Phase 1 (Gemini)</span></span>
+<span class="line"><span>│   ├── core/</span></span>
+<span class="line"><span>│   │   ├── logging.sh                  # ✅ Phase 1 (Gemini - modified)</span></span>
+<span class="line"><span>│   │   ├── utils.sh</span></span>
+<span class="line"><span>│   │   ├── errors.sh</span></span>
+<span class="line"><span>│   │   └── state.sh</span></span>
+<span class="line"><span>│   ├── ui/</span></span>
+<span class="line"><span>│   │   ├── tui.sh                      # ✅ Phase 1 (Gemini - modified)</span></span>
+<span class="line"><span>│   │   ├── boxes.sh</span></span>
+<span class="line"><span>│   │   ├── collapsible.sh</span></span>
+<span class="line"><span>│   │   └── progress.sh</span></span>
+<span class="line"><span>│   ├── verification/</span></span>
+<span class="line"><span>│   │   ├── environment.sh              # ✅ Phase 1 (Gemini)</span></span>
+<span class="line"><span>│   │   ├── health_checks.sh</span></span>
+<span class="line"><span>│   │   └── unit_tests.sh</span></span>
+<span class="line"><span>│   └── tasks/                          # ⏸️ Phase 2 (Claude)</span></span>
+<span class="line"><span>│       ├── ghostty/                    # 8 scripts</span></span>
+<span class="line"><span>│       ├── zsh/                        # 6 scripts</span></span>
+<span class="line"><span>│       ├── python_uv/                  # 5 scripts</span></span>
+<span class="line"><span>│       ├── nodejs_fnm/                 # 6 scripts</span></span>
+<span class="line"><span>│       ├── ai_tools/                   # 5 scripts</span></span>
+<span class="line"><span>│       ├── context_menu/               # 3 scripts</span></span>
+<span class="line"><span>│       ├── gum/                        # 4 scripts</span></span>
+<span class="line"><span>│       └── app_audit/                  # 7 scripts</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── documentation/                      # ✅ Phase 1 (Claude)</span></span>
+<span class="line"><span>│   ├── setup/</span></span>
+<span class="line"><span>│   ├── architecture/</span></span>
+<span class="line"><span>│   │   └── MODULAR_TASK_ARCHITECTURE.md</span></span>
+<span class="line"><span>│   ├── developer/</span></span>
+<span class="line"><span>│   ├── user/</span></span>
+<span class="line"><span>│   ├── specifications/</span></span>
+<span class="line"><span>│   └── archive/</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── astro-website/                      # ✅ Phase 1 (Claude)</span></span>
+<span class="line"><span>│   ├── src/</span></span>
+<span class="line"><span>│   ├── public/</span></span>
+<span class="line"><span>│   ├── astro.config.mjs</span></span>
+<span class="line"><span>│   └── package.json</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── scripts/</span></span>
+<span class="line"><span>│   └── .template.sh                    # ✅ Phase 1 (Gemini)</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── tests/</span></span>
+<span class="line"><span>│   └── test_modularity.sh              # ✅ Phase 1 (Gemini)</span></span>
+<span class="line"><span>│</span></span>
+<span class="line"><span>├── start.sh                            # ✅ Phase 1 / ⏸️ Phase 2</span></span>
+<span class="line"><span>└── COMPLETE_REFACTORING_ROADMAP.md     # ← This document</span></span></code></pre>
+<hr>
+<h2 id="success-criteria">Success Criteria</h2>
+<h3 id="phase-1-infrastructure--complete">Phase 1 (Infrastructure) ✅ COMPLETE</h3>
+<ul>
+<li>✅ Location-independent script execution</li>
+<li>✅ Centralized library loading</li>
+<li>✅ Robust environment verification</li>
+<li>✅ Auto-installing TUI system</li>
+<li>✅ Subshell-compatible logging</li>
+<li>✅ Test suite passing</li>
+<li>✅ Documentation consolidated</li>
+<li>✅ Astro.build consolidated</li>
+</ul>
+<h3 id="phase-2-task-modularity-️-pending">Phase 2 (Task Modularity) ⏸️ PENDING</h3>
+<ul>
+<li>⏸️ 50+ single-purpose scripts (&#x3C;150 lines each)</li>
+<li>⏸️ Real-time output visibility during installations</li>
+<li>⏸️ Docker-like collapsible progress tracking</li>
+<li>⏸️ Granular task registry (50+ tasks vs 9)</li>
+<li>⏸️ Idempotency at step level</li>
+<li>⏸️ Resume capability (re-run failed steps)</li>
+<li>⏸️ Clear error messages (pinpoint which step failed)</li>
+</ul>
+<hr>
+<h2 id="next-actions">Next Actions</h2>
+<h3 id="immediate--complete">Immediate ✅ COMPLETE</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> Fix CONFIG_DIR typo in <a href="lib/init.sh">lib/init.sh line 47</a> - <strong>✅ DONE (2025-11-20)</strong></li>
+<li class="task-list-item"><input type="checkbox" checked disabled> Test fix: <code>./tests/test_modularity.sh</code> - <strong>✅ PASSED</strong></li>
+</ul>
+<h3 id="phase-2-start-awaiting-approval">Phase 2 Start (Awaiting Approval)</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled> User approves Phase 2 task modularity</li>
+<li class="task-list-item"><input type="checkbox" disabled> Begin Phase 2A: Ghostty modularity (Week 1)</li>
+<li class="task-list-item"><input type="checkbox" disabled> Create 8 modular scripts + common.sh</li>
+<li class="task-list-item"><input type="checkbox" disabled> Update start.sh task registry</li>
+<li class="task-list-item"><input type="checkbox" disabled> Test complete installation</li>
+<li class="task-list-item"><input type="checkbox" disabled> Commit and merge</li>
+</ul>
+<hr>
+<p><strong>Document Created</strong>: 2025-11-20
+<strong>Last Updated</strong>: 2025-11-20
+<strong>Status</strong>: Phase 1 ✅ COMPLETE | Phase 2 ⏸️ PENDING APPROVAL
+<strong>Next Review</strong>: After Phase 2A completion (1 week)</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>GitHub MCP Server Setup Guide | Ghostty Configuration Files</title><meta name="description" content="The GitHub MCP server enables Claude Code to interact directly with GitHub repositories, providing capabilities for:"><!-- OpenGraph --><meta property="og:title" content="GitHub MCP Server Setup Guide"><meta property="og:description" content="The GitHub MCP server enables Claude Code to interact directly with GitHub repositories, providing capabilities for:"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>GitHub MCP Server Setup Guide</li> </ul> </div> <h1>GitHub MCP Server Setup Guide</h1> <p class="text-xl text-base-content/70 mb-8">The GitHub MCP server enables Claude Code to interact directly with GitHub repositories, providing capabilities for:</p><h1 id="github-mcp-server-setup-guide">GitHub MCP Server Setup Guide</h1>
+<blockquote>
+<p>Complete guide for integrating GitHub MCP (Model Context Protocol) server with Claude Code CLI</p>
+</blockquote>
+<h2 id="overview">Overview</h2>
+<p>The GitHub MCP server enables Claude Code to interact directly with GitHub repositories, providing capabilities for:</p>
+<ul>
+<li><strong>Repository Management</strong>: List, create, and manage repositories</li>
+<li><strong>Issue Tracking</strong>: Create, read, update, and search issues</li>
+<li><strong>Pull Requests</strong>: Manage PRs, reviews, and merge operations</li>
+<li><strong>Branch Operations</strong>: Create, list, and manage branches</li>
+<li><strong>File Operations</strong>: Read, create, update repository files</li>
+<li><strong>Search</strong>: Search across repositories, issues, and pull requests</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────┐</span></span>
+<span class="line"><span>│  Claude Code    │</span></span>
+<span class="line"><span>│  CLI Client     │</span></span>
+<span class="line"><span>└────────┬────────┘</span></span>
+<span class="line"><span>         │</span></span>
+<span class="line"><span>         │ Loads .mcp.json</span></span>
+<span class="line"><span>         ▼</span></span>
+<span class="line"><span>┌─────────────────────────────────────┐</span></span>
+<span class="line"><span>│  MCP Configuration                  │</span></span>
+<span class="line"><span>│  - Context7 (HTTP server)           │</span></span>
+<span class="line"><span>│  - GitHub (stdio server via npx)    │</span></span>
+<span class="line"><span>└────────┬────────────────────────────┘</span></span>
+<span class="line"><span>         │</span></span>
+<span class="line"><span>         │ Spawns process</span></span>
+<span class="line"><span>         ▼</span></span>
+<span class="line"><span>┌─────────────────────────────────────┐</span></span>
+<span class="line"><span>│  @modelcontextprotocol/server-github│</span></span>
+<span class="line"><span>│  - Runs via npx (no install needed) │</span></span>
+<span class="line"><span>│  - Uses GITHUB_TOKEN from .env      │</span></span>
+<span class="line"><span>└────────┬────────────────────────────┘</span></span>
+<span class="line"><span>         │</span></span>
+<span class="line"><span>         │ GitHub API calls</span></span>
+<span class="line"><span>         ▼</span></span>
+<span class="line"><span>┌─────────────────────────────────────┐</span></span>
+<span class="line"><span>│  GitHub API                         │</span></span>
+<span class="line"><span>│  - Authenticated via token          │</span></span>
+<span class="line"><span>│  - Scopes: repo, read:org, gist     │</span></span>
+<span class="line"><span>└─────────────────────────────────────┘</span></span></code></pre>
+<h2 id="installation-status">Installation Status</h2>
+<p><strong>Status</strong>: ✅ INSTALLED AND CONFIGURED</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled> GitHub CLI authenticated</li>
+<li class="task-list-item"><input type="checkbox" checked disabled> GitHub MCP server configured in <code>.mcp.json</code></li>
+<li class="task-list-item"><input type="checkbox" checked disabled> GITHUB_TOKEN configured in <code>.env</code></li>
+<li class="task-list-item"><input type="checkbox" checked disabled> Node.js and npx available</li>
+<li class="task-list-item"><input type="checkbox" checked disabled> Health check passed</li>
+</ul>
+<h2 id="configuration-files">Configuration Files</h2>
+<h3 id="1-mcpjson-project-level-mcp-configuration">1. <code>.mcp.json</code> (Project-Level MCP Configuration)</h3>
+<p>Location: <code>/home/kkk/Apps/ghostty-config-files/.mcp.json</code></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "mcpServers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "context7"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"http"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "url"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://mcp.context7.com/mcp"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "headers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "CONTEXT7_API_KEY"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"${CONTEXT7_API_KEY}"</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#79B8FF">    "github"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "command"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/home/kkk/Apps/ghostty-config-files/scripts/mcp/start-github-mcp.sh"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "args"</span><span style="color:#E1E4E8">: []</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li><code>command</code> - Uses wrapper script that gets fresh token from <code>gh auth token</code></li>
+<li>No <code>env</code> section needed - wrapper handles token internally</li>
+<li>No static <code>GITHUB_TOKEN</code> polluting shell environment</li>
+<li>Token always fresh and auto-refreshes via gh CLI</li>
+</ul>
+<h3 id="2-env-environment-variables">2. <code>.env</code> (Environment Variables)</h3>
+<p>Location: <code>/home/kkk/Apps/ghostty-config-files/.env</code></p>
+<p><strong>Example <code>.env</code> format</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Context7 MCP Server</span></span>
+<span class="line"><span style="color:#E1E4E8">CONTEXT7_API_KEY</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">ctx7sk-your-api-key-here</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># GitHub MCP Integration</span></span>
+<span class="line"><span style="color:#6A737D"># Token is dynamically obtained from 'gh auth token' via wrapper script</span></span>
+<span class="line"><span style="color:#6A737D"># No static token needed here - prevents GITHUB_TOKEN from polluting shell environment</span></span></code></pre>
+<p><strong>Security Notes:</strong></p>
+<ul>
+<li>✅ <code>.env</code> is in <code>.gitignore</code> (not committed to version control)</li>
+<li>✅ GitHub token obtained dynamically from <code>gh auth token</code> (always fresh)</li>
+<li>✅ No static <code>GITHUB_TOKEN</code> in <code>.env</code> (prevents interference with <code>gh copilot</code>)</li>
+<li>✅ Token has appropriate scopes for repository operations</li>
+<li>✅ Token auto-refreshes via gh CLI</li>
+</ul>
+<h3 id="3-claudejson-user-level-configuration">3. <code>~/.claude.json</code> (User-Level Configuration)</h3>
+<p>The GitHub MCP server is also registered in the user-level Claude Code configuration at <code>~/.claude.json</code> under the project-specific settings:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "projects"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "/home/kkk/Apps/ghostty-config-files"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "mcpServers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "context7"</span><span style="color:#E1E4E8">: { </span><span style="color:#FDAEB7;font-style:italic">...</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#79B8FF">        "github"</span><span style="color:#E1E4E8">: { </span><span style="color:#FDAEB7;font-style:italic">...</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>This allows Claude Code to load the MCP server automatically when working in this project directory.</p>
+<h2 id="github-cli-integration">GitHub CLI Integration</h2>
+<p>The GitHub MCP server leverages the existing GitHub CLI authentication, providing seamless integration:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check authentication status</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> status</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Output:</span></span>
+<span class="line"><span style="color:#6A737D"># github.com</span></span>
+<span class="line"><span style="color:#6A737D">#   ✓ Logged in to github.com account kairin (keyring)</span></span>
+<span class="line"><span style="color:#6A737D">#   - Active account: true</span></span>
+<span class="line"><span style="color:#6A737D">#   - Git operations protocol: ssh</span></span>
+<span class="line"><span style="color:#6A737D">#   - Token: gho_************************************</span></span>
+<span class="line"><span style="color:#6A737D">#   - Token scopes: 'admin:public_key', 'gist', 'read:org', 'repo'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Get current token</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> token</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Refresh token if expired</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> refresh</span></span></code></pre>
+<p><strong>Token Scopes:</strong></p>
+<ul>
+<li><code>repo</code> - Full control of private repositories</li>
+<li><code>read:org</code> - Read organization membership and teams</li>
+<li><code>admin:public_key</code> - Manage public keys</li>
+<li><code>gist</code> - Create and manage gists</li>
+</ul>
+<h2 id="health-check">Health Check</h2>
+<p>Verify GitHub MCP server installation and configuration:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run comprehensive health check</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_github_mcp_health.sh</span></span></code></pre>
+<p><strong>Health Check Validates:</strong></p>
+<ol>
+<li>✅ GitHub CLI authentication</li>
+<li>✅ Environment configuration (.env file and GITHUB_TOKEN)</li>
+<li>✅ MCP configuration (.mcp.json structure)</li>
+<li>✅ Node.js and npx availability</li>
+<li>✅ GitHub MCP server package accessibility</li>
+<li>✅ Repository context (git remote and branch)</li>
+</ol>
+<h2 id="usage-examples">Usage Examples</h2>
+<p>Once Claude Code is restarted with the GitHub MCP server loaded, you can use natural language commands:</p>
+<h3 id="repository-operations">Repository Operations</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: Can you list all repositories in my GitHub account?</span></span>
+<span class="line"><span>Claude: [Uses github.list_repositories tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Create a new repository called 'my-project' with a README</span></span>
+<span class="line"><span>Claude: [Uses github.create_repository and github.create_or_update_file tools]</span></span></code></pre>
+<h3 id="issue-management">Issue Management</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: Show me open issues in this repository</span></span>
+<span class="line"><span>Claude: [Uses github.search_issues with current repository context]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Create an issue for the bug we just found</span></span>
+<span class="line"><span>Claude: [Uses github.create_issue tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Update issue #42 to add a 'bug' label</span></span>
+<span class="line"><span>Claude: [Uses github.update_issue tool]</span></span></code></pre>
+<h3 id="pull-request-operations">Pull Request Operations</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: List recent pull requests</span></span>
+<span class="line"><span>Claude: [Uses github.list_pull_requests tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Create a PR from the current branch to main</span></span>
+<span class="line"><span>Claude: [Uses github.create_pull_request tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Show me the diff for PR #15</span></span>
+<span class="line"><span>Claude: [Uses github.get_pull_request tool]</span></span></code></pre>
+<h3 id="branch-management">Branch Management</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: List all branches in this repository</span></span>
+<span class="line"><span>Claude: [Uses github.list_branches tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Create a feature branch for the new authentication system</span></span>
+<span class="line"><span>Claude: [Uses github.create_branch tool]</span></span></code></pre>
+<h3 id="file-operations">File Operations</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: Show me the contents of README.md in the main branch</span></span>
+<span class="line"><span>Claude: [Uses github.get_file_contents tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Update the installation instructions in docs/setup.md</span></span>
+<span class="line"><span>Claude: [Uses github.create_or_update_file tool]</span></span></code></pre>
+<h3 id="search-operations">Search Operations</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: Find all issues mentioning 'performance optimization'</span></span>
+<span class="line"><span>Claude: [Uses github.search_issues tool]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Search for repositories using Astro.build framework</span></span>
+<span class="line"><span>Claude: [Uses github.search_repositories tool]</span></span></code></pre>
+<h2 id="activation-steps">Activation Steps</h2>
+<h3 id="1-restart-claude-code">1. Restart Claude Code</h3>
+<p>The GitHub MCP server is configured but requires a restart to load:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Exit current Claude Code session</span></span>
+<span class="line"><span style="color:#79B8FF">exit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Start new session (loads MCP servers from .mcp.json)</span></span>
+<span class="line"><span style="color:#B392F0">claude</span></span></code></pre>
+<h3 id="2-verify-mcp-servers-loaded">2. Verify MCP Servers Loaded</h3>
+<p>Within Claude Code conversation:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: What MCP servers are available?</span></span>
+<span class="line"><span>Claude: [Lists available MCP servers including 'github']</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># Or use the /mcp command</span></span>
+<span class="line"><span>/mcp</span></span></code></pre>
+<h3 id="3-test-github-mcp-functionality">3. Test GitHub MCP Functionality</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: Can you list the issues in this repository?</span></span>
+<span class="line"><span>Claude: [Demonstrates GitHub MCP is working]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>User: Show me recent pull requests</span></span>
+<span class="line"><span>Claude: [Confirms GitHub API integration]</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="issue-github-mcp-server-not-loaded">Issue: GitHub MCP Server Not Loaded</h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li><code>/mcp</code> command doesn’t show ‘github’ server</li>
+<li>Claude doesn’t have access to GitHub tools</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Verify health check passes</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/check_github_mcp_health.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Check .mcp.json syntax</span></span>
+<span class="line"><span style="color:#B392F0">jq</span><span style="color:#9ECBFF"> '.'</span><span style="color:#9ECBFF"> .mcp.json</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Verify environment variable</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> .env</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#79B8FF">echo</span><span style="color:#E1E4E8"> $GITHUB_TOKEN</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Restart Claude Code completely</span></span>
+<span class="line"><span style="color:#79B8FF">exit</span></span>
+<span class="line"><span style="color:#B392F0">claude</span></span></code></pre>
+<h3 id="issue-authentication-errors">Issue: Authentication Errors</h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>“Unauthorized” errors when accessing GitHub API</li>
+<li>“Bad credentials” messages</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Check GitHub CLI authentication</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> status</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Refresh authentication</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> refresh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Update token in .env</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> GITHUB_TOKEN</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> token</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> "GITHUB_TOKEN=$(</span><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth token)"</span><span style="color:#F97583"> >></span><span style="color:#9ECBFF"> .env</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Verify token scopes</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> status</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> 'Token scopes'</span></span></code></pre>
+<h3 id="issue-npx-package-download-fails">Issue: npx Package Download Fails</h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>“Failed to start MCP server” errors</li>
+<li>Network timeout during server initialization</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Test npx directly</span></span>
+<span class="line"><span style="color:#B392F0">npx</span><span style="color:#79B8FF"> -y</span><span style="color:#9ECBFF"> @modelcontextprotocol/server-github</span><span style="color:#79B8FF"> --version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Check npm registry access</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> config</span><span style="color:#9ECBFF"> get</span><span style="color:#9ECBFF"> registry</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Clear npx cache if needed</span></span>
+<span class="line"><span style="color:#B392F0">rm</span><span style="color:#79B8FF"> -rf</span><span style="color:#9ECBFF"> ~/.npm/_npx/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Install package globally (alternative)</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @modelcontextprotocol/server-github</span></span></code></pre>
+<h3 id="issue-rate-limiting">Issue: Rate Limiting</h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>“API rate limit exceeded” errors</li>
+<li>Slow response times</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Check rate limit status</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> api</span><span style="color:#9ECBFF"> rate_limit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. Authenticate to increase limits (5000/hour vs 60/hour)</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> login</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Use conditional requests (automatic in MCP server)</span></span>
+<span class="line"><span style="color:#6A737D"># No action needed - server handles this</span></span></code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="1-token-management">1. Token Management</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Rotate tokens periodically</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> refresh</span><span style="color:#79B8FF"> --scopes</span><span style="color:#9ECBFF"> repo,read:org,admin:public_key,gist</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Update .env after rotation</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> GITHUB_TOKEN</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> token</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#6A737D"># Manually update .env file with new token</span></span></code></pre>
+<h3 id="2-security-considerations">2. Security Considerations</h3>
+<ul>
+<li>✅ Never commit <code>.env</code> to version control</li>
+<li>✅ Use <code>.env.example</code> for documentation only</li>
+<li>✅ Limit token scopes to minimum required</li>
+<li>✅ Rotate tokens regularly (every 90 days recommended)</li>
+<li>✅ Use GitHub CLI keyring for secure token storage</li>
+</ul>
+<h3 id="3-performance-optimization">3. Performance Optimization</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Pre-download GitHub MCP package for faster startup</span></span>
+<span class="line"><span style="color:#B392F0">npx</span><span style="color:#79B8FF"> -y</span><span style="color:#9ECBFF"> @modelcontextprotocol/server-github</span><span style="color:#79B8FF"> --version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Monitor MCP server resource usage</span></span>
+<span class="line"><span style="color:#B392F0">ps</span><span style="color:#9ECBFF"> aux</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#9ECBFF"> server-github</span></span></code></pre>
+<h3 id="4-constitutional-compliance">4. Constitutional Compliance</h3>
+<p>Following project constitutional requirements:</p>
+<ul>
+<li>✅ <strong>Zero GitHub Actions Consumption</strong>: All operations local via MCP</li>
+<li>✅ <strong>Branch Preservation</strong>: GitHub MCP respects branch naming conventions</li>
+<li>✅ <strong>Documentation Synchronization</strong>: Updates tracked in AGENTS.md</li>
+<li>✅ <strong>Environment Variable Pattern</strong>: Follows Context7 MCP setup pattern</li>
+</ul>
+<h2 id="integration-with-local-cicd">Integration with Local CI/CD</h2>
+<p>The GitHub MCP server enhances local CI/CD workflows:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Local workflow with GitHub integration</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/workflows/gh-workflow-local.sh</span><span style="color:#9ECBFF"> local</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Claude Code can now:</span></span>
+<span class="line"><span style="color:#6A737D"># - Create issues for failed tests</span></span>
+<span class="line"><span style="color:#6A737D"># - Update PR status with build results</span></span>
+<span class="line"><span style="color:#6A737D"># - Commit fixes and create PRs automatically</span></span>
+<span class="line"><span style="color:#6A737D"># - Query repository state during CI/CD</span></span></code></pre>
+<h2 id="advanced-configuration">Advanced Configuration</h2>
+<h3 id="custom-github-enterprise">Custom GitHub Enterprise</h3>
+<p>If using GitHub Enterprise Server:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "mcpServers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "github"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "command"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"npx"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "args"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"-y"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"@modelcontextprotocol/server-github"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#79B8FF">      "env"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "GITHUB_PERSONAL_ACCESS_TOKEN"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"${GITHUB_TOKEN}"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">        "GITHUB_API_URL"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://github.enterprise.com/api/v3"</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="multiple-github-accounts">Multiple GitHub Accounts</h3>
+<p>Configure separate MCP servers for different accounts:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "mcpServers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "github-personal"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "command"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"npx"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "args"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"-y"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"@modelcontextprotocol/server-github"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#79B8FF">      "env"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "GITHUB_PERSONAL_ACCESS_TOKEN"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"${GITHUB_TOKEN_PERSONAL}"</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#79B8FF">    "github-work"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "command"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"npx"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "args"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"-y"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"@modelcontextprotocol/server-github"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#79B8FF">      "env"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "GITHUB_PERSONAL_ACCESS_TOKEN"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"${GITHUB_TOKEN_WORK}"</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="resources">Resources</h2>
+<h3 id="official-documentation">Official Documentation</h3>
+<ul>
+<li><a href="https://github.com/modelcontextprotocol/servers/tree/main/src/github">GitHub MCP Server</a></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol</a></li>
+<li><a href="https://cli.github.com/manual/">GitHub CLI Documentation</a></li>
+<li><a href="https://docs.github.com/en/rest">GitHub API Documentation</a></li>
+</ul>
+<h3 id="project-documentation">Project Documentation</h3>
+<ul>
+<li><a href="/home/kkk/Apps/ghostty-config-files/CLAUDE.md">CLAUDE.md</a> - Project constitutional requirements</li>
+<li><a href="CONTEXT7_SETUP.md">Context7 Setup</a> - Parallel MCP server setup</li>
+<li><a href="/home/kkk/Apps/ghostty-config-files/.runners-local/README.md">Local CI/CD Guide</a> - Integration patterns</li>
+</ul>
+<h3 id="health-check-script">Health Check Script</h3>
+<ul>
+<li>Location: <code>/home/kkk/Apps/ghostty-config-files/scripts/check_github_mcp_health.sh</code></li>
+<li>Purpose: Automated verification of GitHub MCP configuration</li>
+<li>Usage: <code>./scripts/check_github_mcp_health.sh</code></li>
+</ul>
+<h2 id="github-copilot-cli-configuration">GitHub Copilot CLI Configuration</h2>
+<h3 id="important-enable-all-ai-models">Important: Enable All AI Models</h3>
+<p>If you’re using GitHub Copilot CLI (installed by <code>./start.sh</code>), you <strong>must enable alternative AI models</strong> in your GitHub account settings to access Claude, Gemini, and other models beyond GPT.</p>
+<h4 id="steps-to-enable-all-models">Steps to Enable All Models:</h4>
+<ol>
+<li>
+<p><strong>Navigate to GitHub Copilot Settings</strong>:</p>
+<ul>
+<li>Go to <strong><a href="https://github.com/settings/copilot">https://github.com/settings/copilot</a></strong></li>
+<li>Or: Click your profile → Settings → Copilot</li>
+</ul>
+</li>
+<li>
+<p><strong>Verify All Models Are Enabled</strong>:</p>
+<p>Ensure the following models show as enabled in the <strong>Features</strong> section:</p>
+<ul>
+<li>✅ <strong>Anthropic Claude Sonnet 4</strong> - “You can use the latest Anthropic Claude Sonnet 4 model”</li>
+<li>✅ <strong>Anthropic Claude Sonnet 4.5</strong> - “You can use the latest Anthropic Claude Sonnet 4.5 model”</li>
+<li>✅ <strong>Anthropic Claude Haiku 4.5</strong> - “You can use the latest Anthropic Claude Haiku 4.5 model”</li>
+<li>✅ <strong>Google Gemini 2.5 Pro</strong> - “You can use the latest Google Gemini 2.5 Pro model”</li>
+<li>✅ <strong>Google Gemini 3 Pro Preview</strong> - “You can use the latest Google Gemini 3 Pro model”</li>
+<li>✅ <strong>OpenAI GPT-5</strong> - “You can use the latest OpenAI GPT-5 model”</li>
+<li>✅ <strong>OpenAI GPT-5.1 Preview</strong> - Available for use</li>
+<li>✅ <strong>xAI Grok Code Fast 1</strong> - If enabled, you can access xAI Grok</li>
+</ul>
+</li>
+<li>
+<p><strong>What Happens If Models Are Disabled</strong>:</p>
+<p>If models are disabled in settings, <code>gh copilot</code> and <code>copilot</code> CLI will show:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Some models are not available due to configured policy.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Select Model</span></span>
+<span class="line"><span>❯ 1. Claude Sonnet 4 (1x) (default) (current)</span></span>
+<span class="line"><span>  2. Cancel (Esc)</span></span></code></pre>
+<p><strong>This is a GitHub account-level policy restriction</strong>, not a local configuration issue.</p>
+</li>
+<li>
+<p><strong>Troubleshooting Model Access</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check your Copilot subscription status</span></span>
+<span class="line"><span style="color:#6A737D"># Visit: https://github.com/settings/copilot</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify you have Copilot Pro or Pro+ subscription</span></span>
+<span class="line"><span style="color:#6A737D"># Individual Free plan has limited model access</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test model access in Copilot CLI</span></span>
+<span class="line"><span style="color:#B392F0">copilot</span></span>
+<span class="line"><span style="color:#6A737D"># Should show multiple models if all are enabled</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Alternative: Use gh copilot with GitHub CLI extension</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> copilot</span></span></code></pre>
+</li>
+</ol>
+<h3 id="important-notes">Important Notes</h3>
+<ul>
+<li>
+<p><strong>GitHub MCP for Claude Code</strong> ≠ <strong>GitHub Copilot CLI</strong></p>
+<ul>
+<li>GitHub MCP: Allows Claude Code to interact with GitHub API (repos, issues, PRs)</li>
+<li>GitHub Copilot CLI: Standalone AI assistant with model selection</li>
+</ul>
+</li>
+<li>
+<p><strong>GITHUB_TOKEN Environment Variable</strong>:</p>
+<ul>
+<li>Our configuration <strong>does NOT set</strong> <code>GITHUB_TOKEN</code> in <code>.env</code> or shell</li>
+<li>This prevents interference with <code>gh copilot</code> model selection</li>
+<li>GitHub MCP uses wrapper script (<code>start-github-mcp.sh</code>) that gets token dynamically</li>
+</ul>
+</li>
+<li>
+<p><strong>Model Policy is Per-Account</strong>:</p>
+<ul>
+<li>Settings at <a href="https://github.com/settings/copilot">https://github.com/settings/copilot</a> apply globally</li>
+<li>Changes take effect immediately (no restart needed)</li>
+<li>Applies to all Copilot CLI installations on all machines</li>
+</ul>
+</li>
+</ul>
+<h3 id="reference-documentation">Reference Documentation</h3>
+<ul>
+<li><a href="https://docs.github.com/copilot/how-tos/manage-your-account/managing-copilot-policies-as-an-individual-subscriber">Managing GitHub Copilot policies as an individual subscriber</a></li>
+<li><a href="https://docs.github.com/en/copilot/how-tos/use-ai-models/configure-access-to-ai-models">Configuring access to AI models in GitHub Copilot</a></li>
+<li><a href="https://github.blog/changelog/2025-10-03-github-copilot-cli-enhanced-model-selection-image-support-and-streamlined-ui/">GitHub Copilot CLI: Enhanced model selection</a></li>
+</ul>
+<h2 id="support">Support</h2>
+<p>For issues or questions:</p>
+<ol>
+<li><strong>Health Check</strong>: Run <code>./scripts/check_github_mcp_health.sh</code></li>
+<li><strong>GitHub CLI</strong>: Run <code>gh auth status</code> and <code>gh --version</code></li>
+<li><strong>MCP Status</strong>: Use <code>/mcp</code> command in Claude Code</li>
+<li><strong>Copilot Models</strong>: Visit <a href="https://github.com/settings/copilot">https://github.com/settings/copilot</a> to enable all models</li>
+<li><strong>Logs</strong>: Check Claude Code debug logs for MCP server errors</li>
+<li><strong>Documentation</strong>: Review this guide and <a href="CLAUDE.md">CLAUDE.md</a></li>
+</ol>
+<hr>
+<p><strong>Version</strong>: 1.1
+<strong>Last Updated</strong>: 2025-11-24
+<strong>Status</strong>: ACTIVE - GITHUB MCP SERVER INSTALLED AND CONFIGURED
+<strong>Maintained By</strong>: Claude Code + github-sync-guardian agent</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

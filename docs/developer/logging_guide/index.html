@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Dual-Mode Logging System Guide | Ghostty Configuration Files</title><meta name="description" content="The Ghostty Configuration Files repository implements a **dual-mode output system** that provides:"><!-- OpenGraph --><meta property="og:title" content="Dual-Mode Logging System Guide"><meta property="og:description" content="The Ghostty Configuration Files repository implements a **dual-mode output system** that provides:"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Dual-Mode Logging System Guide</li> </ul> </div> <h1>Dual-Mode Logging System Guide</h1> <p class="text-xl text-base-content/70 mb-8">The Ghostty Configuration Files repository implements a **dual-mode output system** that provides:</p><h1 id="dual-mode-logging-system-guide">Dual-Mode Logging System Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>The Ghostty Configuration Files repository implements a <strong>dual-mode output system</strong> that provides:</p>
+<ol>
+<li><strong>Docker-like collapsed terminal output</strong> (clean, professional user experience)</li>
+<li><strong>Full verbose log files</strong> (complete debugging information)</li>
+</ol>
+<p><strong>Critical Principle</strong>: ALL output is ALWAYS captured to log files regardless of terminal output mode.</p>
+<h2 id="user-requirement">User Requirement</h2>
+<blockquote>
+<p>“all logs captured in ‘/home/kkk/Apps/ghostty-config-files/logs’ must be in full, extremely verbose regardless. this is to ensure full possible debugging. for end user, they must experience full Docker-like collapsing experience.”</p>
+</blockquote>
+<h2 id="architecture">Architecture</h2>
+<h3 id="dual-mode-output-flow">Dual-Mode Output Flow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Command Execution</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>┌─────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│ run_command_collapsible()                   │</span></span>
+<span class="line"><span>│                                             │</span></span>
+<span class="line"><span>│  Executes command with output capture       │</span></span>
+<span class="line"><span>│                                             │</span></span>
+<span class="line"><span>│  ┌────────────────┐    ┌──────────────┐   │</span></span>
+<span class="line"><span>│  │ Terminal       │    │ Log Files    │   │</span></span>
+<span class="line"><span>│  │ (User View)    │    │ (Debugging)  │   │</span></span>
+<span class="line"><span>│  │                │    │              │   │</span></span>
+<span class="line"><span>│  │ VERBOSE=false  │    │ VERBOSE=true │   │</span></span>
+<span class="line"><span>│  │ Collapsed ✓    │    │ Full output  │   │</span></span>
+<span class="line"><span>│  │ Docker-like    │    │ Every line   │   │</span></span>
+<span class="line"><span>│  └────────────────┘    └──────────────┘   │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────┘</span></span></code></pre>
+<h3 id="directory-structure">Directory Structure</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>/home/kkk/Apps/ghostty-config-files/logs/</span></span>
+<span class="line"><span>├── installation/</span></span>
+<span class="line"><span>│   ├── start-20251121-201545.log          # Human-readable summary</span></span>
+<span class="line"><span>│   ├── start-20251121-201545.log.json     # Structured JSON</span></span>
+<span class="line"><span>│   └── start-20251121-201545-verbose.log  # FULL command output (debugging)</span></span>
+<span class="line"><span>├── components/</span></span>
+<span class="line"><span>│   ├── ghostty-20251121-201600.log        # Per-component logs</span></span>
+<span class="line"><span>│   ├── zsh-20251121-201700.log</span></span>
+<span class="line"><span>│   ├── python_uv-20251121-201800.log</span></span>
+<span class="line"><span>│   ├── nodejs_fnm-20251121-201900.log</span></span>
+<span class="line"><span>│   └── ai_tools-20251121-202000.log</span></span>
+<span class="line"><span>└── errors.log                              # All errors (consolidated)</span></span></code></pre>
+<h2 id="log-file-types">Log File Types</h2>
+<h3 id="1-human-readable-log-start-timestamplog">1. Human-Readable Log (<code>start-TIMESTAMP.log</code>)</h3>
+<p><strong>Purpose</strong>: Summary of installation with key events and status updates</p>
+<p><strong>Content</strong>:</p>
+<ul>
+<li>Installation start/end timestamps</li>
+<li>Task status updates (started, completed, failed)</li>
+<li>Success/error messages</li>
+<li>Component installation summaries</li>
+<li>Final status and next steps</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>[2025-11-21T20:15:00Z] INFO Logging system initialized (dual-mode output)</span></span>
+<span class="line"><span>[2025-11-21T20:15:05Z] INFO Starting installation (8 tasks, parallel execution enabled)</span></span>
+<span class="line"><span>[2025-11-21T20:15:10Z] INFO Step 1/9: Check Prerequisites (estimated: 5s)</span></span>
+<span class="line"><span>[2025-11-21T20:15:15Z] SUCCESS Step 1/9 complete: Check Prerequisites (5s)</span></span>
+<span class="line"><span>...</span></span></code></pre>
+<h3 id="2-verbose-debug-log-start-timestamp-verboselog">2. Verbose Debug Log (<code>start-TIMESTAMP-verbose.log</code>)</h3>
+<p><strong>Purpose</strong>: COMPLETE command output for debugging (every byte captured)</p>
+<p><strong>Content</strong>:</p>
+<ul>
+<li>Full stdout/stderr from every command</li>
+<li>Complete curl download progress</li>
+<li>Full git clone output</li>
+<li>Complete build logs</li>
+<li>Every line from every script execution</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>================================</span></span>
+<span class="line"><span>[2025-11-21 20:16:00] Downloading Zig Compiler</span></span>
+<span class="line"><span>Command: curl -fsSL https://ziglang.org/download/0.14.0/zig-x86_64-linux-0.14.0.tar.xz -o /tmp/zig.tar.xz</span></span>
+<span class="line"><span>================================</span></span>
+<span class="line"><span>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span></span>
+<span class="line"><span>                                 Dload  Upload   Total   Spent    Left  Speed</span></span>
+<span class="line"><span>  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0</span></span>
+<span class="line"><span>  5 89.2M    5 4912k    0     0  2384k      0  0:00:38  0:00:02  0:00:36 2384k</span></span>
+<span class="line"><span> 12 89.2M   12 11.1M    0     0  3704k      0  0:00:24  0:00:03  0:00:21 3704k</span></span>
+<span class="line"><span>...</span></span>
+<span class="line"><span>100 89.2M  100 89.2M    0     0  4512k      0  0:00:20  0:00:20 --:--:-- 5234k</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>================================</span></span>
+<span class="line"><span>[2025-11-21 20:16:20] Extracting Zig Tarball</span></span>
+<span class="line"><span>Command: tar -xJf /tmp/zig.tar.xz -C /home/user/Apps/</span></span>
+<span class="line"><span>================================</span></span>
+<span class="line"><span>zig-0.14.0/</span></span>
+<span class="line"><span>zig-0.14.0/LICENSE</span></span>
+<span class="line"><span>zig-0.14.0/README.md</span></span>
+<span class="line"><span>... (EVERY file listed)</span></span></code></pre>
+<p><strong>CRITICAL</strong>: This file contains ALL output regardless of VERBOSE_MODE setting.</p>
+<h3 id="3-structured-json-log-start-timestamplogjson">3. Structured JSON Log (<code>start-TIMESTAMP.log.json</code>)</h3>
+<p><strong>Purpose</strong>: Machine-readable structured log for parsing and analysis</p>
+<p><strong>Content</strong>:</p>
+<ul>
+<li>ISO8601 timestamps</li>
+<li>Log levels (TEST, INFO, SUCCESS, WARNING, ERROR)</li>
+<li>Structured message data</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">[</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#79B8FF">    "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-21T20:15:00.123Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "level"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"INFO"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "message"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Logging system initialized (dual-mode output)"</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#79B8FF">    "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-21T20:15:05.456Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "level"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"INFO"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "message"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Starting installation (8 tasks, parallel execution enabled)"</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#FDAEB7;font-style:italic">  ...</span></span>
+<span class="line"><span style="color:#E1E4E8">]</span></span></code></pre>
+<h3 id="4-component-logs-componentslog">4. Component Logs (<code>components/*.log</code>)</h3>
+<p><strong>Purpose</strong>: Isolated logs for each component installation</p>
+<p><strong>Content</strong>:</p>
+<ul>
+<li>Per-component installation steps</li>
+<li>Component-specific output</li>
+<li>Easier debugging for specific component issues</li>
+</ul>
+<p><strong>Example</strong>: <code>ghostty-20251121-201600.log</code></p>
+<h3 id="5-error-log-errorslog">5. Error Log (<code>errors.log</code>)</h3>
+<p><strong>Purpose</strong>: Consolidated error messages from all installations</p>
+<p><strong>Content</strong>:</p>
+<ul>
+<li>All ERROR-level log messages</li>
+<li>Aggregated across all installation runs</li>
+<li>Never rotated (preserved for historical debugging)</li>
+</ul>
+<h2 id="output-modes">Output Modes</h2>
+<h3 id="default-mode-verbose_modefalse">Default Mode (VERBOSE_MODE=false)</h3>
+<p><strong>Terminal Output</strong> (Docker-like collapsed):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">$</span><span style="color:#9ECBFF"> ./start.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">╔═══════════════════════════════════════════════════════════╗</span></span>
+<span class="line"><span style="color:#B392F0">║</span><span style="color:#9ECBFF">          Ghostty</span><span style="color:#9ECBFF"> Configuration</span><span style="color:#9ECBFF"> Installation</span><span style="color:#9ECBFF">               ║</span></span>
+<span class="line"><span style="color:#B392F0">╚═══════════════════════════════════════════════════════════╝</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Prerequisites</span><span style="color:#9ECBFF"> Check</span><span style="color:#E1E4E8"> (2s)</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Install</span><span style="color:#9ECBFF"> gum</span><span style="color:#9ECBFF"> TUI</span><span style="color:#9ECBFF"> Framework</span><span style="color:#E1E4E8"> (5s)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">╔═══════════════════════════════════════════════════════════╗</span></span>
+<span class="line"><span style="color:#B392F0">║</span><span style="color:#9ECBFF">              Installing</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#9ECBFF"> Terminal</span><span style="color:#9ECBFF">                  ║</span></span>
+<span class="line"><span style="color:#B392F0">╚═══════════════════════════════════════════════════════════╝</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Check</span><span style="color:#9ECBFF"> Prerequisites</span><span style="color:#E1E4E8"> (5s)</span></span>
+<span class="line"><span style="color:#B392F0">⠋</span><span style="color:#9ECBFF"> Downloading</span><span style="color:#9ECBFF"> Zig</span><span style="color:#9ECBFF"> Compiler...</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Downloaded</span><span style="color:#9ECBFF"> Zig</span><span style="color:#9ECBFF"> Compiler</span><span style="color:#E1E4E8"> (30s)</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Extracted</span><span style="color:#9ECBFF"> Zig</span><span style="color:#9ECBFF"> Tarball</span><span style="color:#E1E4E8"> (10s)</span></span>
+<span class="line"><span style="color:#B392F0">⠋</span><span style="color:#9ECBFF"> Cloning</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#9ECBFF"> Repository...</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Cloned</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#9ECBFF"> Repository</span><span style="color:#E1E4E8"> (20s)</span></span>
+<span class="line"><span style="color:#B392F0">⠋</span><span style="color:#9ECBFF"> Building</span><span style="color:#9ECBFF"> Ghostty...</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Built</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#E1E4E8"> (90s)</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Installed</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#9ECBFF"> Binary</span><span style="color:#E1E4E8"> (10s)</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Configured</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#E1E4E8"> (10s)</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Created</span><span style="color:#9ECBFF"> Desktop</span><span style="color:#9ECBFF"> Entry</span><span style="color:#E1E4E8"> (5s)</span></span>
+<span class="line"><span style="color:#B392F0">✓</span><span style="color:#9ECBFF"> Verified</span><span style="color:#9ECBFF"> Installation</span><span style="color:#E1E4E8"> (5s)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">═══════════════════════════════════════════════════════════</span></span>
+<span class="line"><span style="color:#B392F0">✅</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#9ECBFF"> Terminal</span><span style="color:#9ECBFF"> installation</span><span style="color:#9ECBFF"> SUCCESS</span><span style="color:#E1E4E8"> (9/9 </span><span style="color:#9ECBFF">steps,</span><span style="color:#9ECBFF"> 185s</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">Detailed</span><span style="color:#9ECBFF"> logs:</span><span style="color:#9ECBFF"> ./logs/components/ghostty-20251121-201600.log</span></span>
+<span class="line"><span style="color:#B392F0">═══════════════════════════════════════════════════════════</span></span></code></pre>
+<p><strong>Log Files</strong>: FULL verbose output captured to all log files</p>
+<h3 id="verbose-mode-verbose_modetrue">Verbose Mode (VERBOSE_MODE=true)</h3>
+<p><strong>Terminal Output</strong> (full output shown):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">$</span><span style="color:#9ECBFF"> ./start.sh</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">...</span><span style="color:#E1E4E8"> (all </span><span style="color:#9ECBFF">command</span><span style="color:#9ECBFF"> output</span><span style="color:#9ECBFF"> shown</span><span style="color:#9ECBFF"> in</span><span style="color:#9ECBFF"> real-time</span><span style="color:#E1E4E8">) ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">Cloning</span><span style="color:#9ECBFF"> Ghostty</span><span style="color:#9ECBFF"> repository...</span></span>
+<span class="line"><span style="color:#B392F0">Cloning</span><span style="color:#9ECBFF"> into</span><span style="color:#9ECBFF"> 'ghostty'...</span></span>
+<span class="line"><span style="color:#B392F0">remote:</span><span style="color:#9ECBFF"> Enumerating</span><span style="color:#9ECBFF"> objects:</span><span style="color:#9ECBFF"> 15234,</span><span style="color:#9ECBFF"> done.</span></span>
+<span class="line"><span style="color:#B392F0">remote:</span><span style="color:#9ECBFF"> Counting</span><span style="color:#9ECBFF"> objects:</span><span style="color:#9ECBFF"> 100%</span><span style="color:#E1E4E8"> (15234/15234), done.</span></span>
+<span class="line"><span style="color:#B392F0">remote:</span><span style="color:#9ECBFF"> Compressing</span><span style="color:#9ECBFF"> objects:</span><span style="color:#9ECBFF"> 100%</span><span style="color:#E1E4E8"> (5123/5123), done.</span></span>
+<span class="line"><span style="color:#B392F0">remote:</span><span style="color:#9ECBFF"> Total</span><span style="color:#79B8FF"> 15234</span><span style="color:#E1E4E8"> (delta </span><span style="color:#79B8FF">9876</span><span style="color:#E1E4E8">), reused 14321 (</span><span style="color:#B392F0">delta</span><span style="color:#79B8FF"> 8901</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">Receiving</span><span style="color:#9ECBFF"> objects:</span><span style="color:#9ECBFF"> 100%</span><span style="color:#E1E4E8"> (15234/15234), 5.23 MiB </span><span style="color:#F97583">|</span><span style="color:#B392F0"> 2.34</span><span style="color:#9ECBFF"> MiB/s,</span><span style="color:#9ECBFF"> done.</span></span>
+<span class="line"><span style="color:#B392F0">Resolving</span><span style="color:#9ECBFF"> deltas:</span><span style="color:#9ECBFF"> 100%</span><span style="color:#E1E4E8"> (9876/9876), done.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">...</span><span style="color:#E1E4E8"> (continues </span><span style="color:#9ECBFF">with</span><span style="color:#9ECBFF"> full</span><span style="color:#9ECBFF"> output</span><span style="color:#E1E4E8">) ...</span></span></code></pre>
+<p><strong>Log Files</strong>: Same FULL verbose output captured to all log files</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<h3 id="core-functions">Core Functions</h3>
+<h4 id="log_command_output-libcoreloggingsh"><code>log_command_output()</code> (lib/core/logging.sh)</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Log command output to verbose log file</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># CRITICAL: ALWAYS logs to verbose log file regardless of VERBOSE_MODE</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Arguments:</span></span>
+<span class="line"><span style="color:#6A737D">#   $1 - Command description (e.g., "Downloading Zig Compiler")</span></span>
+<span class="line"><span style="color:#6A737D">#   $2 - Command output (from captured variable)</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#B392F0">log_command_output</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> description</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> output</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$2</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> timestamp</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +"%Y-%m-%d %H:%M:%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Write to verbose log (ALWAYS)</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "================================"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "[</span><span style="color:#E1E4E8">$timestamp</span><span style="color:#9ECBFF">] </span><span style="color:#E1E4E8">$description</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "================================"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$output</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> ""</span></span>
+<span class="line"><span style="color:#E1E4E8">    } </span><span style="color:#F97583">>></span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">VERBOSE_LOG_FILE</span><span style="color:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h4 id="run_command_collapsible-libuicollapsiblesh"><code>run_command_collapsible()</code> (lib/ui/collapsible.sh)</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># Run command with collapsible output</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#6A737D"># CRITICAL: ALWAYS logs full output to verbose log file regardless of VERBOSE_MODE</span></span>
+<span class="line"><span style="color:#6A737D">#</span></span>
+<span class="line"><span style="color:#B392F0">run_command_collapsible</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> task_id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">    shift</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> cmd</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">$@</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Capture output to variable (for both terminal and logs)</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> output</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> exit_code</span><span style="color:#F97583">=</span><span style="color:#79B8FF">0</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> output_file</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">mktemp</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Execute command with output capture</span></span>
+<span class="line"><span style="color:#B392F0">    "${</span><span style="color:#E1E4E8">cmd</span><span style="color:#B392F0">[</span><span style="color:#F97583">@</span><span style="color:#B392F0">]}"</span><span style="color:#F97583"> ></span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$output_file</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> 2>&#x26;1</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> exit_code</span><span style="color:#F97583">=</span><span style="color:#79B8FF">$?</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Read captured output</span></span>
+<span class="line"><span style="color:#E1E4E8">    output</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$output_file</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # ALWAYS log full output to verbose log file (regardless of VERBOSE_MODE)</span></span>
+<span class="line"><span style="color:#B392F0">    log_command_output</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$task_id</span><span style="color:#9ECBFF">: ${</span><span style="color:#E1E4E8">cmd</span><span style="color:#9ECBFF">[</span><span style="color:#F97583">*</span><span style="color:#9ECBFF">]}"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$output</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Terminal display depends on VERBOSE_MODE</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [ </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$VERBOSE_MODE</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#6A737D">        # Show full output to terminal</span></span>
+<span class="line"><span style="color:#79B8FF">        echo</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$output</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    else</span></span>
+<span class="line"><span style="color:#6A737D">        # Show only collapsed summary (Docker-like)</span></span>
+<span class="line"><span style="color:#6A737D">        # Output already logged to verbose file</span></span>
+<span class="line"><span style="color:#79B8FF">        :</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    # Cleanup</span></span>
+<span class="line"><span style="color:#B392F0">    rm</span><span style="color:#79B8FF"> -f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$output_file</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> $exit_code</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h3 id="configuration-variables">Configuration Variables</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># lib/core/logging.sh</span></span>
+<span class="line"><span style="color:#E1E4E8">LOGGING_REPO_ROOT</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">REPO_ROOT</span><span style="color:#F97583">:-</span><span style="color:#9ECBFF">...}"</span></span>
+<span class="line"><span style="color:#E1E4E8">LOG_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">LOGGING_REPO_ROOT</span><span style="color:#9ECBFF">}/logs/installation"</span></span>
+<span class="line"><span style="color:#E1E4E8">LOG_FILE</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span><span style="color:#6A737D">                    # Human-readable summary</span></span>
+<span class="line"><span style="color:#E1E4E8">LOG_FILE_JSON</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span><span style="color:#6A737D">               # Structured JSON</span></span>
+<span class="line"><span style="color:#E1E4E8">VERBOSE_LOG_FILE</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span><span style="color:#6A737D">            # FULL verbose output (NEW)</span></span>
+<span class="line"><span style="color:#E1E4E8">ERROR_LOG</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"${</span><span style="color:#E1E4E8">LOGGING_REPO_ROOT</span><span style="color:#9ECBFF">}/logs/errors.log"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># lib/ui/collapsible.sh</span></span>
+<span class="line"><span style="color:#E1E4E8">VERBOSE_MODE</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">${VERBOSE_MODE</span><span style="color:#F97583">:-</span><span style="color:#E1E4E8">false}  </span><span style="color:#6A737D"># Default: Docker-like collapsed</span></span></code></pre>
+<h2 id="usage-examples">Usage Examples</h2>
+<h3 id="installation-with-default-mode-collapsed-output">Installation with Default Mode (Collapsed Output)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./start.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Terminal: Clean Docker-like collapsed output</span></span>
+<span class="line"><span style="color:#6A737D"># Log files: FULL verbose output</span></span></code></pre>
+<h3 id="installation-with-verbose-mode">Installation with Verbose Mode</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Terminal: Full output shown in real-time</span></span>
+<span class="line"><span style="color:#6A737D"># Log files: Same FULL verbose output</span></span></code></pre>
+<h3 id="display-log-locations-after-installation">Display Log Locations After Installation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --show-logs</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Shows:</span></span>
+<span class="line"><span style="color:#6A737D"># - Main installation log</span></span>
+<span class="line"><span style="color:#6A737D"># - Verbose debug log</span></span>
+<span class="line"><span style="color:#6A737D"># - Structured JSON log</span></span>
+<span class="line"><span style="color:#6A737D"># - Component logs</span></span>
+<span class="line"><span style="color:#6A737D"># - Error log</span></span></code></pre>
+<h3 id="view-full-verbose-logs-after-installation">View Full Verbose Logs After Installation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># View verbose log from latest installation</span></span>
+<span class="line"><span style="color:#B392F0">less</span><span style="color:#9ECBFF"> logs/installation/start-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">-verbose.log</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> tail</span><span style="color:#79B8FF"> -1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># View specific component log</span></span>
+<span class="line"><span style="color:#B392F0">less</span><span style="color:#9ECBFF"> logs/components/ghostty-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.log</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> tail</span><span style="color:#79B8FF"> -1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Search for errors in verbose log</span></span>
+<span class="line"><span style="color:#B392F0">grep</span><span style="color:#79B8FF"> -i</span><span style="color:#9ECBFF"> error</span><span style="color:#9ECBFF"> logs/installation/start-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">-verbose.log</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> tail</span><span style="color:#79B8FF"> -1</span></span></code></pre>
+<h2 id="log-rotation">Log Rotation</h2>
+<h3 id="automatic-rotation">Automatic Rotation</h3>
+<ul>
+<li><strong>Trigger</strong>: More than 10 installation runs OR files >50MB</li>
+<li><strong>Action</strong>: Remove oldest log files (keeping last 10)</li>
+<li><strong>Scope</strong>: Applies to all log types (human-readable, verbose, JSON)</li>
+</ul>
+<h3 id="manual-cleanup">Manual Cleanup</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Remove all logs (keep directory structure)</span></span>
+<span class="line"><span style="color:#B392F0">rm</span><span style="color:#79B8FF"> -f</span><span style="color:#9ECBFF"> logs/installation/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.log</span><span style="color:#9ECBFF"> logs/installation/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.json</span></span>
+<span class="line"><span style="color:#B392F0">rm</span><span style="color:#79B8FF"> -f</span><span style="color:#9ECBFF"> logs/components/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.log</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Remove logs older than 30 days</span></span>
+<span class="line"><span style="color:#B392F0">find</span><span style="color:#9ECBFF"> logs/</span><span style="color:#79B8FF"> -name</span><span style="color:#9ECBFF"> "*.log"</span><span style="color:#79B8FF"> -mtime</span><span style="color:#9ECBFF"> +30</span><span style="color:#79B8FF"> -delete</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="problem-log-files-not-created">Problem: Log files not created</h3>
+<p><strong>Solution</strong>: Ensure REPO_ROOT is set correctly</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check REPO_ROOT</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#E1E4E8"> $REPO_ROOT</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># If empty, set manually</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> REPO_ROOT</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/home/kkk/Apps/ghostty-config-files"</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span></span></code></pre>
+<h3 id="problem-verbose-log-file-missing-output">Problem: Verbose log file missing output</h3>
+<p><strong>Cause</strong>: VERBOSE_LOG_FILE not initialized</p>
+<p><strong>Solution</strong>: Ensure init_logging() called before any command execution</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># In start.sh main()</span></span>
+<span class="line"><span style="color:#B392F0">init_logging</span><span style="color:#6A737D">                  # MUST be called first</span></span>
+<span class="line"><span style="color:#B392F0">init_collapsible_output</span><span style="color:#6A737D">       # Then UI initialization</span></span></code></pre>
+<h3 id="problem-output-not-captured-to-logs">Problem: Output not captured to logs</h3>
+<p><strong>Cause</strong>: Command not using run_command_collapsible()</p>
+<p><strong>Solution</strong>: Update command to use collapsible wrapper</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Before (output not captured):</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/example/repo</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># After (output captured):</span></span>
+<span class="line"><span style="color:#B392F0">run_command_collapsible</span><span style="color:#9ECBFF"> "clone-repo"</span><span style="color:#9ECBFF"> git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/example/repo</span></span></code></pre>
+<h2 id="testing">Testing</h2>
+<h3 id="validate-logging-system">Validate Logging System</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Test syntax</span></span>
+<span class="line"><span style="color:#B392F0">bash</span><span style="color:#79B8FF"> -n</span><span style="color:#9ECBFF"> lib/core/logging.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test verbose log capture</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> lib/core/logging.sh</span></span>
+<span class="line"><span style="color:#B392F0">init_logging</span></span>
+<span class="line"><span style="color:#B392F0">log_command_output</span><span style="color:#9ECBFF"> "Test command"</span><span style="color:#9ECBFF"> "Test output line 1\nTest output line 2"</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">get_verbose_log_file</span><span style="color:#9ECBFF">)"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Expected output:</span></span>
+<span class="line"><span style="color:#6A737D"># ================================</span></span>
+<span class="line"><span style="color:#6A737D"># [TIMESTAMP] Test command</span></span>
+<span class="line"><span style="color:#6A737D"># ================================</span></span>
+<span class="line"><span style="color:#6A737D"># Test output line 1</span></span>
+<span class="line"><span style="color:#6A737D"># Test output line 2</span></span></code></pre>
+<h3 id="integration-test">Integration Test</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run installation with verbose mode</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span><span style="color:#79B8FF"> --verbose</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify log files created</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -lh</span><span style="color:#9ECBFF"> logs/installation/</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -lh</span><span style="color:#9ECBFF"> logs/components/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify verbose log contains full output</span></span>
+<span class="line"><span style="color:#B392F0">grep</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> "Cloning into"</span><span style="color:#9ECBFF"> logs/installation/start-</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">-verbose.log</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> tail</span><span style="color:#79B8FF"> -1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Should show count > 0 (command output captured)</span></span></code></pre>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="for-component-developers">For Component Developers</h3>
+<ol>
+<li><strong>Always use run_command_collapsible()</strong> for command execution</li>
+<li><strong>Provide descriptive task IDs</strong> (e.g., “download-zig”, not “task-1”)</li>
+<li><strong>Log command intent</strong> before execution for context</li>
+<li><strong>Never suppress stderr</strong> (always capture 2>&#x26;1)</li>
+</ol>
+<h3 id="for-debugging">For Debugging</h3>
+<ol>
+<li><strong>Start with human-readable log</strong> for overview</li>
+<li><strong>Use verbose log</strong> for complete command output</li>
+<li><strong>Check component logs</strong> for isolated issues</li>
+<li><strong>Search errors.log</strong> for ERROR-level messages</li>
+<li><strong>Use JSON log</strong> for automated parsing/analysis</li>
+</ol>
+<h3 id="for-users">For Users</h3>
+<ol>
+<li><strong>Default mode is best</strong> for normal installation</li>
+<li><strong>Use —verbose</strong> only for troubleshooting</li>
+<li><strong>Save verbose logs</strong> before reporting issues</li>
+<li><strong>Use —show-logs</strong> to find log locations easily</li>
+</ol>
+<h2 id="constitutional-compliance">Constitutional Compliance</h2>
+<ul>
+<li>
+<p><strong>User Requirement</strong>: “all logs captured in full, extremely verbose regardless”</p>
+<ul>
+<li>✅ ACHIEVED: log_command_output() ALWAYS captures full output</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience</strong>: “end user must experience full Docker-like collapsing experience”</p>
+<ul>
+<li>✅ ACHIEVED: VERBOSE_MODE=false by default, clean collapsed output</li>
+</ul>
+</li>
+<li>
+<p><strong>Principle VII</strong>: Structured Logging</p>
+<ul>
+<li>✅ ACHIEVED: Dual-format (JSON + human-readable)</li>
+</ul>
+</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="/home/kkk/Apps/ghostty-config-files/lib/core/logging.sh">lib/core/logging.sh</a> - Logging infrastructure</li>
+<li><a href="/home/kkk/Apps/ghostty-config-files/lib/ui/collapsible.sh">lib/ui/collapsible.sh</a> - Collapsible output system</li>
+<li><a href="/home/kkk/Apps/ghostty-config-files/lib/installers/common/manager-runner.sh">lib/installers/common/manager-runner.sh</a> - Component manager wrapper</li>
+<li><a href="/home/kkk/Apps/ghostty-config-files/start.sh">start.sh</a> - Installation orchestrator</li>
+</ul>
+<hr>
+<p><strong>Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-11-21
+<strong>Status</strong>: ACTIVE - PRODUCTION READY</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

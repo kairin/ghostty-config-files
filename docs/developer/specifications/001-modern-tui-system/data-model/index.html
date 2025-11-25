@@ -1,0 +1,627 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Data Model: Modern TUI Installation System | Ghostty Configuration Files</title><meta name="description" content="**Date**: 2025-11-18"><!-- OpenGraph --><meta property="og:title" content="Data Model: Modern TUI Installation System"><meta property="og:description" content="**Date**: 2025-11-18"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Data Model: Modern TUI Installation System</li> </ul> </div> <h1>Data Model: Modern TUI Installation System</h1> <p class="text-xl text-base-content/70 mb-8">**Date**: 2025-11-18</p><h1 id="data-model-modern-tui-installation-system">Data Model: Modern TUI Installation System</h1>
+<p><strong>Date</strong>: 2025-11-18
+<strong>Phase</strong>: Phase 1 - Design
+<strong>Status</strong>: Complete</p>
+<h2 id="overview">Overview</h2>
+<p>This document defines the core data structures and entities used in the Modern TUI Installation System. All entities use JSON serialization for state persistence and logging.</p>
+<h2 id="entity-relationship-diagram">Entity Relationship Diagram</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌───────────────────┐</span></span>
+<span class="line"><span>│  Installation     │</span></span>
+<span class="line"><span>│  Task             │  1        *  ┌───────────────────┐</span></span>
+<span class="line"><span>│                   │──────────────▶│  Verification     │</span></span>
+<span class="line"><span>│ - id              │              │  Result           │</span></span>
+<span class="line"><span>│ - name            │              │ - task_name       │</span></span>
+<span class="line"><span>│ - verify_function │              │ - exit_code       │</span></span>
+<span class="line"><span>│ - dependencies[]  │              │ - success         │</span></span>
+<span class="line"><span>└───────────────────┘              └───────────────────┘</span></span>
+<span class="line"><span>         │</span></span>
+<span class="line"><span>         │ *</span></span>
+<span class="line"><span>         │</span></span>
+<span class="line"><span>         │ contains</span></span>
+<span class="line"><span>         │</span></span>
+<span class="line"><span>         ▼ 1</span></span>
+<span class="line"><span>┌───────────────────┐</span></span>
+<span class="line"><span>│  Installation     │</span></span>
+<span class="line"><span>│  State            │              ┌───────────────────┐</span></span>
+<span class="line"><span>│                   │  1        1  │  System State     │</span></span>
+<span class="line"><span>│ - completed[]     │──────────────▶│  Snapshot         │</span></span>
+<span class="line"><span>│ - failed[]        │              │ - timestamp       │</span></span>
+<span class="line"><span>│ - performance     │              │ - os_info         │</span></span>
+<span class="line"><span>└───────────────────┘              │ - disk_usage      │</span></span>
+<span class="line"><span>                                   └───────────────────┘</span></span></code></pre>
+<h2 id="core-entities">Core Entities</h2>
+<h3 id="1-installation-task">1. Installation Task</h3>
+<p>Represents a single installation step with verification and dependencies.</p>
+<p><strong>Properties</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> InstallationTask</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    id</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                      </span><span style="color:#6A737D">// Unique identifier (e.g., "install-ghostty")</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                    </span><span style="color:#6A737D">// Human-readable name</span></span>
+<span class="line"><span style="color:#FFAB70">    description</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;             </span><span style="color:#6A737D">// Detailed description</span></span>
+<span class="line"><span style="color:#FFAB70">    install_function</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;        </span><span style="color:#6A737D">// Function name (e.g., "task_install_ghostty")</span></span>
+<span class="line"><span style="color:#FFAB70">    verify_function</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;         </span><span style="color:#6A737D">// Verification function name</span></span>
+<span class="line"><span style="color:#FFAB70">    dependencies</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];          </span><span style="color:#6A737D">// Array of prerequisite task IDs</span></span>
+<span class="line"><span style="color:#FFAB70">    estimated_duration</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;      </span><span style="color:#6A737D">// Expected seconds</span></span>
+<span class="line"><span style="color:#FFAB70">    status</span><span style="color:#F97583">:</span><span style="color:#B392F0"> TaskStatus</span><span style="color:#E1E4E8">;              </span><span style="color:#6A737D">// Current state</span></span>
+<span class="line"><span style="color:#FFAB70">    actual_duration</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;        </span><span style="color:#6A737D">// Actual seconds (after completion)</span></span>
+<span class="line"><span style="color:#FFAB70">    error_message</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;          </span><span style="color:#6A737D">// Error details (if failed)</span></span>
+<span class="line"><span style="color:#FFAB70">    start_time</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;             </span><span style="color:#6A737D">// ISO8601 timestamp</span></span>
+<span class="line"><span style="color:#FFAB70">    end_time</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;               </span><span style="color:#6A737D">// ISO8601 timestamp</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">enum</span><span style="color:#B392F0"> TaskStatus</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#79B8FF">    PENDING</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "pending"</span><span style="color:#E1E4E8">,           </span><span style="color:#6A737D">// Not yet started</span></span>
+<span class="line"><span style="color:#79B8FF">    RUNNING</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "running"</span><span style="color:#E1E4E8">,           </span><span style="color:#6A737D">// Currently executing</span></span>
+<span class="line"><span style="color:#79B8FF">    SUCCESS</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "success"</span><span style="color:#E1E4E8">,           </span><span style="color:#6A737D">// Completed successfully</span></span>
+<span class="line"><span style="color:#79B8FF">    FAILED</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "failed"</span><span style="color:#E1E4E8">,             </span><span style="color:#6A737D">// Execution failed</span></span>
+<span class="line"><span style="color:#79B8FF">    SKIPPED</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "skipped"</span><span style="color:#6A737D">            // Already completed (idempotency)</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>State Transitions</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PENDING ──▶ RUNNING ──▶ SUCCESS</span></span>
+<span class="line"><span>               │</span></span>
+<span class="line"><span>               └────▶ FAILED</span></span>
+<span class="line"><span>               </span></span>
+<span class="line"><span>(PENDING can also transition directly to SKIPPED if already completed)</span></span></code></pre>
+<p><strong>JSON Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"install-ghostty"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Install Ghostty from source"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "description"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Clone Ghostty repository and build with Zig 0.14.0+"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "install_function"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"task_install_ghostty"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "verify_function"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"verify_ghostty_installed"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "dependencies"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"install-system-deps"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#79B8FF">  "estimated_duration"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">60</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "status"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"success"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "actual_duration"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">45.7</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "start_time"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:30:15Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "end_time"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:31:00Z"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Lifecycle</strong>:</p>
+<ol>
+<li><strong>Define</strong>: Task registered with id, name, functions, dependencies</li>
+<li><strong>Validate</strong>: Dependencies checked, topological sort performed</li>
+<li><strong>Execute</strong>: install_function() runs, output captured</li>
+<li><strong>Verify</strong>: verify_function() checks actual system state</li>
+<li><strong>Complete</strong>: Mark success/failed in state file</li>
+</ol>
+<hr>
+<h3 id="2-system-state-snapshot">2. System State Snapshot</h3>
+<p>Captures complete system state at specific points (before/after installation).</p>
+<p><strong>Properties</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> SystemStateSnapshot</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    timestamp</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                 </span><span style="color:#6A737D">// ISO8601 timestamp</span></span>
+<span class="line"><span style="color:#FFAB70">    hostname</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// System hostname</span></span>
+<span class="line"><span style="color:#FFAB70">    os_info</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        name</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// OS name (e.g., "Ubuntu 25.10")</span></span>
+<span class="line"><span style="color:#FFAB70">        version</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;               </span><span style="color:#6A737D">// OS version</span></span>
+<span class="line"><span style="color:#FFAB70">        kernel</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                </span><span style="color:#6A737D">// Kernel version (e.g., "6.17.0-6-generic")</span></span>
+<span class="line"><span style="color:#FFAB70">        architecture</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;          </span><span style="color:#6A737D">// CPU architecture (e.g., "x86_64")</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#FFAB70">    installed_packages</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">        [</span><span style="color:#FFAB70">package_name</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">]</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">            version</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">            installation_method</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;  </span><span style="color:#6A737D">// "apt", "snap", "source", "npm", etc.</span></span>
+<span class="line"><span style="color:#E1E4E8">        };</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#FFAB70">    disk_usage</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        total_gb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        available_gb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        used_gb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        percent_used</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#FFAB70">    memory_usage</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        total_mb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        available_mb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        used_mb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        percent_used</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#FFAB70">    active_services</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];        </span><span style="color:#6A737D">// Running systemd services</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Usage</strong>:</p>
+<ul>
+<li>Captured BEFORE installation begins</li>
+<li>Captured AFTER installation completes</li>
+<li>Used for before/after comparison and debugging</li>
+<li>Stored in <code>/tmp/ghostty-start-logs/system_state_TIMESTAMP.json</code></li>
+</ul>
+<p><strong>JSON Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:30:00Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "hostname"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"ghostty-test"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "os_info"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Ubuntu 25.10"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"25.10"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "kernel"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"6.17.0-6-generic"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "architecture"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"x86_64"</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "installed_packages"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "ghostty"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"1.1.4"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "installation_method"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"source"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#79B8FF">    "node"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"25.2.0"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "installation_method"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"fnm"</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "disk_usage"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "total_gb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">256</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "available_gb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">180</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "used_gb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">76</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "percent_used"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">30</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "memory_usage"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "total_mb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">16384</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "available_mb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8192</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "used_mb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8192</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "percent_used"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">50</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "active_services"</span><span style="color:#E1E4E8">: [</span><span style="color:#9ECBFF">"NetworkManager"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"systemd-resolved"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"ssh"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<hr>
+<h3 id="3-verification-result">3. Verification Result</h3>
+<p>Outcome of running a verification function (real system state check).</p>
+<p><strong>Properties</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> VerificationResult</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    task_name</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                 </span><span style="color:#6A737D">// Associated task (e.g., "install-ghostty")</span></span>
+<span class="line"><span style="color:#FFAB70">    verify_function</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;           </span><span style="color:#6A737D">// Function name (e.g., "verify_ghostty_installed")</span></span>
+<span class="line"><span style="color:#FFAB70">    exit_code</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;                 </span><span style="color:#6A737D">// 0 = success, 1 = failure</span></span>
+<span class="line"><span style="color:#FFAB70">    stdout</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                    </span><span style="color:#6A737D">// Captured standard output</span></span>
+<span class="line"><span style="color:#FFAB70">    stderr</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                    </span><span style="color:#6A737D">// Captured standard error</span></span>
+<span class="line"><span style="color:#FFAB70">    duration</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// Execution time in seconds</span></span>
+<span class="line"><span style="color:#FFAB70">    timestamp</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                 </span><span style="color:#6A737D">// ISO8601 timestamp</span></span>
+<span class="line"><span style="color:#FFAB70">    success</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// exit_code === 0</span></span>
+<span class="line"><span style="color:#FFAB70">    error_diagnostics</span><span style="color:#F97583">?:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        what_failed</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;           </span><span style="color:#6A737D">// Component that failed</span></span>
+<span class="line"><span style="color:#FFAB70">        why_failed</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;            </span><span style="color:#6A737D">// Root cause analysis</span></span>
+<span class="line"><span style="color:#FFAB70">        how_to_fix</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;            </span><span style="color:#6A737D">// Recovery suggestions</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Multi-Layer Types</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> UnitTestResult</span><span style="color:#F97583"> extends</span><span style="color:#B392F0"> VerificationResult</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    component</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                 </span><span style="color:#6A737D">// Single component (e.g., "ghostty", "fnm")</span></span>
+<span class="line"><span style="color:#FFAB70">    tests_run</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];               </span><span style="color:#6A737D">// Individual tests executed</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> IntegrationTestResult</span><span style="color:#F97583"> extends</span><span style="color:#B392F0"> VerificationResult</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    components</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];              </span><span style="color:#6A737D">// Multiple components tested together</span></span>
+<span class="line"><span style="color:#FFAB70">    cross_component_checks</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];  </span><span style="color:#6A737D">// Integration validations</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> HealthCheckResult</span><span style="color:#F97583"> extends</span><span style="color:#B392F0"> VerificationResult</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    check_type</span><span style="color:#F97583">:</span><span style="color:#9ECBFF"> "pre"</span><span style="color:#F97583"> |</span><span style="color:#9ECBFF"> "post"</span><span style="color:#E1E4E8">;       </span><span style="color:#6A737D">// Pre-installation or post-installation</span></span>
+<span class="line"><span style="color:#FFAB70">    checks_passed</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    checks_failed</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    critical_failures</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];       </span><span style="color:#6A737D">// Blocking issues</span></span>
+<span class="line"><span style="color:#FFAB70">    warnings</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];                </span><span style="color:#6A737D">// Non-blocking concerns</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>JSON Example (Unit Test)</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "task_name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"install-ghostty"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "verify_function"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"verify_ghostty_installed"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "exit_code"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "stdout"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"✓ Ghostty binary exists</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">✓ Ghostty version: 1.1.4</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">✓ Configuration valid"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "stderr"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "duration"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1.2</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:31:01Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "success"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "component"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"ghostty"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "tests_run"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#9ECBFF">    "binary_exists"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "binary_executable"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "version_check"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "config_validation"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "shared_libraries"</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>JSON Example (Failed Verification)</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "task_name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"install-nodejs"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "verify_function"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"verify_fnm_performance"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "exit_code"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "stdout"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "stderr"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"fnm startup: 62ms (>50ms ✗ CONSTITUTIONAL VIOLATION)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "duration"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:32:15Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "success"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "error_diagnostics"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "what_failed"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"fnm performance benchmark"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "why_failed"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"fnm startup time exceeded 50ms constitutional requirement"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "how_to_fix"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Check system load, verify fnm binary not on slow filesystem, consider reinstalling fnm"</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<hr>
+<h3 id="4-installation-state-resume">4. Installation State (Resume)</h3>
+<p>Persistent state for interrupt recovery and idempotency.</p>
+<p><strong>Properties</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> InstallationState</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    version</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                   </span><span style="color:#6A737D">// State schema version (e.g., "2.0")</span></span>
+<span class="line"><span style="color:#FFAB70">    started</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                   </span><span style="color:#6A737D">// ISO8601 timestamp of first start</span></span>
+<span class="line"><span style="color:#FFAB70">    last_run</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// ISO8601 timestamp of last execution</span></span>
+<span class="line"><span style="color:#FFAB70">    completed_tasks</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];         </span><span style="color:#6A737D">// Array of completed task IDs</span></span>
+<span class="line"><span style="color:#FFAB70">    failed_tasks</span><span style="color:#F97583">:</span><span style="color:#B392F0"> FailedTask</span><span style="color:#E1E4E8">[];        </span><span style="color:#6A737D">// Array of failed tasks with errors</span></span>
+<span class="line"><span style="color:#FFAB70">    skipped_tasks</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];           </span><span style="color:#6A737D">// Array of skipped task IDs (already installed)</span></span>
+<span class="line"><span style="color:#FFAB70">    system_info</span><span style="color:#F97583">:</span><span style="color:#B392F0"> SystemInfo</span><span style="color:#E1E4E8">;           </span><span style="color:#6A737D">// Basic system identification</span></span>
+<span class="line"><span style="color:#FFAB70">    performance</span><span style="color:#F97583">:</span><span style="color:#B392F0"> PerformanceMetrics</span><span style="color:#E1E4E8">;   </span><span style="color:#6A737D">// Timing data</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> FailedTask</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    task_id</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    error_message</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    timestamp</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    retry_count</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> SystemInfo</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    os</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    kernel</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    architecture</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    hostname</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> PerformanceMetrics</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    total_duration</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;            </span><span style="color:#6A737D">// Total installation time in seconds</span></span>
+<span class="line"><span style="color:#FFAB70">    task_durations</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">        [</span><span style="color:#FFAB70">task_id</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">]</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;     </span><span style="color:#6A737D">// Per-task timing</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>State File Location</strong>: <code>/tmp/ghostty-start-logs/installation-state.json</code></p>
+<p><strong>Persistence Rules</strong>:</p>
+<ol>
+<li>State file created on first run</li>
+<li>Updated after each task completion/failure</li>
+<li>Read on subsequent runs for idempotency</li>
+<li>Tasks in <code>completed_tasks[]</code> are skipped</li>
+<li>Failed tasks can be retried</li>
+</ol>
+<p><strong>JSON Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "version"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2.0"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "started"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:30:00Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "last_run"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:35:42Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "completed_tasks"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#9ECBFF">    "verify-prereqs"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "install-system-deps"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "install-uv"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "install-fnm"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "install-nodejs"</span></span>
+<span class="line"><span style="color:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#79B8FF">  "failed_tasks"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "task_id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"install-ghostty"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "error_message"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Build failed: missing libgtk-4-dev"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "timestamp"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:34:15Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "retry_count"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#79B8FF">  "skipped_tasks"</span><span style="color:#E1E4E8">: [],</span></span>
+<span class="line"><span style="color:#79B8FF">  "system_info"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "os"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Ubuntu 25.10"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "kernel"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"6.17.0-6-generic"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "architecture"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"x86_64"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "hostname"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"ghostty-test"</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "performance"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "total_duration"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">285</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "task_durations"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "verify-prereqs"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">2.1</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "install-system-deps"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8.3</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "install-uv"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1.5</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "install-fnm"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1.9</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "install-nodejs"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">3.2</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>State Operations</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check if task completed</span></span>
+<span class="line"><span style="color:#B392F0">is_task_completed</span><span style="color:#9ECBFF"> "install-ghostty"</span></span>
+<span class="line"><span style="color:#6A737D"># Returns: 0 if in completed_tasks[], 1 otherwise</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Mark task completed</span></span>
+<span class="line"><span style="color:#B392F0">mark_task_completed</span><span style="color:#9ECBFF"> "install-ghostty"</span><span style="color:#79B8FF"> 45.7</span></span>
+<span class="line"><span style="color:#6A737D"># Adds to completed_tasks[], records duration</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Mark task failed</span></span>
+<span class="line"><span style="color:#B392F0">mark_task_failed</span><span style="color:#9ECBFF"> "install-ghostty"</span><span style="color:#9ECBFF"> "Build failed: missing libgtk-4-dev"</span></span>
+<span class="line"><span style="color:#6A737D"># Adds to failed_tasks[] with error and timestamp</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Resume installation</span></span>
+<span class="line"><span style="color:#B392F0">resume_installation</span></span>
+<span class="line"><span style="color:#6A737D"># Reads state file, skips completed tasks, retries failed tasks</span></span></code></pre>
+<hr>
+<h3 id="5-performance-metrics">5. Performance Metrics</h3>
+<p>Task-level timing and system resource usage.</p>
+<p><strong>Properties</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="typescript"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> PerformanceMetrics</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    task_name</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    start_time</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                </span><span style="color:#6A737D">// ISO8601 timestamp</span></span>
+<span class="line"><span style="color:#FFAB70">    end_time</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// ISO8601 timestamp</span></span>
+<span class="line"><span style="color:#FFAB70">    duration</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;                  </span><span style="color:#6A737D">// Seconds</span></span>
+<span class="line"><span style="color:#FFAB70">    cpu_usage</span><span style="color:#F97583">?:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        user_time</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;             </span><span style="color:#6A737D">// User CPU seconds</span></span>
+<span class="line"><span style="color:#FFAB70">        system_time</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;           </span><span style="color:#6A737D">// System CPU seconds</span></span>
+<span class="line"><span style="color:#FFAB70">        percent</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;               </span><span style="color:#6A737D">// CPU utilization percentage</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#FFAB70">    memory_usage</span><span style="color:#F97583">?:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        peak_mb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;               </span><span style="color:#6A737D">// Peak memory usage</span></span>
+<span class="line"><span style="color:#FFAB70">        average_mb</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;            </span><span style="color:#6A737D">// Average memory usage</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#FFAB70">    disk_io</span><span style="color:#F97583">?:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        bytes_read</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">        bytes_written</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> AggregateMetrics</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">    total_duration</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">    parallel_speedup</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;         </span><span style="color:#6A737D">// % improvement from parallel execution</span></span>
+<span class="line"><span style="color:#FFAB70">    bottleneck_tasks</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">[];        </span><span style="color:#6A737D">// Tasks taking >20% of total time</span></span>
+<span class="line"><span style="color:#FFAB70">    performance_metrics</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">        fnm_startup_ms</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;        </span><span style="color:#6A737D">// Performance measured and logged</span></span>
+<span class="line"><span style="color:#FFAB70">        gum_startup_ms</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;        </span><span style="color:#6A737D">// Performance measured and logged</span></span>
+<span class="line"><span style="color:#FFAB70">        total_minutes</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> number</span><span style="color:#E1E4E8">;         </span><span style="color:#6A737D">// Target: &#x3C;10 minutes total</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>JSON Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "task_name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"install-ghostty"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "start_time"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:30:15Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "end_time"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"2025-11-18T10:31:00Z"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "duration"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">45.7</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "cpu_usage"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "user_time"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">38.2</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "system_time"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">7.5</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "percent"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">100</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "memory_usage"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "peak_mb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">512</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "average_mb"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">380</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "disk_io"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "bytes_read"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">524288000</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "bytes_written"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">104857600</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p><strong>Constitutional Validation</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "constitutional_compliance"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "fnm_startup_ms"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">42</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "gum_startup_ms"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "total_minutes"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">8.5</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "compliant"</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">    "violations"</span><span style="color:#E1E4E8">: []</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<hr>
+<h2 id="data-flow-diagrams">Data Flow Diagrams</h2>
+<h3 id="task-execution-flow">Task Execution Flow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  1. Load Installation State                                 │</span></span>
+<span class="line"><span>│     └─ Read /tmp/ghostty-start-logs/installation-state.json│</span></span>
+<span class="line"><span>└──────────────────────┬──────────────────────────────────────┘</span></span>
+<span class="line"><span>                       │</span></span>
+<span class="line"><span>                       ▼</span></span>
+<span class="line"><span>┌─────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  2. Check if Task Already Completed                         │</span></span>
+<span class="line"><span>│     └─ task_id in state.completed_tasks[]?                 │</span></span>
+<span class="line"><span>└──────────────────────┬──────────────────────────────────────┘</span></span>
+<span class="line"><span>                       │</span></span>
+<span class="line"><span>                ┌──────┴──────┐</span></span>
+<span class="line"><span>                │             │</span></span>
+<span class="line"><span>            YES │             │ NO</span></span>
+<span class="line"><span>                │             │</span></span>
+<span class="line"><span>                ▼             ▼</span></span>
+<span class="line"><span>        ┌───────────┐  ┌─────────────────────┐</span></span>
+<span class="line"><span>        │  Skip     │  │  3. Execute         │</span></span>
+<span class="line"><span>        │  Task     │  │     Dependencies    │</span></span>
+<span class="line"><span>        │  (SKIPPED)│  │                     │</span></span>
+<span class="line"><span>        └───────────┘  └──────┬──────────────┘</span></span>
+<span class="line"><span>                              │</span></span>
+<span class="line"><span>                              ▼</span></span>
+<span class="line"><span>                    ┌──────────────────────┐</span></span>
+<span class="line"><span>                    │  4. Run              │</span></span>
+<span class="line"><span>                    │     install_function │</span></span>
+<span class="line"><span>                    │     (capture output) │</span></span>
+<span class="line"><span>                    └──────┬───────────────┘</span></span>
+<span class="line"><span>                           │</span></span>
+<span class="line"><span>                           ▼</span></span>
+<span class="line"><span>                    ┌──────────────────────┐</span></span>
+<span class="line"><span>                    │  5. Run              │</span></span>
+<span class="line"><span>                    │     verify_function  │</span></span>
+<span class="line"><span>                    │     (real checks)    │</span></span>
+<span class="line"><span>                    └──────┬───────────────┘</span></span>
+<span class="line"><span>                           │</span></span>
+<span class="line"><span>                    ┌──────┴──────┐</span></span>
+<span class="line"><span>                    │             │</span></span>
+<span class="line"><span>               SUCCESS           FAILURE</span></span>
+<span class="line"><span>                    │             │</span></span>
+<span class="line"><span>                    ▼             ▼</span></span>
+<span class="line"><span>            ┌───────────┐  ┌──────────────┐</span></span>
+<span class="line"><span>            │  Mark     │  │  Mark        │</span></span>
+<span class="line"><span>            │  Completed│  │  Failed      │</span></span>
+<span class="line"><span>            │  (SUCCESS)│  │  (FAILED)    │</span></span>
+<span class="line"><span>            └────┬──────┘  └──────┬───────┘</span></span>
+<span class="line"><span>                 │                │</span></span>
+<span class="line"><span>                 ▼                ▼</span></span>
+<span class="line"><span>        ┌────────────────────────────┐</span></span>
+<span class="line"><span>        │  6. Update State File      │</span></span>
+<span class="line"><span>        │     - Add to completed[]   │</span></span>
+<span class="line"><span>        │     - Record duration      │</span></span>
+<span class="line"><span>        │     - Save error (if any)  │</span></span>
+<span class="line"><span>        └────────────────────────────┘</span></span></code></pre>
+<h3 id="verification-flow-multi-layer">Verification Flow (Multi-Layer)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌──────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  Component Installation Complete         │</span></span>
+<span class="line"><span>└──────────────────┬───────────────────────┘</span></span>
+<span class="line"><span>                   │</span></span>
+<span class="line"><span>                   ▼</span></span>
+<span class="line"><span>┌──────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  LAYER 1: Unit Tests                     │</span></span>
+<span class="line"><span>│  - Binary exists?                        │</span></span>
+<span class="line"><span>│  - Binary executable?                    │</span></span>
+<span class="line"><span>│  - Version check succeeds?               │</span></span>
+<span class="line"><span>│  - Basic functionality works?            │</span></span>
+<span class="line"><span>└──────────────────┬───────────────────────┘</span></span>
+<span class="line"><span>                   │</span></span>
+<span class="line"><span>            ┌──────┴──────┐</span></span>
+<span class="line"><span>            │             │</span></span>
+<span class="line"><span>          PASS          FAIL</span></span>
+<span class="line"><span>            │             │</span></span>
+<span class="line"><span>            ▼             ▼</span></span>
+<span class="line"><span>┌───────────────┐  ┌──────────────┐</span></span>
+<span class="line"><span>│  Continue     │  │  ABORT       │</span></span>
+<span class="line"><span>│  to Layer 2   │  │  Return 1    │</span></span>
+<span class="line"><span>└───────┬───────┘  └──────────────┘</span></span>
+<span class="line"><span>        │</span></span>
+<span class="line"><span>        ▼</span></span>
+<span class="line"><span>┌──────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  LAYER 2: Integration Tests              │</span></span>
+<span class="line"><span>│  - Components work together?             │</span></span>
+<span class="line"><span>│  - Configuration valid?                  │</span></span>
+<span class="line"><span>│  - Environment variables set?            │</span></span>
+<span class="line"><span>└──────────────────┬───────────────────────┘</span></span>
+<span class="line"><span>                   │</span></span>
+<span class="line"><span>            ┌──────┴──────┐</span></span>
+<span class="line"><span>            │             │</span></span>
+<span class="line"><span>          PASS          FAIL</span></span>
+<span class="line"><span>            │             │</span></span>
+<span class="line"><span>            ▼             ▼</span></span>
+<span class="line"><span>┌───────────────┐  ┌──────────────┐</span></span>
+<span class="line"><span>│  Continue     │  │  ABORT       │</span></span>
+<span class="line"><span>│  to Layer 3   │  │  Return 1    │</span></span>
+<span class="line"><span>└───────┬───────┘  └──────────────┘</span></span>
+<span class="line"><span>        │</span></span>
+<span class="line"><span>        ▼</span></span>
+<span class="line"><span>┌──────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  LAYER 3: Health Checks                  │</span></span>
+<span class="line"><span>│  - No conflicts?                         │</span></span>
+<span class="line"><span>│  - Performance targets met?              │</span></span>
+<span class="line"><span>│  - System resources adequate?            │</span></span>
+<span class="line"><span>└──────────────────┬───────────────────────┘</span></span>
+<span class="line"><span>                   │</span></span>
+<span class="line"><span>            ┌──────┴──────┐</span></span>
+<span class="line"><span>            │             │</span></span>
+<span class="line"><span>          PASS          FAIL</span></span>
+<span class="line"><span>            │             │</span></span>
+<span class="line"><span>            ▼             ▼</span></span>
+<span class="line"><span>    ┌────────────┐  ┌──────────────┐</span></span>
+<span class="line"><span>    │  SUCCESS   │  │  WARNING     │</span></span>
+<span class="line"><span>    │  Return 0  │  │  Log &#x26; Return│</span></span>
+<span class="line"><span>    └────────────┘  └──────────────┘</span></span></code></pre>
+<hr>
+<h2 id="data-validation-rules">Data Validation Rules</h2>
+<h3 id="task-definition-validation">Task Definition Validation</h3>
+<ul>
+<li><code>id</code> must be unique, lowercase, dash-separated (e.g., “install-ghostty”)</li>
+<li><code>name</code> must be non-empty, human-readable</li>
+<li><code>install_function</code> must exist in <code>lib/tasks/*.sh</code></li>
+<li><code>verify_function</code> must exist in <code>lib/verification/*.sh</code></li>
+<li><code>dependencies[]</code> must reference existing task IDs</li>
+<li><code>estimated_duration</code> must be positive number</li>
+</ul>
+<h3 id="state-file-validation">State File Validation</h3>
+<ul>
+<li><code>version</code> must match expected schema version (“2.0”)</li>
+<li><code>completed_tasks[]</code> must contain valid task IDs</li>
+<li><code>failed_tasks[]</code> must have task_id, error_message, timestamp</li>
+<li>No task can be in both <code>completed_tasks[]</code> and <code>failed_tasks[]</code></li>
+</ul>
+<h3 id="verification-result-validation">Verification Result Validation</h3>
+<ul>
+<li><code>exit_code</code> must be 0 (success) or 1 (failure)</li>
+<li><code>success</code> must equal <code>exit_code === 0</code></li>
+<li><code>duration</code> must be non-negative</li>
+<li>If <code>success === false</code>, <code>error_diagnostics</code> should be present</li>
+</ul>
+<hr>
+<h2 id="storage-locations">Storage Locations</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Data Type</th><th>File Path</th><th>Format</th><th>Retention</th></tr></thead><tbody><tr><td>Installation State</td><td><code>/tmp/ghostty-start-logs/installation-state.json</code></td><td>JSON</td><td>Until next clean install</td></tr><tr><td>System Snapshots</td><td><code>/tmp/ghostty-start-logs/system_state_TIMESTAMP.json</code></td><td>JSON</td><td>Last 10 installations</td></tr><tr><td>Human-readable Log</td><td><code>/tmp/ghostty-start-logs/start-TIMESTAMP.log</code></td><td>Text</td><td>Last 10 installations</td></tr><tr><td>Structured JSON Log</td><td><code>/tmp/ghostty-start-logs/start-TIMESTAMP.log.json</code></td><td>JSON</td><td>Last 10 installations</td></tr><tr><td>Error Log</td><td><code>/tmp/ghostty-start-logs/errors.log</code></td><td>Text</td><td>Append-only (rotated at 10MB)</td></tr><tr><td>Performance Metrics</td><td><code>/tmp/ghostty-start-logs/performance.json</code></td><td>JSON</td><td>Latest only</td></tr></tbody></table>
+<hr>
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="why-json-for-state-files">Why JSON for State Files?</h3>
+<ul>
+<li>Human-readable for debugging</li>
+<li>Easy to parse with jq in bash</li>
+<li>Standard format with wide tool support</li>
+<li>Structured data with validation</li>
+<li>Easy to version and migrate</li>
+</ul>
+<h3 id="why-tmp-for-logs">Why /tmp/ for Logs?</h3>
+<ul>
+<li>Automatic cleanup on reboot</li>
+<li>No need for manual log rotation (system handles it)</li>
+<li>Fast access (tmpfs on most systems)</li>
+<li>Doesn’t clutter home directory</li>
+</ul>
+<h3 id="why-multi-layer-verification">Why Multi-Layer Verification?</h3>
+<ul>
+<li>Catches failures at appropriate granularity</li>
+<li>Unit tests fail fast (before integration)</li>
+<li>Integration tests verify real-world usage</li>
+<li>Health checks ensure overall system compliance</li>
+</ul>
+<h3 id="why-separate-completed_tasks-and-failed_tasks">Why Separate completed_tasks[] and failed_tasks[]?</h3>
+<ul>
+<li>Clear state distinction</li>
+<li>Failed tasks can be retried</li>
+<li>Completed tasks always skipped (idempotency)</li>
+<li>Easy to generate summary reports</li>
+</ul>
+<hr>
+<p><strong>Data Model Complete</strong> ✅</p>
+<p>All core entities defined with TypeScript-style interfaces, JSON examples, validation rules, and storage specifications. Ready for contract definition and implementation.</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

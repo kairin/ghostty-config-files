@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>ZSH Compinit Security Check System | Ghostty Configuration Files</title><meta name="description" content="Automatic detection and fixing of ZSH compinit insecure file warnings. This system prevents the recurring 'zsh compinit: insecure files' error that occurs when completion files have incorrect ownership or permissions."><!-- OpenGraph --><meta property="og:title" content="ZSH Compinit Security Check System"><meta property="og:description" content="Automatic detection and fixing of ZSH compinit insecure file warnings. This system prevents the recurring 'zsh compinit: insecure files' error that occurs when completion files have incorrect ownership or permissions."><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>ZSH Compinit Security Check System</li> </ul> </div> <h1>ZSH Compinit Security Check System</h1> <p class="text-xl text-base-content/70 mb-8">Automatic detection and fixing of ZSH compinit insecure file warnings. This system prevents the recurring &#39;zsh compinit: insecure files&#39; error that occurs when completion files have incorrect ownership or permissions.</p><h1 id="zsh-compinit-security-check-system">ZSH Compinit Security Check System</h1>
+<h2 id="overview">Overview</h2>
+<p>Automatic detection and fixing of ZSH compinit insecure file warnings. This system prevents the recurring “zsh compinit: insecure files” error that occurs when completion files have incorrect ownership or permissions.</p>
+<h2 id="quick-fix-tldr">Quick Fix (TL;DR)</h2>
+<p>If you’re seeing the “zsh compinit: insecure files” warning right now:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. List insecure files</span></span>
+<span class="line"><span style="color:#B392F0">compaudit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 2. One-time quick fix (requires password)</span></span>
+<span class="line"><span style="color:#B392F0">/home/kkk/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. For automatic fixes without password prompts, add passwordless sudo:</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> EDITOR=nano</span><span style="color:#9ECBFF"> visudo</span></span>
+<span class="line"><span style="color:#6A737D"># Add this line (replace 'kkk' with your username):</span></span>
+<span class="line"><span style="color:#6A737D"># kkk ALL=(ALL) NOPASSWD: /usr/bin/chown, /usr/bin/chmod</span></span>
+<span class="line"><span style="color:#6A737D"># Save: Ctrl+X, Y, Enter</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Test the fix</span></span>
+<span class="line"><span style="color:#B392F0">compaudit</span><span style="color:#6A737D">  # Should return no output if fixed</span></span></code></pre>
+<h2 id="problem-statement">Problem Statement</h2>
+<p>ZSH’s completion system (<code>compinit</code>) performs security checks on completion files and directories. Files owned by users other than root or the current user (e.g., <code>nobody:nogroup</code>) trigger security warnings:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>zsh compinit: insecure files, run compaudit for list.</span></span>
+<span class="line"><span>Ignore insecure files and continue [y] or abort compinit [n]?</span></span></code></pre>
+<p>This issue commonly occurs after:</p>
+<ul>
+<li>System updates when package managers install completion files with incorrect ownership</li>
+<li>Reinstalling packages like <code>antigravity</code> that create completion files owned by <code>nobody:nogroup</code></li>
+<li>The daily check marker file prevents re-running the auto-fix on the same day after package reinstalls</li>
+</ul>
+<h2 id="solution">Solution</h2>
+<h3 id="automatic-detection--fix">Automatic Detection &#x26; Fix</h3>
+<p>The system automatically:</p>
+<ol>
+<li><strong>Checks once per day</strong> on first terminal launch</li>
+<li><strong>Detects</strong> insecure completion files using <code>compaudit</code></li>
+<li><strong>Auto-fixes</strong> by changing ownership to <code>root:root</code> and permissions to <code>644</code></li>
+<li><strong>Reports</strong> results with color-coded output</li>
+</ol>
+<h3 id="components">Components</h3>
+<h4 id="1-security-check-script">1. Security Check Script</h4>
+<p><strong>Location</strong>: <code>/home/kkk/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh</code></p>
+<p><strong>Usage</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check only (no fixes)</span></span>
+<span class="line"><span style="color:#B392F0">./fix-zsh-compinit-security.sh</span><span style="color:#79B8FF"> --check</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Interactive mode (prompts for sudo password)</span></span>
+<span class="line"><span style="color:#B392F0">./fix-zsh-compinit-security.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Automatic mode (requires passwordless sudo)</span></span>
+<span class="line"><span style="color:#B392F0">./fix-zsh-compinit-security.sh</span><span style="color:#79B8FF"> --auto</span></span></code></pre>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Robust error handling with <code>set -euo pipefail</code></li>
+<li>Color-coded output (INFO, SUCCESS, WARNING, ERROR)</li>
+<li>Detailed file ownership and permissions display</li>
+<li>Verification after fixes applied</li>
+</ul>
+<h4 id="2-automatic-integration-zshrc">2. Automatic Integration (.zshrc)</h4>
+<p><strong>Location</strong>: <code>~/.zshrc</code> (lines 7-22)</p>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>Runs automatically once per day on first terminal launch</li>
+<li>Creates daily marker file: <code>/tmp/.zsh-security-check-YYYYMMDD</code></li>
+<li>Silent when no issues detected</li>
+<li>Interactive prompt when issues found (requires sudo password)</li>
+</ul>
+<p><strong>Code</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Automatic ZSH compinit security fix</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#F97583">-f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">    local</span><span style="color:#E1E4E8"> last_check_file</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/tmp/.zsh-security-check-$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%Y%m%d)"</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#F97583">!</span><span style="color:#F97583"> -f</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$last_check_file</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> !</span><span style="color:#B392F0"> "</span><span style="color:#E1E4E8">$HOME</span><span style="color:#B392F0">/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh"</span><span style="color:#79B8FF"> --check</span><span style="color:#E1E4E8"> &#x26;</span><span style="color:#F97583">></span><span style="color:#E1E4E8">/dev/null; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">            echo</span><span style="color:#9ECBFF"> "⚠️  ZSH security check: Insecure completion files detected"</span></span>
+<span class="line"><span style="color:#79B8FF">            echo</span><span style="color:#9ECBFF"> "🔧 Auto-fixing with sudo (you may be prompted for password)..."</span></span>
+<span class="line"><span style="color:#B392F0">            "</span><span style="color:#E1E4E8">$HOME</span><span style="color:#B392F0">/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh"</span><span style="color:#79B8FF"> --auto</span></span>
+<span class="line"><span style="color:#B392F0">            touch</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$last_check_file</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        else</span></span>
+<span class="line"><span style="color:#B392F0">            touch</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$last_check_file</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        fi</span></span>
+<span class="line"><span style="color:#F97583">    fi</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h4 id="3-manual-commands">3. Manual Commands</h4>
+<p><strong>Added aliases</strong> (lines 249-250 in <code>.zshrc</code>):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for security issues (no fixes)</span></span>
+<span class="line"><span style="color:#B392F0">zsh-check-security</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Fix security issues interactively</span></span>
+<span class="line"><span style="color:#B392F0">zsh-fix-security</span></span></code></pre>
+<h2 id="technical-details">Technical Details</h2>
+<h3 id="root-cause">Root Cause</h3>
+<p>The issue occurs when completion files are:</p>
+<ul>
+<li>Owned by <code>nobody:nogroup</code> instead of <code>root:root</code></li>
+<li>Have group/world writable permissions</li>
+<li>Located in system completion directories (<code>/usr/share/zsh/vendor-completions/</code>)</li>
+</ul>
+<h3 id="proper-fix">Proper Fix</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Change ownership to root</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chown</span><span style="color:#9ECBFF"> root:root</span><span style="color:#9ECBFF"> /path/to/completion/file</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Set proper permissions (644 = rw-r--r--)</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chmod</span><span style="color:#79B8FF"> 644</span><span style="color:#9ECBFF"> /path/to/completion/file</span></span></code></pre>
+<h3 id="why-zsh_disable_compfix-doesnt-work">Why ZSH_DISABLE_COMPFIX Doesn’t Work</h3>
+<p>The setting <code>ZSH_DISABLE_COMPFIX=true</code> only disables <strong>Oh My Zsh</strong> warnings, not the underlying ZSH security prompt that appears <strong>before</strong> <code>.zshrc</code> is read.</p>
+<p>The <code>-u</code> flag for <code>compinit</code> (skip security checks) also doesn’t prevent the initial warning prompt.</p>
+<p><strong>The only proper solution is to fix the file ownership and permissions.</strong></p>
+<h2 id="common-scenarios">Common Scenarios</h2>
+<h3 id="google-antigravity-package-most-common-issue">Google Antigravity Package (Most Common Issue)</h3>
+<p>The <strong>antigravity</strong> package from Google frequently installs its ZSH completion file with incorrect ownership:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Problem: File owned by nobody instead of root</span></span>
+<span class="line"><span style="color:#B392F0">$</span><span style="color:#9ECBFF"> ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span></span>
+<span class="line"><span style="color:#B392F0">-rw-r--r--</span><span style="color:#79B8FF"> 1</span><span style="color:#9ECBFF"> nobody</span><span style="color:#9ECBFF"> nobody</span><span style="color:#79B8FF"> 2554</span><span style="color:#9ECBFF"> Nov</span><span style="color:#79B8FF"> 19</span><span style="color:#9ECBFF"> 10:55</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Result: ZSH security warning on every terminal launch</span></span>
+<span class="line"><span style="color:#B392F0">zsh</span><span style="color:#9ECBFF"> compinit:</span><span style="color:#9ECBFF"> insecure</span><span style="color:#9ECBFF"> files,</span><span style="color:#9ECBFF"> run</span><span style="color:#9ECBFF"> compaudit</span><span style="color:#9ECBFF"> for</span><span style="color:#9ECBFF"> list.</span></span></code></pre>
+<p><strong>Root Cause</strong>: The antigravity package (version 1.0.0-1763520963) from Google installs the completion file with <code>nobody:nobody</code> ownership instead of <code>root:root</code>. This can happen during:</p>
+<ul>
+<li>Initial package installation</li>
+<li>Package updates</li>
+<li>System updates that modify the package</li>
+</ul>
+<p><strong>Immediate Fix</strong> (single-line command):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chown</span><span style="color:#9ECBFF"> root:root</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chmod</span><span style="color:#79B8FF"> 644</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span></span></code></pre>
+<p><strong>Verify Fix</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">compaudit</span><span style="color:#6A737D">  # Should return no output</span></span></code></pre>
+<p><strong>Permanent Solution</strong>: Configure passwordless sudo (see section below) so the automatic daily fix script handles this without password prompts.</p>
+<p><strong>Alternative</strong>: If you don’t need antigravity, uninstall it:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> remove</span><span style="color:#9ECBFF"> antigravity</span></span></code></pre>
+<h3 id="after-system-updates">After System Updates</h3>
+<p>Other packages may also install completion files with incorrect ownership:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Example: Various packages installing with wrong ownership</span></span>
+<span class="line"><span style="color:#B392F0">-rw-r--r--</span><span style="color:#79B8FF"> 1</span><span style="color:#9ECBFF"> nobody</span><span style="color:#9ECBFF"> nogroup</span><span style="color:#79B8FF"> 2554</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_some_tool</span></span></code></pre>
+<p><strong>Solution</strong>: Automatic daily check detects and fixes this.</p>
+<h3 id="multiple-insecure-files">Multiple Insecure Files</h3>
+<p>If multiple files are affected:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># List all insecure files</span></span>
+<span class="line"><span style="color:#B392F0">compaudit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Fix all at once</span></span>
+<span class="line"><span style="color:#B392F0">zsh-fix-security</span></span></code></pre>
+<h3 id="passwordless-sudo-optional">Passwordless Sudo (Optional)</h3>
+<p>For fully automatic fixing without password prompts:</p>
+<ol>
+<li>
+<p>Edit sudoers file:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> visudo</span></span></code></pre>
+</li>
+<li>
+<p>Add line (replace <code>username</code> with your username):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>username ALL=(ALL) NOPASSWD: /usr/bin/chown, /usr/bin/chmod</span></span></code></pre>
+</li>
+<li>
+<p>Now automatic mode works without prompts:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./fix-zsh-compinit-security.sh</span><span style="color:#79B8FF"> --auto</span></span></code></pre>
+</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="issue-fix-script-says-no-insecure-files-found-but-warning-still-appears">Issue: Fix Script Says “No insecure files found” But Warning Still Appears</h3>
+<p><strong>Symptoms</strong>: The fix script reports no issues, but <code>compaudit</code> shows insecure files and the warning persists.</p>
+<p><strong>Cause</strong>: Bug fixed in 2025-11-21 - the script was running <code>compaudit</code> in bash, but <code>compaudit</code> is a ZSH function that requires loading the completion system first.</p>
+<p><strong>Solution</strong>: The script has been updated to properly run <code>compaudit</code> in a ZSH context. If you experience this:</p>
+<ol>
+<li>
+<p><strong>Manually remove the daily check marker</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">rm</span><span style="color:#9ECBFF"> /tmp/.zsh-security-check-</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +%Y%m%d</span><span style="color:#E1E4E8">)</span></span></code></pre>
+</li>
+<li>
+<p><strong>Run the updated script</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">/home/kkk/Apps/ghostty-config-files/scripts/fix-zsh-compinit-security.sh</span></span></code></pre>
+</li>
+</ol>
+<p>The updated script now correctly detects insecure files by running:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">zsh</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> 'autoload -Uz compinit; compinit -u 2>/dev/null; compaudit 2>&#x26;1'</span></span></code></pre>
+<h3 id="issue-warning-keeps-recurring-after-fix">Issue: Warning Keeps Recurring After Fix</h3>
+<p><strong>Symptoms</strong>: You run the fix command, <code>compaudit</code> returns no output, but the warning reappears on the next terminal launch.</p>
+<p><strong>Cause</strong>: The antigravity package (or another package) is being reinstalled or its files are being reset, possibly by:</p>
+<ul>
+<li>Automatic daily updates (<code>update-all</code> command)</li>
+<li>Manual package updates with <code>apt upgrade</code></li>
+<li>Package reinstallation triggers</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li>
+<p><strong>Enable automatic daily fix</strong> (recommended):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Configure passwordless sudo</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> EDITOR=nano</span><span style="color:#9ECBFF"> visudo</span></span>
+<span class="line"><span style="color:#6A737D"># Add this line:</span></span>
+<span class="line"><span style="color:#B392F0">kkk</span><span style="color:#9ECBFF"> ALL=</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">ALL</span><span style="color:#E1E4E8">) </span><span style="color:#9ECBFF">NOPASSWD:</span><span style="color:#9ECBFF"> /usr/bin/chown,</span><span style="color:#9ECBFF"> /usr/bin/chmod</span></span></code></pre>
+<p>The daily ZSH security check (runs automatically on first terminal launch each day) will then fix the issue without password prompts.</p>
+</li>
+<li>
+<p><strong>Manual fix each time</strong> (if passwordless sudo not desired):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chown</span><span style="color:#9ECBFF"> root:root</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> chmod</span><span style="color:#79B8FF"> 644</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span></span></code></pre>
+</li>
+<li>
+<p><strong>Prevent package from being updated</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Hold the antigravity package at current version</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt-mark</span><span style="color:#9ECBFF"> hold</span><span style="color:#9ECBFF"> antigravity</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify hold status</span></span>
+<span class="line"><span style="color:#B392F0">apt-mark</span><span style="color:#9ECBFF"> showhold</span></span></code></pre>
+</li>
+<li>
+<p><strong>Remove the package</strong> (if not needed):</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> remove</span><span style="color:#9ECBFF"> antigravity</span></span></code></pre>
+</li>
+</ol>
+<h3 id="issue-authentication-failed">Issue: “Authentication failed”</h3>
+<p><strong>Cause</strong>: Incorrect sudo password or passwordless sudo not configured</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Enter correct password when prompted</li>
+<li>Or configure passwordless sudo (see above)</li>
+</ul>
+<h3 id="issue-compaudit-command-not-found">Issue: “compaudit command not found”</h3>
+<p><strong>Cause</strong>: ZSH not installed or not in PATH</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install ZSH</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> zsh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Set as default shell</span></span>
+<span class="line"><span style="color:#B392F0">chsh</span><span style="color:#79B8FF"> -s</span><span style="color:#E1E4E8"> $(</span><span style="color:#79B8FF">which</span><span style="color:#9ECBFF"> zsh</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h3 id="issue-script-runs-on-every-terminal-launch">Issue: Script runs on every terminal launch</h3>
+<p><strong>Cause</strong>: Marker file not being created in <code>/tmp/</code></p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check if /tmp is writable</span></span>
+<span class="line"><span style="color:#B392F0">touch</span><span style="color:#9ECBFF"> /tmp/.test</span><span style="color:#E1E4E8"> &#x26;&#x26; </span><span style="color:#B392F0">rm</span><span style="color:#9ECBFF"> /tmp/.test</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check script execution</span></span>
+<span class="line"><span style="color:#B392F0">zsh-check-security</span></span></code></pre>
+<h3 id="issue-fixes-dont-persist">Issue: Fixes don’t persist</h3>
+<p><strong>Cause</strong>: Package manager re-installs files with incorrect ownership</p>
+<p><strong>Solution</strong>: This is expected behavior. The daily check will automatically fix newly-introduced issues.</p>
+<h2 id="verification">Verification</h2>
+<h3 id="check-current-status">Check Current Status</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Manual check with compaudit</span></span>
+<span class="line"><span style="color:#B392F0">compaudit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># No output = secure</span></span>
+<span class="line"><span style="color:#6A737D"># Output = insecure files listed</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Or use the alias</span></span>
+<span class="line"><span style="color:#B392F0">zsh-check-security</span></span></code></pre>
+<h3 id="verify-fix-applied">Verify Fix Applied</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check file ownership and permissions</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /usr/share/zsh/vendor-completions/_antigravity</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Should show:</span></span>
+<span class="line"><span style="color:#6A737D"># -rw-r--r-- 1 root root 2554 Nov 18 19:54 /usr/share/zsh/vendor-completions/_antigravity</span></span></code></pre>
+<h3 id="test-terminal-launch">Test Terminal Launch</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Open new terminal</span></span>
+<span class="line"><span style="color:#B392F0">ghostty</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Should start without "insecure files" prompt</span></span>
+<span class="line"><span style="color:#6A737D"># First launch of day may show auto-fix message (if issues detected)</span></span></code></pre>
+<h2 id="integration-with-daily-updates">Integration with Daily Updates</h2>
+<p>This security check system works alongside the daily update system:</p>
+<p><strong>Daily Update System</strong> (<code>update-all</code>):</p>
+<ul>
+<li>Updates packages at 9:00 AM</li>
+<li>May introduce new completion files with incorrect ownership</li>
+</ul>
+<p><strong>Security Check System</strong> (automatic):</p>
+<ul>
+<li>Runs on first terminal launch each day</li>
+<li>Fixes any issues introduced by updates</li>
+<li>Ensures clean ZSH startup</li>
+</ul>
+<h2 id="performance-impact">Performance Impact</h2>
+<ul>
+<li><strong>Check time</strong>: &#x3C;100ms (cached compaudit)</li>
+<li><strong>Fix time</strong>: 1-2 seconds per file (sudo overhead)</li>
+<li><strong>Frequency</strong>: Once per day maximum</li>
+<li><strong>Impact</strong>: Negligible on terminal startup</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p>✅ <strong>Automatic</strong>: Runs once per day without user intervention
+✅ <strong>Proactive</strong>: Detects issues before they become annoying
+✅ <strong>Secure</strong>: Properly fixes ownership and permissions
+✅ <strong>Informative</strong>: Clear color-coded output when issues found
+✅ <strong>Manual controls</strong>: <code>zsh-check-security</code> and <code>zsh-fix-security</code> commands
+✅ <strong>Constitutional compliance</strong>: Follows ghostty-config-files best practices</p>
+<h2 id="references">References</h2>
+<ul>
+<li>ZSH Completion System: <code>man zshcompsys</code></li>
+<li>compaudit documentation: <code>compaudit -h</code></li>
+<li>Oh My Zsh security checks: <a href="https://github.com/zsh-users/zsh-completions/issues/433">GitHub Issue #433</a></li>
+<li>Stack Overflow: <a href="https://stackoverflow.com/questions/13762280/zsh-compinit-insecure-directories">ZSH compinit insecure directories</a></li>
+</ul>
+<hr>
+<p><strong>Last Updated</strong>: 2025-11-20
+<strong>Version</strong>: 1.0
+<strong>Maintainer</strong>: ghostty-config-files project</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

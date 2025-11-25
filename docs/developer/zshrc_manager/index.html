@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>.zshrc Manager Utility | Ghostty Configuration Files</title><meta name="description" content="The `.zshrc` Manager is an intelligent utility that provides **Powerlevel10k (P10k) compliant** modifications to `.zshrc` configuration files. It prevents console output warnings during shell initialization by ensuring all content is placed in the correct location relative to the P10k instant prompt block."><!-- OpenGraph --><meta property="og:title" content=".zshrc Manager Utility"><meta property="og:description" content="The `.zshrc` Manager is an intelligent utility that provides **Powerlevel10k (P10k) compliant** modifications to `.zshrc` configuration files. It prevents console output warnings during shell initialization by ensuring all content is placed in the correct location relative to the P10k instant prompt block."><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>.zshrc Manager Utility</li> </ul> </div> <h1>.zshrc Manager Utility</h1> <p class="text-xl text-base-content/70 mb-8">The `.zshrc` Manager is an intelligent utility that provides **Powerlevel10k (P10k) compliant** modifications to `.zshrc` configuration files. It prevents console output warnings during shell initialization by ensuring all content is placed in the correct location relative to the P10k instant prompt block.</p><h1 id="zshrc-manager-utility">.zshrc Manager Utility</h1>
+<h2 id="overview">Overview</h2>
+<p>The <code>.zshrc</code> Manager is an intelligent utility that provides <strong>Powerlevel10k (P10k) compliant</strong> modifications to <code>.zshrc</code> configuration files. It prevents console output warnings during shell initialization by ensuring all content is placed in the correct location relative to the P10k instant prompt block.</p>
+<p><strong>Location</strong>: <code>lib/utils/zshrc_manager.sh</code></p>
+<h2 id="problem-statement">Problem Statement</h2>
+<h3 id="issue-powerlevel10k-instant-prompt-warnings">Issue: Powerlevel10k Instant Prompt Warnings</h3>
+<p>When shell configuration produces console output (like <code>fnm env</code> showing “Using Node v25.2.1”) <strong>after</strong> the P10k instant prompt block initializes, users see warnings like:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>[WARNING]: Console output during zsh initialization detected.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>When using Powerlevel10k with instant prompt, console output during zsh</span></span>
+<span class="line"><span>initialization may indicate issues.</span></span></code></pre>
+<h3 id="root-cause">Root Cause</h3>
+<p>Installation/update scripts were appending configuration to the <strong>end</strong> of <code>.zshrc</code>, placing it after the P10k instant prompt block:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="zsh"><code><span class="line"><span style="color:#6A737D"># (Line 27-32) P10k instant prompt - MUST come early</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#F97583">-r</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">XDG_CACHE_HOME</span><span style="color:#F97583">:-</span><span style="color:#E1E4E8">$HOME</span><span style="color:#F97583">/</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">cache</span><span style="color:#9ECBFF">}/p10k-instant-prompt-${(</span><span style="color:#F97583">%</span><span style="color:#9ECBFF">)</span><span style="color:#F97583">:-%</span><span style="color:#E1E4E8">n</span><span style="color:#9ECBFF">}.zsh"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">  source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">XDG_CACHE_HOME</span><span style="color:#F97583">:-</span><span style="color:#E1E4E8">$HOME</span><span style="color:#F97583">/</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">cache</span><span style="color:#9ECBFF">}/p10k-instant-prompt-${(</span><span style="color:#F97583">%</span><span style="color:#9ECBFF">)</span><span style="color:#F97583">:-%</span><span style="color:#E1E4E8">n</span><span style="color:#9ECBFF">}.zsh"</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># ... other configuration ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># (Line 150+) fnm initialization - WRONG LOCATION!</span></span>
+<span class="line"><span style="color:#79B8FF">eval</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">fnm</span><span style="color:#9ECBFF"> env </span><span style="color:#79B8FF">--use-on-cd</span><span style="color:#9ECBFF">)"</span><span style="color:#6A737D">  # &#x3C;-- Produces console output AFTER P10k</span></span></code></pre>
+<h3 id="solution">Solution</h3>
+<p>The <code>.zshrc</code> Manager automatically detects the P10k instant prompt location and injects content in the <strong>correct</strong> position:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="zsh"><code><span class="line"><span style="color:#6A737D"># (Line 24) fnm initialization - CORRECT LOCATION (before P10k)</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> FNM_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/.local/share/fnm"</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-d</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$FNM_DIR</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#F97583">  export</span><span style="color:#E1E4E8"> PATH</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">$FNM_DIR</span><span style="color:#9ECBFF">:</span><span style="color:#E1E4E8">$PATH</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#79B8FF">  eval</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">fnm</span><span style="color:#9ECBFF"> env </span><span style="color:#79B8FF">--use-on-cd</span><span style="color:#9ECBFF">)"</span><span style="color:#6A737D">  # Now executes BEFORE P10k</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># (Line 36-41) P10k instant prompt</span></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> [[ </span><span style="color:#F97583">-r</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">XDG_CACHE_HOME</span><span style="color:#F97583">:-</span><span style="color:#E1E4E8">$HOME</span><span style="color:#F97583">/</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">cache</span><span style="color:#9ECBFF">}/p10k-instant-prompt-${(</span><span style="color:#F97583">%</span><span style="color:#9ECBFF">)</span><span style="color:#F97583">:-%</span><span style="color:#E1E4E8">n</span><span style="color:#9ECBFF">}.zsh"</span><span style="color:#E1E4E8"> ]]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">  source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">XDG_CACHE_HOME</span><span style="color:#F97583">:-</span><span style="color:#E1E4E8">$HOME</span><span style="color:#F97583">/</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">cache</span><span style="color:#9ECBFF">}/p10k-instant-prompt-${(</span><span style="color:#F97583">%</span><span style="color:#9ECBFF">)</span><span style="color:#F97583">:-%</span><span style="color:#E1E4E8">n</span><span style="color:#9ECBFF">}.zsh"</span></span>
+<span class="line"><span style="color:#F97583">fi</span></span></code></pre>
+<h2 id="api-reference">API Reference</h2>
+<h3 id="inject_into_zshrc"><code>inject_into_zshrc()</code></h3>
+<p>Inject content into <code>.zshrc</code> at the correct location based on P10k compliance requirements.</p>
+<p><strong>Signature</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">inject_into_zshrc</span><span style="color:#9ECBFF"> description</span><span style="color:#9ECBFF"> content</span><span style="color:#9ECBFF"> placement</span><span style="color:#E1E4E8"> [marker]</span></span></code></pre>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>description</code> (string): Human-readable description for logging</li>
+<li><code>content</code> (string): Content block to inject</li>
+<li><code>placement</code> (string): Where to inject: <code>"before_p10k"</code> | <code>"after_p10k"</code> | <code>"end"</code></li>
+<li><code>marker</code> (string, optional): Unique string for duplicate detection</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>0</code> - Success</li>
+<li><code>1</code> - Failed</li>
+<li><code>2</code> - Already exists (skipped)</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Example 1: Inject fnm before P10k (prevents console output)</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> lib/utils/zshrc_manager.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">fnm_block</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'</span></span>
+<span class="line"><span style="color:#9ECBFF"># fnm (Fast Node Manager)</span></span>
+<span class="line"><span style="color:#9ECBFF">export FNM_DIR="$HOME/.local/share/fnm"</span></span>
+<span class="line"><span style="color:#9ECBFF">if [ -d "$FNM_DIR" ]; then</span></span>
+<span class="line"><span style="color:#9ECBFF">  export PATH="$FNM_DIR:$PATH"</span></span>
+<span class="line"><span style="color:#9ECBFF">  eval "$(fnm env --use-on-cd)"</span></span>
+<span class="line"><span style="color:#9ECBFF">fi</span></span>
+<span class="line"><span style="color:#9ECBFF">'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">inject_into_zshrc</span><span style="color:#9ECBFF"> "fnm initialization"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$fnm_block</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "before_p10k"</span><span style="color:#9ECBFF"> "fnm env"</span></span>
+<span class="line"><span style="color:#6A737D"># ✓ Added fnm initialization to .zshrc (line 25, placement: before_p10k)</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Example 2: Inject aliases after P10k (no console output concern)</span></span>
+<span class="line"><span style="color:#E1E4E8">alias_block</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'</span></span>
+<span class="line"><span style="color:#9ECBFF"># Custom aliases</span></span>
+<span class="line"><span style="color:#9ECBFF">alias ll="ls -la"</span></span>
+<span class="line"><span style="color:#9ECBFF">alias grep="rg"</span></span>
+<span class="line"><span style="color:#9ECBFF">'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">inject_into_zshrc</span><span style="color:#9ECBFF"> "custom aliases"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$alias_block</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "after_p10k"</span><span style="color:#9ECBFF"> "# Custom aliases"</span></span>
+<span class="line"><span style="color:#6A737D"># ✓ Added custom aliases to .zshrc (line 120, placement: after_p10k)</span></span></code></pre>
+<h3 id="remove_from_zshrc"><code>remove_from_zshrc()</code></h3>
+<p>Remove content block from <code>.zshrc</code> (for cleanup/updates).</p>
+<p><strong>Signature</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">remove_from_zshrc</span><span style="color:#9ECBFF"> start_marker</span><span style="color:#E1E4E8"> [end_marker]</span></span></code></pre>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>start_marker</code> (string): Line containing this will be removed</li>
+<li><code>end_marker</code> (string, optional): For multi-line blocks</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>0</code> - Success</li>
+<li><code>1</code> - Failed</li>
+<li><code>2</code> - Not found (already removed)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">remove_from_zshrc</span><span style="color:#9ECBFF"> "# fnm (Fast Node Manager)"</span><span style="color:#9ECBFF"> "fi"</span></span>
+<span class="line"><span style="color:#6A737D"># ✓ Removed content from .zshrc</span></span></code></pre>
+<h3 id="verify_p10k_compliance"><code>verify_p10k_compliance()</code></h3>
+<p>Diagnostic function to check <code>.zshrc</code> P10k compliance.</p>
+<p><strong>Signature</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">verify_p10k_compliance</span></span></code></pre>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>0</code> - Compliant</li>
+<li><code>1</code> - Issues detected</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">verify_p10k_compliance</span></span>
+<span class="line"><span style="color:#6A737D"># ✓ P10k instant prompt detected (lines 36-41)</span></span>
+<span class="line"><span style="color:#6A737D"># ✓ No console output detected inside P10k block</span></span></code></pre>
+<h2 id="placement-strategy-guide">Placement Strategy Guide</h2>
+<h3 id="when-to-use-before_p10k">When to use <code>before_p10k</code></h3>
+<p>Use for configuration that:</p>
+<ul>
+<li>Produces console output (e.g., <code>fnm env</code>, <code>nvm</code>, version managers)</li>
+<li>Exports environment variables needed early</li>
+<li>Must execute before shell prompt initialization</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>fnm/nvm initialization</li>
+<li>Python version managers (pyenv, uv)</li>
+<li>Ruby version managers (rbenv, rvm)</li>
+<li>Any tool that prints version info during init</li>
+</ul>
+<h3 id="when-to-use-after_p10k">When to use <code>after_p10k</code></h3>
+<p>Use for configuration that:</p>
+<ul>
+<li>Does not produce console output</li>
+<li>Configures prompt behavior</li>
+<li>Loads completion systems</li>
+<li>Sources additional scripts</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>ZSH plugins (zsh-autosuggestions, zsh-syntax-highlighting)</li>
+<li>Completion configurations</li>
+<li>Directory colors (dircolors)</li>
+<li>Oh My Zsh configuration</li>
+</ul>
+<h3 id="when-to-use-end">When to use <code>end</code></h3>
+<p>Use for configuration that:</p>
+<ul>
+<li>Is user-specific customization</li>
+<li>Has no P10k interaction</li>
+<li>Is safe to load last</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>User aliases</li>
+<li>Project-specific environment variables</li>
+<li>Custom functions</li>
+</ul>
+<h2 id="integration-with-installation-scripts">Integration with Installation Scripts</h2>
+<h3 id="before--problematic">Before (❌ Problematic)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># lib/installers/nodejs_fnm/steps/03-configure-shell.sh</span></span>
+<span class="line"><span style="color:#79B8FF">echo</span><span style="color:#9ECBFF"> 'eval "$(fnm env --use-on-cd)"'</span><span style="color:#F97583"> >></span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$HOME</span><span style="color:#9ECBFF">/.zshrc"</span></span>
+<span class="line"><span style="color:#6A737D"># Problem: Appends to end, causes P10k warnings</span></span></code></pre>
+<h3 id="after--p10k-compliant">After (✅ P10k-Compliant)</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># lib/installers/nodejs_fnm/steps/03-configure-shell.sh</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> "${</span><span style="color:#E1E4E8">REPO_ROOT</span><span style="color:#9ECBFF">}/lib/utils/zshrc_manager.sh"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">fnm_block</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'...'</span></span>
+<span class="line"><span style="color:#B392F0">inject_into_zshrc</span><span style="color:#9ECBFF"> "fnm initialization"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$fnm_block</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "before_p10k"</span><span style="color:#9ECBFF"> "fnm env"</span></span>
+<span class="line"><span style="color:#6A737D"># Solution: Injects before P10k, prevents warnings</span></span></code></pre>
+<h2 id="testing">Testing</h2>
+<h3 id="manual-test">Manual Test</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Test P10k compliance</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> lib/utils/zshrc_manager.sh</span></span>
+<span class="line"><span style="color:#B392F0">verify_p10k_compliance</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Test injection</span></span>
+<span class="line"><span style="color:#E1E4E8">fnm_block</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'# Test content'</span></span>
+<span class="line"><span style="color:#B392F0">inject_into_zshrc</span><span style="color:#9ECBFF"> "test"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$fnm_block</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "before_p10k"</span><span style="color:#9ECBFF"> "# Test"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Verify placement</span></span>
+<span class="line"><span style="color:#B392F0">grep</span><span style="color:#79B8FF"> -n</span><span style="color:#9ECBFF"> "# Test content"</span><span style="color:#9ECBFF"> ~/.zshrc</span></span></code></pre>
+<h3 id="integration-test">Integration Test</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run test suite</span></span>
+<span class="line"><span style="color:#B392F0">./.runners-local/tests/unit/test_zshrc_manager.sh</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="warning-console-output-during-zsh-initialization">Warning: Console output during zsh initialization</h3>
+<p><strong>Symptom</strong>: Powerlevel10k warning on terminal startup</p>
+<p><strong>Cause</strong>: Configuration producing console output after P10k instant prompt</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>
+<p>Identify problematic configuration:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> lib/utils/zshrc_manager.sh</span></span>
+<span class="line"><span style="color:#B392F0">verify_p10k_compliance</span></span></code></pre>
+</li>
+<li>
+<p>Move configuration before P10k:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Remove old configuration</span></span>
+<span class="line"><span style="color:#B392F0">remove_from_zshrc</span><span style="color:#9ECBFF"> "problematic config marker"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Re-inject before P10k</span></span>
+<span class="line"><span style="color:#B392F0">inject_into_zshrc</span><span style="color:#9ECBFF"> "description"</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$config</span><span style="color:#9ECBFF">"</span><span style="color:#9ECBFF"> "before_p10k"</span><span style="color:#9ECBFF"> "marker"</span></span></code></pre>
+</li>
+<li>
+<p>Verify fix:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">verify_p10k_compliance</span></span>
+<span class="line"><span style="color:#6A737D"># Restart terminal</span></span></code></pre>
+</li>
+</ol>
+<h3 id="p10k-instant-prompt-not-detected">P10k instant prompt not detected</h3>
+<p><strong>Symptom</strong>: <code>verify_p10k_compliance</code> shows “P10k instant prompt not detected”</p>
+<p><strong>Cause</strong>: P10k not installed or <code>.zshrc</code> modified incorrectly</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>
+<p>Check for P10k installation:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> ~/.oh-my-zsh/custom/themes/powerlevel10k</span></span></code></pre>
+</li>
+<li>
+<p>Verify <code>.zshrc</code> contains P10k block:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">grep</span><span style="color:#79B8FF"> -A</span><span style="color:#79B8FF"> 5</span><span style="color:#9ECBFF"> "Enable Powerlevel10k instant prompt"</span><span style="color:#9ECBFF"> ~/.zshrc</span></span></code></pre>
+</li>
+<li>
+<p>If missing, install P10k:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/romkatv/powerlevel10k.git</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#9ECBFF">  ~/.oh-my-zsh/custom/themes/powerlevel10k</span></span></code></pre>
+</li>
+</ol>
+<h2 id="constitutional-compliance">Constitutional Compliance</h2>
+<p>This utility enforces:</p>
+<ul>
+<li>✅ <strong>Performance</strong>: Prevents shell startup degradation from P10k warnings</li>
+<li>✅ <strong>User Experience</strong>: Eliminates confusing warning messages</li>
+<li>✅ <strong>Modularity</strong>: Centralized .zshrc management logic</li>
+<li>✅ <strong>Idempotency</strong>: Safe to re-run, prevents duplicates</li>
+<li>✅ <strong>Script Proliferation Prevention</strong>: Single utility for all .zshrc modifications</li>
+</ul>
+<h2 id="version-history">Version History</h2>
+<ul>
+<li><strong>v1.0</strong> (2025-11-22): Initial release
+<ul>
+<li>P10k-compliant injection</li>
+<li>Duplicate detection</li>
+<li>Automatic placement calculation</li>
+<li>Diagnostic functions</li>
+</ul>
+</li>
+</ul>
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="/.claude/instructions-for-agents/requirements/CRITICAL-requirements.md#powerlevel10k-performance">Critical Requirements - Powerlevel10k</a></li>
+<li><a href="/.claude/instructions-for-agents/principles/script-proliferation.md">Script Proliferation Prevention</a></li>
+<li><a href="/.claude/instructions-for-agents/guides/first-time-setup.md">First-Time Setup</a></li>
+</ul> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>

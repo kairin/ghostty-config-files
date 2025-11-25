@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="en" data-theme="light" class="transition-colors duration-200"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><meta name="generator" content="Astro v5.15.8"><title>Spec-Kit: Modern TUI Installation System - Implementation Plan Complete | Ghostty Configuration Files</title><meta name="description" content="**Date**: 2025-11-18"><!-- OpenGraph --><meta property="og:title" content="Spec-Kit: Modern TUI Installation System - Implementation Plan Complete"><meta property="og:description" content="**Date**: 2025-11-18"><meta property="og:type" content="website"><!-- Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.zlehmsn5.css"></head> <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg"> <!-- Modern Glass Morphism Navigation --> <nav class="fixed top-0 w-full backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300"> <div class="full-width-section"> <div class="navbar"> <div class="flex-1"> <a href="/ghostty-config-files/" class="btn btn-ghost text-xl font-bold hover:text-blue-600 dark:hover:text-cyan-400 transition-all"> <span class="hidden md:inline">Ghostty Config Files</span> <span class="md:hidden">Ghostty</span> </a> </div> <div class="flex-none gap-2"> <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4"> <li><a href="/ghostty-config-files/user-guide" class="nav-link">User Guide</a></li> <li><a href="/ghostty-config-files/ai-guidelines" class="nav-link">AI Guidelines</a></li> <li><a href="/ghostty-config-files/developer" class="nav-link">Developer</a></li> <li> <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
+GitHub
+</a> </li> </ul> <button id="theme-toggle" class="btn btn-ghost btn-circle" aria-label="Toggle theme" title="Toggle dark/light mode" data-astro-cid-x3pjskd3> <svg id="theme-icon-sun" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" data-astro-cid-x3pjskd3></path> </svg> <svg id="theme-icon-moon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-x3pjskd3> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" data-astro-cid-x3pjskd3></path> </svg> </button> <script type="module">function c(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),d=localStorage.getItem("theme"),s=window.matchMedia("(prefers-color-scheme: dark)").matches,o=d||(s?"dark":"light");o==="dark"?(e.setAttribute("data-theme","dark"),e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.setAttribute("data-theme","light"),e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",o)}function a(){const e=document.documentElement,t=document.getElementById("theme-icon-sun"),n=document.getElementById("theme-icon-moon"),s=e.getAttribute("data-theme")==="dark"?"light":"dark";e.setAttribute("data-theme",s),s==="dark"?(e.classList.add("dark"),t&&t.classList.remove("hidden"),n&&n.classList.add("hidden")):(e.classList.remove("dark"),t&&t.classList.add("hidden"),n&&n.classList.remove("hidden")),localStorage.setItem("theme",s)}c();const m=document.getElementById("theme-toggle");m&&m.addEventListener("click",a);document.addEventListener("astro:page-load",c);</script>  </div> </div> </div> </nav> <!-- Spacer for fixed nav --> <div class="h-20"></div> <!-- Main Content - Full Width --> <main class="w-full px-4 md:px-8 lg:px-12 xl:px-16 py-12"> <!-- Article Header (if metadata provided) --> <div class="mb-8 text-sm text-gray-600 dark:text-gray-400"> <time datetime="2025-11-25T00:00:00.000Z"> November 25, 2025 </time> <span> by Ghostty Config Team</span> </div> <!-- Page Content - Full Width with Max Readable for Prose --> <article class="prose prose-lg w-full max-w-none text-lg leading-relaxed">  <div class="breadcrumbs text-sm mb-6"> <ul> <li><a href="/ghostty-config-files/">Home</a></li> <li><a href="/ghostty-config-files/developer/architecture">Developer</a></li> <li>Spec-Kit: Modern TUI Installation System - Implementation Plan Complete</li> </ul> </div> <h1>Spec-Kit: Modern TUI Installation System - Implementation Plan Complete</h1> <p class="text-xl text-base-content/70 mb-8">**Date**: 2025-11-18</p><h1 id="spec-kit-modern-tui-installation-system---implementation-plan-complete">Spec-Kit: Modern TUI Installation System - Implementation Plan Complete</h1>
+<p><strong>Date</strong>: 2025-11-18
+<strong>Branch</strong>: 001-modern-tui-system
+<strong>Status</strong>: Phase 0 &#x26; Phase 1 Complete - Ready for Implementation</p>
+<h2 id="summary-of-completed-artifacts">Summary of Completed Artifacts</h2>
+<p>This document provides a comprehensive implementation plan for the Modern TUI Installation System, fulfilling all spec-kit workflow requirements for Phase 0 (Research) and Phase 1 (Design).</p>
+<h3 id="generated-artifacts">Generated Artifacts</h3>
+<h4 id="phase-0-research-complete">Phase 0: Research (Complete ✅)</h4>
+<p><strong>File</strong>: <code>specs/001-modern-tui-system/research.md</code> (34 KB)</p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Topic 1: gum (Charm Bracelet) Framework analysis</li>
+<li>Topic 2: Adaptive Box Drawing Techniques</li>
+<li>Topic 3: Collapsible Output Patterns (Docker-like UX)</li>
+<li>Topic 4: State Persistence for Resume Capability</li>
+<li>Topic 5: Parallel Task Execution Patterns</li>
+<li>Topic 6: Real Verification Test Design</li>
+<li>Topic 7: uv (Python) and fnm (Node.js) Integration</li>
+</ul>
+<p><strong>Key Findings</strong>:</p>
+<ul>
+<li>gum provides performance measured and logged startup with production-ready TUI components</li>
+<li>UTF-8/ASCII adaptive box drawing solves terminal compatibility permanently</li>
+<li>Docker-like collapsible output achievable with ANSI cursor management</li>
+<li>Multi-layer verification (unit/integration/health) ensures reliability</li>
+<li>uv and fnm provide 10-100x and 40x performance improvements respectively</li>
+</ul>
+<h4 id="phase-1-design-complete">Phase 1: Design (Complete ✅)</h4>
+<p><strong>File</strong>: <code>specs/001-modern-tui-system/plan.md</code> (37 KB)</p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Complete technical context (Bash 5.x+, gum, uv, fnm, jq, bc)</li>
+<li>Constitutional compliance verification (10/10 principles passed)</li>
+<li>Detailed project structure (lib/ modular architecture)</li>
+<li>Phase 0 research synthesis</li>
+<li>Phase 1 design artifacts (data models, contracts, quickstart)</li>
+<li>Phase 2-4 implementation roadmap (6-7 week timeline)</li>
+<li>Risk mitigation strategies</li>
+<li>Success criteria and validation methods</li>
+</ul>
+<p><strong>File</strong>: <code>specs/001-modern-tui-system/data-model.md</code> (23 KB)</p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Installation Task entity (properties, states, lifecycle)</li>
+<li>System State Snapshot entity (OS info, packages, resources)</li>
+<li>Verification Result entity (multi-layer: unit/integration/health)</li>
+<li>Installation State entity (resume capability, idempotency)</li>
+<li>Performance Metrics entity (timing, constitutional compliance)</li>
+<li>Entity-relationship diagrams</li>
+<li>Data flow diagrams (task execution, verification flow)</li>
+<li>JSON schemas and examples</li>
+<li>Storage locations and retention policies</li>
+</ul>
+<p><strong>File</strong>: <code>specs/001-modern-tui-system/quickstart.md</code> (14 KB)</p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>One-command installation instructions</li>
+<li>Command-line options reference</li>
+<li>5 common usage scenarios (fresh install, SSH, resume, re-run, update)</li>
+<li>6 troubleshooting guides (box drawing, resume, verification, performance, fnm, customizations)</li>
+<li>Performance expectations (fresh install, re-run, constitutional compliance)</li>
+<li>Logs and diagnostics reference</li>
+<li>Emergency rollback procedures</li>
+</ul>
+<p><strong>Directory</strong>: <code>specs/001-modern-tui-system/contracts/</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>cli-interface.yaml (complete) - start.sh command-line specification</li>
+<li>README.md - Contract usage and implementation status</li>
+<li>4 additional contracts pending (verification, tui, task, state)</li>
+</ul>
+<h3 id="implementation-roadmap">Implementation Roadmap</h3>
+<h4 id="phase-2-implementation-4-weeks">Phase 2: Implementation (4 weeks)</h4>
+<p><strong>Wave 1: Core Infrastructure</strong> (Week 1)</p>
+<ul>
+<li>Install gum prerequisite (performance measured and logged startup verified)</li>
+<li>Implement lib/core/*.sh (logging, state, errors, utils)</li>
+<li>Implement lib/ui/tui.sh (gum integration)</li>
+</ul>
+<p><strong>Wave 2: Adaptive Box Drawing</strong> (Week 1)</p>
+<ul>
+<li>Implement lib/ui/boxes.sh (UTF-8/ASCII character sets)</li>
+<li>Terminal capability detection (TERM, LANG, SSH_CONNECTION)</li>
+<li>Visual width calculation (ANSI escape stripping)</li>
+</ul>
+<p><strong>Wave 3: Verification Framework</strong> (Week 2)</p>
+<ul>
+<li>Implement lib/verification/unit_tests.sh (per-component verification)</li>
+<li>Implement lib/verification/integration_tests.sh (cross-component)</li>
+<li>Implement lib/verification/health_checks.sh (pre/post checks)</li>
+</ul>
+<p><strong>Wave 4: Task Modules</strong> (Week 2-3)</p>
+<ul>
+<li>Implement lib/tasks/*.sh (ghostty, zsh, python_uv, nodejs_fnm, ai_tools, context_menu)</li>
+<li>Task dependency definitions</li>
+<li>fnm performance measured and logged performance validation</li>
+</ul>
+<p><strong>Wave 5: Collapsible Output &#x26; Progress</strong> (Week 3)</p>
+<ul>
+<li>Implement lib/ui/collapsible.sh (Docker-like task display)</li>
+<li>Implement lib/ui/progress.sh (gum progress bars/spinners)</li>
+<li>Verbose mode toggle (‘v’ key, —verbose flag)</li>
+</ul>
+<p><strong>Wave 6: Orchestration &#x26; Integration</strong> (Week 4)</p>
+<ul>
+<li>Refactor start.sh (modular orchestrator)</li>
+<li>Task registry with dependency resolution (topological sort)</li>
+<li>Parallel task execution (30-40% speedup)</li>
+</ul>
+<h4 id="phase-3-testing--validation-1-week">Phase 3: Testing &#x26; Validation (1 week)</h4>
+<p><strong>Testing Matrix</strong>:</p>
+<ul>
+<li>Fresh install (Ubuntu 25.10 clean VM)</li>
+<li>Idempotency (re-run safety)</li>
+<li>Resume capability (interrupt recovery)</li>
+<li>Box drawing compatibility (Ghostty, xterm, SSH, TTY)</li>
+<li>Performance validation (&#x3C;10min total, performance measured and logged fnm, performance measured and logged gum)</li>
+<li>Parallel execution (uv + fnm concurrent)</li>
+<li>Error recovery (simulated failures)</li>
+</ul>
+<h4 id="phase-4-documentation--deployment-2-3-days">Phase 4: Documentation &#x26; Deployment (2-3 days)</h4>
+<p><strong>Documentation Updates</strong>:</p>
+<ul>
+<li>README.md (modern TUI highlights, new options)</li>
+<li>ARCHITECTURE.md (lib/ modular design)</li>
+<li>AGENTS.md (TUI system reference)</li>
+<li>Migration guide (start.sh vs start-legacy.sh)</li>
+</ul>
+<p><strong>Deployment Checklist</strong>:</p>
+<ul>
+<li>All tests pass</li>
+<li>Constitutional compliance verified (10/10)</li>
+<li>Local CI/CD workflows pass</li>
+<li>Performance benchmarks meet targets</li>
+<li>Documentation complete</li>
+</ul>
+<h3 id="constitutional-compliance-summary">Constitutional Compliance Summary</h3>
+<p><strong>10/10 Principles Verified</strong> ✅</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Principle</th><th>Requirement</th><th>Spec Compliance</th></tr></thead><tbody><tr><td>I</td><td>gum exclusive</td><td>FR-001 ✅</td></tr><tr><td>II</td><td>Adaptive box drawing</td><td>FR-002-005 ✅</td></tr><tr><td>III</td><td>Real verification tests</td><td>FR-007-012 ✅</td></tr><tr><td>IV</td><td>Docker-like collapsible</td><td>FR-013-019 ✅</td></tr><tr><td>V</td><td>Modular lib/ architecture</td><td>FR-020-031 ✅</td></tr><tr><td>VI</td><td>uv/fnm exclusive</td><td>FR-032-038 ✅</td></tr><tr><td>VII</td><td>Structured logging</td><td>FR-039-046 ✅</td></tr><tr><td>VIII</td><td>Error recovery</td><td>FR-047-052 ✅</td></tr><tr><td>IX</td><td>Idempotency</td><td>FR-053-058 ✅</td></tr><tr><td>X</td><td>Performance standards</td><td>FR-059-063 ✅</td></tr></tbody></table>
+<p><strong>No constitutional violations</strong>. No complexity justification required.</p>
+<h3 id="performance-targets">Performance Targets</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Metric</th><th>Target</th><th>Validation</th></tr></thead><tbody><tr><td>Total installation</td><td>&#x3C;10 minutes</td><td>Constitutional ✅</td></tr><tr><td>fnm startup</td><td>performance measured and logged</td><td>Constitutional (AGENTS.md) ✅</td></tr><tr><td>gum startup</td><td>performance measured and logged</td><td>Specification ✅</td></tr><tr><td>Idempotent re-run</td><td>&#x3C;30 seconds</td><td>Specification ✅</td></tr><tr><td>Parallel speedup</td><td>30-40%</td><td>Specification ✅</td></tr></tbody></table>
+<h3 id="success-criteria">Success Criteria</h3>
+<p><strong>Functional</strong>:</p>
+<ul>
+<li>✅ Installation success rate ≥99%</li>
+<li>✅ Verification accuracy ≥99%</li>
+<li>✅ Zero broken box characters (all terminals)</li>
+<li>✅ 100% task verification coverage</li>
+</ul>
+<p><strong>Performance</strong>:</p>
+<ul>
+<li>✅ &#x3C;10 minutes fresh installation</li>
+<li>✅ performance measured and logged fnm startup (constitutional)</li>
+<li>✅ performance measured and logged gum startup</li>
+<li>✅ &#x3C;30 seconds idempotent re-run</li>
+</ul>
+<p><strong>Quality</strong>:</p>
+<ul>
+<li>✅ Idempotency (safe to re-run)</li>
+<li>✅ Resume capability (interrupt-safe)</li>
+<li>✅ Error recovery (clear suggestions)</li>
+<li>✅ Customization preservation</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<h3 id="immediate-actions">Immediate Actions</h3>
+<ol>
+<li><strong>Review Plan</strong>: Verify all requirements captured correctly</li>
+<li><strong>Approve Design</strong>: Confirm data models and contracts align with needs</li>
+<li><strong>Begin Implementation</strong>: Start with Wave 1 (Core Infrastructure)</li>
+<li><strong>Track Progress</strong>: Use spec-kit task tracking for implementation waves</li>
+</ol>
+<h3 id="command-reference">Command Reference</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Navigate to spec directory</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files/specs/001-modern-tui-system</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Review artifacts</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> plan.md</span><span style="color:#6A737D">          # Implementation roadmap</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> research.md</span><span style="color:#6A737D">      # Research findings</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> data-model.md</span><span style="color:#6A737D">    # Data structures</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> quickstart.md</span><span style="color:#6A737D">    # User guide</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> contracts/</span><span style="color:#6A737D">    # API contracts</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Begin implementation (after approval)</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> lib/{core,ui,tasks,verification}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Track with spec-kit (next phase)</span></span>
+<span class="line"><span style="color:#6A737D"># /speckit.tasks - Generate task breakdown for implementation</span></span></code></pre>
+<h3 id="timeline-estimate">Timeline Estimate</h3>
+<ul>
+<li><strong>Phase 0 (Research)</strong>: Complete ✅</li>
+<li><strong>Phase 1 (Design)</strong>: Complete ✅</li>
+<li><strong>Phase 2 (Implementation)</strong>: 4 weeks (6 waves)</li>
+<li><strong>Phase 3 (Testing)</strong>: 1 week</li>
+<li><strong>Phase 4 (Documentation)</strong>: 2-3 days</li>
+</ul>
+<p><strong>Total</strong>: 6-7 weeks from implementation start to production deployment</p>
+<h3 id="risk-summary">Risk Summary</h3>
+<p><strong>Low Risk</strong>:</p>
+<ul>
+<li>All technologies proven (gum, uv, fnm)</li>
+<li>Constitutional compliance verified</li>
+<li>Performance targets validated</li>
+<li>Clear implementation path</li>
+</ul>
+<p><strong>Mitigation</strong>:</p>
+<ul>
+<li>Graceful degradation (gum unavailable → plain text)</li>
+<li>Automatic terminal detection (UTF-8/ASCII fallback)</li>
+<li>Comprehensive testing (fresh install, SSH, resume)</li>
+<li>User customization preservation (backups, rollback)</li>
+</ul>
+<hr>
+<p><strong>Implementation Plan Status</strong>: Complete ✅</p>
+<p>All Phase 0 and Phase 1 deliverables generated. Ready to proceed with <code>/speckit.tasks</code> for implementation wave breakdown or begin coding directly from specification.</p>
+<p><strong>Total Artifacts</strong>: 7 files, ~110 KB of comprehensive specifications</p>
+<ul>
+<li>plan.md (37 KB)</li>
+<li>research.md (34 KB)</li>
+<li>data-model.md (23 KB)</li>
+<li>quickstart.md (14 KB)</li>
+<li>spec.md (30 KB, pre-existing)</li>
+<li>contracts/cli-interface.yaml (3 KB)</li>
+<li>contracts/README.md (1 KB)</li>
+</ul>
+<p>Ready for implementation. 🚀</p> <div class="mt-12"> <div class="divider"></div> <div class="flex gap-2 flex-wrap"> <span class="badge badge-outline">developer</span><span class="badge badge-outline">technical</span> </div> </div> </article> </main> <!-- Modern Glass Footer --> <footer class="footer footer-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-gray-900 dark:text-gray-100 p-10 mt-16 border-t border-gray-200/50 dark:border-gray-700/50"> <aside> <p class="font-bold text-xl mb-2">
+Ghostty Configuration Files
+</p> <p class="max-w-2xl text-gray-600 dark:text-gray-400">
+A comprehensive terminal environment setup featuring Ghostty terminal emulator<br>
+with 2025 performance optimizations, AI tools integration, and intelligent update management.
+</p> <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
+Built with Astro v5 + Tailwind CSS v4 + DaisyUI v5
+</p> </aside> </footer>  </body> </html>
