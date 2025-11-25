@@ -16,24 +16,24 @@ TESTS_FAILED=0
 
 assert_true() {
     local condition="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if eval "$condition"; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
     fi
 }
 
 assert_file_exists() {
     local file="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ -f "$file" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] ${message:-File exists: $file}"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] ${message:-File exists: $file}"
     fi
 }
@@ -55,8 +55,8 @@ test_generate_dashboard_exists() {
         assert_true "bash -n '$file'" "generate_dashboard.sh has valid syntax"
     else
         echo "  [SKIP] generate_dashboard.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -69,8 +69,8 @@ test_consolidate_todos_exists() {
         assert_true "bash -n '$file'" "consolidate_todos.sh has valid syntax"
     else
         echo "  [SKIP] consolidate_todos.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -83,8 +83,8 @@ test_update_ghostty_exists() {
         assert_true "bash -n '$file'" "update_ghostty.sh has valid syntax"
     else
         echo "  [SKIP] update_ghostty.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -95,12 +95,12 @@ test_all_lib_scripts_syntax() {
         if [[ -f "$script" ]]; then
             if bash -n "$script" 2>/dev/null; then
                 echo "  [PASS] $(basename "$script") syntax valid"
-                ((TESTS_RUN++))
-                ((TESTS_PASSED++))
+                ((++TESTS_RUN))
+                ((++TESTS_PASSED))
             else
                 echo "  [FAIL] $(basename "$script") syntax invalid"
-                ((TESTS_RUN++))
-                ((TESTS_FAILED++))
+                ((++TESTS_RUN))
+                ((++TESTS_FAILED))
             fi
         fi
     done 2>/dev/null || true

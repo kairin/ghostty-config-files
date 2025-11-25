@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = await getCollection('developer');
+const title = "Developer Documentation";
+const description = "Architecture, specifications, and contributing guides for the Ghostty Configuration Files project.";
+
+// Sort posts by title
+posts.sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-gray-100">{title}</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300">{description}</p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {posts.map((post) => (
+        <a href={`${base}/developer/${post.id}`} class="glass-card hover-lift p-6 block no-underline group">
+          <h2 class="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+            {post.data.title}
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+            {post.data.description}
+          </p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            {post.data.tags && post.data.tags.slice(0, 3).map((tag: string) => (
+              <span class="badge badge-sm badge-outline">{tag}</span>
+            ))}
+          </div>
+          <div class="flex items-center text-sm font-medium text-amber-600 dark:text-amber-400">
+            Read Docs
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

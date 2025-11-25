@@ -25,7 +25,7 @@
 **Location**: `.claude/instructions-for-agents/architecture/`
 
 - **[System Architecture](/.claude/instructions-for-agents/architecture/system-architecture.md)** - Directory structure, technology stack, core functionality
-- **[Directory Structure](documentation/setup/DIRECTORY_STRUCTURE.md)** - Complete file tree with descriptions
+- **[Directory Structure](astro-website/src/developer/DIRECTORY_STRUCTURE.md)** - Complete file tree with descriptions
 
 ### 📚 Operational Guides
 **Location**: `.claude/instructions-for-agents/guides/`
@@ -170,9 +170,9 @@ ghostty +show-config                    # Validate configuration
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
 ### Setup Guides
-- [Context7 MCP Setup](documentation/setup/context7-mcp.md) - Complete Context7 integration
-- [GitHub MCP Setup](documentation/setup/github-mcp.md) - Complete GitHub MCP integration
-- [Logging Guide](documentation/developer/LOGGING_GUIDE.md) - Dual-mode logging system
+- [Context7 MCP Setup](astro-website/src/developer/context7-mcp.md) - Complete Context7 integration
+- [GitHub MCP Setup](astro-website/src/developer/github-mcp.md) - Complete GitHub MCP integration
+- [Logging Guide](astro-website/src/developer/LOGGING_GUIDE.md) - Dual-mode logging system
 
 ### Agent & Command Reference
 - **Agents**: `.claude/agents/` - 9 specialized agents (orchestrator, Git ops, etc.)

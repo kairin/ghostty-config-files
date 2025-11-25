@@ -16,16 +16,16 @@ run_test_suite() {
     local suite_name="$1"
     local suite_file="$2"
 
-    ((TOTAL_SUITES++))
+    ((++TOTAL_SUITES))
     echo ""
     echo "Running: $suite_name"
     echo "-----------------------------------------"
 
     if [[ -f "$suite_file" ]] && bash "$suite_file"; then
-        ((PASSED_SUITES++))
+        ((++PASSED_SUITES))
         echo "[SUITE PASS] $suite_name"
     else
-        ((FAILED_SUITES++))
+        ((++FAILED_SUITES))
         echo "[SUITE FAIL] $suite_name"
     fi
 }
@@ -64,4 +64,7 @@ main() {
     fi
 }
 
-main "$@"
+# Run if executed directly (not when sourced)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

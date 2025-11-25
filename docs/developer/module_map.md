@@ -1,12 +1,29 @@
 # Module Mapping & Orchestration Verification
 
 **Generated**: 2025-11-25
-**Last Updated**: 2025-11-25 (Phase 6 & 7 Complete)
-**Purpose**: Ensure all modules are correctly mapped to orchestrators and no scripts are orphaned.
+**Last Updated**: 2025-11-25 (Comprehensive Audit Complete)
+**Purpose**: Comprehensive map of all orchestrators, modules, and their relationships.
 
 ---
 
-## 1. Updates & Installation
+## 1. Bootstrap & Initialization
+
+### Orchestrator: `lib/init.sh`
+**Role**: Core bootstrap script - single entry point for all scripts.
+**Sources**:
+- `lib/core/logging.sh`
+- `lib/core/utils.sh`
+- `lib/core/errors.sh`
+- `lib/core/state.sh`
+- `lib/ui/tui.sh`
+- `lib/ui/collapsible.sh`
+- `lib/ui/progress.sh`
+- `lib/verification/health_checks.sh`
+- `lib/verification/environment.sh`
+
+---
+
+## 2. Updates & Installation
 
 ### Orchestrator: `scripts/updates/update_ghostty.sh`
 **Role**: Manages the Ghostty update process (build, install, verify).
@@ -15,31 +32,20 @@
 - `lib/installers/zig.sh`
 - `lib/installers/ghostty-deps.sh`
 
-**Function Calls**:
-- `install_ghostty_dependencies()` -> `ghostty-deps.sh`
-- `verify_build_tools()` -> `ghostty-deps.sh`
-- `install_zig()` -> `zig.sh`
-- `build_ghostty()` -> `ghostty-specific.sh` -> `ghostty/build.sh`
-- `install_ghostty()` -> `ghostty-specific.sh` -> `ghostty/install.sh`
-
-### Sub-orchestrator: `lib/updates/ghostty-specific.sh` (141 lines)
+### Sub-orchestrator: `lib/updates/ghostty-specific.sh`
 **Role**: Coordinates Ghostty build and installation modules.
 **Sources**:
-- `lib/updates/ghostty/build.sh` (188 lines)
-- `lib/updates/ghostty/install.sh` (209 lines)
+- `lib/updates/ghostty/build.sh`
+- `lib/updates/ghostty/install.sh`
 
-**Function Mapping**:
-| Function | Module |
-|----------|--------|
-| `get_ghostty_version()` | ghostty-specific.sh |
-| `get_step_status()` | ghostty-specific.sh |
-| `build_ghostty()` | ghostty/build.sh |
-| `verify_critical_build_tools()` | ghostty/build.sh |
-| `verify_gtk4_libadwaita()` | ghostty/build.sh |
-| `install_ghostty()` | ghostty/install.sh |
-| `kill_ghostty_processes()` | ghostty/install.sh |
-| `backup_ghostty_config()` | ghostty/install.sh |
-| `test_ghostty_config()` | ghostty/install.sh |
+### Orchestrator: `scripts/updates/daily-updates.sh`
+**Role**: Daily update orchestrator with VHS recording.
+**Sources**:
+- `lib/ui/vhs-auto-record.sh`
+- `lib/updates/apt_updates.sh`
+- `lib/updates/npm_updates.sh`
+- `lib/updates/source_updates.sh`
+- `lib/updates/system_updates.sh`
 
 ### Orchestrator: `lib/installers/common/manager-runner.sh`
 **Role**: TUI wrapper for installation managers.
@@ -48,61 +54,33 @@
 - `lib/ui/tui.sh`
 - `lib/ui/collapsible.sh`
 
-**Function Calls**:
-- `init_tui()` -> `tui.sh`
-- `show_component_header()` -> `tui-helpers.sh` -> `tui/render.sh`
-- `register_task()` -> `collapsible.sh`
-- `show_component_footer()` -> `tui-helpers.sh` -> `tui/render.sh`
-
-### Sub-orchestrator: `lib/installers/common/tui-helpers.sh` (67 lines)
+### Sub-orchestrator: `lib/installers/common/tui-helpers.sh`
 **Role**: Coordinates TUI rendering and input modules.
 **Sources**:
-- `lib/ui/tui/render.sh` (225 lines)
-- `lib/ui/tui/input.sh` (260 lines)
-
-**Function Mapping**:
-| Function | Module |
-|----------|--------|
-| `show_component_header()` | tui/render.sh |
-| `show_component_footer()` | tui/render.sh |
-| `show_progress_bar()` | tui/render.sh |
-| `format_duration()` | tui/render.sh |
-| `confirm_action()` | tui/input.sh |
-| `select_option()` | tui/input.sh |
-| `validate_step_format()` | tui/input.sh |
+- `lib/ui/tui/render.sh`
+- `lib/ui/tui/input.sh`
 
 ---
 
-## 2. Documentation & Reporting
+## 3. Documentation & Reporting
 
 ### Orchestrator: `scripts/docs/generate_dashboard.sh`
 **Role**: Generates project status dashboard.
 **Sources**:
 - `lib/docs/dashboard.sh` (orchestrator)
 
-**Function Calls**:
-- `collect_spec_statistics()` -> `dashboard.sh`
-- `calculate_aggregate_stats()` -> `dashboard.sh` -> `dashboard/stats.sh`
-- `generate_markdown_dashboard()` -> `dashboard.sh` -> `dashboard/render.sh`
-
-### Sub-orchestrator: `lib/docs/dashboard.sh` (141 lines)
+### Sub-orchestrator: `lib/docs/dashboard.sh`
 **Role**: Coordinates dashboard statistics and rendering.
 **Sources**:
-- `lib/docs/dashboard/stats.sh` (234 lines)
-- `lib/docs/dashboard/render.sh` (293 lines)
+- `lib/docs/dashboard/stats.sh`
+- `lib/docs/dashboard/render.sh`
 
-**Function Mapping**:
-| Function | Module |
-|----------|--------|
-| `generate_markdown_dashboard()` | dashboard.sh |
-| `generate_dashboard()` | dashboard.sh |
-| `classify_status()` | dashboard/stats.sh |
-| `get_status_emoji()` | dashboard/stats.sh |
-| `calculate_aggregate_stats()` | dashboard/stats.sh |
-| `generate_summary_metrics()` | dashboard/render.sh |
-| `generate_status_distribution()` | dashboard/render.sh |
-| `generate_json_format()` | dashboard/render.sh |
-| `generate_csv_format()` | dashboard/render.sh |
+### Orchestrator: `scripts/docs/generate_docs_website.sh`
+**Role**: Generates documentation website.
+**Sources**:
+- `lib/docs/markdown_generator.sh`
+- `lib/docs/index_builder.sh`
+- `lib/docs/asset_compiler.sh`
 
 ### Orchestrator: `scripts/git/consolidate_todos.sh`
 **Role**: Extracts and reports TODOs.
@@ -110,33 +88,15 @@
 - `lib/todos/extractors.sh`
 - `lib/todos/report.sh` (orchestrator)
 
-**Function Calls**:
-- `extract_incomplete_tasks()` -> `extractors.sh`
-- `generate_checklist_header()` -> `report.sh` -> `reporters/markdown.sh`
-- `group_by_specification()` -> `report.sh` -> `reporters/markdown.sh`
-
-### Sub-orchestrator: `lib/todos/report.sh` (179 lines)
+### Sub-orchestrator: `lib/todos/report.sh`
 **Role**: Coordinates markdown and JSON report generation.
 **Sources**:
-- `lib/todos/reporters/markdown.sh` (254 lines)
-- `lib/todos/reporters/json.sh` (229 lines)
-
-**Function Mapping**:
-| Function | Module |
-|----------|--------|
-| `calculate_total_effort()` | report.sh |
-| `find_spec_dir()` | report.sh |
-| `sort_tasks()` | report.sh |
-| `generate_checklist_header()` | reporters/markdown.sh |
-| `generate_summary_stats()` | reporters/markdown.sh |
-| `group_by_specification()` | reporters/markdown.sh |
-| `group_by_priority()` | reporters/markdown.sh |
-| `json_escape()` | reporters/json.sh |
-| `generate_json_tasks()` | reporters/json.sh |
+- `lib/todos/reporters/markdown.sh`
+- `lib/todos/reporters/json.sh`
 
 ---
 
-## 3. Core & Validation
+## 4. Core Libraries & Validation
 
 ### Orchestrator: `scripts/lib/common.sh`
 **Role**: Backward compatibility layer for core utilities.
@@ -144,44 +104,97 @@
 - `lib/core/paths.sh`
 - `lib/core/validation.sh` (orchestrator)
 
-**Function Calls**:
-- Re-exports all functions from sourced modules.
-
-### Sub-orchestrator: `lib/core/validation.sh` (61 lines)
+### Sub-orchestrator: `lib/core/validation.sh`
 **Role**: Unified validation API.
 **Sources**:
-- `lib/core/validation/files.sh` (214 lines)
-- `lib/core/validation/input.sh` (253 lines)
+- `lib/core/validation/files.sh`
+- `lib/core/validation/input.sh`
 
-**Function Mapping**:
-| Function | Module |
-|----------|--------|
-| `require_file()` | validation/files.sh |
-| `require_dir()` | validation/files.sh |
-| `ensure_dir()` | validation/files.sh |
-| `is_writable()` | validation/files.sh |
-| `validate_shell_syntax()` | validation/files.sh |
-| `command_exists()` | validation/input.sh |
-| `require_command()` | validation/input.sh |
-| `validate_json()` | validation/input.sh |
-| `validate_yaml()` | validation/input.sh |
-| `is_valid_url()` | validation/input.sh |
-| `is_valid_email()` | validation/input.sh |
+### Core Libraries (Sourced Globally via init.sh)
+| Module | Purpose |
+|--------|---------|
+| `lib/core/utils.sh` | Common utility functions |
+| `lib/core/logging.sh` | Logging framework |
+| `lib/core/state.sh` | State management |
+| `lib/core/errors.sh` | Error handling |
+| `lib/core/paths.sh` | Path manipulation |
+| `lib/core/validation.sh` | Validation API |
+| `lib/core/version-intelligence.sh` | Version comparison utilities |
+| `lib/core/installation-check.sh` | Installation status checks |
+| `lib/core/uninstaller.sh` | Uninstallation utilities |
 
 ---
 
-## 4. Workflows & CI/CD
+## 5. System Health & Configuration
+
+### Orchestrator: `scripts/health/system_health_check.sh`
+**Role**: Comprehensive system health verification.
+**Sources**:
+- `lib/health/disk_health.sh`
+- `lib/health/network_health.sh`
+- `lib/health/service_health.sh`
+- `lib/health/resource_health.sh`
+
+### Orchestrator: `scripts/config/configure_zsh.sh`
+**Role**: ZSH configuration management.
+**Sources**:
+- `lib/config/zsh/plugins.sh`
+- `lib/config/zsh/theme.sh`
+- `lib/config/zsh/aliases.sh`
+- `lib/config/zsh/functions.sh`
+
+### Orchestrator: `lib/verification/health_checks.sh`
+**Role**: Installation verification checks.
+**Sources**:
+- `lib/verification/checks/pre_install_checks.sh`
+- `lib/verification/checks/post_install_checks.sh`
+- `lib/verification/checks/performance_checks.sh`
+
+---
+
+## 6. Audit Systems
+
+### Orchestrator: `lib/tasks/app_audit.sh`
+**Role**: Application audit and detection.
+**Sources**:
+- `lib/audit/scanners.sh`
+- `lib/audit/app-detectors.sh`
+- `lib/audit/app-report.sh`
+
+### Orchestrator: `lib/tasks/system_audit.sh`
+**Role**: System-wide audit with version intelligence.
+**Sources**:
+- `lib/audit/detectors.sh`
+- `lib/audit/report.sh`
+
+### Audit Modules Summary
+| Module | Purpose |
+|--------|---------|
+| `lib/audit/scanners.sh` | Package scanning (APT, Snap, Flatpak) |
+| `lib/audit/detectors.sh` | Duplicate/issue detection |
+| `lib/audit/report.sh` | Audit report generation |
+| `lib/audit/app-detectors.sh` | Application-specific detection |
+| `lib/audit/app-report.sh` | Application audit reporting |
+
+---
+
+## 7. Archive & Specification
+
+### Orchestrator: `scripts/archive/archive_spec.sh`
+**Role**: Specification archiving.
+**Sources**:
+- `lib/archive/yaml-generator.sh`
+- `lib/archive/validators.sh`
+
+---
+
+## 8. Workflows & CI/CD
 
 ### Orchestrator: `.runners-local/workflows/gh-cli-integration.sh`
-**Role**: GitHub CLI integration without Actions consumption.
+**Role**: GitHub CLI integration.
 **Sources**:
 - `lib/workflows/gh-cli/auth.sh`
 - `lib/workflows/gh-cli/api.sh`
-
-**Function Calls**:
-- `get_repo_status_summary()` -> `api.sh`
-- `get_workflow_runs()` -> `api.sh`
-- `create_constitutional_branch()` -> `api.sh`
 
 ### Orchestrator: `.runners-local/workflows/pre-commit-local.sh`
 **Role**: Pre-commit validation.
@@ -189,51 +202,179 @@
 - `lib/workflows/pre-commit/validators.sh`
 - `lib/workflows/pre-commit/formatters.sh`
 
-**Function Calls**:
-- `validate_file_by_extension()` -> `validators.sh`
-- `validate_constitutional_compliance()` -> `validators.sh`
-- `validate_commit_message()` -> `validators.sh`
+---
+
+## 9. Verification & Testing
+
+### Orchestrator: `lib/verification/integration_tests.sh`
+**Role**: Integration test runner.
+**Sources**:
+- `lib/verification/tests/zsh-fnm-test.sh`
+- `lib/verification/tests/ghostty-zsh-test.sh`
+- `lib/verification/tests/ai-nodejs-test.sh`
+- `lib/verification/tests/context-menu-test.sh`
+- `lib/verification/tests/phase8-tests.sh`
+
+### Verification Modules Summary
+| Module | Purpose |
+|--------|---------|
+| `lib/verification/unit_tests.sh` | Unit test framework |
+| `lib/verification/integration_tests.sh` | Integration test orchestrator |
+| `lib/verification/health_checks.sh` | Health check orchestrator |
+| `lib/verification/environment.sh` | Environment detection |
+| `lib/verification/duplicate_detection.sh` | Duplicate package detection |
+| `lib/verification/test_runner.sh` | Generic test runner |
+| `lib/verification/test_version_compare.sh` | Version comparison tests |
+
+### Test Script: `tests/constitutional/test_script_line_limits.sh`
+**Role**: Validates 300-line constitutional limit compliance.
 
 ---
 
-## 5. Constitutional Testing
+## 10. UI Components
 
-### Test Script: `tests/constitutional/test_script_line_limits.sh` (130 lines)
-**Role**: Validates 300-line constitutional limit compliance.
-**Outputs**:
-- Console summary
-- `logs/constitutional_check.log`
+### Orchestrator: `lib/ui/collapsible.sh`
+**Role**: Docker-like progressive summarization.
+**Sources**:
+- `lib/ui/components/task_state.sh`
+- `lib/ui/components/spinner.sh`
+- `lib/ui/components/render.sh`
+
+### UI Modules Summary
+| Module | Purpose |
+|--------|---------|
+| `lib/ui/tui.sh` | Main TUI framework (gum-based) |
+| `lib/ui/collapsible.sh` | Collapsible output orchestrator |
+| `lib/ui/progress.sh` | Progress bar components |
+| `lib/ui/colors.sh` | Color palette definitions |
+| `lib/ui/vhs-recorder.sh` | VHS recording utilities |
+| `lib/ui/vhs-auto-record.sh` | Automatic VHS recording |
+| `lib/ui/boxes.sh` | **DEPRECATED** - use gum instead |
+
+### TUI Sub-modules (under lib/ui/tui/)
+| Module | Purpose |
+|--------|---------|
+| `lib/ui/tui/render.sh` | TUI rendering functions |
+| `lib/ui/tui/input.sh` | User input handling |
+
+### Component Sub-modules (under lib/ui/components/)
+| Module | Purpose |
+|--------|---------|
+| `lib/ui/components/task_state.sh` | Task state management |
+| `lib/ui/components/spinner.sh` | Spinner/loading animations |
+| `lib/ui/components/render.sh` | Component rendering |
+
+---
+
+## 11. Management Scripts
+
+### Orchestrator: `scripts/utils/manage.sh`
+**Role**: Unified management CLI.
+**Sources**:
+- `lib/manage/cleanup.sh`
+- `lib/manage/docs.sh`
+- `lib/manage/install.sh`
+- `lib/manage/screenshots.sh`
+- `lib/manage/status.sh`
+- `lib/manage/update.sh`
+- `lib/manage/validate.sh`
+
+---
+
+## 12. Task Modules
+
+### Task Modules Summary (lib/tasks/)
+| Module | Purpose | Dependencies |
+|--------|---------|--------------|
+| `lib/tasks/ghostty.sh` | Ghostty installation task | core modules |
+| `lib/tasks/python_uv.sh` | Python + UV installation | duplicate_detection, unit_tests |
+| `lib/tasks/nodejs_fnm.sh` | Node.js + FNM installation | core modules |
+| `lib/tasks/zsh.sh` | ZSH configuration task | zshrc_manager |
+| `lib/tasks/ai_tools.sh` | AI tools installation | core modules |
+| `lib/tasks/gum.sh` | Gum TUI installation | core modules |
+| `lib/tasks/glow.sh` | Glow markdown viewer | core modules |
+| `lib/tasks/vhs.sh` | VHS recorder installation | core modules |
+| `lib/tasks/feh.sh` | Feh image viewer | core modules |
+| `lib/tasks/fastfetch.sh` | Fastfetch system info | core modules |
+| `lib/tasks/go.sh` | Go language installation | core modules |
+| `lib/tasks/context_menu.sh` | Context menu integration | core modules |
+| `lib/tasks/system_audit.sh` | System audit task | audit modules |
+| `lib/tasks/app_audit.sh` | Application audit task | audit modules |
+
+---
+
+## 13. Utility Modules
+
+### Utility Modules Summary
+| Module | Purpose | Used By |
+|--------|---------|---------|
+| `lib/utils/zshrc_manager.sh` | ZSH RC file management | nodejs_fnm steps |
+
+---
+
+## 14. Installer Modules
+
+### Top-level Installer Modules
+| Module | Purpose |
+|--------|---------|
+| `lib/installers/zig.sh` | Zig compiler installation |
+| `lib/installers/ghostty-deps.sh` | Ghostty dependencies |
+
+### Installer Step Directories
+Each installer has its own step-based architecture:
+- `lib/installers/ghostty/steps/` (5 steps + common)
+- `lib/installers/python_uv/steps/` (5 steps + common)
+- `lib/installers/nodejs_fnm/steps/` (5 steps + common)
+- `lib/installers/zsh/steps/` (6 steps + common)
+- `lib/installers/ai_tools/steps/` (5 steps + common)
+- `lib/installers/gum/steps/` (3 steps + common)
+- `lib/installers/glow/steps/` (3 steps + common)
+- `lib/installers/vhs/steps/` (5 steps + common)
+- `lib/installers/feh/steps/` (4 steps + common)
+- `lib/installers/fastfetch/steps/` (3 steps + common)
+- `lib/installers/go/steps/` (2 steps + common)
+- `lib/installers/context_menu/steps/` (3 steps + common)
+
+---
+
+## Deprecated/Removed Modules
+
+| Module | Status | Replacement |
+|--------|--------|-------------|
+| `lib/ui/boxes.sh` | DEPRECATED | Use `gum` TUI framework |
 
 ---
 
 ## Verification Status
 
-**Phase 6 & 7 Completion Status**:
-- [x] `lib/updates/ghostty-specific.sh`: 396 -> 141 lines
-- [x] `lib/todos/report.sh`: 394 -> 179 lines
-- [x] `lib/docs/dashboard.sh`: 386 -> 141 lines
-- [x] `lib/installers/common/tui-helpers.sh`: 331 -> 67 lines
-- [x] `lib/core/validation.sh`: 310 -> 61 lines
+**Comprehensive Audit (2025-11-25)**:
+- [x] All 93 lib/ modules pass syntax check (bash -n)
+- [x] All orchestrators correctly source their modules
+- [x] No orphaned scripts (all modules are sourced somewhere)
+- [x] 1 deprecated module identified (lib/ui/boxes.sh)
 
-**New Modules Created**:
-- [x] `lib/updates/ghostty/build.sh` (188 lines)
-- [x] `lib/updates/ghostty/install.sh` (209 lines)
-- [x] `lib/todos/reporters/markdown.sh` (254 lines)
-- [x] `lib/todos/reporters/json.sh` (229 lines)
-- [x] `lib/docs/dashboard/stats.sh` (234 lines)
-- [x] `lib/docs/dashboard/render.sh` (293 lines)
-- [x] `lib/ui/tui/render.sh` (225 lines)
-- [x] `lib/ui/tui/input.sh` (260 lines)
-- [x] `lib/core/validation/files.sh` (214 lines)
-- [x] `lib/core/validation/input.sh` (253 lines)
-- [x] `tests/constitutional/test_script_line_limits.sh` (130 lines)
+**Module Count by Category**:
+| Category | Count |
+|----------|-------|
+| Core | 9 |
+| UI | 10 |
+| Audit | 5 |
+| Tasks | 14 |
+| Verification | 12 |
+| Updates | 7 |
+| Health | 4 |
+| Config | 4 |
+| Docs | 6 |
+| Workflows | 4 |
+| Manage | 7 |
+| Archive | 2 |
+| Todos | 4 |
+| Utils | 1 |
+| Installers | 2 |
+| **Total** | **91** |
 
 **Constitutional Compliance**:
 - Total Scripts: 233
 - Passing (<300 lines): 200
 - Failing (>300 lines): 33 (legacy violations in catalog)
 - Compliance Rate: 85%
-
-**All Modules Sourced**: Every new module in `lib/` is sourced by at least one orchestrator.
-**All Functions Used**: Key exported functions are invoked by the orchestrators.
-**No Orphans**: No scripts were found to be isolated or unused.

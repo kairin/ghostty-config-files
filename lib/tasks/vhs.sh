@@ -32,5 +32,14 @@ export VHS_APT_PACKAGE
 export FFMPEG_MIN_VERSION
 export TTYD_MIN_VERSION
 
+# Verify VHS installation
+verify_vhs_installed() {
+    if command -v vhs >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Export functions
 export -f verify_vhs_installed

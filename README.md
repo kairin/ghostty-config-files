@@ -270,16 +270,11 @@ This will start a development server, and you can view the website at `http://lo
     -   `updates/daily-updates.sh`: Comprehensive update system (v4.0)
     -   `mcp/`: MCP server scripts
     -   `vhs/`: VHS recording utilities
--   `website/src/`: **Editable documentation source** (git-tracked)
+-   `astro-website/src/`: **Editable documentation source** (git-tracked)
     -   `user-guide/`: User documentation (installation, configuration, usage)
     -   `ai-guidelines/`: AI assistant guidelines (modular extracts from AGENTS.md)
     -   `developer/`: Developer documentation (architecture, contributing, testing)
 -   `docs/`: **Documentation build output** (Astro static site, **committed for GitHub Pages**)
--   `documentations/`: **Centralized documentation hub** (as of 2025-11-09)
-    -   `user/`: End-user documentation (installation guides, configuration, troubleshooting)
-    -   `developer/`: Developer documentation (architecture, analysis)
-    -   `specifications/`: Active feature specifications (Spec 001, 002, 004)
-    -   `archive/`: Historical/obsolete documentation
 -   `.runners-local/`: Local CI/CD infrastructure for zero-cost testing and validation.
     -   `tests/unit/`: Unit tests for modular scripts (Phase 1, 5)
     -   `.runners-local/workflows/`: Local CI/CD execution scripts
@@ -307,32 +302,32 @@ The output will be generated in the `docs/` directory.
 ## Documentation
 
 ### For Users
-- **[Installation Guide](website/src/user-guide/installation.md)** - Complete setup instructions
-- **[Configuration Guide](website/src/user-guide/configuration.md)** - Customize your environment
-- **[Usage Guide](website/src/user-guide/usage.md)** - manage.sh command reference
+- **[Installation Guide](astro-website/src/user-guide/installation.md)** - Complete setup instructions
+- **[Configuration Guide](astro-website/src/user-guide/configuration.md)** - Customize your environment
+- **[Usage Guide](astro-website/src/user-guide/usage.md)** - manage.sh command reference
 
 ### For Developers
-- **[Architecture Overview](website/src/developer/architecture.md)** - System design and patterns
-- **[Contributing Guide](website/src/developer/contributing.md)** - How to contribute
-- **[Testing Guide](website/src/developer/testing.md)** - Testing strategies
+- **[Architecture Overview](astro-website/src/developer/architecture.md)** - System design and patterns
+- **[Contributing Guide](astro-website/src/developer/contributing.md)** - How to contribute
+- **[Testing Guide](astro-website/src/developer/testing.md)** - Testing strategies
 
 ### For AI Assistants
-- **[Core Principles](website/src/ai-guidelines/core-principles.md)** - Project requirements
-- **[Git Strategy](website/src/ai-guidelines/git-strategy.md)** - Branch management
-- **[CI/CD Requirements](website/src/ai-guidelines/ci-cd-requirements.md)** - Local CI/CD
-- **[Development Commands](website/src/ai-guidelines/development-commands.md)** - Quick reference
+- **[Core Principles](astro-website/src/ai-guidelines/core-principles.md)** - Project requirements
+- **[Git Strategy](astro-website/src/ai-guidelines/git-strategy.md)** - Branch management
+- **[CI/CD Requirements](astro-website/src/ai-guidelines/ci-cd-requirements.md)** - Local CI/CD
+- **[Development Commands](astro-website/src/ai-guidelines/development-commands.md)** - Quick reference
 
-**Note**: Edit documentation in `website/src/`, not `docs/` (which is auto-generated).
+**Note**: Edit documentation in `astro-website/src/`, not `docs/` (which is auto-generated).
 
 ## Contributing
 
 Contributions are welcome! Please read our comprehensive [Contributing Guide](.github/CONTRIBUTING.md) for:
-- Documentation structure explained (docs/ vs documentation/ vs astro-website/src/)
+- Documentation structure explained (docs/ vs astro-website/src/)
 - Git workflow and branch preservation policy
 - Development commands and testing procedures
 - Code style guidelines
 
-For detailed developer documentation, see [website/src/developer/contributing.md](website/src/developer/contributing.md).
+For detailed developer documentation, see [astro-website/src/developer/contributing.md](astro-website/src/developer/contributing.md).
 
 ## License
 

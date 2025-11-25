@@ -16,24 +16,24 @@ TESTS_FAILED=0
 
 assert_true() {
     local condition="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if eval "$condition"; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
     fi
 }
 
 assert_file_exists() {
     local file="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ -f "$file" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] ${message:-File exists: $file}"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] ${message:-File exists: $file}"
     fi
 }
@@ -47,8 +47,8 @@ test_vhs_auto_record_exists() {
         assert_true "bash -n '$file'" "vhs-auto-record.sh has valid syntax"
     else
         echo "  [SKIP] vhs-auto-record.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -63,23 +63,23 @@ test_gum_availability() {
     echo "Testing gum availability check..."
     if command -v gum >/dev/null 2>&1; then
         echo "  [PASS] gum is installed"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
 
         # Test gum version
         if gum --version >/dev/null 2>&1; then
             echo "  [PASS] gum --version works"
-            ((TESTS_RUN++))
-            ((TESTS_PASSED++))
+            ((++TESTS_RUN))
+            ((++TESTS_PASSED))
         else
             echo "  [FAIL] gum --version failed"
-            ((TESTS_RUN++))
-            ((TESTS_FAILED++))
+            ((++TESTS_RUN))
+            ((++TESTS_FAILED))
         fi
     else
         echo "  [SKIP] gum not installed (optional)"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -92,20 +92,20 @@ test_all_ui_scripts_syntax() {
             found_scripts=true
             if bash -n "$script" 2>/dev/null; then
                 echo "  [PASS] $(basename "$script") syntax valid"
-                ((TESTS_RUN++))
-                ((TESTS_PASSED++))
+                ((++TESTS_RUN))
+                ((++TESTS_PASSED))
             else
                 echo "  [FAIL] $(basename "$script") syntax invalid"
-                ((TESTS_RUN++))
-                ((TESTS_FAILED++))
+                ((++TESTS_RUN))
+                ((++TESTS_FAILED))
             fi
         fi
     done 2>/dev/null || true
 
     if [[ "$found_scripts" == "false" ]]; then
         echo "  [SKIP] No UI scripts found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 

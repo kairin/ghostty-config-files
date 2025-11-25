@@ -16,24 +16,24 @@ TESTS_FAILED=0
 
 assert_true() {
     local condition="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if eval "$condition"; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
     fi
 }
 
 assert_file_exists() {
     local file="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ -f "$file" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] ${message:-File exists: $file}"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] ${message:-File exists: $file}"
     fi
 }
@@ -47,8 +47,8 @@ test_integration_tests_exists() {
         assert_true "bash -n '$file'" "integration_tests.sh has valid syntax"
     else
         echo "  [SKIP] integration_tests.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -61,8 +61,8 @@ test_unit_tests_exists() {
         assert_true "bash -n '$file'" "unit_tests.sh has valid syntax"
     else
         echo "  [SKIP] unit_tests.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -81,8 +81,8 @@ test_duplicate_detection_exists() {
         assert_true "bash -n '$file'" "duplicate_detection.sh has valid syntax"
     else
         echo "  [SKIP] duplicate_detection.sh not found (optional)"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -95,20 +95,20 @@ test_all_verification_scripts_syntax() {
             found_scripts=true
             if bash -n "$script" 2>/dev/null; then
                 echo "  [PASS] $(basename "$script") syntax valid"
-                ((TESTS_RUN++))
-                ((TESTS_PASSED++))
+                ((++TESTS_RUN))
+                ((++TESTS_PASSED))
             else
                 echo "  [FAIL] $(basename "$script") syntax invalid"
-                ((TESTS_RUN++))
-                ((TESTS_FAILED++))
+                ((++TESTS_RUN))
+                ((++TESTS_FAILED))
             fi
         fi
     done 2>/dev/null || true
 
     if [[ "$found_scripts" == "false" ]]; then
         echo "  [SKIP] No verification scripts found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 

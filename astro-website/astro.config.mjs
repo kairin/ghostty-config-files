@@ -16,6 +16,17 @@ export default defineConfig({
 
   integrations: [sitemap()],
 
+  markdown: {
+    shikiConfig: {
+      // Map non-standard language tags to supported highlighters to silence warnings
+      langAlias: {
+        conf: 'ini',
+        cron: 'bash',
+        tape: 'bash',
+      },
+    },
+  },
+
   build: {
     assets: '_astro'
   },
