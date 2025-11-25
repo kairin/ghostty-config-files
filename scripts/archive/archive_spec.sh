@@ -1,20 +1,6 @@
 #!/usr/bin/env bash
-#
 # archive_spec.sh - Generate YAML archives for completed specifications
-# Feature: 006-task-archive-consolidation
-# Version: 1.0.0
-#
-# Usage: archive_spec.sh [OPTIONS] [SPEC_ID...]
-#
-# Exit codes:
-#   0 - Success
-#   1 - General error
-#   2 - Validation error (missing files)
-#   3 - Archive already exists
-#   4 - Specification not found
-#   5 - Specification incomplete
 
-set -euo pipefail
 
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
-#
 # consolidate_todos.sh - Extract and consolidate outstanding todos
-# Feature: 006-task-archive-consolidation
-# Version: 1.0.0
-#
-# Usage: consolidate_todos.sh [OPTIONS]
-#
-# Exit codes:
-#   0 - Success
-#   1 - General error
-#   4 - No incomplete tasks found
-#   6 - Circular dependencies detected (warning, continues)
 
-set -euo pipefail
 
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

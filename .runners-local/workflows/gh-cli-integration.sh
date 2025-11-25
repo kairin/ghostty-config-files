@@ -1,14 +1,5 @@
 #!/bin/bash
-#
-# Constitutional GitHub CLI Integration
-# Zero GitHub Actions consumption with comprehensive workflow management
-#
-# Constitutional Requirements:
-# - Zero GitHub Actions minutes consumption
-# - Local workflow execution only
-# - Branch preservation strategy
-# - Performance monitoring
-# - Constitutional compliance validation
+# Constitutional GitHub CLI Integration - Zero GitHub Actions consumption
 
 set -euo pipefail
 

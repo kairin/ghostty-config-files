@@ -1,9 +1,5 @@
 #!/bin/bash
-# Module: common.sh
-# Purpose: Common utility functions for path resolution, logging, and error handling
-# Dependencies: None
-# Modules Required: None
-# Exit Codes: 0=success, 1=general failure, 2=invalid argument
+# common.sh - Common utility functions for path resolution, logging, error handling
 
 set -euo pipefail
 
