@@ -540,6 +540,7 @@ main() {
 
     # Group tasks by parallel_group for execution batching
     declare -A parallel_groups
+    log "INFO" "Processing ${#TASK_REGISTRY[@]} tasks for execution..."
     for task_entry in "${TASK_REGISTRY[@]}"; do
         IFS='|' read -r task_id deps install_fn verify_fn parallel_group est_seconds <<< "$task_entry"
 
@@ -555,6 +556,7 @@ main() {
 
     # Sort group IDs (use sort -g to handle negative keys like -1)
     mapfile -t sorted_groups < <(printf '%s\n' "${!parallel_groups[@]}" | sort -g)
+    log "INFO" "Found ${#sorted_groups[@]} execution groups"
     for group_id in "${sorted_groups[@]}"; do
         local group_tasks
         read -ra group_tasks <<< "${parallel_groups[$group_id]}"
@@ -715,4 +717,6 @@ main() {
 }
 
 # Run orchestrator
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
