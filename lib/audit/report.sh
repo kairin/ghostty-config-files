@@ -233,7 +233,7 @@ display_installation_strategy_groups() {
                 "green")   marker="📦" ;;
                 "magenta") marker="🐧" ;;
                 "yellow")  marker="🔨" ;;
-                "cyan")    marker="⚙️" ;;
+                "cyan")    marker="🔧" ;;
                 *)         marker="▪" ;;
             esac
 
