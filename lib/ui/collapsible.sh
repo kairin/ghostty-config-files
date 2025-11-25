@@ -202,6 +202,8 @@ render_all_tasks() {
 
         [[ "$status" == "failed" ]] && [[ -n "$error" ]] && echo "  Error: $error"
     done
+
+    return 0
 }
 
 # ============================================================================

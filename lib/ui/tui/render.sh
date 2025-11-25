@@ -70,6 +70,10 @@ show_component_footer() {
             status_symbol="[PARTIAL]"
             status_color="yellow"
             ;;
+        SKIPPED)
+            status_symbol="[SKIPPED]"
+            status_color="cyan"
+            ;;
         *)
             status_symbol="[?]"
             status_color="white"

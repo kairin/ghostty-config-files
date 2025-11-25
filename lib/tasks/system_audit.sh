@@ -235,6 +235,13 @@ task_pre_installation_audit() {
     generate_markdown_report "${audit_data[@]}"
 
     # Ask user to confirm before proceeding
+    # SKIP interactive confirmation if inside TEXT_RECORDING session (non-interactive)
+    if [[ -n "${TEXT_RECORDING:-}" ]]; then
+        log "DEBUG" "Skipping confirmation (inside TEXT_RECORDING session, auto-proceeding)"
+        log "SUCCESS" "Auto-proceeding with installation (recording mode)"
+        return 0
+    fi
+
     if command_exists "gum"; then
         log "INFO" "Ready to proceed with installation?"
         echo ""

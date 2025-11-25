@@ -151,19 +151,47 @@ run_install_steps() {
         start_task "$task_id"
 
         # Execute step with timing
-        local step_start step_end step_duration
+        local step_start step_end step_duration step_exit_code
         step_start=$(date +%s)
         log "INFO" "-> Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name}..."
 
-        if "$step_path"; then
-            step_end=$(date +%s)
-            step_duration=$((step_end - step_start))
+        # Execute and capture exit code properly
+        "$step_path" && step_exit_code=0 || step_exit_code=$?
+        step_end=$(date +%s)
+        step_duration=$((step_end - step_start))
+
+        # Handle exit codes:
+        #   0 = success
+        #   1 = failure
+        #   2 = skipped (idempotent - already installed)
+        if [ $step_exit_code -eq 0 ]; then
             complete_task "$task_id" "$step_duration"
             log "SUCCESS" "Completed: ${display_name} ($(format_duration "$step_duration"))"
+        elif [ $step_exit_code -eq 2 ]; then
+            # Exit code 2 = skipped (already done, idempotent behavior)
+            # Mark remaining tasks as skipped and exit early with success
+            complete_task "$task_id" 0
+            log "INFO" "Skipped: ${display_name} (already installed)"
+
+            # Mark remaining steps as skipped and return success
+            local remaining_step=$((step_num + 1))
+            while [ $remaining_step -le $MR_TOTAL_STEPS ]; do
+                local remaining_task_id="${component_name,,}-step-${remaining_step}"
+                skip_task "$remaining_task_id" 2>/dev/null || true
+                ((remaining_step++))
+            done
+
+            # Show component footer with SKIPPED status
+            local skip_end_time
+            skip_end_time=$(date +%s)
+            MR_TOTAL_DURATION=$((skip_end_time - MR_START_TIME))
+            show_component_footer "$component_name" "$MR_TOTAL_STEPS" "SKIPPED" "$MR_TOTAL_DURATION" "$component_log"
+            log "INFO" "${component_name} already installed - skipping remaining steps"
+            cleanup_collapsible_output
+            return 2  # Return 2 to indicate skipped (idempotent)
         else
-            local exit_code=$?
-            log "ERROR" "FAILED: ${display_name} (exit code: $exit_code)"
-            fail_task "$task_id" "Exit code: $exit_code - Check logs for details"
+            log "ERROR" "FAILED: ${display_name} (exit code: $step_exit_code)"
+            fail_task "$task_id" "Exit code: $step_exit_code - Check logs for details"
             ((failed_steps++))
         fi
 

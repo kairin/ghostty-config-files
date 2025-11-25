@@ -46,6 +46,28 @@ else
 fi
 
 # ═════════════════════════════════════════════════════════════
+# PRE-SUDO AUTHENTICATION (before VHS recording)
+# ═════════════════════════════════════════════════════════════
+# Get sudo credentials BEFORE VHS recording starts.
+# The VHS recording uses `script` command which runs non-interactively,
+# causing sudo password prompts to fail with SIGINT (exit 130).
+# By authenticating here (in Layer 1, before TEXT_RECORDING is set),
+# the password prompt happens in the real interactive terminal.
+if [[ "$*" != *"--help"* ]] && [[ -z "${TEXT_RECORDING:-}" ]] && command -v sudo &>/dev/null; then
+    echo "Installation requires sudo privileges for package management..."
+    if ! sudo -v; then
+        echo "Error: Sudo authentication required for installation"
+        exit 1
+    fi
+    # Keep sudo credentials alive in background (refresh every 50 seconds)
+    # This runs only in Layer 1 and will be killed when script exits
+    (while true; do sudo -n true; sleep 50; done 2>/dev/null) &
+    SUDO_KEEPALIVE_PID=$!
+    # Ensure we kill the background process on exit
+    trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null || true' EXIT
+fi
+
+# ═════════════════════════════════════════════════════════════
 # VHS AUTO-RECORDING (if available)
 # ═════════════════════════════════════════════════════════════
 # Enable automatic VHS recording for demo creation
@@ -455,7 +477,12 @@ main() {
 
     # Setup sudo credentials AFTER user confirms installation
     # This ensures sudo prompts come AFTER the audit table
-    setup_sudo
+    # SKIP if inside TEXT_RECORDING session (sudo already cached from Layer 1)
+    if [[ -z "${TEXT_RECORDING:-}" ]]; then
+        setup_sudo
+    else
+        log "DEBUG" "Skipping setup_sudo (inside TEXT_RECORDING session, credentials cached)"
+    fi
 
     # Run robust environment verification
     if ! run_environment_checks; then
@@ -501,6 +528,7 @@ main() {
         # Generate user-friendly display name from task_id
         local display_name
         case "$task_id" in
+            install-fastfetch)     display_name="Install Fastfetch" ;;
             install-go)            display_name="Installing Go Programming Language" ;;
             install-gum)           display_name="Installing Gum TUI Framework" ;;
             verify-prereqs)        display_name="Verifying Prerequisites" ;;
@@ -523,7 +551,6 @@ main() {
     # Render initial task list (all pending)
     render_all_tasks
 
-    # Start spinner loop for visual feedback (non-verbose mode only)
     # Start spinner loop for visual feedback (non-verbose mode only)
     # Spinner disabled to prevent hanging issues
     local spinner_pid=""

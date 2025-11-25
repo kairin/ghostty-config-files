@@ -108,11 +108,24 @@ check_ai_tools_installed() {
 # Check if context menu integration is installed
 #
 check_context_menu_installed() {
-    # Check for context menu desktop files
-    if [ -f "$HOME/.local/share/applications/ghostty-here.desktop" ]; then
+    # Check for Nautilus right-click context menu script
+    local script_path="$HOME/.local/share/nautilus/scripts/Open in Ghostty"
+    if [ -f "$script_path" ] && [ -x "$script_path" ]; then
         return 0  # Installed
     fi
     return 1  # Not installed
+}
+
+#
+# Verify context menu installation (for use by start.sh TASK_REGISTRY)
+#
+# Returns:
+#   0 = context menu installed and functional
+#   1 = not installed
+#
+verify_context_menu() {
+    local script_path="$HOME/.local/share/nautilus/scripts/Open in Ghostty"
+    [ -f "$script_path" ] && [ -x "$script_path" ]
 }
 
 #
@@ -201,6 +214,7 @@ export -f check_uv_installed
 export -f check_fnm_installed
 export -f check_ai_tools_installed
 export -f check_context_menu_installed
+export -f verify_context_menu
 export -f check_component_installed
 export -f get_component_action
 
