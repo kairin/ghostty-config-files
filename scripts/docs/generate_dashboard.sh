@@ -70,6 +70,7 @@ show_version() {
 # Discover specifications in repository
 #######################################
 discover_specifications() {
+    # shellcheck disable=SC2038 # Using -I {} placeholder safely handles spaces
     find "$REPO_ROOT" -type d -name "spec-kit" -prune -o \
          -type f -name "tasks.md" -print 2>/dev/null | \
          xargs -I {} dirname {} | sort -u

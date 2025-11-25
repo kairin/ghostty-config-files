@@ -5,7 +5,8 @@
 
 # Get repository root
 get_repo_root() {
-    local current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local current_dir
+    current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     while [ "$current_dir" != "/" ]; do
         if [ -f "$current_dir/start.sh" ]; then
             echo "$current_dir"

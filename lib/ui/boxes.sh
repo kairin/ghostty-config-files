@@ -156,6 +156,7 @@ is_utf8_terminal() {
 #   init_box_drawing "ascii"      # Force ASCII
 #   echo "${BOX_CHARS[TL]}"       # Top-left corner
 #
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 init_box_drawing() {
     local box_style="${1:-${BOX_DRAWING:-auto}}"
 

@@ -78,10 +78,10 @@ verify_conflicts() {
 verify_path_sanity() {
     # Check if ~/.local/bin is in PATH (common issue)
     if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-        log "WARNING" "~/.local/bin is not in PATH. Some tools might not be found."
+        log "WARNING" "\$HOME/.local/bin is not in PATH. Some tools might not be found."
         # We can try to append it for this session
         export PATH="$HOME/.local/bin:$PATH"
-        log "INFO" "Added ~/.local/bin to PATH for this session."
+        log "INFO" "Added \$HOME/.local/bin to PATH for this session."
     fi
     
     return 0

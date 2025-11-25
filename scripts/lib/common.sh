@@ -194,15 +194,24 @@ load_config() {
     local config_file="${1:-$HOME/.config/package-migration/config.json}"
     [[ ! -f "$config_file" ]] && { log_warn "Config file not found: $config_file, using defaults"; return 1; }
 
-    export MIGRATION_BACKUP_DIR=$(json_parse "$config_file" '.backup.directory' 2>/dev/null || echo "$HOME/.config/package-migration/backups")
-    export MIGRATION_RETENTION_DAYS=$(json_parse "$config_file" '.backup.retention_days' 2>/dev/null || echo "30")
-    export MIGRATION_CACHE_ENABLED=$(json_parse "$config_file" '.cache.enabled' 2>/dev/null || echo "true")
-    export MIGRATION_CACHE_TTL=$(json_parse "$config_file" '.cache.ttl_seconds' 2>/dev/null || echo "3600")
-    export MIGRATION_BATCH_SIZE=$(json_parse "$config_file" '.migration.batch_size' 2>/dev/null || echo "10")
-    export MIGRATION_PRIORITY_THRESHOLD=$(json_parse "$config_file" '.migration.priority_threshold' 2>/dev/null || echo "500")
-    export MIGRATION_DISK_MIN_GB=$(json_parse "$config_file" '.health_checks.disk_space_minimum_gb' 2>/dev/null || echo "10")
-    export MIGRATION_NETWORK_TIMEOUT=$(json_parse "$config_file" '.health_checks.network_timeout_seconds' 2>/dev/null || echo "30")
-    export MIGRATION_LOG_DIR=$(json_parse "$config_file" '.logging.directory' 2>/dev/null || echo "/tmp/ghostty-start-logs")
+    MIGRATION_BACKUP_DIR=$(json_parse "$config_file" '.backup.directory' 2>/dev/null || echo "$HOME/.config/package-migration/backups")
+    export MIGRATION_BACKUP_DIR
+    MIGRATION_RETENTION_DAYS=$(json_parse "$config_file" '.backup.retention_days' 2>/dev/null || echo "30")
+    export MIGRATION_RETENTION_DAYS
+    MIGRATION_CACHE_ENABLED=$(json_parse "$config_file" '.cache.enabled' 2>/dev/null || echo "true")
+    export MIGRATION_CACHE_ENABLED
+    MIGRATION_CACHE_TTL=$(json_parse "$config_file" '.cache.ttl_seconds' 2>/dev/null || echo "3600")
+    export MIGRATION_CACHE_TTL
+    MIGRATION_BATCH_SIZE=$(json_parse "$config_file" '.migration.batch_size' 2>/dev/null || echo "10")
+    export MIGRATION_BATCH_SIZE
+    MIGRATION_PRIORITY_THRESHOLD=$(json_parse "$config_file" '.migration.priority_threshold' 2>/dev/null || echo "500")
+    export MIGRATION_PRIORITY_THRESHOLD
+    MIGRATION_DISK_MIN_GB=$(json_parse "$config_file" '.health_checks.disk_space_minimum_gb' 2>/dev/null || echo "10")
+    export MIGRATION_DISK_MIN_GB
+    MIGRATION_NETWORK_TIMEOUT=$(json_parse "$config_file" '.health_checks.network_timeout_seconds' 2>/dev/null || echo "30")
+    export MIGRATION_NETWORK_TIMEOUT
+    MIGRATION_LOG_DIR=$(json_parse "$config_file" '.logging.directory' 2>/dev/null || echo "/tmp/ghostty-start-logs")
+    export MIGRATION_LOG_DIR
 
     log_info "Configuration loaded from $config_file"
     return 0

@@ -359,7 +359,7 @@ render_display() {
 
     # Render all tasks (sorted by ID)
     local -a sorted_ids
-    IFS=$'\n' sorted_ids=($(for id in "${!TASK_IDS[@]}"; do echo "${TASK_IDS[$id]} $id"; done | sort -n | cut -d' ' -f2))
+    mapfile -t sorted_ids < <(for id in "${!TASK_IDS[@]}"; do echo "${TASK_IDS[$id]} $id"; done | sort -n | cut -d' ' -f2)
 
     for task_id in "${sorted_ids[@]}"; do
         render_task_line "$task_id"

@@ -32,7 +32,8 @@ main() {
 
     # Backup existing .zshrc
     if [ -f "$ZSHRC" ]; then
-        local backup_file="${ZSHRC}.backup-$(date +%Y%m%d-%H%M%S)"
+        local backup_file
+        backup_file="${ZSHRC}.backup-$(date +%Y%m%d-%H%M%S)"
         cp "$ZSHRC" "$backup_file"
         log "INFO" "✓ Backed up existing .zshrc to $backup_file"
     fi

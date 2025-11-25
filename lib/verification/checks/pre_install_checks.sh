@@ -57,6 +57,7 @@ check_sudo_access() {
 #   $1 - Minimum required GB (default: 10)
 # Returns:
 #   0 = sufficient space, 1 = insufficient space
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 check_disk_space() {
     local min_gb="${1:-$DISK_MIN_GB}"
 

@@ -53,7 +53,8 @@ if [ -f "${ENV_FILE}" ]; then
 
     # Export actual token from gh CLI if GITHUB_TOKEN is placeholder
     if [ "${GITHUB_TOKEN:-}" = "\${GITHUB_TOKEN}" ] || [ -z "${GITHUB_TOKEN:-}" ]; then
-        export GITHUB_TOKEN=$(gh auth token)
+        GITHUB_TOKEN=$(gh auth token)
+        export GITHUB_TOKEN
         echo -e "  ${YELLOW}ℹ${NC} Using GitHub token from gh CLI"
     fi
 

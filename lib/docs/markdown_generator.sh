@@ -116,6 +116,7 @@ EOF
 #   $1 - Additional footer content (optional)
 # Returns:
 #   HTML footer section (stdout)
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 generate_html_footer() {
     local extra_content="${1:-}"
 

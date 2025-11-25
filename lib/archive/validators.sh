@@ -52,6 +52,7 @@ extract_file_paths_from_line() {
     local task_line="$1"
 
     echo "$task_line" | grep -oE '(scripts|configs|tests|docs|.runners-local|documentations)/[^ ,)]+\.(sh|md|json|yaml|yml|conf|py|js|ts)' || true
+    # shellcheck disable=SC2088 # Tilde is a regex pattern here, not path expansion
     echo "$task_line" | grep -oE '~/\.[a-z]+/[^ ,)]+' || true
     echo "$task_line" | grep -oE 'src/[^ ,)]+\.(sh|md|json|yaml|yml|conf|py|js|ts)' || true
 }

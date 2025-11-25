@@ -67,8 +67,10 @@ check_repo_updates() {
         }
 
         # Check if we're behind
-        local local_commit=$(git rev-parse HEAD)
-        local remote_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null)
+        local local_commit
+        local_commit=$(git rev-parse HEAD)
+        local remote_commit
+        remote_commit=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null)
 
         if [ "$local_commit" != "$remote_commit" ]; then
             log "INFO" "🆕 Repository updates available!"
@@ -146,7 +148,8 @@ apply_config_updates() {
 
     # Backup existing config
     if [ -f "$CONFIG_DIR/config" ]; then
-        local backup_file="$CONFIG_DIR/config.backup-$(date +%Y%m%d-%H%M%S)"
+        local backup_file
+        backup_file="$CONFIG_DIR/config.backup-$(date +%Y%m%d-%H%M%S)"
         cp "$CONFIG_DIR/config" "$backup_file"
         log "SUCCESS" "✅ Backed up existing config to: $(basename "$backup_file")"
         CLEANUP_NEEDED=1  # Signal cleanup to run

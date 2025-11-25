@@ -119,6 +119,7 @@ start_spinner_loop() {
 }
 
 # Function: stop_spinner_loop
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 stop_spinner_loop() {
     local pid="${1:-$SPINNER_PID}"
 

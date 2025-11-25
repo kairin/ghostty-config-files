@@ -122,7 +122,8 @@ verify_build_tools() {
         done
         
         # Remove duplicates and install
-        local unique_packages=($(printf "%s\n" "${tool_packages[@]}" | sort -u))
+        local unique_packages
+        mapfile -t unique_packages < <(printf "%s\n" "${tool_packages[@]}" | sort -u)
         
         if [ ${#unique_packages[@]} -gt 0 ]; then
             echo "Installing additional packages for build tools: ${unique_packages[*]}"
