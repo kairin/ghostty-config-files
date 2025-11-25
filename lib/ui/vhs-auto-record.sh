@@ -308,57 +308,6 @@ maybe_start_vhs_recording() {
             local vhs_width=$(( term_cols * 12 + 100 ))
             local vhs_height=$(( term_lines * 24 + 100 ))
 
-            # Create a tape file that replays the script
-            cat > "$tape_file" <<EOF
-# VHS Tape - Replay of ${recording_name}
-Output "${gif_file}"
-Set Shell "bash"
-Set FontSize 14
-Set Width ${vhs_width}
-Set Height ${vhs_height}
-Set Theme "Catppuccin Mocha"
-Set PlaybackSpeed 1.0
-Set Padding 20
-
-# Replay the recorded session
-# We use scriptreplay to play back the timing and log files
-Hide
-Type "scriptreplay --timing='${timing_file}' '${log_file}'"
-Enter
-Show
-Sleep 100ms
-# Wait for replay to finish (scriptreplay exits when done)
-# But VHS needs to know when to stop. 
-# Since we can't easily know the duration in the tape without parsing,
-# we rely on the fact that scriptreplay will exit, and then we exit the shell.
-# However, VHS records the *shell*. If scriptreplay finishes, the shell prompt returns.
-# We want to capture the replay, then stop.
-
-# Better approach: Run scriptreplay directly? 
-# No, VHS runs a shell.
-# We can just sleep for the duration? No, dynamic.
-
-# Trick: We run scriptreplay, then exit.
-# VHS will record until the shell exits if we don't put Sleep?
-# No, VHS tape needs explicit commands.
-
-# Actually, we can just use the 'Type' command to run scriptreplay
-# and then Sleep for a bit? No.
-
-# Let's try a different approach for the tape:
-# We don't use Type. We just want to render the output.
-# But VHS is a driver.
-
-# Alternative: Use 'asciinema' if available? No, requirement is VHS.
-
-# Back to scriptreplay:
-# If we run scriptreplay, it outputs to stdout.
-# VHS records the terminal.
-# So if we Type "scriptreplay ...", VHS will record the playback!
-# We just need to know how long to sleep.
-# We can parse the timing file to get total duration!
-EOF
-
             # Calculate total duration from timing file
             # Timing file format: "delay_duration block_size" per line
             # We sum up the first column
@@ -371,11 +320,46 @@ EOF
                 total_duration=300 # Fallback
             fi
             
-            # Append sleep to tape
-            echo "Sleep ${total_duration}s" >> "$tape_file"
+            # Speed up replay to reduce generation time
+            local replay_speed=2
+            local sleep_duration=$(echo "$total_duration / $replay_speed + 5" | bc 2>/dev/null || echo "300")
+
+            # Create a tape file that replays the script
+            cat > "$tape_file" <<EOF
+# VHS Tape - Replay of ${recording_name}
+Output "${gif_file}"
+Set Shell "bash"
+Set FontSize 14
+Set Width ${vhs_width}
+Set Height ${vhs_height}
+Set Theme "Catppuccin Mocha"
+Set PlaybackSpeed 0.5 
+Set Padding 20
+
+# Replay the recorded session
+# We use scriptreplay to play back the timing and log files
+# We speed it up by ${replay_speed}x during recording to save time
+# Then we slow down playback by 0.5x (which is 1/2) to compensate? 
+# No, Set PlaybackSpeed 1.0 means 1 second of video = 1 second of real time.
+# If we record at 2x speed, 10s real time becomes 5s video.
+# If we want the video to look normal speed, we need to slow it down?
+# Actually, usually people WANT the demo to be faster than real time.
+# So recording at 2x speed and playing at 1x speed results in a 2x speed video.
+# This is good.
+
+Hide
+Type "scriptreplay --divisor ${replay_speed} --timing='${timing_file}' '${log_file}'"
+Enter
+Show
+Sleep 100ms
+
+# Wait for replay to finish
+Sleep ${sleep_duration}s
+EOF
             
             # Render GIF
-            if vhs "$tape_file" >/dev/null 2>&1; then
+            # We do NOT suppress output so user sees the progress bar
+            if vhs "$tape_file"; then
                 echo "Video saved to: $gif_file"
                 # Cleanup intermediate files
                 rm -f "$tape_file" "$timing_file"

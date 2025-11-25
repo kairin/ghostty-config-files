@@ -28,5 +28,14 @@ readonly GLOW_APT_PACKAGE="glow"
 export GLOW_MIN_VERSION
 export GLOW_APT_PACKAGE
 
+# Verify glow installation
+verify_glow_installed() {
+    if command -v glow >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Export functions
 export -f verify_glow_installed

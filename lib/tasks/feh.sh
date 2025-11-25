@@ -38,5 +38,14 @@ export FEH_REPO
 export FEH_BUILD_DIR
 export FEH_INSTALL_PREFIX
 
+# Verify feh installation
+verify_feh_installed() {
+    if command -v feh >/dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # Export functions
 export -f verify_feh_installed

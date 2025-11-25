@@ -426,9 +426,15 @@ keep_sudo_alive() {
     ) >/dev/null 2>&1 &
     
     SUDO_KEEP_ALIVE_PID=$!
-    
-    # Ensure cleanup on exit
-    trap 'kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true' EXIT
+
+    # Ensure cleanup on exit (preserve existing trap handler)
+    local existing_trap
+    existing_trap=$(trap -p EXIT 2>/dev/null | sed "s/trap -- '//" | sed "s/' EXIT//" || true)
+    if [ -n "$existing_trap" ]; then
+        trap "kill \"\$SUDO_KEEP_ALIVE_PID\" 2>/dev/null || true; $existing_trap" EXIT
+    else
+        trap 'kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true' EXIT
+    fi
 }
 
 # Export functions for use in other modules

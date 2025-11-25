@@ -18,13 +18,13 @@ TESTS_FAILED=0
 # Simple test assertion helpers
 assert_equals() {
     local expected="$1" actual="$2" message="${3:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ "$expected" == "$actual" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
         return 0
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
         echo "    Expected: $expected"
         echo "    Actual:   $actual"
@@ -34,13 +34,13 @@ assert_equals() {
 
 assert_true() {
     local condition="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if eval "$condition"; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
         return 0
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
         return 1
     fi
@@ -48,13 +48,13 @@ assert_true() {
 
 assert_file_exists() {
     local file="$1" message="${2:-File exists: $1}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ -f "$file" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
         return 0
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
         return 1
     fi
@@ -101,8 +101,8 @@ test_version_compare() {
         version_compare "2.0.0" "1.0.0" || assert_equals "1" "$?" "2.0.0 > 1.0.0"
     else
         echo "  [SKIP] version_compare not available"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 

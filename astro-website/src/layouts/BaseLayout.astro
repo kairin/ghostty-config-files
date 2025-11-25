@@ -49,12 +49,12 @@ const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
             </a>
           </div>
           <div class="flex-none gap-2">
-            <ul class="menu menu-horizontal px-1 hidden lg:flex">
-              <li><a href={`${base}/user-guide/installation`} class="hover:text-blue-600 dark:hover:text-cyan-400 transition-all">User Guide</a></li>
-              <li><a href={`${base}/ai-guidelines/core-principles`} class="hover:text-purple-600 dark:hover:text-purple-400 transition-all">AI Guidelines</a></li>
-              <li><a href={`${base}/developer/architecture`} class="hover:text-amber-600 dark:hover:text-amber-400 transition-all">Developer</a></li>
+            <ul class="menu menu-horizontal px-1 hidden lg:flex gap-4">
+              <li><a href={`${base}/user-guide`} class="nav-link">User Guide</a></li>
+              <li><a href={`${base}/ai-guidelines`} class="nav-link">AI Guidelines</a></li>
+              <li><a href={`${base}/developer`} class="nav-link">Developer</a></li>
               <li>
-                <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-cyan-400 transition-all">
+                <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="nav-link">
                   GitHub
                 </a>
               </li>

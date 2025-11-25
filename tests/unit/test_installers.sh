@@ -16,36 +16,36 @@ TESTS_FAILED=0
 
 assert_equals() {
     local expected="$1" actual="$2" message="${3:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ "$expected" == "$actual" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message (expected: $expected, got: $actual)"
     fi
 }
 
 assert_true() {
     local condition="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if eval "$condition"; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] $message"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] $message"
     fi
 }
 
 assert_file_exists() {
     local file="$1" message="${2:-}"
-    ((TESTS_RUN++))
+    ((++TESTS_RUN))
     if [[ -f "$file" ]]; then
-        ((TESTS_PASSED++))
+        ((++TESTS_PASSED))
         echo "  [PASS] ${message:-File exists: $file}"
     else
-        ((TESTS_FAILED++))
+        ((++TESTS_FAILED))
         echo "  [FAIL] ${message:-File exists: $file}"
     fi
 }
@@ -59,8 +59,8 @@ test_manager_runner_exists() {
         assert_true "bash -n '$file'" "manager-runner.sh has valid syntax"
     else
         echo "  [SKIP] manager-runner.sh not found"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -73,8 +73,8 @@ test_ghostty_deps_exists() {
         assert_true "bash -n '$file'" "ghostty-deps.sh has valid syntax"
     else
         echo "  [SKIP] ghostty-deps.sh not found (optional)"
-        ((TESTS_RUN++))
-        ((TESTS_PASSED++))
+        ((++TESTS_RUN))
+        ((++TESTS_PASSED))
     fi
 }
 
@@ -95,12 +95,12 @@ test_all_installer_syntax() {
         if [[ -f "$script" ]]; then
             if bash -n "$script" 2>/dev/null; then
                 echo "  [PASS] $(basename "$script") syntax valid"
-                ((TESTS_RUN++))
-                ((TESTS_PASSED++))
+                ((++TESTS_RUN))
+                ((++TESTS_PASSED))
             else
                 echo "  [FAIL] $(basename "$script") syntax invalid"
-                ((TESTS_RUN++))
-                ((TESTS_FAILED++))
+                ((++TESTS_RUN))
+                ((++TESTS_FAILED))
                 all_valid=false
             fi
         fi

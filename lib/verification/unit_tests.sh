@@ -43,27 +43,27 @@ run_all_unit_tests() {
     local test_groups_failed=0
 
     # Core library tests
-    if test_core_libraries; then ((test_groups_passed++)); else ((test_groups_failed++)); fi
+    if run_core_library_tests; then ((++test_groups_passed)); else ((++test_groups_failed)); fi
     echo ""
 
     # Installer tests
-    if test_installers; then ((test_groups_passed++)); else ((test_groups_failed++)); fi
+    if run_installer_tests; then ((++test_groups_passed)); else ((++test_groups_failed)); fi
     echo ""
 
     # Utility tests
-    if test_utilities; then ((test_groups_passed++)); else ((test_groups_failed++)); fi
+    if run_utility_tests; then ((++test_groups_passed)); else ((++test_groups_failed)); fi
     echo ""
 
     # UI component tests
-    if test_ui_components; then ((test_groups_passed++)); else ((test_groups_failed++)); fi
+    if run_ui_component_tests; then ((++test_groups_passed)); else ((++test_groups_failed)); fi
     echo ""
 
     # Verification tests
-    if test_verification; then ((test_groups_passed++)); else ((test_groups_failed++)); fi
+    if run_verification_tests; then ((++test_groups_passed)); else ((++test_groups_failed)); fi
     echo ""
 
     # Phase 8 tests
-    if run_phase8_tests; then ((test_groups_passed++)); else ((test_groups_failed++)); fi
+    if run_phase8_tests; then ((++test_groups_passed)); else ((++test_groups_failed)); fi
     echo ""
 
     # Summary

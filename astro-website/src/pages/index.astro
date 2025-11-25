@@ -25,24 +25,27 @@ const base = '/ghostty-config-files';
 >
   <!-- Modern Hero Section with Glass Morphism -->
   <div class="hero min-h-[60vh] glass-card mb-16 overflow-hidden relative">
-    <!-- Animated background gradient -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-cyan-500/20 dark:via-purple-500/20 dark:to-pink-500/20 animate-pulse"></div>
+    <!-- VHS Recording Background -->
+    <img src={`${base}/demo.gif`} alt="Ghostty Terminal Demo" class="hero-video-bg" />
+    
+    <!-- Gradient Overlay for Readability -->
+    <div class="hero-overlay-gradient"></div>
 
     <div class="hero-content text-center relative z-10 w-full">
       <div class="w-full px-4">
-        <h1 class="responsive-text-hero font-bold mb-8 text-gray-900 dark:text-gray-100 break-words">
+        <h1 class="responsive-text-hero font-bold mb-8 text-gray-900 dark:text-gray-100 break-words drop-shadow-sm">
           Ghostty Configuration Files
         </h1>
-        <p class="text-xl md:text-2xl lg:text-3xl mb-10 text-gray-600 dark:text-gray-300 leading-relaxed max-w-5xl mx-auto break-words">
+        <p class="text-xl md:text-2xl lg:text-3xl mb-10 text-gray-700 dark:text-gray-200 leading-relaxed max-w-5xl mx-auto break-words font-medium drop-shadow-sm">
           A comprehensive terminal environment setup featuring Ghostty terminal emulator
           with 2025 performance optimizations, right-click context menu integration,
           plus integrated AI tools (Claude Code, Gemini CLI) and intelligent update management.
         </p>
         <div class="flex gap-4 md:gap-6 justify-center flex-wrap">
-          <a href={`${base}/user-guide/installation`} class="btn btn-lg bg-gradient-to-r from-blue-600 to-purple-600 dark:from-cyan-500 dark:to-purple-500 hover:scale-105 text-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300">
+          <a href={`${base}/user-guide/installation`} class="btn-primary-action">
             Get Started
           </a>
-          <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="btn btn-lg glass-card hover:scale-105 transition-all duration-300">
+          <a href="https://github.com/kairin/ghostty-config-files" target="_blank" rel="noopener noreferrer" class="btn-secondary-action">
             View on GitHub
           </a>
         </div>
@@ -200,11 +203,14 @@ const base = '/ghostty-config-files';
             Installation, configuration, and usage documentation for end users.
           </p>
           <div class="flex flex-col gap-2">
-            {userGuide.map((entry) => (
+            {userGuide.slice(0, 5).map((entry) => (
               <a href={`${base}/user-guide/${entry.id}`} class="btn btn-sm glass-card justify-start hover:scale-105 transition-all">
                 {entry.data.title}
               </a>
             ))}
+            <a href={`${base}/user-guide`} class="btn btn-sm btn-ghost justify-start hover:text-blue-600 dark:hover:text-cyan-400 mt-4 w-full group">
+              <span class="group-hover:translate-x-2 transition-transform duration-300">View All Guides →</span>
+            </a>
           </div>
         </div>
       </div>
@@ -222,11 +228,14 @@ const base = '/ghostty-config-files';
             Constitutional requirements and instructions for AI assistants (Claude, Gemini).
           </p>
           <div class="flex flex-col gap-2">
-            {aiGuidelines.map((entry) => (
+            {aiGuidelines.slice(0, 5).map((entry) => (
               <a href={`${base}/ai-guidelines/${entry.id}`} class="btn btn-sm glass-card justify-start hover:scale-105 transition-all">
                 {entry.data.title}
               </a>
             ))}
+            <a href={`${base}/ai-guidelines`} class="btn btn-sm btn-ghost justify-start hover:text-purple-600 dark:hover:text-purple-400 mt-4 w-full group">
+              <span class="group-hover:translate-x-2 transition-transform duration-300">View All Guidelines →</span>
+            </a>
           </div>
         </div>
       </div>
@@ -244,11 +253,14 @@ const base = '/ghostty-config-files';
             Architecture, testing, and technical documentation for contributors.
           </p>
           <div class="flex flex-col gap-2">
-            {developer.map((entry) => (
+            {developer.slice(0, 5).map((entry) => (
               <a href={`${base}/developer/${entry.id}`} class="btn btn-sm glass-card justify-start hover:scale-105 transition-all">
                 {entry.data.title}
               </a>
             ))}
+            <a href={`${base}/developer`} class="btn btn-sm btn-ghost justify-start hover:text-amber-600 dark:hover:text-amber-400 mt-4 w-full group">
+              <span class="group-hover:translate-x-2 transition-transform duration-300">View All Docs →</span>
+            </a>
           </div>
         </div>
       </div>
@@ -262,43 +274,73 @@ const base = '/ghostty-config-files';
 
   <div class="responsive-grid mb-20">
     <div class="glass-card hover-lift w-full">
-      <div class="p-6 md:p-8">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">2025 Performance Optimizations</h3>
+      <div class="p-6 md:p-8 flex flex-col items-center text-center h-full">
+        <div class="mb-4 p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-cyan-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">2025 Performance</h3>
         <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Linux CGroup single-instance, enhanced shell integration, and memory management.</p>
       </div>
     </div>
 
     <div class="glass-card hover-lift w-full">
-      <div class="p-6 md:p-8">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Context Menu Integration</h3>
+      <div class="p-6 md:p-8 flex flex-col items-center text-center h-full">
+        <div class="mb-4 p-3 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Context Menu</h3>
         <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Right-click "Open in Ghostty" in Nautilus file manager.</p>
       </div>
     </div>
 
     <div class="glass-card hover-lift w-full">
-      <div class="p-6 md:p-8">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">AI Tools Integration</h3>
+      <div class="p-6 md:p-8 flex flex-col items-center text-center h-full">
+        <div class="mb-4 p-3 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">AI Integration</h3>
         <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Claude Code, Gemini CLI, and Context7 MCP for documentation synchronization.</p>
       </div>
     </div>
 
     <div class="glass-card hover-lift w-full">
-      <div class="p-6 md:p-8">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Intelligent Updates</h3>
+      <div class="p-6 md:p-8 flex flex-col items-center text-center h-full">
+        <div class="mb-4 p-3 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Smart Updates</h3>
         <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Smart detection and preservation of user customizations during updates.</p>
       </div>
     </div>
 
     <div class="glass-card hover-lift w-full">
-      <div class="p-6 md:p-8">
+      <div class="p-6 md:p-8 flex flex-col items-center text-center h-full">
+        <div class="mb-4 p-3 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
         <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Local CI/CD</h3>
         <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">Complete workflow execution without GitHub Actions costs.</p>
       </div>
     </div>
 
     <div class="glass-card hover-lift w-full">
-      <div class="p-6 md:p-8">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Zero-Configuration Setup</h3>
+      <div class="p-6 md:p-8 flex flex-col items-center text-center h-full">
+        <div class="mb-4 p-3 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words">Zero Config</h3>
         <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed break-words whitespace-normal">One-command installation for fresh Ubuntu systems.</p>
       </div>
     </div>

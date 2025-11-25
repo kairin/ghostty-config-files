@@ -553,8 +553,9 @@ main() {
     # Execute tasks sequentially (Parallel execution disabled for stability)
     log "INFO" "Starting installation (${total_tasks} tasks)..."
 
-    # Sort group IDs
-    for group_id in $(printf '%s\n' "${!parallel_groups[@]}" | sort -n); do
+    # Sort group IDs (use sort -g to handle negative keys like -1)
+    mapfile -t sorted_groups < <(printf '%s\n' "${!parallel_groups[@]}" | sort -g)
+    for group_id in "${sorted_groups[@]}"; do
         local group_tasks=(${parallel_groups[$group_id]})
         
         # Execute all tasks in this group sequentially
