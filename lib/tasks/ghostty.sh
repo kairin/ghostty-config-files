@@ -1,24 +1,6 @@
 #!/usr/bin/env bash
-#
 # lib/tasks/ghostty.sh - Ghostty terminal installation from source
-#
-# CONTEXT7 STATUS: API authentication failed (invalid key)
-# FALLBACK STRATEGY: Use constitutional compliance requirements and documented best practices
-# - Build from source with Zig 0.14.0+ (constitutional requirement)
-# - XDG-compliant installation location
-# - 2025 performance optimizations (CGroup single-instance, shell integration)
-#
-# Constitutional Compliance:
-# - Principle V: Modular Architecture
-# - Ghostty from official .deb package (simplified installation)
-# - Configuration in $HOME/.config/ghostty (XDG compliant)
-#
-# User Stories: US1 (Fresh Installation), US3 (Re-run Safety)
-#
-# Requirements:
-# - FR-053: Idempotency (skip if already installed)
-# - FR-071: Query Context7 (fallback if unavailable)
-#
+# Constitutional Compliance: Principle V - Modular Architecture
 
 set -euo pipefail
 
