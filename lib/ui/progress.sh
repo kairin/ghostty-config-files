@@ -218,7 +218,8 @@ show_header() {
     # PLAIN TEXT ONLY - no gum, no escape sequences
     # User requirement: copy/paste from terminal must be readable
     local width=70
-    local border_line=$(printf '=%.0s' $(seq 1 $width))
+    local border_line
+    border_line=$(printf '=%.0s' $(seq 1 $width))
 
     echo ""
     echo "$border_line"
@@ -264,7 +265,8 @@ show_footer() {
 
     # PLAIN TEXT ONLY - no gum, no escape sequences
     local width=70
-    local border_line=$(printf '=%.0s' $(seq 1 $width))
+    local border_line
+    border_line=$(printf '=%.0s' $(seq 1 $width))
 
     echo "$border_line"
     printf "  %-${width}s\n" "Installation Progress"
@@ -334,7 +336,8 @@ show_summary() {
 
     # PLAIN TEXT ONLY - no gum, no escape sequences
     local width=70
-    local border_line=$(printf '=%.0s' $(seq 1 $width))
+    local border_line
+    border_line=$(printf '=%.0s' $(seq 1 $width))
 
     echo "$border_line"
     for line in "${summary_lines[@]}"; do

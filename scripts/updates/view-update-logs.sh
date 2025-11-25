@@ -35,11 +35,12 @@ show_full_log() {
 
 show_errors() {
     if [[ -d "$LOG_DIR" ]]; then
-        local error_files=$(find "$LOG_DIR" -name "errors-*.log" -type f 2>/dev/null | sort -r)
+        local error_files
+        error_files=$(find "$LOG_DIR" -name "errors-*.log" -type f 2>/dev/null | sort -r)
         if [[ -n "$error_files" ]]; then
             echo "=== Recent Error Logs ==="
             echo ""
-            head -100 $(echo "$error_files" | head -1)
+            head -100 "$(echo "$error_files" | head -1)"
         else
             echo "✅ No error logs found!"
         fi

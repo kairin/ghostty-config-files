@@ -113,7 +113,8 @@ echo -e "${COLOR_INFO}Test 3: Performance (100 iterations)...${COLOR_RESET}"
 ((total_tests++))
 
 time_start=$(date +%s%N)
-for i in {1..100}; do
+# shellcheck disable=SC2167 # Intentional: testing performance, not using loop variable
+for _ in {1..100}; do
     source lib/core/logging.sh
     source lib/core/utils.sh
     source lib/core/state.sh

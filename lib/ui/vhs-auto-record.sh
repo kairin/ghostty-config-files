@@ -237,7 +237,8 @@ maybe_start_vhs_recording() {
 
     # Generate output filenames
     local repo_root="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-    local timestamp=$(date +%Y%m%d-%H%M%S)
+    local timestamp
+    timestamp=$(date +%Y%m%d-%H%M%S)
     local output_dir="${repo_root}/logs/video"
     local log_file="${output_dir}/${timestamp}.log"
     local tape_file="${output_dir}/${timestamp}.tape"
@@ -259,10 +260,12 @@ maybe_start_vhs_recording() {
 
         # Prepare output files
         local timing_file="${output_dir}/${timestamp}.timing"
-        
+
         # Capture current terminal dimensions
-        local term_cols=$(tput cols 2>/dev/null || echo "120")
-        local term_lines=$(tput lines 2>/dev/null || echo "40")
+        local term_cols
+        term_cols=$(tput cols 2>/dev/null || echo "120")
+        local term_lines
+        term_lines=$(tput lines 2>/dev/null || echo "40")
         
         echo ""
         echo "═══════════════════════════════════════════════════════════"
@@ -322,7 +325,8 @@ maybe_start_vhs_recording() {
             
             # Speed up replay to reduce generation time
             local replay_speed=2
-            local sleep_duration=$(echo "$total_duration / $replay_speed + 5" | bc 2>/dev/null || echo "300")
+            local sleep_duration
+            sleep_duration=$(echo "$total_duration / $replay_speed + 5" | bc 2>/dev/null || echo "300")
 
             # Create a tape file that replays the script
             cat > "$tape_file" <<EOF

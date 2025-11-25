@@ -8,7 +8,8 @@ main() {
     local all_checks_passed=true
     
     if verify_fnm_binary; then
-        local fnm_version=$(fnm --version 2>/dev/null || echo "unknown")
+        local fnm_version
+        fnm_version=$(fnm --version 2>/dev/null || echo "unknown")
         log "SUCCESS" "✓ fnm installed: $fnm_version"
     else
         log "ERROR" "✗ fnm binary not found"
@@ -19,8 +20,10 @@ main() {
     eval "$(fnm env --use-on-cd)" 2>/dev/null || true
     
     if verify_nodejs_installed; then
-        local node_version=$(node --version 2>/dev/null)
-        local npm_version=$(npm --version 2>/dev/null || echo "unknown")
+        local node_version
+        node_version=$(node --version 2>/dev/null)
+        local npm_version
+        npm_version=$(npm --version 2>/dev/null || echo "unknown")
         log "SUCCESS" "✓ Node.js installed: $node_version"
         log "SUCCESS" "✓ npm installed: v$npm_version"
 

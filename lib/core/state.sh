@@ -265,7 +265,7 @@ mark_task_completed() {
     STATE_COMPLETED_TASKS["$task_id"]=1
 
     # Remove from failed tasks if present
-    unset STATE_FAILED_TASKS["$task_id"]
+    unset "STATE_FAILED_TASKS[$task_id]"
 
     set -u
 
@@ -299,7 +299,7 @@ mark_task_failed() {
     STATE_FAILED_TASKS["$task_id"]="$error_message"
 
     # Remove from completed tasks if present
-    unset STATE_COMPLETED_TASKS["$task_id"]
+    unset "STATE_COMPLETED_TASKS[$task_id]"
 
     set -u
 

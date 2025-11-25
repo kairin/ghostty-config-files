@@ -45,7 +45,8 @@ find_repo_root() {
     echo "$(dirname "$script_dir")"
 }
 
-export REPO_ROOT="$(find_repo_root)"
+REPO_ROOT="$(find_repo_root)"
+export REPO_ROOT
 export LIB_DIR="${REPO_ROOT}/lib"
 export SCRIPTS_DIR="${REPO_ROOT}/scripts"
 export CONFIG_DIR="${REPO_ROOT}/configs"
@@ -107,8 +108,8 @@ if ! command -v gum >/dev/null 2>&1; then
             # Fallback: binary download
             log "WARNING" "apt failed, attempting binary download..."
 
-            local temp_dir
             temp_dir=$(mktemp -d)
+            # shellcheck disable=SC2064
             trap "rm -rf '$temp_dir'" EXIT
 
             if curl -fsSL "https://github.com/charmbracelet/gum/releases/latest/download/gum_Linux_x86_64.tar.gz" -o "$temp_dir/gum.tar.gz" && \

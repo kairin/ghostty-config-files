@@ -75,6 +75,7 @@ check_memory_warning() {
 #   CPU_LOAD_1MIN - 1 minute load average
 #   CPU_LOAD_5MIN - 5 minute load average
 #   CPU_LOAD_15MIN - 15 minute load average
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 check_cpu_load() {
     local threshold="${1:-$LOAD_WARN_THRESHOLD}"
 
@@ -131,6 +132,7 @@ get_cpu_info() {
 # ============================================================================
 
 # Function: check_swap_usage
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 check_swap_usage() {
     local warn_percent="${1:-$SWAP_WARN_PERCENT}"
 

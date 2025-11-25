@@ -182,7 +182,7 @@ wait_for_task_slot() {
                 fi
 
                 # Remove from running tasks
-                unset RUNNING_TASKS["$task_id"]
+                unset "RUNNING_TASKS[$task_id]"
             fi
         done
 

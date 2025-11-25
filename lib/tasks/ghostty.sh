@@ -90,7 +90,7 @@ upgrade_zig() {
         log "INFO" "  Backing up old Zig installation..."
         if [ -d "zig" ] && [ ! -L "zig" ]; then
             # It's a directory (old installation), move it
-            mv zig zig-old-backup-$(date +%Y%m%d-%H%M%S)
+            mv zig "zig-old-backup-$(date +%Y%m%d-%H%M%S)"
         elif [ -L "zig" ]; then
             # It's a symlink, just remove it
             rm -f zig

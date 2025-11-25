@@ -55,7 +55,9 @@ ensure_gum() {
         log "INFO" "Installing gum via go install..."
         if go install github.com/charmbracelet/gum@latest; then
             # Add go bin to path if not there
-            export PATH=$PATH:$(go env GOPATH)/bin
+            local gopath
+            gopath=$(go env GOPATH)
+            export PATH=$PATH:$gopath/bin
             log "SUCCESS" "gum installed via go"
             return 0
         fi

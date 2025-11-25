@@ -431,6 +431,7 @@ keep_sudo_alive() {
     local existing_trap
     existing_trap=$(trap -p EXIT 2>/dev/null | sed "s/trap -- '//" | sed "s/' EXIT//" || true)
     if [ -n "$existing_trap" ]; then
+        # shellcheck disable=SC2064
         trap "kill \"\$SUDO_KEEP_ALIVE_PID\" 2>/dev/null || true; $existing_trap" EXIT
     else
         trap 'kill "$SUDO_KEEP_ALIVE_PID" 2>/dev/null || true' EXIT

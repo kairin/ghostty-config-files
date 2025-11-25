@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 if [ -z "${REPO_ROOT:-}" ]; then
-    source "$(dirname "${BASH_SOURCE[0]}")" /../../init.sh"
+    source "$(dirname "${BASH_SOURCE[0]}")/../../init.sh"
 fi
 
 export NAUTILUS_SCRIPTS_DIR="${HOME}/.local/share/nautilus/scripts"

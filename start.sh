@@ -556,7 +556,8 @@ main() {
     # Sort group IDs (use sort -g to handle negative keys like -1)
     mapfile -t sorted_groups < <(printf '%s\n' "${!parallel_groups[@]}" | sort -g)
     for group_id in "${sorted_groups[@]}"; do
-        local group_tasks=(${parallel_groups[$group_id]})
+        local group_tasks
+        read -ra group_tasks <<< "${parallel_groups[$group_id]}"
         
         # Execute all tasks in this group sequentially
         for task_id in "${group_tasks[@]}"; do

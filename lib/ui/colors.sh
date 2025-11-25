@@ -170,8 +170,10 @@ show_progress_bar_colored() {
     local filled=$((bar_width * current / total))
     local empty=$((bar_width - filled))
 
-    local filled_bar=$(printf '█%.0s' $(seq 1 $filled))
-    local empty_bar=$(printf '░%.0s' $(seq 1 $empty))
+    local filled_bar
+    filled_bar=$(printf '█%.0s' $(seq 1 $filled))
+    local empty_bar
+    empty_bar=$(printf '░%.0s' $(seq 1 $empty))
 
     gum style --foreground="$bar_color" "${filled_bar}${empty_bar} ${percent}% ${label}"
 }

@@ -88,7 +88,8 @@ check_software_installation() {
 
     # Ghostty
     if command -v ghostty >/dev/null 2>&1; then
-        local ghostty_version=$(ghostty --version 2>&1 | grep "version:" | awk '{print $3}' || echo "unknown")
+        local ghostty_version
+        ghostty_version=$(ghostty --version 2>&1 | grep "version:" | awk '{print $3}' || echo "unknown")
         log_pass "Ghostty installed - version: $ghostty_version"
     else
         log_fail "Ghostty not found in PATH"
@@ -110,8 +111,10 @@ check_software_installation() {
 
     # Node.js
     if command -v node >/dev/null 2>&1; then
-        local node_version=$(node --version)
-        local major_version=$(echo "$node_version" | sed 's/v\([0-9]*\).*/\1/')
+        local node_version
+        node_version=$(node --version)
+        local major_version
+        major_version=$(echo "$node_version" | sed 's/v\([0-9]*\).*/\1/')
         if [[ "$major_version" -ge 25 ]]; then
             log_pass "Node.js v25+ installed ($node_version)"
         else

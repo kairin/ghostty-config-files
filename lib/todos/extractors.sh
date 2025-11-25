@@ -245,6 +245,7 @@ discover_spec_directories() {
     local base_dir="${1:-.}"
 
     # Find directories containing spec.md or tasks.md
+    # shellcheck disable=SC2038 # Using -I {} placeholder safely handles spaces
     find "$base_dir" -type d -name "spec-kit" -prune -o \
          -type f \( -name "tasks.md" -o -name "spec.md" \) -print 2>/dev/null | \
          xargs -I {} dirname {} | sort -u

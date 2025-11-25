@@ -57,6 +57,7 @@ check_internet_connectivity() {
 #   $1 - Hostname to resolve (default: github.com)
 # Returns:
 #   0 = DNS working, 1 = DNS issues
+# shellcheck disable=SC2120 # Function designed for external calls with optional args
 check_dns_resolution() {
     local hostname="${1:-$DNS_TEST_HOST}"
 

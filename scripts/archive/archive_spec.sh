@@ -75,8 +75,10 @@ find_spec_dir() {
 
 generate_archive() {
     local spec_dir="$1"
-    local spec_id=$(get_spec_id "$spec_dir")
-    local spec_title=$(get_spec_title "$spec_dir")
+    local spec_id
+    spec_id=$(get_spec_id "$spec_dir")
+    local spec_title
+    spec_title=$(get_spec_title "$spec_dir")
     local tasks_file="$spec_dir/tasks.md"
     local spec_file="$spec_dir/spec.md"
     local archive_file="$OUTPUT_DIR/${spec_id}.yaml"
@@ -88,9 +90,12 @@ generate_archive() {
     fi
 
     # Validate completeness
-    local total_tasks=$(count_total_tasks "$tasks_file")
-    local completed_tasks=$(count_completed_tasks "$tasks_file")
-    local completion_pct=$(calculate_completion_percentage "$completed_tasks" "$total_tasks")
+    local total_tasks
+    total_tasks=$(count_total_tasks "$tasks_file")
+    local completed_tasks
+    completed_tasks=$(count_completed_tasks "$tasks_file")
+    local completion_pct
+    completion_pct=$(calculate_completion_percentage "$completed_tasks" "$total_tasks")
 
     print_info "$EMOJI_SCAN" "Validating $spec_id..."
     echo "  Completion: $completed_tasks/$total_tasks (${completion_pct}%)"
@@ -100,7 +105,8 @@ generate_archive() {
         return "$EXIT_VALIDATION_ERROR"
     fi
 
-    local file_count=$(find "$spec_dir" -type f | wc -l)
+    local file_count
+    file_count=$(find "$spec_dir" -type f | wc -l)
     print_success "  All files validated ($file_count files)"
 
     # Stop if validate-only
@@ -120,11 +126,16 @@ generate_archive() {
     [ "$completion_pct" -ne 100 ] && status="in-progress"
 
     local summary=""
-    [ -f "$spec_file" ] && summary=$(grep -A10 '^## Overview' "$spec_file" 2>/dev/null | tail -n +2 | head -n 5 | sed 's/^/  /' || echo "  No summary")
+    if [ -f "$spec_file" ]; then
+        summary=$(grep -A10 '^## Overview' "$spec_file" 2>/dev/null | tail -n +2 | head -n 5 | sed 's/^/  /' || echo "  No summary")
+    fi
 
-    local functional_reqs=$(extract_functional_requirements "$spec_file" 2>/dev/null || echo '    - "No requirements documented"')
-    local key_completed=$(extract_key_completed_tasks "$tasks_file" 10)
-    local key_remaining=$(extract_remaining_tasks "$tasks_file" 10)
+    local functional_reqs
+    functional_reqs=$(extract_functional_requirements "$spec_file" 2>/dev/null || echo '    - "No requirements documented"')
+    local key_completed
+    key_completed=$(extract_key_completed_tasks "$tasks_file" 10)
+    local key_remaining
+    key_remaining=$(extract_remaining_tasks "$tasks_file" 10)
 
     # Use template from yaml-generator module
     local yaml_content
@@ -150,7 +161,8 @@ generate_archive() {
         return "$EXIT_ERROR"
     fi
 
-    local archive_lines=$(wc -l < "$archive_file")
+    local archive_lines
+    archive_lines=$(wc -l < "$archive_file")
     print_success "  Generated YAML archive ($archive_lines lines)"
 
     # Move original if requested
@@ -169,11 +181,15 @@ list_specifications() {
 
     while IFS= read -r spec_dir; do
         is_valid_specification "$spec_dir" || continue
-        local spec_id=$(get_spec_id "$spec_dir")
+        local spec_id
+        spec_id=$(get_spec_id "$spec_dir")
         local tasks_file="$spec_dir/tasks.md"
-        local total=$(count_total_tasks "$tasks_file")
-        local completed=$(count_completed_tasks "$tasks_file")
-        local pct=$(calculate_completion_percentage "$completed" "$total")
+        local total
+        total=$(count_total_tasks "$tasks_file")
+        local completed
+        completed=$(count_completed_tasks "$tasks_file")
+        local pct
+        pct=$(calculate_completion_percentage "$completed" "$total")
 
         if [ "$pct" -eq 100 ]; then
             echo "  + $spec_id (100% complete)"
@@ -222,7 +238,8 @@ main() {
         while IFS= read -r spec_dir; do
             is_valid_specification "$spec_dir" || continue
             local tasks_file="$spec_dir/tasks.md"
-            local pct=$(calculate_completion_percentage "$(count_completed_tasks "$tasks_file")" "$(count_total_tasks "$tasks_file")")
+            local pct
+            pct=$(calculate_completion_percentage "$(count_completed_tasks "$tasks_file")" "$(count_total_tasks "$tasks_file")")
             [ "$pct" -eq 100 ] && specs_to_archive+=("$spec_dir")
         done < <(discover_specifications)
     else
