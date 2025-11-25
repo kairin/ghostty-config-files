@@ -1,12 +1,31 @@
 #!/usr/bin/env bash
-# lib/updates/ghostty-specific.sh - Ghostty-specific update operations
-# Extracted from scripts/updates/update_ghostty.sh for modularity
+# lib/updates/ghostty-specific.sh - Ghostty-specific update operations (Orchestrator)
+# Sources build and install modules for complete Ghostty update workflow
+#
+# This file acts as an orchestrator, sourcing modular components:
+# - lib/updates/ghostty/build.sh   - Build operations
+# - lib/updates/ghostty/install.sh - Installation operations
 
 set -euo pipefail
 
 # Source guard - prevent redundant loading
 [[ -n "${_GHOSTTY_SPECIFIC_SOURCED:-}" ]] && return 0
 readonly _GHOSTTY_SPECIFIC_SOURCED=1
+
+# Determine script directory for relative sourcing
+SCRIPT_DIR="${BASH_SOURCE[0]:-$0}"
+SCRIPT_DIR="${SCRIPT_DIR%/*}"
+
+# Source modular components
+# shellcheck source=lib/updates/ghostty/build.sh
+if [[ -f "${SCRIPT_DIR}/ghostty/build.sh" ]]; then
+    source "${SCRIPT_DIR}/ghostty/build.sh"
+fi
+
+# shellcheck source=lib/updates/ghostty/install.sh
+if [[ -f "${SCRIPT_DIR}/ghostty/install.sh" ]]; then
+    source "${SCRIPT_DIR}/ghostty/install.sh"
+fi
 
 #######################################
 # Get Ghostty version from installed binary
@@ -65,286 +84,6 @@ get_process_details() {
 }
 
 #######################################
-# Backup Ghostty configuration files
-# Arguments:
-#   $1 - Source directory
-#   $2 - Backup directory (optional, defaults to /tmp/ghostty-config-backup-TIMESTAMP)
-# Returns:
-#   0 on success, 1 on failure
-#######################################
-backup_ghostty_config() {
-    local source_dir="${1:-.}"
-    local backup_dir="${2:-/tmp/ghostty-config-backup-$(date +%s)}"
-
-    mkdir -p "$backup_dir"
-    echo "-> Backing up current config to $backup_dir"
-
-    cp "$source_dir/config" "$backup_dir/" 2>/dev/null || true
-    cp "$source_dir/theme.conf" "$backup_dir/" 2>/dev/null || true
-
-    if [[ ! -f "$backup_dir/config" ]] && [[ ! -f "$backup_dir/theme.conf" ]]; then
-        echo "Warning: Some config files may not exist"
-        return 1
-    fi
-
-    echo "$backup_dir"
-    return 0
-}
-
-#######################################
-# Restore Ghostty configuration from backup
-# Arguments:
-#   $1 - Backup directory
-#   $2 - Target directory (optional, defaults to current directory)
-# Returns:
-#   0 on success, 1 on failure
-#######################################
-restore_ghostty_config() {
-    local backup_dir="$1"
-    local target_dir="${2:-.}"
-
-    if [[ ! -d "$backup_dir" ]]; then
-        echo "ERROR: Backup directory does not exist: $backup_dir"
-        return 1
-    fi
-
-    cp "$backup_dir/config" "$target_dir/config" 2>/dev/null && echo "-> Restored config file"
-    cp "$backup_dir/theme.conf" "$target_dir/theme.conf" 2>/dev/null && echo "-> Restored theme.conf file"
-
-    return 0
-}
-
-#######################################
-# Test Ghostty configuration for errors
-# Arguments:
-#   $1 - Config test error log file (optional)
-# Returns:
-#   0 if config is valid, 1 if errors found
-#######################################
-test_ghostty_config() {
-    local error_log="${1:-config_test_errors.log}"
-
-    echo "-> Testing Ghostty configuration for errors..."
-    if ghostty +show-config >/dev/null 2>"$error_log"; then
-        echo "Configuration test passed"
-        rm -f "$error_log"
-        return 0
-    else
-        echo "Configuration test failed"
-        cat "$error_log"
-        return 1
-    fi
-}
-
-#######################################
-# Attempt automatic configuration cleanup
-# Arguments:
-#   $1 - Backup directory for restoration on failure
-# Returns:
-#   0 on success, 1 on failure
-#######################################
-attempt_config_fix() {
-    local backup_dir="${1:-}"
-
-    if [[ -x "scripts/fix_config.sh" ]]; then
-        echo "-> Running automatic configuration cleanup..."
-        if scripts/fix_config.sh; then
-            echo "-> Automatic cleanup completed, re-testing configuration..."
-            if ghostty +show-config >/dev/null 2>&1; then
-                echo "Configuration fixed automatically"
-                rm -f config_test_errors.log
-                return 0
-            fi
-        fi
-    fi
-
-    echo "Automatic cleanup failed or not available"
-    if [[ -n "$backup_dir" ]] && [[ -d "$backup_dir" ]]; then
-        echo "-> Restoring backup..."
-        restore_ghostty_config "$backup_dir"
-    fi
-
-    return 1
-}
-
-#######################################
-# Verify critical build tools are installed
-# Arguments:
-#   None
-# Outputs:
-#   Status messages for each tool
-# Returns:
-#   0 if all tools present, 1 if any missing
-#######################################
-verify_critical_build_tools() {
-    local missing_critical=()
-    local critical_tools=("zig" "pkg-config" "msgfmt" "gcc" "g++")
-
-    echo ""
-    echo "=================================="
-    echo "     Pre-build System Verification"
-    echo "=================================="
-    echo "Final system check before building Ghostty..."
-
-    for tool in "${critical_tools[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then
-            missing_critical+=("$tool")
-        fi
-    done
-
-    if [[ ${#missing_critical[@]} -ne 0 ]]; then
-        echo "Critical build tools are missing: ${missing_critical[*]}"
-        return 1
-    fi
-
-    echo "All critical build tools are available"
-    return 0
-}
-
-#######################################
-# Print manual installation instructions
-# Outputs:
-#   Instructions for installing missing dependencies
-#######################################
-print_dependency_instructions() {
-    cat <<'EOF'
-
-MANUAL INSTALLATION REQUIRED:
-Please run the following commands manually to install missing dependencies:
-
-# Update package lists
-sudo apt update
-
-# Install essential build tools and dependencies
-sudo apt install -y \
-  build-essential \
-  pkg-config \
-  gettext \
-  libxml2-utils \
-  pandoc \
-  libgtk-4-dev \
-  libadwaita-1-dev \
-  blueprint-compiler \
-  libgtk4-layer-shell-dev \
-  libfreetype-dev \
-  libharfbuzz-dev \
-  libfontconfig-dev \
-  libpng-dev \
-  libbz2-dev \
-  zlib1g-dev \
-  libglib2.0-dev \
-  libgio-2.0-dev \
-  libpango1.0-dev \
-  libgdk-pixbuf-2.0-dev \
-  libcairo2-dev \
-  libvulkan-dev \
-  libgraphene-1.0-dev \
-  libx11-dev \
-  libwayland-dev \
-  libonig-dev \
-  libxml2-dev
-
-# Verify tools are available
-pkg-config --modversion gtk4
-pkg-config --modversion libadwaita-1
-
-After installing dependencies, re-run this script.
-EOF
-}
-
-#######################################
-# Verify GTK4 and libadwaita via pkg-config
-# Returns:
-#   0 if both are available, 1 otherwise
-#######################################
-verify_gtk4_libadwaita() {
-    if pkg-config --exists gtk4 && pkg-config --exists libadwaita-1; then
-        local gtk4_version adwaita_version
-        gtk4_version=$(pkg-config --modversion gtk4 2>/dev/null || echo "unknown")
-        adwaita_version=$(pkg-config --modversion libadwaita-1 2>/dev/null || echo "unknown")
-        echo "GTK4 version: $gtk4_version"
-        echo "libadwaita version: $adwaita_version"
-        return 0
-    fi
-
-    echo "GTK4 or libadwaita not properly installed or configured"
-    echo "This may cause build failures. Please ensure the development packages are installed."
-    return 1
-}
-
-#######################################
-# Kill running Ghostty processes holding the binary
-# Returns:
-#   0 always (best effort)
-#######################################
-kill_ghostty_processes() {
-    echo ""
-    echo "-> Checking for running Ghostty processes holding /usr/bin/ghostty..."
-
-    local ghostty_pids
-    ghostty_pids=$(sudo lsof -t /usr/bin/ghostty 2>/dev/null || true)
-
-    if [[ -n "$ghostty_pids" ]]; then
-        local pid_list
-        pid_list=$(echo "$ghostty_pids" | tr '\n' ' ')
-        echo ""
-        echo "-> Found Ghostty process(es) (PIDs: $pid_list) holding /usr/bin/ghostty. Terminating..."
-        for pid in $ghostty_pids; do
-            sudo kill -9 "$pid" 2>/dev/null || true
-        done
-        sleep 1
-    else
-        echo ""
-        echo "-> No Ghostty process found holding /usr/bin/ghostty."
-    fi
-}
-
-#######################################
-# Build Ghostty from source
-# Arguments:
-#   $1 - Source directory (optional, defaults to ~/Apps/ghostty)
-# Returns:
-#   0 on success, 1 on failure
-#######################################
-build_ghostty() {
-    local source_dir="${1:-$HOME/Apps/ghostty}"
-
-    echo ""
-    echo "-> Building Ghostty..."
-
-    cd "$source_dir" || {
-        echo "Error: Ghostty application directory not found at $source_dir"
-        return 1
-    }
-
-    if ! DESTDIR=/tmp/ghostty zig build --prefix /usr -Doptimize=ReleaseFast -Dcpu=baseline; then
-        echo "Error: Ghostty build failed."
-        return 1
-    fi
-
-    echo "Ghostty build completed successfully"
-    return 0
-}
-
-#######################################
-# Install Ghostty from build output
-# Returns:
-#   0 on success, 1 on failure
-#######################################
-install_ghostty() {
-    echo ""
-    echo "-> Installing Ghostty..."
-
-    if ! sudo cp -r /tmp/ghostty/usr/* /usr/; then
-        echo "Error: Ghostty installation failed."
-        return 1
-    fi
-
-    echo "Ghostty installation completed successfully"
-    return 0
-}
-
-#######################################
 # Print Ghostty update summary
 # Arguments:
 #   $1 - Old version
@@ -386,10 +125,18 @@ print_update_summary() {
     echo "======================================="
 }
 
-# Export functions for use by main script
+# Export orchestrator functions
 export -f get_ghostty_version get_step_status get_process_details
-export -f backup_ghostty_config restore_ghostty_config
-export -f test_ghostty_config attempt_config_fix
-export -f verify_critical_build_tools print_dependency_instructions
-export -f verify_gtk4_libadwaita kill_ghostty_processes
-export -f build_ghostty install_ghostty print_update_summary
+export -f print_update_summary
+
+# Re-export functions from sourced modules for backward compatibility
+# Build functions (from ghostty/build.sh)
+export -f verify_critical_build_tools print_dependency_instructions 2>/dev/null || true
+export -f verify_gtk4_libadwaita build_ghostty 2>/dev/null || true
+export -f verify_build_output clean_build_artifacts 2>/dev/null || true
+
+# Install functions (from ghostty/install.sh)
+export -f kill_ghostty_processes install_ghostty 2>/dev/null || true
+export -f verify_ghostty_installation update_desktop_database 2>/dev/null || true
+export -f backup_ghostty_config restore_ghostty_config 2>/dev/null || true
+export -f test_ghostty_config attempt_config_fix 2>/dev/null || true
