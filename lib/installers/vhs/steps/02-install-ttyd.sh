@@ -12,7 +12,6 @@ source "$(dirname "${BASH_SOURCE[0]}")/../../../init.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
 # Constants
-readonly TTYD_BINARY_URL="https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.x86_64"
 readonly TTYD_INSTALL_PATH="/usr/local/bin/ttyd"
 
 # Temp file tracking
@@ -36,9 +35,22 @@ main() {
     register_task "$task_id" "Installing ttyd"
     start_task "$task_id"
 
-    # Check if already installed
-    if command_exists "ttyd"; then
-        log "INFO" "ttyd already installed, checking version..."
+    # Check for source installation and remove it
+    if [ -f "$TTYD_INSTALL_PATH" ]; then
+        log "INFO" "Found source-installed ttyd at $TTYD_INSTALL_PATH"
+        log "INFO" "Removing source installation to replace with APT version..."
+        if sudo rm -f "$TTYD_INSTALL_PATH"; then
+            log "SUCCESS" "Source-installed ttyd removed"
+        else
+            log "ERROR" "Failed to remove source-installed ttyd"
+            fail_task "$task_id"
+            exit 1
+        fi
+    fi
+
+    # Check if already installed via APT
+    if command_exists "ttyd" && [ "$(command -v ttyd)" = "/usr/bin/ttyd" ]; then
+        log "INFO" "ttyd already installed via APT, checking version..."
         local version
         if version=$(ttyd --version 2>&1 | grep -oP '\d+\.\d+\.\d+'); then
             log "SUCCESS" "  ✓ ttyd $version installed"
@@ -47,36 +59,26 @@ main() {
         fi
     fi
 
-    log "INFO" "Installing ttyd from GitHub releases..."
-    echo "  ⠋ Downloading latest ttyd binary..."
-
-    TEMP_FILE=$(mktemp)
-
-    if ! curl -fL --progress-bar "$TTYD_BINARY_URL" -o "$TEMP_FILE" 2>&1; then
-        log "ERROR" "Failed to download ttyd binary"
-        complete_task "$task_id" 1
-        exit 1
-    fi
-
-    echo "  ⠋ Installing binary to /usr/local/bin..."
-    if ! sudo install -m 755 "$TEMP_FILE" "$TTYD_INSTALL_PATH"; then
-        log "ERROR" "Failed to install ttyd binary"
-        complete_task "$task_id" 1
-        exit 1
-    fi
-
-    # Verify installation
-    if command_exists "ttyd"; then
-        local version
-        if version=$(ttyd --version 2>&1 | grep -oP '\d+\.\d+\.\d+'); then
-            log "SUCCESS" "✓ Installed ttyd $version"
+    log "INFO" "Installing ttyd via APT..."
+    
+    if sudo apt install -y ttyd; then
+        # Verify installation
+        if command_exists "ttyd"; then
+            local version
+            if version=$(ttyd --version 2>&1 | grep -oP '\d+\.\d+\.\d+'); then
+                log "SUCCESS" "✓ Installed ttyd $version"
+            else
+                log "SUCCESS" "✓ Installed ttyd (version unknown)"
+            fi
+            complete_task "$task_id" 0
+            exit 0
         else
-            log "SUCCESS" "✓ Installed ttyd (version unknown)"
+            log "ERROR" "ttyd installation failed verification"
+            complete_task "$task_id" 1
+            exit 1
         fi
-        complete_task "$task_id" 0
-        exit 0
     else
-        log "ERROR" "ttyd installation failed verification"
+        log "ERROR" "Failed to install ttyd via APT"
         complete_task "$task_id" 1
         exit 1
     fi

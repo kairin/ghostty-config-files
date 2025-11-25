@@ -42,8 +42,10 @@ last-updated: 2025-11-21
 ├── configs/                    # Ghostty config, themes, dircolors, workspace
 ├── scripts/                    # Utility scripts (manage.sh, daily-updates.sh v2.1, health checks)
 ├── lib/                        # Modular task libraries with uninstall support
-│   ├── installers/ghostty/     # Ghostty installation modules + uninstall.sh
-│   ├── installers/zig/         # Zig compiler modules + uninstall.sh
+│   ├── installers/ghostty/     # Ghostty .deb installation modules + uninstall.sh
+│   ├── installers/gum,glow,vhs/# Charm TUI ecosystem installers
+│   ├── ui/vhs-auto-record.sh   # VHS auto-recording library
+│   ├── tasks/system_audit.sh   # Pre-installation system audit
 │   └── installers/*/           # Other modular installers
 │
 ├── documentation/              # SINGLE documentation folder (consolidated)
@@ -75,7 +77,8 @@ last-updated: 2025-11-21
 ## Technology Stack (NON-NEGOTIABLE)
 
 ### Terminal Environment
-- **Ghostty**: Latest via Snap package with 2025 optimizations
+- **Ghostty v1.2.3+**: Via official .deb package (mkasberg/ghostty-ubuntu) with 2025 optimizations
+- **Charm TUI Ecosystem**: gum (tables/spinners), glow (markdown), VHS (recording)
 - **ZSH**: Oh My ZSH with productivity plugins
 - **Context Menu**: Nautilus integration for "Open in Ghostty"
 

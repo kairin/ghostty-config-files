@@ -14,7 +14,7 @@ fi
 export FEH_REPO="https://github.com/derf/feh.git"
 export FEH_BUILD_DIR="/tmp/feh-build"
 export FEH_INSTALL_PREFIX="/usr/local"
-export FEH_MIN_VERSION="3.11.0"
+export FEH_MIN_VERSION="3.10.0"
 
 # Helper function to get feh version
 get_feh_version() {

@@ -146,25 +146,52 @@ LAUNCHER_EOF
     log "SUCCESS" "Smart launcher created: /usr/local/bin/feh-launcher"
 
     # Update desktop file to use smart launcher and make it visible
-    if [ -f "/usr/local/share/applications/feh.desktop" ]; then
-        log "INFO" "Configuring desktop entry for smart launcher..."
+    local desktop_file="$HOME/.local/share/applications/feh.desktop"
+    
+    # Ensure directory exists
+    mkdir -p "$(dirname "$desktop_file")"
+
+    # Check for system desktop file (APT or Source)
+    if [ -f "/usr/share/applications/feh.desktop" ]; then
+        log "INFO" "Found system desktop file at /usr/share/applications/feh.desktop"
+        cp "/usr/share/applications/feh.desktop" "$desktop_file"
+    elif [ -f "/usr/local/share/applications/feh.desktop" ]; then
+        log "INFO" "Found system desktop file at /usr/local/share/applications/feh.desktop"
+        cp "/usr/local/share/applications/feh.desktop" "$desktop_file"
+    else
+        log "WARNING" "No system desktop file found. Creating new one..."
+        cat > "$desktop_file" << 'EOF'
+[Desktop Entry]
+Name=Feh
+GenericName=Image Viewer
+Comment=Image viewer and cataloguer
+Exec=feh %F
+Icon=feh
+Terminal=false
+Type=Application
+Categories=Graphics;2DGraphics;Viewer;
+MimeType=image/bmp;image/gif;image/jpeg;image/jpg;image/pjpeg;image/png;image/tiff;image/webp;image/x-bmp;image/x-pcx;image/x-png;image/x-portable-anymap;image/x-portable-bitmap;image/x-portable-graymap;image/x-portable-pixmap;image/x-tga;image/x-xbitmap;
+EOF
+    fi
+
+    # Configure the local desktop file
+    if [ -f "$desktop_file" ]; then
+        log "INFO" "Configuring local desktop entry for smart launcher..."
 
         # Replace Exec line with smart launcher
-        sudo sed -i 's|^Exec=.*|Exec=/usr/local/bin/feh-launcher %F|' /usr/local/share/applications/feh.desktop
+        sed -i 's|^Exec=.*|Exec=/usr/local/bin/feh-launcher %F|' "$desktop_file"
 
         # Enable menu visibility
-        sudo sed -i 's/NoDisplay=true/NoDisplay=false/' /usr/local/share/applications/feh.desktop
+        sed -i 's/NoDisplay=true/NoDisplay=false/' "$desktop_file"
 
         # Update comment to reflect smart behavior
-        sudo sed -i 's/^Comment=.*/Comment=Smart image viewer - automatically finds images in Pictures, Downloads/' /usr/local/share/applications/feh.desktop
+        sed -i 's/^Comment=.*/Comment=Smart image viewer - automatically finds images in Pictures, Downloads/' "$desktop_file"
 
-        log "SUCCESS" "Desktop entry configured with smart launcher"
+        log "SUCCESS" "Desktop entry configured: $desktop_file"
 
         # Update desktop database
         if command -v update-desktop-database >/dev/null 2>&1; then
-            log "INFO" "Updating desktop database..."
-            sudo update-desktop-database /usr/local/share/applications/ 2>/dev/null || true
-            log "SUCCESS" "Desktop database updated"
+            update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
         fi
     fi
 
@@ -202,14 +229,26 @@ EOF
 
     # Verify icon files exist
     local icon_found=0
+    # Check APT locations
+    if [ -f "/usr/share/icons/hicolor/48x48/apps/feh.png" ]; then
+        log "SUCCESS" "PNG icon found (APT): /usr/share/icons/hicolor/48x48/apps/feh.png"
+        icon_found=1
+    fi
+    if [ -f "/usr/share/icons/hicolor/scalable/apps/feh.svg" ]; then
+        log "SUCCESS" "SVG icon found (APT): /usr/share/icons/hicolor/scalable/apps/feh.svg"
+        icon_found=1
+    fi
+    
+    # Check Source locations (fallback)
     if [ -f "/usr/local/share/icons/hicolor/48x48/apps/feh.png" ]; then
-        log "SUCCESS" "PNG icon installed: /usr/local/share/icons/hicolor/48x48/apps/feh.png"
+        log "SUCCESS" "PNG icon found (Source): /usr/local/share/icons/hicolor/48x48/apps/feh.png"
         icon_found=1
     fi
     if [ -f "/usr/local/share/icons/hicolor/scalable/apps/feh.svg" ]; then
-        log "SUCCESS" "SVG icon installed: /usr/local/share/icons/hicolor/scalable/apps/feh.svg"
+        log "SUCCESS" "SVG icon found (Source): /usr/local/share/icons/hicolor/scalable/apps/feh.svg"
         icon_found=1
     fi
+    
     if [ $icon_found -eq 0 ]; then
         log "WARNING" "No feh icons found (non-critical)"
     fi

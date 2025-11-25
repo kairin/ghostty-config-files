@@ -313,6 +313,59 @@ EOF
 }
 
 #
+# Detect Oh My ZSH status with git version check
+#
+# Returns:
+#   Pipe-delimited string: "Name|Version|Path|Method|MinReq|AptAvail|SourceLatest|Status"
+#
+detect_omz_status() {
+    local omz_dir="$HOME/.oh-my-zsh"
+    local current_version="not installed"
+    local latest_version="N/A"
+    local status="INSTALL"
+    local install_path="N/A"
+    local install_method="missing"
+
+    if [ -d "$omz_dir" ]; then
+        install_path="$omz_dir"
+        install_method="source"
+        
+        # Get local commit hash (short)
+        if command_exists "git"; then
+            current_version=$(git -C "$omz_dir" rev-parse --short HEAD 2>/dev/null || echo "unknown")
+            
+            # Get remote latest commit hash
+            local cache_key="github-ohmyzsh-ohmyzsh-master"
+            if ! latest_version=$(get_cached_version "$cache_key"); then
+                # Try to fetch from GitHub API
+                if command_exists "gh"; then
+                    latest_version=$(timeout 5s gh api repos/ohmyzsh/ohmyzsh/commits/master -q .sha 2>/dev/null | cut -c1-7 || echo "N/A")
+                elif command_exists "curl"; then
+                    latest_version=$(timeout 5s curl -s "https://api.github.com/repos/ohmyzsh/ohmyzsh/commits/master" | grep -oP '"sha": "\K[^"]+' | head -1 | cut -c1-7 || echo "N/A")
+                fi
+                set_cached_version "$cache_key" "$latest_version"
+            fi
+            
+            # Compare versions
+            if [ "$current_version" != "unknown" ] && [ "$latest_version" != "N/A" ]; then
+                if [ "$current_version" = "$latest_version" ]; then
+                    status="OK"
+                else
+                    status="UPGRADE"
+                fi
+            elif [ "$current_version" != "unknown" ]; then
+                status="OK" # Assume OK if can't check remote
+            fi
+        else
+            current_version="installed"
+            status="OK"
+        fi
+    fi
+
+    echo "Oh My ZSH|${current_version}|${install_path}|${install_method}|latest|N/A|${latest_version}|${status}"
+}
+
+#
 # Detect Snap package status for audit table
 #
 # Args:
@@ -408,6 +461,9 @@ task_pre_installation_audit() {
     # fastfetch System Info Tool
     audit_data+=("$(detect_app_status_enhanced "fastfetch" "fastfetch" "fastfetch --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+'" "2.0.0" "fastfetch" "fastfetch")")
 
+    # Go Programming Language
+    audit_data+=("$(detect_app_status_enhanced "Go Language" "go" "go version 2>&1 | grep -oP 'go\K[\d.]+'" "1.21.0" "none" "go")")
+
     # Gum TUI Framework (built from source)
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
 
@@ -418,11 +474,7 @@ task_pre_installation_audit() {
     audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | head -n1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
 
     # Oh My ZSH (check directory instead) - enhanced format manually
-    if [ -d "$HOME/.oh-my-zsh" ]; then
-        audit_data+=("Oh My ZSH|installed|$HOME/.oh-my-zsh|source|latest|N/A|N/A|OK")
-    else
-        audit_data+=("Oh My ZSH|not installed|N/A|missing|latest|N/A|N/A|INSTALL")
-    fi
+    audit_data+=("$(detect_omz_status)")
 
     # Python UV
     audit_data+=("$(detect_app_status_enhanced "Python UV" "uv" "uv --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.5.0" "none" "uv")")
@@ -474,46 +526,7 @@ task_pre_installation_audit() {
         audit_data+=("Context Menu|not installed|N/A|missing|latest|N/A|N/A|INSTALL")
     fi
 
-    # Display basic table using gum (if available) or fallback to plain text
-    if command_exists "gum"; then
-        log "INFO" "Current System State:"
-        echo ""
-
-        # Create table header with clearer labels
-        local table_header="App/Tool|Current Version|Path|Install Source|Min Version|Status"
-
-        # Combine header + data (extract first 6 fields only)
-        {
-            echo "$table_header"
-            for data in "${audit_data[@]}"; do
-                IFS='|' read -r name current path method min_req apt_ver src_ver status <<< "$data"
-                echo "${name}|${current}|${path}|${method}|${min_req}|${status}"
-            done
-        } | gum table --separator "|" \
-            --border rounded \
-            --border.foreground "6" \
-            --height 0 \
-            --print
-
-    else
-        # Fallback: plain text table
-        log "INFO" "Current System State (install gum for better formatting):"
-        echo ""
-        printf "%-20s %-20s %-35s %-15s %-18s %-10s\n" \
-            "App/Tool" "Current Version" "Path" "Install Source" "Min Version" "Status"
-        printf "%-20s %-20s %-35s %-15s %-18s %-10s\n" \
-            "--------------------" "--------------------" "-----------------------------------" "---------------" "------------------" "----------"
-
-        for data in "${audit_data[@]}"; do
-            IFS='|' read -r name version path method min_req apt_ver src_ver action <<< "$data"
-            printf "%-20s %-20s %-35s %-15s %-18s %-10s\n" \
-                "$name" "$version" "$path" "$method" "$min_req" "$action"
-        done
-    fi
-
-    echo ""
-
-    # Summary statistics
+    # Summary statistics (displayed first, then grouped table)
     local total_apps="${#audit_data[@]}"
     local installed_count=0
     local upgrade_count=0
@@ -529,7 +542,7 @@ task_pre_installation_audit() {
     done
 
     log "INFO" "════════════════════════════════════════"
-    log "INFO" "Summary"
+    log "INFO" "System Audit Summary"
     log "INFO" "════════════════════════════════════════"
     log "INFO" "Total apps/tools: $total_apps"
     log "SUCCESS" "Already installed (OK): $installed_count"
@@ -537,38 +550,10 @@ task_pre_installation_audit() {
     log "INFO" "Will install: $install_count"
     echo ""
 
-    # Installation method breakdown
-    log "INFO" "Installation Methods Detected:"
-    local method_apt=0 method_source=0 method_binary=0 method_npm=0 method_missing=0
-
-    for data in "${audit_data[@]}"; do
-        IFS='|' read -r _ _ _ method _ _ _ _ <<< "$data"
-        case "$method" in
-            "apt") ((method_apt++)) ;;
-            "source") ((method_source++)) ;;
-            "binary"|"user-binary") ((method_binary++)) ;;
-            "npm") ((method_npm++)) ;;
-            "missing") ((method_missing++)) ;;
-        esac
-    done
-
-    [ "$method_apt" -gt 0 ] && log "INFO" "  - APT packages: $method_apt"
-    [ "$method_source" -gt 0 ] && log "INFO" "  - Built from source: $method_source"
-    [ "$method_binary" -gt 0 ] && log "INFO" "  - Binary installations: $method_binary"
-    [ "$method_npm" -gt 0 ] && log "INFO" "  - NPM global packages: $method_npm"
-    [ "$method_missing" -gt 0 ] && log "INFO" "  - Not installed: $method_missing"
-    echo ""
-
-    log "INFO" "════════════════════════════════════════"
-    echo ""
-
-    # Display tools grouped by installation strategy
+    # Display tools grouped by installation strategy (CONSOLIDATED TABLE - only one shown)
     display_installation_strategy_groups "${audit_data[@]}"
 
-    # Display enhanced version analysis
-    display_version_analysis "${audit_data[@]}"
-
-    # Generate markdown report and save to logs
+    # Generate markdown report and save to logs (detailed analysis saved to file)
     generate_markdown_report "${audit_data[@]}"
 
     # Ask user to confirm before proceeding
@@ -602,6 +587,7 @@ task_pre_installation_audit() {
 #
 declare -gA SOURCE_REPOS=(
     ["fastfetch"]="fastfetch-cli/fastfetch"
+    ["go"]="golang/go"
     ["gum"]="charmbracelet/gum"
     ["glow"]="charmbracelet/glow"
     ["vhs"]="charmbracelet/vhs"
@@ -714,6 +700,30 @@ detect_apt_version() {
 #
 detect_source_version() {
     local app_name="$1"
+
+    # Special handling for Go (fetch from go.dev)
+    if [ "$app_name" = "go" ]; then
+        local cache_key="go-dev-latest"
+        local cached_version
+        if cached_version=$(get_cached_version "$cache_key"); then
+            echo "$cached_version"
+            return 0
+        fi
+        
+        local source_version="N/A"
+        if command -v curl >/dev/null 2>&1; then
+            # Fetch from go.dev JSON API
+            local go_json
+            if go_json=$(timeout 5s curl -s "https://go.dev/dl/?mode=json"); then
+                source_version=$(echo "$go_json" | grep -oP '"version": "\K[^"]+' | head -1 | sed 's/^go//')
+            fi
+        fi
+        
+        set_cached_version "$cache_key" "$source_version"
+        echo "$source_version"
+        return 0
+    fi
+
     local repo="${SOURCE_REPOS[$app_name]:-}"
 
     if [ -z "$repo" ]; then
@@ -955,7 +965,7 @@ generate_recommendation() {
 
     # Generate recommendation
     if [ "$at_latest" = true ]; then
-        if [ "$install_method" = "source" ]; then
+        if [ "$install_method" = "source" ] || [ "$install_method" = "other" ]; then
             echo "✓ OK (built from source)"
         else
             echo "✓ OK (APT latest)"
@@ -1048,34 +1058,19 @@ display_installation_strategy_groups() {
     for data in "${audit_data[@]}"; do
         IFS='|' read -r app_name current_ver path method min_required apt_avail source_latest status <<< "$data"
 
-        # Determine optimal installation strategy
-        local strategy=""
-        local reason=""
+        # Standardize row format for all tables:
+        # App/Tool|Current Version|Path|Install Source|Min Version|Status
+        local row="${app_name}|${current_ver}|${path}|${method}|${min_required}|${status}"
 
         # Check if it's a Snap package first
         if [ "$method" = "snap" ]; then
-            reason="Snap: ${source_latest:-latest} (Universal Linux package)"
-            other_tools+=("${app_name}|${current_ver}|N/A|${source_latest}|${reason}")
+            other_tools+=("$row")
         # Check if it's a curl-based installer
-        elif [ "$app_name" = "fnm" ]; then
-            reason="fnm.vercel.app::curl -fsSL fnm.vercel.app/install"
-            curl_installer_tools+=("${app_name}|${current_ver}|${reason}")
-        elif [ "$app_name" = "Python UV" ]; then
-            reason="astral.sh/uv::curl -LsSf astral.sh/uv/install.sh"
-            curl_installer_tools+=("${app_name}|${current_ver}|${reason}")
-        elif [ "$app_name" = "Oh My ZSH" ]; then
-            reason="ohmyz.sh::sh -c \$(curl -fsSL ohmyz.sh/install)"
-            curl_installer_tools+=("${app_name}|${current_ver}|${reason}")
+        elif [ "$app_name" = "fnm" ] || [ "$app_name" = "Python UV" ] || [ "$app_name" = "Oh My ZSH" ] || [ "$app_name" = "Go Language" ]; then
+            curl_installer_tools+=("$row")
         # Check if it's npm/fnm managed
         elif [ "$method" = "npm" ] || [ "$app_name" = "Node.js" ] || [ "$app_name" = "npm" ]; then
-            if [ "$app_name" = "Node.js" ]; then
-                reason="Managed by fnm"
-            elif [ "$app_name" = "npm" ]; then
-                reason="Installed with Node.js via fnm"
-            else
-                reason="Global npm package"
-            fi
-            npm_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+            npm_tools+=("$row")
         # Check if APT version is sufficient
         elif [ "$apt_avail" != "N/A" ] && [ "$apt_avail" != "unknown" ]; then
             # Compare APT vs Source to determine best strategy
@@ -1085,154 +1080,85 @@ display_installation_strategy_groups() {
                 local src_major=$(echo "$source_latest" | cut -d. -f1 2>/dev/null || echo "0")
 
                 if [ "$src_major" != "$apt_major" ] && [ "$src_major" -gt "$apt_major" ] 2>/dev/null; then
-                    reason="Source: $source_latest (APT: $apt_avail - major version upgrade)"
-                    source_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+                    source_tools+=("$row")
                 else
-                    reason="APT: $apt_avail sufficient (Source: $source_latest)"
-                    apt_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+                    apt_tools+=("$row")
                 fi
             else
-                reason="APT: $apt_avail (recommended)"
-                apt_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+                apt_tools+=("$row")
             fi
         # Must build from source
         elif [ "$source_latest" != "N/A" ] && [ "$source_latest" != "unknown" ]; then
-            reason="Source: $source_latest (APT not available)"
-            source_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+            source_tools+=("$row")
         else
             # Other/custom installation
-            reason="Custom installation"
-            other_tools+=("${app_name}|${current_ver}|${apt_avail}|${source_latest}|${reason}")
+            other_tools+=("$row")
         fi
     done
 
-    # Display Group 1: Official curl Installers
-    if [ ${#curl_installer_tools[@]} -gt 0 ]; then
-        log "INFO" "🌐 Group 1: Official curl-Based Installers"
-        log "INFO" "Tools installed via official curl installation scripts"
-        echo ""
+    # Consolidate all groups into one table
+    local -a consolidated_table=()
 
-        if command_exists "gum"; then
-            {
-                echo "Tool|Current Ver|Official Source|Installation Command"
-                for row in "${curl_installer_tools[@]}"; do
-                    IFS='|' read -r name ver reason <<< "$row"
-                    # Split on :: delimiter
-                    source="${reason%%::*}"
-                    cmd="${reason#*::}"
-                    echo "${name}|${ver}|${source}|${cmd}"
-                done
-            } | gum table --separator "|" --border rounded --border.foreground "5" --height 0 --print
-        else
-            printf "%-15s | %-15s | %-15s | %-15s | %-80s\n" \
-                "Tool" "Current Ver" "APT Available" "Source Latest" "Official Installation Command"
-            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
-            for row in "${curl_installer_tools[@]}"; do
-                IFS='|' read -r name ver apt src reason <<< "$row"
-                printf "%-15s | %-15s | %-15s | %-15s | %-80s\n" \
-                    "$name" "$ver" "$apt" "$src" "$reason"
-            done
+    # Helper to add section
+    add_section() {
+        local title="$1"
+        local -n items=$2
+        local color_name="$3"
+        
+        if [ ${#items[@]} -gt 0 ]; then
+            # Fillers for columns 2-6 (widths: 15, 55, 15, 12, 10)
+            # Using ─ (U+2500) box drawing character
+            local f2="───────────────"
+            local f3="───────────────────────────────────────────────────────"
+            local f4="───────────────"
+            local f5="────────────"
+            local f6="──────────"
+            
+            # Use emoji markers for visual distinction (no ANSI codes)
+            local marker=""
+            case "$color_name" in
+                "blue")    marker="🌐" ;;  # Web/Curl installers
+                "green")   marker="📦" ;;  # Node/NPM packages
+                "magenta") marker="🐧" ;;  # APT/DEB packages 
+                "yellow")  marker="🔨" ;;  # Build from source
+                "cyan")    marker="⚙️" ;;   # Custom/Other
+                *)         marker="▪" ;;
+            esac
+            
+            # Construct row without ANSI codes
+            local row="${marker} [ ${title} ]|${f2}|${f3}|${f4}|${f5}|${f6}"
+            
+            consolidated_table+=("$row")
+            consolidated_table+=("${items[@]}")
         fi
-        echo ""
+    }
+
+    add_section "CURL / WEB" curl_installer_tools "blue"
+    add_section "NODE / NPM" npm_tools "green"
+    add_section "APT / DEB" apt_tools "magenta"
+    add_section "SOURCE" source_tools "yellow"
+    add_section "CUSTOM" other_tools "cyan"
+
+    log "INFO" "Consolidated Installation Strategy:"
+    echo ""
+
+    local table_widths="20,15,55,15,12,10"
+
+    if command_exists "gum"; then
+        {
+            echo "App/Tool|Current Version|Path|Install Source|Min Version|Status"
+            printf '%s\n' "${consolidated_table[@]}"
+        } | gum table --separator "|" --widths "$table_widths" --border rounded --border.foreground "6" --height 0 --print
+    else
+        printf "%-20s | %-15s | %-30s | %-15s | %-12s | %-10s\n" \
+            "App/Tool" "Current Version" "Path" "Install Source" "Min Version" "Status"
+        echo "────────────────────────────────────────────────────────────────────────────────────────────────────────────────"
+        for row in "${consolidated_table[@]}"; do
+            IFS='|' read -r name ver path method min stat <<< "$row"
+            printf "%-20s | %-15s | %-30s | %-15s | %-12s | %-10s\n" \
+                "$name" "$ver" "$path" "$method" "$min" "$stat"
+        done
     fi
-
-    # Display Group 2: Node.js Ecosystem (npm/fnm)
-    if [ ${#npm_tools[@]} -gt 0 ]; then
-        log "INFO" "📦 Group 2: Node.js Ecosystem (npm/fnm)"
-        log "INFO" "Tools managed by Node.js package manager or fnm"
-        echo ""
-
-        if command_exists "gum"; then
-            {
-                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
-                printf '%s\n' "${npm_tools[@]}"
-            } | gum table --separator "|" --border rounded --border.foreground "4" --height 0 --print
-        else
-            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
-            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
-            for row in "${npm_tools[@]}"; do
-                IFS='|' read -r name ver apt src reason <<< "$row"
-                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                    "$name" "$ver" "$apt" "$src" "$reason"
-            done
-        fi
-        echo ""
-    fi
-
-    # Display Group 3: APT Packages (good enough versions)
-    if [ ${#apt_tools[@]} -gt 0 ]; then
-        log "INFO" "📦 Group 3: APT Packages (Recommended)"
-        log "INFO" "Tools with good enough versions available via APT"
-        echo ""
-
-        if command_exists "gum"; then
-            {
-                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
-                printf '%s\n' "${apt_tools[@]}"
-            } | gum table --separator "|" --border rounded --border.foreground "2" --height 0 --print
-        else
-            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
-            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
-            for row in "${apt_tools[@]}"; do
-                IFS='|' read -r name ver apt src reason <<< "$row"
-                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                    "$name" "$ver" "$apt" "$src" "$reason"
-            done
-        fi
-        echo ""
-    fi
-
-    # Display Group 4: Build from Source (best versions)
-    if [ ${#source_tools[@]} -gt 0 ]; then
-        log "INFO" "🔨 Group 4: Build from Source (Best Versions)"
-        log "INFO" "Tools requiring source build for optimal versions"
-        echo ""
-
-        if command_exists "gum"; then
-            {
-                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
-                printf '%s\n' "${source_tools[@]}"
-            } | gum table --separator "|" --border rounded --border.foreground "3" --height 0 --print
-        else
-            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
-            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
-            for row in "${source_tools[@]}"; do
-                IFS='|' read -r name ver apt src reason <<< "$row"
-                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                    "$name" "$ver" "$apt" "$src" "$reason"
-            done
-        fi
-        echo ""
-    fi
-
-    # Display Group 5: Snap Packages & Custom Installations
-    if [ ${#other_tools[@]} -gt 0 ]; then
-        log "INFO" "⚙️  Group 5: Snap Packages & Custom Installations"
-        log "INFO" "Tools installed via Snap or specialized methods"
-        echo ""
-
-        if command_exists "gum"; then
-            {
-                echo "Tool|Current Version|APT Available|Source Latest|Installation Strategy"
-                printf '%s\n' "${other_tools[@]}"
-            } | gum table --separator "|" --border rounded --border.foreground "5" --height 0 --print
-        else
-            printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                "Tool" "Current Version" "APT Available" "Source Latest" "Installation Strategy"
-            echo "────────────────────────────────────────────────────────────────────────────────────────────────────────"
-            for row in "${other_tools[@]}"; do
-                IFS='|' read -r name ver apt src reason <<< "$row"
-                printf "%-20s | %-20s | %-15s | %-15s | %-50s\n" \
-                    "$name" "$ver" "$apt" "$src" "$reason"
-            done
-        fi
-        echo ""
-    fi
-
-    log "INFO" "════════════════════════════════════════"
     echo ""
 }
 
@@ -1360,6 +1286,9 @@ task_post_installation_verification() {
     # Build audit data (same as pre-installation)
     local -a audit_data
 
+    # Go Programming Language
+    audit_data+=("$(detect_app_status_enhanced "Go Language" "go" "go version 2>&1 | grep -oP 'go\K[\d.]+'" "1.21.0" "none" "go")")
+
     # Gum TUI Framework
     audit_data+=("$(detect_app_status_enhanced "Gum TUI" "gum" "gum --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo 'built-from-source'" "0.14.5" "gum" "gum")")
 
@@ -1370,7 +1299,7 @@ task_post_installation_verification() {
     audit_data+=("$(detect_app_status_enhanced "ZSH Shell" "zsh" "zsh --version 2>&1 | grep -oP '\d+\.\d+'" "5.9" "zsh" "none")")
 
     # Oh My ZSH
-    audit_data+=("$(detect_app_status_enhanced "Oh My ZSH" "oh-my-zsh" "[ -d ~/.oh-my-zsh ] && echo 'installed' || echo 'not installed'" "latest" "none" "none")")
+    audit_data+=("$(detect_omz_status)")
 
     # Python UV
     audit_data+=("$(detect_app_status_enhanced "Python UV" "uv" "uv --version 2>&1 | grep -oP '\d+\.\d+\.\d+'" "0.5.0" "none" "uv")")

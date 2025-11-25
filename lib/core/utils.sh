@@ -133,6 +133,9 @@ format_duration() {
     local output=""
 
     # Calculate hours, minutes, seconds
+    # Ensure total_seconds is treated as an integer by stripping quotes if present
+    total_seconds=$(echo "$total_seconds" | tr -d '"')
+    
     hours=$((total_seconds / 3600))
     minutes=$(((total_seconds % 3600) / 60))
     seconds=$((total_seconds % 60))

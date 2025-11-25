@@ -72,64 +72,39 @@ Location: `/home/kkk/Apps/ghostty-config-files/.mcp.json`
       }
     },
     "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-      }
+      "command": "/home/kkk/Apps/ghostty-config-files/scripts/mcp/start-github-mcp.sh",
+      "args": []
     }
   }
 }
 ```
 
 **Key Points:**
-- `command: "npx"` - Uses npx to run the server (no global install needed)
-- `args: ["-y", "@modelcontextprotocol/server-github"]` - Auto-confirms package download
-- `env.GITHUB_PERSONAL_ACCESS_TOKEN` - References GITHUB_TOKEN from environment
+- `command` - Uses wrapper script that gets fresh token from `gh auth token`
+- No `env` section needed - wrapper handles token internally
+- No static `GITHUB_TOKEN` polluting shell environment
+- Token always fresh and auto-refreshes via gh CLI
 
 ### 2. `.env` (Environment Variables)
 
 Location: `/home/kkk/Apps/ghostty-config-files/.env`
 
-**⚠️ CRITICAL REQUIREMENT**: Claude Code's `.mcp.json` uses `${VARIABLE_NAME}` syntax to reference **shell environment variables**. These must be exported to your shell environment.
-
-**Quick Setup**:
-```bash
-# Add to ~/.zshrc (or ~/.bashrc for bash)
-cat >> ~/.zshrc << 'EOF'
-if [ -f /home/kkk/Apps/ghostty-config-files/.env ]; then
-    set -a
-    source /home/kkk/Apps/ghostty-config-files/.env
-    set +a
-fi
-EOF
-
-# Reload configuration
-source ~/.zshrc
-```
-
 **Example `.env` format**:
 ```bash
 # Context7 MCP Server
 CONTEXT7_API_KEY=ctx7sk-your-api-key-here
-CONTEXT7_MCP_URL=mcp.context7.com/mcp
-CONTEXT7_API_URL=context7.com/api/v1
 
-# GitHub Personal Access Token (for GitHub MCP integration)
-# Automatically obtained from GitHub CLI: gh auth token
-# Required scopes: repo, read:org, admin:public_key, gist (already configured via gh auth)
-# Token refreshes automatically via gh CLI
-GITHUB_TOKEN=gho_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# GitHub MCP Integration
+# Token is dynamically obtained from 'gh auth token' via wrapper script
+# No static token needed here - prevents GITHUB_TOKEN from polluting shell environment
 ```
 
 **Security Notes:**
 - ✅ `.env` is in `.gitignore` (not committed to version control)
-- ✅ Token obtained from GitHub CLI (`gh auth token`)
+- ✅ GitHub token obtained dynamically from `gh auth token` (always fresh)
+- ✅ No static `GITHUB_TOKEN` in `.env` (prevents interference with `gh copilot`)
 - ✅ Token has appropriate scopes for repository operations
-- ⚠️ Token expires periodically - refresh with `gh auth refresh`
+- ✅ Token auto-refreshes via gh CLI
 
 ### 3. `~/.claude.json` (User-Level Configuration)
 
@@ -506,6 +481,83 @@ Configure separate MCP servers for different accounts:
 - Purpose: Automated verification of GitHub MCP configuration
 - Usage: `./scripts/check_github_mcp_health.sh`
 
+## GitHub Copilot CLI Configuration
+
+### Important: Enable All AI Models
+
+If you're using GitHub Copilot CLI (installed by `./start.sh`), you **must enable alternative AI models** in your GitHub account settings to access Claude, Gemini, and other models beyond GPT.
+
+#### Steps to Enable All Models:
+
+1. **Navigate to GitHub Copilot Settings**:
+   - Go to **https://github.com/settings/copilot**
+   - Or: Click your profile → Settings → Copilot
+
+2. **Verify All Models Are Enabled**:
+
+   Ensure the following models show as enabled in the **Features** section:
+
+   - ✅ **Anthropic Claude Sonnet 4** - "You can use the latest Anthropic Claude Sonnet 4 model"
+   - ✅ **Anthropic Claude Sonnet 4.5** - "You can use the latest Anthropic Claude Sonnet 4.5 model"
+   - ✅ **Anthropic Claude Haiku 4.5** - "You can use the latest Anthropic Claude Haiku 4.5 model"
+   - ✅ **Google Gemini 2.5 Pro** - "You can use the latest Google Gemini 2.5 Pro model"
+   - ✅ **Google Gemini 3 Pro Preview** - "You can use the latest Google Gemini 3 Pro model"
+   - ✅ **OpenAI GPT-5** - "You can use the latest OpenAI GPT-5 model"
+   - ✅ **OpenAI GPT-5.1 Preview** - Available for use
+   - ✅ **xAI Grok Code Fast 1** - If enabled, you can access xAI Grok
+
+3. **What Happens If Models Are Disabled**:
+
+   If models are disabled in settings, `gh copilot` and `copilot` CLI will show:
+   ```
+   Some models are not available due to configured policy.
+
+   Select Model
+   ❯ 1. Claude Sonnet 4 (1x) (default) (current)
+     2. Cancel (Esc)
+   ```
+
+   **This is a GitHub account-level policy restriction**, not a local configuration issue.
+
+4. **Troubleshooting Model Access**:
+
+   ```bash
+   # Check your Copilot subscription status
+   # Visit: https://github.com/settings/copilot
+
+   # Verify you have Copilot Pro or Pro+ subscription
+   # Individual Free plan has limited model access
+
+   # Test model access in Copilot CLI
+   copilot
+   # Should show multiple models if all are enabled
+
+   # Alternative: Use gh copilot with GitHub CLI extension
+   gh copilot
+   ```
+
+### Important Notes
+
+- **GitHub MCP for Claude Code** ≠ **GitHub Copilot CLI**
+  - GitHub MCP: Allows Claude Code to interact with GitHub API (repos, issues, PRs)
+  - GitHub Copilot CLI: Standalone AI assistant with model selection
+
+- **GITHUB_TOKEN Environment Variable**:
+  - Our configuration **does NOT set** `GITHUB_TOKEN` in `.env` or shell
+  - This prevents interference with `gh copilot` model selection
+  - GitHub MCP uses wrapper script (`start-github-mcp.sh`) that gets token dynamically
+
+- **Model Policy is Per-Account**:
+  - Settings at https://github.com/settings/copilot apply globally
+  - Changes take effect immediately (no restart needed)
+  - Applies to all Copilot CLI installations on all machines
+
+### Reference Documentation
+
+- [Managing GitHub Copilot policies as an individual subscriber](https://docs.github.com/copilot/how-tos/manage-your-account/managing-copilot-policies-as-an-individual-subscriber)
+- [Configuring access to AI models in GitHub Copilot](https://docs.github.com/en/copilot/how-tos/use-ai-models/configure-access-to-ai-models)
+- [GitHub Copilot CLI: Enhanced model selection](https://github.blog/changelog/2025-10-03-github-copilot-cli-enhanced-model-selection-image-support-and-streamlined-ui/)
+
 ## Support
 
 For issues or questions:
@@ -513,12 +565,13 @@ For issues or questions:
 1. **Health Check**: Run `./scripts/check_github_mcp_health.sh`
 2. **GitHub CLI**: Run `gh auth status` and `gh --version`
 3. **MCP Status**: Use `/mcp` command in Claude Code
-4. **Logs**: Check Claude Code debug logs for MCP server errors
-5. **Documentation**: Review this guide and [CLAUDE.md](CLAUDE.md)
+4. **Copilot Models**: Visit https://github.com/settings/copilot to enable all models
+5. **Logs**: Check Claude Code debug logs for MCP server errors
+6. **Documentation**: Review this guide and [CLAUDE.md](CLAUDE.md)
 
 ---
 
-**Version**: 1.0
-**Last Updated**: 2025-11-11
+**Version**: 1.1
+**Last Updated**: 2025-11-24
 **Status**: ACTIVE - GITHUB MCP SERVER INSTALLED AND CONFIGURED
 **Maintained By**: Claude Code + github-sync-guardian agent
