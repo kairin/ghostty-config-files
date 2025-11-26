@@ -19,14 +19,16 @@
   --font-size-base: 18px;
   --line-height-base: 1.7;
 
-  /* Light mode colors - Modern & Clean */
-  --color-text-light: #1f2937;
-  --color-text-secondary-light: #6b7280;
-  --color-bg-light: #ffffff;
-  --color-surface-light: #f8f9fa;
-  --color-border-light: #e5e7eb;
-  --color-primary-light: #1d4ed8;
-  --color-secondary-light: #8b5cf6;
+  /* Light mode colors - Cream Pastel Theme */
+  --color-text-light: #000000;
+  --color-text-secondary-light: #333333;
+  --color-bg-light: #fdfbf7;
+  --color-surface-light: #fffefc;
+  --color-border-light: #e7e5e4;
+  --color-primary-light: #6366f1;
+  /* Soft Indigo */
+  --color-secondary-light: #a855f7;
+  /* Pastel Purple */
   --color-accent-light: #f59e0b;
   --color-success-light: #10b981;
 
@@ -76,7 +78,12 @@ body {
 }
 
 /* Headings with proper hierarchy and spacing */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   line-height: 1.3;
   margin-top: 1.5em;
@@ -105,7 +112,8 @@ p {
 }
 
 /* Code blocks with mono font */
-code, pre {
+code,
+pre {
   font-family: var(--font-mono);
 }
 
@@ -120,7 +128,8 @@ a:focus-visible {
 }
 
 /* Lists with proper spacing */
-ul, ol {
+ul,
+ol {
   padding-left: 1.5em;
   margin-bottom: 1.5em;
 }
@@ -195,7 +204,7 @@ html:not(.dark) .glass-card:hover {
   padding: 2px;
 }
 
-.gradient-border > div {
+.gradient-border>div {
   background: var(--color-space-900);
   border-radius: 1rem;
 }
@@ -204,7 +213,7 @@ html:not(.dark) .gradient-border {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
 }
 
-html:not(.dark) .gradient-border > div {
+html:not(.dark) .gradient-border>div {
   background: #ffffff;
 }
 
@@ -230,14 +239,22 @@ html:not(.dark) .text-glow {
 }
 
 html:not(.dark) .cyber-bg {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #fdfbf7 0%, #fffefc 50%, #f5f5f4 100%);
   background-size: 200% 200%;
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Glow Animation */
@@ -246,8 +263,13 @@ html:not(.dark) .cyber-bg {
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
-  100% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.8); }
+  0% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+
+  100% {
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+  }
 }
 
 html:not(.dark) .animate-glow {
@@ -255,8 +277,13 @@ html:not(.dark) .animate-glow {
 }
 
 @keyframes glow-light {
-  0% { box-shadow: 0 0 16px rgba(59, 130, 246, 0.3); }
-  100% { box-shadow: 0 0 32px rgba(59, 130, 246, 0.5); }
+  0% {
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.3);
+  }
+
+  100% {
+    box-shadow: 0 0 32px rgba(59, 130, 246, 0.5);
+  }
 }
 
 /* Float Animation */
@@ -265,8 +292,15 @@ html:not(.dark) .animate-glow {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 /* Full-width utilities */
@@ -330,13 +364,13 @@ html:not(.dark) .animate-glow {
   position: relative;
   border: 2px solid transparent;
   background: linear-gradient(var(--color-bg-dark), var(--color-bg-dark)) padding-box,
-              linear-gradient(135deg, var(--color-neon-cyan), var(--color-neon-purple)) border-box;
+    linear-gradient(135deg, var(--color-neon-cyan), var(--color-neon-purple)) border-box;
   border-radius: 1rem;
 }
 
 html:not(.dark) .neon-border {
   background: linear-gradient(var(--color-bg-light), var(--color-bg-light)) padding-box,
-              linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+    linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
 }
 
 /* Shimmer effect for loading states */
@@ -347,8 +381,13 @@ html:not(.dark) .neon-border {
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Smooth hover transitions for all interactive elements */
@@ -397,20 +436,18 @@ html.dark .btn-secondary-action {
 .hero-overlay-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, 
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.7) 50%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0.9) 100%);
   z-index: 1;
 }
 
 html.dark .hero-overlay-gradient {
-  background: linear-gradient(to bottom, 
-    rgba(10, 10, 15, 0.9) 0%,
-    rgba(10, 10, 15, 0.7) 50%,
-    rgba(10, 10, 15, 0.9) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(10, 10, 15, 0.9) 0%,
+      rgba(10, 10, 15, 0.7) 50%,
+      rgba(10, 10, 15, 0.9) 100%);
 }
 
 /* Navigation Links */
