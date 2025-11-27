@@ -51,7 +51,7 @@ main() {
     fi
 
     # Check if Charm repository is already configured
-    if [ -f "$CHARM_REPO_LIST" ]; then
+    if [ -f "$CHARM_REPO_LIST" ] && [ -f "$CHARM_GPG_KEYRING" ]; then
         log "INFO" "  ✓ Charm repository already configured"
     else
         log "INFO" "Adding Charm repository..."
@@ -59,6 +59,10 @@ main() {
         sudo mkdir -p /etc/apt/keyrings
 
         echo "  ⠋ Downloading GPG key..."
+        # Remove existing keyring to avoid interactive prompt from gpg --dearmor
+        if [ -f "$CHARM_GPG_KEYRING" ]; then
+            sudo rm -f "$CHARM_GPG_KEYRING"
+        fi
         if ! curl -fsSL "$CHARM_GPG_URL" | sudo gpg --dearmor -o "$CHARM_GPG_KEYRING" 2>&1 | tee -a "$(get_log_file)"; then
             log "ERROR" "Failed to download Charm GPG key"
             complete_task "$task_id" 1
