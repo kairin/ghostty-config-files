@@ -184,6 +184,9 @@ EOF
         # Enable menu visibility
         sed -i 's/NoDisplay=true/NoDisplay=false/' "$desktop_file"
 
+        # Fix icon to use feh-specific icon instead of generic image-viewer
+        sed -i 's/^Icon=image-viewer$/Icon=feh/' "$desktop_file"
+
         # Update comment to reflect smart behavior
         sed -i 's/^Comment=.*/Comment=Smart image viewer - automatically finds images in Pictures, Downloads/' "$desktop_file"
 
