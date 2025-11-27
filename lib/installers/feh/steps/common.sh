@@ -29,3 +29,18 @@ get_feh_version() {
 is_feh_apt_installed() {
     dpkg -l feh 2>/dev/null | grep -q "^ii"
 }
+
+# Check for Snap installation
+is_feh_snap_installed() {
+    command -v snap &>/dev/null && snap list feh &>/dev/null 2>&1
+}
+
+# Check for any feh installation (comprehensive)
+has_any_feh_installation() {
+    is_feh_apt_installed && return 0
+    is_feh_snap_installed && return 0
+    [ -f "/usr/local/bin/feh" ] && return 0
+    [ -f "$HOME/.local/bin/feh" ] && return 0
+    [ -f "$HOME/.local/share/applications/feh.desktop" ] && return 0
+    return 1
+}
