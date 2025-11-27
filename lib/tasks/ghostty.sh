@@ -268,7 +268,7 @@ EOF
 Name=Ghostty
 Comment=Fast, native, feature-rich terminal emulator
 Exec=$GHOSTTY_INSTALL_DIR/bin/ghostty
-Icon=utilities-terminal
+Icon=com.mitchellh.ghostty
 Terminal=false
 Type=Application
 Categories=System;TerminalEmulator;
