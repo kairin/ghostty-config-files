@@ -256,6 +256,70 @@ EOF
         log "WARNING" "No feh icons found (non-critical)"
     fi
 
+    # Check 6: Desktop Icon Functional Verification
+    log "INFO" "Check 6: Desktop Icon Functionality"
+    local icon_status=0
+
+    # 6a: Verify .desktop file exists and is valid
+    if [ -f "$desktop_file" ]; then
+        log "SUCCESS" "Desktop file found: $desktop_file"
+
+        # Validate desktop file syntax
+        if command -v desktop-file-validate >/dev/null 2>&1; then
+            if desktop-file-validate "$desktop_file" 2>/dev/null; then
+                log "SUCCESS" "Desktop file syntax is valid"
+            else
+                log "WARNING" "Desktop file has syntax warnings (non-critical)"
+            fi
+        fi
+
+        # Verify Exec points to valid executable
+        local exec_cmd
+        exec_cmd=$(grep "^Exec=" "$desktop_file" 2>/dev/null | head -1 | sed 's/^Exec=//' | awk '{print $1}')
+        if [ -n "$exec_cmd" ]; then
+            if [ -x "$exec_cmd" ] || command -v "$exec_cmd" >/dev/null 2>&1; then
+                log "SUCCESS" "Exec command is valid: $exec_cmd"
+            else
+                log "WARNING" "Exec command not found: $exec_cmd"
+                icon_status=1
+            fi
+        fi
+    else
+        log "WARNING" "Desktop file not found: $desktop_file"
+        icon_status=1
+    fi
+
+    # 6b: Check icon cache freshness and update if needed
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        local hicolor_cache="/usr/share/icons/hicolor/icon-theme.cache"
+        if [ -f "$hicolor_cache" ]; then
+            local cache_age=$(( $(date +%s) - $(stat -c %Y "$hicolor_cache" 2>/dev/null || echo 0) ))
+            if [ $cache_age -gt 86400 ]; then
+                log "INFO" "Refreshing stale icon cache..."
+                sudo gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
+            fi
+        fi
+    fi
+
+    # 6c: Update desktop database
+    if command -v update-desktop-database >/dev/null 2>&1; then
+        update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+        log "SUCCESS" "Desktop database updated"
+    fi
+
+    # 6d: Verify registration with gio
+    if command -v gio >/dev/null 2>&1 && [ -f "$desktop_file" ]; then
+        if gio info "$desktop_file" >/dev/null 2>&1; then
+            log "SUCCESS" "Application registered with desktop environment"
+        fi
+    fi
+
+    if [ $icon_status -eq 0 ]; then
+        log "SUCCESS" "Desktop icon verification passed"
+    else
+        log "WARNING" "Desktop icon verification had warnings (app should still work)"
+    fi
+
     if [ $all_checks_passed -eq 0 ]; then
         log "SUCCESS" "All verification checks passed"
         log "SUCCESS" "Feh should now appear in your application menu"

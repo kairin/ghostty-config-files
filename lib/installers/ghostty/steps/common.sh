@@ -49,10 +49,18 @@ get_latest_ghostty_version() {
     fi
 }
 
+# Check if Ghostty is installed via .deb package
+is_ghostty_deb_installed() {
+    dpkg -l ghostty 2>/dev/null | grep -q "^ii"
+}
+
 # Check if manual Ghostty installation exists
 # Returns 0 (true) if any manual/legacy installation is detected
 # Returns 1 (false) if no manual installations found
 has_manual_ghostty_installation() {
+    # Check for existing .deb installation
+    is_ghostty_deb_installed && return 0
+
     # Check for manual build binaries
     [ -f "/usr/local/bin/ghostty" ] && return 0
     [ -f "$HOME/.local/bin/ghostty" ] && return 0

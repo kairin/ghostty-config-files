@@ -32,6 +32,18 @@ main() {
 
     log "INFO" "Removing manual Ghostty installations..."
 
+    # Remove existing .deb installation first (ensures clean reinstall)
+    if is_ghostty_deb_installed; then
+        log "INFO" "Found existing Ghostty .deb package, removing..."
+        if sudo apt remove -y ghostty 2>/dev/null; then
+            log "SUCCESS" "Removed existing Ghostty .deb package"
+            : $((cleaned++))
+            sudo apt autoremove -y 2>/dev/null || true
+        else
+            log "WARNING" "Could not remove existing .deb package (continuing anyway)"
+        fi
+    fi
+
     # Remove binary from /usr/local/bin
     if [ -f "/usr/local/bin/ghostty" ]; then
         log "INFO" "Removing /usr/local/bin/ghostty"

@@ -23,7 +23,7 @@ main() {
     # Format: "script.sh|Display Name|Estimated Duration (seconds)"
     declare -a INSTALL_STEPS=(
         "00-check-prerequisites.sh|Check Prerequisites|5"
-        "01-uninstall-source-version.sh|Uninstall Source Version|5"
+        "01-cleanup-existing-installations.sh|Cleanup Existing Installations|10"
         "02-install-apt-feh.sh|Install Feh via APT|30"
         "05-verify-installation.sh|Verify Installation|5"
     )
