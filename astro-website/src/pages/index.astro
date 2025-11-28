@@ -4,35 +4,48 @@
 
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GifRotator from '../components/GifRotator.astro';
+import { getHeroGifPaths, rotationConfig } from '../config/gif-segments';
 
 // Fetch all collections
 const aiGuidelines = await getCollection('ai-guidelines');
 const userGuide = await getCollection('user-guide');
 const developer = await getCollection('developer');
 
+// Type interface for collection entries
+interface CollectionEntry {
+  data: { title: string; order?: number };
+}
+
 // Sort by title
-const sortByTitle = (a: any, b: any) => a.data.title.localeCompare(b.data.title);
+const sortByTitle = (a: CollectionEntry, b: CollectionEntry) => a.data.title.localeCompare(b.data.title);
 aiGuidelines.sort(sortByTitle);
 userGuide.sort(sortByTitle);
 developer.sort(sortByTitle);
 
-const base = '/ghostty-config-files';
+const base = import.meta.env.BASE_URL;
+const heroGifs = getHeroGifPaths();
 ---
 
 <BaseLayout
   title="Documentation Home"
   description="Comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, AI tools integration, and intelligent update management."
 >
-  <!-- Modern Hero Section with Glass Morphism -->
-  <!-- Modern Hero Section with Glass Morphism -->
-  <!-- Modern Hero Section with Glass Morphism -->
+  <!-- Modern Hero Section with Glass Morphism and VHS Effects -->
   <div class="hero glass-card mb-16 overflow-hidden relative min-h-[60vh] flex items-center">
-    <!-- VHS Recording Background -->
-    <img src={`${base}/demo.gif`} alt="Ghostty Terminal Demo" class="absolute inset-0 w-full h-full object-cover object-left" />
-    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-white/20 dark:via-black/5 dark:to-black/20 pointer-events-none"></div>
+    <!-- Rotating VHS Recording Background -->
+    <GifRotator
+      id="hero-background"
+      gifs={heroGifs}
+      interval={rotationConfig.interval}
+      vhsGlitch={rotationConfig.vhsGlitch}
+      opacity={rotationConfig.heroOpacity}
+      class="absolute inset-0"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-white/20 dark:via-black/5 dark:to-black/20 pointer-events-none z-10"></div>
 
     <!-- Content (Floated Right) -->
-    <div class="relative z-10 w-full flex justify-end px-6 md:px-12">
+    <div class="relative z-20 w-full flex justify-end px-6 md:px-12">
       <div class="max-w-xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-white/20 dark:border-white/10 p-8 rounded-2xl shadow-lg">
         <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100 break-words drop-shadow-sm">
           Ghostty Configuration Files

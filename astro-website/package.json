@@ -2,7 +2,6 @@
   "name": "ghostty-config-files",
   "version": "1.0.0",
   "description": "A complete terminal environment setup featuring Ghostty terminal emulator with **2025 performance optimizations**, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI) and Ptyxis terminal via Flatpak.",
-  "main": "index.js",
   "directories": {
     "test": "tests"
   },
@@ -10,7 +9,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "clean-docs": "rm -rf ../docs/* || true",
-    "prebuild": "npm run clean-docs",
+    "ensure-segments": "node scripts/ensure-segments.js",
+    "prebuild": "npm run clean-docs && npm run ensure-segments",
     "build": "astro check && astro build",
     "postbuild": "cp public/favicon.* ../docs/ || true",
     "preview": "astro preview",
@@ -26,7 +26,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/kairin/ghostty-config-files/issues"
   },

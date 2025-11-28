@@ -4,6 +4,8 @@
 
 import '../styles/global.css';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import GifRotator from '../components/GifRotator.astro';
+import { getBackgroundGifPaths, rotationConfig } from '../config/gif-segments';
 
 interface Props {
   title: string;
@@ -14,6 +16,7 @@ interface Props {
 
 const { title, description, pubDate, author } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const backgroundGifs = getBackgroundGifPaths();
 ---
 
 <!DOCTYPE html>
@@ -50,6 +53,15 @@ const base = import.meta.env.BASE_URL;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 cyber-bg">
+    <!-- Rotating GIF Background with VHS Effects -->
+    <GifRotator
+      id="page-background"
+      gifs={backgroundGifs}
+      interval={rotationConfig.interval}
+      vhsGlitch={rotationConfig.vhsGlitch}
+      opacity={rotationConfig.backgroundOpacity}
+      class="fixed inset-0 z-[-1]"
+    />
     <!-- Modern Glass Morphism Navigation -->
     <nav id="main-nav" class="fixed top-0 w-full bg-[#fdfbf7] dark:bg-slate-900/80 shadow-lg border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300">
       <div class="full-width-section">
