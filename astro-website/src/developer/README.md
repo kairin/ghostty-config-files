@@ -18,10 +18,9 @@ This directory contains developer-focused technical documentation for the Ghostt
 
 ## Quick Links
 
-- [Directory Structure](../../docs-setup/DIRECTORY_STRUCTURE.md)
-- [AI Assistant Instructions](../../AGENTS.md)
-- [User Documentation](../user/)
-- [Feature Specifications](../specifications/)
+- [Directory Structure](./DIRECTORY_STRUCTURE.md)
+- [User Documentation](../user-guide/)
+- [Feature Specifications](./specifications/)
 
 ## Contents
 
