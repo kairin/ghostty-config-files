@@ -16,16 +16,16 @@ $ARGUMENTS
 
 ## Automatic Workflow
 
-You **MUST** invoke the **master-orchestrator** agent to coordinate the complete deployment workflow.
+You **MUST** invoke the **001-orchestrator** agent to coordinate the complete deployment workflow.
 
-Pass the following instructions to master-orchestrator:
+Pass the following instructions to 001-orchestrator:
 
 ### Phase 1: Pre-Deployment Validation (Parallel - 3 Agents)
 
 **Agents to Execute**:
-1. **git-operations-specialist**: Check git status, verify working tree, list branches needing sync
-2. **astro-build-specialist**: Verify build artifacts, .nojekyll file, HTML page count
-3. **project-health-auditor**: Quick health check, symlink verification, constitutional compliance
+1. **002-git**: Check git status, verify working tree, list branches needing sync
+2. **002-astro**: Verify build artifacts, .nojekyll file, HTML page count
+3. **002-health**: Quick health check, symlink verification, constitutional compliance
 
 **Validation Requirements**:
 - ✅ Working tree clean or changes identified
@@ -56,7 +56,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 3: Git Workflow Synchronization (Sequential)
 
-**Agent**: **git-operations-specialist**
+**Agent**: **002-git**
 
 **Tasks**:
 1. Ensure main branch is current
@@ -72,7 +72,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 4: Astro Build Execution (Single Agent)
 
-**Agent**: **astro-build-specialist**
+**Agent**: **002-astro**
 
 **Tasks**:
 ```bash
@@ -94,7 +94,7 @@ npm --prefix /home/kkk/Apps/ghostty-config-files/website run build
 
 ### Phase 5: GitHub Pages Deployment (Parallel - 2 Agents)
 
-**Agent 1**: **git-operations-specialist**
+**Agent 1**: **002-git**
 
 If docs/ has uncommitted changes:
 - Create deployment branch (YYYYMMDD-HHMMSS-deploy-build-artifacts)
@@ -103,7 +103,7 @@ If docs/ has uncommitted changes:
 - Push to remote
 - Preserve branch (NEVER delete)
 
-**Agent 2**: **astro-build-specialist**
+**Agent 2**: **002-astro**
 
 Verify GitHub Pages:
 ```bash
@@ -126,7 +126,7 @@ gh repo view --json homepageUrl
 
 ### Phase 7: Documentation & Logging (Single Agent)
 
-**Agent**: **documentation-guardian**
+**Agent**: **003-docs**
 
 **Tasks**:
 - Generate deployment summary

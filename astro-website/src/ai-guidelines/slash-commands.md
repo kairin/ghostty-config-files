@@ -23,9 +23,9 @@ Constitutional slash commands provide high-level workflow automation by coordina
 **Purpose**: Execute comprehensive project health assessment
 
 **Agents Invoked** (Parallel):
-- project-health-auditor
-- documentation-guardian
-- astro-build-specialist
+- 002-health
+- 003-docs
+- 002-astro
 
 **Use Cases**:
 - Weekly scheduled health audits
@@ -63,11 +63,11 @@ Overall Status: HEALTHY / NEEDS ATTENTION / CRITICAL
 
 **Purpose**: Comprehensive documentation integrity verification
 
-**Agents Invoked** (Coordinated by master-orchestrator):
-- master-orchestrator (coordinator)
-- constitutional-compliance-agent
-- documentation-guardian
-- symlink-guardian
+**Agents Invoked** (Coordinated by 001-orchestrator):
+- 001-orchestrator (coordinator)
+- 002-compliance
+- 003-docs
+- 003-symlink
 
 **Verification Scope**:
 
@@ -161,8 +161,8 @@ Overall Status: EXCELLENT / GOOD / NEEDS ATTENTION / CRITICAL
 **Purpose**: Identify redundant files and consolidate directory structures with constitutional Git workflow
 
 **Agents Invoked** (Sequential):
-1. repository-cleanup-specialist (analysis)
-2. git-operations-specialist (Git operations)
+1. 002-cleanup (analysis)
+2. 002-git (Git operations)
 
 **Cleanup Scope**:
 - Redundant file detection
@@ -215,8 +215,8 @@ SUMMARY: [Brief description of cleanup]
 **Purpose**: Execute fully automatic constitutional Git commit workflow
 
 **Agents Invoked** (Sequential):
-1. symlink-guardian (pre-commit validation)
-2. git-operations-specialist (commit workflow)
+1. 003-symlink (pre-commit validation)
+2. 002-git (commit workflow)
 
 **Workflow Steps**:
 1. Verify symlink integrity (CLAUDE.md, GEMINI.md)
@@ -277,8 +277,8 @@ BRANCH PRESERVED (as required by constitution)
 **Purpose**: Execute complete deployment workflow - Astro build, validation, commit, and GitHub Pages deployment
 
 **Agents Invoked** (Sequential):
-1. astro-build-specialist (build and validation)
-2. git-operations-specialist (deployment commit)
+1. 002-astro (build and validation)
+2. 002-git (deployment commit)
 
 **Deployment Steps**:
 1. **Build Phase**:

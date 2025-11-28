@@ -18,7 +18,7 @@ The ghostty-config-files project employs a sophisticated **9-agent constitutiona
 
 ### Core Coordination
 
-#### 1. **master-orchestrator** (35KB)
+#### 1. **001-orchestrator** (35KB)
 **Primary Function**: Multi-agent coordination and parallel execution planning
 
 **When to Invoke**:
@@ -37,8 +37,8 @@ The ghostty-config-files project employs a sophisticated **9-agent constitutiona
 **Example**:
 ```
 User: "Review all documentation, fix issues, run tests, and deploy"
-AI: Uses master-orchestrator to coordinate documentation-guardian,
-    constitutional-compliance-agent, testing, and astro-build-specialist
+AI: Uses 001-orchestrator to coordinate 003-docs,
+    002-compliance, testing, and 002-astro
     in parallel phases with dependency management.
 ```
 
@@ -49,7 +49,7 @@ AI: Uses master-orchestrator to coordinate documentation-guardian,
 
 ### Documentation Integrity Agents
 
-#### 2. **symlink-guardian** (16KB)
+#### 2. **003-symlink** (16KB)
 **Primary Function**: Verify and restore CLAUDE.md/GEMINI.md symlinks to AGENTS.md
 
 **When to Invoke**:
@@ -69,7 +69,7 @@ AI: Uses master-orchestrator to coordinate documentation-guardian,
 **Example Workflow**:
 ```bash
 # Verify symlinks before commit
-symlink-guardian detects CLAUDE.md is a regular file
+003-symlink detects CLAUDE.md is a regular file
 → Merges unique content from CLAUDE.md into AGENTS.md
 → Deletes CLAUDE.md regular file
 → Creates symlink: CLAUDE.md → AGENTS.md
@@ -81,7 +81,7 @@ symlink-guardian detects CLAUDE.md is a regular file
 
 ---
 
-#### 3. **constitutional-compliance-agent** (22KB)
+#### 3. **002-compliance** (22KB)
 **Primary Function**: Ensure AGENTS.md remains <40KB by modularizing large sections
 
 **When to Invoke**:
@@ -112,7 +112,7 @@ IF AGENTS.md > 40KB:
 
 ---
 
-#### 4. **documentation-guardian** (18KB)
+#### 4. **003-docs** (18KB)
 **Primary Function**: Enforce AGENTS.md as single source of truth
 
 **When to Invoke**:
@@ -131,13 +131,13 @@ IF AGENTS.md > 40KB:
 **Constitutional Requirement**: All AI assistant instructions MUST originate from AGENTS.md. CLAUDE.md and GEMINI.md are symlinks only.
 
 **Parallel-Safe**: ✅ Yes
-**Dependencies**: symlink-guardian (run symlink checks first)
+**Dependencies**: 003-symlink (run symlink checks first)
 
 ---
 
 ### Build & Deployment Agents
 
-#### 5. **astro-build-specialist** (18KB)
+#### 5. **002-astro** (18KB)
 **Primary Function**: Astro.build operations and .nojekyll validation
 
 **When to Invoke**:
@@ -163,11 +163,11 @@ IF AGENTS.md > 40KB:
 ```
 
 **Parallel-Safe**: ✅ Yes
-**Dependencies**: None (delegates Git operations to git-operations-specialist)
+**Dependencies**: None (delegates Git operations to 002-git)
 
 ---
 
-#### 6. **git-operations-specialist** (19KB)
+#### 6. **002-git** (19KB)
 **Primary Function**: ALL Git and GitHub operations with constitutional compliance
 
 **When to Invoke**:
@@ -202,13 +202,13 @@ git push origin main
 ```
 
 **Parallel-Safe**: ❌ NO (SEQUENTIAL ONLY - conflicts if parallel)
-**Dependencies**: symlink-guardian, documentation-guardian (run before Git operations)
+**Dependencies**: 003-symlink, 003-docs (run before Git operations)
 
 ---
 
 ### Validation & Health Agents
 
-#### 7. **project-health-auditor** (19KB)
+#### 7. **002-health** (19KB)
 **Primary Function**: Comprehensive health checks and Context7 MCP integration
 
 **When to Invoke**:
@@ -238,7 +238,7 @@ git push origin main
 
 ---
 
-#### 8. **repository-cleanup-specialist** (21KB)
+#### 8. **002-cleanup** (21KB)
 **Primary Function**: Identify redundancy and consolidate directory structures
 
 **When to Invoke**:
@@ -256,19 +256,19 @@ git push origin main
 - Constitutional cleanup workflows
 
 **Safety Protocols**:
-- ALWAYS delegate Git operations to git-operations-specialist
+- ALWAYS delegate Git operations to 002-git
 - NEVER delete without constitutional workflow
 - Preserve branch history
 - Backup before cleanup
 
 **Parallel-Safe**: ✅ Yes
-**Dependencies**: None (delegates Git to git-operations-specialist)
+**Dependencies**: None (delegates Git to 002-git)
 
 ---
 
 ### Shared Utilities
 
-#### 9. **constitutional-workflow-orchestrator** (18KB)
+#### 9. **003-workflow** (18KB)
 **Primary Function**: Shared workflow templates and utility functions
 
 **When to Invoke**: NOT invoked directly - referenced by other agents as a library
@@ -283,8 +283,8 @@ git push origin main
 **Usage Pattern**:
 ```markdown
 Other agents reference templates like:
-"Use constitutional-workflow-orchestrator templates for branch naming"
-"Follow constitutional-workflow-orchestrator commit format"
+"Use 003-workflow templates for branch naming"
+"Follow 003-workflow commit format"
 ```
 
 **Parallel-Safe**: N/A (utility library, not directly invoked)
@@ -296,13 +296,13 @@ Other agents reference templates like:
 
 ```mermaid
 graph TD
-    A[master-orchestrator<br/>TOP-LEVEL COORDINATOR] --> B[symlink-guardian<br/>PARALLEL-SAFE]
-    A --> C[constitutional-compliance-agent<br/>PARALLEL-SAFE]
-    A --> D[documentation-guardian<br/>PARALLEL-SAFE]
-    A --> E[project-health-auditor<br/>PARALLEL-SAFE]
-    A --> F[repository-cleanup-specialist<br/>PARALLEL-SAFE]
-    A --> G[astro-build-specialist<br/>PARALLEL-SAFE]
-    A --> H[git-operations-specialist<br/>SEQUENTIAL ONLY]
+    A[001-orchestrator<br/>TOP-LEVEL COORDINATOR] --> B[003-symlink<br/>PARALLEL-SAFE]
+    A --> C[002-compliance<br/>PARALLEL-SAFE]
+    A --> D[003-docs<br/>PARALLEL-SAFE]
+    A --> E[002-health<br/>PARALLEL-SAFE]
+    A --> F[002-cleanup<br/>PARALLEL-SAFE]
+    A --> G[002-astro<br/>PARALLEL-SAFE]
+    A --> H[002-git<br/>SEQUENTIAL ONLY]
 
     D -.requires.-> B
     H -.requires.-> B
@@ -310,7 +310,7 @@ graph TD
     F -.delegates Git.-> H
     G -.delegates Git.-> H
 
-    B -.uses.-> I[constitutional-workflow-orchestrator<br/>UTILITY LIBRARY]
+    B -.uses.-> I[003-workflow<br/>UTILITY LIBRARY]
     C -.uses.-> I
     H -.uses.-> I
 
@@ -339,49 +339,49 @@ graph TD
 
 **Phase 1 (Parallel)**:
 ```bash
-├─ symlink-guardian
-├─ constitutional-compliance-agent
-├─ project-health-auditor
-└─ repository-cleanup-specialist
+├─ 003-symlink
+├─ 002-compliance
+├─ 002-health
+└─ 002-cleanup
 ```
 
 **Phase 2 (Parallel, depends on Phase 1)**:
 ```bash
-├─ documentation-guardian (requires symlink-guardian complete)
-└─ astro-build-specialist
+├─ 003-docs (requires 003-symlink complete)
+└─ 002-astro
 ```
 
 **Phase 3 (Sequential ONLY)**:
 ```bash
-└─ git-operations-specialist (requires ALL previous phases complete)
+└─ 002-git (requires ALL previous phases complete)
 ```
 
 ### Dependency Management
 
 **Strict Ordering Rules**:
-1. symlink-guardian MUST complete before documentation-guardian
-2. documentation-guardian MUST complete before git-operations-specialist
-3. git-operations-specialist MUST run sequentially (never parallel)
+1. 003-symlink MUST complete before 003-docs
+2. 003-docs MUST complete before 002-git
+3. 002-git MUST run sequentially (never parallel)
 4. Parallel agents can run simultaneously if no dependencies
 
 **Example Multi-Agent Workflow**:
 ```
 User Request: "Audit project, fix issues, rebuild website, commit changes"
 
-master-orchestrator decomposition:
+001-orchestrator decomposition:
 ┌─ Phase 1 (Parallel) ─────────────────────┐
-│ • project-health-auditor                 │
-│ • symlink-guardian                       │
-│ • constitutional-compliance-agent        │
+│ • 002-health                 │
+│ • 003-symlink                       │
+│ • 002-compliance        │
 └──────────────────────────────────────────┘
          ↓ (wait for completion)
 ┌─ Phase 2 (Parallel) ─────────────────────┐
-│ • documentation-guardian                 │
-│ • astro-build-specialist                 │
+│ • 003-docs                 │
+│ • 002-astro                 │
 └──────────────────────────────────────────┘
          ↓ (wait for completion)
 ┌─ Phase 3 (Sequential) ───────────────────┐
-│ • git-operations-specialist              │
+│ • 002-git              │
 └──────────────────────────────────────────┘
 ```
 
@@ -392,7 +392,7 @@ master-orchestrator decomposition:
 The agent system is exposed through constitutional slash commands:
 
 ### /guardian-health
-**Agents Invoked**: project-health-auditor, documentation-guardian, astro-build-specialist
+**Agents Invoked**: 002-health, 003-docs, 002-astro
 
 **Execution**: ALL THREE IN PARALLEL
 
@@ -406,9 +406,9 @@ The agent system is exposed through constitutional slash commands:
 ---
 
 ### /guardian-documentation
-**Agents Invoked**: master-orchestrator, constitutional-compliance-agent, documentation-guardian, symlink-guardian
+**Agents Invoked**: 001-orchestrator, 002-compliance, 003-docs, 003-symlink
 
-**Execution**: Coordinated by master-orchestrator
+**Execution**: Coordinated by 001-orchestrator
 
 **Output**: Comprehensive documentation integrity report:
 - Agent system verification (9 agents + registry)
@@ -421,7 +421,7 @@ The agent system is exposed through constitutional slash commands:
 ---
 
 ### /guardian-cleanup
-**Agents Invoked**: repository-cleanup-specialist, git-operations-specialist
+**Agents Invoked**: 002-cleanup, 002-git
 
 **Execution**: Sequential (cleanup analysis → Git operations)
 
@@ -430,7 +430,7 @@ The agent system is exposed through constitutional slash commands:
 ---
 
 ### /guardian-commit
-**Agents Invoked**: symlink-guardian, git-operations-specialist
+**Agents Invoked**: 003-symlink, 002-git
 
 **Execution**: Sequential (symlink verification → Git commit)
 
@@ -439,7 +439,7 @@ The agent system is exposed through constitutional slash commands:
 ---
 
 ### /guardian-deploy
-**Agents Invoked**: astro-build-specialist, git-operations-specialist
+**Agents Invoked**: 002-astro, 002-git
 
 **Execution**: Sequential (build validation → deployment commit)
 
@@ -515,14 +515,14 @@ def verify_and_finalize(results):
 ### For AI Assistants
 
 **DO**:
-- Use master-orchestrator for complex multi-agent tasks
+- Use 001-orchestrator for complex multi-agent tasks
 - Verify symlink integrity before Git operations
 - Run parallel agents simultaneously when possible
 - Always check dependencies before execution
 - Validate all outputs before marking tasks complete
 
 **DON'T**:
-- Run git-operations-specialist in parallel
+- Run 002-git in parallel
 - Skip dependency validation
 - Bypass constitutional workflows
 - Delete branches without explicit permission
@@ -535,15 +535,15 @@ def verify_and_finalize(results):
 All agents stored in:
 ```
 .claude/agents/
-├── master-orchestrator.md
-├── symlink-guardian.md
-├── constitutional-compliance-agent.md
-├── documentation-guardian.md
-├── git-operations-specialist.md
-├── astro-build-specialist.md
-├── project-health-auditor.md
-├── repository-cleanup-specialist.md
-└── constitutional-workflow-orchestrator.md
+├── 001-orchestrator.md
+├── 003-symlink.md
+├── 002-compliance.md
+├── 003-docs.md
+├── 002-git.md
+├── 002-astro.md
+├── 002-health.md
+├── 002-cleanup.md
+└── 003-workflow.md
 ```
 
 All slash commands stored in:

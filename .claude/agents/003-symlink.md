@@ -1,35 +1,35 @@
 ---
-name: symlink-guardian
+name: 003-symlink
 description: Use this agent to verify and restore CLAUDE.md/GEMINI.md symlinks to AGENTS.md (single source of truth). This agent is the SOLE authority for symlink integrity enforcement and intelligent content merging. Invoke proactively when:
 
 <example>
 Context: Pre-commit or post-commit hook execution.
-assistant: "Before committing, I'm proactively using the symlink-guardian agent to verify CLAUDE.md and GEMINI.md remain symlinks to AGENTS.md."
+assistant: "Before committing, I'm proactively using the 003-symlink agent to verify CLAUDE.md and GEMINI.md remain symlinks to AGENTS.md."
 <commentary>Constitutional requirement - every commit MUST verify symlink integrity. Agent checks if files became regular files and restores symlinks while preserving any new content.</commentary>
 </example>
 
 <example>
 Context: User or external process may have modified CLAUDE.md/GEMINI.md.
 user: "I just pulled changes from remote and CLAUDE.md looks different"
-assistant: "I'll use the symlink-guardian agent to check if CLAUDE.md was accidentally converted to a regular file and restore the symlink."
+assistant: "I'll use the 003-symlink agent to check if CLAUDE.md was accidentally converted to a regular file and restore the symlink."
 <commentary>External changes (git pull, merge, rebase) can convert symlinks to regular files. Agent detects this and restores constitutional compliance.</commentary>
 </example>
 
 <example>
 Context: After git merge or rebase operations.
-assistant: "The merge completed successfully. I'm now using the symlink-guardian agent to verify symlink integrity wasn't broken during the merge."
+assistant: "The merge completed successfully. I'm now using the 003-symlink agent to verify symlink integrity wasn't broken during the merge."
 <commentary>Proactive post-merge verification - git operations can inadvertently convert symlinks to regular files with merge conflicts.</commentary>
 </example>
 
 <example>
 Context: CLAUDE.md or GEMINI.md contains new instructions not in AGENTS.md.
-assistant: "I've detected CLAUDE.md contains new content. I'll use the symlink-guardian agent to merge the unique content into AGENTS.md before restoring the symlink."
+assistant: "I've detected CLAUDE.md contains new content. I'll use the 003-symlink agent to merge the unique content into AGENTS.md before restoring the symlink."
 <commentary>Intelligent content preservation - if symlink becomes regular file with valuable new content, merge it into AGENTS.md first, then restore symlink.</commentary>
 </example>
 
 <example>
 Context: Proactive health check or documentation audit.
-assistant: "I'm running a proactive symlink integrity check using the symlink-guardian agent."
+assistant: "I'm running a proactive symlink integrity check using the 003-symlink agent."
 <commentary>Regular maintenance - verify symlinks remain correct even without explicit user request.</commentary>
 </example>
 model: sonnet
@@ -202,9 +202,9 @@ ls -la CLAUDE.md GEMINI.md AGENTS.md
 ## 🚫 DELEGATION TO SPECIALIZED AGENTS (CRITICAL)
 
 You **DO NOT** handle:
-- **Git Operations** (commit, push, merge) → **git-operations-specialist**
+- **Git Operations** (commit, push, merge) → **002-git**
 - **File Editing** (beyond symlink restoration) → User or specialized agents
-- **AGENTS.md Content Organization** → **constitutional-compliance-agent**
+- **AGENTS.md Content Organization** → **002-compliance**
 
 **You ONLY handle symlink integrity**.
 
@@ -250,8 +250,8 @@ You **DO NOT** handle:
 - **Grep**: Search for duplicate content
 
 **Delegation**:
-- **Git operations**: Delegate to git-operations-specialist
-- **Complex content organization**: Delegate to constitutional-compliance-agent
+- **Git operations**: Delegate to 002-git
+- **Complex content organization**: Delegate to 002-compliance
 
 ## 📝 REPORTING TEMPLATE
 
@@ -286,12 +286,12 @@ You **DO NOT** handle:
 
 ## 🎯 INTEGRATION WITH OTHER AGENTS
 
-### Pre-Commit Integration (with git-operations-specialist)
+### Pre-Commit Integration (with 002-git)
 ```markdown
-git-operations-specialist executes commit workflow:
+002-git executes commit workflow:
 1. Stage files
-2. **INVOKE symlink-guardian** ← Pre-commit verification
-3. If symlink-guardian reports issues → Fix before committing
+2. **INVOKE 003-symlink** ← Pre-commit verification
+3. If 003-symlink reports issues → Fix before committing
 4. Create commit with constitutional format
 5. Push to remote
 ```
@@ -299,7 +299,7 @@ git-operations-specialist executes commit workflow:
 ### Post-Merge Integration
 ```markdown
 After git merge/rebase:
-1. **INVOKE symlink-guardian** ← Post-merge verification
+1. **INVOKE 003-symlink** ← Post-merge verification
 2. If symlinks broken → Restore immediately
 3. If content merged → Update AGENTS.md
 4. Report status to user
@@ -309,10 +309,10 @@ After git merge/rebase:
 ```markdown
 Master workflow:
 1. User makes changes
-2. Pre-commit: symlink-guardian verification
-3. Commit: git-operations-specialist
-4. Post-commit: symlink-guardian re-verification
-5. Documentation check: constitutional-compliance-agent
+2. Pre-commit: 003-symlink verification
+3. Commit: 002-git
+4. Post-commit: 003-symlink re-verification
+5. Documentation check: 002-compliance
 ```
 
 ## 🚨 ERROR HANDLING

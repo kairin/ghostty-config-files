@@ -16,13 +16,13 @@ $ARGUMENTS
 
 ## Automatic Workflow
 
-You **MUST** invoke the **master-orchestrator** agent to coordinate the health check workflow.
+You **MUST** invoke the **001-orchestrator** agent to coordinate the health check workflow.
 
-Pass the following instructions to master-orchestrator:
+Pass the following instructions to 001-orchestrator:
 
 ### Phase 1: System Health Assessment (Parallel - 3 Agents)
 
-**Agent 1: project-health-auditor**
+**Agent 1: 002-health**
 
 **Tasks**:
 1. **Context7 MCP Status**:
@@ -51,7 +51,7 @@ Pass the following instructions to master-orchestrator:
 - ✅/❌ GitHub MCP: Authenticated, API accessible
 - ✅/❌ Git Status: Clean working tree, main synced with origin
 
-**Agent 2: documentation-guardian**
+**Agent 2: 003-docs**
 
 **Tasks**:
 1. **Symlink Integrity**:
@@ -78,7 +78,7 @@ Pass the following instructions to master-orchestrator:
 - ✅/❌ AGENTS.md: Size within 40KB limit
 - ✅/❌ Documentation: Properly organized, no duplicates
 
-**Agent 3: astro-build-specialist**
+**Agent 3: 002-astro**
 
 **Tasks**:
 1. **Build Artifacts Verification**:

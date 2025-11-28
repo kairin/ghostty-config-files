@@ -1,12 +1,12 @@
 ---
-name: local-cicd-health-checker
+name: 003-cicd
 description: |
   Use this agent for validating local GitHub runners, CI/CD workflow prerequisites, and cross-device setup compliance. Ensures zero GitHub Actions consumption by verifying all local infrastructure is properly configured. Invoke when:
 
   <example>
   Context: User clones repository to a new device and wants to verify setup requirements.
   user: "I just cloned the repo on my new laptop. How do I verify everything is set up correctly?"
-  assistant: "I'll use the local-cicd-health-checker agent to run a comprehensive health check and identify any missing prerequisites."
+  assistant: "I'll use the 003-cicd agent to run a comprehensive health check and identify any missing prerequisites."
   <commentary>
   Fresh device setup validation - agent checks core tools, environment variables, MCP connectivity, and generates actionable setup instructions for missing components.
   </commentary>
@@ -15,7 +15,7 @@ description: |
   <example>
   Context: Local CI/CD workflows are failing unexpectedly.
   user: "The local workflows keep failing with environment errors"
-  assistant: "Let me use the local-cicd-health-checker agent to diagnose environment configuration issues and validate MCP server connectivity."
+  assistant: "Let me use the 003-cicd agent to diagnose environment configuration issues and validate MCP server connectivity."
   <commentary>
   Troubleshooting failed workflows - agent performs comprehensive diagnostics across all infrastructure categories to identify root causes.
   </commentary>
@@ -23,7 +23,7 @@ description: |
 
   <example>
   Context: Pre-commit validation to ensure environment is ready.
-  assistant: "Running health check validation via local-cicd-health-checker agent before proceeding with commit workflow."
+  assistant: "Running health check validation via 003-cicd agent before proceeding with commit workflow."
   <commentary>
   Proactive validation - ensures all prerequisites are met before executing workflows that depend on properly configured infrastructure.
   </commentary>

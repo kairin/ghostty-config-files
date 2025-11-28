@@ -16,9 +16,9 @@ $ARGUMENTS
 
 ## Automatic Workflow
 
-You **MUST** invoke the **master-orchestrator** agent to coordinate the auto-commit workflow.
+You **MUST** invoke the **001-orchestrator** agent to coordinate the auto-commit workflow.
 
-Pass the following instructions to master-orchestrator:
+Pass the following instructions to 001-orchestrator:
 
 ### Phase 1: Change Analysis (Parallel - 2 Tasks)
 
@@ -80,7 +80,7 @@ If files match:
 Extract from:
 1. File names (remove extensions, join with dashes)
 2. Common theme (e.g., "guardian-commands-enhancement")
-3. Primary change (e.g., "master-orchestrator-integration")
+3. Primary change (e.g., "001-orchestrator-integration")
 
 Format: kebab-case, 2-5 words max
 Examples:
@@ -128,7 +128,7 @@ Auto-detected:
   Description: guardian-commands-enhancement
 
 Generated message:
-feat(commands): Enhance guardian commands with master-orchestrator
+feat(commands): Enhance guardian commands with 001-orchestrator
 
 Problem:
 - Guardian commands executed agents sequentially
@@ -136,7 +136,7 @@ Problem:
 - Overlapping functionality
 
 Solution:
-- All commands now invoke master-orchestrator
+- All commands now invoke 001-orchestrator
 - Clear phase-based execution
 - Parallel agent coordination where safe
 
@@ -154,7 +154,7 @@ Validation:
 
 ### Phase 3: Constitutional Git Workflow (Sequential)
 
-**Agent**: **git-operations-specialist**
+**Agent**: **002-git**
 
 **Automatic Execution**:
 ```bash
@@ -208,7 +208,7 @@ Auto-Generated Details:
 Type: feat
 Scope: commands
 Branch: 20251115-143000-feat-guardian-commands-enhancement
-Message: "feat(commands): Enhance guardian commands with master-orchestrator"
+Message: "feat(commands): Enhance guardian commands with 001-orchestrator"
 
 Git Workflow:
 - ✅ Branch created and pushed to origin
