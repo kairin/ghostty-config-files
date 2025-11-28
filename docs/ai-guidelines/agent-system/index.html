@@ -7,7 +7,7 @@ GitHub
 <p>The ghostty-config-files project employs a sophisticated <strong>9-agent constitutional orchestration system</strong> designed for parallel workflow execution, dependency management, automated verification, and iterative refinement. This system maximizes efficiency while maintaining strict constitutional compliance and zero GitHub Actions cost.</p>
 <h2 id="agent-registry-9-specialized-agents">Agent Registry (9 Specialized Agents)</h2>
 <h3 id="core-coordination">Core Coordination</h3>
-<h4 id="1-master-orchestrator-35kb">1. <strong>master-orchestrator</strong> (35KB)</h4>
+<h4 id="1-001-orchestrator-35kb">1. <strong>001-orchestrator</strong> (35KB)</h4>
 <p><strong>Primary Function</strong>: Multi-agent coordination and parallel execution planning</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -26,14 +26,14 @@ GitHub
 </ul>
 <p><strong>Example</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User: "Review all documentation, fix issues, run tests, and deploy"</span></span>
-<span class="line"><span>AI: Uses master-orchestrator to coordinate documentation-guardian,</span></span>
-<span class="line"><span>    constitutional-compliance-agent, testing, and astro-build-specialist</span></span>
+<span class="line"><span>AI: Uses 001-orchestrator to coordinate 003-docs,</span></span>
+<span class="line"><span>    002-compliance, testing, and 002-astro</span></span>
 <span class="line"><span>    in parallel phases with dependency management.</span></span></code></pre>
 <p><strong>Parallel-Safe</strong>: ✅ Yes (coordinates other agents)
 <strong>Dependencies</strong>: None (top-level coordinator)</p>
 <hr>
 <h3 id="documentation-integrity-agents">Documentation Integrity Agents</h3>
-<h4 id="2-symlink-guardian-16kb">2. <strong>symlink-guardian</strong> (16KB)</h4>
+<h4 id="2-003-symlink-16kb">2. <strong>003-symlink</strong> (16KB)</h4>
 <p><strong>Primary Function</strong>: Verify and restore CLAUDE.md/GEMINI.md symlinks to AGENTS.md</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -52,7 +52,7 @@ GitHub
 <p><strong>Constitutional Requirement</strong>: CLAUDE.md and GEMINI.md MUST be symlinks to AGENTS.md (single source of truth)</p>
 <p><strong>Example Workflow</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Verify symlinks before commit</span></span>
-<span class="line"><span style="color:#B392F0">symlink-guardian</span><span style="color:#9ECBFF"> detects</span><span style="color:#9ECBFF"> CLAUDE.md</span><span style="color:#9ECBFF"> is</span><span style="color:#9ECBFF"> a</span><span style="color:#9ECBFF"> regular</span><span style="color:#9ECBFF"> file</span></span>
+<span class="line"><span style="color:#B392F0">003-symlink</span><span style="color:#9ECBFF"> detects</span><span style="color:#9ECBFF"> CLAUDE.md</span><span style="color:#9ECBFF"> is</span><span style="color:#9ECBFF"> a</span><span style="color:#9ECBFF"> regular</span><span style="color:#9ECBFF"> file</span></span>
 <span class="line"><span style="color:#B392F0">→</span><span style="color:#9ECBFF"> Merges</span><span style="color:#9ECBFF"> unique</span><span style="color:#9ECBFF"> content</span><span style="color:#9ECBFF"> from</span><span style="color:#9ECBFF"> CLAUDE.md</span><span style="color:#9ECBFF"> into</span><span style="color:#9ECBFF"> AGENTS.md</span></span>
 <span class="line"><span style="color:#B392F0">→</span><span style="color:#9ECBFF"> Deletes</span><span style="color:#9ECBFF"> CLAUDE.md</span><span style="color:#9ECBFF"> regular</span><span style="color:#9ECBFF"> file</span></span>
 <span class="line"><span style="color:#B392F0">→</span><span style="color:#9ECBFF"> Creates</span><span style="color:#9ECBFF"> symlink:</span><span style="color:#9ECBFF"> CLAUDE.md</span><span style="color:#9ECBFF"> →</span><span style="color:#9ECBFF"> AGENTS.md</span></span>
@@ -60,7 +60,7 @@ GitHub
 <p><strong>Parallel-Safe</strong>: ✅ Yes
 <strong>Dependencies</strong>: None</p>
 <hr>
-<h4 id="3-constitutional-compliance-agent-22kb">3. <strong>constitutional-compliance-agent</strong> (22KB)</h4>
+<h4 id="3-002-compliance-22kb">3. <strong>002-compliance</strong> (22KB)</h4>
 <p><strong>Primary Function</strong>: Ensure AGENTS.md remains &#x3C;40KB by modularizing large sections</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -87,7 +87,7 @@ GitHub
 <p><strong>Parallel-Safe</strong>: ✅ Yes
 <strong>Dependencies</strong>: None</p>
 <hr>
-<h4 id="4-documentation-guardian-18kb">4. <strong>documentation-guardian</strong> (18KB)</h4>
+<h4 id="4-003-docs-18kb">4. <strong>003-docs</strong> (18KB)</h4>
 <p><strong>Primary Function</strong>: Enforce AGENTS.md as single source of truth</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -106,10 +106,10 @@ GitHub
 </ul>
 <p><strong>Constitutional Requirement</strong>: All AI assistant instructions MUST originate from AGENTS.md. CLAUDE.md and GEMINI.md are symlinks only.</p>
 <p><strong>Parallel-Safe</strong>: ✅ Yes
-<strong>Dependencies</strong>: symlink-guardian (run symlink checks first)</p>
+<strong>Dependencies</strong>: 003-symlink (run symlink checks first)</p>
 <hr>
 <h3 id="build--deployment-agents">Build &#x26; Deployment Agents</h3>
-<h4 id="5-astro-build-specialist-18kb">5. <strong>astro-build-specialist</strong> (18KB)</h4>
+<h4 id="5-002-astro-18kb">5. <strong>002-astro</strong> (18KB)</h4>
 <p><strong>Primary Function</strong>: Astro.build operations and .nojekyll validation</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -133,9 +133,9 @@ GitHub
 <span class="line"><span style="color:#B392F0">✅</span><span style="color:#9ECBFF"> docs/_astro/</span><span style="color:#9ECBFF"> directory</span><span style="color:#9ECBFF"> exists</span></span>
 <span class="line"><span style="color:#B392F0">✅</span><span style="color:#9ECBFF"> All</span><span style="color:#9ECBFF"> HTML</span><span style="color:#9ECBFF"> pages</span><span style="color:#9ECBFF"> generated</span><span style="color:#9ECBFF"> correctly</span></span></code></pre>
 <p><strong>Parallel-Safe</strong>: ✅ Yes
-<strong>Dependencies</strong>: None (delegates Git operations to git-operations-specialist)</p>
+<strong>Dependencies</strong>: None (delegates Git operations to 002-git)</p>
 <hr>
-<h4 id="6-git-operations-specialist-19kb">6. <strong>git-operations-specialist</strong> (19KB)</h4>
+<h4 id="6-002-git-19kb">6. <strong>002-git</strong> (19KB)</h4>
 <p><strong>Primary Function</strong>: ALL Git and GitHub operations with constitutional compliance</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -168,10 +168,10 @@ GitHub
 <span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> main</span></span>
 <span class="line"><span style="color:#6A737D"># NEVER: git branch -d "$BRANCH" (preserve ALL branches)</span></span></code></pre>
 <p><strong>Parallel-Safe</strong>: ❌ NO (SEQUENTIAL ONLY - conflicts if parallel)
-<strong>Dependencies</strong>: symlink-guardian, documentation-guardian (run before Git operations)</p>
+<strong>Dependencies</strong>: 003-symlink, 003-docs (run before Git operations)</p>
 <hr>
 <h3 id="validation--health-agents">Validation &#x26; Health Agents</h3>
-<h4 id="7-project-health-auditor-19kb">7. <strong>project-health-auditor</strong> (19KB)</h4>
+<h4 id="7-002-health-19kb">7. <strong>002-health</strong> (19KB)</h4>
 <p><strong>Primary Function</strong>: Comprehensive health checks and Context7 MCP integration</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -201,7 +201,7 @@ GitHub
 <p><strong>Parallel-Safe</strong>: ✅ Yes
 <strong>Dependencies</strong>: None</p>
 <hr>
-<h4 id="8-repository-cleanup-specialist-21kb">8. <strong>repository-cleanup-specialist</strong> (21KB)</h4>
+<h4 id="8-002-cleanup-21kb">8. <strong>002-cleanup</strong> (21KB)</h4>
 <p><strong>Primary Function</strong>: Identify redundancy and consolidate directory structures</p>
 <p><strong>When to Invoke</strong>:</p>
 <ul>
@@ -221,16 +221,16 @@ GitHub
 </ul>
 <p><strong>Safety Protocols</strong>:</p>
 <ul>
-<li>ALWAYS delegate Git operations to git-operations-specialist</li>
+<li>ALWAYS delegate Git operations to 002-git</li>
 <li>NEVER delete without constitutional workflow</li>
 <li>Preserve branch history</li>
 <li>Backup before cleanup</li>
 </ul>
 <p><strong>Parallel-Safe</strong>: ✅ Yes
-<strong>Dependencies</strong>: None (delegates Git to git-operations-specialist)</p>
+<strong>Dependencies</strong>: None (delegates Git to 002-git)</p>
 <hr>
 <h3 id="shared-utilities">Shared Utilities</h3>
-<h4 id="9-constitutional-workflow-orchestrator-18kb">9. <strong>constitutional-workflow-orchestrator</strong> (18KB)</h4>
+<h4 id="9-003-workflow-18kb">9. <strong>003-workflow</strong> (18KB)</h4>
 <p><strong>Primary Function</strong>: Shared workflow templates and utility functions</p>
 <p><strong>When to Invoke</strong>: NOT invoked directly - referenced by other agents as a library</p>
 <p><strong>Key Capabilities</strong>:</p>
@@ -243,20 +243,20 @@ GitHub
 </ul>
 <p><strong>Usage Pattern</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="markdown"><code><span class="line"><span style="color:#E1E4E8">Other agents reference templates like:</span></span>
-<span class="line"><span style="color:#E1E4E8">"Use constitutional-workflow-orchestrator templates for branch naming"</span></span>
-<span class="line"><span style="color:#E1E4E8">"Follow constitutional-workflow-orchestrator commit format"</span></span></code></pre>
+<span class="line"><span style="color:#E1E4E8">"Use 003-workflow templates for branch naming"</span></span>
+<span class="line"><span style="color:#E1E4E8">"Follow 003-workflow commit format"</span></span></code></pre>
 <p><strong>Parallel-Safe</strong>: N/A (utility library, not directly invoked)
 <strong>Dependencies</strong>: None</p>
 <hr>
 <h2 id="agent-delegation-network">Agent Delegation Network</h2>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">graph TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[master-orchestrator&#x3C;br/>TOP-LEVEL COORDINATOR] --> B[symlink-guardian&#x3C;br/>PARALLEL-SAFE]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> C[constitutional-compliance-agent&#x3C;br/>PARALLEL-SAFE]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> D[documentation-guardian&#x3C;br/>PARALLEL-SAFE]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> E[project-health-auditor&#x3C;br/>PARALLEL-SAFE]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> F[repository-cleanup-specialist&#x3C;br/>PARALLEL-SAFE]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> G[astro-build-specialist&#x3C;br/>PARALLEL-SAFE]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> H[git-operations-specialist&#x3C;br/>SEQUENTIAL ONLY]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A[001-orchestrator&#x3C;br/>TOP-LEVEL COORDINATOR] --> B[003-symlink&#x3C;br/>PARALLEL-SAFE]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A --> C[002-compliance&#x3C;br/>PARALLEL-SAFE]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A --> D[003-docs&#x3C;br/>PARALLEL-SAFE]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A --> E[002-health&#x3C;br/>PARALLEL-SAFE]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A --> F[002-cleanup&#x3C;br/>PARALLEL-SAFE]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A --> G[002-astro&#x3C;br/>PARALLEL-SAFE]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A --> H[002-git&#x3C;br/>SEQUENTIAL ONLY]</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">    D -.requires.-> B</span></span>
 <span class="line"><span style="color:#E1E4E8">    H -.requires.-> B</span></span>
@@ -264,7 +264,7 @@ GitHub
 <span class="line"><span style="color:#E1E4E8">    F -.delegates Git.-> H</span></span>
 <span class="line"><span style="color:#E1E4E8">    G -.delegates Git.-> H</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">    B -.uses.-> I[constitutional-workflow-orchestrator&#x3C;br/>UTILITY LIBRARY]</span></span>
+<span class="line"><span style="color:#E1E4E8">    B -.uses.-> I[003-workflow&#x3C;br/>UTILITY LIBRARY]</span></span>
 <span class="line"><span style="color:#E1E4E8">    C -.uses.-> I</span></span>
 <span class="line"><span style="color:#E1E4E8">    H -.uses.-> I</span></span>
 <span class="line"></span>
@@ -288,46 +288,46 @@ GitHub
 <h2 id="parallel-execution-strategy">Parallel Execution Strategy</h2>
 <h3 id="phase-based-execution">Phase-Based Execution</h3>
 <p><strong>Phase 1 (Parallel)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> symlink-guardian</span></span>
-<span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> constitutional-compliance-agent</span></span>
-<span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> project-health-auditor</span></span>
-<span class="line"><span style="color:#B392F0">└─</span><span style="color:#9ECBFF"> repository-cleanup-specialist</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> 003-symlink</span></span>
+<span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> 002-compliance</span></span>
+<span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> 002-health</span></span>
+<span class="line"><span style="color:#B392F0">└─</span><span style="color:#9ECBFF"> 002-cleanup</span></span></code></pre>
 <p><strong>Phase 2 (Parallel, depends on Phase 1)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> documentation-guardian</span><span style="color:#E1E4E8"> (requires </span><span style="color:#9ECBFF">symlink-guardian</span><span style="color:#9ECBFF"> complete</span><span style="color:#E1E4E8">)</span></span>
-<span class="line"><span style="color:#B392F0">└─</span><span style="color:#9ECBFF"> astro-build-specialist</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">├─</span><span style="color:#9ECBFF"> 003-docs</span><span style="color:#E1E4E8"> (requires </span><span style="color:#9ECBFF">003-symlink</span><span style="color:#9ECBFF"> complete</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">└─</span><span style="color:#9ECBFF"> 002-astro</span></span></code></pre>
 <p><strong>Phase 3 (Sequential ONLY)</strong>:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">└─</span><span style="color:#9ECBFF"> git-operations-specialist</span><span style="color:#E1E4E8"> (requires </span><span style="color:#9ECBFF">ALL</span><span style="color:#9ECBFF"> previous</span><span style="color:#9ECBFF"> phases</span><span style="color:#9ECBFF"> complete</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">└─</span><span style="color:#9ECBFF"> 002-git</span><span style="color:#E1E4E8"> (requires </span><span style="color:#9ECBFF">ALL</span><span style="color:#9ECBFF"> previous</span><span style="color:#9ECBFF"> phases</span><span style="color:#9ECBFF"> complete</span><span style="color:#E1E4E8">)</span></span></code></pre>
 <h3 id="dependency-management">Dependency Management</h3>
 <p><strong>Strict Ordering Rules</strong>:</p>
 <ol>
-<li>symlink-guardian MUST complete before documentation-guardian</li>
-<li>documentation-guardian MUST complete before git-operations-specialist</li>
-<li>git-operations-specialist MUST run sequentially (never parallel)</li>
+<li>003-symlink MUST complete before 003-docs</li>
+<li>003-docs MUST complete before 002-git</li>
+<li>002-git MUST run sequentially (never parallel)</li>
 <li>Parallel agents can run simultaneously if no dependencies</li>
 </ol>
 <p><strong>Example Multi-Agent Workflow</strong>:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>User Request: "Audit project, fix issues, rebuild website, commit changes"</span></span>
 <span class="line"><span></span></span>
-<span class="line"><span>master-orchestrator decomposition:</span></span>
+<span class="line"><span>001-orchestrator decomposition:</span></span>
 <span class="line"><span>┌─ Phase 1 (Parallel) ─────────────────────┐</span></span>
-<span class="line"><span>│ • project-health-auditor                 │</span></span>
-<span class="line"><span>│ • symlink-guardian                       │</span></span>
-<span class="line"><span>│ • constitutional-compliance-agent        │</span></span>
+<span class="line"><span>│ • 002-health                 │</span></span>
+<span class="line"><span>│ • 003-symlink                       │</span></span>
+<span class="line"><span>│ • 002-compliance        │</span></span>
 <span class="line"><span>└──────────────────────────────────────────┘</span></span>
 <span class="line"><span>         ↓ (wait for completion)</span></span>
 <span class="line"><span>┌─ Phase 2 (Parallel) ─────────────────────┐</span></span>
-<span class="line"><span>│ • documentation-guardian                 │</span></span>
-<span class="line"><span>│ • astro-build-specialist                 │</span></span>
+<span class="line"><span>│ • 003-docs                 │</span></span>
+<span class="line"><span>│ • 002-astro                 │</span></span>
 <span class="line"><span>└──────────────────────────────────────────┘</span></span>
 <span class="line"><span>         ↓ (wait for completion)</span></span>
 <span class="line"><span>┌─ Phase 3 (Sequential) ───────────────────┐</span></span>
-<span class="line"><span>│ • git-operations-specialist              │</span></span>
+<span class="line"><span>│ • 002-git              │</span></span>
 <span class="line"><span>└──────────────────────────────────────────┘</span></span></code></pre>
 <hr>
 <h2 id="slash-command-integration">Slash Command Integration</h2>
 <p>The agent system is exposed through constitutional slash commands:</p>
 <h3 id="guardian-health">/guardian-health</h3>
-<p><strong>Agents Invoked</strong>: project-health-auditor, documentation-guardian, astro-build-specialist</p>
+<p><strong>Agents Invoked</strong>: 002-health, 003-docs, 002-astro</p>
 <p><strong>Execution</strong>: ALL THREE IN PARALLEL</p>
 <p><strong>Output</strong>: Consolidated health report covering:</p>
 <ul>
@@ -339,8 +339,8 @@ GitHub
 </ul>
 <hr>
 <h3 id="guardian-documentation">/guardian-documentation</h3>
-<p><strong>Agents Invoked</strong>: master-orchestrator, constitutional-compliance-agent, documentation-guardian, symlink-guardian</p>
-<p><strong>Execution</strong>: Coordinated by master-orchestrator</p>
+<p><strong>Agents Invoked</strong>: 001-orchestrator, 002-compliance, 003-docs, 003-symlink</p>
+<p><strong>Execution</strong>: Coordinated by 001-orchestrator</p>
 <p><strong>Output</strong>: Comprehensive documentation integrity report:</p>
 <ul>
 <li>Agent system verification (9 agents + registry)</li>
@@ -352,17 +352,17 @@ GitHub
 </ul>
 <hr>
 <h3 id="guardian-cleanup">/guardian-cleanup</h3>
-<p><strong>Agents Invoked</strong>: repository-cleanup-specialist, git-operations-specialist</p>
+<p><strong>Agents Invoked</strong>: 002-cleanup, 002-git</p>
 <p><strong>Execution</strong>: Sequential (cleanup analysis → Git operations)</p>
 <p><strong>Output</strong>: Cleanup report with constitutional Git workflow</p>
 <hr>
 <h3 id="guardian-commit">/guardian-commit</h3>
-<p><strong>Agents Invoked</strong>: symlink-guardian, git-operations-specialist</p>
+<p><strong>Agents Invoked</strong>: 003-symlink, 002-git</p>
 <p><strong>Execution</strong>: Sequential (symlink verification → Git commit)</p>
 <p><strong>Output</strong>: Constitutional commit with branch preservation</p>
 <hr>
 <h3 id="guardian-deploy">/guardian-deploy</h3>
-<p><strong>Agents Invoked</strong>: astro-build-specialist, git-operations-specialist</p>
+<p><strong>Agents Invoked</strong>: 002-astro, 002-git</p>
 <p><strong>Execution</strong>: Sequential (build validation → deployment commit)</p>
 <p><strong>Output</strong>: Complete deployment with constitutional compliance</p>
 <hr>
@@ -427,7 +427,7 @@ GitHub
 <h3 id="for-ai-assistants">For AI Assistants</h3>
 <p><strong>DO</strong>:</p>
 <ul>
-<li>Use master-orchestrator for complex multi-agent tasks</li>
+<li>Use 001-orchestrator for complex multi-agent tasks</li>
 <li>Verify symlink integrity before Git operations</li>
 <li>Run parallel agents simultaneously when possible</li>
 <li>Always check dependencies before execution</li>
@@ -435,7 +435,7 @@ GitHub
 </ul>
 <p><strong>DON’T</strong>:</p>
 <ul>
-<li>Run git-operations-specialist in parallel</li>
+<li>Run 002-git in parallel</li>
 <li>Skip dependency validation</li>
 <li>Bypass constitutional workflows</li>
 <li>Delete branches without explicit permission</li>
@@ -445,15 +445,15 @@ GitHub
 <h2 id="agent-file-locations">Agent File Locations</h2>
 <p>All agents stored in:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>.claude/agents/</span></span>
-<span class="line"><span>├── master-orchestrator.md</span></span>
-<span class="line"><span>├── symlink-guardian.md</span></span>
-<span class="line"><span>├── constitutional-compliance-agent.md</span></span>
-<span class="line"><span>├── documentation-guardian.md</span></span>
-<span class="line"><span>├── git-operations-specialist.md</span></span>
-<span class="line"><span>├── astro-build-specialist.md</span></span>
-<span class="line"><span>├── project-health-auditor.md</span></span>
-<span class="line"><span>├── repository-cleanup-specialist.md</span></span>
-<span class="line"><span>└── constitutional-workflow-orchestrator.md</span></span></code></pre>
+<span class="line"><span>├── 001-orchestrator.md</span></span>
+<span class="line"><span>├── 003-symlink.md</span></span>
+<span class="line"><span>├── 002-compliance.md</span></span>
+<span class="line"><span>├── 003-docs.md</span></span>
+<span class="line"><span>├── 002-git.md</span></span>
+<span class="line"><span>├── 002-astro.md</span></span>
+<span class="line"><span>├── 002-health.md</span></span>
+<span class="line"><span>├── 002-cleanup.md</span></span>
+<span class="line"><span>└── 003-workflow.md</span></span></code></pre>
 <p>All slash commands stored in:</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>.claude/commands/</span></span>
 <span class="line"><span>├── guardian-health.md</span></span>

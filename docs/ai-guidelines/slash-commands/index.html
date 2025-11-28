@@ -11,9 +11,9 @@ GitHub
 <p><strong>Purpose</strong>: Execute comprehensive project health assessment</p>
 <p><strong>Agents Invoked</strong> (Parallel):</p>
 <ul>
-<li>project-health-auditor</li>
-<li>documentation-guardian</li>
-<li>astro-build-specialist</li>
+<li>002-health</li>
+<li>003-docs</li>
+<li>002-astro</li>
 </ul>
 <p><strong>Use Cases</strong>:</p>
 <ul>
@@ -42,12 +42,12 @@ GitHub
 <hr>
 <h3 id="guardian-documentation">/guardian-documentation</h3>
 <p><strong>Purpose</strong>: Comprehensive documentation integrity verification</p>
-<p><strong>Agents Invoked</strong> (Coordinated by master-orchestrator):</p>
+<p><strong>Agents Invoked</strong> (Coordinated by 001-orchestrator):</p>
 <ul>
-<li>master-orchestrator (coordinator)</li>
-<li>constitutional-compliance-agent</li>
-<li>documentation-guardian</li>
-<li>symlink-guardian</li>
+<li>001-orchestrator (coordinator)</li>
+<li>002-compliance</li>
+<li>003-docs</li>
+<li>003-symlink</li>
 </ul>
 <p><strong>Verification Scope</strong>:</p>
 <h4 id="1-agent-system-verification">1. Agent System Verification</h4>
@@ -138,8 +138,8 @@ GitHub
 <p><strong>Purpose</strong>: Identify redundant files and consolidate directory structures with constitutional Git workflow</p>
 <p><strong>Agents Invoked</strong> (Sequential):</p>
 <ol>
-<li>repository-cleanup-specialist (analysis)</li>
-<li>git-operations-specialist (Git operations)</li>
+<li>002-cleanup (analysis)</li>
+<li>002-git (Git operations)</li>
 </ol>
 <p><strong>Cleanup Scope</strong>:</p>
 <ul>
@@ -185,8 +185,8 @@ GitHub
 <p><strong>Purpose</strong>: Execute fully automatic constitutional Git commit workflow</p>
 <p><strong>Agents Invoked</strong> (Sequential):</p>
 <ol>
-<li>symlink-guardian (pre-commit validation)</li>
-<li>git-operations-specialist (commit workflow)</li>
+<li>003-symlink (pre-commit validation)</li>
+<li>002-git (commit workflow)</li>
 </ol>
 <p><strong>Workflow Steps</strong>:</p>
 <ol>
@@ -237,8 +237,8 @@ GitHub
 <p><strong>Purpose</strong>: Execute complete deployment workflow - Astro build, validation, commit, and GitHub Pages deployment</p>
 <p><strong>Agents Invoked</strong> (Sequential):</p>
 <ol>
-<li>astro-build-specialist (build and validation)</li>
-<li>git-operations-specialist (deployment commit)</li>
+<li>002-astro (build and validation)</li>
+<li>002-git (deployment commit)</li>
 </ol>
 <p><strong>Deployment Steps</strong>:</p>
 <ol>

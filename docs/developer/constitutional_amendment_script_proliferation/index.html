@@ -80,7 +80,7 @@ GitHub
 <p><strong>Key Feature</strong>: Places script proliferation at top of mind for all AI tasks</p>
 <hr>
 <h3 id="4-constitutional-compliance-agent-enhanced"><strong>4. Constitutional Compliance Agent Enhanced</strong></h3>
-<p><strong>File</strong>: <code>/home/kkk/Apps/ghostty-config-files/.claude/agents/constitutional-compliance-agent.md</code>
+<p><strong>File</strong>: <code>/home/kkk/Apps/ghostty-config-files/.claude/agents/002-compliance.md</code>
 <strong>Location</strong>: Lines 458-647 (new section)
 <strong>Size Impact</strong>: +5KB</p>
 <p><strong>Added Capabilities</strong>:</p>
@@ -88,7 +88,7 @@ GitHub
 <li><strong>Script Proliferation Validation Protocol</strong></li>
 <li>6-rule validation system</li>
 <li>Automated validation response</li>
-<li>Integration points (pre-commit hook, master-orchestrator, git-operations-specialist)</li>
+<li>Integration points (pre-commit hook, 001-orchestrator, 002-git)</li>
 <li>Metrics tracking system</li>
 <li>Override process</li>
 <li>Example violations with remediation</li>
@@ -121,7 +121,7 @@ GitHub
 <span class="line"><span>│       └── Metrics</span></span>
 <span class="line"><span>│</span></span>
 <span class="line"><span>├── agents/</span></span>
-<span class="line"><span>│   └── constitutional-compliance-agent.md  (ENHANCED)</span></span>
+<span class="line"><span>│   └── 002-compliance.md  (ENHANCED)</span></span>
 <span class="line"><span>│       └── Script Proliferation Prevention Section</span></span>
 <span class="line"><span>│           ├── Validation Protocol</span></span>
 <span class="line"><span>│           ├── Integration Points</span></span>
@@ -141,9 +141,9 @@ GitHub
 </ul>
 <h3 id="layer-2-agent-instructions-guidance"><strong>Layer 2: Agent Instructions (Guidance)</strong></h3>
 <ul>
-<li>constitutional-compliance-agent validates all new files</li>
-<li>master-orchestrator checks before delegating file creation</li>
-<li>git-operations-specialist checks before commits</li>
+<li>002-compliance validates all new files</li>
+<li>001-orchestrator checks before delegating file creation</li>
+<li>002-git checks before commits</li>
 </ul>
 <h3 id="layer-3-automated-validation-prevention"><strong>Layer 3: Automated Validation (Prevention)</strong></h3>
 <ul>
@@ -294,7 +294,7 @@ GitHub
 <p><strong>Action</strong>: Try to commit new file <code>lib/utils/helper.sh</code></p>
 <p><strong>Expected Behavior</strong>:</p>
 <ol>
-<li>✅ constitutional-compliance-agent detects new <code>.sh</code> file</li>
+<li>✅ 002-compliance detects new <code>.sh</code> file</li>
 <li>✅ Validation checklist presented</li>
 <li>✅ Commit blocked (no justification provided)</li>
 <li>✅ Remediation suggestions displayed</li>
@@ -306,7 +306,7 @@ GitHub
 <p><strong>Action</strong>: Create <code>tests/integration/test_version_compare.sh</code></p>
 <p><strong>Expected Behavior</strong>:</p>
 <ol>
-<li>✅ constitutional-compliance-agent detects new <code>.sh</code> file</li>
+<li>✅ 002-compliance detects new <code>.sh</code> file</li>
 <li>✅ Test file exception applies</li>
 <li>✅ Commit allowed (test files exempt)</li>
 </ol>
@@ -383,7 +383,7 @@ GitHub
 </ul>
 <p>✅ <strong>Automated Enforcement</strong>:</p>
 <ul>
-<li>constitutional-compliance-agent blocks violations</li>
+<li>002-compliance blocks violations</li>
 <li>Pre-commit validation prevents bad commits</li>
 <li>Metrics track repository health</li>
 </ul>
@@ -478,7 +478,7 @@ GitHub
 </ul>
 </li>
 <li>
-<p><strong>.claude/agents/constitutional-compliance-agent.md</strong> (lines 458-647)</p>
+<p><strong>.claude/agents/002-compliance.md</strong> (lines 458-647)</p>
 <ul>
 <li>Automated validation logic</li>
 <li>Integration points</li>
@@ -544,7 +544,7 @@ GitHub
 
 
 
-<table><thead><tr><th>Criterion</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>Principle formally documented</td><td>✅ COMPLETE</td><td>AGENTS.md lines 180-240</td></tr><tr><td>Detailed rules documented</td><td>✅ COMPLETE</td><td>.claude/principles/script-proliferation.md</td></tr><tr><td>AI assistant awareness</td><td>✅ COMPLETE</td><td>.claude/README.md created</td></tr><tr><td>Automated enforcement</td><td>✅ COMPLETE</td><td>constitutional-compliance-agent enhanced</td></tr><tr><td>Validation checklist</td><td>✅ COMPLETE</td><td>7-step checklist documented</td></tr><tr><td>Examples provided</td><td>✅ COMPLETE</td><td>3 violations with remediation</td></tr><tr><td>Baseline metrics</td><td>✅ COMPLETE</td><td>132 scripts baseline established</td></tr><tr><td>Override process</td><td>✅ COMPLETE</td><td>Documented in all locations</td></tr></tbody></table>
+<table><thead><tr><th>Criterion</th><th>Status</th><th>Evidence</th></tr></thead><tbody><tr><td>Principle formally documented</td><td>✅ COMPLETE</td><td>AGENTS.md lines 180-240</td></tr><tr><td>Detailed rules documented</td><td>✅ COMPLETE</td><td>.claude/principles/script-proliferation.md</td></tr><tr><td>AI assistant awareness</td><td>✅ COMPLETE</td><td>.claude/README.md created</td></tr><tr><td>Automated enforcement</td><td>✅ COMPLETE</td><td>002-compliance enhanced</td></tr><tr><td>Validation checklist</td><td>✅ COMPLETE</td><td>7-step checklist documented</td></tr><tr><td>Examples provided</td><td>✅ COMPLETE</td><td>3 violations with remediation</td></tr><tr><td>Baseline metrics</td><td>✅ COMPLETE</td><td>132 scripts baseline established</td></tr><tr><td>Override process</td><td>✅ COMPLETE</td><td>Documented in all locations</td></tr></tbody></table>
 <hr>
 <h2 id="conclusion">Conclusion</h2>
 <p>Script proliferation prevention is now a <strong>CONSTITUTIONAL PRINCIPLE</strong> enforced at multiple levels:</p>
@@ -552,7 +552,7 @@ GitHub
 <li><strong>Documentation</strong>: Prominently displayed in AGENTS.md</li>
 <li><strong>Awareness</strong>: .claude/README.md ensures AI assistants see it first</li>
 <li><strong>Guidance</strong>: Detailed principles document with examples</li>
-<li><strong>Enforcement</strong>: constitutional-compliance-agent validates all new files</li>
+<li><strong>Enforcement</strong>: 002-compliance validates all new files</li>
 <li><strong>Metrics</strong>: Baseline established, tracking system in place</li>
 <li><strong>Override</strong>: Clear process for rare exceptions</li>
 </ol>
