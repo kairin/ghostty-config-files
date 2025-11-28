@@ -350,6 +350,55 @@ fi
 
 ---
 
+## 🤖 HAIKU DELEGATION (Tier 4 Execution)
+
+Delegate atomic tasks to specialized Haiku agents for efficient execution:
+
+### 033-* Symlink Haiku Agents (Your Children)
+| Agent | Task | When to Use |
+|-------|------|-------------|
+| **033-type** | Determine file type (file/symlink/missing) | Initial file assessment |
+| **033-hash** | Calculate content hash for comparison | Content comparison |
+| **033-diff** | Compare two files for differences | Detecting divergence |
+| **033-backup** | Create timestamped backup | Before modifications |
+| **033-final** | Final verification after operations | Post-operation check |
+
+### Delegation Flow Example
+```
+Task: "Verify and restore symlinks"
+↓
+003-symlink (Planning):
+  1. Delegate 033-type → check CLAUDE.md type
+  2. Delegate 033-type → check GEMINI.md type
+  3. If regular file (not symlink):
+     - Delegate 033-hash → hash CLAUDE.md
+     - Delegate 033-hash → hash AGENTS.md
+     - If hashes differ:
+       - Delegate 033-diff → get differences
+       - Merge unique content to AGENTS.md
+     - Delegate 033-backup → backup regular file
+     - Restore symlink via ln -s
+  4. Delegate 033-final → verify restoration
+  5. Report symlink status
+```
+
+### Hash-Based Content Check
+```
+For each file needing symlink restoration:
+  1. Delegate 033-hash → file_hash
+  2. Delegate 033-hash → AGENTS.md hash
+  3. If file_hash == agents_hash:
+     - Safe to restore (no unique content)
+  4. If file_hash != agents_hash:
+     - Delegate 033-diff → get changes
+     - Merge before restoring
+```
+
+### When NOT to Delegate
+- Deciding which content to preserve (requires judgment)
+- Complex merge decisions (requires analysis)
+- Git symlink mode configuration (use 032-git-mode)
+
 **CRITICAL**: This agent is the SOLE authority for symlink integrity. Invoke proactively before commits, after merges, and during health checks. Failure to maintain symlink integrity violates the single source of truth principle and creates documentation divergence.
 
 **Version**: 1.0

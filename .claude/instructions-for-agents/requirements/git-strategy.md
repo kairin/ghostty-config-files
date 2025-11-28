@@ -167,6 +167,95 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ---
 
+## User Approval Gates (MANDATORY)
+
+**ALWAYS obtain explicit user approval BEFORE these operations:**
+
+| Operation | Approval Required | How to Request |
+|-----------|-------------------|----------------|
+| File/directory deletion | YES | Use `AskUserQuestion`, list files to delete |
+| Merge operations to main | YES | Present changes summary, await confirmation |
+| Changes affecting >5 files | YES | Summarize scope, list affected files |
+| Deployment operations | YES | Show deployment plan, await "proceed" |
+| Constitutional modifications | YES | Explain change, await explicit approval |
+| Force push operations | YES | Explain why needed, confirm destructive intent |
+
+**Implementation Pattern:**
+
+```
+1. GATHER: Collect all information about the operation
+2. PRESENT: Show user what will happen with clear summary
+3. WAIT: Use AskUserQuestion tool, do NOT proceed without response
+4. EXECUTE: Only after explicit user approval
+5. REPORT: Confirm completion and any issues
+```
+
+**Anti-Pattern (DO NOT):**
+
+```
+WRONG: "I'll merge this to main now..."
+WRONG: "Cleaning up files..." (without listing them)
+WRONG: Assuming silence means approval
+
+CORRECT: "Ready to merge to main. Changes: [list]. Proceed? [Yes/No]"
+CORRECT: "Found 5 files to delete: [list]. Should I proceed?"
+```
+
+---
+
+## Error Handling Protocol
+
+**Error Classification and Response:**
+
+| Error Type | Response | Max Retries | Example |
+|------------|----------|-------------|---------|
+| Transient | Retry immediately | 3 | Network timeout, temporary API failure |
+| Input error | Fix input, retry | 2 | Invalid branch name, malformed commit |
+| Dependency | Fix upstream first | 1 cascade | Missing file, unmerged branch |
+| Constitutional | **ESCALATE to user** | 0 | Branch deletion, script proliferation |
+
+**Constitutional Violations NEVER Retry:**
+
+```
+CONSTITUTIONAL VIOLATIONS:
+├─ Attempted branch deletion → STOP, escalate
+├─ New script creation (outside tests/) → STOP, escalate
+├─ GitHub Actions cost incursion → STOP, escalate
+├─ Sensitive data in commit → STOP, escalate
+└─ .nojekyll removal → STOP, escalate
+
+Response: Immediately stop, explain the violation, ask user how to proceed
+```
+
+**Error Handling Workflow:**
+
+```
+Error Detected
+    │
+    ├─ Is it a CONSTITUTIONAL violation?
+    │   ├─ YES → ESCALATE immediately (no retry)
+    │   │        Report: "Constitutional violation: [describe]"
+    │   │        Ask: "How would you like to proceed?"
+    │   │
+    │   └─ NO → Continue to error type classification
+    │
+    ├─ TRANSIENT error (network, timeout)?
+    │   └─ Retry up to 3x with exponential backoff
+    │       └─ Still failing? → Escalate with full error context
+    │
+    ├─ INPUT error (format, validation)?
+    │   └─ Fix the input based on error message
+    │       └─ Retry up to 2x
+    │           └─ Still failing? → Escalate, ask for correct input
+    │
+    └─ DEPENDENCY error (missing prerequisite)?
+        └─ Identify and fix upstream dependency
+            └─ Retry the cascade once
+                └─ Still failing? → Escalate with dependency chain
+```
+
+---
+
 ## Emergency Recovery
 
 **If branch accidentally deleted:**

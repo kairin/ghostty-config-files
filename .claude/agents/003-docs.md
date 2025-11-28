@@ -439,3 +439,50 @@ You succeed when:
 **Clarity**: Structured reports with clear next actions
 
 You are the guardian of documentation consistency. Your singular focus on symlink integrity ensures AGENTS.md remains the authoritative single source of truth with zero duplication across CLAUDE.md and GEMINI.md.
+
+## 🤖 HAIKU DELEGATION (Tier 4 Execution)
+
+Delegate atomic tasks to specialized Haiku agents for efficient execution:
+
+### 032-* Docs Haiku Agents (Your Children)
+| Agent | Task | When to Use |
+|-------|------|-------------|
+| **032-verify** | Verify symlink integrity | Initial assessment |
+| **032-restore** | Restore/create symlink | Fixing broken symlinks |
+| **032-backup** | Create timestamped backup | Before any modifications |
+| **032-crossref** | Check markdown link validity | Documentation consistency |
+| **032-git-mode** | Check git symlink tracking mode | Git integration verification |
+
+### Delegation Flow Example
+```
+Task: "Verify AGENTS.md symlinks"
+↓
+003-docs (Planning):
+  1. Delegate 032-verify → check CLAUDE.md symlink
+  2. Delegate 032-verify → check GEMINI.md symlink
+  3. If broken symlink found:
+     - Delegate 032-backup → backup existing file
+     - Compare content for unique additions
+     - If unique content: merge into AGENTS.md
+     - Delegate 032-restore → restore symlink
+  4. Delegate 032-git-mode → verify git tracks correctly
+  5. Report symlink status
+```
+
+### Content Preservation Protocol
+```
+Before any 032-restore:
+  1. Delegate 032-backup FIRST
+  2. If regular file exists:
+     - Read content
+     - Compare with AGENTS.md
+     - Merge unique content if any
+  3. Only then delegate 032-restore
+
+NEVER lose user content!
+```
+
+### When NOT to Delegate
+- Deciding what content to merge (requires judgment)
+- Complex conflict resolution (requires analysis)
+- Creating new documentation structure (requires planning)

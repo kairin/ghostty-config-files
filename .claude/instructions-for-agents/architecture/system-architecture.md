@@ -14,6 +14,8 @@ last-updated: 2025-11-21
 - [Directory Structure](./directory-structure.md) - File organization details
 - [Technology Stack](./technology-stack.md) - Core dependencies
 - [Logging System](./logging-system.md) - Dual-mode logging architecture
+- [Agent Delegation](./agent-delegation.md) - 4-tier agent hierarchy
+- [Agent Registry](./agent-registry.md) - Complete 60-agent reference
 
 ---
 
@@ -71,6 +73,24 @@ last-updated: 2025-11-21
 ```
 
 **Complete Structure**: See [DIRECTORY_STRUCTURE.md](./directory-structure.md) for detailed directory tree with file descriptions, design patterns, and naming conventions.
+
+---
+
+## Agent Architecture (4-Tier Hierarchy)
+
+The project uses a 4-tier agent system for intelligent task delegation:
+
+| Tier | Model | Count | Purpose |
+|------|-------|-------|---------|
+| 1 | Opus | 1 | Multi-agent orchestration |
+| 2-3 | Sonnet | 9 | Core/utility operations |
+| 4 | Haiku | 50 | Atomic execution tasks |
+
+**Token Optimization**: ~40% reduction by delegating atomic tasks to Haiku tier.
+
+**Complete Documentation**:
+- [Agent Delegation Guide](./agent-delegation.md) - When to use which tier
+- [Agent Registry](./agent-registry.md) - Complete 60-agent reference
 
 ---
 
