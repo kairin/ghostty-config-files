@@ -27,22 +27,42 @@ source "${INSTALL_CHECK_DIR}/logging.sh"
 source "${INSTALL_CHECK_DIR}/utils.sh"
 
 #
-# Check if Ghostty is actually installed
+# Check if Ghostty is actually installed (rejects snap installations)
 #
 # Returns:
-#   0 = installed
-#   1 = not installed
+#   0 = installed via .deb or source build (valid)
+#   1 = not installed OR snap installation (needs reinstall)
 #   2 = installed but outdated
 #
 check_ghostty_installed() {
-    # Use command -v to detect Ghostty regardless of installation location
-    # This works for both Snap installations (/usr/bin/ghostty) and
-    # manual builds (~/.local/share/ghostty/bin/ghostty)
-    if command -v ghostty >/dev/null 2>&1; then
-        return 0  # Installed and in PATH
+    # Check if ghostty binary exists
+    if ! command -v ghostty >/dev/null 2>&1; then
+        return 1  # Not installed
     fi
 
-    return 1  # Not installed
+    # Reject snap installations - they should be replaced with .deb or source
+    local ghostty_path
+    ghostty_path=$(command -v ghostty)
+    if [[ "$ghostty_path" == /snap/* ]]; then
+        return 1  # Snap version - needs reinstall
+    fi
+
+    # Check for valid .deb installation
+    if dpkg -l ghostty 2>/dev/null | grep -q "^ii"; then
+        return 0  # Valid .deb installation
+    fi
+
+    # Check for source build in /usr/local
+    if [[ "$ghostty_path" == "/usr/local/bin/ghostty" ]]; then
+        return 0  # Valid source installation
+    fi
+
+    # Check for source build in /usr/bin (from DESTDIR install)
+    if [[ "$ghostty_path" == "/usr/bin/ghostty" ]] && ! dpkg -l ghostty 2>/dev/null | grep -q "^ii"; then
+        return 0  # Valid source installation to /usr
+    fi
+
+    return 1  # Unknown installation type - reinstall
 }
 
 #
