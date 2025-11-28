@@ -261,6 +261,43 @@ EOF
         fi
     fi
 
+    # Symlink icons to user's icon directory for better desktop integration
+    # (following Ghostty pattern - desktop environments search ~/.local first)
+    local user_icons="$HOME/.local/share/icons/hicolor"
+    local source_icons="$FEH_INSTALL_PREFIX/share/icons/hicolor"
+
+    if [ -d "$source_icons" ]; then
+        log "INFO" "Creating user icon symlinks for better desktop integration..."
+
+        # Create user icon directories and symlink feh icons
+        for size in "48x48" "scalable"; do
+            local src_dir="$source_icons/$size/apps"
+            local dst_dir="$user_icons/$size/apps"
+
+            if [ -d "$src_dir" ]; then
+                mkdir -p "$dst_dir"
+
+                # Symlink PNG icon
+                if [ -f "$src_dir/feh.png" ]; then
+                    ln -sf "$src_dir/feh.png" "$dst_dir/feh.png"
+                    log "SUCCESS" "  ✓ Symlinked feh.png to $dst_dir/"
+                fi
+
+                # Symlink SVG icon
+                if [ -f "$src_dir/feh.svg" ]; then
+                    ln -sf "$src_dir/feh.svg" "$dst_dir/feh.svg"
+                    log "SUCCESS" "  ✓ Symlinked feh.svg to $dst_dir/"
+                fi
+            fi
+        done
+
+        # Update user icon cache
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+            gtk-update-icon-cache -f -t "$user_icons" 2>/dev/null || true
+            log "SUCCESS" "  ✓ User icon cache updated"
+        fi
+    fi
+
     # Step 8: Create user desktop entry with smart launcher
     log "INFO" "Creating user desktop entry..."
 
