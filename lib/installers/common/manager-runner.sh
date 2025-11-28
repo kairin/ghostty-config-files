@@ -15,6 +15,7 @@ REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/../../.." && pwd)}"
 # Source required libraries
 source "${REPO_ROOT}/lib/core/utils.sh"
 source "${REPO_ROOT}/lib/core/logging.sh"
+source "${REPO_ROOT}/lib/core/lifecycle.sh"
 source "${REPO_ROOT}/lib/ui/tui.sh"
 source "${REPO_ROOT}/lib/ui/collapsible.sh"
 source "${REPO_ROOT}/lib/installers/common/tui-helpers.sh"
@@ -146,14 +147,16 @@ run_install_steps() {
             }
         fi
 
-        # Log step start and update task state
-        log "INFO" "Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name} (estimated: $(format_duration "$duration"))"
+        # Log step start and update task state with Docker-style timestamps
+        local step_timestamp
+        step_timestamp=$(date "+%H:%M:%S")
+        log "INFO" "[$step_timestamp] Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name} (estimated: $(format_duration "$duration"))"
         start_task "$task_id"
 
         # Execute step with timing
         local step_start step_end step_duration step_exit_code
         step_start=$(date +%s)
-        log "INFO" "-> Step ${step_num}/${MR_TOTAL_STEPS}: ${display_name}..."
+        log "INFO" "[$step_timestamp] → ${display_name}..."
 
         # Execute and capture exit code properly
         "$step_path" && step_exit_code=0 || step_exit_code=$?
@@ -164,14 +167,16 @@ run_install_steps() {
         #   0 = success
         #   1 = failure
         #   2 = skipped (idempotent - already installed)
+        local end_timestamp
+        end_timestamp=$(date "+%H:%M:%S")
         if [ $step_exit_code -eq 0 ]; then
             complete_task "$task_id" "$step_duration"
-            log "SUCCESS" "Completed: ${display_name} ($(format_duration "$step_duration"))"
+            log "SUCCESS" "[$end_timestamp] ✓ ${display_name} ($(format_duration "$step_duration"))"
         elif [ $step_exit_code -eq 2 ]; then
             # Exit code 2 = skipped (already done, idempotent behavior)
             # Mark remaining tasks as skipped and exit early with success
             complete_task "$task_id" 0
-            log "INFO" "Skipped: ${display_name} (already installed)"
+            log "INFO" "[$end_timestamp] ↷ ${display_name} (already installed)"
 
             # Mark remaining steps as skipped and return success
             local remaining_step=$((step_num + 1))
@@ -190,7 +195,7 @@ run_install_steps() {
             cleanup_collapsible_output
             return 2  # Return 2 to indicate skipped (idempotent)
         else
-            log "ERROR" "FAILED: ${display_name} (exit code: $step_exit_code)"
+            log "ERROR" "[$end_timestamp] ✗ ${display_name} (exit code: $step_exit_code)"
             fail_task "$task_id" "Exit code: $step_exit_code - Check logs for details"
             ((failed_steps++))
         fi

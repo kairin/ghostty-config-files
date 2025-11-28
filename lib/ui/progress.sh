@@ -127,28 +127,8 @@ show_progress_bar() {
     echo "$title: $progress_bar"
 }
 
-#
-# Show spinner with title (gum wrapper)
-#
-# Args:
-#   $1 - Title/message
-#   $2 - Command to execute (optional)
-#
-# Returns:
-#   Exit code from command (or 0 if no command)
-#
-show_spinner() {
-    local title="$1"
-    local command="${2:-}"
-
-    # Use gum spinner if available (from tui.sh)
-    if [ -n "$command" ]; then
-        show_spinner_wrapper "$title" "$command"
-    else
-        # Just show title (no command to execute)
-        echo "$title..."
-    fi
-}
+# NOTE: show_spinner() is provided by tui.sh (sourced above)
+# Do NOT redefine it here - that would override the correct gum implementation
 
 #
 # Calculate elapsed time
@@ -372,11 +352,11 @@ demo_progress() {
 }
 
 # Export functions
+# NOTE: show_spinner is exported by tui.sh, not here
 export -f init_progress_tracking
 export -f calculate_progress_percentage
 export -f render_progress_bar
 export -f show_progress_bar
-export -f show_spinner
 export -f calculate_elapsed_time
 export -f estimate_remaining_time
 export -f show_header

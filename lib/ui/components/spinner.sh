@@ -235,20 +235,5 @@ get_status_symbol() {
     esac
 }
 
-# Function: format_duration
-#   Formatted duration (stdout)
-format_duration() {
-    local seconds="$1"
-
-    if [[ $seconds -lt 60 ]]; then
-        echo "${seconds}s"
-    elif [[ $seconds -lt 3600 ]]; then
-        local mins=$((seconds / 60))
-        local secs=$((seconds % 60))
-        echo "${mins}m ${secs}s"
-    else
-        local hours=$((seconds / 3600))
-        local mins=$(((seconds % 3600) / 60))
-        echo "${hours}h ${mins}m"
-    fi
-}
+# NOTE: format_duration() is provided by lib/core/utils.sh
+# Do NOT redefine it here - use the authoritative source

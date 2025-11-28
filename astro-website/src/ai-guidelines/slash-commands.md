@@ -88,7 +88,6 @@ Overall Status: HEALTHY / NEEDS ATTENTION / CRITICAL
 - All internal links valid
 - No broken references to moved files
 - Quick Links section current
-- Spec-Kit documentation up-to-date
 
 #### 4. Consolidation Compliance
 - No scattered documentation
@@ -353,88 +352,6 @@ DEPLOYMENT COMPLETE ✅
 
 ---
 
-## Spec-Kit Integration Commands
-
-### /speckit.constitution
-
-**Purpose**: Create or update project constitution with principle synchronization
-
-**Execution**: Interactive principle input → Template updates
-
-**Output**: Updated constitution.md and dependent templates
-
----
-
-### /speckit.specify
-
-**Purpose**: Create or update feature specification from natural language
-
-**Input**: Feature description (natural language)
-
-**Output**: spec.md with structured specification
-
----
-
-### /speckit.plan
-
-**Purpose**: Execute implementation planning workflow
-
-**Input**: spec.md
-
-**Output**: plan.md with design artifacts
-
----
-
-### /speckit.tasks
-
-**Purpose**: Generate actionable, dependency-ordered tasks.md
-
-**Input**: spec.md, plan.md
-
-**Output**: tasks.md with executable task list
-
----
-
-### /speckit.implement
-
-**Purpose**: Execute implementation by processing all tasks in tasks.md
-
-**Input**: tasks.md
-
-**Output**: Complete feature implementation
-
----
-
-### /speckit.analyze
-
-**Purpose**: Perform cross-artifact consistency analysis
-
-**Input**: spec.md, plan.md, tasks.md
-
-**Output**: Analysis report with recommendations
-
----
-
-### /speckit.checklist
-
-**Purpose**: Generate custom checklist for current feature
-
-**Input**: User requirements
-
-**Output**: Feature-specific checklist
-
----
-
-### /speckit.clarify
-
-**Purpose**: Identify underspecified areas and ask clarification questions
-
-**Input**: spec.md
-
-**Output**: Updated spec.md with clarified details
-
----
-
 ## Command Naming Conventions
 
 **Guardian Commands** (`/guardian-*`):
@@ -442,11 +359,6 @@ DEPLOYMENT COMPLETE ✅
 - Health checks and validation
 - Cleanup and maintenance
 - Git and deployment operations
-
-**Spec-Kit Commands** (`/speckit.*`):
-- Feature specification and planning
-- Implementation workflows
-- Task management
 - Cross-artifact analysis
 
 ---
@@ -474,15 +386,7 @@ All slash commands stored in:
 ├── guardian-documentation.md
 ├── guardian-cleanup.md
 ├── guardian-commit.md
-├── guardian-deploy.md
-├── speckit.constitution.md
-├── speckit.specify.md
-├── speckit.plan.md
-├── speckit.tasks.md
-├── speckit.implement.md
-├── speckit.analyze.md
-├── speckit.checklist.md
-└── speckit.clarify.md
+└── guardian-deploy.md
 ```
 
 ---
@@ -493,14 +397,12 @@ All slash commands stored in:
 
 **DO**:
 - Use guardian commands for infrastructure operations
-- Use speckit commands for feature development
 - Invoke /guardian-health before major changes
 - Invoke /guardian-documentation after doc updates
 - Use /guardian-deploy for zero-cost deployments
 - Trust the orchestration - agents handle complexity
 
 **DON'T**:
-- Mix guardian and speckit workflows unnecessarily
 - Skip pre-deployment /guardian-health checks
 - Bypass constitutional Git workflows
 - Delete branches created by slash commands
@@ -579,13 +481,6 @@ All slash commands stored in:
 - /guardian-commit: ~20-40s (validation + commit)
 - /guardian-deploy: ~2-4min (build + validation + commit)
 
-**Spec-Kit Command Suite**:
-- /speckit.specify: ~1-2min (specification generation)
-- /speckit.plan: ~2-3min (planning artifacts)
-- /speckit.tasks: ~30-60s (task decomposition)
-- /speckit.implement: Variable (depends on task complexity)
-- /speckit.analyze: ~1-2min (cross-artifact analysis)
-
 ---
 
 ## References
@@ -593,7 +488,6 @@ All slash commands stored in:
 - **AGENTS.md**: Agent system implementation details
 - **.claude/agents/**: Agent implementation files
 - **.claude/commands/**: Slash command definitions
-- **spec-kit/guides/**: Spec-Kit workflow documentation
 - **documentations/developer/**: Developer architecture guides
 
 ---

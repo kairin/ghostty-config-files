@@ -244,7 +244,7 @@ ghostty +show-config                    # Validate configuration
 
 - **[Agent Delegation Guide](/.claude/instructions-for-agents/architecture/agent-delegation.md)** - When to use which tier
 - **[Agent Registry](/.claude/instructions-for-agents/architecture/agent-registry.md)** - Complete 60-agent reference
-- **Commands**: `.claude/commands/` - 14 slash commands (/guardian-*, /speckit.*)
+- **Commands**: `.claude/commands/` - 6 slash commands (/guardian-*)
 
 ---
 
