@@ -151,8 +151,7 @@ AGENTS.md (master) ← CLAUDE.md (symlink)
 │           └── Override Process
 │
 └── commands/
-    ├── guardian-*.md                (reference script proliferation)
-    └── speckit.*.md                 (reference script proliferation)
+    └── guardian-*.md                (reference script proliferation)
 ```
 
 ---

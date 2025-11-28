@@ -141,9 +141,9 @@ init_tui() {
 #   Exit code from command
 #
 # Usage:
-#   show_spinner "Installing Ghostty..." "zig build -Doptimize=ReleaseFast"
+#   tui_spinner "Installing Ghostty..." "zig build -Doptimize=ReleaseFast"
 #
-show_spinner() {
+tui_spinner() {
     local title="$1"
     local command="$2"
 
@@ -157,6 +157,9 @@ show_spinner() {
     fi
 }
 
+# Backward compatible alias
+show_spinner() { tui_spinner "$@"; }
+
 #
 # Show progress indicator (gum wrapper)
 #
@@ -166,9 +169,9 @@ show_spinner() {
 #   $3 - Title/message
 #
 # Usage:
-#   show_progress 10 3 "Installing dependencies"
+#   tui_progress 10 3 "Installing dependencies"
 #
-show_progress() {
+tui_progress() {
     local total="$1"
     local current="$2"
     local title="$3"
@@ -185,6 +188,9 @@ show_progress() {
     fi
 }
 
+# Backward compatible alias
+show_progress() { tui_progress "$@"; }
+
 #
 # Show confirmation prompt (gum wrapper)
 #
@@ -195,11 +201,11 @@ show_progress() {
 #   0 if user confirmed (yes), 1 if declined (no)
 #
 # Usage:
-#   if show_confirm "Install Ghostty?"; then
+#   if tui_confirm "Install Ghostty?"; then
 #       echo "User confirmed"
 #   fi
 #
-show_confirm() {
+tui_confirm() {
     local prompt="$1"
 
     if [ "$TUI_AVAILABLE" = true ]; then
@@ -225,6 +231,9 @@ show_confirm() {
     fi
 }
 
+# Backward compatible alias
+show_confirm() { tui_confirm "$@"; }
+
 #
 # Show styled text (gum wrapper)
 #
@@ -234,9 +243,9 @@ show_confirm() {
 #   $3 - Bold flag (true/false, optional)
 #
 # Usage:
-#   show_styled "SUCCESS" "green" true
+#   tui_styled "SUCCESS" "green" true
 #
-show_styled() {
+tui_styled() {
     local text="$1"
     local color="${2:-}"
     local bold="${3:-false}"
@@ -276,6 +285,9 @@ show_styled() {
     fi
 }
 
+# Backward compatible alias
+show_styled() { tui_styled "$@"; }
+
 #
 # Show input prompt (gum wrapper)
 #
@@ -288,9 +300,9 @@ show_styled() {
 #   User input string
 #
 # Usage:
-#   username=$(show_input "Enter username:" "admin" "your username")
+#   username=$(tui_input "Enter username:" "admin" "your username")
 #
-show_input() {
+tui_input() {
     local prompt="$1"
     local default="${2:-}"
     local placeholder="${3:-}"
@@ -321,6 +333,9 @@ show_input() {
     fi
 }
 
+# Backward compatible alias
+show_input() { tui_input "$@"; }
+
 #
 # Show choice menu (gum wrapper)
 #
@@ -332,9 +347,9 @@ show_input() {
 #   Selected choice
 #
 # Usage:
-#   choice=$(show_choose "Select installation method:" "apt" "snap" "source")
+#   choice=$(tui_choose "Select installation method:" "apt" "snap" "source")
 #
-show_choose() {
+tui_choose() {
     local header="$1"
     shift
     local choices=("$@")
@@ -365,6 +380,9 @@ show_choose() {
     fi
 }
 
+# Backward compatible alias
+show_choose() { tui_choose "$@"; }
+
 #
 # Show multi-line text in box (gum wrapper)
 #
@@ -373,9 +391,9 @@ show_choose() {
 #   $2... - Content lines (multiple arguments)
 #
 # Usage:
-#   show_box "System Information" "OS: Ubuntu 25.10" "Kernel: 6.17.0" "Arch: x86_64"
+#   tui_box "System Information" "OS: Ubuntu 25.10" "Kernel: 6.17.0" "Arch: x86_64"
 #
-show_box() {
+tui_box() {
     local title="$1"
     shift
     local content=("$@")
@@ -408,6 +426,9 @@ show_box() {
     fi
 }
 
+# Backward compatible alias
+show_box() { tui_box "$@"; }
+
 #
 # Get TUI status summary
 #
@@ -427,6 +448,16 @@ EOF
 
 # Export functions for use in other modules
 export -f init_tui
+# Primary functions (with tui_ prefix for disambiguation)
+export -f tui_spinner
+export -f tui_progress
+export -f tui_confirm
+export -f tui_styled
+export -f tui_input
+export -f tui_choose
+export -f tui_box
+export -f get_tui_status
+# Backward compatible aliases (transitional period)
 export -f show_spinner
 export -f show_progress
 export -f show_confirm
@@ -434,7 +465,6 @@ export -f show_styled
 export -f show_input
 export -f show_choose
 export -f show_box
-export -f get_tui_status
 
 # Export global variables
 export TUI_AVAILABLE

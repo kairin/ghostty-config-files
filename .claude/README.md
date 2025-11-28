@@ -76,21 +76,6 @@
 | `/guardian-deploy` | Deploy with validation | Safe |
 | `/guardian-cleanup` | Safe cleanup with preservation | Safe |
 
-### Spec-Kit Commands (Feature Workflow)
-
-**Feature specification and implementation:**
-
-| Command | Purpose | Phase |
-|---------|---------|-------|
-| `/speckit.specify` | Create specification from natural language | 1. Spec |
-| `/speckit.plan` | Generate implementation plan | 2. Plan |
-| `/speckit.tasks` | Create actionable tasks | 3. Tasks |
-| `/speckit.clarify` | Ask targeted clarification questions | * Clarify |
-| `/speckit.analyze` | Cross-artifact consistency check | * Validate |
-| `/speckit.checklist` | Generate custom checklist | * Support |
-| `/speckit.implement` | Execute implementation | 4. Implement |
-| `/speckit.taskstoissues` | Convert tasks to GitHub issues | 5. Track |
-
 ---
 
 ## 🏗️ Architecture Overview
@@ -117,9 +102,8 @@ CLAUDE.md, GEMINI.md         ← AI assistant entry points
 │   ├── 003-symlink.md           (Tier 3: Sonnet Utility)
 │   ├── 003-docs.md              (Tier 3: Sonnet Utility)
 │   └── 003-workflow.md          (Tier 3: Sonnet Utility)
-└── commands/                 ← 14 slash commands
-    ├── guardian-*.md         (6 guardian commands)
-    └── speckit.*.md          (8 spec-kit commands)
+└── commands/                 ← 6 slash commands
+    └── guardian-*.md         (6 guardian commands)
 ```
 
 ---
@@ -199,9 +183,8 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
    - Constitutional compliance enforcement
 
 4. **Command Definitions** (`.claude/commands/`)
-   - 14 slash commands (116KB total)
+   - 6 slash commands
    - Guardian commands (safe operations)
-   - Spec-kit commands (feature workflow)
 
 ### Supporting Documentation
 
@@ -240,19 +223,6 @@ Task: Implement update detection for all components
 5. Agents modify existing verification scripts ✅
 6. No new scripts created ✅
 7. Constitutional Git workflow ✅
-```
-
-### Example 3: New Feature Specification
-
-```
-Task: Design modern TUI system
-
-1. Run: /speckit.specify ✅
-2. Run: /speckit.plan ✅
-3. Run: /speckit.tasks ✅
-4. Run: /speckit.implement ✅
-5. Follow script proliferation rules ✅
-6. Constitutional Git workflow ✅
 ```
 
 ---

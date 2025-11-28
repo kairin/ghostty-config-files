@@ -106,33 +106,11 @@ show_component_footer() {
     echo ""
 }
 
-#######################################
-# format_duration - Convert seconds to human-readable format
-#
-# Args:
-#   $1 - Duration in seconds
-#
-# Returns:
-#   Formatted duration string (e.g., "2m 30s")
-#######################################
-format_duration() {
-    local seconds="${1:-0}"
-
-    if [[ "$seconds" -lt 60 ]]; then
-        echo "${seconds}s"
-    elif [[ "$seconds" -lt 3600 ]]; then
-        local minutes=$((seconds / 60))
-        local remaining_seconds=$((seconds % 60))
-        echo "${minutes}m ${remaining_seconds}s"
-    else
-        local hours=$((seconds / 3600))
-        local remaining_minutes=$(((seconds % 3600) / 60))
-        echo "${hours}h ${remaining_minutes}m"
-    fi
-}
+# NOTE: format_duration() is provided by lib/core/utils.sh
+# Do NOT redefine it here - use the authoritative source
 
 #######################################
-# show_progress_bar - Display a progress bar for current step
+# render_progress_inline - Display an inline progress bar for current step
 #
 # Args:
 #   $1 - Current step number
@@ -140,9 +118,11 @@ format_duration() {
 #   $3 - Step description (optional)
 #
 # Output:
-#   Visual progress indicator
+#   Visual progress indicator (inline, overwrites current line)
+#
+# NOTE: Different from show_progress_bar() in progress.sh which outputs newlines
 #######################################
-show_progress_bar() {
+render_progress_inline() {
     local current="$1"
     local total="$2"
     local description="${3:-}"
@@ -159,15 +139,16 @@ show_progress_bar() {
 }
 
 #######################################
-# show_spinner - Display a spinner for long-running operations
+# render_spinner_for_pid - Display a spinner while waiting for a PID
 #
 # Args:
 #   $1 - Message to display
 #   $2 - PID of background process to wait for
 #
 # Note: This is a blocking function that waits for the process
+# NOTE: Different from show_spinner() in tui.sh which runs a command with gum
 #######################################
-show_spinner() {
+render_spinner_for_pid() {
     local message="$1"
     local pid="$2"
     local spin_chars='/-\|'
@@ -224,6 +205,7 @@ print_status_line() {
 }
 
 # Export functions
+# NOTE: format_duration is exported by lib/core/utils.sh
 export -f show_component_header show_component_footer
-export -f format_duration show_progress_bar show_spinner
+export -f render_progress_inline render_spinner_for_pid
 export -f print_header print_status_line
