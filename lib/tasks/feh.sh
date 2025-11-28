@@ -263,33 +263,37 @@ EOF
 
     # Symlink icons to user's icon directory for better desktop integration
     # (following Ghostty pattern - desktop environments search ~/.local first)
+    # NOTE: Desktop environments (GNOME, KDE) require icons in multiple sizes.
+    # We symlink the 48x48 PNG to all common sizes since that's what feh provides.
     local user_icons="$HOME/.local/share/icons/hicolor"
     local source_icons="$FEH_INSTALL_PREFIX/share/icons/hicolor"
+    local source_png="$source_icons/48x48/apps/feh.png"
+    local source_svg="$source_icons/scalable/apps/feh.svg"
 
     if [ -d "$source_icons" ]; then
         log "INFO" "Creating user icon symlinks for better desktop integration..."
 
-        # Create user icon directories and symlink feh icons
-        for size in "48x48" "scalable"; do
-            local src_dir="$source_icons/$size/apps"
+        # Create symlinks for all common icon sizes (desktop envs need multiple sizes)
+        # Yaru, Papirus, and other themes look for: 16, 22, 24, 32, 48, 64, 128, 256
+        local icon_sizes=("16x16" "22x22" "24x24" "32x32" "48x48" "64x64" "128x128" "256x256")
+
+        for size in "${icon_sizes[@]}"; do
             local dst_dir="$user_icons/$size/apps"
+            mkdir -p "$dst_dir"
 
-            if [ -d "$src_dir" ]; then
-                mkdir -p "$dst_dir"
-
-                # Symlink PNG icon
-                if [ -f "$src_dir/feh.png" ]; then
-                    ln -sf "$src_dir/feh.png" "$dst_dir/feh.png"
-                    log "SUCCESS" "  ✓ Symlinked feh.png to $dst_dir/"
-                fi
-
-                # Symlink SVG icon
-                if [ -f "$src_dir/feh.svg" ]; then
-                    ln -sf "$src_dir/feh.svg" "$dst_dir/feh.svg"
-                    log "SUCCESS" "  ✓ Symlinked feh.svg to $dst_dir/"
-                fi
+            # Symlink PNG icon (use 48x48 source for all sizes - GTK will scale)
+            if [ -f "$source_png" ] && [ ! -e "$dst_dir/feh.png" ]; then
+                ln -sf "$source_png" "$dst_dir/feh.png"
             fi
         done
+        log "SUCCESS" "  ✓ Symlinked feh.png to all icon sizes (16-256px)"
+
+        # Also symlink the scalable SVG
+        if [ -f "$source_svg" ]; then
+            mkdir -p "$user_icons/scalable/apps"
+            ln -sf "$source_svg" "$user_icons/scalable/apps/feh.svg"
+            log "SUCCESS" "  ✓ Symlinked feh.svg to scalable/"
+        fi
 
         # Update user icon cache
         if command -v gtk-update-icon-cache >/dev/null 2>&1; then

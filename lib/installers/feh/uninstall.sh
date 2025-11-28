@@ -72,21 +72,22 @@ uninstall_feh() {
     fi
 
     # 3b. Remove user icon symlinks (created for desktop integration)
-    local user_icon_files=(
-        "$HOME/.local/share/icons/hicolor/48x48/apps/feh.png"
-        "$HOME/.local/share/icons/hicolor/scalable/apps/feh.svg"
-    )
+    # Clean up all icon sizes that may have been symlinked
+    local icon_sizes=("16x16" "22x22" "24x24" "32x32" "48x48" "64x64" "128x128" "256x256" "scalable")
 
-    for icon_file in "${user_icon_files[@]}"; do
-        if [ -L "$icon_file" ] || [ -f "$icon_file" ]; then
-            log "INFO" "Removing user icon symlink: $icon_file"
-            if rm -f "$icon_file" 2>/dev/null; then
-                log "SUCCESS" "Icon symlink removed: $icon_file"
-                ((removed_items++))
-            else
-                log "WARNING" "Could not remove icon symlink: $icon_file"
+    for size in "${icon_sizes[@]}"; do
+        local icon_dir="$HOME/.local/share/icons/hicolor/$size/apps"
+        for icon_file in "$icon_dir/feh.png" "$icon_dir/feh.svg"; do
+            if [ -L "$icon_file" ] || [ -f "$icon_file" ]; then
+                log "INFO" "Removing user icon: $icon_file"
+                if rm -f "$icon_file" 2>/dev/null; then
+                    log "SUCCESS" "Icon removed: $icon_file"
+                    ((removed_items++))
+                else
+                    log "WARNING" "Could not remove icon: $icon_file"
+                fi
             fi
-        fi
+        done
     done
 
     # 4. Remove build directory (if it exists)
