@@ -16,8 +16,13 @@ set -euo pipefail
 [ -z "${INSTALLATION_CHECK_SH_LOADED:-}" ] || return 0
 INSTALLATION_CHECK_SH_LOADED=1
 
-# Source required libraries
-INSTALL_CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Source required libraries (bash/zsh portable)
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+    INSTALL_CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+    # zsh fallback using %x expansion
+    INSTALL_CHECK_DIR="$(cd "$(dirname "${(%):-%x}")" && pwd)"
+fi
 source "${INSTALL_CHECK_DIR}/logging.sh"
 source "${INSTALL_CHECK_DIR}/utils.sh"
 
@@ -205,17 +210,19 @@ get_component_action() {
     fi
 }
 
-# Export functions
-export -f check_ghostty_installed
-export -f check_gum_installed
-export -f check_zsh_installed
-export -f check_go_installed
-export -f check_uv_installed
-export -f check_fnm_installed
-export -f check_ai_tools_installed
-export -f check_context_menu_installed
-export -f verify_context_menu
-export -f check_component_installed
-export -f get_component_action
+# Export functions (bash only - export -f not supported in zsh)
+if [[ -n "${BASH_VERSION:-}" ]]; then
+    export -f check_ghostty_installed
+    export -f check_gum_installed
+    export -f check_zsh_installed
+    export -f check_go_installed
+    export -f check_uv_installed
+    export -f check_fnm_installed
+    export -f check_ai_tools_installed
+    export -f check_context_menu_installed
+    export -f verify_context_menu
+    export -f check_component_installed
+    export -f get_component_action
+fi
 
 log "INFO" "installation-check.sh loaded successfully"
