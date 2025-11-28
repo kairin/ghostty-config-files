@@ -14,7 +14,7 @@ posts.sort((a, b) => {
   return a.data.title.localeCompare(b.data.title);
 });
 
-const { base } = Astro.site ? { base: '/ghostty-config-files' } : { base: '' };
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title={title} description={description}>
