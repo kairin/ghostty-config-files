@@ -15,7 +15,9 @@
 │   └── local-cicd-operations.md        (CI/CD pipeline, logging)
 │
 ├── architecture/                       (System design documentation)
-│   └── system-architecture.md          (Overview, tech stack, goals)
+│   ├── system-architecture.md          (Overview, tech stack, goals)
+│   ├── agent-delegation.md             (4-tier hierarchy, delegation decision tree)
+│   └── agent-registry.md               (Complete 60-agent reference)
 │
 ├── guides/                            (Operational how-to guides)
 │   └── first-time-setup.md            (Installation, configuration)
@@ -90,6 +92,25 @@
 - Documentation structure
 
 **When to reference**: Understanding system design or planning major architectural changes
+
+#### `agent-delegation.md` (~500 tokens)
+**Contains:**
+- 4-tier agent hierarchy diagram
+- Delegation decision tree
+- Cost/complexity matrix (Opus $$$ → Sonnet $$ → Haiku $)
+- When to delegate vs execute directly
+- Good/bad delegation examples
+
+**When to reference**: Deciding which agent tier to use for a task
+
+#### `agent-registry.md` (~800 tokens)
+**Contains:**
+- Complete 60-agent registry
+- Parent-child relationships (Sonnet → Haiku)
+- Parallel-safe indicators
+- Purpose descriptions by tier
+
+**When to reference**: Looking up specific agents or understanding agent relationships
 
 ---
 

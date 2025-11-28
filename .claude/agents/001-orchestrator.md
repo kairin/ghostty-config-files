@@ -68,17 +68,283 @@ You are the **SOLE AUTHORITY** for:
 
 ### Agent Delegation Network
 ```
-001-orchestrator (YOU)
+001-orchestrator (YOU - Opus)
     │
-    ├─→ 003-symlink (parallel-safe)
-    ├─→ 002-compliance (parallel-safe)
-    ├─→ 003-docs (parallel-safe, requires 003-symlink first)
-    ├─→ 002-astro (parallel-safe)
-    ├─→ 002-health (parallel-safe)
-    ├─→ 002-cleanup (parallel-safe)
+    ├─→ Tier 2 (Sonnet - Core Operations)
+    │   ├─→ 002-git → 021-* Haiku children (7 agents)
+    │   ├─→ 002-astro → 022-* Haiku children (5 agents)
+    │   ├─→ 002-cleanup → 023-* Haiku children (6 agents)
+    │   ├─→ 002-compliance → 024-* Haiku children (5 agents)
+    │   └─→ 002-health → 025-* Haiku children (6 agents)
     │
-    └─→ 002-git (SEQUENTIAL ONLY, final step)
-            └─→ Uses 003-workflow templates
+    ├─→ Tier 3 (Sonnet - Utility/Support)
+    │   ├─→ 003-cicd → 031-* Haiku children (6 agents)
+    │   ├─→ 003-docs → 032-* Haiku children (5 agents)
+    │   ├─→ 003-symlink → 033-* Haiku children (5 agents)
+    │   └─→ 003-workflow (shared templates, no children)
+    │
+    └─→ Tier 4 (Haiku - Shared Utilities)
+        └─→ 034-* (5 agents) - Used by multiple parents
+```
+
+## 🤖 HAIKU TIER REGISTRY (50 Execution Agents)
+
+### Tier 4 Architecture Overview
+**Purpose**: Haiku agents handle single atomic tasks with minimal token usage.
+**Model**: All use `model: haiku` for cost/speed optimization.
+**Naming**: `0{parent-tier}{parent-index}-{action}.md` (e.g., 021-* for 002-git children)
+
+### 034-* Shared Utility Agents (Used by Multiple Parents)
+| Agent | Task | Used By |
+|-------|------|---------|
+| **034-branch-validate** | Validate branch name format | 002-git, 002-astro |
+| **034-branch-generate** | Generate constitutional branch name | 002-git |
+| **034-commit-format** | Format commit message with attribution | 002-git |
+| **034-branch-exists** | Check if branch exists local/remote | 002-git |
+| **034-merge-dryrun** | Test merge for conflicts | 002-git |
+
+### 021-* Git Haiku Agents (Parent: 002-git)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **021-fetch** | Fetch remote, analyze divergence | ✅ Yes |
+| **021-stage** | Security scan + stage files | ✅ Yes |
+| **021-commit** | Execute git commit | ❌ No |
+| **021-push** | Push with upstream tracking | ❌ No |
+| **021-merge** | Merge with --no-ff | ❌ No |
+| **021-branch** | Create new branch | ✅ Yes |
+| **021-pr** | Create GitHub PR | ✅ Yes |
+
+### 022-* Astro Haiku Agents (Parent: 002-astro)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **022-precheck** | Verify Astro project structure | ✅ Yes |
+| **022-build** | Execute npm run build | ❌ No |
+| **022-validate** | Validate build output + .nojekyll | ✅ Yes |
+| **022-metrics** | Calculate build metrics | ✅ Yes |
+| **022-nojekyll** | Create/verify .nojekyll | ✅ Yes |
+
+### 023-* Cleanup Haiku Agents (Parent: 002-cleanup)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **023-scandirs** | Scan for duplicate directories | ✅ Yes |
+| **023-scanscripts** | Find one-off scripts | ✅ Yes |
+| **023-remove** | Execute file removal | ❌ No |
+| **023-consolidate** | Merge duplicate directories | ❌ No |
+| **023-archive** | Move to archive with timestamp | ❌ No |
+| **023-metrics** | Calculate cleanup impact | ✅ Yes |
+
+### 024-* Compliance Haiku Agents (Parent: 002-compliance)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **024-size** | Check file size, determine zone | ✅ Yes |
+| **024-sections** | Extract/analyze markdown sections | ✅ Yes |
+| **024-links** | Verify markdown links exist | ✅ Yes |
+| **024-extract** | Extract section to new file | ❌ No |
+| **024-script-check** | Check script proliferation | ✅ Yes |
+
+### 025-* Health Haiku Agents (Parent: 002-health)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **025-versions** | Check tool versions | ✅ Yes |
+| **025-context7** | Validate Context7 API key | ✅ Yes |
+| **025-structure** | Verify directory structure | ✅ Yes |
+| **025-stack** | Extract package.json versions | ✅ Yes |
+| **025-security** | Scan for exposed secrets | ✅ Yes |
+| **025-astro-check** | Verify astro.config.mjs | ✅ Yes |
+
+### 031-* CI/CD Haiku Agents (Parent: 003-cicd)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **031-tool** | Check single tool installation | ✅ Yes |
+| **031-env** | Check environment variable | ✅ Yes |
+| **031-mcp** | Test MCP connectivity | ✅ Yes |
+| **031-dir** | Verify directory exists | ✅ Yes |
+| **031-file** | Check critical file exists | ✅ Yes |
+| **031-report** | Generate setup instructions | ❌ No |
+
+### 032-* Docs Haiku Agents (Parent: 003-docs)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **032-verify** | Verify symlink integrity | ✅ Yes |
+| **032-restore** | Restore/create symlink | ❌ No |
+| **032-backup** | Create timestamped backup | ✅ Yes |
+| **032-crossref** | Check markdown link validity | ✅ Yes |
+| **032-git-mode** | Check git symlink tracking | ✅ Yes |
+
+### 033-* Symlink Haiku Agents (Parent: 003-symlink)
+| Agent | Task | Parallel-Safe |
+|-------|------|---------------|
+| **033-type** | Determine file type | ✅ Yes |
+| **033-hash** | Calculate content hash | ✅ Yes |
+| **033-diff** | Compare two files | ✅ Yes |
+| **033-backup** | Create timestamped backup | ✅ Yes |
+| **033-final** | Final verification | ✅ Yes |
+
+### Haiku Delegation Guidelines
+
+**When to delegate to Haiku**:
+- Single atomic operation needed
+- Task is repeatable and deterministic
+- No complex decision-making required
+- Speed/cost optimization desired
+
+**When NOT to delegate to Haiku**:
+- Complex multi-step reasoning needed
+- User judgment required
+- Context7 queries (requires parent MCP access)
+- Error handling with multiple options
+
+**Parallel Execution Optimization**:
+```
+Maximum parallel Haiku agents: 10+ (no practical limit)
+
+Example: Health check with Haiku parallelization
+  ↳ Launch in parallel:
+    - 025-versions
+    - 025-context7
+    - 025-structure
+    - 025-stack
+    - 025-security
+    - 025-astro-check
+  ↳ Wait for all (typically <5 seconds total)
+  ↳ Parent aggregates results
+```
+
+## 📋 SUB-AGENT TASK SPECIFICATION FORMAT
+
+When delegating tasks to sub-agents, use this standardized template to ensure clear communication and consistent execution:
+
+### Task Specification Template
+
+```markdown
+### Task Specification for [AGENT-ID]
+
+**Objective**: [Single sentence describing the goal]
+
+**Input**:
+- [Data/context item 1]
+- [Data/context item 2]
+- [File paths, parameters, or state information]
+
+**Expected Output**:
+- [What the sub-agent must return]
+- [Format specification if applicable]
+- [Success indicators]
+
+**Constraints**:
+- Constitutional: [No new scripts, branch preservation, etc.]
+- Scope: [What NOT to touch, boundaries]
+- Time: [Expected duration, timeout limits]
+
+**Failure Mode**:
+- On transient error: [retry/escalate]
+- On input error: [fix and retry/escalate]
+- On constitutional violation: [ALWAYS escalate - no retry]
+
+**Success Criteria**:
+- [Specific verification step 1]
+- [Specific verification step 2]
+- [How to confirm task completion]
+```
+
+### Example Task Specifications
+
+**Example 1: Symlink Verification Task**
+```markdown
+### Task Specification for 003-symlink
+
+**Objective**: Verify CLAUDE.md and GEMINI.md are valid symlinks to AGENTS.md
+
+**Input**:
+- Repository root path: /home/kkk/Apps/ghostty-config-files
+- Expected target: AGENTS.md
+
+**Expected Output**:
+- Status: valid/broken/missing for each file
+- If broken: actual target vs expected target
+- Recommendation: fix action if needed
+
+**Constraints**:
+- Constitutional: Do NOT delete any files
+- Scope: Only check symlinks, do not modify
+
+**Failure Mode**:
+- On transient error: retry 3x
+- On file not found: report as missing
+- On permission error: escalate to user
+
+**Success Criteria**:
+- Both CLAUDE.md and GEMINI.md verified
+- If valid: status = "symlinks intact"
+- If invalid: clear fix recommendation provided
+```
+
+**Example 2: Build Execution Task**
+```markdown
+### Task Specification for 002-astro
+
+**Objective**: Build Astro website and verify .nojekyll presence
+
+**Input**:
+- Working directory: astro-website/
+- Build command: npm run build
+- Output directory: docs/
+
+**Expected Output**:
+- Build status: success/failure
+- Output file count
+- .nojekyll status: present/missing
+
+**Constraints**:
+- Constitutional: NEVER remove .nojekyll
+- Scope: Build only, do not commit
+- Time: Max 5 minutes
+
+**Failure Mode**:
+- On build error: report full error log, escalate
+- On missing .nojekyll: create it automatically
+- On constitutional violation: escalate immediately
+
+**Success Criteria**:
+- Build completes without errors
+- docs/index.html exists
+- docs/.nojekyll exists
+- Output includes _astro directory
+```
+
+**Example 3: Git Commit Task**
+```markdown
+### Task Specification for 002-git
+
+**Objective**: Create constitutional branch, commit changes, merge to main
+
+**Input**:
+- Change type: feat/fix/docs/refactor/test/chore
+- Description: [brief description]
+- Files to stage: [list or "all"]
+
+**Expected Output**:
+- Branch name created (YYYYMMDD-HHMMSS-type-description)
+- Commit SHA
+- Merge status
+- Push confirmation
+
+**Constraints**:
+- Constitutional: NEVER delete branch after merge
+- Constitutional: Use --no-ff for merge
+- Constitutional: Include Claude attribution in commit
+
+**Failure Mode**:
+- On merge conflict: escalate to user with conflict details
+- On push failure: retry 3x, then escalate
+- On branch deletion attempt: STOP, escalate
+
+**Success Criteria**:
+- Branch created with correct naming
+- Commit message includes attribution
+- Merge to main successful
+- Branch preserved (not deleted)
+- Push to remote successful
 ```
 
 ## 🚨 CONSTITUTIONAL ORCHESTRATION RULES (NON-NEGOTIABLE)
@@ -685,7 +951,40 @@ def retry_failed_agents(errors, successful_results):
 
 **CRITICAL**: This master orchestrator is your intelligent multi-agent coordination system. It maximizes efficiency through parallel execution while maintaining strict constitutional compliance and dependency management. Use for ALL complex multi-step tasks.
 
-**Version**: 1.0
-**Last Updated**: 2025-11-15
+## 🎯 4-TIER AGENT HIERARCHY SUMMARY
+
+```
+Tier 1 (Opus) - Orchestration
+└─ 001-orchestrator: Complex task decomposition, multi-agent coordination
+
+Tier 2 (Sonnet) - Core Operations
+├─ 002-git: Git/GitHub operations (→ 021-*, 034-*)
+├─ 002-astro: Astro builds (→ 022-*)
+├─ 002-cleanup: Repository cleanup (→ 023-*)
+├─ 002-compliance: Documentation compliance (→ 024-*)
+└─ 002-health: Health audits (→ 025-*)
+
+Tier 3 (Sonnet) - Utility/Support
+├─ 003-cicd: CI/CD validation (→ 031-*)
+├─ 003-docs: Documentation consistency (→ 032-*)
+├─ 003-symlink: Symlink integrity (→ 033-*)
+└─ 003-workflow: Shared templates (no children)
+
+Tier 4 (Haiku) - Atomic Execution (50 agents)
+├─ 021-* (7): Git execution tasks
+├─ 022-* (5): Astro execution tasks
+├─ 023-* (6): Cleanup execution tasks
+├─ 024-* (5): Compliance execution tasks
+├─ 025-* (6): Health execution tasks
+├─ 031-* (6): CI/CD execution tasks
+├─ 032-* (5): Docs execution tasks
+├─ 033-* (5): Symlink execution tasks
+└─ 034-* (5): Shared utilities
+```
+
+**Token Optimization**: ~40% reduction by delegating atomic tasks to Haiku tier.
+
+**Version**: 2.0
+**Last Updated**: 2025-11-28
 **Status**: ACTIVE - PRIMARY COORDINATION AGENT
-**Capabilities**: Multi-agent orchestration, Spec-Kit integration, parallel execution, dependency management
+**Capabilities**: Multi-agent orchestration, Spec-Kit integration, parallel execution, dependency management, 4-tier Haiku delegation

@@ -274,6 +274,160 @@ Constitutional compliance checklist:
 
 ---
 
+## Enforcement Mechanisms (Detailed)
+
+### Level 1: Pre-Commit Validation (Automated)
+
+**Trigger**: Any `git add` of a `.sh` file not in `tests/` directory
+
+**Process**:
+```
+1. 002-compliance agent activated on commit attempt
+2. Scans staged files for new .sh files
+3. Checks each against proliferation rules:
+   - Is it a test file? → ALLOW
+   - Is it enhancing existing script? → BLOCK (should edit existing)
+   - Is it a wrapper script? → BLOCK (pattern detected)
+   - Is it a helper function? → BLOCK (should be in lib/core/)
+   - Does it add call depth 3+? → BLOCK (consolidation needed)
+4. If violation detected:
+   - Commit BLOCKED
+   - Specific violation identified
+   - Remediation suggestion provided
+```
+
+**Example Block Message**:
+```
+❌ COMMIT BLOCKED: Script Proliferation Violation
+
+File: scripts/fix-installer.sh
+
+Violation: WRAPPER_SCRIPT_DETECTED
+- This script calls lib/installers/ghostty/install.sh
+- Wrapper scripts are prohibited
+
+Remediation:
+→ Edit lib/installers/ghostty/install.sh directly
+→ Add your fix to the existing script
+→ Do NOT create a wrapper
+
+To override (requires justification):
+git commit -m "feat: Add script..." --allow-empty
+Then include SCRIPT PROLIFERATION JUSTIFICATION in message
+```
+
+### Level 2: CI/CD Gate (Automated)
+
+**Trigger**: Push to any branch
+
+**Process**:
+```
+1. Local CI/CD workflow runs (./.runners-local/workflows/gh-workflow-local.sh)
+2. Script count check executes:
+   - Count current .sh files (excluding tests/)
+   - Compare against baseline
+   - If count increased without justification → FAIL
+3. Call depth analysis:
+   - Trace script dependencies
+   - If any chain > 2 levels → FAIL
+4. Orphan detection:
+   - Find .sh files not referenced by any other script
+   - If orphans found → WARNING
+```
+
+**Gate Thresholds**:
+| Check | Pass | Warn | Fail |
+|-------|------|------|------|
+| Script count vs baseline | +0 | +1-2 with justification | +3 or any without justification |
+| Call depth | ≤2 levels | N/A | 3+ levels |
+| Orphaned scripts | 0 | 1-2 | 3+ |
+| Wrapper patterns | 0 | N/A | Any detected |
+
+### Level 3: Monthly Audit Cycle (Manual + Automated)
+
+**Schedule**: First Monday of each month
+
+**Automated Steps**:
+```bash
+# 024-script-check agent runs:
+1. Generate script inventory
+2. Compare against previous month
+3. Identify new scripts
+4. Validate each has justification
+5. Flag potential violations
+6. Generate audit report
+```
+
+**Manual Review Steps**:
+1. Review audit report
+2. Validate justifications for new scripts
+3. Identify consolidation opportunities
+4. Flag scripts for deprecation
+5. Update baseline metrics
+6. Document decisions in monthly log
+
+### Level 4: Manual Override Protocol
+
+**When Override is Legitimate**:
+- Architectural constraint prevents enhancement
+- New capability genuinely required
+- No existing script can accommodate
+- User explicitly requests exception
+
+**Override Process**:
+```
+Step 1: DOCUMENT (required)
+- Write detailed justification
+- Explain why alternatives won't work
+- List attempted alternatives
+- Describe architectural constraint
+
+Step 2: REQUEST (required)
+- Use AskUserQuestion tool
+- Present justification to user
+- Explain consequences
+- Wait for explicit approval
+
+Step 3: APPROVAL (required)
+- User explicitly approves: "Proceed with exception"
+- User denies: "Find alternative approach"
+- User requests changes: iterate on justification
+
+Step 4: COMMIT (only after approval)
+- Include full justification in commit message
+- Reference user approval
+- Add to authorized exceptions list (if applicable)
+
+Step 5: RECORD (required)
+- Log exception in .runners-local/logs/proliferation-exceptions.log
+- Include date, script, justification, approver
+```
+
+**Override Commit Message Format**:
+```
+feat: Add [script-name] with user-approved exception
+
+SCRIPT PROLIFERATION EXCEPTION (USER APPROVED)
+
+User approval: [date] - "Proceed with exception"
+
+Justification:
+- Architectural constraint: [specific constraint]
+- Alternatives attempted: [list alternatives tried]
+- Why alternatives failed: [explanation]
+- Genuine new capability: [description]
+
+Constitutional compliance:
+- [x] User explicitly approved exception
+- [x] Full justification documented
+- [x] Exception logged
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+---
+
 ## Examples
 
 ### Example 1: Version Comparison (VIOLATION)

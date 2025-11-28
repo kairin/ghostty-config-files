@@ -86,6 +86,66 @@ Query Context7 before major configuration changes:
 
 ---
 
+## 🤖 LLM Quick Start Protocol
+
+> **For AI Assistants**: Use this section to quickly classify your task and determine the correct workflow.
+
+### Step 1: Classify Your Task
+
+| Task Type | Complexity | Action | Orchestrator? |
+|-----------|------------|--------|---------------|
+| Bug fix (single file) | ATOMIC | Direct fix → validate → commit | No |
+| Feature (multi-file) | MODERATE | TodoWrite → incremental execution | Maybe |
+| Deployment | COMPLEX | Use `/guardian-deploy` or orchestrate | Yes |
+| Investigation | VARIABLE | Explore first → propose → await approval | No |
+| Cleanup | MODERATE | Scan → present findings → await approval | Yes (approval) |
+
+### Step 2: Pre-Execution Checklist
+
+Before ANY operation, verify:
+- [ ] No new scripts created (except in `tests/`)
+- [ ] Enhancing existing code (not wrapping with helpers)
+- [ ] Local CI/CD will run before GitHub push
+- [ ] User approval obtained for destructive operations
+- [ ] Branch naming follows `YYYYMMDD-HHMMSS-type-description`
+
+### Step 3: Execution Mode Decision
+
+```
+STATE-MUTATING? (git commit, file delete, push)
+  └─ YES → SEQUENTIAL execution only
+  └─ NO  → Check dependencies...
+
+HAS DEPENDENCY on another task?
+  └─ YES → SEQUENTIAL after dependency completes
+  └─ NO  → PARALLEL eligible
+```
+
+**Parallel-Safe**: Analysis, validation, health checks, documentation scans
+**Sequential-Only**: Git operations, file deletions, deployments
+
+### Step 4: Follow Domain Protocol
+
+| Domain | Reference |
+|--------|-----------|
+| Agent selection | [Agent Delegation Guide](/.claude/instructions-for-agents/architecture/agent-delegation.md) |
+| Git workflow | [Git Strategy](/.claude/instructions-for-agents/requirements/git-strategy.md) |
+| CI/CD validation | [Local CI/CD Operations](/.claude/instructions-for-agents/requirements/local-cicd-operations.md) |
+| Script rules | [Script Proliferation Prevention](/.claude/instructions-for-agents/principles/script-proliferation.md) |
+
+### Error Handling Protocol
+
+| Error Type | Response | Max Retries |
+|------------|----------|-------------|
+| Transient (network, timeout) | Retry immediately | 3 |
+| Input error (invalid format) | Fix input, retry | 2 |
+| Dependency failure | Fix upstream first | 1 cascade |
+| Constitutional violation | **ESCALATE to user** | 0 (no retry) |
+
+**Constitutional violations NEVER retry** - always escalate immediately.
+
+---
+
 ## 🛠️ Development Commands (Quick Reference)
 
 ### Environment Setup
@@ -175,7 +235,15 @@ ghostty +show-config                    # Validate configuration
 - [Logging Guide](astro-website/src/developer/LOGGING_GUIDE.md) - Dual-mode logging system
 
 ### Agent & Command Reference
-- **Agents**: `.claude/agents/` - 9 specialized agents (orchestrator, Git ops, etc.)
+
+| Tier | Model | Count | Purpose |
+|------|-------|-------|---------|
+| 1 | Opus | 1 | Multi-agent orchestration |
+| 2-3 | Sonnet | 9 | Core/utility operations |
+| 4 | Haiku | 50 | Atomic execution |
+
+- **[Agent Delegation Guide](/.claude/instructions-for-agents/architecture/agent-delegation.md)** - When to use which tier
+- **[Agent Registry](/.claude/instructions-for-agents/architecture/agent-registry.md)** - Complete 60-agent reference
 - **Commands**: `.claude/commands/` - 14 slash commands (/guardian-*, /speckit.*)
 
 ---

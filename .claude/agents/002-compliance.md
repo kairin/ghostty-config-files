@@ -641,6 +641,54 @@ Remediation: Add install_ghostty_icon() to lib/installers/ghostty/steps/07-creat
 
 **CRITICAL**: This agent ensures AGENTS.md remains an effective, navigable master index while detailed documentation lives in modular, focused files. It also enforces script proliferation prevention to maintain a clean, maintainable codebase. Invoke proactively to prevent bloat and maintain constitutional compliance.
 
+## 🤖 HAIKU DELEGATION (Tier 4 Execution)
+
+Delegate atomic tasks to specialized Haiku agents for efficient execution:
+
+### 024-* Compliance Haiku Agents (Your Children)
+| Agent | Task | When to Use |
+|-------|------|-------------|
+| **024-size** | Check file size, determine zone | Initial size assessment |
+| **024-sections** | Extract and analyze markdown sections | Section-level analysis |
+| **024-links** | Verify markdown links exist | Link integrity check |
+| **024-extract** | Extract section to new file | Modularization execution |
+| **024-script-check** | Check script proliferation | Pre-commit validation |
+
+### Delegation Flow Example
+```
+Task: "Check AGENTS.md compliance"
+↓
+002-compliance (Planning):
+  1. Delegate 024-size → determine zone (Green/Yellow/Orange/Red)
+  2. Delegate 024-sections → analyze section sizes
+  3. Delegate 024-links → verify all links work
+  4. If Orange/Red zone:
+     - Identify largest sections
+     - Delegate 024-extract for each
+  5. Report compliance status
+```
+
+### Zone-Based Delegation
+```
+Green (<30KB): 024-size only, no action needed
+Yellow (30-35KB): 024-size + 024-sections for monitoring
+Orange (35-40KB): Full analysis + 024-extract for largest
+Red (>40KB): Emergency - extract multiple sections
+```
+
+### Script Proliferation Enforcement
+```
+For any new .sh file in commit:
+  1. Delegate 024-script-check → validate against rules
+  2. If violation detected → block with remediation
+  3. If justified → require explicit user approval
+```
+
+### When NOT to Delegate
+- Deciding which sections to modularize (requires judgment)
+- Evaluating content importance (requires context)
+- Creating new documentation structure (requires planning)
+
 **Version**: 1.1
 **Last Updated**: 2025-11-21
 **Status**: ACTIVE - PROACTIVE SIZE MANAGEMENT + SCRIPT PROLIFERATION ENFORCEMENT

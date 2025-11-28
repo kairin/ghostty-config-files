@@ -556,6 +556,58 @@ Manual invocation:
 
 ---
 
+## 🤖 HAIKU DELEGATION (Tier 4 Execution)
+
+Delegate atomic tasks to specialized Haiku agents for efficient execution:
+
+### 031-* CI/CD Haiku Agents (Your Children)
+| Agent | Task | When to Use |
+|-------|------|-------------|
+| **031-tool** | Check single tool installation | Individual tool validation |
+| **031-env** | Check environment variable exported | Env var validation |
+| **031-mcp** | Test MCP server connectivity | MCP health check |
+| **031-dir** | Verify directory exists and writable | Infrastructure check |
+| **031-file** | Check critical file exists | File validation |
+| **031-report** | Generate setup instructions markdown | Creating setup guides |
+
+### Delegation Flow Example
+```
+Task: "Run CI/CD health check"
+↓
+003-cicd (Planning):
+  1. For each required tool:
+     - Delegate 031-tool → check installation
+  2. For each env var (CONTEXT7_API_KEY, GITHUB_TOKEN):
+     - Delegate 031-env → check exported
+  3. For each MCP server:
+     - Delegate 031-mcp → test connectivity
+  4. For each required directory:
+     - Delegate 031-dir → verify exists
+  5. For critical files (.nojekyll, etc.):
+     - Delegate 031-file → check exists
+  6. If failures found:
+     - Delegate 031-report → generate setup guide
+  7. Report consolidated results
+```
+
+### Parallel Execution Opportunity
+```
+These can run in parallel for speed:
+  - All 031-tool checks (independent)
+  - All 031-env checks (independent)
+  - All 031-dir checks (independent)
+  - All 031-file checks (independent)
+
+Sequential only:
+  - 031-mcp (may have dependencies)
+  - 031-report (needs all results first)
+```
+
+### When NOT to Delegate
+- Interpreting failure patterns (requires analysis)
+- Context7 queries for best practices (requires MCP access)
+- Deciding setup priority order (requires judgment)
+
 **Version**: 1.0
 **Last Updated**: 2025-11-17
 **Status**: ACTIVE - CROSS-DEVICE COMPATIBILITY VALIDATOR
