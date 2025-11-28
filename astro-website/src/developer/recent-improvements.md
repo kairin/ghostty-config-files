@@ -487,9 +487,9 @@ grep "gtk-single-instance" ~/.local/share/applications/com.mitchellh.ghostty.des
 
 ### Agent System Enhancement
 - **New Agents**: 3 specialized agents added to registry
-  - Enhanced documentation-guardian
-  - Extended constitutional-compliance-agent
-  - Improved symlink-guardian
+  - Enhanced 003-docs
+  - Extended 002-compliance
+  - Improved 003-symlink
 - **Centralized Registry**: Complete agent knowledge base in AGENTS.md
 - **Documentation**: Comprehensive slash command reference
 

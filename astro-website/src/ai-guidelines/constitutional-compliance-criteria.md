@@ -809,7 +809,7 @@ echo "=== End of Metrics Report ==="
 ## 10. Contact and Support
 
 **Repository Owner**: kkk
-**Constitutional Compliance Agent**: constitutional-compliance-agent
+**Constitutional Compliance Agent**: 002-compliance
 **Documentation**: AGENTS.md, CLAUDE.md, GEMINI.md
 **Support Files**: `.runners-local/workflows/*`
 

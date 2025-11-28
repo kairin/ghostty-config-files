@@ -549,13 +549,13 @@ git ls-files docs/.nojekyll | grep -q ".nojekyll" && echo "✅ .nojekyll committ
 
 **Next Steps**:
 1. ✅ Stage documentation reports: `git add .runners-local/docs/`
-2. ✅ Commit reports via git-operations-specialist
+2. ✅ Commit reports via 002-git
 3. ⚠️ Fix Context7 API authentication (see W001)
 4. ℹ️ Consider adding automated verification to CI/CD pipeline
 
 ---
 
 **Report Generated**: 2025-11-17
-**Verifier**: documentation-guardian agent
+**Verifier**: 003-docs agent
 **Task**: T004 - Symlink & Documentation Integrity Verification
 **Status**: ✅ COMPLETE

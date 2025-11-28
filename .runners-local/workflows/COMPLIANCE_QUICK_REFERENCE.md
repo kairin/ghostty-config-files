@@ -160,7 +160,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Support
 
 **Repository Owner**: kkk
-**Constitutional Compliance Agent**: constitutional-compliance-agent
+**Constitutional Compliance Agent**: 002-compliance
 **Issue Reporting**: Document in conversation logs
 
 ---

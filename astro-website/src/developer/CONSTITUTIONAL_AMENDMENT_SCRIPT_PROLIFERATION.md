@@ -98,7 +98,7 @@ Successfully implemented script proliferation prevention as a **CONSTITUTIONAL P
 
 ### **4. Constitutional Compliance Agent Enhanced**
 
-**File**: `/home/kkk/Apps/ghostty-config-files/.claude/agents/constitutional-compliance-agent.md`
+**File**: `/home/kkk/Apps/ghostty-config-files/.claude/agents/002-compliance.md`
 **Location**: Lines 458-647 (new section)
 **Size Impact**: +5KB
 
@@ -106,7 +106,7 @@ Successfully implemented script proliferation prevention as a **CONSTITUTIONAL P
 - **Script Proliferation Validation Protocol**
 - 6-rule validation system
 - Automated validation response
-- Integration points (pre-commit hook, master-orchestrator, git-operations-specialist)
+- Integration points (pre-commit hook, 001-orchestrator, 002-git)
 - Metrics tracking system
 - Override process
 - Example violations with remediation
@@ -143,7 +143,7 @@ AGENTS.md (master) ← CLAUDE.md (symlink)
 │       └── Metrics
 │
 ├── agents/
-│   └── constitutional-compliance-agent.md  (ENHANCED)
+│   └── 002-compliance.md  (ENHANCED)
 │       └── Script Proliferation Prevention Section
 │           ├── Validation Protocol
 │           ├── Integration Points
@@ -165,9 +165,9 @@ AGENTS.md (master) ← CLAUDE.md (symlink)
 - Examples show violations vs compliant approaches
 
 ### **Layer 2: Agent Instructions (Guidance)**
-- constitutional-compliance-agent validates all new files
-- master-orchestrator checks before delegating file creation
-- git-operations-specialist checks before commits
+- 002-compliance validates all new files
+- 001-orchestrator checks before delegating file creation
+- 002-git checks before commits
 
 ### **Layer 3: Automated Validation (Prevention)**
 - Pre-commit hooks detect new `.sh` files
@@ -342,7 +342,7 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
 **Action**: Try to commit new file `lib/utils/helper.sh`
 
 **Expected Behavior**:
-1. ✅ constitutional-compliance-agent detects new `.sh` file
+1. ✅ 002-compliance detects new `.sh` file
 2. ✅ Validation checklist presented
 3. ✅ Commit blocked (no justification provided)
 4. ✅ Remediation suggestions displayed
@@ -357,7 +357,7 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
 **Action**: Create `tests/integration/test_version_compare.sh`
 
 **Expected Behavior**:
-1. ✅ constitutional-compliance-agent detects new `.sh` file
+1. ✅ 002-compliance detects new `.sh` file
 2. ✅ Test file exception applies
 3. ✅ Commit allowed (test files exempt)
 
@@ -427,7 +427,7 @@ User approval: [Awaiting explicit approval]
 - Validation checklist ensures compliance
 
 ✅ **Automated Enforcement**:
-- constitutional-compliance-agent blocks violations
+- 002-compliance blocks violations
 - Pre-commit validation prevents bad commits
 - Metrics track repository health
 
@@ -522,7 +522,7 @@ fi
    - Agent selection matrix
    - Common scenarios
 
-4. **.claude/agents/constitutional-compliance-agent.md** (lines 458-647)
+4. **.claude/agents/002-compliance.md** (lines 458-647)
    - Automated validation logic
    - Integration points
    - Override process
@@ -542,7 +542,7 @@ fi
 | Principle formally documented | ✅ COMPLETE | AGENTS.md lines 180-240 |
 | Detailed rules documented | ✅ COMPLETE | .claude/principles/script-proliferation.md |
 | AI assistant awareness | ✅ COMPLETE | .claude/README.md created |
-| Automated enforcement | ✅ COMPLETE | constitutional-compliance-agent enhanced |
+| Automated enforcement | ✅ COMPLETE | 002-compliance enhanced |
 | Validation checklist | ✅ COMPLETE | 7-step checklist documented |
 | Examples provided | ✅ COMPLETE | 3 violations with remediation |
 | Baseline metrics | ✅ COMPLETE | 132 scripts baseline established |
@@ -557,7 +557,7 @@ Script proliferation prevention is now a **CONSTITUTIONAL PRINCIPLE** enforced a
 1. **Documentation**: Prominently displayed in AGENTS.md
 2. **Awareness**: .claude/README.md ensures AI assistants see it first
 3. **Guidance**: Detailed principles document with examples
-4. **Enforcement**: constitutional-compliance-agent validates all new files
+4. **Enforcement**: 002-compliance validates all new files
 5. **Metrics**: Baseline established, tracking system in place
 6. **Override**: Clear process for rare exceptions
 

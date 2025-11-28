@@ -404,5 +404,5 @@ The workflow scripts in `.runners-local/workflows/` demonstrate **excellent docu
 ---
 
 **Report Generated**: 2025-11-17
-**Analyzer**: documentation-guardian agent
+**Analyzer**: 003-docs agent
 **Task**: T003 - Script Analysis Support

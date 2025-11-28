@@ -199,7 +199,7 @@ flowchart TD
 
 **Validation Requirements**:
 - All agents MUST check `.claude/principles/script-proliferation.md` before creating files
-- constitutional-compliance-agent validates all new script creation
+- 002-compliance validates all new script creation
 - Any new script requires explicit justification in commit message
 
 **Examples**:
@@ -229,7 +229,7 @@ lib/installers/nodejs_fnm/steps/00-check-prerequisites.sh  # Add snap detection
 
 **Enforcement**:
 - **Detection**: Repository monitors for new `.sh` file creation
-- **Validation**: constitutional-compliance-agent blocks proliferation violations
+- **Validation**: 002-compliance blocks proliferation violations
 - **Override**: Requires explicit user approval with documented justification
 
 **Metrics**:

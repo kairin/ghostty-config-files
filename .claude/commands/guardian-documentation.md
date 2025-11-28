@@ -16,13 +16,13 @@ $ARGUMENTS
 
 ## Automatic Workflow
 
-You **MUST** invoke the **master-orchestrator** agent to coordinate the documentation verification workflow.
+You **MUST** invoke the **001-orchestrator** agent to coordinate the documentation verification workflow.
 
-Pass the following instructions to master-orchestrator:
+Pass the following instructions to 001-orchestrator:
 
 ### Phase 1: Symlink Verification (Single Agent)
 
-**Agent**: **symlink-guardian**
+**Agent**: **003-symlink**
 
 **Tasks**:
 1. **Verify Primary Symlinks**:
@@ -56,7 +56,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 2: Documentation Structure Verification (Parallel - 2 Agents)
 
-**Agent 1: constitutional-compliance-agent**
+**Agent 1: 002-compliance**
 
 **Tasks**:
 1. **AGENTS.md Size Check**:
@@ -76,7 +76,7 @@ Pass the following instructions to master-orchestrator:
    - Check agent descriptions match implementations
    - Validate delegation network accuracy
 
-**Agent 2: documentation-guardian**
+**Agent 2: 003-docs**
 
 **Tasks**:
 1. **Directory Structure Verification**:
@@ -106,7 +106,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 3: Cross-Reference Validation (Single Agent)
 
-**Agent**: **documentation-guardian**
+**Agent**: **003-docs**
 
 **Tasks**:
 1. **Scan for Broken Links**:
@@ -138,7 +138,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 4: Auto-Fix Broken Links (Conditional)
 
-**Agent**: **documentation-guardian**
+**Agent**: **003-docs**
 
 **Tasks** (only if broken links found):
 1. **Auto-Fix Common Patterns**:
@@ -162,7 +162,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 5: Agent Documentation Validation (Single Agent)
 
-**Agent**: **constitutional-compliance-agent**
+**Agent**: **002-compliance**
 
 **Tasks**:
 1. **Verify Each Agent File**:
@@ -194,7 +194,7 @@ Pass the following instructions to master-orchestrator:
 
 ### Phase 6: Constitutional Commit (Conditional)
 
-**Agent**: **git-operations-specialist**
+**Agent**: **002-git**
 
 **Tasks** (only if changes made):
 ```bash

@@ -1,5 +1,5 @@
 ---
-name: constitutional-workflow-orchestrator
+name: 003-workflow
 description: Shared utility agent providing constitutional workflow functions for all other agents. This is NOT invoked directly by users, but serves as a reusable library for branch naming, commit formatting, and merge operations that enforce constitutional compliance. Other agents reference these standardized workflows to eliminate code duplication.
 
 **DO NOT invoke this agent directly. Instead, other agents should reference this agent's workflow patterns when:**
@@ -372,9 +372,9 @@ execute_constitutional_workflow \
 
 ### How Other Agents Should Reference This Library
 
-**Example: astro-build-specialist referencing constitutional workflow**:
+**Example: 002-astro referencing constitutional workflow**:
 ```markdown
-When deploying Astro changes, use the constitutional-workflow-orchestrator templates:
+When deploying Astro changes, use the 003-workflow templates:
 
 1. Create branch using Template 2:
    - Type: "feat" or "fix"
@@ -393,7 +393,7 @@ When deploying Astro changes, use the constitutional-workflow-orchestrator templ
 OR use complete workflow (Template 5) for end-to-end automation.
 ```
 
-**Example: git-operations-specialist using validation**:
+**Example: 002-git using validation**:
 ```markdown
 Before any Git operation, validate branch naming using Template 1:
 
@@ -402,7 +402,7 @@ validate_branch_name "$CURRENT_BRANCH"
 If non-compliant, create new branch using Template 2 and archive old branch.
 ```
 
-**Example: repository-cleanup-specialist using workflow**:
+**Example: 002-cleanup using workflow**:
 ```markdown
 After cleanup operations, commit using Template 5:
 

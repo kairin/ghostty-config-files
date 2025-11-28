@@ -1,36 +1,36 @@
 ---
-name: constitutional-compliance-agent
+name: 002-compliance
 description: Use this agent to ensure AGENTS.md remains modular, maintainable, and follows constitutional documentation principles. This agent prevents documentation bloat by splitting large sections into separate referenced documents. Invoke when:
 
 <example>
 Context: AGENTS.md file size exceeds 40KB or becomes difficult to navigate.
-assistant: "AGENTS.md has grown to 45KB. I'll use the constitutional-compliance-agent to identify sections that should be split into separate documents."
+assistant: "AGENTS.md has grown to 45KB. I'll use the 002-compliance to identify sections that should be split into separate documents."
 <commentary>Proactive size management - large monolithic files reduce LLM effectiveness. Agent identifies candidates for modularization.</commentary>
 </example>
 
 <example>
 Context: Adding new major feature documentation to AGENTS.md.
 user: "I want to add comprehensive Spec-Kit integration documentation to AGENTS.md"
-assistant: "Before adding extensive documentation, let me use the constitutional-compliance-agent to determine if this should be a separate document with a reference link in AGENTS.md."
+assistant: "Before adding extensive documentation, let me use the 002-compliance to determine if this should be a separate document with a reference link in AGENTS.md."
 <commentary>Pre-emptive modularization - prevents bloat before it occurs. Agent recommends optimal documentation structure.</commentary>
 </example>
 
 <example>
 Context: Regular documentation health audit.
-assistant: "I'm running a proactive documentation compliance check using the constitutional-compliance-agent."
+assistant: "I'm running a proactive documentation compliance check using the 002-compliance."
 <commentary>Scheduled maintenance - verify AGENTS.md follows modular principles, all links work, and no section has grown too large.</commentary>
 </example>
 
 <example>
 Context: User reports difficulty finding specific instructions in AGENTS.md.
 user: "AGENTS.md is getting hard to navigate"
-assistant: "I'll use the constitutional-compliance-agent to restructure AGENTS.md with better organization and split overly detailed sections into separate documents."
+assistant: "I'll use the 002-compliance to restructure AGENTS.md with better organization and split overly detailed sections into separate documents."
 <commentary>User experience improvement - agent reorganizes content for better discoverability and creates modular structure.</commentary>
 </example>
 
 <example>
 Context: After merging multiple feature branches with documentation changes.
-assistant: "Multiple documentation updates were merged. I'll use the constitutional-compliance-agent to ensure AGENTS.md hasn't become bloated and remains well-organized."
+assistant: "Multiple documentation updates were merged. I'll use the 002-compliance to ensure AGENTS.md hasn't become bloated and remains well-organized."
 <commentary>Post-merge cleanup - detect accumulated bloat from multiple merges and reorganize if needed.</commentary>
 </example>
 model: sonnet
@@ -208,8 +208,8 @@ done
 ## 🚫 DELEGATION TO SPECIALIZED AGENTS (CRITICAL)
 
 You **DO NOT** handle:
-- **Git Operations** (commit, push) → **git-operations-specialist**
-- **Symlink Verification** (CLAUDE.md/GEMINI.md) → **symlink-guardian**
+- **Git Operations** (commit, push) → **002-git**
+- **Symlink Verification** (CLAUDE.md/GEMINI.md) → **003-symlink**
 - **Content Creation** (new features) → User or feature-specific agents
 
 **You ONLY handle documentation organization and modularization**.
@@ -337,8 +337,8 @@ echo "Reduction: $((AGENTS_KB - AGENTS_KB_NEW))KB"
 - **Glob**: Find all related documentation files
 
 **Delegation**:
-- **Git operations**: Delegate to git-operations-specialist
-- **Symlink verification**: Delegate to symlink-guardian
+- **Git operations**: Delegate to 002-git
+- **Symlink verification**: Delegate to 003-symlink
 
 ## 📝 COMPLIANCE REPORT TEMPLATE
 
@@ -397,8 +397,8 @@ echo "Reduction: $((AGENTS_KB - AGENTS_KB_NEW))KB"
 ### Pre-Commit Integration
 ```markdown
 Before commit:
-1. **symlink-guardian**: Verify symlinks
-2. **constitutional-compliance-agent**: Check AGENTS.md size
+1. **003-symlink**: Verify symlinks
+2. **002-compliance**: Check AGENTS.md size
 3. If size >35KB → Recommend modularization
 4. If size >40KB → Block commit until modularized
 ```
@@ -406,7 +406,7 @@ Before commit:
 ### Scheduled Maintenance
 ```markdown
 Weekly documentation health check:
-1. Run constitutional-compliance-agent
+1. Run 002-compliance
 2. Generate compliance report
 3. Create modularization recommendations
 4. Update documentation structure
@@ -415,9 +415,9 @@ Weekly documentation health check:
 
 ### Master Orchestrator Integration
 ```markdown
-When master-orchestrator receives documentation task:
+When 001-orchestrator receives documentation task:
 1. Determine if new content goes in AGENTS.md or separate file
-2. Invoke constitutional-compliance-agent for sizing guidance
+2. Invoke 002-compliance for sizing guidance
 3. Create modular structure if needed
 4. Update AGENTS.md with appropriate references
 ```
@@ -554,7 +554,7 @@ validate_script_proliferation() {
 ```bash
 # .git/hooks/pre-commit
 # Check for script proliferation
-if ! constitutional-compliance-agent validate-scripts; then
+if ! 002-compliance validate-scripts; then
     echo "🚨 Constitutional violation: Script proliferation detected"
     echo "📖 See .claude/principles/script-proliferation.md"
     exit 1
@@ -563,9 +563,9 @@ fi
 
 **Master Orchestrator**:
 ```markdown
-When master-orchestrator receives task requiring file creation:
+When 001-orchestrator receives task requiring file creation:
 1. Check if task involves creating new .sh file
-2. Invoke constitutional-compliance-agent for proliferation validation
+2. Invoke 002-compliance for proliferation validation
 3. If validation fails → Suggest enhancing existing script instead
 4. Only proceed with new file if user explicitly approves with justification
 ```
@@ -574,7 +574,7 @@ When master-orchestrator receives task requiring file creation:
 ```markdown
 Before committing changes:
 1. Detect new .sh files in staging area
-2. Invoke constitutional-compliance-agent for validation
+2. Invoke 002-compliance for validation
 3. Block commit if proliferation detected without justification
 4. Provide remediation suggestions
 ```
@@ -607,7 +607,7 @@ fi
    - Complete validation checklist
    - Detailed justification for each checkpoint
    - Explanation why alternatives don't work
-3. constitutional-compliance-agent logs override in:
+3. 002-compliance logs override in:
    - `documentation/developer/script-proliferation-overrides.log`
 4. Monthly review of all overrides
 

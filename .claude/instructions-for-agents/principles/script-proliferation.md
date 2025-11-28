@@ -1,7 +1,7 @@
 # Constitutional Principle: Script Proliferation Prevention
 
 **Status**: MANDATORY - CONSTITUTIONAL REQUIREMENT
-**Enforcement**: Automated validation via constitutional-compliance-agent
+**Enforcement**: Automated validation via 002-compliance
 **Last Updated**: 2025-11-21
 **Authority**: User Constitutional Requirement
 
@@ -30,7 +30,7 @@ This principle is **NON-NEGOTIABLE** and applies to **ALL** AI assistants (Claud
 
 **Exception**: Test files (`tests/`, `*_test.sh`, `test_*.sh`, `*_spec.sh`)
 
-**Enforcement**: constitutional-compliance-agent validates all new file creation
+**Enforcement**: 002-compliance validates all new file creation
 
 ---
 
@@ -225,7 +225,7 @@ scripts/setup.sh:
 
 ### Automated Validation
 
-**constitutional-compliance-agent**:
+**002-compliance**:
 - Monitors all commits for new `.sh` files
 - Checks against proliferation rules
 - Blocks commits that violate principles
@@ -233,7 +233,7 @@ scripts/setup.sh:
 
 **Validation Triggers**:
 1. Pre-commit hooks check for new `.sh` files
-2. constitutional-compliance-agent reviews changes
+2. 002-compliance reviews changes
 3. Automated tests verify script count stability
 
 **Override Process**:
@@ -491,7 +491,7 @@ find /home/kkk/Apps/ghostty-config-files -name "*.sh" -not -path "*/tests/*" | w
 
 - **AGENTS.md**: Core constitutional requirements (lines 180-240)
 - **constitutional-compliance-criteria.md**: Validation rules
-- **master-orchestrator.md**: Multi-agent coordination patterns
+- **001-orchestrator.md**: Multi-agent coordination patterns
 - **User requirement (2025-11-21)**: Original proliferation concern
 
 ---
@@ -558,7 +558,7 @@ git add archive/scripts/deprecated-20251121/
 
 **Status**: ACTIVE - MANDATORY COMPLIANCE
 **Next Review**: 2025-12-21 (monthly review cycle)
-**Enforcement**: Automated via constitutional-compliance-agent
+**Enforcement**: Automated via 002-compliance
 
 ---
 

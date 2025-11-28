@@ -16,13 +16,13 @@ $ARGUMENTS
 
 ## Automatic Workflow
 
-You **MUST** invoke the **master-orchestrator** agent to coordinate the cleanup workflow.
+You **MUST** invoke the **001-orchestrator** agent to coordinate the cleanup workflow.
 
-Pass the following instructions to master-orchestrator:
+Pass the following instructions to 001-orchestrator:
 
 ### Phase 1: Cleanup Analysis (Single Agent)
 
-**Agent**: **repository-cleanup-specialist**
+**Agent**: **002-cleanup**
 
 **Tasks**:
 1. Scan entire repository for:
@@ -54,7 +54,7 @@ RELOCATE (if needed):
 
 ### Phase 2: Execute Cleanup (Single Agent)
 
-**Agent**: **repository-cleanup-specialist**
+**Agent**: **002-cleanup**
 
 **Automatic Actions**:
 ```bash
@@ -77,7 +77,7 @@ echo "Relocated: Z files"
 
 ### Phase 3: Verify Documentation Impact (Conditional)
 
-**Agent**: **documentation-guardian**
+**Agent**: **003-docs**
 
 **Tasks** (only if documentation files were modified):
 1. Verify AGENTS.md symlinks:
@@ -90,7 +90,7 @@ echo "Relocated: Z files"
 
 ### Phase 4: Constitutional Commit (Single Agent)
 
-**Agent**: **git-operations-specialist**
+**Agent**: **002-git**
 
 **Tasks**:
 ```bash

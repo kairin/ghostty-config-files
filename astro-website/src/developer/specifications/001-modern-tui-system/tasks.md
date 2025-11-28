@@ -812,11 +812,11 @@ task_install_COMPONENT() {
 
 ### Parallel Opportunities (Multi-Agent Execution)
 
-**Agent 1: project-health-auditor**
+**Agent 1: 002-health**
 - T045-T047 (Context7 validation)
 - T055 (CI/CD integration)
 
-**Agent 2: documentation-guardian**
+**Agent 2: 003-docs**
 - T005 (Duplicate detection library)
 - T014 (Health checks)
 
@@ -842,7 +842,7 @@ task_install_COMPONENT() {
 **Agent 8: App Audit System**
 - T040-T044 (Duplicate detection and cleanup)
 
-**Agent 9: constitutional-compliance-agent**
+**Agent 9: 002-compliance**
 - T049-T054 (All test scripts)
 - T061 (Final validation)
 

@@ -49,16 +49,16 @@
 
 | Need | Agent | File |
 |------|-------|------|
-| **Multiple parallel tasks** | master-orchestrator | `agents/master-orchestrator.md` |
-| **Git operations** | git-operations-specialist | `agents/git-operations-specialist.md` |
-| **Documentation sync** | documentation-guardian | `agents/documentation-guardian.md` |
-| **Symlink integrity** | symlink-guardian | `agents/symlink-guardian.md` |
-| **Build/deploy** | astro-build-specialist | `agents/astro-build-specialist.md` |
-| **Cleanup operations** | repository-cleanup-specialist | `agents/repository-cleanup-specialist.md` |
-| **Health check** | project-health-auditor | `agents/project-health-auditor.md` |
-| **Constitutional validation** | constitutional-compliance-agent | `agents/constitutional-compliance-agent.md` |
-| **Workflow orchestration** | constitutional-workflow-orchestrator | `agents/constitutional-workflow-orchestrator.md` |
-| **Local CI/CD** | local-cicd-health-checker | `agents/local-cicd-health-checker.md` |
+| **Multiple parallel tasks** | 001-orchestrator | `agents/001-orchestrator.md` |
+| **Git operations** | 002-git | `agents/002-git.md` |
+| **Constitutional validation** | 002-compliance | `agents/002-compliance.md` |
+| **Health check** | 002-health | `agents/002-health.md` |
+| **Cleanup operations** | 002-cleanup | `agents/002-cleanup.md` |
+| **Build/deploy** | 002-astro | `agents/002-astro.md` |
+| **Local CI/CD** | 003-cicd | `agents/003-cicd.md` |
+| **Symlink integrity** | 003-symlink | `agents/003-symlink.md` |
+| **Documentation sync** | 003-docs | `agents/003-docs.md` |
+| **Workflow orchestration** | 003-workflow | `agents/003-workflow.md` |
 
 ---
 
@@ -107,16 +107,16 @@ CLAUDE.md, GEMINI.md         ← AI assistant entry points
 ├── principles/               ← Constitutional requirements
 │   └── script-proliferation.md  🔴 CRITICAL
 ├── agents/                   ← 10 specialized agents
-│   ├── master-orchestrator.md
-│   ├── constitutional-compliance-agent.md
-│   ├── constitutional-workflow-orchestrator.md
-│   ├── symlink-guardian.md
-│   ├── documentation-guardian.md
-│   ├── git-operations-specialist.md
-│   ├── astro-build-specialist.md
-│   ├── local-cicd-health-checker.md
-│   ├── project-health-auditor.md
-│   └── repository-cleanup-specialist.md
+│   ├── 001-orchestrator.md      (Tier 1: Opus)
+│   ├── 002-git.md               (Tier 2: Sonnet Core)
+│   ├── 002-compliance.md        (Tier 2: Sonnet Core)
+│   ├── 002-health.md            (Tier 2: Sonnet Core)
+│   ├── 002-cleanup.md           (Tier 2: Sonnet Core)
+│   ├── 002-astro.md             (Tier 2: Sonnet Core)
+│   ├── 003-cicd.md              (Tier 3: Sonnet Utility)
+│   ├── 003-symlink.md           (Tier 3: Sonnet Utility)
+│   ├── 003-docs.md              (Tier 3: Sonnet Utility)
+│   └── 003-workflow.md          (Tier 3: Sonnet Utility)
 └── commands/                 ← 14 slash commands
     ├── guardian-*.md         (6 guardian commands)
     └── speckit.*.md          (8 spec-kit commands)
@@ -172,7 +172,7 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
                                     # Add install_ghostty_icon()
 ```
 
-**Enforcement**: constitutional-compliance-agent validates all new files.
+**Enforcement**: 002-compliance validates all new files.
 
 ---
 
@@ -235,7 +235,7 @@ Task: Implement update detection for all components
 
 1. Check AGENTS.md for requirements ✅
 2. Check script proliferation principle ✅
-3. Select agent: master-orchestrator ✅
+3. Select agent: 001-orchestrator ✅
 4. Instruct to enhance existing scripts only ✅
 5. Agents modify existing verification scripts ✅
 6. No new scripts created ✅
@@ -305,7 +305,7 @@ library), following the script proliferation prevention principle.
 
 ### Automated Validation
 
-**constitutional-compliance-agent** checks:
+**002-compliance** checks:
 - ✅ New `.sh` file creation
 - ✅ Script proliferation violations
 - ✅ Branch naming compliance
