@@ -35,11 +35,15 @@ main() {
     # Phase 1: Remove APT installation
     if is_feh_apt_installed; then
         log "INFO" "Found APT-installed feh, removing..."
-        if sudo apt remove -y feh 2>/dev/null; then
-            log "SUCCESS" "Removed APT feh package"
-            : $((cleaned++))
-        else
-            log "WARNING" "Could not remove APT feh (continuing anyway)"
+        # Use subshell to isolate error handling - don't let apt failure stop cleanup
+        if (set +e; sudo apt-get remove -y --allow-change-held-packages feh 2>&1 || true); then
+            if ! is_feh_apt_installed; then
+                log "SUCCESS" "Removed APT feh package"
+                : $((cleaned++))
+            else
+                log "WARNING" "APT feh removal may have failed (will retry with purge)"
+                sudo apt-get purge -y feh 2>/dev/null || true
+            fi
         fi
     fi
 

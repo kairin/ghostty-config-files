@@ -24,7 +24,7 @@ main() {
     declare -a INSTALL_STEPS=(
         "00-check-prerequisites.sh|Check Prerequisites|5"
         "01-cleanup-existing-installations.sh|Cleanup Existing Installations|10"
-        "02-install-apt-feh.sh|Install Feh via APT|30"
+        "02-install-feh-source.sh|Build and Install Feh from Source|120"
         "05-verify-installation.sh|Verify Installation|5"
     )
 
