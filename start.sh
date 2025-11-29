@@ -137,16 +137,28 @@ show_dashboard() {
         local row1=$(printf "%-15s %b%*s %-20s %-15s" "$app_name" "$color_status" "$status_pad" "" "${version:0:19}" "$method")
         body+="${row1}"$'\n'
         
-        # Row 2: Location (if installed)
+        # Row 2+: Location and Extra Details
         if [[ "$status" == "INSTALLED" ]]; then
-             local row2=$(printf "└─ Location: %s" "$location")
+             # Split location by | to handle extra details (e.g. npm version)
+             IFS='|' read -ra details <<< "$location"
+             
+             # First part is always location
+             local row2=$(printf "└─ Location: %s" "${details[0]}")
              body+="${row2}"$'\n'
+             
+             # Subsequent parts are extra details
+             for ((i=1; i<${#details[@]}; i++)); do
+                 local detail="${details[i]}"
+                 local row_extra=$(printf "└─ %s" "$detail")
+                 body+="${row_extra}"$'\n'
+             done
         fi
     }
     
     append_app_row "Feh" "feh"
     append_app_row "Ghostty" "ghostty"
     append_app_row "Nerd Fonts" "nerdfonts"
+    append_app_row "Node.js" "nodejs"
     
     # Local AI Tools (Placeholder)
     local ai_status="Not Installed"
@@ -316,6 +328,7 @@ while true; do
         "Install Feh" \
         "Install Ghostty" \
         "Install Nerd Fonts" \
+        "Install Node.js" \
         "Install Both (Feh + Ghostty)" \
         "Install Local AI Tools (Coming Soon)" \
         "Exit")
@@ -329,6 +342,9 @@ while true; do
             ;;
         "Install Nerd Fonts")
             install_app "nerdfonts"
+            ;;
+        "Install Node.js")
+            install_app "nodejs"
             ;;
         "Install Both (Feh + Ghostty)")
             install_app "feh"
