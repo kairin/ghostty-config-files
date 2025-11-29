@@ -110,10 +110,21 @@ show_dashboard() {
     local ICON_FOLDER=$'\uf07b'  # Folder
     local ICON_TAG=$'\uf02b'     # Tag
 
-    # Build Header with VERSION/LATEST columns
-    # Columns: APP(14) STATUS(10) VERSION(12) LATEST(12) METHOD(10) = 62 chars
-    local header=$(printf "%-14s %-10s %-12s %-12s %-10s" "APP" "STATUS" "VERSION" "LATEST" "METHOD")
-    local separator=$(printf "%0.s─" {1..62})
+    # Get terminal width and calculate proportional column widths
+    local term_width=$(tput cols)
+    local content_width=$((term_width - 6))  # Account for gum border + padding
+
+    # Proportional column widths (percentages of content width)
+    local col_app=$((content_width * 18 / 100))
+    local col_status=$((content_width * 10 / 100))
+    local col_version=$((content_width * 26 / 100))
+    local col_latest=$((content_width * 22 / 100))
+    local col_method=$((content_width * 24 / 100))
+
+    # Build Header with dynamic widths
+    local header=$(printf "%-${col_app}s %-${col_status}s %-${col_version}s %-${col_latest}s %-${col_method}s" \
+        "APP" "STATUS" "VERSION" "LATEST" "METHOD")
+    local separator=$(printf "%0.s─" $(seq 1 $content_width))
 
     # Accumulate body content
     local body=""
@@ -146,13 +157,13 @@ show_dashboard() {
             display_status="Missing"
         fi
 
-        # Build row with fixed-width visible text
-        local app_padded=$(printf "%-14s" "$app_name")
+        # Build row with dynamic-width visible text
+        local app_padded=$(printf "%-${col_app}s" "$app_name")
         local status_text="${icon} ${display_status}"
-        local status_padded=$(printf "%-8s" "$status_text")
-        local ver_padded=$(printf "%-12s" "${version:--}")
-        local lat_padded=$(printf "%-12s" "${latest:--}")
-        local method_padded=$(printf "%-10s" "${method:--}")
+        local status_padded=$(printf "%-${col_status}s" "$status_text")
+        local ver_padded=$(printf "%-${col_version}s" "${version:--}")
+        local lat_padded=$(printf "%-${col_latest}s" "${latest:--}")
+        local method_padded=$(printf "%-${col_method}s" "${method:--}")
 
         # Assemble row with color on status only
         local row="${app_padded} ${ESC}[${color}m${status_padded}${ESC}[0m ${ver_padded} ${lat_padded} ${method_padded}"
@@ -187,17 +198,16 @@ show_dashboard() {
     append_app_row "Node.js" "nodejs"
 
     # Local AI Tools (Placeholder)
-    local ai_padded=$(printf "%-14s" "Local AI Tools")
+    local ai_padded=$(printf "%-${col_app}s" "Local AI Tools")
     local ai_status="${ICON_MISSING} Missing"
-    local ai_status_padded=$(printf "%-8s" "$ai_status")
-    local ai_row="${ai_padded} ${ESC}[31m${ai_status_padded}${ESC}[0m $(printf '%-12s' '-') $(printf '%-12s' '-') $(printf '%-10s' '-')"
+    local ai_status_padded=$(printf "%-${col_status}s" "$ai_status")
+    local ai_row="${ai_padded} ${ESC}[31m${ai_status_padded}${ESC}[0m $(printf "%-${col_version}s" '-') $(printf "%-${col_latest}s" '-') $(printf "%-${col_method}s" '-')"
     body+="${ai_row}"
 
     # Combine all content
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
 
     # Render with gum style (flexible width)
-    local term_width=$(tput cols)
     local box_width=$((term_width - 4))
     gum style --border rounded --padding "0 1" --border-foreground 212 --width "$box_width" "$content"
     echo ""
@@ -215,9 +225,21 @@ show_extras_dashboard() {
     local ICON_FOLDER=$'\uf07b'  # Folder
     local ICON_TAG=$'\uf02b'     # Tag
 
-    # Build Header with VERSION/LATEST columns
-    local header=$(printf "%-14s %-10s %-12s %-12s %-10s" "APP" "STATUS" "VERSION" "LATEST" "METHOD")
-    local separator=$(printf "%0.s─" {1..62})
+    # Get terminal width and calculate proportional column widths
+    local term_width=$(tput cols)
+    local content_width=$((term_width - 6))  # Account for gum border + padding
+
+    # Proportional column widths (percentages of content width)
+    local col_app=$((content_width * 18 / 100))
+    local col_status=$((content_width * 10 / 100))
+    local col_version=$((content_width * 26 / 100))
+    local col_latest=$((content_width * 22 / 100))
+    local col_method=$((content_width * 24 / 100))
+
+    # Build Header with dynamic widths
+    local header=$(printf "%-${col_app}s %-${col_status}s %-${col_version}s %-${col_latest}s %-${col_method}s" \
+        "APP" "STATUS" "VERSION" "LATEST" "METHOD")
+    local separator=$(printf "%0.s─" $(seq 1 $content_width))
 
     local body=""
 
@@ -249,13 +271,13 @@ show_extras_dashboard() {
             display_status="Missing"
         fi
 
-        # Build row with fixed-width visible text
-        local app_padded=$(printf "%-14s" "$app_name")
+        # Build row with dynamic-width visible text
+        local app_padded=$(printf "%-${col_app}s" "$app_name")
         local status_text="${icon} ${display_status}"
-        local status_padded=$(printf "%-8s" "$status_text")
-        local ver_padded=$(printf "%-12s" "${version:--}")
-        local lat_padded=$(printf "%-12s" "${latest:--}")
-        local method_padded=$(printf "%-10s" "${method:--}")
+        local status_padded=$(printf "%-${col_status}s" "$status_text")
+        local ver_padded=$(printf "%-${col_version}s" "${version:--}")
+        local lat_padded=$(printf "%-${col_latest}s" "${latest:--}")
+        local method_padded=$(printf "%-${col_method}s" "${method:--}")
 
         # Assemble row with color on status only
         local row="${app_padded} ${ESC}[${color}m${status_padded}${ESC}[0m ${ver_padded} ${lat_padded} ${method_padded}"
@@ -295,7 +317,6 @@ show_extras_dashboard() {
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
 
     # Render with gum style (flexible width)
-    local term_width=$(tput cols)
     local box_width=$((term_width - 4))
     gum style --border rounded --padding "0 1" --border-foreground 99 --width "$box_width" "$content"
     echo ""
