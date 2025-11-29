@@ -4,19 +4,25 @@
 VERSION="v3.4.0"
 FONTS_DIR="$HOME/.local/share/fonts"
 
-# Fonts to check
-FONT_FAMILIES=("JetBrainsMono" "FiraCode" "Hack" "Meslo" "CascadiaCode" "SourceCodePro" "IBMPlexMono" "Iosevka")
+# fc-list search patterns (Nerd Fonts uses different names for licensing)
+# CascadiaCode → CaskaydiaCove, SourceCodePro → SauceCodePro, IBMPlexMono → BlexMono
+SEARCH_PATTERNS=("JetBrainsMono" "FiraCode" "Hack" "Meslo" "CaskaydiaCove" "SauceCodePro" "BlexMono" "Iosevka")
+
+# Display names (user-friendly original names)
+DISPLAY_NAMES=("JetBrainsMono" "FiraCode" "Hack" "Meslo" "CascadiaCode" "SourceCodePro" "IBMPlexMono" "Iosevka")
 
 # Count installed fonts and build status list
 INSTALLED_COUNT=0
 FONT_STATUS=""
 
-for family in "${FONT_FAMILIES[@]}"; do
-    if fc-list : family | grep -qi "${family}.*Nerd"; then
+for i in "${!SEARCH_PATTERNS[@]}"; do
+    pattern="${SEARCH_PATTERNS[$i]}"
+    display="${DISPLAY_NAMES[$i]}"
+    if fc-list : family | /bin/grep -qi "${pattern}.*Nerd"; then
         ((INSTALLED_COUNT++))
-        FONT_STATUS="$FONT_STATUS^   ✓ $family"
+        FONT_STATUS="$FONT_STATUS^   ✓ $display"
     else
-        FONT_STATUS="$FONT_STATUS^   ✗ $family"
+        FONT_STATUS="$FONT_STATUS^   ✗ $display"
     fi
 done
 

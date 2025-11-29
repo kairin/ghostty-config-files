@@ -3,15 +3,20 @@ source "$(dirname "$0")/../006-logs/logger.sh"
 
 log "INFO" "Confirming Nerd Fonts installation..."
 
-FONT_FAMILIES=("JetBrainsMono" "FiraCode" "Hack" "Meslo" "CascadiaCode" "SourceCodePro" "IBMPlexMono" "Iosevka")
+# fc-list search patterns (Nerd Fonts uses different names for licensing)
+# CascadiaCode → CaskaydiaCove, SourceCodePro → SauceCodePro, IBMPlexMono → BlexMono
+SEARCH_PATTERNS=("JetBrainsMono" "FiraCode" "Hack" "Meslo" "CaskaydiaCove" "SauceCodePro" "BlexMono" "Iosevka")
+DISPLAY_NAMES=("JetBrainsMono" "FiraCode" "Hack" "Meslo" "CascadiaCode" "SourceCodePro" "IBMPlexMono" "Iosevka")
 INSTALLED=0
 
-for family in "${FONT_FAMILIES[@]}"; do
-    if fc-list : family | grep -qi "${family}.*Nerd"; then
-        log "SUCCESS" "$family Nerd Font installed"
+for i in "${!SEARCH_PATTERNS[@]}"; do
+    pattern="${SEARCH_PATTERNS[$i]}"
+    display="${DISPLAY_NAMES[$i]}"
+    if fc-list : family | /bin/grep -qi "${pattern}.*Nerd"; then
+        log "SUCCESS" "$display Nerd Font installed"
         ((INSTALLED++))
     else
-        log "WARNING" "$family Nerd Font not found"
+        log "WARNING" "$display Nerd Font not found"
     fi
 done
 
