@@ -100,6 +100,9 @@ get_app_status() {
 
 # Show Status Dashboard (Main)
 show_dashboard() {
+    # ANSI Escape sequence (must use $'\033' for actual escape char)
+    local ESC=$'\033'
+
     # Nerd Font Icons
     local ICON_OK=$'\uf00c'      # Checkmark
     local ICON_UPDATE=$'\uf062'  # Arrow up
@@ -152,7 +155,7 @@ show_dashboard() {
         local method_padded=$(printf "%-10s" "${method:--}")
 
         # Assemble row with color on status only
-        local row="${app_padded} \033[${color}m${status_padded}\033[0m ${ver_padded} ${lat_padded} ${method_padded}"
+        local row="${app_padded} ${ESC}[${color}m${status_padded}${ESC}[0m ${ver_padded} ${lat_padded} ${method_padded}"
         body+="${row}"$'\n'
 
         # Sub-items with icons
@@ -160,11 +163,11 @@ show_dashboard() {
             IFS='^' read -ra details <<< "$location"
 
             # Location line with folder icon
-            body+="   \033[36m${ICON_FOLDER}\033[0m ${details[0]}"$'\n'
+            body+="   ${ESC}[36m${ICON_FOLDER}${ESC}[0m ${details[0]}"$'\n'
 
             # Extra details with tag icon
             for ((i=1; i<${#details[@]}; i++)); do
-                body+="   \033[34m${ICON_TAG}\033[0m ${details[i]}"$'\n'
+                body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${details[i]}"$'\n'
             done
         fi
     }
@@ -178,7 +181,7 @@ show_dashboard() {
     local ai_padded=$(printf "%-14s" "Local AI Tools")
     local ai_status="${ICON_MISSING} Missing"
     local ai_status_padded=$(printf "%-8s" "$ai_status")
-    local ai_row="${ai_padded} \033[31m${ai_status_padded}\033[0m $(printf '%-12s' '-') $(printf '%-12s' '-') $(printf '%-10s' '-')"
+    local ai_row="${ai_padded} ${ESC}[31m${ai_status_padded}${ESC}[0m $(printf '%-12s' '-') $(printf '%-12s' '-') $(printf '%-10s' '-')"
     body+="${ai_row}"
 
     # Combine all content
@@ -191,6 +194,9 @@ show_dashboard() {
 
 # Show Extras Dashboard
 show_extras_dashboard() {
+    # ANSI Escape sequence (must use $'\033' for actual escape char)
+    local ESC=$'\033'
+
     # Nerd Font Icons
     local ICON_OK=$'\uf00c'      # Checkmark
     local ICON_UPDATE=$'\uf062'  # Arrow up
@@ -241,7 +247,7 @@ show_extras_dashboard() {
         local method_padded=$(printf "%-10s" "${method:--}")
 
         # Assemble row with color on status only
-        local row="${app_padded} \033[${color}m${status_padded}\033[0m ${ver_padded} ${lat_padded} ${method_padded}"
+        local row="${app_padded} ${ESC}[${color}m${status_padded}${ESC}[0m ${ver_padded} ${lat_padded} ${method_padded}"
         body+="${row}"$'\n'
 
         # Sub-items with icons
@@ -249,11 +255,11 @@ show_extras_dashboard() {
             IFS='^' read -ra details <<< "$location"
 
             # Location line with folder icon
-            body+="   \033[36m${ICON_FOLDER}\033[0m ${details[0]}"$'\n'
+            body+="   ${ESC}[36m${ICON_FOLDER}${ESC}[0m ${details[0]}"$'\n'
 
             # Extra details with tag icon
             for ((i=1; i<${#details[@]}; i++)); do
-                body+="   \033[34m${ICON_TAG}\033[0m ${details[i]}"$'\n'
+                body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${details[i]}"$'\n'
             done
         fi
     }
