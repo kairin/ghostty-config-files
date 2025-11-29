@@ -471,9 +471,17 @@ run_step() {
 # Install an application
 install_app() {
     local app="$1"
-    
+
     gum style --foreground 212 "Starting installation for: $app"
-    
+
+    # Pre-authenticate sudo before any background operations
+    # In normal mode: uses cached credentials (no prompt)
+    # In demo mode: prompts here (before spinner hides it)
+    if ! sudo -v; then
+        gum style --foreground 196 "Sudo authentication required. Please try again."
+        return 1
+    fi
+
     # 1. Check
     run_step "scripts/000-check" "$app" "Checking existing installation..."
 
@@ -507,13 +515,19 @@ install_app() {
 # Uninstall an application
 uninstall_app() {
     local app="$1"
-    
+
     if ! gum confirm "Are you sure you want to uninstall $app?"; then
         return 0
     fi
 
     gum style --foreground 212 "Starting uninstallation for: $app"
-    
+
+    # Pre-authenticate sudo before any background operations
+    if ! sudo -v; then
+        gum style --foreground 196 "Sudo authentication required. Please try again."
+        return 1
+    fi
+
     # Run uninstall script
     if ! run_step "scripts/001-uninstall" "$app" "Uninstalling..."; then
         gum style --foreground 196 "Uninstallation failed."
