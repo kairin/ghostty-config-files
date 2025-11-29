@@ -83,6 +83,8 @@
     "node": ">=25.0.0",
     "npm": ">=10.0.0"
   },
-  "devDependencies": {},
-  "optionalDependencies": {}
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "tailwindcss": "^4.1.17"
+  }
 }
