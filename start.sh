@@ -56,13 +56,19 @@ if [[ "$DEMO_MODE" -eq 0 ]]; then
     SUDO_PID=$!
     trap 'kill $SUDO_PID 2>/dev/null' EXIT
 elif [[ "$SUDO_CACHED" -eq 1 ]]; then
-    # Demo mode with pre-cached credentials - verify still valid
-    if ! sudo -n true 2>/dev/null; then
-        gum style --foreground 196 "Sudo credentials expired. Re-run recording."
-        exit 1
+    # Demo mode with pre-cached credentials
+    # Note: Don't exit if verification fails - sudo caching is per-TTY
+    # and asciinema creates a new PTY. The actual sudo commands will
+    # prompt if needed, which works fine in asciinema.
+    if sudo -n true 2>/dev/null; then
+        echo "$(date): Demo Mode - sudo credentials verified" >> /tmp/ghostty_start.log
+    else
+        echo "$(date): Demo Mode - sudo not cached in this PTY (will prompt when needed)" >> /tmp/ghostty_start.log
     fi
-    echo "$(date): Demo Mode - using pre-cached sudo credentials" >> /tmp/ghostty_start.log
-    # Keep-alive is handled by record.sh
+    # Start keep-alive in demo mode too (may help on some systems)
+    (while true; do sudo -n true 2>/dev/null; sleep 60; done) &
+    SUDO_PID=$!
+    trap 'kill $SUDO_PID 2>/dev/null' EXIT
 else
     # Demo mode without caching - skip (for testing without sudo)
     echo "$(date): Demo Mode - sudo not cached (may stall on sudo prompts)" >> /tmp/ghostty_start.log
