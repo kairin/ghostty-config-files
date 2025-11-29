@@ -66,9 +66,20 @@ cmd_start() {
 
     local CAST_FILE="$SCRIPT_DIR/${CLIP_NAME}.cast"
 
-    # Cache sudo credentials before recording
-    gum style --foreground 214 "Caching sudo credentials (enter password now if prompted)..."
-    sudo -v
+    # Cache sudo credentials with extended timeout before recording
+    gum style --foreground 214 "Pre-caching sudo credentials for recording session..."
+    gum style --foreground 245 "(You may be prompted for your password)"
+
+    # Validate credentials - this prompts if needed
+    if ! sudo -v; then
+        gum style --foreground 196 "Sudo authentication failed. Cannot record."
+        exit 1
+    fi
+
+    # Extend sudo timeout for the recording session (15 minutes)
+    # This runs sudo -v in background to keep credentials fresh
+    (while true; do sudo -n true 2>/dev/null; sleep 50; done) &
+    SUDO_KEEPALIVE_PID=$!
 
     echo ""
     gum style --foreground 212 --bold "Recording: $CLIP_NAME"
@@ -80,7 +91,10 @@ cmd_start() {
     sleep 2
 
     cd "$PROJECT_DIR"
-    asciinema rec "$CAST_FILE" --command "./start.sh --demo-child" --overwrite
+    asciinema rec "$CAST_FILE" --command "./start.sh --demo-child --sudo-cached" --overwrite
+
+    # Kill the keep-alive after recording ends
+    kill $SUDO_KEEPALIVE_PID 2>/dev/null
 
     echo ""
     gum style --foreground 46 "✓ Recording saved: $CAST_FILE"
