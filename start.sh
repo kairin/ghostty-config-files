@@ -61,25 +61,25 @@ get_app_status() {
     
     if [ -f "$check_script" ]; then
         # Run check script and capture output
-        # Output format: INSTALLED|Version|Method|Location
+        # Output format: INSTALLED|Version|Method|Location|LatestVersion
         local output
         output=$("$check_script" 2>/dev/null)
         
         if [[ "$output" == *"INSTALLED|"* ]]; then
             # Parse pipe-delimited output
-            IFS='|' read -r status version method location <<< "$output"
-            
-            # Clean version string (remove "feh version ", "Ghostty ", etc if desired, but user asked for clean string)
-            # The check script output is already what we want to show, but let's ensure it's clean
-            # The previous fix in check script might have included "feh version" in the string.
-            # Let's just use what's passed.
-            
-            echo "$status|$version|$method|$location"
+            IFS='|' read -r status version method location latest <<< "$output"
+            echo "$status|$version|$method|$location|$latest"
         else
-            echo "Not Installed|-|-|-"
+            # Pass through "Not Installed" or other statuses, ensuring 5 fields
+            # If output is just "Not Installed|-|-|-", append one more field
+            if [[ "$output" == *"|"* ]]; then
+                 echo "$output|-"
+            else
+                 echo "Not Installed|-|-|-|-"
+            fi
         fi
     else
-        echo "Unknown|-|-|-"
+        echo "Unknown|-|-|-|-"
     fi
 }
 
@@ -105,17 +105,20 @@ show_dashboard() {
         local app_name="$1"
         local app_id="$2"
         
-        IFS='|' read -r status version method location <<< "$(get_app_status $app_id)"
+        IFS='|' read -r status version method location latest <<< "$(get_app_status $app_id)"
         
         local display_status="$status"
         
         # Logic for "Update Recommended"
         if [[ "$status" == "INSTALLED" ]]; then
-            # Default to Installed if method is Source, or specific app exceptions
-            if [[ "$method" == "Source" ]] || [[ "$app_id" == "nerdfonts" ]] || [[ "$app_id" == "nodejs" ]]; then
-                display_status="Installed"
+            # If we have a latest version and it differs from current, show update available
+            # Note: This is a simple string comparison. For robust semver, we'd need a helper.
+            # For now, we rely on the check script to provide a meaningful "latest" only if it's actually newer,
+            # OR we just compare strings.
+            if [[ -n "$latest" ]] && [[ "$latest" != "-" ]] && [[ "$latest" != "$version" ]]; then
+                 display_status="Update Available"
             else
-                display_status="Update Recommended"
+                 display_status="Installed"
             fi
         fi
         
@@ -123,7 +126,7 @@ show_dashboard() {
         local color_status="$display_status"
         if [[ "$display_status" == "Installed" ]]; then
             color_status="\033[32m$display_status\033[0m" # Green
-        elif [[ "$display_status" == "Update Recommended" ]]; then
+        elif [[ "$display_status" == "Update Available" ]]; then
             color_status="\033[33m$display_status\033[0m" # Yellow
         elif [[ "$display_status" == "Not Installed" ]]; then
             color_status="\033[31m$display_status\033[0m" # Red
@@ -140,8 +143,8 @@ show_dashboard() {
         
         # Row 2+: Location and Extra Details
         if [[ "$status" == "INSTALLED" ]]; then
-             # Split location by | to handle extra details (e.g. npm version)
-             IFS='|' read -ra details <<< "$location"
+             # Split location by ^ to handle extra details (e.g. npm version)
+             IFS='^' read -ra details <<< "$location"
              
              # First part is always location
              local row2=$(printf "└─ Location: %s" "${details[0]}")
@@ -153,6 +156,12 @@ show_dashboard() {
                  local row_extra=$(printf "└─ %s" "$detail")
                  body+="${row_extra}"$'\n'
              done
+
+             # Show latest version if available
+             if [[ -n "$latest" ]] && [[ "$latest" != "-" ]]; then
+                 local row_latest=$(printf "└─ Latest:   %s" "$latest")
+                 body+="${row_latest}"$'\n'
+             fi
         fi
     }
     
@@ -317,6 +326,78 @@ install_app() {
     echo ""
 }
 
+# Uninstall an application
+uninstall_app() {
+    local app="$1"
+    
+    if ! gum confirm "Are you sure you want to uninstall $app?"; then
+        return 0
+    fi
+
+    gum style --foreground 212 "Starting uninstallation for: $app"
+    
+    # Run uninstall script
+    if ! run_step "001-uninstall" "$app" "Uninstalling..."; then
+        gum style --foreground 196 "Uninstallation failed."
+        return 1
+    fi
+    
+    gum style --foreground 46 "✓ $app uninstallation complete!"
+    echo ""
+}
+
+# Handle App Selection
+handle_app_selection() {
+    local app_name="$1"
+    local app_id="$2"
+    
+    while true; do
+        show_header
+        show_dashboard
+        
+        IFS='|' read -r status version method location latest <<< "$(get_app_status $app_id)"
+        
+        local options=()
+        
+        if [[ "$status" == "INSTALLED" ]]; then
+            if [[ -n "$latest" ]] && [[ "$latest" != "-" ]] && [[ "$latest" != "$version" ]]; then
+                options+=("Update to $latest")
+            fi
+            options+=("Reinstall")
+            options+=("Uninstall")
+        else
+            options+=("Install")
+        fi
+        options+=("Back")
+        
+        local choice=$(gum choose "${options[@]}")
+        
+        case "$choice" in
+            "Install")
+                install_app "$app_id"
+                ;;
+            "Update to "*)
+                install_app "$app_id" # Re-run install to update
+                ;;
+            "Reinstall")
+                install_app "$app_id"
+                ;;
+            "Uninstall")
+                uninstall_app "$app_id"
+                ;;
+            "Back")
+                return
+                ;;
+        esac
+        
+        # Pause to let user see result before refreshing
+        if [[ "$choice" != "Back" ]]; then
+             echo "Press Enter to continue..."
+             read -r
+        fi
+    done
+}
+
 # =============================================================================
 # 4. Main Loop
 # =============================================================================
@@ -326,43 +407,34 @@ while true; do
     show_dashboard
     
     CHOICE=$(gum choose \
-        "Install Feh" \
-        "Install Ghostty" \
-        "Install Nerd Fonts" \
-        "Install Node.js" \
-        "Install Both (Feh + Ghostty)" \
-        "Install Local AI Tools (Coming Soon)" \
+        "Feh" \
+        "Ghostty" \
+        "Nerd Fonts" \
+        "Node.js" \
+        "Install All (Feh + Ghostty + Node.js)" \
         "Exit")
         
     case "$CHOICE" in
-        "Install Feh")
+        "Feh")
+            handle_app_selection "Feh" "feh"
+            ;;
+        "Ghostty")
+            handle_app_selection "Ghostty" "ghostty"
+            ;;
+        "Nerd Fonts")
+            handle_app_selection "Nerd Fonts" "nerdfonts"
+            ;;
+        "Node.js")
+            handle_app_selection "Node.js" "nodejs"
+            ;;
+        "Install All (Feh + Ghostty + Node.js)")
             install_app "feh"
-            ;;
-        "Install Ghostty")
             install_app "ghostty"
-            ;;
-        "Install Nerd Fonts")
-            install_app "nerdfonts"
-            ;;
-        "Install Node.js")
             install_app "nodejs"
-            ;;
-        "Install Both (Feh + Ghostty)")
-            install_app "feh"
-            install_app "ghostty"
-            ;;
-        "Install Local AI Tools (Coming Soon)")
-            gum style --foreground 212 "This feature is under development."
-            sleep 2
             ;;
         "Exit")
             echo "Goodbye!"
             exit 0
             ;;
     esac
-    
-    if ! gum confirm "Return to main menu?"; then
-        echo "Goodbye!"
-        exit 0
-    fi
 done
