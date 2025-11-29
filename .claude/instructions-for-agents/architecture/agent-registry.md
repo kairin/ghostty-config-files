@@ -6,20 +6,40 @@ status: ACTIVE
 last-updated: 2025-11-28
 ---
 
-# Agent Registry (60 Agents)
+# Agent Registry (65 Agents)
 
 [<- Back to AGENTS.md](../../../../AGENTS.md) | [Delegation Guide](./agent-delegation.md)
 
 ---
 
-## 4-Tier Overview
+## 5-Tier Overview
 
 | Tier | Model | Count | Purpose |
 |------|-------|-------|---------|
+| **0** | **Sonnet** | **5** | **Complete workflow agents** |
 | 1 | Opus | 1 | Multi-agent orchestration |
 | 2 | Sonnet | 5 | Core domain operations |
 | 3 | Sonnet | 4 | Utility/support operations |
 | 4 | Haiku | 50 | Atomic execution tasks |
+
+---
+
+## Tier 0: Complete Workflows (Sonnet)
+
+| Agent | Purpose | Delegates To | Parallel-Safe |
+|-------|---------|--------------|---------------|
+| **000-health** | Full health assessment | 002-health, 003-docs, 002-astro | Yes |
+| **000-cleanup** | Repository cleanup | 002-cleanup, 002-git | No |
+| **000-commit** | Constitutional commit workflow | 002-git | No |
+| **000-deploy** | Complete deployment | 002-git, 002-astro, 002-health, 003-docs | No |
+| **000-docs** | Documentation verification | 003-docs, 003-symlink, 002-git | No |
+
+**Natural Language Triggers**:
+- "Check project health" → 000-health
+- "Clean up the repo" → 000-cleanup
+- "Commit my changes" → 000-commit
+- "Deploy the website" → 000-deploy
+- "Fix documentation" → 000-docs
 
 ---
 
@@ -156,6 +176,13 @@ last-updated: 2025-11-28
 ## Parent-Child Summary
 
 ```
+000-* (Tier 0 Workflows) → Coordinate Tier 2/3 agents
+    ├─ 000-health ────→ 002-health, 003-docs, 002-astro
+    ├─ 000-cleanup ───→ 002-cleanup, 002-git
+    ├─ 000-commit ────→ 002-git
+    ├─ 000-deploy ────→ 002-git, 002-astro, 002-health, 003-docs
+    └─ 000-docs ──────→ 003-docs, 003-symlink, 002-git
+
 002-git ────────→ 021-* (7 agents)
 002-astro ──────→ 022-* (5 agents)
 002-cleanup ────→ 023-* (6 agents)
@@ -167,7 +194,7 @@ last-updated: 2025-11-28
 034-* (5 shared utilities)
 ```
 
-**Total**: 1 Opus + 9 Sonnet + 50 Haiku = **60 agents**
+**Total**: 5 Tier 0 + 1 Opus + 9 Sonnet + 50 Haiku = **65 agents**
 
 ---
 

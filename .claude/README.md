@@ -62,19 +62,19 @@
 
 ---
 
-## ⚡ Command Quick Reference
+## ⚡ Workflow Agents (Quick Reference)
 
-### Guardian Commands (Safe Operations)
+### Tier 0 Workflow Agents (Fully Automatic)
 
-**Fully automatic with constitutional compliance:**
+**Invoke via natural language or Task tool:**
 
-| Command | Purpose | Safety |
-|---------|---------|--------|
-| `/guardian-health` | System health assessment | Read-only |
-| `/guardian-documentation` | Fix documentation and symlinks | Safe |
-| `/guardian-commit` | Constitutional Git commit | Safe |
-| `/guardian-deploy` | Deploy with validation | Safe |
-| `/guardian-cleanup` | Safe cleanup with preservation | Safe |
+| Agent | Natural Language Trigger | Purpose |
+|-------|--------------------------|---------|
+| `000-health` | "Check project health" | System health assessment |
+| `000-docs` | "Fix documentation" | Fix documentation and symlinks |
+| `000-commit` | "Commit my changes" | Constitutional Git commit |
+| `000-deploy` | "Deploy the website" | Deploy with validation |
+| `000-cleanup` | "Clean up the repo" | Safe cleanup with preservation |
 
 ---
 
@@ -87,23 +87,26 @@ AGENTS.md (master)            ← Single source of truth
     ↓ symlinked by
 CLAUDE.md, GEMINI.md         ← AI assistant entry points
     ↓ references
-.claude/                      ← Agent & command definitions
+.claude/                      ← Agent definitions
 ├── README.md                 ← This file (quick reference)
 ├── principles/               ← Constitutional requirements
 │   └── script-proliferation.md  🔴 CRITICAL
-├── agents/                   ← 10 specialized agents
-│   ├── 001-orchestrator.md      (Tier 1: Opus)
-│   ├── 002-git.md               (Tier 2: Sonnet Core)
-│   ├── 002-compliance.md        (Tier 2: Sonnet Core)
-│   ├── 002-health.md            (Tier 2: Sonnet Core)
-│   ├── 002-cleanup.md           (Tier 2: Sonnet Core)
-│   ├── 002-astro.md             (Tier 2: Sonnet Core)
-│   ├── 003-cicd.md              (Tier 3: Sonnet Utility)
-│   ├── 003-symlink.md           (Tier 3: Sonnet Utility)
-│   ├── 003-docs.md              (Tier 3: Sonnet Utility)
-│   └── 003-workflow.md          (Tier 3: Sonnet Utility)
-└── commands/                 ← 6 slash commands
-    └── guardian-*.md         (6 guardian commands)
+└── agents/                   ← 15 specialized agents (65 total with Haiku)
+    ├── 000-health.md            (Tier 0: Workflow)
+    ├── 000-cleanup.md           (Tier 0: Workflow)
+    ├── 000-commit.md            (Tier 0: Workflow)
+    ├── 000-deploy.md            (Tier 0: Workflow)
+    ├── 000-docs.md              (Tier 0: Workflow)
+    ├── 001-orchestrator.md      (Tier 1: Opus)
+    ├── 002-git.md               (Tier 2: Sonnet Core)
+    ├── 002-compliance.md        (Tier 2: Sonnet Core)
+    ├── 002-health.md            (Tier 2: Sonnet Core)
+    ├── 002-cleanup.md           (Tier 2: Sonnet Core)
+    ├── 002-astro.md             (Tier 2: Sonnet Core)
+    ├── 003-cicd.md              (Tier 3: Sonnet Utility)
+    ├── 003-symlink.md           (Tier 3: Sonnet Utility)
+    ├── 003-docs.md              (Tier 3: Sonnet Utility)
+    └── 003-workflow.md          (Tier 3: Sonnet Utility)
 ```
 
 ---
@@ -178,13 +181,10 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
    - Enforcement procedures
 
 3. **Agent Definitions** (`.claude/agents/`)
-   - 10 specialized agents (188KB total)
+   - 15 specialized agents (5 Tier 0 workflows + 10 core agents)
+   - 50 additional Haiku atomic agents (65 total)
    - Detailed capabilities and usage
    - Constitutional compliance enforcement
-
-4. **Command Definitions** (`.claude/commands/`)
-   - 6 slash commands
-   - Guardian commands (safe operations)
 
 ### Supporting Documentation
 

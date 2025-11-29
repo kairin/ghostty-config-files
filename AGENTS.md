@@ -96,7 +96,7 @@ Query Context7 before major configuration changes:
 |-----------|------------|--------|---------------|
 | Bug fix (single file) | ATOMIC | Direct fix → validate → commit | No |
 | Feature (multi-file) | MODERATE | TodoWrite → incremental execution | Maybe |
-| Deployment | COMPLEX | Use `/guardian-deploy` or orchestrate | Yes |
+| Deployment | COMPLEX | Use `000-deploy` agent or orchestrate | Yes |
 | Investigation | VARIABLE | Explore first → propose → await approval | No |
 | Cleanup | MODERATE | Scan → present findings → await approval | Yes (approval) |
 
@@ -238,13 +238,14 @@ ghostty +show-config                    # Validate configuration
 
 | Tier | Model | Count | Purpose |
 |------|-------|-------|---------|
+| 0 | Sonnet | 5 | Complete workflows (000-*) |
 | 1 | Opus | 1 | Multi-agent orchestration |
 | 2-3 | Sonnet | 9 | Core/utility operations |
 | 4 | Haiku | 50 | Atomic execution |
 
 - **[Agent Delegation Guide](/.claude/instructions-for-agents/architecture/agent-delegation.md)** - When to use which tier
-- **[Agent Registry](/.claude/instructions-for-agents/architecture/agent-registry.md)** - Complete 60-agent reference
-- **Commands**: `.claude/commands/` - 6 slash commands (/guardian-*)
+- **[Agent Registry](/.claude/instructions-for-agents/architecture/agent-registry.md)** - Complete 65-agent reference
+- **Workflow Agents**: `000-health`, `000-cleanup`, `000-commit`, `000-deploy`, `000-docs`
 
 ---
 
