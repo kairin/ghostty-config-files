@@ -100,97 +100,90 @@ get_app_status() {
 
 # Show Status Dashboard (Main)
 show_dashboard() {
-    # Helper to pad string to length
-    pad() {
-        local s="$1"
-        local len="$2"
-        printf "%-${len}s" "$s"
-    }
+    # Nerd Font Icons
+    local ICON_OK=$'\uf00c'      # Checkmark
+    local ICON_UPDATE=$'\uf062'  # Arrow up
+    local ICON_MISSING=$'\uf00d' # X mark
+    local ICON_FOLDER=$'\uf07b'  # Folder
+    local ICON_TAG=$'\uf02b'     # Tag
 
-    # Build Header
-    # Columns: APP(15) STATUS(20) VERSION(20) METHOD(15) = 70 chars
-    local header=$(printf "%-15s %-20s %-20s %-15s" "APP" "STATUS" "VERSION" "METHOD")
-    local separator=$(printf "%0.s─" {1..70})
-    
+    # Build Header with VERSION/LATEST columns
+    # Columns: APP(14) STATUS(10) VERSION(12) LATEST(12) METHOD(10) = 62 chars
+    local header=$(printf "%-14s %-10s %-12s %-12s %-10s" "APP" "STATUS" "VERSION" "LATEST" "METHOD")
+    local separator=$(printf "%0.s─" {1..62})
+
     # Accumulate body content
     local body=""
-    
+
     # Function to append app row to body
     append_app_row() {
         local app_name="$1"
         local app_id="$2"
-        
+
         IFS='|' read -r status version method location latest <<< "$(get_app_status $app_id)"
-        
-        local display_status="$status"
-        
-        # Logic for "Update Recommended"
+
+        # Determine icon, color, and display text
+        local icon=""
+        local color=""
+        local display_status=""
+
         if [[ "$status" == "INSTALLED" ]]; then
             if [[ -n "$latest" ]] && [[ "$latest" != "-" ]] && [[ "$latest" != "$version" ]]; then
-                 display_status="Update Available"
+                icon="$ICON_UPDATE"
+                color="33"  # Yellow
+                display_status="Update"
             else
-                 display_status="Installed"
+                icon="$ICON_OK"
+                color="32"  # Green
+                display_status="OK"
             fi
+        else
+            icon="$ICON_MISSING"
+            color="31"  # Red
+            display_status="Missing"
         fi
-        
-        # Colorize status
-        local color_status="$display_status"
-        if [[ "$display_status" == "Installed" ]]; then
-            color_status="\033[32m$display_status\033[0m" # Green
-        elif [[ "$display_status" == "Update Available" ]]; then
-            color_status="\033[33m$display_status\033[0m" # Yellow
-        elif [[ "$display_status" == "Not Installed" ]]; then
-            color_status="\033[31m$display_status\033[0m" # Red
-        fi
-        
-        # Calculate padding for status (since it has colors)
-        local status_len=${#display_status}
-        local status_pad=$((20 - status_len))
-        if [ $status_pad -lt 0 ]; then status_pad=0; fi
-        
-        # Row 1: Columns
-        local row1=$(printf "%-15s %b%*s %-20s %-15s" "$app_name" "$color_status" "$status_pad" "" "${version:0:19}" "$method")
-        body+="${row1}"$'\n'
-        
-        # Row 2+: Location and Extra Details
-        if [[ "$status" == "INSTALLED" ]]; then
-             # Split location by ^ to handle extra details (e.g. npm version)
-             IFS='^' read -ra details <<< "$location"
-             
-             # First part is always location
-             local row2=$(printf "└─ Location: %s" "${details[0]}")
-             body+="${row2}"$'\n'
-             
-             # Subsequent parts are extra details
-             for ((i=1; i<${#details[@]}; i++)); do
-                 local detail="${details[i]}"
-                 local row_extra=$(printf "└─ %s" "$detail")
-                 body+="${row_extra}"$'\n'
-             done
 
-             # Show latest version if available
-             if [[ -n "$latest" ]] && [[ "$latest" != "-" ]]; then
-                 local row_latest=$(printf "└─ Latest:   %s" "$latest")
-                 body+="${row_latest}"$'\n'
-             fi
+        # Build row with fixed-width visible text
+        local app_padded=$(printf "%-14s" "$app_name")
+        local status_text="${icon} ${display_status}"
+        local status_padded=$(printf "%-8s" "$status_text")
+        local ver_padded=$(printf "%-12s" "${version:--}")
+        local lat_padded=$(printf "%-12s" "${latest:--}")
+        local method_padded=$(printf "%-10s" "${method:--}")
+
+        # Assemble row with color on status only
+        local row="${app_padded} \033[${color}m${status_padded}\033[0m ${ver_padded} ${lat_padded} ${method_padded}"
+        body+="${row}"$'\n'
+
+        # Sub-items with icons
+        if [[ "$status" == "INSTALLED" ]]; then
+            IFS='^' read -ra details <<< "$location"
+
+            # Location line with folder icon
+            body+="   \033[36m${ICON_FOLDER}\033[0m ${details[0]}"$'\n'
+
+            # Extra details with tag icon
+            for ((i=1; i<${#details[@]}; i++)); do
+                body+="   \033[34m${ICON_TAG}\033[0m ${details[i]}"$'\n'
+            done
         fi
     }
-    
+
     append_app_row "Feh" "feh"
     append_app_row "Ghostty" "ghostty"
     append_app_row "Nerd Fonts" "nerdfonts"
     append_app_row "Node.js" "nodejs"
-    
+
     # Local AI Tools (Placeholder)
-    local ai_status="Not Installed"
-    local ai_color="\033[31m$ai_status\033[0m"
-    local ai_pad=$((20 - ${#ai_status}))
-    local ai_row=$(printf "%-15s %b%*s %-20s %-15s" "Local AI Tools" "$ai_color" "$ai_pad" "" "-" "-")
+    local ai_padded=$(printf "%-14s" "Local AI Tools")
+    local ai_status="${ICON_MISSING} Missing"
+    local ai_status_padded=$(printf "%-8s" "$ai_status")
+    local ai_row="${ai_padded} \033[31m${ai_status_padded}\033[0m $(printf '%-12s' '-') $(printf '%-12s' '-') $(printf '%-10s' '-')"
     body+="${ai_row}"
-    
+
     # Combine all content
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
-    
+
     # Render with gum style
     gum style --border rounded --padding "0 1" --border-foreground 212 "$content"
     echo ""
@@ -198,68 +191,73 @@ show_dashboard() {
 
 # Show Extras Dashboard
 show_extras_dashboard() {
-    # Helper to pad string to length
-    pad() {
-        local s="$1"
-        local len="$2"
-        printf "%-${len}s" "$s"
-    }
+    # Nerd Font Icons
+    local ICON_OK=$'\uf00c'      # Checkmark
+    local ICON_UPDATE=$'\uf062'  # Arrow up
+    local ICON_MISSING=$'\uf00d' # X mark
+    local ICON_FOLDER=$'\uf07b'  # Folder
+    local ICON_TAG=$'\uf02b'     # Tag
 
-    # Build Header
-    local header=$(printf "%-15s %-20s %-20s %-15s" "APP" "STATUS" "VERSION" "METHOD")
-    local separator=$(printf "%0.s─" {1..70})
-    
+    # Build Header with VERSION/LATEST columns
+    local header=$(printf "%-14s %-10s %-12s %-12s %-10s" "APP" "STATUS" "VERSION" "LATEST" "METHOD")
+    local separator=$(printf "%0.s─" {1..62})
+
     local body=""
-    
-    # Function to append app row to body (Duplicated for now to avoid scope issues)
+
+    # Function to append app row to body
     append_app_row() {
         local app_name="$1"
         local app_id="$2"
-        
+
         IFS='|' read -r status version method location latest <<< "$(get_app_status $app_id)"
-        
-        local display_status="$status"
-        
+
+        # Determine icon, color, and display text
+        local icon=""
+        local color=""
+        local display_status=""
+
         if [[ "$status" == "INSTALLED" ]]; then
             if [[ -n "$latest" ]] && [[ "$latest" != "-" ]] && [[ "$latest" != "$version" ]]; then
-                 display_status="Update Available"
+                icon="$ICON_UPDATE"
+                color="33"  # Yellow
+                display_status="Update"
             else
-                 display_status="Installed"
+                icon="$ICON_OK"
+                color="32"  # Green
+                display_status="OK"
             fi
+        else
+            icon="$ICON_MISSING"
+            color="31"  # Red
+            display_status="Missing"
         fi
-        
-        local color_status="$display_status"
-        if [[ "$display_status" == "Installed" ]]; then
-            color_status="\033[32m$display_status\033[0m"
-        elif [[ "$display_status" == "Update Available" ]]; then
-            color_status="\033[33m$display_status\033[0m"
-        elif [[ "$display_status" == "Not Installed" ]]; then
-            color_status="\033[31m$display_status\033[0m"
-        fi
-        
-        local status_len=${#display_status}
-        local status_pad=$((20 - status_len))
-        if [ $status_pad -lt 0 ]; then status_pad=0; fi
-        
-        local row1=$(printf "%-15s %b%*s %-20s %-15s" "$app_name" "$color_status" "$status_pad" "" "${version:0:19}" "$method")
-        body+="${row1}"$'\n'
-        
+
+        # Build row with fixed-width visible text
+        local app_padded=$(printf "%-14s" "$app_name")
+        local status_text="${icon} ${display_status}"
+        local status_padded=$(printf "%-8s" "$status_text")
+        local ver_padded=$(printf "%-12s" "${version:--}")
+        local lat_padded=$(printf "%-12s" "${latest:--}")
+        local method_padded=$(printf "%-10s" "${method:--}")
+
+        # Assemble row with color on status only
+        local row="${app_padded} \033[${color}m${status_padded}\033[0m ${ver_padded} ${lat_padded} ${method_padded}"
+        body+="${row}"$'\n'
+
+        # Sub-items with icons
         if [[ "$status" == "INSTALLED" ]]; then
-             IFS='^' read -ra details <<< "$location"
-             local row2=$(printf "└─ Location: %s" "${details[0]}")
-             body+="${row2}"$'\n'
-             for ((i=1; i<${#details[@]}; i++)); do
-                 local detail="${details[i]}"
-                 local row_extra=$(printf "└─ %s" "$detail")
-                 body+="${row_extra}"$'\n'
-             done
-             if [[ -n "$latest" ]] && [[ "$latest" != "-" ]]; then
-                 local row_latest=$(printf "└─ Latest:   %s" "$latest")
-                 body+="${row_latest}"$'\n'
-             fi
+            IFS='^' read -ra details <<< "$location"
+
+            # Location line with folder icon
+            body+="   \033[36m${ICON_FOLDER}\033[0m ${details[0]}"$'\n'
+
+            # Extra details with tag icon
+            for ((i=1; i<${#details[@]}; i++)); do
+                body+="   \033[34m${ICON_TAG}\033[0m ${details[i]}"$'\n'
+            done
         fi
     }
-    
+
     append_app_row "Fastfetch" "fastfetch"
     append_app_row "Glow" "glow"
     append_app_row "Go" "go"
@@ -267,9 +265,9 @@ show_extras_dashboard() {
     append_app_row "Python (uv)" "python_uv"
     append_app_row "VHS" "vhs"
     append_app_row "Zsh" "zsh"
-    
+
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
-    gum style --border rounded --padding "0 1" --border-foreground 99 "$content" # Different color for extras? 99 is purple
+    gum style --border rounded --padding "0 1" --border-foreground 99 "$content"
     echo ""
 }
 
