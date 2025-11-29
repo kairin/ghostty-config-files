@@ -1,0 +1,120 @@
+---
+// docs/installation.astro - Detailed installation guide
+import DocsLayout from '../../components/layout/DocsLayout.astro';
+---
+
+<DocsLayout title="Installation" description="Detailed guide for installing Ghostty Configuration Files">
+  <h2>System Requirements</h2>
+
+  <div class="alert alert-warning not-prose my-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <span><strong>Ubuntu 22.04+</strong> or Debian-based distribution required</span>
+  </div>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Minimum</th>
+          <th>Recommended</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OS</td>
+          <td>Ubuntu 22.04</td>
+          <td>Ubuntu 24.04+</td>
+        </tr>
+        <tr>
+          <td>RAM</td>
+          <td>2 GB</td>
+          <td>4 GB+</td>
+        </tr>
+        <tr>
+          <td>Disk Space</td>
+          <td>500 MB</td>
+          <td>1 GB+</td>
+        </tr>
+        <tr>
+          <td>Network</td>
+          <td>Required</td>
+          <td>Broadband</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Step-by-Step Installation</h2>
+
+  <h3>1. Install Prerequisites</h3>
+  <p>Ensure you have git and curl installed:</p>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>sudo apt update && sudo apt install -y git curl</code></pre>
+  </div>
+
+  <h3>2. Clone the Repository</h3>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>git clone https://github.com/kairin/ghostty-config-files</code></pre>
+    <pre data-prefix="$"><code>cd ghostty-config-files</code></pre>
+  </div>
+
+  <h3>3. Run the Installer</h3>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>./start.sh</code></pre>
+  </div>
+
+  <h3>4. Follow the Interactive Menu</h3>
+  <p>The installer provides a TUI menu to select what you want to install:</p>
+
+  <div class="mockup-window border border-base-300 not-prose my-6">
+    <div class="bg-base-200 px-4 py-8 font-mono text-sm">
+      <p class="text-primary">╭─────────────────────────────────────╮</p>
+      <p class="text-primary">│   Ghostty Config Files Installer    │</p>
+      <p class="text-primary">╰─────────────────────────────────────╯</p>
+      <p class="mt-4">Select components to install:</p>
+      <p class="mt-2">  <span class="text-success">▸</span> [x] Ghostty Terminal</p>
+      <p>  <span class="text-base-content/50">▸</span> [x] ZSH + Oh My ZSH</p>
+      <p>  <span class="text-base-content/50">▸</span> [x] Nerd Fonts</p>
+      <p>  <span class="text-base-content/50">▸</span> [ ] AI Tools (Claude, Gemini)</p>
+      <p>  <span class="text-base-content/50">▸</span> [x] CLI Utilities</p>
+    </div>
+  </div>
+
+  <h2>Post-Installation</h2>
+
+  <h3>Restart Your Shell</h3>
+  <p>After installation, either:</p>
+  <ul>
+    <li>Close and reopen your terminal, or</li>
+    <li>Run: <code>source ~/.zshrc</code></li>
+  </ul>
+
+  <h3>Verify Installation</h3>
+  <p>Check that everything installed correctly:</p>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>ghostty --version</code></pre>
+    <pre data-prefix="ghostty" class="text-success"><code>1.2.3</code></pre>
+    <pre data-prefix="$"><code>echo $SHELL</code></pre>
+    <pre data-prefix="" class="text-success"><code>/usr/bin/zsh</code></pre>
+  </div>
+
+  <h2>Uninstallation</h2>
+  <p>To remove installed components:</p>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>./start.sh</code></pre>
+    <pre data-prefix=""><code># Select an app and choose "Uninstall"</code></pre>
+  </div>
+
+  <h2>Manual Installation</h2>
+  <p>If you prefer to install components individually, each has its own script:</p>
+
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="#" class="text-base-content/50"><code>Install just Ghostty</code></pre>
+    <pre data-prefix="$"><code>./scripts/004-reinstall/install_ghostty.sh</code></pre>
+    <pre data-prefix="#" class="text-base-content/50"><code>Install just Nerd Fonts</code></pre>
+    <pre data-prefix="$"><code>./scripts/004-reinstall/install_nerdfonts.sh</code></pre>
+  </div>
+</DocsLayout>

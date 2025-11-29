@@ -1,0 +1,162 @@
+---
+// StarField.astro - Animated constellation background
+// Ported from Tailwind Plus commit template
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+// Pre-defined star positions [x, y, dim?, blur?]
+const stars = [
+  [4, 4, true, true],
+  [4, 44, true],
+  [36, 22],
+  [50, 146, true, true],
+  [64, 43, true, true],
+  [76, 30, true],
+  [101, 116],
+  [140, 36, true],
+  [149, 134],
+  [162, 74, true],
+  [171, 96, true, true],
+  [210, 56, true, true],
+  [235, 90],
+  [275, 82, true, true],
+  [306, 6],
+  [307, 64, true, true],
+  [380, 68, true],
+  [380, 108, true, true],
+  [391, 148, true, true],
+  [405, 18, true],
+  [412, 86, true, true],
+  [426, 210, true, true],
+  [427, 56, true, true],
+  [538, 138],
+  [563, 88, true, true],
+  [611, 154, true, true],
+  [637, 150],
+  [651, 146, true],
+  [682, 70, true, true],
+  [683, 128],
+  [781, 82, true, true],
+  [785, 158, true],
+  [832, 146, true, true],
+  [852, 89],
+];
+
+// Constellation paths (arrays of [x, y] points)
+const constellations = [
+  [[247, 103], [261, 86], [307, 104], [357, 36]],
+  [[586, 120], [516, 100], [491, 62], [440, 107], [477, 180], [516, 100]],
+  [[733, 100], [803, 120], [879, 113], [823, 164], [803, 120]],
+];
+
+const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
+---
+
+<svg
+  viewBox="0 0 881 211"
+  fill="white"
+  aria-hidden="true"
+  class:list={[
+    'pointer-events-none absolute w-[55rem] origin-top-right rotate-[30deg] overflow-visible opacity-70',
+    className
+  ]}
+>
+  <defs>
+    <filter id={blurId}>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Constellation paths -->
+  {constellations.map((points, i) => {
+    const pathD = `M ${points.map(p => p.join(',')).join(' L ')}`;
+    const uniquePoints = points.filter((point, idx) =>
+      points.findIndex(p => p[0] === point[0] && p[1] === point[1]) === idx
+    );
+    return (
+      <g class="constellation" data-index={i}>
+        <path
+          stroke="white"
+          stroke-opacity="0.2"
+          stroke-dasharray="1"
+          stroke-dashoffset="1"
+          pathLength="1"
+          fill="transparent"
+          d={pathD}
+          class="constellation-path"
+        />
+        {uniquePoints.map(([cx, cy]) => (
+          <g class="star-group opacity-0">
+            <circle cx={cx} cy={cy} r="1" class="star" />
+          </g>
+        ))}
+      </g>
+    );
+  })}
+
+  <!-- Individual stars -->
+  {stars.map(([cx, cy, dim, blur]) => (
+    <g class="star-group opacity-0" data-dim={dim ? 'true' : undefined}>
+      <circle
+        cx={cx}
+        cy={cy}
+        r="1"
+        class="star"
+        style={`transform-origin: ${cx / 16}rem ${cy / 16}rem; opacity: ${dim ? 0.2 : 1}; transform: scale(${dim ? 1 : 1.2});`}
+        filter={blur ? `url(#${blurId})` : undefined}
+      />
+    </g>
+  ))}
+</svg>
+
+<script>
+  // Client-side animation for stars
+  document.addEventListener('astro:page-load', () => {
+    const starGroups = document.querySelectorAll('.star-group');
+    const constellationPaths = document.querySelectorAll('.constellation-path');
+
+    // Animate stars fading in
+    starGroups.forEach((group, i) => {
+      const delay = Math.random() * 2000;
+      setTimeout(() => {
+        group.classList.remove('opacity-0');
+        group.classList.add('transition-opacity', 'duration-[4000ms]', 'opacity-100');
+      }, delay);
+
+      // Twinkling animation for the star inside
+      const star = group.querySelector('.star');
+      if (star) {
+        const isDim = group.getAttribute('data-dim') === 'true';
+        const duration = Math.random() * 2000 + 2000;
+        star.animate([
+          { opacity: isDim ? 0.2 : 1, transform: isDim ? 'scale(1)' : 'scale(1.2)' },
+          { opacity: isDim ? 0.5 : 0.6, transform: isDim ? 'scale(1.2)' : 'scale(1)' },
+        ], {
+          duration,
+          delay: delay + 4000,
+          direction: 'alternate',
+          iterations: Infinity,
+          easing: 'ease-in-out',
+        });
+      }
+    });
+
+    // Animate constellation paths drawing
+    constellationPaths.forEach((path, i) => {
+      const delay = Math.random() * 3000 + 2000;
+      path.animate([
+        { strokeDashoffset: 1 },
+        { strokeDashoffset: 0 },
+      ], {
+        duration: 5000,
+        delay,
+        fill: 'forwards',
+        easing: 'ease-out',
+      });
+    });
+  });
+</script>

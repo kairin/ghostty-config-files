@@ -1,0 +1,107 @@
+---
+// docs/index.astro - Documentation overview
+import DocsLayout from '../../components/layout/DocsLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<DocsLayout title="Overview" description="Welcome to Ghostty Configuration Files documentation">
+  <h2>What is Ghostty Config Files?</h2>
+  <p>
+    A comprehensive terminal environment setup for Ubuntu that installs and configures:
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-6">
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h3 class="card-title text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          Ghostty Terminal
+        </h3>
+        <p class="text-base-content/70">GPU-accelerated terminal emulator with native performance and modern features.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h3 class="card-title text-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+          ZSH + Oh My ZSH
+        </h3>
+        <p class="text-base-content/70">Enhanced shell with syntax highlighting, autosuggestions, and powerful plugins.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h3 class="card-title text-accent">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          AI Tools
+        </h3>
+        <p class="text-base-content/70">Claude Code and Gemini CLI for AI-assisted development directly in your terminal.</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h3 class="card-title text-info">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          Modern CLI Tools
+        </h3>
+        <p class="text-base-content/70">gum, glow, eza, fzf, zoxide, fastfetch, and more.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Quick Links</h2>
+  <ul>
+    <li><a href={`${base}docs/getting-started/`}>Getting Started</a> - Clone and run in 2 minutes</li>
+    <li><a href={`${base}docs/features/`}>Features</a> - Complete list of what gets installed</li>
+    <li><a href={`${base}docs/installation/`}>Installation</a> - Detailed installation guide</li>
+    <li><a href={`${base}docs/activity/`}>Project Activity</a> - Commit history and statistics</li>
+  </ul>
+
+  <h2>Project Stats</h2>
+  <div class="stats shadow bg-base-100 not-prose">
+    <div class="stat">
+      <div class="stat-figure text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div class="stat-title">Total Commits</div>
+      <div class="stat-value text-primary">726</div>
+      <div class="stat-desc">Since January 2025</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-figure text-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="stat-title">Install Time</div>
+      <div class="stat-value text-secondary">~2</div>
+      <div class="stat-desc">Minutes to complete</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-figure text-accent">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="stat-title">Apps Installed</div>
+      <div class="stat-value text-accent">15+</div>
+      <div class="stat-desc">Tools and utilities</div>
+    </div>
+  </div>
+</DocsLayout>
