@@ -21,7 +21,7 @@ wait_for_apt_lock() {
     return 0
 }
 
-DEPS="unzip curl fontconfig"
+DEPS="tar xz-utils curl fontconfig"
 
 log "INFO" "Updating apt..."
 wait_for_apt_lock
