@@ -1,0 +1,112 @@
+---
+// CommitChart.astro - Chart.js commit activity visualization
+import commitData from '../../data/commits.json';
+
+// Prepare monthly data for the chart
+const monthlyData = commitData.byMonth;
+const labels = monthlyData.map(m => m.month);
+const data = monthlyData.map(m => m.count);
+---
+
+<div class="w-full">
+  <canvas id="commitChart" class="w-full max-h-[400px]"></canvas>
+</div>
+
+<script define:vars={{ labels, data, total: commitData.total, peakDay: commitData.peakDay }}>
+  // Load Chart.js from CDN
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+  script.onload = () => {
+    const ctx = document.getElementById('commitChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Commits per Month',
+          data: data,
+          backgroundColor: [
+            'rgba(56, 189, 248, 0.3)',  // sky-400
+            'rgba(56, 189, 248, 0.4)',
+            'rgba(56, 189, 248, 0.5)',
+            'rgba(56, 189, 248, 0.6)',
+            'rgba(56, 189, 248, 0.8)',
+          ],
+          borderColor: [
+            'rgb(56, 189, 248)',
+            'rgb(56, 189, 248)',
+            'rgb(56, 189, 248)',
+            'rgb(56, 189, 248)',
+            'rgb(56, 189, 248)',
+          ],
+          borderWidth: 2,
+          borderRadius: 8,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          title: {
+            display: true,
+            text: `Project Commit Activity (${total} total commits)`,
+            font: {
+              size: 16,
+              weight: 'normal',
+            },
+            color: '#9ca3af',
+            padding: {
+              bottom: 20
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+            titleColor: '#f3f4f6',
+            bodyColor: '#d1d5db',
+            borderColor: 'rgba(56, 189, 248, 0.3)',
+            borderWidth: 1,
+            cornerRadius: 8,
+            callbacks: {
+              afterBody: function(tooltipItems) {
+                if (tooltipItems[0].label === 'Nov 2025') {
+                  return `\nPeak: ${peakDay.count} commits on ${peakDay.date}`;
+                }
+                return '';
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)',
+            },
+            ticks: {
+              color: '#9ca3af',
+            }
+          },
+          x: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              color: '#9ca3af',
+            }
+          }
+        }
+      }
+    });
+  };
+  document.head.appendChild(script);
+</script>
+
+<style>
+  canvas {
+    max-height: 400px;
+  }
+</style>

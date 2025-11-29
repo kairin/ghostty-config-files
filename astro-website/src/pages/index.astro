@@ -1,152 +1,107 @@
 ---
+// Main landing page - redesigned with commit template style
 import '../styles/global.css';
+import StarField from '../components/hero/StarField.astro';
+import Glow from '../components/hero/Glow.astro';
+import Hero from '../components/hero/Hero.astro';
 
 const base = import.meta.env.BASE_URL;
 ---
 
 <html lang="en" data-theme="dracula">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Complete terminal environment setup for Ubuntu with Ghostty, ZSH, AI tools, and modern CLI utilities." />
-		<title>Ghostty Configuration Files</title>
-	</head>
-	<body class="min-h-screen bg-base-300">
-		<!-- Theme Toggle (top-right corner) -->
-		<label class="swap swap-rotate fixed top-4 right-4 z-50 btn btn-ghost btn-circle">
-			<input type="checkbox" id="theme-toggle" />
-			<!-- Sun icon (shown in dark mode - click to switch to light) -->
-			<svg class="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-				<path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
-			</svg>
-			<!-- Moon icon (shown in light mode - click to switch to dark) -->
-			<svg class="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-				<path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Z"/>
-			</svg>
-		</label>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="Complete terminal environment setup for Ubuntu with Ghostty, ZSH, AI tools, and modern CLI utilities." />
+    <title>Ghostty Configuration Files</title>
+  </head>
+  <body class="min-h-screen bg-gray-950 text-white overflow-x-hidden">
+    <!-- Theme Toggle (top-right corner) -->
+    <label class="swap swap-rotate fixed top-4 right-4 z-50 btn btn-ghost btn-circle bg-white/5 hover:bg-white/10">
+      <input type="checkbox" id="theme-toggle" />
+      <!-- Sun icon (shown in dark mode - click to switch to light) -->
+      <svg class="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/>
+      </svg>
+      <!-- Moon icon (shown in light mode - click to switch to dark) -->
+      <svg class="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Z"/>
+      </svg>
+    </label>
 
-		<!-- Video Background -->
-		<video
-			autoplay
-			muted
-			loop
-			playsinline
-			class="fixed inset-0 w-full h-full object-cover -z-10 opacity-20"
-		>
-			<source src={`${base}video/feh-install.webm`} type="video/webm" />
-			<source src={`${base}video/feh-install.mp4`} type="video/mp4" />
-		</video>
+    <!-- Background Layers -->
+    <div class="fixed inset-0 -z-20">
+      <!-- Video Background (lowest layer) -->
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        class="absolute inset-0 w-full h-full object-cover opacity-15"
+      >
+        <source src={`${base}video/feh-install.webm`} type="video/webm" />
+        <source src={`${base}video/feh-install.mp4`} type="video/mp4" />
+      </video>
 
-		<!-- Gradient Overlay -->
-		<div class="fixed inset-0 bg-gradient-to-b from-base-300/80 via-base-300/60 to-base-300/90 -z-5"></div>
+      <!-- Glow Effect (middle layer) -->
+      <Glow class="bg-gray-950" />
 
-		<!-- Main Content -->
-		<main class="relative min-h-screen flex items-center justify-center p-4">
-			<div class="card bg-base-100/90 backdrop-blur-sm shadow-2xl max-w-2xl w-full">
-				<div class="card-body">
-					<!-- Header -->
-					<div class="text-center mb-6">
-						<h1 class="text-4xl font-bold text-primary mb-2">
-							Ghostty Config Files
-						</h1>
-						<p class="text-lg text-base-content/70">
-							Complete terminal environment setup for Ubuntu
-						</p>
-					</div>
+      <!-- Star Field (top layer) -->
+      <StarField class="top-0 right-0 lg:top-[-10%] lg:-right-20" />
+    </div>
 
-					<!-- Divider -->
-					<div class="divider"></div>
+    <!-- Gradient Overlays -->
+    <div class="fixed inset-0 -z-10">
+      <!-- Top gradient -->
+      <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-gray-950 to-transparent"></div>
+      <!-- Bottom gradient -->
+      <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-950 to-transparent"></div>
+    </div>
 
-					<!-- Features List -->
-					<div class="space-y-3">
-						<h2 class="text-xl font-semibold text-secondary">What Gets Installed</h2>
-						<ul class="space-y-2">
-							<li class="flex items-center gap-2">
-								<span class="badge badge-primary badge-sm">Terminal</span>
-								<span>Ghostty v1.2.3+ via .deb (~2 min install)</span>
-							</li>
-							<li class="flex items-center gap-2">
-								<span class="badge badge-secondary badge-sm">Shell</span>
-								<span>ZSH + Oh My ZSH with plugins</span>
-							</li>
-							<li class="flex items-center gap-2">
-								<span class="badge badge-accent badge-sm">TUI</span>
-								<span>Charm tools: gum, glow, VHS</span>
-							</li>
-							<li class="flex items-center gap-2">
-								<span class="badge badge-info badge-sm">Tools</span>
-								<span>Modern Unix: eza, fzf, zoxide, fastfetch</span>
-							</li>
-							<li class="flex items-center gap-2">
-								<span class="badge badge-success badge-sm">AI</span>
-								<span>Claude Code + Gemini CLI</span>
-							</li>
-							<li class="flex items-center gap-2">
-								<span class="badge badge-warning badge-sm">Extras</span>
-								<span>"Open in Ghostty" right-click menu</span>
-							</li>
-						</ul>
-					</div>
+    <!-- Main Content -->
+    <main class="relative min-h-screen flex items-center justify-center py-20">
+      <Hero />
+    </main>
 
-					<!-- Divider -->
-					<div class="divider"></div>
+    <!-- Footer -->
+    <footer class="fixed bottom-0 w-full p-4 text-center text-gray-500 text-sm bg-gradient-to-t from-gray-950 via-gray-950/80 to-transparent">
+      <p>Built with Astro + Tailwind + DaisyUI | MIT License</p>
+    </footer>
 
-					<!-- Quick Start -->
-					<div class="mockup-code bg-neutral text-neutral-content text-sm">
-						<pre data-prefix="$"><code>git clone https://github.com/kairin/ghostty-config-files</code></pre>
-						<pre data-prefix="$"><code>cd ghostty-config-files</code></pre>
-						<pre data-prefix="$"><code>./start.sh</code></pre>
-					</div>
+    <!-- Theme Toggle Script -->
+    <script>
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme') || 'dracula';
+      const htmlEl = document.documentElement;
 
-					<!-- CTA Buttons -->
-					<div class="card-actions justify-center mt-6 gap-4">
-						<a
-							href="https://github.com/kairin/ghostty-config-files"
-							target="_blank"
-							rel="noopener"
-							class="btn btn-primary"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-								<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-							</svg>
-							View on GitHub
-						</a>
-						<a
-							href="https://github.com/kairin/ghostty-config-files#getting-started"
-							target="_blank"
-							rel="noopener"
-							class="btn btn-outline btn-secondary"
-						>
-							Quick Start Guide
-						</a>
-					</div>
-				</div>
-			</div>
-		</main>
+      // Apply theme colors based on preference
+      if (savedTheme === 'light') {
+        htmlEl.classList.add('light-mode');
+        document.body.classList.remove('bg-gray-950', 'text-white');
+        document.body.classList.add('bg-gray-100', 'text-gray-900');
+      }
 
-		<!-- Footer -->
-		<footer class="fixed bottom-0 w-full p-4 text-center text-base-content/50 text-sm">
-			<p>Built with Astro + DaisyUI | MIT License</p>
-		</footer>
+      // Set checkbox state
+      const toggle = document.getElementById('theme-toggle');
+      if (toggle) {
+        toggle.checked = savedTheme === 'light';
+        toggle.addEventListener('change', () => {
+          const isLight = toggle.checked;
+          localStorage.setItem('theme', isLight ? 'light' : 'dracula');
 
-		<!-- Theme Toggle Script -->
-		<script>
-			// Check for saved theme or default to dracula
-			const savedTheme = localStorage.getItem('theme') || 'dracula';
-			document.documentElement.setAttribute('data-theme', savedTheme);
-
-			// Set checkbox state based on theme
-			const toggle = document.getElementById('theme-toggle');
-			if (toggle) {
-				toggle.checked = savedTheme === 'light';
-				toggle.addEventListener('change', () => {
-					const newTheme = toggle.checked ? 'light' : 'dracula';
-					document.documentElement.setAttribute('data-theme', newTheme);
-					localStorage.setItem('theme', newTheme);
-				});
-			}
-		</script>
-	</body>
+          if (isLight) {
+            htmlEl.classList.add('light-mode');
+            document.body.classList.remove('bg-gray-950', 'text-white');
+            document.body.classList.add('bg-gray-100', 'text-gray-900');
+          } else {
+            htmlEl.classList.remove('light-mode');
+            document.body.classList.remove('bg-gray-100', 'text-gray-900');
+            document.body.classList.add('bg-gray-950', 'text-white');
+          }
+        });
+      }
+    </script>
+  </body>
 </html>

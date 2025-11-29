@@ -1,0 +1,154 @@
+---
+// docs/features.astro - Feature list
+import DocsLayout from '../../components/layout/DocsLayout.astro';
+---
+
+<DocsLayout title="Features" description="Complete list of tools and utilities installed by Ghostty Config Files">
+  <h2>Terminal Environment</h2>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Description</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-primary">Ghostty</span></td>
+          <td>GPU-accelerated terminal emulator with native performance</td>
+          <td>Terminal</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-secondary">ZSH</span></td>
+          <td>Extended Bourne shell with many improvements</td>
+          <td>Shell</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-secondary">Oh My ZSH</span></td>
+          <td>Framework for managing ZSH configuration</td>
+          <td>Shell</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-accent">Nerd Fonts</span></td>
+          <td>Developer fonts with icons (8 font families)</td>
+          <td>Fonts</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>CLI Tools</h2>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Description</th>
+          <th>Replaces</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>eza</strong></td>
+          <td>Modern replacement for ls with icons and git integration</td>
+          <td>ls</td>
+        </tr>
+        <tr>
+          <td><strong>fzf</strong></td>
+          <td>Fuzzy finder for files, history, and more</td>
+          <td>find + grep</td>
+        </tr>
+        <tr>
+          <td><strong>zoxide</strong></td>
+          <td>Smarter cd that learns your habits</td>
+          <td>cd</td>
+        </tr>
+        <tr>
+          <td><strong>bat</strong></td>
+          <td>Cat clone with syntax highlighting</td>
+          <td>cat</td>
+        </tr>
+        <tr>
+          <td><strong>ripgrep</strong></td>
+          <td>Blazingly fast grep alternative</td>
+          <td>grep</td>
+        </tr>
+        <tr>
+          <td><strong>fd</strong></td>
+          <td>Simple, fast find alternative</td>
+          <td>find</td>
+        </tr>
+        <tr>
+          <td><strong>fastfetch</strong></td>
+          <td>System information tool</td>
+          <td>neofetch</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Charm Tools</h2>
+  <p>Beautiful TUI applications from <a href="https://charm.sh" target="_blank" rel="noopener">Charm</a>:</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose my-6">
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title">gum</h3>
+        <p class="text-sm">Write gorgeous shell scripts with glamorous prompts</p>
+      </div>
+    </div>
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title">glow</h3>
+        <p class="text-sm">Render markdown on the CLI with style</p>
+      </div>
+    </div>
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title">VHS</h3>
+        <p class="text-sm">Record terminal sessions as GIFs</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>AI Development Tools</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-6">
+    <div class="card bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/20">
+      <div class="card-body">
+        <h3 class="card-title text-orange-400">Claude Code</h3>
+        <p>Anthropic's official CLI for Claude AI assistance in your terminal.</p>
+        <div class="badge badge-outline">AI Assistant</div>
+      </div>
+    </div>
+    <div class="card bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20">
+      <div class="card-body">
+        <h3 class="card-title text-blue-400">Gemini CLI</h3>
+        <p>Google's command-line interface for Gemini AI interactions.</p>
+        <div class="badge badge-outline">AI Assistant</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>ZSH Plugins</h2>
+  <p>Pre-configured plugins for enhanced productivity:</p>
+
+  <ul>
+    <li><strong>zsh-autosuggestions</strong> - Fish-like suggestions as you type</li>
+    <li><strong>zsh-syntax-highlighting</strong> - Syntax highlighting for commands</li>
+    <li><strong>zsh-completions</strong> - Additional completion definitions</li>
+    <li><strong>fzf-tab</strong> - Replace zsh completion with fzf</li>
+    <li><strong>git</strong> - Git aliases and functions</li>
+    <li><strong>docker</strong> - Docker completion and aliases</li>
+  </ul>
+
+  <h2>Desktop Integration</h2>
+  <ul>
+    <li><strong>Context Menu</strong> - "Open in Ghostty" right-click option</li>
+    <li><strong>feh</strong> - Lightweight image viewer for context menu</li>
+  </ul>
+</DocsLayout>

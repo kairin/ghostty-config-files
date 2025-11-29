@@ -1,0 +1,71 @@
+---
+// Navigation.astro - Sidebar navigation for docs
+const base = import.meta.env.BASE_URL;
+
+const navigation = [
+  {
+    title: 'Documentation',
+    items: [
+      { title: 'Overview', href: `${base}docs/` },
+      { title: 'Getting Started', href: `${base}docs/getting-started/` },
+      { title: 'Features', href: `${base}docs/features/` },
+      { title: 'Installation', href: `${base}docs/installation/` },
+    ],
+  },
+  {
+    title: 'Project',
+    items: [
+      { title: 'Activity', href: `${base}docs/activity/` },
+    ],
+  },
+];
+
+// Get current path to highlight active link
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="p-4">
+  <div class="mb-4">
+    <a href={base} class="flex items-center gap-2 text-lg font-bold">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Home
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  {navigation.map((section) => (
+    <div class="mb-6">
+      <h3 class="font-semibold text-sm uppercase tracking-wider text-base-content/50 mb-3">
+        {section.title}
+      </h3>
+      <ul class="menu menu-sm bg-base-200 rounded-lg w-full">
+        {section.items.map((item) => {
+          const isActive = currentPath === item.href || currentPath === item.href.slice(0, -1);
+          return (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'flex items-center gap-2',
+                  { 'active': isActive }
+                ]}
+              >
+                {item.title}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  ))}
+
+  <div class="divider"></div>
+
+  <div class="text-xs text-base-content/50">
+    <p>Built with Astro + DaisyUI</p>
+    <p class="mt-1">726 commits since Jan 2025</p>
+  </div>
+</nav>
