@@ -111,10 +111,11 @@ show_dashboard() {
         
         # Logic for "Update Recommended"
         if [[ "$status" == "INSTALLED" ]]; then
-            if [[ "$method" != "Source" ]] && [[ "$app_id" != "nerdfonts" ]]; then
-                display_status="Update Recommended"
-            else
+            # Default to Installed if method is Source, or specific app exceptions
+            if [[ "$method" == "Source" ]] || [[ "$app_id" == "nerdfonts" ]] || [[ "$app_id" == "nodejs" ]]; then
                 display_status="Installed"
+            else
+                display_status="Update Recommended"
             fi
         fi
         
