@@ -182,8 +182,14 @@ show_dashboard() {
                 if [[ "$detail" == "Globals:" ]]; then
                     # Globals header - magenta
                     body+="   ${ESC}[35m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
+                elif [[ "$detail" == "   ✓"* ]]; then
+                    # Installed item - green
+                    body+="      ${ESC}[32m${ICON_TAG}${ESC}[0m${detail}"$'\n'
+                elif [[ "$detail" == "   ✗"* ]]; then
+                    # Missing item - red
+                    body+="      ${ESC}[31m${ICON_TAG}${ESC}[0m${detail}"$'\n'
                 elif [[ "$detail" == "   "* ]]; then
-                    # Indented global package - extra indent
+                    # Other indented items - blue
                     body+="      ${ESC}[34m${ICON_TAG}${ESC}[0m${detail}"$'\n'
                 else
                     body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
@@ -296,8 +302,14 @@ show_extras_dashboard() {
                 if [[ "$detail" == "Globals:" ]]; then
                     # Globals header - magenta
                     body+="   ${ESC}[35m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
+                elif [[ "$detail" == "   ✓"* ]]; then
+                    # Installed item - green
+                    body+="      ${ESC}[32m${ICON_TAG}${ESC}[0m${detail}"$'\n'
+                elif [[ "$detail" == "   ✗"* ]]; then
+                    # Missing item - red
+                    body+="      ${ESC}[31m${ICON_TAG}${ESC}[0m${detail}"$'\n'
                 elif [[ "$detail" == "   "* ]]; then
-                    # Indented global package - extra indent
+                    # Other indented items - blue
                     body+="      ${ESC}[34m${ICON_TAG}${ESC}[0m${detail}"$'\n'
                 else
                     body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
