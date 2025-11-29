@@ -327,16 +327,21 @@ run_with_tail() {
     local cmd="$1"
     local log_file="$2"
     local description="$3"
-    
+
     # Spinner characters and colors
     local spinners=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
     local colors=(31 32 33 34 35 36) # Red, Green, Yellow, Blue, Magenta, Cyan
     local spin_idx=0
-    
+
+    # Hide cursor during animation to reduce flicker
+    tput civis
+    # Ensure cursor is restored on exit (trap for cleanup)
+    trap 'tput cnorm' RETURN
+
     # Start command in background, redirecting to log
     eval "$cmd" > "$log_file" 2>&1 &
     local pid=$!
-    
+
     # Loop while process is running
     while kill -0 $pid 2>/dev/null; do
         # Get current terminal width
@@ -344,35 +349,38 @@ run_with_tail() {
         # Adjust cols for indentation (4 spaces) + safety margin (2 spaces) = 6
         local max_len=$((cols - 6))
         if [ $max_len -lt 1 ]; then max_len=1; fi
-        
-        # 1. Print Description Line with Spinner
+
+        # 1. Print Description Line with Spinner (clear line first to prevent remnants)
         local spin_char="${spinners[$spin_idx]}"
         local color="${colors[$((spin_idx % ${#colors[@]}))]}"
-        printf "  \033[1;${color}m%s\033[0m %s\n" "$spin_char" "$description"
-        
+        printf "\033[2K  \033[1;${color}m%s\033[0m %s\n" "$spin_char" "$description"
+
         # 2. Capture and Print Tail Output
         # Capture to variable to avoid race condition between printing and counting
         local tail_out
         tail_out=$(tail -n 5 "$log_file" | cut -c 1-"$max_len")
-        
+
         local lines_printed=0
         if [ -n "$tail_out" ]; then
             while IFS= read -r line; do
-                printf "    \033[90m%s\033[K\n" "$line" # Indent + Gray color + Clear line
+                printf "\033[2K    \033[90m%s\033[0m\n" "$line" # Clear line + Indent + Gray color
                 ((lines_printed++))
             done <<< "$tail_out"
         fi
-        
-        # 3. Wait and Update Spinner
-        sleep 0.1
+
+        # 3. Wait and Update Spinner (0.15s for smoother recording)
+        sleep 0.15
         spin_idx=$(( (spin_idx + 1) % ${#spinners[@]} ))
-        
+
         # 4. Move Cursor Up
         # Move up lines_printed + 1 (description line)
         local move_up=$((lines_printed + 1))
         printf "\033[%dA" "$move_up"
     done
-    
+
+    # Show cursor again
+    tput cnorm
+
     # Wait for final exit code
     wait $pid
     local exit_code=$?
