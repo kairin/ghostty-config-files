@@ -26,16 +26,16 @@ const base = import.meta.env.BASE_URL;
     <title>{title} | Ghostty Config Docs</title>
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={`https://kairin.github.io/ghostty-config-files${Astro.url.pathname}`} />
+    <meta property="og:url" content={`https://kairin.github.io${Astro.url.pathname}`} />
     <meta property="og:title" content={`${title} | Ghostty Config Docs`} />
     <meta property="og:description" content={description || `${title} - Ghostty Configuration Files Documentation`} />
-    <meta property="og:image" content={`https://kairin.github.io/ghostty-config-files${ogImage}`} />
+    <meta property="og:image" content={`https://kairin.github.io${base}${ogImage.startsWith('/') ? ogImage.slice(1) : ogImage}`} />
     <meta property="og:site_name" content="Ghostty Configuration Files" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | Ghostty Config Docs`} />
     <meta name="twitter:description" content={description || `${title} - Ghostty Configuration Files Documentation`} />
-    <meta name="twitter:image" content={`https://kairin.github.io/ghostty-config-files${ogImage}`} />
+    <meta name="twitter:image" content={`https://kairin.github.io${base}${ogImage.startsWith('/') ? ogImage.slice(1) : ogImage}`} />
   </head>
   <body class="min-h-screen bg-base-200">
     <!-- Header -->
