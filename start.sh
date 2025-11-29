@@ -9,12 +9,17 @@
 # 0. Demo Mode Check
 # =============================================================================
 DEMO_MODE=0
-if [[ "$1" == "--demo-child" ]]; then
-    DEMO_MODE=1
-fi
+SUDO_CACHED=0
+
+for arg in "$@"; do
+    case "$arg" in
+        --demo-child) DEMO_MODE=1 ;;
+        --sudo-cached) SUDO_CACHED=1 ;;
+    esac
+done
 
 echo "$(date): Started with args: $@" >> /tmp/ghostty_start.log
-echo "$(date): DEMO_MODE: $DEMO_MODE" >> /tmp/ghostty_start.log
+echo "$(date): DEMO_MODE: $DEMO_MODE, SUDO_CACHED: $SUDO_CACHED" >> /tmp/ghostty_start.log
 
 # =============================================================================
 # 1. Bootstrap Gum
@@ -37,8 +42,9 @@ fi
 # =============================================================================
 # 2. Sudo Pre-Authentication & Keep-Alive
 # =============================================================================
-# Authenticate once at the start (Skip in Demo Mode to avoid PTY issues)
+# Authenticate once at the start (handle different modes)
 if [[ "$DEMO_MODE" -eq 0 ]]; then
+    # Normal mode: full authentication
     gum style --foreground 212 "Authenticating sudo..."
     if ! sudo -v; then
         gum style --foreground 196 "Sudo authentication failed. Exiting."
@@ -48,9 +54,18 @@ if [[ "$DEMO_MODE" -eq 0 ]]; then
     # Start background keep-alive
     (while true; do sudo -n true; sleep 60; done) &
     SUDO_PID=$!
-    trap 'kill $SUDO_PID' EXIT
+    trap 'kill $SUDO_PID 2>/dev/null' EXIT
+elif [[ "$SUDO_CACHED" -eq 1 ]]; then
+    # Demo mode with pre-cached credentials - verify still valid
+    if ! sudo -n true 2>/dev/null; then
+        gum style --foreground 196 "Sudo credentials expired. Re-run recording."
+        exit 1
+    fi
+    echo "$(date): Demo Mode - using pre-cached sudo credentials" >> /tmp/ghostty_start.log
+    # Keep-alive is handled by record.sh
 else
-    echo "$(date): Skipping sudo auth in Demo Mode" >> /tmp/ghostty_start.log
+    # Demo mode without caching - skip (for testing without sudo)
+    echo "$(date): Demo Mode - sudo not cached (may stall on sudo prompts)" >> /tmp/ghostty_start.log
 fi
 
 # =============================================================================
