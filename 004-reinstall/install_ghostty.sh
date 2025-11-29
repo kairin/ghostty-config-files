@@ -68,6 +68,15 @@ if [ -f "zig-out/bin/ghostty" ]; then
         sudo update-desktop-database /usr/local/share/applications
         log "SUCCESS" "Updated desktop database"
     fi
+    
+    # Install Configurations
+    CONFIG_SCRIPT="$(dirname "$0")/../002-install-first-time/install_ghostty_config.sh"
+    if [ -f "$CONFIG_SCRIPT" ]; then
+        log "INFO" "Installing Ghostty configurations..."
+        bash "$CONFIG_SCRIPT"
+    else
+        log "WARNING" "Config script not found: $CONFIG_SCRIPT"
+    fi
 else
     log "ERROR" "Binary not found after build"
     exit 1
