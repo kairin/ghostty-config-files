@@ -167,7 +167,16 @@ show_dashboard() {
 
             # Extra details with tag icon
             for ((i=1; i<${#details[@]}; i++)); do
-                body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${details[i]}"$'\n'
+                local detail="${details[i]}"
+                if [[ "$detail" == "Globals:" ]]; then
+                    # Globals header - magenta
+                    body+="   ${ESC}[35m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
+                elif [[ "$detail" == "   "* ]]; then
+                    # Indented global package - extra indent
+                    body+="      ${ESC}[34m${ICON_TAG}${ESC}[0m${detail}"$'\n'
+                else
+                    body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
+                fi
             done
         fi
     }
@@ -187,8 +196,10 @@ show_dashboard() {
     # Combine all content
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
 
-    # Render with gum style
-    gum style --border rounded --padding "0 1" --border-foreground 212 "$content"
+    # Render with gum style (flexible width)
+    local term_width=$(tput cols)
+    local box_width=$((term_width - 4))
+    gum style --border rounded --padding "0 1" --border-foreground 212 --width "$box_width" "$content"
     echo ""
 }
 
@@ -259,7 +270,16 @@ show_extras_dashboard() {
 
             # Extra details with tag icon
             for ((i=1; i<${#details[@]}; i++)); do
-                body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${details[i]}"$'\n'
+                local detail="${details[i]}"
+                if [[ "$detail" == "Globals:" ]]; then
+                    # Globals header - magenta
+                    body+="   ${ESC}[35m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
+                elif [[ "$detail" == "   "* ]]; then
+                    # Indented global package - extra indent
+                    body+="      ${ESC}[34m${ICON_TAG}${ESC}[0m${detail}"$'\n'
+                else
+                    body+="   ${ESC}[34m${ICON_TAG}${ESC}[0m ${detail}"$'\n'
+                fi
             done
         fi
     }
@@ -273,7 +293,11 @@ show_extras_dashboard() {
     append_app_row "Zsh" "zsh"
 
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
-    gum style --border rounded --padding "0 1" --border-foreground 99 "$content"
+
+    # Render with gum style (flexible width)
+    local term_width=$(tput cols)
+    local box_width=$((term_width - 4))
+    gum style --border rounded --padding "0 1" --border-foreground 99 --width "$box_width" "$content"
     echo ""
 }
 
