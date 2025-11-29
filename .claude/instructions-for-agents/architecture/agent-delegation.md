@@ -12,10 +12,20 @@ last-updated: 2025-11-28
 
 ---
 
-## 4-Tier Hierarchy
+## 5-Tier Hierarchy
 
 ```
-001-orchestrator (Opus) ─ Strategic coordination
+Tier 0 (Sonnet Workflows) ─ Complete automated workflows
+    │
+    ├─ 000-health ────→ Health assessment workflow
+    ├─ 000-cleanup ───→ Repository cleanup workflow
+    ├─ 000-commit ────→ Constitutional commit workflow
+    ├─ 000-deploy ────→ Complete deployment workflow
+    └─ 000-docs ──────→ Documentation verification workflow
+    │
+    └─ (All Tier 0 agents delegate to Tier 2/3 agents)
+
+001-orchestrator (Opus) ─ Strategic coordination (for complex multi-domain tasks)
     │
     ├─ Tier 2 (Sonnet Core)
     │   ├─ 002-git ──────→ 021-* (7 Haiku)
@@ -33,6 +43,18 @@ last-updated: 2025-11-28
     └─ 034-* (5 Shared Haiku utilities)
 ```
 
+### Tier 0 Workflow Agents
+
+These are **complete workflow agents** that automate common tasks:
+
+| Agent | Natural Language Trigger | What It Does |
+|-------|--------------------------|--------------|
+| **000-health** | "Check project health" | Full health assessment |
+| **000-cleanup** | "Clean up the repo" | Remove obsolete files |
+| **000-commit** | "Commit my changes" | Constitutional git commit |
+| **000-deploy** | "Deploy the website" | Build and deploy to GitHub Pages |
+| **000-docs** | "Fix documentation" | Verify and fix documentation |
+
 ---
 
 ## Delegation Decision Tree
@@ -45,6 +67,11 @@ Task Received
     │
     └─ Needs agent?
         │
+        ├─ COMPLETE WORKFLOW (standard automated task)
+        │   → Tier 0 (000-*)
+        │   Examples: "deploy website", "commit changes", "check health"
+        │   Triggers: Natural language matching workflow descriptions
+        │
         ├─ ATOMIC (single op, deterministic)
         │   → Haiku tier (021-034-*)
         │   Examples: Validate branch name, check file exists
@@ -55,7 +82,7 @@ Task Received
         │
         └─ COMPLEX (multi-domain, parallel, judgment)
             → Opus (001-orchestrator)
-            Examples: Full audit with fixes, multi-agent deploy
+            Examples: Full audit with fixes, custom multi-agent orchestration
 ```
 
 ---
@@ -307,7 +334,7 @@ WORKFLOW:
 
 ## Complete Registry
 
-For the full 60-agent registry with parent-child relationships and parallel-safe indicators, see:
+For the full 65-agent registry with parent-child relationships and parallel-safe indicators, see:
 
 **[Agent Registry](./agent-registry.md)**
 
