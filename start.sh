@@ -465,9 +465,17 @@ handle_app_selection() {
                 options+=("Update to $latest")
             fi
             options+=("Reinstall")
+            # Node.js-specific: Install global packages option
+            if [[ "$app_id" == "nodejs" ]]; then
+                options+=("Install Global Packages (DaisyUI/Tailwind)")
+            fi
             options+=("Uninstall")
         else
             options+=("Install")
+            # Node.js-specific: Install with global packages option
+            if [[ "$app_id" == "nodejs" ]]; then
+                options+=("Install + Global Packages (DaisyUI/Tailwind)")
+            fi
         fi
         
         if [[ "$DEMO_MODE" -eq 1 ]]; then
@@ -481,6 +489,14 @@ handle_app_selection() {
         case "$choice" in
             "Install")
                 install_app "$app_id"
+                ;;
+            "Install + Global Packages (DaisyUI/Tailwind)")
+                INSTALL_ASTRO_PACKAGES=1 install_app "$app_id"
+                ;;
+            "Install Global Packages (DaisyUI/Tailwind)")
+                export INSTALL_ASTRO_PACKAGES=1
+                run_step "scripts/004-reinstall" "nodejs" "Installing global npm packages..."
+                run_step "scripts/005-confirm" "nodejs" "Verifying packages..."
                 ;;
             "Update to "*)
                 install_app "$app_id" # Re-run install to update
