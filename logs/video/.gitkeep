@@ -1,9 +1,0 @@
-# VHS Auto-Recording Storage
-#
-# This directory stores automatic VHS recordings of:
-# - ./start.sh installation sessions
-# - update-all daily update sessions
-#
-# Format: YYYYMMDD-HHMMSS.gif
-#
-# Recordings are .gitignored to prevent large files in repository
