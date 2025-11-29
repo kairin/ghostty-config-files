@@ -53,19 +53,12 @@ jobs:
           echo "Installing dependencies..."
           npm ci --silent
 
-      - name: Verify critical dependencies
+      - name: Verify Astro installation
         working-directory: ./astro-website
         run: |
-          echo "Verifying Astro and TypeScript installation..."
-          npm list astro --depth=0
-          npm list typescript --depth=0
-          npm list @astrojs/check --depth=0
-
-      - name: Run TypeScript validation
-        working-directory: ./astro-website
-        run: |
-          echo "Running TypeScript check..."
-          npm run check
+          echo "Verifying Astro installation..."
+          npm list astro --depth=0 || exit 1
+          echo "Astro verified successfully"
 
       - name: Build Astro site
         working-directory: ./astro-website

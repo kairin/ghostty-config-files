@@ -190,8 +190,8 @@ install_dependencies() {
         npm install --silent
     fi
 
-    # Verify critical dependencies
-    local critical_deps=("astro" "@astrojs/check" "typescript")
+    # Verify critical dependencies (only astro required - TypeScript is optional)
+    local critical_deps=("astro")
     for dep in "${critical_deps[@]}"; do
         if npm list "$dep" >/dev/null 2>&1; then
             log "SUCCESS" "✅ $dep installed"
@@ -351,10 +351,10 @@ run_complete_build() {
     # Environment setup
     detect_environment
 
-    # Run build pipeline
+    # Run build pipeline (TypeScript validation skipped - project uses plain JS/Astro)
     check_prerequisites || ((failed_steps++))
     install_dependencies || ((failed_steps++))
-    validate_typescript || ((failed_steps++))
+    # validate_typescript || ((failed_steps++))  # Disabled - TypeScript not used in this project
     build_astro || ((failed_steps++))
     validate_github_pages || ((failed_steps++))
     generate_report
