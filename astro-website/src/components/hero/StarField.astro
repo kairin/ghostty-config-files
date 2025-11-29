@@ -115,7 +115,7 @@ const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
 
 <script>
   // Client-side animation for stars
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     const starGroups = document.querySelectorAll('.star-group');
     const constellationPaths = document.querySelectorAll('.constellation-path');
 
