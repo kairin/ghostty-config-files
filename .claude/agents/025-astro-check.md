@@ -7,6 +7,9 @@ model: haiku
 ## Single Task
 Check that Astro configuration follows project standards.
 
+## Tailwind CSS Rules Reference
+For Tailwind CSS v4 best practices, see: `.claude/rules-tailwindcss/tailwind.md`
+
 ## Input
 - config_path: Path to astro.config.mjs (default: astro-website/astro.config.mjs)
 

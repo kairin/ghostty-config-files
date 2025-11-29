@@ -15,11 +15,42 @@ if command -v node &> /dev/null; then
     
     if [[ "$VERSION" == v25* ]]; then
         log "SUCCESS" "Version check passed (v25)"
-        exit 0
     else
         log "WARNING" "Version mismatch: Expected v25, got $VERSION"
-        exit 0 # Not a fatal error, just a warning
     fi
+
+    # Verify global packages if they were installed
+    if [[ "${INSTALL_ASTRO_PACKAGES:-0}" == "1" ]]; then
+        log "INFO" "Verifying global npm packages..."
+
+        PKGS_OK=1
+
+        if npm list -g tailwindcss &> /dev/null; then
+            TW_VER=$(npm list -g tailwindcss --depth=0 2>/dev/null | grep tailwindcss | sed 's/.*@//')
+            log "SUCCESS" "tailwindcss installed: $TW_VER"
+        else
+            log "WARNING" "tailwindcss not found globally"
+            PKGS_OK=0
+        fi
+
+        if npm list -g daisyui &> /dev/null; then
+            DAISY_VER=$(npm list -g daisyui --depth=0 2>/dev/null | grep daisyui | sed 's/.*@//')
+            log "SUCCESS" "daisyui installed: $DAISY_VER"
+        else
+            log "WARNING" "daisyui not found globally"
+            PKGS_OK=0
+        fi
+
+        if npm list -g @tailwindcss/vite &> /dev/null; then
+            VITE_VER=$(npm list -g @tailwindcss/vite --depth=0 2>/dev/null | grep vite | sed 's/.*@//')
+            log "SUCCESS" "@tailwindcss/vite installed: $VITE_VER"
+        else
+            log "WARNING" "@tailwindcss/vite not found globally"
+            PKGS_OK=0
+        fi
+    fi
+
+    exit 0
 else
     log "ERROR" "Node.js binary not found"
     exit 1

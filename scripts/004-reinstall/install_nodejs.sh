@@ -32,6 +32,35 @@ NPM_VERSION=$(npm -v)
 log "SUCCESS" "Installed Node.js $NODE_VERSION"
 log "SUCCESS" "Installed npm $NPM_VERSION"
 
+# Optional Global npm Packages (DaisyUI/Tailwind)
+# Set INSTALL_ASTRO_PACKAGES=1 to install global packages
+if [[ "${INSTALL_ASTRO_PACKAGES:-0}" == "1" ]]; then
+    log "INFO" "Installing global npm packages (DaisyUI + Tailwind)..."
+
+    log "INFO" "Installing tailwindcss@latest..."
+    npm install -g tailwindcss@latest
+
+    log "INFO" "Installing @tailwindcss/vite@latest..."
+    npm install -g @tailwindcss/vite@latest
+
+    log "INFO" "Installing daisyui@latest..."
+    npm install -g daisyui@latest
+
+    # Verify installations
+    GLOBAL_TW=$(npm list -g tailwindcss --depth=0 2>/dev/null | grep tailwindcss | sed 's/.*@//' || echo "failed")
+    GLOBAL_DAISY=$(npm list -g daisyui --depth=0 2>/dev/null | grep daisyui | sed 's/.*@//' || echo "failed")
+    GLOBAL_VITE=$(npm list -g @tailwindcss/vite --depth=0 2>/dev/null | grep vite | sed 's/.*@//' || echo "failed")
+
+    if [[ "$GLOBAL_TW" != "failed" ]] && [[ "$GLOBAL_DAISY" != "failed" ]]; then
+        log "SUCCESS" "Global packages installed:"
+        log "SUCCESS" "  - tailwindcss: $GLOBAL_TW"
+        log "SUCCESS" "  - daisyui: $GLOBAL_DAISY"
+        log "SUCCESS" "  - @tailwindcss/vite: $GLOBAL_VITE"
+    else
+        log "WARNING" "Some global packages may not have installed correctly"
+    fi
+fi
+
 # Configure shell (idempotent)
 SHELL_CONFIG="$HOME/.zshrc"
 if [ -f "$HOME/.bashrc" ]; then SHELL_CONFIG="$HOME/.bashrc"; fi
