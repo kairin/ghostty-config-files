@@ -10,20 +10,20 @@ const { class: className = '' } = Astro.props;
 const glowId = `glow-${Math.random().toString(36).slice(2)}`;
 ---
 
-<div class:list={['absolute inset-0 -z-10 overflow-hidden', className]}>
+<div class:list={['absolute inset-0 overflow-hidden', className]}>
   <svg
     class="absolute -bottom-48 left-[-40%] h-[80rem] w-[180%] lg:top-[-40%] lg:-right-40 lg:bottom-auto lg:left-auto lg:h-[180%] lg:w-[112rem]"
     aria-hidden="true"
   >
     <defs>
       <radialGradient id={`${glowId}-desktop`} cx="100%">
-        <stop offset="0%" stop-color="rgba(56, 189, 248, 0.3)" />
-        <stop offset="53.95%" stop-color="rgba(0, 71, 255, 0.09)" />
+        <stop offset="0%" stop-color="rgba(56, 189, 248, 0.6)" />
+        <stop offset="53.95%" stop-color="rgba(0, 71, 255, 0.25)" />
         <stop offset="100%" stop-color="rgba(10, 14, 23, 0)" />
       </radialGradient>
       <radialGradient id={`${glowId}-mobile`} cy="100%">
-        <stop offset="0%" stop-color="rgba(56, 189, 248, 0.3)" />
-        <stop offset="53.95%" stop-color="rgba(0, 71, 255, 0.09)" />
+        <stop offset="0%" stop-color="rgba(56, 189, 248, 0.6)" />
+        <stop offset="53.95%" stop-color="rgba(0, 71, 255, 0.25)" />
         <stop offset="100%" stop-color="rgba(10, 14, 23, 0)" />
       </radialGradient>
     </defs>
