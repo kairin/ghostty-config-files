@@ -61,7 +61,7 @@ const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
   fill="white"
   aria-hidden="true"
   class:list={[
-    'pointer-events-none absolute w-[55rem] origin-top-right rotate-[30deg] overflow-visible opacity-70',
+    'pointer-events-none absolute w-[55rem] origin-top-right rotate-[30deg] overflow-visible opacity-100',
     className
   ]}
 >
@@ -81,7 +81,7 @@ const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
       <g class="constellation" data-index={i}>
         <path
           stroke="white"
-          stroke-opacity="0.2"
+          stroke-opacity="0.5"
           stroke-dasharray="1"
           stroke-dashoffset="1"
           pathLength="1"
@@ -91,7 +91,7 @@ const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
         />
         {uniquePoints.map(([cx, cy]) => (
           <g class="star-group opacity-0">
-            <circle cx={cx} cy={cy} r="1" class="star" />
+            <circle cx={cx} cy={cy} r="2.5" class="star" />
           </g>
         ))}
       </g>
@@ -104,9 +104,9 @@ const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
       <circle
         cx={cx}
         cy={cy}
-        r="1"
+        r="2.5"
         class="star"
-        style={`transform-origin: ${cx / 16}rem ${cy / 16}rem; opacity: ${dim ? 0.2 : 1}; transform: scale(${dim ? 1 : 1.2});`}
+        style={`transform-origin: ${cx / 16}rem ${cy / 16}rem; opacity: ${dim ? 0.6 : 1}; transform: scale(${dim ? 1.5 : 2});`}
         filter={blur ? `url(#${blurId})` : undefined}
       />
     </g>
@@ -133,8 +133,8 @@ const blurId = `starfield-blur-${Math.random().toString(36).slice(2)}`;
         const isDim = group.getAttribute('data-dim') === 'true';
         const duration = Math.random() * 2000 + 2000;
         star.animate([
-          { opacity: isDim ? 0.2 : 1, transform: isDim ? 'scale(1)' : 'scale(1.2)' },
-          { opacity: isDim ? 0.5 : 0.6, transform: isDim ? 'scale(1.2)' : 'scale(1)' },
+          { opacity: isDim ? 0.6 : 1, transform: isDim ? 'scale(1.5)' : 'scale(2)' },
+          { opacity: isDim ? 0.9 : 0.7, transform: isDim ? 'scale(2)' : 'scale(1.5)' },
         ], {
           duration,
           delay: delay + 4000,
