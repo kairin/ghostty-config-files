@@ -64,8 +64,8 @@ const base = import.meta.env.BASE_URL;
       <StarField class="top-0 right-0 lg:top-[-10%] lg:-right-20" />
     </div>
 
-    <!-- Gradient Overlays -->
-    <div class="fixed inset-0 -z-10">
+    <!-- Gradient Overlays (hidden on mobile to show full background) -->
+    <div class="fixed inset-0 -z-10 hidden md:block">
       <!-- Top gradient -->
       <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-gray-950 to-transparent"></div>
       <!-- Bottom gradient -->
@@ -78,7 +78,7 @@ const base = import.meta.env.BASE_URL;
     </main>
 
     <!-- Footer -->
-    <footer class="fixed bottom-0 w-full p-4 text-center text-gray-500 text-sm bg-gradient-to-t from-gray-950 via-gray-950/80 to-transparent">
+    <footer class="fixed bottom-0 w-full p-4 text-center text-gray-500 text-sm bg-transparent md:bg-gradient-to-t md:from-gray-950 md:via-gray-950/80 md:to-transparent">
       <p>Built with Astro + Tailwind + DaisyUI | MIT License</p>
     </footer>
 
