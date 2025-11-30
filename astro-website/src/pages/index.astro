@@ -52,13 +52,13 @@ const base = import.meta.env.BASE_URL;
         muted
         loop
         playsinline
-        class="absolute inset-0 w-full h-full object-cover opacity-15"
+        class="absolute inset-0 w-full h-full object-cover opacity-80 md:opacity-15"
       >
         <source src={`${base}video/font-install.webm`} type="video/webm" />
       </video>
 
       <!-- Glow Effect (middle layer) -->
-      <Glow class="bg-gray-950" />
+      <Glow class="bg-transparent md:bg-gray-950" />
 
       <!-- Star Field (top layer) -->
       <StarField class="top-0 right-0 lg:top-[-10%] lg:-right-20" />
@@ -73,7 +73,7 @@ const base = import.meta.env.BASE_URL;
     </div>
 
     <!-- Main Content -->
-    <main class="relative min-h-screen flex items-center justify-center py-20">
+    <main class="relative min-h-screen flex items-center justify-end py-20 pr-2 md:justify-center md:pr-0">
       <Hero />
     </main>
 

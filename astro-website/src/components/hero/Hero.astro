@@ -15,7 +15,7 @@ const {
 const base = import.meta.env.BASE_URL;
 ---
 
-<div class="relative z-10 mx-auto max-w-2xl px-6 lg:max-w-5xl lg:px-8">
+<div class="relative z-10 w-[25%] min-w-[120px] ml-auto mr-0 px-2 md:w-auto md:mx-auto md:max-w-2xl md:px-6 lg:max-w-5xl lg:px-8">
   <div class="flex flex-col items-center text-center lg:items-start lg:text-left">
     <!-- Logo/Icon -->
     <div class="mb-6">
@@ -27,7 +27,7 @@ const base = import.meta.env.BASE_URL;
     </div>
 
     <!-- Title -->
-    <h1 class="font-display text-4xl/tight font-light text-white sm:text-5xl/tight lg:text-6xl/tight">
+    <h1 class="font-display text-lg/tight font-light text-white md:text-4xl/tight sm:text-5xl/tight lg:text-6xl/tight">
       {title.split(' ')[0]}{' '}
       <span class="text-sky-300">{title.split(' ').slice(1).join(' ')}</span>
     </h1>
@@ -38,15 +38,15 @@ const base = import.meta.env.BASE_URL;
     </p>
 
     <!-- Feature Pills -->
-    <div class="mt-8 flex flex-wrap justify-center lg:justify-start gap-2">
+    <div class="mt-4 flex flex-col gap-1 md:mt-8 md:flex-row md:flex-wrap md:justify-center lg:justify-start md:gap-2">
       <span class="badge badge-lg bg-sky-500/20 text-sky-300 border-sky-500/30">Ghostty v1.2.3+</span>
       <span class="badge badge-lg bg-emerald-500/20 text-emerald-300 border-emerald-500/30">ZSH + Oh My ZSH</span>
       <span class="badge badge-lg bg-violet-500/20 text-violet-300 border-violet-500/30">AI Tools</span>
       <span class="badge badge-lg bg-amber-500/20 text-amber-300 border-amber-500/30">Nerd Fonts</span>
     </div>
 
-    <!-- Quick Install -->
-    <div class="mt-8 w-full max-w-lg">
+    <!-- Quick Install (hidden on mobile) -->
+    <div class="hidden md:block mt-8 w-full max-w-lg">
       <div class="mockup-code bg-gray-900/80 backdrop-blur text-sm shadow-xl">
         <pre data-prefix="$" class="text-gray-300"><code>git clone https://github.com/kairin/ghostty-config-files</code></pre>
         <pre data-prefix="$" class="text-gray-300"><code>cd ghostty-config-files && ./start.sh</code></pre>
@@ -54,7 +54,7 @@ const base = import.meta.env.BASE_URL;
     </div>
 
     <!-- CTA Buttons -->
-    <div class="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
+    <div class="mt-4 flex flex-col gap-2 md:mt-8 md:flex-row md:flex-wrap md:justify-center lg:justify-start md:gap-4">
       <a
         href="https://github.com/kairin/ghostty-config-files"
         target="_blank"
@@ -77,8 +77,8 @@ const base = import.meta.env.BASE_URL;
       </a>
     </div>
 
-    <!-- Footer Stats -->
-    <div class="mt-12 flex items-center gap-x-6 text-sm text-gray-400">
+    <!-- Footer Stats (hidden on mobile) -->
+    <div class="hidden md:flex mt-12 items-center gap-x-6 text-sm text-gray-400">
       <div class="flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
