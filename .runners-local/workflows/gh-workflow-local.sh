@@ -192,6 +192,131 @@ validate_config() {
     end_timer "Configuration validation"
 }
 
+# Icon cache validation with auto-fix (prevents broken system icons)
+validate_icons() {
+    log "STEP" "🎨 Validating desktop icon integration..."
+    start_timer
+
+    local system_dir="/usr/local/share/icons/hicolor"
+    local user_dir="$HOME/.local/share/icons/hicolor"
+    local issues=0
+    local fixes_applied=0
+
+    # Check system icon directory (if Ghostty installed system-wide)
+    if [ -d "$system_dir" ]; then
+        log "INFO" "Checking system icon directory: $system_dir"
+
+        # Check index.theme (CRITICAL)
+        if [ ! -f "$system_dir/index.theme" ]; then
+            log "WARNING" "⚠️ Missing index.theme in $system_dir - auto-fixing..."
+            if [ -f "/usr/share/icons/hicolor/index.theme" ]; then
+                if sudo cp /usr/share/icons/hicolor/index.theme "$system_dir/" 2>/dev/null; then
+                    log "SUCCESS" "✅ Auto-fixed: Copied index.theme to $system_dir"
+                    fixes_applied=$((fixes_applied + 1))
+                else
+                    log "ERROR" "❌ Failed to copy index.theme (sudo required)"
+                    issues=$((issues + 1))
+                fi
+            else
+                log "ERROR" "❌ Cannot auto-fix: system index.theme not found"
+                issues=$((issues + 1))
+            fi
+        else
+            log "SUCCESS" "✅ index.theme exists in $system_dir"
+        fi
+
+        # Check cache validity (should be > 1KB; invalid cache is ~496 bytes)
+        local cache_file="$system_dir/icon-theme.cache"
+        if [ -f "$cache_file" ]; then
+            local cache_size
+            cache_size=$(stat -c%s "$cache_file" 2>/dev/null || echo "0")
+            if [ "$cache_size" -lt 1024 ]; then
+                log "WARNING" "⚠️ Icon cache invalid (${cache_size} bytes) - auto-fixing..."
+                if command -v gtk-update-icon-cache &> /dev/null; then
+                    if sudo gtk-update-icon-cache --force "$system_dir" 2>/dev/null; then
+                        local new_size
+                        new_size=$(stat -c%s "$cache_file" 2>/dev/null || echo "0")
+                        log "SUCCESS" "✅ Auto-fixed: Rebuilt icon cache (${new_size} bytes)"
+                        fixes_applied=$((fixes_applied + 1))
+                    else
+                        log "ERROR" "❌ Failed to rebuild icon cache"
+                        issues=$((issues + 1))
+                    fi
+                else
+                    log "WARNING" "⚠️ gtk-update-icon-cache not available"
+                    issues=$((issues + 1))
+                fi
+            else
+                log "SUCCESS" "✅ Icon cache valid (${cache_size} bytes)"
+            fi
+        else
+            log "WARNING" "⚠️ Icon cache does not exist - rebuilding..."
+            if command -v gtk-update-icon-cache &> /dev/null; then
+                if sudo gtk-update-icon-cache --force "$system_dir" 2>/dev/null; then
+                    log "SUCCESS" "✅ Auto-fixed: Created icon cache"
+                    fixes_applied=$((fixes_applied + 1))
+                else
+                    log "WARNING" "⚠️ Failed to create icon cache"
+                    issues=$((issues + 1))
+                fi
+            fi
+        fi
+    else
+        log "INFO" "ℹ️ System icon directory does not exist - skipping"
+    fi
+
+    # Check user icon directory
+    if [ -d "$user_dir" ]; then
+        log "INFO" "Checking user icon directory: $user_dir"
+
+        # Check index.theme
+        if [ ! -f "$user_dir/index.theme" ]; then
+            log "WARNING" "⚠️ Missing index.theme in $user_dir - auto-fixing..."
+            if [ -f "/usr/share/icons/hicolor/index.theme" ]; then
+                mkdir -p "$user_dir"
+                if cp /usr/share/icons/hicolor/index.theme "$user_dir/"; then
+                    log "SUCCESS" "✅ Auto-fixed: Copied index.theme to $user_dir"
+                    fixes_applied=$((fixes_applied + 1))
+                else
+                    log "ERROR" "❌ Failed to copy index.theme"
+                    issues=$((issues + 1))
+                fi
+            fi
+        fi
+
+        # Check cache validity
+        local user_cache="$user_dir/icon-theme.cache"
+        if [ -f "$user_cache" ]; then
+            local user_cache_size
+            user_cache_size=$(stat -c%s "$user_cache" 2>/dev/null || echo "0")
+            if [ "$user_cache_size" -lt 1024 ]; then
+                log "WARNING" "⚠️ User icon cache invalid - auto-fixing..."
+                if gtk-update-icon-cache --force "$user_dir" 2>/dev/null; then
+                    log "SUCCESS" "✅ Auto-fixed: Rebuilt user icon cache"
+                    fixes_applied=$((fixes_applied + 1))
+                fi
+            fi
+        fi
+    fi
+
+    # Summary
+    if [ $fixes_applied -gt 0 ]; then
+        log "SUCCESS" "✅ Applied $fixes_applied auto-fix(es) to icon infrastructure"
+        log "INFO" "ℹ️ Log out and back in for changes to take full effect"
+    fi
+
+    if [ $issues -eq 0 ]; then
+        log "SUCCESS" "✅ Icon integration validated (auto-fixed if needed)"
+        end_timer "Icon validation"
+        return 0
+    else
+        log "ERROR" "❌ Icon validation found $issues unresolvable issue(s)"
+        log "INFO" "💡 Run: tests/verify_icons.sh --fix for manual remediation"
+        end_timer "Icon validation"
+        return 1
+    fi
+}
+
 # Performance testing
 test_performance() {
     log "STEP" "📊 Running performance tests..."
@@ -486,6 +611,7 @@ run_complete_workflow() {
 
     # Run all workflow steps
     validate_config || ((failed_steps++))
+    validate_icons || ((failed_steps++))  # Icon cache validation with auto-fix
     validate_context7 || ((failed_steps++))  # Priority 3 Enhancement: Context7 MCP validation
     test_performance || ((failed_steps++))
     simulate_build || ((failed_steps++))
@@ -630,13 +756,14 @@ show_help() {
     echo "  init        Initialize local CI/CD infrastructure"
     echo "  local       Run complete local workflow simulation"
     echo "  validate    Validate Ghostty configuration"
+    echo "  icons       Validate and auto-fix desktop icon integration"
     echo "  context7    Validate with Context7 MCP best practices (Priority 3)"
     echo "  test        Run performance tests"
     echo "  build       Simulate build process"
     echo "  status      Check GitHub Actions status"
     echo "  billing     Check GitHub Actions billing"
     echo "  pages       Simulate GitHub Pages setup"
-    echo "  all         Run complete workflow (validate + context7 + test + build + status + billing + pages)"
+    echo "  all         Run complete workflow (validate + icons + context7 + test + build + status + billing + pages)"
     echo "  help        Show this help message"
     echo ""
     echo "Examples:"
@@ -665,6 +792,9 @@ main() {
             ;;
         "validate")
             validate_config
+            ;;
+        "icons")
+            validate_icons
             ;;
         "context7")
             validate_context7
