@@ -6,12 +6,13 @@ name: Configuration & Code Validation
 
 on:
   pull_request:
-    branches: [main, 'feature/**', 'fix/**']
+    branches: [main]
   push:
-    branches: ['*']
+    branches: [main]
     paths:
       - 'configs/**'
       - 'scripts/**'
+      - 'astro-website/**'
       - 'start.sh'
       - 'manage.sh'
       - '.github/workflows/validation-tests.yml'
