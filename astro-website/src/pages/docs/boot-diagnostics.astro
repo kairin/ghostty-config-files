@@ -1,0 +1,375 @@
+---
+// docs/boot-diagnostics.astro - Boot Diagnostics documentation
+import DocsLayout from '../../components/layout/DocsLayout.astro';
+---
+
+<DocsLayout title="Boot Diagnostics" description="Automated system health checker that detects boot issues and offers one-click fixes">
+  <h2>Overview</h2>
+  <p>
+    Boot Diagnostics is an automated system health checker that detects common boot issues on Ubuntu systems
+    and offers one-click fixes. It uses pure pattern matching and system queries - no LLM or AI required.
+  </p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose my-6">
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title text-primary">Automatic Detection</h3>
+        <p class="text-sm">Scans journalctl and systemctl for known boot issues</p>
+      </div>
+    </div>
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title text-secondary">Safe Fixes</h3>
+        <p class="text-sm">User-approved fixes with sudo batching for efficiency</p>
+      </div>
+    </div>
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title text-accent">Severity Classification</h3>
+        <p class="text-sm">Issues ranked by impact: Critical, Moderate, Low</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Quick Start</h2>
+
+  <div class="alert alert-info not-prose my-4">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <span>Boot Diagnostics automatically scans on startup and shows a warning banner if issues are found.</span>
+  </div>
+
+  <h3>Access via Main Menu</h3>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>./start.sh</code></pre>
+    <pre data-prefix=" "><code># Select "Boot Diagnostics" from the menu</code></pre>
+  </div>
+
+  <h3>Quick Scan (CLI)</h3>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>./scripts/007-diagnostics/quick_scan.sh count</code></pre>
+    <pre data-prefix=" " class="text-warning"><code>3</code></pre>
+    <pre data-prefix="$"><code>./scripts/007-diagnostics/quick_scan.sh summary</code></pre>
+    <pre data-prefix=" " class="text-warning"><code>CRITICAL:1 MODERATE:2 LOW:0</code></pre>
+  </div>
+
+  <h3>Full TUI Interface</h3>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>./scripts/007-diagnostics/boot_diagnostics.sh</code></pre>
+  </div>
+
+  <h2>Architecture</h2>
+  <p>The diagnostics system follows a modular architecture with pluggable detectors:</p>
+
+  <div class="mockup-code not-prose my-4 text-sm">
+    <pre><code>scripts/007-diagnostics/</code></pre>
+    <pre><code>├── boot_diagnostics.sh     # Main TUI interface</code></pre>
+    <pre><code>├── quick_scan.sh           # Fast scan for startup banner</code></pre>
+    <pre><code>├── lib/</code></pre>
+    <pre><code>│   ├── issue_registry.sh   # Issue patterns & helpers</code></pre>
+    <pre><code>│   └── fix_executor.sh     # Batched fix execution</code></pre>
+    <pre><code>└── detectors/</code></pre>
+    <pre><code>    ├── detect_orphaned_services.sh</code></pre>
+    <pre><code>    ├── detect_unsupported_snaps.sh</code></pre>
+    <pre><code>    ├── detect_network_wait_issues.sh</code></pre>
+    <pre><code>    ├── detect_failed_services.sh</code></pre>
+    <pre><code>    └── detect_cosmetic_warnings.sh</code></pre>
+  </div>
+
+  <h2>Detectors Reference</h2>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>Detector</th>
+          <th>Detects</th>
+          <th>Severity</th>
+          <th>Fixable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Orphaned Services</strong></td>
+          <td>User services with missing executables</td>
+          <td><span class="badge badge-error">CRITICAL</span></td>
+          <td><span class="badge badge-success">YES</span></td>
+        </tr>
+        <tr>
+          <td><strong>Unsupported Snaps</strong></td>
+          <td>Snaps incompatible with Ubuntu version</td>
+          <td><span class="badge badge-error">CRITICAL</span></td>
+          <td><span class="badge badge-success">YES</span></td>
+        </tr>
+        <tr>
+          <td><strong>Network Wait</strong></td>
+          <td>Unnecessary network wait services</td>
+          <td><span class="badge badge-warning">MODERATE</span></td>
+          <td><span class="badge badge-success">YES</span></td>
+        </tr>
+        <tr>
+          <td><strong>Failed Services</strong></td>
+          <td>Services that failed to start</td>
+          <td><span class="badge badge-error">CRITICAL</span></td>
+          <td><span class="badge badge-info">MAYBE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cosmetic Warnings</strong></td>
+          <td>Known harmless warnings (ALSA, etc.)</td>
+          <td><span class="badge badge-ghost">LOW</span></td>
+          <td><span class="badge badge-ghost">NO</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Severity Levels</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 not-prose my-6">
+    <div class="card bg-error/10 border border-error/30">
+      <div class="card-body">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-error">CRITICAL</span>
+        </div>
+        <p class="text-sm mt-2">Broken services, failed snaps, orphaned processes. Action required for system health.</p>
+      </div>
+    </div>
+    <div class="card bg-warning/10 border border-warning/30">
+      <div class="card-body">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-warning">MODERATE</span>
+        </div>
+        <p class="text-sm mt-2">Performance issues, unnecessary services. Recommended to fix for faster boot.</p>
+      </div>
+    </div>
+    <div class="card bg-base-300/50 border border-base-content/10">
+      <div class="card-body">
+        <div class="flex items-center gap-2">
+          <span class="badge badge-ghost">LOW</span>
+        </div>
+        <p class="text-sm mt-2">Cosmetic warnings, known Ubuntu bugs. Informational only, no action needed.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Command Reference</h2>
+
+  <h3>quick_scan.sh</h3>
+  <p>Fast scanner for startup integration. Outputs issue counts without TUI.</p>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th>Mode</th>
+          <th>Output</th>
+          <th>Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>count</code></td>
+          <td>Number of actionable issues</td>
+          <td>Startup banner condition</td>
+        </tr>
+        <tr>
+          <td><code>summary</code></td>
+          <td><code>CRITICAL:N MODERATE:N LOW:N</code></td>
+          <td>Startup banner text</td>
+        </tr>
+        <tr>
+          <td><code>details</code></td>
+          <td>Full issue list (pipe-delimited)</td>
+          <td>Debugging, logging</td>
+        </tr>
+        <tr>
+          <td><code>critical</code></td>
+          <td>Only critical issues</td>
+          <td>Emergency checks</td>
+        </tr>
+        <tr>
+          <td><code>fixable</code></td>
+          <td>Only fixable issues (YES/MAYBE)</td>
+          <td>Automated fix pipelines</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>boot_diagnostics.sh</h3>
+  <p>Full TUI interface with interactive issue selection and fix application.</p>
+
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="$"><code>./scripts/007-diagnostics/boot_diagnostics.sh</code></pre>
+    <pre data-prefix=" "><code># Interactive TUI with gum</code></pre>
+    <pre data-prefix=" "><code># - View all detected issues</code></pre>
+    <pre data-prefix=" "><code># - Select issues to fix</code></pre>
+    <pre data-prefix=" "><code># - Review and approve fixes</code></pre>
+    <pre data-prefix=" "><code># - Execute with batched sudo</code></pre>
+  </div>
+
+  <h2>Issue Patterns</h2>
+  <p>The system detects issues by matching patterns in system logs and service status:</p>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table table-zebra text-sm">
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Issue Type</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>platform.*not supported</code></td>
+          <td>Unsupported Snap</td>
+          <td><code>snap remove &lt;pkg&gt;</code></td>
+        </tr>
+        <tr>
+          <td><code>Failed at step EXEC spawning</code></td>
+          <td>Orphaned Service</td>
+          <td><code>systemctl --user disable &lt;svc&gt;</code></td>
+        </tr>
+        <tr>
+          <td><code>Timeout.*waiting for network</code></td>
+          <td>Network Wait</td>
+          <td><code>systemctl mask &lt;svc&gt;</code></td>
+        </tr>
+        <tr>
+          <td><code>GOTO.*has no matching label</code></td>
+          <td>ALSA Bug (Ubuntu #2105475)</td>
+          <td>No action (cosmetic)</td>
+        </tr>
+        <tr>
+          <td><code>unable to locate daemon control file</code></td>
+          <td>Keyring PAM Timing</td>
+          <td>No action (cosmetic)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Fix Execution</h2>
+  <p>Fixes are executed safely with user approval and sudo batching:</p>
+
+  <ul class="steps steps-vertical not-prose my-6">
+    <li class="step step-primary">Scan system for issues</li>
+    <li class="step step-primary">Display issues with severity</li>
+    <li class="step step-primary">User selects issues to fix</li>
+    <li class="step step-primary">Review generated fix commands</li>
+    <li class="step step-primary">Batch execute with single sudo</li>
+    <li class="step step-primary">Verify fixes applied</li>
+  </ul>
+
+  <div class="alert alert-warning not-prose my-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+    <span>Fixes require sudo access. All commands are shown for review before execution.</span>
+  </div>
+
+  <h2>Cosmetic Warnings (No Action Needed)</h2>
+  <p>These are known issues that don't affect system operation:</p>
+
+  <div class="overflow-x-auto not-prose my-6">
+    <table class="table table-zebra text-sm">
+      <thead>
+        <tr>
+          <th>Warning</th>
+          <th>Cause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ALSA GOTO label missing</td>
+          <td>Ubuntu packaging bug (#2105475)</td>
+        </tr>
+        <tr>
+          <td>Keyring PAM timing issue</td>
+          <td>Normal startup race condition</td>
+        </tr>
+        <tr>
+          <td>SCSI loop device warnings</td>
+          <td>Normal for snap packages</td>
+        </tr>
+        <tr>
+          <td>SATA resume warnings</td>
+          <td>Empty ports on motherboard</td>
+        </tr>
+        <tr>
+          <td>Kernel taint from drivers</td>
+          <td>Proprietary drivers (NVIDIA, etc.)</td>
+        </tr>
+        <tr>
+          <td>Bluetooth HCI limitation</td>
+          <td>Minor driver limitation</td>
+        </tr>
+        <tr>
+          <td>Snap desktop integration</td>
+          <td>Boot race condition (harmless)</td>
+        </tr>
+        <tr>
+          <td>ModemManager WiFi probe</td>
+          <td>Normal adapter behavior</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Integration with start.sh</h2>
+  <p>Boot Diagnostics is integrated into the main launcher:</p>
+
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix="1"><code># Automatic scan on startup</code></pre>
+    <pre data-prefix="2"><code>issue_count=$(./scripts/007-diagnostics/quick_scan.sh count)</code></pre>
+    <pre data-prefix="3"><code>if [[ $issue_count -gt 0 ]]; then</code></pre>
+    <pre data-prefix="4"><code>  gum style --foreground 208 "Boot issues detected: $issue_count"</code></pre>
+    <pre data-prefix="5"><code>fi</code></pre>
+  </div>
+
+  <p>The main menu includes a dedicated option:</p>
+  <div class="mockup-code not-prose my-4">
+    <pre data-prefix=" " class="text-success"><code>Boot Diagnostics</code></pre>
+    <pre data-prefix=" "><code>  ↳ Scan system for boot issues and apply fixes</code></pre>
+  </div>
+
+  <h2>Troubleshooting</h2>
+
+  <div class="collapse collapse-arrow bg-base-100 not-prose my-2">
+    <input type="checkbox" />
+    <div class="collapse-title font-medium">
+      Quick scan returns 0 but issues exist
+    </div>
+    <div class="collapse-content">
+      <p class="text-sm">Ensure journalctl access: <code>sudo usermod -aG systemd-journal $USER</code> then re-login.</p>
+    </div>
+  </div>
+
+  <div class="collapse collapse-arrow bg-base-100 not-prose my-2">
+    <input type="checkbox" />
+    <div class="collapse-title font-medium">
+      Detector scripts not executable
+    </div>
+    <div class="collapse-content">
+      <p class="text-sm">Run: <code>chmod +x scripts/007-diagnostics/detectors/*.sh</code></p>
+    </div>
+  </div>
+
+  <div class="collapse collapse-arrow bg-base-100 not-prose my-2">
+    <input type="checkbox" />
+    <div class="collapse-title font-medium">
+      Fix fails with permission denied
+    </div>
+    <div class="collapse-content">
+      <p class="text-sm">System services require sudo. User services use <code>systemctl --user</code> without sudo.</p>
+    </div>
+  </div>
+
+  <div class="collapse collapse-arrow bg-base-100 not-prose my-2">
+    <input type="checkbox" />
+    <div class="collapse-title font-medium">
+      gum not found error
+    </div>
+    <div class="collapse-content">
+      <p class="text-sm">Install gum: Run <code>./start.sh</code> and select "Install Tools" → "gum".</p>
+    </div>
+  </div>
+</DocsLayout>

@@ -743,7 +743,19 @@ while true; do
 
     show_dashboard
     if [[ "$DEMO_MODE" -eq 1 ]]; then echo "$(date): Dashboard shown" >> /tmp/ghostty_start.log; fi
-    
+
+    # Quick boot scan - show warning banner if issues detected
+    if [[ -x "scripts/007-diagnostics/quick_scan.sh" ]]; then
+        local issue_count
+        issue_count=$(scripts/007-diagnostics/quick_scan.sh count 2>/dev/null) || issue_count=0
+        if [[ "$issue_count" -gt 0 ]]; then
+            echo ""
+            gum style --foreground 208 --border rounded --padding "0 1" \
+                "⚠️  $issue_count boot issue(s) detected. Select '🔧 Boot Diagnostics' to review."
+            echo ""
+        fi
+    fi
+
     # Build Menu Options
     OPTIONS=(
         "Feh"
@@ -751,6 +763,7 @@ while true; do
         "Nerd Fonts"
         "Node.js"
         "Extras"
+        "🔧 Boot Diagnostics"
         "Install All (Feh + Ghostty + Node.js)"
     )
     
@@ -783,6 +796,14 @@ while true; do
             ;;
         "Extras")
             handle_extras_menu
+            ;;
+        "🔧 Boot Diagnostics")
+            if [[ -x "scripts/007-diagnostics/boot_diagnostics.sh" ]]; then
+                scripts/007-diagnostics/boot_diagnostics.sh
+            else
+                gum style --foreground 208 "Boot Diagnostics module not found"
+                sleep 2
+            fi
             ;;
         "Install All (Feh + Ghostty + Node.js)")
             install_app "feh"
