@@ -107,7 +107,7 @@ const base = import.meta.env.BASE_URL;
       }
 
       // Set checkbox state
-      const toggle = document.getElementById('theme-toggle');
+      const toggle = document.getElementById('theme-toggle') as HTMLInputElement | null;
       if (toggle) {
         toggle.checked = savedTheme === 'light';
         toggle.addEventListener('change', () => {

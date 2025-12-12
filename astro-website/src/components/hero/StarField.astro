@@ -9,7 +9,8 @@ interface Props {
 const { class: className = '' } = Astro.props;
 
 // Pre-defined star positions [x, y, dim?, blur?]
-const stars = [
+type StarTuple = [number, number, boolean?, boolean?];
+const stars: StarTuple[] = [
   [4, 4, true, true],
   [4, 44, true],
   [36, 22],
