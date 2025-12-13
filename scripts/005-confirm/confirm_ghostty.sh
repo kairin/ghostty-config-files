@@ -87,30 +87,64 @@ else
     log "SUCCESS" "Desktop icon integration verified"
 fi
 
-# Install Nautilus context menu "Open in Ghostty"
+# Install Nautilus "Open Terminal Here" with Ghostty using nautilus-open-any-terminal
+# This extension adds a direct context menu item (not hidden in Scripts submenu)
 install_nautilus_context_menu() {
-    local scripts_dir="${HOME}/.local/share/nautilus/scripts"
-    local script_file="${scripts_dir}/Open in Ghostty"
-
-    # Only install if Nautilus is available
+    # Check if Nautilus is available
     if ! command -v nautilus &>/dev/null; then
         log "INFO" "Nautilus not installed, skipping context menu"
         return 0
     fi
 
-    mkdir -p "$scripts_dir"
+    # Check if already configured for Ghostty
+    local current_terminal
+    current_terminal=$(gsettings get com.github.stunkymonkey.nautilus-open-any-terminal terminal 2>/dev/null | tr -d "'" || echo "")
+    if [[ "$current_terminal" == "ghostty" ]]; then
+        log "SUCCESS" "Context menu already configured for Ghostty"
+        return 0
+    fi
 
-    cat > "$script_file" << 'SCRIPT'
-#!/bin/bash
-# Open Ghostty in the current Nautilus directory
-cd "${NAUTILUS_SCRIPT_CURRENT_URI#file://}" 2>/dev/null || cd "$PWD"
-ghostty &
-SCRIPT
+    # Check if python3-nautilus is installed (required for extensions)
+    if ! dpkg -l python3-nautilus 2>/dev/null | /bin/grep -q "^ii"; then
+        log "INFO" "Installing python3-nautilus for context menu support..."
+        sudo apt install -y python3-nautilus || {
+            log "WARNING" "Could not install python3-nautilus"
+            return 1
+        }
+    fi
 
-    chmod +x "$script_file"
-    log "SUCCESS" "Context menu 'Open in Ghostty' installed"
-    log "INFO" "Right-click folder → Scripts → Open in Ghostty"
+    # Install nautilus-open-any-terminal from source (pip doesn't work on externally managed Python)
+    local ext_file="${HOME}/.local/share/nautilus-python/extensions/nautilus_open_any_terminal.py"
+    if [[ ! -f "$ext_file" ]]; then
+        log "INFO" "Installing nautilus-open-any-terminal extension from source..."
+        local temp_dir
+        temp_dir=$(mktemp -d)
+
+        if git clone --depth 1 https://github.com/Stunkymonkey/nautilus-open-any-terminal.git "$temp_dir" 2>/dev/null; then
+            make -C "$temp_dir" build 2>/dev/null
+            make -C "$temp_dir" install-nautilus 2>/dev/null
+            glib-compile-schemas ~/.local/share/glib-2.0/schemas/ 2>/dev/null
+            rm -rf "$temp_dir"
+        else
+            log "WARNING" "Could not clone nautilus-open-any-terminal"
+            rm -rf "$temp_dir"
+            return 1
+        fi
+    fi
+
+    # Configure for Ghostty
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal ghostty 2>/dev/null || true
+    gsettings set com.github.stunkymonkey.nautilus-open-any-terminal new-tab false 2>/dev/null || true
+
+    # Remove legacy script if exists (deprecated approach)
+    rm -f "${HOME}/.local/share/nautilus/scripts/Open in Ghostty" 2>/dev/null
+
+    # Restart Nautilus to load extension
+    nautilus -q 2>/dev/null || true
+
+    log "SUCCESS" "Context menu 'Open Terminal Here' configured for Ghostty"
+    log "INFO" "Right-click any folder → 'Open Terminal Here'"
 }
 
-log "INFO" "Installing Nautilus context menu..."
+log "INFO" "Setting up Nautilus context menu..."
 install_nautilus_context_menu
