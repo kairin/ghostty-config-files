@@ -1,0 +1,143 @@
+// Package ui provides the Bubbletea TUI implementation
+package ui
+
+import "github.com/charmbracelet/lipgloss"
+
+// Colors used throughout the UI
+var (
+	ColorPrimary   = lipgloss.Color("212") // Magenta/pink
+	ColorSuccess   = lipgloss.Color("42")  // Green
+	ColorWarning   = lipgloss.Color("214") // Orange/yellow
+	ColorError     = lipgloss.Color("196") // Red
+	ColorMuted     = lipgloss.Color("240") // Gray
+	ColorHighlight = lipgloss.Color("39")  // Cyan
+)
+
+// Nerd Font icons
+const (
+	IconCheckmark = "\uf00c" //
+	IconArrowUp   = "\uf062" //
+	IconCross     = "\uf00d" //
+	IconFolder    = "\uf07b" //
+	IconTag       = "\uf02b" //
+	IconGear      = "\uf013" //
+	IconWrench    = "\uf0ad" //
+	IconWarning   = "\uf071" //
+)
+
+// Style definitions
+var (
+	// Header styles
+	HeaderStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(ColorPrimary).
+			Border(lipgloss.DoubleBorder()).
+			BorderForeground(ColorPrimary).
+			Padding(1, 4).
+			Margin(1, 2)
+
+	// Dashboard table styles
+	TableHeaderStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(ColorHighlight).
+				Padding(0, 1)
+
+	TableRowStyle = lipgloss.NewStyle().
+			Padding(0, 1)
+
+	TableSelectedStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(ColorPrimary).
+				Padding(0, 1)
+
+	// Status styles
+	StatusInstalledStyle = lipgloss.NewStyle().
+				Foreground(ColorSuccess)
+
+	StatusUpdateStyle = lipgloss.NewStyle().
+				Foreground(ColorWarning)
+
+	StatusMissingStyle = lipgloss.NewStyle().
+				Foreground(ColorError)
+
+	StatusUnknownStyle = lipgloss.NewStyle().
+				Foreground(ColorMuted)
+
+	// Detail line styles (sub-items like npm versions, globals)
+	DetailStyle = lipgloss.NewStyle().
+			Foreground(ColorMuted).
+			PaddingLeft(4)
+
+	// Menu styles
+	MenuItemStyle = lipgloss.NewStyle().
+			PaddingLeft(2)
+
+	MenuSelectedStyle = lipgloss.NewStyle().
+				Foreground(ColorPrimary).
+				Bold(true).
+				PaddingLeft(2)
+
+	MenuCursorStyle = lipgloss.NewStyle().
+			Foreground(ColorPrimary)
+
+	// Footer/help styles
+	HelpStyle = lipgloss.NewStyle().
+			Foreground(ColorMuted).
+			Margin(1, 0)
+
+	// Spinner/progress styles
+	SpinnerStyle = lipgloss.NewStyle().
+			Foreground(ColorPrimary)
+
+	ProgressDescStyle = lipgloss.NewStyle().
+				Bold(true)
+
+	// Output line styles (for installation output)
+	OutputLineStyle = lipgloss.NewStyle().
+			Foreground(ColorMuted).
+			PaddingLeft(4)
+
+	OutputErrorStyle = lipgloss.NewStyle().
+				Foreground(ColorError).
+				PaddingLeft(4)
+
+	// Box styles
+	BoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(ColorPrimary).
+			Padding(0, 1)
+
+	WarningBoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(ColorWarning).
+			Foreground(ColorWarning).
+			Padding(0, 1)
+)
+
+// GetStatusStyle returns the appropriate style for a status string
+func GetStatusStyle(status string) lipgloss.Style {
+	switch status {
+	case "INSTALLED":
+		return StatusInstalledStyle
+	case "Not Installed", "NOT_INSTALLED":
+		return StatusMissingStyle
+	case "Update":
+		return StatusUpdateStyle
+	default:
+		return StatusUnknownStyle
+	}
+}
+
+// GetStatusIcon returns the appropriate icon for a status
+func GetStatusIcon(status string, needsUpdate bool) string {
+	if status != "INSTALLED" && status != "Not Installed" && status != "NOT_INSTALLED" {
+		return IconCross
+	}
+	if needsUpdate {
+		return IconArrowUp
+	}
+	if status == "INSTALLED" {
+		return IconCheckmark
+	}
+	return IconCross
+}
