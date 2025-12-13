@@ -65,9 +65,19 @@ const base = import.meta.env.BASE_URL;
   <ul>
     <li><a href={`${base}docs/getting-started/`}>Getting Started</a> - Clone and run in 2 minutes</li>
     <li><a href={`${base}docs/features/`}>Features</a> - Complete list of what gets installed</li>
-    <li><a href={`${base}docs/installation/`}>Installation</a> - Detailed installation guide</li>
+    <li><a href={`${base}docs/installation/`}>Installation</a> - Detailed installation guide with TUI documentation</li>
     <li><a href={`${base}docs/activity/`}>Project Activity</a> - Commit history and statistics</li>
   </ul>
+
+  <div class="alert not-prose my-6 bg-gradient-to-r from-primary/20 to-secondary/20 border-primary/30">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+    <div>
+      <h3 class="font-bold">Built-in Tool Documentation</h3>
+      <p class="text-sm">The TUI includes a "Show Details" feature for every tool with installation guides, features, and troubleshooting - all accessible without leaving the terminal!</p>
+    </div>
+  </div>
 
   <h2>Project Stats</h2>
   <div class="stats shadow bg-base-100 not-prose">

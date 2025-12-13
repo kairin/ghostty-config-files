@@ -83,6 +83,35 @@ import DocsLayout from '../../components/layout/DocsLayout.astro';
     </div>
   </div>
 
+  <h3>5. View Tool Documentation</h3>
+  <p>Each tool has a <strong>"Show Details"</strong> option that displays comprehensive documentation:</p>
+
+  <div class="mockup-window border border-base-300 not-prose my-6">
+    <div class="bg-base-200 px-4 py-6 font-mono text-sm">
+      <p class="text-primary">╭─────── Summary: ghostty ───────╮</p>
+      <p class="text-primary">│                                │</p>
+      <p class="mt-2">  # Ghostty Terminal</p>
+      <p class="mt-1 text-base-content/70">  GPU-accelerated terminal emulator...</p>
+      <p class="text-primary mt-2">│                                │</p>
+      <p class="text-primary">╰────────────────────────────────╯</p>
+      <p class="mt-4 text-warning">    ↳ View Full Details uses pager:</p>
+      <p class="text-warning border border-warning/50 inline-block px-2 ml-6">q=exit  ↑↓=scroll  /=search</p>
+      <p class="mt-4">What would you like to do?</p>
+      <p class="mt-2 text-success">  ▸ View Full Details</p>
+      <p class="text-base-content/50">    Return to Menu</p>
+    </div>
+  </div>
+
+  <div class="alert alert-info not-prose my-4">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <div>
+      <h4 class="font-bold">Pager Controls</h4>
+      <p class="text-sm">When viewing full details: <code>q</code> exits, <code>↑↓</code> scrolls, <code>/</code> searches.</p>
+    </div>
+  </div>
+
   <h2>Post-Installation</h2>
 
   <h3>Restart Your Shell</h3>
