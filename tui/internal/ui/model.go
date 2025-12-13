@@ -53,7 +53,8 @@ type Model struct {
 	state *sharedState
 
 	// Components
-	spinner spinner.Model
+	spinner   spinner.Model
+	installer *InstallerModel
 
 	// Flags
 	demoMode bool
@@ -175,6 +176,24 @@ func (m Model) checkToolStatus(tool *registry.Tool) tea.Cmd {
 
 // Update handles messages
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	// If installer is active, delegate messages to it
+	if m.currentView == ViewInstaller && m.installer != nil {
+		var cmd tea.Cmd
+		newInstaller, cmd := m.installer.Update(msg)
+		m.installer = &newInstaller
+
+		// Check for ESC to return to dashboard
+		if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == "esc" {
+			if !m.installer.IsRunning() {
+				m.currentView = ViewDashboard
+				m.installer = nil
+				// Refresh status after installation
+				return m, m.refreshAllStatuses()
+			}
+		}
+		return m, cmd
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		return m.handleKeyPress(msg)
@@ -199,9 +218,33 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case allStatusesLoadedMsg:
 		m.loading = false
 		return m, nil
+
+	case startInstallMsg:
+		return m.startInstaller(msg.tool, msg.resume)
 	}
 
 	return m, nil
+}
+
+// startInstallMsg triggers installation of a tool
+type startInstallMsg struct {
+	tool   *registry.Tool
+	resume bool
+}
+
+// startInstaller creates and starts the installer view
+func (m Model) startInstaller(tool *registry.Tool, resume bool) (tea.Model, tea.Cmd) {
+	installer := NewInstallerModel(tool, m.repoRoot)
+	m.installer = &installer
+	m.currentView = ViewInstaller
+
+	// Initialize and start
+	initCmd := m.installer.Init()
+	startCmd := func() tea.Msg {
+		return InstallerStartMsg{Resume: resume}
+	}
+
+	return m, tea.Batch(initCmd, startCmd)
 }
 
 // handleKeyPress handles key presses
@@ -211,18 +254,29 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case "up", "k":
-		if m.currentView == ViewDashboard {
+		switch m.currentView {
+		case ViewDashboard:
 			if m.mainCursor > 0 {
 				m.mainCursor--
+			}
+		case ViewAppMenu:
+			if m.menuCursor > 0 {
+				m.menuCursor--
 			}
 		}
 		return m, nil
 
 	case "down", "j":
-		if m.currentView == ViewDashboard {
+		switch m.currentView {
+		case ViewDashboard:
 			maxCursor := registry.MainToolCount() + 3 // Tools + menu items
 			if m.mainCursor < maxCursor-1 {
 				m.mainCursor++
+			}
+		case ViewAppMenu:
+			maxCursor := 4 // Install, Reinstall, Uninstall, Back
+			if m.menuCursor < maxCursor-1 {
+				m.menuCursor++
 			}
 		}
 		return m, nil
@@ -242,6 +296,7 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "esc":
 		if m.currentView != ViewDashboard {
 			m.currentView = ViewDashboard
+			m.menuCursor = 0
 		}
 		return m, nil
 	}
@@ -250,7 +305,8 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) handleEnter() (tea.Model, tea.Cmd) {
-	if m.currentView == ViewDashboard {
+	switch m.currentView {
+	case ViewDashboard:
 		tools := registry.GetMainTools()
 		toolCount := len(tools)
 
@@ -272,7 +328,11 @@ func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 				return m, tea.Quit
 			}
 		}
+
+	case ViewAppMenu:
+		return m.handleAppMenuEnter()
 	}
+
 	return m, nil
 }
 
@@ -285,6 +345,11 @@ func (m Model) View() string {
 		return m.viewExtras()
 	case ViewAppMenu:
 		return m.viewAppMenu()
+	case ViewInstaller:
+		if m.installer != nil {
+			return m.installer.View()
+		}
+		return m.viewDashboard()
 	case ViewDiagnostics:
 		return m.viewDiagnostics()
 	default:
@@ -454,10 +519,84 @@ func (m Model) viewAppMenu() string {
 	}
 
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf("\n%s - Actions\n\n", m.selectedTool.DisplayName))
-	b.WriteString("Press ESC to go back\n")
+
+	// Header
+	header := HeaderStyle.Render(fmt.Sprintf("%s - Actions", m.selectedTool.DisplayName))
+	b.WriteString(header)
+	b.WriteString("\n\n")
+
+	// Get status
+	m.state.mu.RLock()
+	status, hasStatus := m.state.statuses[m.selectedTool.ID]
+	m.state.mu.RUnlock()
+
+	// Show current status
+	if hasStatus {
+		statusLine := fmt.Sprintf("Status: %s", status.Status)
+		if status.Version != "" && status.Version != "-" {
+			statusLine += fmt.Sprintf(" (v%s)", status.Version)
+		}
+		b.WriteString(DetailStyle.Render(statusLine))
+		b.WriteString("\n\n")
+	}
+
+	// Menu options based on status
+	menuItems := []string{"Install", "Reinstall", "Uninstall", "Back"}
+	if hasStatus && status.NeedsUpdate() {
+		menuItems = []string{"Update", "Reinstall", "Uninstall", "Back"}
+	}
+
+	b.WriteString("Choose action:\n")
+	for i, item := range menuItems {
+		cursor := " "
+		style := MenuItemStyle
+		if m.menuCursor == i {
+			cursor = ">"
+			style = MenuSelectedStyle
+		}
+		b.WriteString(fmt.Sprintf("%s %s\n", MenuCursorStyle.Render(cursor), style.Render(item)))
+	}
+
+	b.WriteString("\n")
+	b.WriteString(HelpStyle.Render("↑↓ navigate • enter select • esc back"))
 
 	return b.String()
+}
+
+// handleAppMenuEnter processes enter key in app menu
+func (m Model) handleAppMenuEnter() (tea.Model, tea.Cmd) {
+	if m.selectedTool == nil {
+		return m, nil
+	}
+
+	// Get status to determine menu options
+	m.state.mu.RLock()
+	status, hasStatus := m.state.statuses[m.selectedTool.ID]
+	m.state.mu.RUnlock()
+
+	// Menu items: Install/Update, Reinstall, Uninstall, Back
+	hasUpdate := hasStatus && status.NeedsUpdate()
+
+	switch m.menuCursor {
+	case 0: // Install or Update
+		return m, func() tea.Msg {
+			return startInstallMsg{tool: m.selectedTool, resume: false}
+		}
+	case 1: // Reinstall
+		return m, func() tea.Msg {
+			return startInstallMsg{tool: m.selectedTool, resume: false}
+		}
+	case 2: // Uninstall
+		// TODO: Implement uninstall
+		_ = hasUpdate // Silence unused warning
+		return m, nil
+	case 3: // Back
+		m.currentView = ViewDashboard
+		m.menuCursor = 0
+		return m, nil
+	}
+
+	return m, nil
 }
 
 func (m Model) viewDiagnostics() string {

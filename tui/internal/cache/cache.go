@@ -83,13 +83,20 @@ func (c *StatusCache) Get(toolID string) (*ToolStatus, bool) {
 	return entry, true
 }
 
-// Set stores a status in the cache
+// Set stores a status in the cache and persists to disk
 func (c *StatusCache) Set(status *ToolStatus) {
 	c.mu.Lock()
-	defer c.mu.Unlock()
-
 	status.CachedAt = time.Now()
 	c.entries[status.ID] = status
+	c.mu.Unlock()
+
+	// Persist to disk (non-blocking, errors logged but not returned)
+	go func() {
+		if err := c.Save(); err != nil {
+			// Silently ignore save errors - cache is best-effort
+			_ = err
+		}
+	}()
 }
 
 // Invalidate removes a tool from the cache
