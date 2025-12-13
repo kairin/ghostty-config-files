@@ -90,6 +90,73 @@ show_header() {
         "Ghostty, Feh, Local AI Tools"
 }
 
+# Show tool details (markdown documentation) - Two-stage with instruction banner
+show_tool_details() {
+    local tool_id="$1"
+    local filename="${tool_id//_/-}.md"
+    local doc_path=".claude/instructions-for-agents/tools/${filename}"
+
+    if [[ ! -f "$doc_path" ]]; then
+        gum style --foreground 208 --border rounded --padding "0 1" \
+            "Documentation not available for: $tool_id"
+        sleep 2
+        return 1
+    fi
+
+    # Extract summary (title + first paragraph)
+    local summary
+    summary=$(sed -n '1,/^## /p' "$doc_path" | head -15 | sed '/^## /d')
+
+    local wrap_width=$(($(tput cols) - 6))
+
+    clear
+
+    # Stage 1: Show summary in styled modal
+    gum style \
+        --border double \
+        --padding "1 2" \
+        --margin "1 1" \
+        --border-foreground 212 \
+        "Summary: $tool_id"
+
+    echo ""
+    echo "$summary" | gum format --type markdown
+    echo ""
+
+    # Navigation hint with arrow - positioned before menu
+    echo "    ↳ View Full Details uses pager:"
+    gum style \
+        --border rounded \
+        --padding "0 1" \
+        --margin "0 4" \
+        --foreground 226 \
+        --border-foreground 226 \
+        "q=exit  ↑↓=scroll  /=search"
+    echo ""
+
+    # Stage 2: Let user choose next action
+    local choice
+    choice=$(gum choose \
+        --header "What would you like to do?" \
+        --cursor.foreground "212" \
+        "View Full Details" \
+        "Return to Menu")
+
+    case "$choice" in
+        "View Full Details")
+            clear
+            if command -v glow &> /dev/null; then
+                glow --pager --width "$wrap_width" --style dark "$doc_path"
+            else
+                gum format --type markdown --theme dark < "$doc_path" | gum pager --soft-wrap
+            fi
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+}
+
 # Get App Status
 get_app_status() {
     local app="$1"
@@ -582,12 +649,15 @@ handle_app_selection() {
             fi
         fi
         
+        # Show Details option (documentation)
+        options+=("Show Details")
+
         if [[ "$DEMO_MODE" -eq 1 ]]; then
             options+=("Demo Mode Off")
         fi
-        
+
         options+=("Back")
-        
+
         local choice=$(gum choose "${options[@]}")
         
         case "$choice" in
@@ -610,6 +680,9 @@ handle_app_selection() {
                 ;;
             "Uninstall")
                 uninstall_app "$app_id"
+                ;;
+            "Show Details")
+                show_tool_details "$app_id"
                 ;;
             "Demo Mode Off")
                 exit 0

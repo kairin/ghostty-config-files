@@ -32,6 +32,21 @@ cd ghostty-config-files
 - Git installed
 - Passwordless sudo for apt: `sudo visudo` → add `username ALL=(ALL) NOPASSWD: /usr/bin/apt`
 
+## Terminal Compatibility
+
+The TUI dashboard uses **Nerd Font icons** for visual elements. Any terminal emulator with Nerd Font support will work:
+
+| Terminal | Nerd Font Setup |
+|----------|-----------------|
+| **Ghostty** | Configured automatically by this project |
+| **Ptyxis** (GNOME 49+) | Settings → Font → Select any Nerd Font (e.g., JetBrainsMonoNL NF) |
+| **GNOME Terminal** | Preferences → Profiles → Custom font → Select Nerd Font |
+| **Kitty/Alacritty** | Configure in respective config files |
+
+**Without Nerd Fonts**: The dashboard will show missing glyphs (□) but functionality remains intact.
+
+**Recommended fonts**: JetBrainsMono Nerd Font, FiraCode Nerd Font, or any font from [nerdfonts.com](https://www.nerdfonts.com/).
+
 ## Boot Diagnostics
 
 Automated system health checker that detects and fixes common boot issues:

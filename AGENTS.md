@@ -37,6 +37,11 @@
 
 - **[Script Proliferation Prevention](/.claude/instructions-for-agents/principles/script-proliferation.md)** - Mandatory principle for all script creation
 
+### 🔧 Tool Implementation Reference
+**Location**: `.claude/instructions-for-agents/tools/`
+
+- **[Tool Documentation Index](/.claude/instructions-for-agents/tools/README.md)** - Complete reference for all 11 installable tools (fastfetch, ghostty, gum, glow, vhs, feh, go, nerdfonts, nodejs, python-uv, zsh)
+
 ---
 
 ## ⚡ Top 5 CRITICAL Requirements (Quick Reference)
