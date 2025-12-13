@@ -86,3 +86,31 @@ if [ $ICON_ISSUES -gt 0 ]; then
 else
     log "SUCCESS" "Desktop icon integration verified"
 fi
+
+# Install Nautilus context menu "Open in Ghostty"
+install_nautilus_context_menu() {
+    local scripts_dir="${HOME}/.local/share/nautilus/scripts"
+    local script_file="${scripts_dir}/Open in Ghostty"
+
+    # Only install if Nautilus is available
+    if ! command -v nautilus &>/dev/null; then
+        log "INFO" "Nautilus not installed, skipping context menu"
+        return 0
+    fi
+
+    mkdir -p "$scripts_dir"
+
+    cat > "$script_file" << 'SCRIPT'
+#!/bin/bash
+# Open Ghostty in the current Nautilus directory
+cd "${NAUTILUS_SCRIPT_CURRENT_URI#file://}" 2>/dev/null || cd "$PWD"
+ghostty &
+SCRIPT
+
+    chmod +x "$script_file"
+    log "SUCCESS" "Context menu 'Open in Ghostty' installed"
+    log "INFO" "Right-click folder → Scripts → Open in Ghostty"
+}
+
+log "INFO" "Installing Nautilus context menu..."
+install_nautilus_context_menu
