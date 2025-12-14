@@ -29,6 +29,28 @@ if dpkg -l google-antigravity 2>/dev/null | grep -q '^ii'; then
     fi
 fi
 
+# 1b. Remove APT repository and GPG key (added by install script)
+SOURCES_LIST="/etc/apt/sources.list.d/antigravity.list"
+KEYRING_FILE="/etc/apt/keyrings/antigravity-repo-key.gpg"
+if [ -f "$SOURCES_LIST" ]; then
+    log "INFO" "Found APT repository, removing..."
+    if sudo rm -f "$SOURCES_LIST"; then
+        ((removed_count++))
+        log "SUCCESS" "APT repository removed"
+    else
+        log "WARNING" "Failed to remove APT repository"
+    fi
+fi
+if [ -f "$KEYRING_FILE" ]; then
+    log "INFO" "Found GPG keyring, removing..."
+    if sudo rm -f "$KEYRING_FILE"; then
+        ((removed_count++))
+        log "SUCCESS" "GPG keyring removed"
+    else
+        log "WARNING" "Failed to remove GPG keyring"
+    fi
+fi
+
 # 2. Remove AppImage installation
 INSTALL_DIR="$HOME/.local/share/antigravity"
 if [ -d "$INSTALL_DIR" ]; then

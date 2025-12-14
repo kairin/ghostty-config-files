@@ -255,6 +255,30 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case ConfirmResult:
 		// Handle confirmation dialog result globally (before view-specific handling)
 		return m.handleConfirmResult(msg)
+
+	case InstallerExitMsg:
+		// User requested to exit installer view via recovery button
+		m.batchMode = false
+		m.batchQueue = nil
+		m.batchIndex = 0
+		m.pendingCleanInstall = nil
+
+		// Return to extras view if we came from there
+		if m.extras != nil {
+			m.currentView = ViewExtras
+			m.installer = nil
+			m.refreshPending = false
+			return m, m.extras.Init()
+		}
+
+		m.currentView = ViewDashboard
+		m.installer = nil
+		m.loading = true
+		if !m.refreshPending {
+			m.refreshPending = true
+			return m, tea.Batch(m.spinner.Tick, m.refreshAllStatuses())
+		}
+		return m, m.spinner.Tick
 	}
 
 	// If installer is active, delegate messages to it
