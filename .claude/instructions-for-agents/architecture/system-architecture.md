@@ -11,9 +11,6 @@ last-updated: 2025-11-21
 [← Back to AGENTS.md](../../../../AGENTS.md)
 
 **Related Sections**:
-- [Directory Structure](./directory-structure.md) - File organization details
-- [Technology Stack](./technology-stack.md) - Core dependencies
-- [Logging System](./logging-system.md) - Dual-mode logging architecture
 - [Agent Delegation](./agent-delegation.md) - 4-tier agent hierarchy
 - [Agent Registry](./agent-registry.md) - Complete 60-agent reference
 
@@ -82,8 +79,6 @@ last-updated: 2025-11-21
 ├── .runners-local/             # Local CI/CD infrastructure (see below)
 └── archive-spec-kit/           # Archived spec-kit materials (.specify/)
 ```
-
-**Complete Structure**: See [DIRECTORY_STRUCTURE.md](./directory-structure.md) for detailed directory tree with file descriptions, design patterns, and naming conventions.
 
 ---
 
