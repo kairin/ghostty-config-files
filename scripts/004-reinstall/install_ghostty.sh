@@ -30,7 +30,57 @@ log "INFO" "Installing ghostty..."
 if [ -f "zig-out/bin/ghostty" ]; then
     sudo cp "zig-out/bin/ghostty" "/usr/local/bin/"
     log "SUCCESS" "Installed to /usr/local/bin/ghostty"
-    
+
+    # Install terminfo (CRITICAL for terminal compatibility - fixes "unknown terminal xterm-ghostty")
+    log "INFO" "Installing terminfo..."
+    TERMINFO_FILE="zig-out/share/terminfo/ghostty.terminfo"
+    TERMINFO_INSTALLED=false
+
+    # Primary method: compile terminfo from build output using tic
+    if [ -f "$TERMINFO_FILE" ]; then
+        if sudo tic -x "$TERMINFO_FILE" 2>/dev/null; then
+            log "SUCCESS" "Terminfo compiled from build output"
+            TERMINFO_INSTALLED=true
+        else
+            # User-level fallback (installs to ~/.terminfo/)
+            if tic -x "$TERMINFO_FILE" 2>/dev/null; then
+                log "SUCCESS" "Terminfo compiled to user directory"
+                TERMINFO_INSTALLED=true
+            fi
+        fi
+    fi
+
+    # Fallback: system ncurses should have ghostty entry (ncurses 6.5+)
+    if [ "$TERMINFO_INSTALLED" = false ] && [ -f "/usr/share/terminfo/g/ghostty" ]; then
+        log "INFO" "Using system ncurses terminfo entry"
+        TERMINFO_INSTALLED=true
+    fi
+
+    # Create xterm-ghostty symlink (Ghostty uses TERM=xterm-ghostty by default)
+    # This is needed because ncurses has "ghostty" but Ghostty sets TERM=xterm-ghostty
+    if [ -f "/usr/share/terminfo/g/ghostty" ] && [ ! -e "/usr/share/terminfo/x/xterm-ghostty" ]; then
+        sudo mkdir -p /usr/share/terminfo/x 2>/dev/null
+        if sudo ln -sf /usr/share/terminfo/g/ghostty /usr/share/terminfo/x/xterm-ghostty 2>/dev/null; then
+            log "SUCCESS" "Created xterm-ghostty symlink (system-wide)"
+        else
+            # User-level fallback (no sudo required)
+            mkdir -p "$HOME/.terminfo/x"
+            ln -sf /usr/share/terminfo/g/ghostty "$HOME/.terminfo/x/xterm-ghostty"
+            log "SUCCESS" "Created xterm-ghostty symlink (user-level)"
+        fi
+    fi
+
+    # Also check user-level terminfo for symlink
+    if [ -f "$HOME/.terminfo/g/ghostty" ] && [ ! -e "$HOME/.terminfo/x/xterm-ghostty" ]; then
+        mkdir -p "$HOME/.terminfo/x"
+        ln -sf "$HOME/.terminfo/g/ghostty" "$HOME/.terminfo/x/xterm-ghostty"
+        log "SUCCESS" "Created xterm-ghostty symlink (user-level from user terminfo)"
+    fi
+
+    if [ "$TERMINFO_INSTALLED" = false ]; then
+        log "WARNING" "Terminfo not installed - set TERM=xterm-256color in Ghostty config as workaround"
+    fi
+
     # Install desktop resources
     log "INFO" "Installing desktop resources..."
     
@@ -86,16 +136,25 @@ if [ -f "zig-out/bin/ghostty" ]; then
 
     # CRITICAL: Rebuild icon cache (prevents broken system icons)
     if command -v gtk-update-icon-cache &> /dev/null; then
-        if sudo gtk-update-icon-cache --force "$ICON_DIR" 2>/dev/null; then
-            # Verify cache is valid (should be > 1KB)
-            CACHE_SIZE=$(stat -c%s "$ICON_DIR/icon-theme.cache" 2>/dev/null || echo "0")
-            if [ "$CACHE_SIZE" -gt 1024 ]; then
-                log "SUCCESS" "Icon cache rebuilt (${CACHE_SIZE} bytes)"
-            else
-                log "WARNING" "Icon cache may be invalid (${CACHE_SIZE} bytes)"
-            fi
+        # Force rebuild with ignore-theme-index for better compatibility
+        sudo gtk-update-icon-cache --force --ignore-theme-index "$ICON_DIR" 2>/dev/null || true
+
+        # Verify cache exists (for local icons dir with few icons, ~300 bytes is normal)
+        CACHE_SIZE=$(stat -c%s "$ICON_DIR/icon-theme.cache" 2>/dev/null || echo "0")
+        if [ "$CACHE_SIZE" -gt 100 ]; then
+            log "SUCCESS" "Icon cache rebuilt (${CACHE_SIZE} bytes)"
         else
-            log "WARNING" "gtk-update-icon-cache returned non-zero exit code"
+            # Try alternative method: remove and rebuild
+            log "WARNING" "Icon cache appears empty (${CACHE_SIZE} bytes), retrying..."
+            sudo rm -f "$ICON_DIR/icon-theme.cache"
+            sudo gtk-update-icon-cache --force "$ICON_DIR" 2>/dev/null || true
+
+            CACHE_SIZE=$(stat -c%s "$ICON_DIR/icon-theme.cache" 2>/dev/null || echo "0")
+            if [ "$CACHE_SIZE" -gt 100 ]; then
+                log "SUCCESS" "Icon cache rebuilt on retry (${CACHE_SIZE} bytes)"
+            else
+                log "WARNING" "Icon cache may be empty (${CACHE_SIZE} bytes)"
+            fi
         fi
     else
         log "WARNING" "gtk-update-icon-cache not found - icons may not display until next login"

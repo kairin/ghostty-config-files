@@ -1,16 +1,16 @@
 #!/bin/bash
 # check_ai_tools.sh - Check installation status of Local AI CLI Tools
-# Tools: Claude Code, Gemini CLI, GitHub Copilot CLI
+# Tools: Claude Code (curl), Gemini CLI (npm), GitHub Copilot CLI (npm)
+
+# Ensure fnm environment is loaded
+if command -v fnm &> /dev/null; then
+    eval "$(fnm env --use-on-cd 2>/dev/null)" || true
+fi
 
 # Ensure npm global bin is in PATH
 if command -v npm &> /dev/null; then
     NPM_BIN=$(npm config get prefix 2>/dev/null)/bin
     export PATH="$NPM_BIN:$PATH"
-fi
-
-# Also check fnm-managed Node.js
-if command -v fnm &> /dev/null; then
-    eval "$(fnm env --shell bash 2>/dev/null)" || true
 fi
 
 # Track installation status
@@ -24,7 +24,7 @@ COPILOT_VER="-"
 
 EXTRA=""
 
-# Check Claude Code
+# Check Claude Code (standalone binary installed via curl script)
 if command -v claude &> /dev/null; then
     CLAUDE_INSTALLED=1
     CLAUDE_VER=$(claude --version 2>/dev/null | head -n 1 | grep -oP '\d+\.\d+\.\d+' || echo "installed")
@@ -33,7 +33,7 @@ else
     EXTRA="$EXTRA^     \xe2\x9c\x97 Claude Code"
 fi
 
-# Check Gemini CLI
+# Check Gemini CLI (npm package @google/gemini-cli)
 if command -v gemini &> /dev/null; then
     GEMINI_INSTALLED=1
     GEMINI_VER=$(gemini --version 2>/dev/null | head -n 1 | grep -oP '\d+\.\d+\.\d+' || echo "installed")
@@ -42,10 +42,10 @@ else
     EXTRA="$EXTRA^     \xe2\x9c\x97 Gemini CLI"
 fi
 
-# Check GitHub Copilot CLI (via gh extension)
-if command -v gh &> /dev/null && gh extension list 2>/dev/null | grep -q "copilot"; then
+# Check GitHub Copilot CLI (npm package @github/copilot)
+if command -v copilot &> /dev/null; then
     COPILOT_INSTALLED=1
-    COPILOT_VER=$(gh copilot --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' || echo "installed")
+    COPILOT_VER=$(copilot --version 2>/dev/null | head -n 1 | grep -oP '\d+\.\d+\.\d+' || echo "installed")
     EXTRA="$EXTRA^     \xe2\x9c\x93 GitHub Copilot v${COPILOT_VER}"
 else
     EXTRA="$EXTRA^     \xe2\x9c\x97 GitHub Copilot"
@@ -55,7 +55,6 @@ fi
 TOTAL_INSTALLED=$((CLAUDE_INSTALLED + GEMINI_INSTALLED + COPILOT_INSTALLED))
 
 # Determine overall status
-# Note: Use "INSTALLED" for partial too, so dashboard shows status correctly
 if [[ $TOTAL_INSTALLED -eq 3 ]]; then
     STATUS="INSTALLED"
     VERSION="3/3 tools"
@@ -63,20 +62,21 @@ elif [[ $TOTAL_INSTALLED -gt 0 ]]; then
     STATUS="INSTALLED"
     VERSION="${TOTAL_INSTALLED}/3 tools"
 else
-    STATUS="Not Installed"
+    STATUS="NOT_INSTALLED"
     VERSION="-"
 fi
 
-# Method (all npm-based)
+# Method description
 if [[ $TOTAL_INSTALLED -gt 0 ]]; then
-    METHOD="npm"
-    LOCATION="npm global^tools:"
+    METHOD="mixed"
+    LOCATION="curl+npm^tools:"
 else
     METHOD="-"
     LOCATION="-"
 fi
 
-# Latest version info (we don't track individual latest versions for aggregate)
+# Aggregate tools: no single "latest version" - disable update detection
+# Individual versions shown in details section with checkmarks
 LATEST="-"
 
 # Output in standard format

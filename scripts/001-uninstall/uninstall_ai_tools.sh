@@ -1,5 +1,15 @@
 #!/bin/bash
 # uninstall_ai_tools.sh - Uninstall Local AI CLI Tools
+# Claude Code: installed via curl script to ~/.claude/
+# Gemini CLI: npm package @google/gemini-cli
+# GitHub Copilot: npm package @github/copilot
+
+source "$(dirname "$0")/../006-logs/logger.sh"
+
+# Ensure fnm environment is loaded
+if command -v fnm &> /dev/null; then
+    eval "$(fnm env --use-on-cd 2>/dev/null)" || true
+fi
 
 # Ensure npm global bin is in PATH
 if command -v npm &> /dev/null; then
@@ -7,39 +17,49 @@ if command -v npm &> /dev/null; then
     export PATH="$NPM_BIN:$PATH"
 fi
 
-# Also ensure fnm-managed Node.js is available
-if command -v fnm &> /dev/null; then
-    eval "$(fnm env --shell bash 2>/dev/null)" || true
-fi
+log "INFO" "Uninstalling AI CLI tools..."
 
-echo "Uninstalling AI CLI tools..."
-
-# Uninstall Claude Code
+# Uninstall Claude Code (installed via curl script)
 if command -v claude &> /dev/null; then
-    echo "Removing Claude Code..."
+    log "INFO" "Removing Claude Code..."
+    # Claude Code installs to ~/.claude/ - remove the directory
+    rm -rf "$HOME/.claude" 2>/dev/null || true
+    # Also remove old npm version if exists
     npm uninstall -g @anthropic-ai/claude-code 2>/dev/null || true
-    echo "Claude Code removed."
+    # Remove from PATH additions in shell rc files
+    sed -i '/\.claude/d' "$HOME/.bashrc" 2>/dev/null || true
+    sed -i '/\.claude/d' "$HOME/.zshrc" 2>/dev/null || true
+    log "SUCCESS" "Claude Code removed."
 else
-    echo "Claude Code not installed."
+    log "INFO" "Claude Code not installed."
 fi
 
-# Uninstall Gemini CLI
+# Uninstall Gemini CLI (npm package)
 if command -v gemini &> /dev/null; then
-    echo "Removing Gemini CLI..."
+    log "INFO" "Removing Gemini CLI..."
+    npm uninstall -g @google/gemini-cli 2>/dev/null || true
+    # Also remove old incorrect package if exists
     npm uninstall -g @google/generative-ai-cli 2>/dev/null || true
-    echo "Gemini CLI removed."
+    log "SUCCESS" "Gemini CLI removed."
 else
-    echo "Gemini CLI not installed."
+    log "INFO" "Gemini CLI not installed."
 fi
 
-# Uninstall GitHub Copilot CLI (gh extension)
-if command -v gh &> /dev/null && gh extension list 2>/dev/null | grep -q "copilot"; then
-    echo "Removing GitHub Copilot CLI..."
-    gh extension remove gh-copilot 2>/dev/null || true
-    echo "GitHub Copilot CLI removed."
+# Uninstall GitHub Copilot CLI (npm package)
+if command -v copilot &> /dev/null; then
+    log "INFO" "Removing GitHub Copilot CLI..."
+    npm uninstall -g @github/copilot 2>/dev/null || true
+    log "SUCCESS" "GitHub Copilot CLI removed."
 else
-    echo "GitHub Copilot CLI not installed."
+    log "INFO" "GitHub Copilot CLI not installed."
+fi
+
+# Also remove old gh extension if exists
+if command -v gh &> /dev/null && gh extension list 2>/dev/null | grep -q "copilot"; then
+    log "INFO" "Removing old gh copilot extension..."
+    gh extension remove gh-copilot 2>/dev/null || true
+    log "SUCCESS" "Old gh extension removed."
 fi
 
 echo ""
-echo "AI CLI tools uninstallation complete."
+log "SUCCESS" "AI CLI tools uninstallation complete."

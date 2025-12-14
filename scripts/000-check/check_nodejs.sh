@@ -11,8 +11,15 @@ fi
 LATEST_VER=""
 if command -v fnm &> /dev/null; then
     # Get latest version (including Current, not just LTS) to avoid downgrading suggestions
-    # fnm ls-remote | tail -n 1
-    LATEST_VER=$(fnm ls-remote | tail -n 1)
+    LATEST_VER=$(fnm ls-remote 2>/dev/null | tail -n 1 | grep -oP 'v[\d.]+' || echo "")
+fi
+
+# Fallback: query nodejs.org if fnm not available or failed (with timeout)
+if [[ -z "$LATEST_VER" ]]; then
+    LATEST_VER=$(curl -s --connect-timeout 3 --max-time 5 \
+        https://nodejs.org/dist/index.json 2>/dev/null | \
+        grep -oP '"version":"v\K[^"]+' | head -1 || echo "-")
+    [[ -n "$LATEST_VER" && "$LATEST_VER" != "-" ]] && LATEST_VER="v$LATEST_VER"
 fi
 
 if command -v node &> /dev/null; then
@@ -63,5 +70,5 @@ if command -v node &> /dev/null; then
 
     echo "INSTALLED|$VERSION|$METHOD|$LOCATION$EXTRA|$LATEST_VER"
 else
-    echo "Not Installed|-|-|-|$LATEST_VER"
+    echo "NOT_INSTALLED|-|-|-|$LATEST_VER"
 fi

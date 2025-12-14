@@ -3,7 +3,7 @@ source "$(dirname "$0")/../006-logs/logger.sh"
 
 log "INFO" "Installing Ghostty configurations..."
 
-CONFIG_SRC="$(dirname "$0")/../configs/ghostty"
+CONFIG_SRC="$(dirname "$0")/../../configs/ghostty"
 CONFIG_DEST="$HOME/.config/ghostty"
 
 if [ ! -d "$CONFIG_SRC" ]; then

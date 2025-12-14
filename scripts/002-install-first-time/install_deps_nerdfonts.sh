@@ -25,10 +25,10 @@ DEPS="tar xz-utils curl fontconfig"
 
 log "INFO" "Updating apt..."
 wait_for_apt_lock
-sudo apt-get update
+sudo stdbuf -oL apt-get update
 
 log "INFO" "Installing: $DEPS"
-if sudo apt-get install -y $DEPS; then
+if sudo stdbuf -oL apt-get install -y $DEPS; then
     log "SUCCESS" "Dependencies installed successfully"
 else
     log "ERROR" "Failed to install dependencies"

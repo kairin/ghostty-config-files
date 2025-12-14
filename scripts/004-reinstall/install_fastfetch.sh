@@ -23,14 +23,24 @@ fi
 
 # 1. Try Adding PPA if not present (Ubuntu/Debian)
 if command -v apt-get &> /dev/null; then
+    NEED_UPDATE=0
     if ! grep -q "fastfetch" /etc/apt/sources.list.d/* 2>/dev/null; then
         echo "Adding Fastfetch PPA..."
         sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch
-        sudo apt-get update
+        NEED_UPDATE=1
     fi
-    
+
+    # Smart apt update - skip if cache is fresh (< 5 min) and no new repo added
+    APT_LISTS="/var/lib/apt/lists"
+    CACHE_AGE=$(($(date +%s) - $(stat -c%Y "$APT_LISTS" 2>/dev/null || echo 0)))
+    if [[ $NEED_UPDATE -eq 1 ]] || [[ $CACHE_AGE -gt 300 ]]; then
+        sudo stdbuf -oL apt-get update
+    else
+        echo "APT cache fresh (${CACHE_AGE}s ago), skipping update"
+    fi
+
     echo "Attempting APT install..."
-    sudo apt-get install -y fastfetch
+    sudo stdbuf -oL apt-get install -y fastfetch
     
     # Check if it worked
     NEW_VERSION=$(fastfetch --version 2>&1 | head -n1 | grep -oP '\d+\.\d+\.\d+' || echo "")

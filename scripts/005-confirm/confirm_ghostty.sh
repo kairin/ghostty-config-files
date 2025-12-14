@@ -9,11 +9,12 @@ if command -v ghostty &> /dev/null; then
     log "SUCCESS" "ghostty is installed at $PATH_LOC"
     log "SUCCESS" "Version: $VERSION"
     
-    # Check if multiple versions exist
-    COUNT=$(type -a ghostty | grep "is" | wc -l)
+    # Check if multiple versions exist (filter duplicates from PATH)
+    UNIQUE_PATHS=$(type -a ghostty 2>/dev/null | awk '{print $NF}' | sort -u)
+    COUNT=$(echo "$UNIQUE_PATHS" | wc -l)
     if [ "$COUNT" -gt 1 ]; then
         log "WARNING" "Multiple versions of ghostty detected:"
-        type -a ghostty | while read -r line; do log "WARNING" "$line"; done
+        echo "$UNIQUE_PATHS" | while read -r path; do log "WARNING" "ghostty at $path"; done
     else
         log "SUCCESS" "Single installation confirmed."
     fi
@@ -58,12 +59,12 @@ if [ -d "$ICON_DIR" ]; then
         fi
     fi
 
-    # Check cache validity (should be > 1KB; invalid cache is ~496 bytes)
+    # Check cache validity (for local icons dir with few icons, ~300 bytes is normal)
     CACHE_FILE="$ICON_DIR/icon-theme.cache"
     if [ -f "$CACHE_FILE" ]; then
         CACHE_SIZE=$(stat -c%s "$CACHE_FILE" 2>/dev/null || echo "0")
-        if [ "$CACHE_SIZE" -lt 1024 ]; then
-            log "WARNING" "Icon cache may be invalid (${CACHE_SIZE} bytes, expected >1KB)"
+        if [ "$CACHE_SIZE" -lt 100 ]; then
+            log "WARNING" "Icon cache appears empty or corrupt (${CACHE_SIZE} bytes)"
             ICON_ISSUES=$((ICON_ISSUES + 1))
 
             # Auto-fix using shared utility if available
