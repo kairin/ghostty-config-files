@@ -154,6 +154,15 @@ if command -v zsh &> /dev/null; then
         echo -e "${YELLOW}ℹ SKIP${NC}: Powerlevel10k theme not installed"
     fi
 
+    # Check .p10k.zsh does NOT self-source (prevents infinite recursion bug)
+    if [[ -f "${HOME}/.p10k.zsh" ]]; then
+        run_test ".p10k.zsh exists" "[[ -f \"\${HOME}/.p10k.zsh\" ]]"
+        run_test ".p10k.zsh does NOT self-source (prevents recursion)" "! grep -q 'source ~/.p10k.zsh' \"\${HOME}/.p10k.zsh\""
+        echo "  → Verified: No circular sourcing in .p10k.zsh"
+    else
+        echo -e "${YELLOW}ℹ SKIP${NC}: .p10k.zsh not found"
+    fi
+
 else
     echo -e "${YELLOW}ℹ SKIP${NC}: ZSH not installed - skipping integration tests"
 fi

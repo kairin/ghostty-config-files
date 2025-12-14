@@ -272,8 +272,7 @@ typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=160
 typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
 typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=101
 
-# Source the theme (required at end)
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Note: .zshrc handles sourcing this file - no self-sourcing needed
 P10K_CONFIG
         log "SUCCESS" "Created default .p10k.zsh"
     else
