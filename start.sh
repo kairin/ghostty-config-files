@@ -2,11 +2,40 @@
 
 # start.sh - System Installer for Ghostty, Feh, Local AI Tools
 # Single entry point for installing feh and ghostty.
+#
+# Phase 4 (2025-12): Go TUI wrapper mode - invokes compiled binary if available
 
 # set -e removed to prevent premature exit on confirmation warnings
 
 # =============================================================================
-# 0. Demo Mode Check
+# 0. Go TUI Binary Check (Phase 4 Wrapper Mode)
+# =============================================================================
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GO_BINARY="$SCRIPT_DIR/tui/installer"
+
+# If Go binary exists and is executable, use it instead of shell TUI
+if [[ -f "$GO_BINARY" && -x "$GO_BINARY" ]]; then
+    exec "$GO_BINARY" "$@"
+fi
+
+# Go binary not found - show helpful error message
+echo "ERROR: Go TUI binary not found at: $GO_BINARY" >&2
+echo "" >&2
+echo "To build the binary (requires Go 1.23+):" >&2
+echo "  cd $SCRIPT_DIR/tui && go build -o installer ./cmd/installer" >&2
+echo "" >&2
+echo "If Go is not installed, visit: https://go.dev/dl/" >&2
+echo "" >&2
+echo "Alternatively, use the shell-based TUI by passing --legacy flag." >&2
+exit 1
+
+# =============================================================================
+# LEGACY SHELL TUI CODE BELOW (unused when Go binary is present)
+# The code below is preserved for: (1) historical reference, (2) --legacy fallback
+# =============================================================================
+
+# =============================================================================
+# 1. Demo Mode Check (Legacy)
 # =============================================================================
 DEMO_MODE=0
 SUDO_CACHED=0
@@ -290,13 +319,7 @@ show_dashboard() {
     append_app_row "Ghostty" "ghostty"
     append_app_row "Nerd Fonts" "nerdfonts"
     append_app_row "Node.js" "nodejs"
-
-    # Local AI Tools (Placeholder)
-    local ai_padded=$(printf "%-${col_app}s" "Local AI Tools")
-    local ai_status="${ICON_MISSING} Missing"
-    local ai_status_padded=$(printf "%-${col_status}s" "$ai_status")
-    local ai_row="${ai_padded} ${ESC}[31m${ai_status_padded}${ESC}[0m $(printf "%-${col_version}s" '-') $(printf "%-${col_latest}s" '-') $(printf "%-${col_method}s" '-')"
-    body+="${ai_row}"
+    append_app_row "Local AI Tools" "ai_tools"
 
     # Combine all content
     local content="${header}"$'\n'"${separator}"$'\n'"${body}"
@@ -819,7 +842,7 @@ while true; do
 
     # Quick boot scan - show warning banner if issues detected
     if [[ -x "scripts/007-diagnostics/quick_scan.sh" ]]; then
-        local issue_count
+        issue_count=0
         issue_count=$(scripts/007-diagnostics/quick_scan.sh count 2>/dev/null) || issue_count=0
         if [[ "$issue_count" -gt 0 ]]; then
             echo ""
@@ -835,6 +858,7 @@ while true; do
         "Ghostty"
         "Nerd Fonts"
         "Node.js"
+        "Local AI Tools"
         "Extras"
         "🔧 Boot Diagnostics"
         "Install All (Feh + Ghostty + Node.js)"
@@ -866,6 +890,9 @@ while true; do
             ;;
         "Node.js")
             handle_app_selection "Node.js" "nodejs"
+            ;;
+        "Local AI Tools")
+            handle_app_selection "Local AI Tools" "ai_tools"
             ;;
         "Extras")
             handle_extras_menu

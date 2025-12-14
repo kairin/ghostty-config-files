@@ -67,6 +67,17 @@ last-updated: 2025-11-21
 ├── docs/                       # Astro BUILD OUTPUT ONLY (GitHub Pages)
 │   └── .nojekyll               # CRITICAL - never delete
 │
+├── tui/                        # Go TUI installer (Bubbletea/Lipgloss)
+│   ├── go.mod, go.sum          # Go module definitions
+│   ├── installer               # Compiled binary (5.0MB)
+│   ├── cmd/installer/          # CLI entry point
+│   └── internal/               # Core packages
+│       ├── registry/           # Data-driven tool catalog (12 tools)
+│       ├── cache/              # Status caching (5-min TTL)
+│       ├── executor/           # Script execution with streaming
+│       ├── diagnostics/        # Boot diagnostics integration
+│       └── ui/                 # Bubbletea model, views, styles
+│
 ├── tests/                      # Test infrastructure
 ├── .runners-local/             # Local CI/CD infrastructure (see below)
 └── archive-spec-kit/           # Archived spec-kit materials (.specify/)
@@ -101,6 +112,14 @@ The project uses a 4-tier agent system for intelligent task delegation:
 - **Charm TUI Ecosystem**: gum (tables/spinners), glow (markdown), VHS (recording)
 - **ZSH**: Oh My ZSH with productivity plugins
 - **Context Menu**: Nautilus integration for "Open in Ghostty"
+
+### Modern TUI Installer (Phase 4)
+- **Go 1.23+**: Programming language for TUI implementation
+- **Bubbletea v1.2.4+**: Elm-architecture TUI framework
+- **Lipgloss v1.0.0+**: Terminal styling library
+- **Bubbles v0.20.0+**: Reusable TUI components (spinner, viewport)
+- **Module**: `github.com/kairin/ghostty-installer`
+- **Binary**: `tui/installer` (5.0MB, statically linked)
 
 ### AI Integration
 - **Claude Code**: Latest CLI via npm for code assistance

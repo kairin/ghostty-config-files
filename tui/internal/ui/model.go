@@ -53,12 +53,15 @@ type Model struct {
 	state *sharedState
 
 	// Components
-	spinner   spinner.Model
-	installer *InstallerModel
+	spinner     spinner.Model
+	installer   *InstallerModel
+	extras      *ExtrasModel
+	diagnostics *DiagnosticsModel
 
 	// Flags
-	demoMode bool
-	loading  bool
+	demoMode   bool
+	sudoCached bool
+	loading    bool
 
 	// Dimensions
 	width  int
@@ -194,6 +197,66 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 	}
 
+	// If extras view is active, delegate messages to it
+	if m.currentView == ViewExtras && m.extras != nil {
+		newExtras, cmd := m.extras.Update(msg)
+		m.extras = &newExtras
+
+		// Handle key presses for extras
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewDashboard
+				m.extras = nil
+				return m, nil
+			}
+
+			extrasCmd, handled := m.extras.HandleKey(keyMsg)
+			if handled {
+				// Handle tool selection or menu actions
+				if m.extras.IsBackSelected() {
+					m.currentView = ViewDashboard
+					m.extras = nil
+					return m, nil
+				} else if m.extras.IsInstallAllSelected() {
+					// TODO: Implement install all
+					return m, nil
+				} else if tool := m.extras.GetSelectedTool(); tool != nil {
+					m.selectedTool = tool
+					m.currentView = ViewAppMenu
+					m.menuCursor = 0
+					return m, nil
+				}
+			}
+			if extrasCmd != nil {
+				return m, extrasCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If diagnostics view is active, delegate messages to it
+	if m.currentView == ViewDiagnostics && m.diagnostics != nil {
+		newDiag, cmd := m.diagnostics.Update(msg)
+		m.diagnostics = &newDiag
+
+		// Handle key presses for diagnostics
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewDashboard
+				m.diagnostics = nil
+				return m, nil
+			}
+
+			diagCmd := m.diagnostics.HandleKey(keyMsg)
+			if diagCmd != nil {
+				return m, diagCmd
+			}
+		}
+
+		return m, cmd
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		return m.handleKeyPress(msg)
@@ -320,10 +383,15 @@ func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 			menuIndex := m.mainCursor - toolCount
 			switch menuIndex {
 			case 0: // Extras
+				extras := NewExtrasModel(m.state, m.cache, m.repoRoot)
+				m.extras = &extras
 				m.currentView = ViewExtras
-				m.extrasCursor = 0
+				return m, m.extras.Init()
 			case 1: // Boot Diagnostics
+				diag := NewDiagnosticsModel(m.repoRoot, m.demoMode, m.sudoCached)
+				m.diagnostics = &diag
 				m.currentView = ViewDiagnostics
+				return m, m.diagnostics.Init()
 			case 2: // Exit
 				return m, tea.Quit
 			}
@@ -510,7 +578,10 @@ func (m Model) renderMainMenu() string {
 }
 
 func (m Model) viewExtras() string {
-	return "Extras view - press ESC to go back"
+	if m.extras != nil {
+		return m.extras.View()
+	}
+	return "Loading extras..."
 }
 
 func (m Model) viewAppMenu() string {
@@ -600,5 +671,13 @@ func (m Model) handleAppMenuEnter() (tea.Model, tea.Cmd) {
 }
 
 func (m Model) viewDiagnostics() string {
-	return "Boot Diagnostics - press ESC to go back"
+	if m.diagnostics != nil {
+		return m.diagnostics.View()
+	}
+	return "Loading diagnostics..."
+}
+
+// SetSudoCached sets the sudo cached flag for demo mode
+func (m *Model) SetSudoCached(cached bool) {
+	m.sudoCached = cached
 }
