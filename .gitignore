@@ -213,3 +213,10 @@ runner-credentials.json
 actions-runner/
 _diag/
 _work/
+
+# TUI build artifacts (Go binary)
+tui/ghostty-installer
+
+# Download logs (wget artifacts)
+wget-log
+wget-log.*
