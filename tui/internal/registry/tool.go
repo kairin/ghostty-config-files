@@ -30,6 +30,7 @@ type ToolScripts struct {
 	VerifyDeps  string // scripts/003-verify/verify_deps_{id}.sh
 	Install     string // scripts/004-reinstall/install_{id}.sh
 	Confirm     string // scripts/005-confirm/confirm_{id}.sh
+	Configure   string // scripts/configure_{id}.sh (optional post-installation configuration)
 }
 
 // SubTool represents a component of an aggregate tool (e.g., AI Tools)

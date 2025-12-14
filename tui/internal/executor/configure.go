@@ -1,4 +1,4 @@
-// Package executor - uninstall.go handles single-stage uninstall pipeline
+// Package executor - configure.go handles single-stage configure pipeline
 package executor
 
 import (
@@ -10,8 +10,8 @@ import (
 	"github.com/kairin/ghostty-installer/internal/registry"
 )
 
-// UninstallPipeline handles tool uninstallation (single stage)
-type UninstallPipeline struct {
+// ConfigurePipeline handles tool configuration (single stage)
+type ConfigurePipeline struct {
 	config PipelineConfig
 	tool   *registry.Tool
 
@@ -25,9 +25,9 @@ type UninstallPipeline struct {
 	progressChan chan StageProgress
 }
 
-// NewUninstallPipeline creates a new uninstall pipeline for a tool
-func NewUninstallPipeline(tool *registry.Tool, config PipelineConfig) *UninstallPipeline {
-	return &UninstallPipeline{
+// NewConfigurePipeline creates a new configure pipeline for a tool
+func NewConfigurePipeline(tool *registry.Tool, config PipelineConfig) *ConfigurePipeline {
+	return &ConfigurePipeline{
 		config:       config,
 		tool:         tool,
 		outputChan:   make(chan OutputLine, 100),
@@ -36,21 +36,21 @@ func NewUninstallPipeline(tool *registry.Tool, config PipelineConfig) *Uninstall
 }
 
 // OutputChan returns the channel for real-time output
-func (p *UninstallPipeline) OutputChan() <-chan OutputLine {
+func (p *ConfigurePipeline) OutputChan() <-chan OutputLine {
 	return p.outputChan
 }
 
 // ProgressChan returns the channel for stage progress updates
-func (p *UninstallPipeline) ProgressChan() <-chan StageProgress {
+func (p *ConfigurePipeline) ProgressChan() <-chan StageProgress {
 	return p.progressChan
 }
 
-// Execute runs the uninstall script
-func (p *UninstallPipeline) Execute(ctx context.Context) error {
+// Execute runs the configure script
+func (p *ConfigurePipeline) Execute(ctx context.Context) error {
 	p.mu.Lock()
 	if p.running {
 		p.mu.Unlock()
-		return fmt.Errorf("uninstall already running")
+		return fmt.Errorf("configure already running")
 	}
 	p.running = true
 
@@ -68,23 +68,23 @@ func (p *UninstallPipeline) Execute(ctx context.Context) error {
 		close(p.progressChan)
 	}()
 
-	// Check for uninstall script
-	uninstallScript := p.tool.Scripts.Uninstall
-	if uninstallScript == "" {
-		return fmt.Errorf("no uninstall script available for %s", p.tool.DisplayName)
+	// Check for configure script
+	configureScript := p.tool.Scripts.Configure
+	if configureScript == "" {
+		return fmt.Errorf("no configure script available for %s", p.tool.DisplayName)
 	}
 
 	// Send starting progress
 	p.progressChan <- StageProgress{
-		Stage:    StageUninstall,
+		Stage:    StageConfigure,
 		Complete: false,
 		Success:  false,
 	}
 
 	start := time.Now()
 
-	// Run the uninstall script with streaming output
-	outputChan, resultChan := RunScript(p.config.RepoRoot, uninstallScript, nil)
+	// Run the configure script with streaming output
+	outputChan, resultChan := RunScript(p.config.RepoRoot, configureScript, nil)
 
 	// Forward output to pipeline's output channel
 	go func() {
@@ -101,7 +101,7 @@ func (p *UninstallPipeline) Execute(ctx context.Context) error {
 	select {
 	case result := <-resultChan:
 		progress := StageProgress{
-			Stage:    StageUninstall,
+			Stage:    StageConfigure,
 			Complete: true,
 			Success:  result.ExitCode == 0,
 			Duration: time.Since(start),
@@ -109,7 +109,7 @@ func (p *UninstallPipeline) Execute(ctx context.Context) error {
 		}
 
 		if result.ExitCode != 0 {
-			progress.Error = fmt.Errorf("uninstall exited with code %d", result.ExitCode)
+			progress.Error = fmt.Errorf("configure exited with code %d", result.ExitCode)
 			p.progressChan <- progress
 			return progress.Error
 		}
@@ -119,7 +119,7 @@ func (p *UninstallPipeline) Execute(ctx context.Context) error {
 
 	case <-ctx.Done():
 		progress := StageProgress{
-			Stage:    StageUninstall,
+			Stage:    StageConfigure,
 			Complete: true,
 			Success:  false,
 			Duration: time.Since(start),
@@ -130,21 +130,21 @@ func (p *UninstallPipeline) Execute(ctx context.Context) error {
 	}
 }
 
-// Cancel stops the running uninstall
-func (p *UninstallPipeline) Cancel() error {
+// Cancel stops the running configure
+func (p *ConfigurePipeline) Cancel() error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
 	if !p.running || p.cancel == nil {
-		return fmt.Errorf("uninstall not running")
+		return fmt.Errorf("configure not running")
 	}
 
 	p.cancel()
 	return nil
 }
 
-// IsRunning returns whether the uninstall is currently executing
-func (p *UninstallPipeline) IsRunning() bool {
+// IsRunning returns whether the configure is currently executing
+func (p *ConfigurePipeline) IsRunning() bool {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	return p.running

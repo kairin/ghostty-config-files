@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"os/exec"
 	"strings"
 	"sync"
 
@@ -75,6 +76,28 @@ type Model struct {
 
 	// Boot diagnostics (cached issue count for banner)
 	diagCache *diagnostics.CacheStore
+
+	// Batch installation state (for "Install All" feature)
+	batchQueue []*registry.Tool // Queue of tools to install
+	batchIndex int              // Current position in queue
+	batchMode  bool             // Whether in batch install mode
+
+	// Status refresh tracking (prevents race conditions)
+	refreshPending bool // True when async refresh is in flight
+
+	// Clean install state (uninstall before install)
+	pendingCleanInstall *registry.Tool // Tool to install after uninstall completes
+
+	// Sudo authentication state
+	pendingInstall *pendingInstall // Install waiting for sudo auth
+	sudoAuthDone   bool            // Whether sudo auth was attempted this session
+}
+
+// pendingInstall stores installation to execute after sudo auth
+type pendingInstall struct {
+	tool      *registry.Tool
+	resume    bool
+	uninstall bool
 }
 
 // NewModel creates a new Model
@@ -186,19 +209,148 @@ func (m Model) checkToolStatus(tool *registry.Tool) tea.Cmd {
 
 // Update handles messages
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	// Handle installation messages globally (before view-specific handling)
+	// This ensures startInstallMsg/startUninstallMsg are processed regardless of currentView
+	switch msg := msg.(type) {
+	case startInstallMsg:
+		// Check if sudo auth is needed before starting installation
+		if !m.sudoAuthDone && !checkSudoCached() {
+			// Store pending install and request sudo auth
+			m.pendingInstall = &pendingInstall{
+				tool:   msg.tool,
+				resume: msg.resume,
+			}
+			return m, requestSudoAuth()
+		}
+		m.sudoAuthDone = true
+		return m.startInstaller(msg.tool, msg.resume)
+
+	case startUninstallMsg:
+		// Check if sudo auth is needed before starting uninstallation
+		if !m.sudoAuthDone && !checkSudoCached() {
+			m.pendingInstall = &pendingInstall{
+				tool:      msg.tool,
+				uninstall: true,
+			}
+			return m, requestSudoAuth()
+		}
+		m.sudoAuthDone = true
+		return m.startUninstaller(msg.tool)
+
+	case sudoAuthMsg:
+		m.sudoAuthDone = true
+		if msg.success && m.pendingInstall != nil {
+			// Resume pending installation
+			pending := m.pendingInstall
+			m.pendingInstall = nil
+			if pending.uninstall {
+				return m.startUninstaller(pending.tool)
+			}
+			return m.startInstaller(pending.tool, pending.resume)
+		}
+		// Auth failed or cancelled - clear pending and return to previous view
+		m.pendingInstall = nil
+		return m, nil
+
+	case ConfirmResult:
+		// Handle confirmation dialog result globally (before view-specific handling)
+		return m.handleConfirmResult(msg)
+	}
+
 	// If installer is active, delegate messages to it
 	if m.currentView == ViewInstaller && m.installer != nil {
 		var cmd tea.Cmd
 		newInstaller, cmd := m.installer.Update(msg)
 		m.installer = &newInstaller
 
-		// Check for ESC to return to dashboard
+		// Auto-continue batch installation when current tool completes successfully
+		if m.batchMode && !m.installer.IsRunning() && m.installer.IsSuccess() {
+			m.batchIndex++
+			if m.batchIndex < len(m.batchQueue) {
+				// Start next tool in batch (auto-continue, no ESC needed)
+				nextTool := m.batchQueue[m.batchIndex]
+				m.selectedTool = nextTool
+				m.installer = nil
+				return m, func() tea.Msg {
+					return startInstallMsg{tool: nextTool, resume: false}
+				}
+			}
+			// Batch complete - return to extras
+			m.batchMode = false
+			m.batchQueue = nil
+			m.batchIndex = 0
+			if m.extras != nil {
+				m.currentView = ViewExtras
+				m.installer = nil
+				return m, m.extras.Init()
+			}
+			m.currentView = ViewDashboard
+			m.installer = nil
+			return m, m.refreshAllStatuses()
+		}
+
+		// Check if uninstall completed and we have pending clean install
+		if !m.batchMode && !m.installer.IsRunning() && m.installer.IsSuccess() && m.installer.IsUninstall() {
+			if m.pendingCleanInstall != nil {
+				tool := m.pendingCleanInstall
+				m.pendingCleanInstall = nil
+				// Chain to install after successful uninstall
+				installer := NewInstallerModel(tool, m.repoRoot)
+				m.installer = &installer
+				initCmd := m.installer.Init()
+				startCmd := func() tea.Msg {
+					return InstallerStartMsg{Resume: false}
+				}
+				return m, tea.Batch(initCmd, startCmd)
+			}
+		}
+
+		// Clear pendingCleanInstall if uninstall failed (prevent stale state)
+		if !m.batchMode && !m.installer.IsRunning() && !m.installer.IsSuccess() && m.installer.IsUninstall() {
+			m.pendingCleanInstall = nil
+		}
+
+		// Single-tool installation complete (not batch mode) - refresh in background
+		// Only trigger once (check refreshPending to avoid double refresh)
+		if !m.batchMode && !m.installer.IsRunning() && m.installer.IsSuccess() && !m.refreshPending {
+			m.refreshPending = true
+			m.loading = true // Show loading indicator on dashboard
+			// Invalidate cache for this tool so fresh check runs
+			if m.selectedTool != nil {
+				m.cache.Invalidate(m.selectedTool.ID)
+			}
+			// Trigger background status refresh (user stays on success screen)
+			return m, tea.Batch(m.spinner.Tick, m.refreshAllStatuses())
+		}
+
+		// Check for ESC to cancel/exit
 		if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == "esc" {
 			if !m.installer.IsRunning() {
+				// Reset batch state and return to appropriate view
+				m.batchMode = false
+				m.batchQueue = nil
+				m.batchIndex = 0
+				m.pendingCleanInstall = nil // Clear pending install on cancel
+
+				// Return to extras view if we came from there
+				if m.extras != nil {
+					m.currentView = ViewExtras
+					m.installer = nil
+					m.refreshPending = false
+					return m, m.extras.Init()
+				}
+
 				m.currentView = ViewDashboard
 				m.installer = nil
-				// Refresh status after installation
-				return m, m.refreshAllStatuses()
+				// Show loading indicator while refresh completes
+				m.loading = true
+				// Ensure status refresh happens before returning to dashboard
+				if !m.refreshPending {
+					m.refreshPending = true
+					return m, tea.Batch(m.spinner.Tick, m.refreshAllStatuses())
+				}
+				// Refresh already in flight, just keep spinner going
+				return m, m.spinner.Tick
 			}
 		}
 		return m, cmd
@@ -225,8 +377,24 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.extras = nil
 					return m, nil
 				} else if m.extras.IsInstallAllSelected() {
-					// TODO: Implement install all
-					return m, nil
+					// Install All reinstalls all extras tools regardless of status
+					toInstall := registry.GetExtrasTools()
+
+					if len(toInstall) == 0 {
+						return m, nil
+					}
+
+					// Start batch installation
+					m.batchQueue = toInstall
+					m.batchIndex = 0
+					m.batchMode = true
+
+					// Start first tool installation
+					firstTool := m.batchQueue[0]
+					m.selectedTool = firstTool
+					return m, func() tea.Msg {
+						return startInstallMsg{tool: firstTool, resume: false}
+					}
 				} else if tool := m.extras.GetSelectedTool(); tool != nil {
 					m.selectedTool = tool
 					m.currentView = ViewAppMenu
@@ -294,16 +462,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case allStatusesLoadedMsg:
 		m.loading = false
+		m.refreshPending = false // Reset flag so future refreshes can trigger
 		return m, nil
-
-	case startInstallMsg:
-		return m.startInstaller(msg.tool, msg.resume)
-
-	case startUninstallMsg:
-		return m.startUninstaller(msg.tool)
-
-	case ConfirmResult:
-		return m.handleConfirmResult(msg)
 	}
 
 	return m, nil
@@ -320,8 +480,41 @@ type startUninstallMsg struct {
 	tool *registry.Tool
 }
 
+// sudoAuthMsg signals sudo authentication is complete
+type sudoAuthMsg struct {
+	success bool
+	err     error
+}
+
+// checkSudoCached returns true if sudo credentials are currently cached
+func checkSudoCached() bool {
+	cmd := exec.Command("sudo", "-n", "true")
+	return cmd.Run() == nil
+}
+
+// requestSudoAuth returns a command that prompts for sudo password
+// This suspends the TUI and gives the user full terminal access
+func requestSudoAuth() tea.Cmd {
+	c := exec.Command("sudo", "-v")
+	return tea.ExecProcess(c, func(err error) tea.Msg {
+		return sudoAuthMsg{success: err == nil, err: err}
+	})
+}
+
 // startInstaller creates and starts the installer view
 func (m Model) startInstaller(tool *registry.Tool, resume bool) (tea.Model, tea.Cmd) {
+	// Check if tool is already installed - need to uninstall first (clean install)
+	// This ensures old versions are removed before installing new ones
+	m.state.mu.RLock()
+	status, hasStatus := m.state.statuses[tool.ID]
+	m.state.mu.RUnlock()
+
+	if hasStatus && status != nil && status.IsInstalled() {
+		m.pendingCleanInstall = tool // Remember to install after uninstall
+		return m.startUninstaller(tool)
+	}
+
+	// Normal fresh install
 	installer := NewInstallerModel(tool, m.repoRoot)
 	m.installer = &installer
 	m.currentView = ViewInstaller
@@ -476,6 +669,17 @@ func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// getToolStatus retrieves the cached status for a tool by ID
+func (m Model) getToolStatus(toolID string) *cache.ToolStatus {
+	m.state.mu.RLock()
+	defer m.state.mu.RUnlock()
+
+	if status, ok := m.state.statuses[toolID]; ok {
+		return status
+	}
+	return nil
+}
+
 // View renders the UI
 func (m Model) View() string {
 	switch m.currentView {
@@ -505,10 +709,8 @@ func (m Model) View() string {
 func (m Model) viewDashboard() string {
 	var b strings.Builder
 
-	// Header
-	header := HeaderStyle.Render(
-		"System Installer\nGhostty, Feh, Local AI Tools",
-	)
+	// Header (compact single line)
+	header := HeaderStyle.Render("System Installer • Ghostty, Feh, Local AI Tools")
 	b.WriteString(header)
 	b.WriteString("\n\n")
 
@@ -713,11 +915,30 @@ func (m Model) viewAppMenu() string {
 		b.WriteString("\n\n")
 	}
 
-	// Menu options based on status
-	menuItems := []string{"Install", "Reinstall", "Uninstall", "Back"}
+	// Build menu items dynamically based on status and tool capabilities
+	var menuItems []string
 	if hasStatus && status.NeedsUpdate() {
-		menuItems = []string{"Update", "Reinstall", "Uninstall", "Back"}
+		menuItems = append(menuItems, "Update")
+	} else {
+		menuItems = append(menuItems, "Install")
 	}
+	menuItems = append(menuItems, "Reinstall", "Uninstall")
+
+	// Add Configure option if available and conditions met
+	if m.selectedTool.Scripts.Configure != "" {
+		// Only show Configure for ZSH when both Ghostty and ZSH are installed
+		if m.selectedTool.ID == "zsh" {
+			ghosttyStatus := m.getToolStatus("ghostty")
+			zshStatus := m.getToolStatus("zsh")
+
+			if ghosttyStatus != nil && zshStatus != nil &&
+				ghosttyStatus.IsInstalled() && zshStatus.IsInstalled() {
+				menuItems = append(menuItems, "Configure")
+			}
+		}
+	}
+
+	menuItems = append(menuItems, "Back")
 
 	b.WriteString("Choose action:\n")
 	for i, item := range menuItems {
@@ -742,27 +963,51 @@ func (m Model) handleAppMenuEnter() (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	// Get status to determine menu options
+	// Build menu items dynamically (same logic as viewAppMenu)
 	m.state.mu.RLock()
 	status, hasStatus := m.state.statuses[m.selectedTool.ID]
 	m.state.mu.RUnlock()
 
-	// Menu items: Install/Update, Reinstall, Uninstall, Back
-	hasUpdate := hasStatus && status.NeedsUpdate()
+	var menuItems []string
+	if hasStatus && status.NeedsUpdate() {
+		menuItems = append(menuItems, "Update")
+	} else {
+		menuItems = append(menuItems, "Install")
+	}
+	menuItems = append(menuItems, "Reinstall", "Uninstall")
 
-	switch m.menuCursor {
-	case 0: // Install or Update
+	// Add Configure option if available and conditions met
+	if m.selectedTool.Scripts.Configure != "" {
+		if m.selectedTool.ID == "zsh" {
+			ghosttyStatus := m.getToolStatus("ghostty")
+			zshStatus := m.getToolStatus("zsh")
+
+			if ghosttyStatus != nil && zshStatus != nil &&
+				ghosttyStatus.IsInstalled() && zshStatus.IsInstalled() {
+				menuItems = append(menuItems, "Configure")
+			}
+		}
+	}
+
+	menuItems = append(menuItems, "Back")
+
+	// Get selected action by name (not index)
+	if m.menuCursor >= len(menuItems) {
+		return m, nil
+	}
+	selectedAction := menuItems[m.menuCursor]
+
+	// Handle action by name
+	switch selectedAction {
+	case "Install", "Update", "Reinstall":
 		return m, func() tea.Msg {
 			return startInstallMsg{tool: m.selectedTool, resume: false}
 		}
-	case 1: // Reinstall
-		return m, func() tea.Msg {
-			return startInstallMsg{tool: m.selectedTool, resume: false}
-		}
-	case 2: // Uninstall
-		_ = hasUpdate // Silence unused warning
+	case "Uninstall":
 		return m.showUninstallConfirm(m.selectedTool)
-	case 3: // Back
+	case "Configure":
+		return m.startConfigure(m.selectedTool)
+	case "Back":
 		m.currentView = ViewDashboard
 		m.menuCursor = 0
 		return m, nil
@@ -781,4 +1026,24 @@ func (m Model) viewDiagnostics() string {
 // SetSudoCached sets the sudo cached flag for demo mode
 func (m *Model) SetSudoCached(cached bool) {
 	m.sudoCached = cached
+}
+
+// startConfigure initiates the configuration process for a tool
+func (m Model) startConfigure(tool *registry.Tool) (tea.Model, tea.Cmd) {
+	if tool.Scripts.Configure == "" {
+		return m, nil
+	}
+
+	// Create installer model for configure operation
+	installer := NewInstallerModelForConfigure(tool, m.repoRoot)
+	m.installer = &installer
+	m.currentView = ViewInstaller
+
+	// Initialize and start
+	initCmd := m.installer.Init()
+	startCmd := func() tea.Msg {
+		return InstallerStartMsg{Resume: false, Uninstall: false}
+	}
+
+	return m, tea.Batch(initCmd, startCmd)
 }

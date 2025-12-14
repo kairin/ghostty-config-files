@@ -168,6 +168,8 @@ const (
 	StageVerifyDeps
 	StageInstall
 	StageConfirm
+	StageUninstall
+	StageConfigure
 )
 
 // String returns the human-readable stage name
@@ -178,6 +180,8 @@ func (s PipelineStage) String() string {
 		"Verifying dependencies",
 		"Building and installing",
 		"Confirming installation",
+		"Uninstalling",
+		"Configuring",
 	}[s]
 }
 
@@ -189,5 +193,7 @@ func (s PipelineStage) ActiveForm() string {
 		"Verifying dependencies...",
 		"Building and installing...",
 		"Confirming installation...",
+		"Uninstalling...",
+		"Configuring...",
 	}[s]
 }

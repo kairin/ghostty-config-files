@@ -101,6 +101,23 @@ var tools = map[string]*Tool{
 		},
 		DocsPath: ".claude/instructions-for-agents/tools/ai-cli-tools.md",
 	},
+	"antigravity": {
+		ID:          "antigravity",
+		DisplayName: "Google Antigravity",
+		Description: "Agentic development platform",
+		Category:    CategoryMain,
+		Method:      MethodScript,
+		Scripts: ToolScripts{
+			Check:       "scripts/000-check/check_antigravity.sh",
+			Uninstall:   "scripts/001-uninstall/uninstall_antigravity.sh",
+			InstallDeps: "scripts/002-install-first-time/install_deps_antigravity.sh",
+			VerifyDeps:  "scripts/003-verify/verify_deps_antigravity.sh",
+			Install:     "scripts/004-reinstall/install_antigravity.sh",
+			Confirm:     "scripts/005-confirm/confirm_antigravity.sh",
+		},
+		VersionCmd:   []string{"antigravity", "--version"},
+		VersionRegex: `(\d+\.\d+\.\d+)`,
+	},
 
 	// === EXTRAS TOOLS ===
 	"fastfetch": {
@@ -224,6 +241,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_zsh.sh",
 			Install:     "scripts/004-reinstall/install_zsh.sh",
 			Confirm:     "scripts/005-confirm/confirm_zsh.sh",
+			Configure:   "scripts/configure_zsh.sh",
 		},
 		VersionCmd:   []string{"zsh", "--version"},
 		VersionRegex: `zsh (\d+\.\d+\.\d+)`,
@@ -232,7 +250,7 @@ var tools = map[string]*Tool{
 }
 
 // Ordered lists for display
-var mainToolIDs = []string{"feh", "ghostty", "nerdfonts", "nodejs", "ai_tools"}
+var mainToolIDs = []string{"feh", "ghostty", "nerdfonts", "nodejs", "ai_tools", "antigravity"}
 var extrasToolIDs = []string{"fastfetch", "glow", "go", "gum", "python_uv", "vhs", "zsh"}
 
 // GetTool returns a tool by ID
