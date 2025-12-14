@@ -9,6 +9,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/kairin/ghostty-installer/internal/cache"
+	"github.com/kairin/ghostty-installer/internal/diagnostics"
 	"github.com/kairin/ghostty-installer/internal/executor"
 	"github.com/kairin/ghostty-installer/internal/registry"
 )
@@ -22,6 +23,7 @@ const (
 	ViewAppMenu
 	ViewInstaller
 	ViewDiagnostics
+	ViewConfirm
 )
 
 // sharedState holds mutex-protected data that needs to survive model copies
@@ -53,10 +55,14 @@ type Model struct {
 	state *sharedState
 
 	// Components
-	spinner     spinner.Model
-	installer   *InstallerModel
-	extras      *ExtrasModel
-	diagnostics *DiagnosticsModel
+	spinner       spinner.Model
+	installer     *InstallerModel
+	extras        *ExtrasModel
+	diagnostics   *DiagnosticsModel
+	confirmDialog *ConfirmModel
+
+	// Pending uninstall (set when confirmation shown)
+	uninstallTool *registry.Tool
 
 	// Flags
 	demoMode   bool
@@ -67,8 +73,8 @@ type Model struct {
 	width  int
 	height int
 
-	// Boot diagnostics
-	bootIssueCount int
+	// Boot diagnostics (cached issue count for banner)
+	diagCache *diagnostics.CacheStore
 }
 
 // NewModel creates a new Model
@@ -85,9 +91,10 @@ func NewModel(repoRoot string, demoMode bool) Model {
 			statuses:     make(map[string]*cache.ToolStatus),
 			loadingTools: make(map[string]bool),
 		},
-		spinner:  s,
-		demoMode: demoMode,
-		loading:  true,
+		spinner:   s,
+		demoMode:  demoMode,
+		loading:   true,
+		diagCache: diagnostics.NewCacheStore(),
 	}
 }
 
@@ -257,6 +264,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 	}
 
+	// If confirm dialog is active, delegate messages to it
+	if m.currentView == ViewConfirm && m.confirmDialog != nil {
+		newConfirm, cmd := m.confirmDialog.Update(msg)
+		m.confirmDialog = &newConfirm
+		return m, cmd
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		return m.handleKeyPress(msg)
@@ -284,6 +298,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case startInstallMsg:
 		return m.startInstaller(msg.tool, msg.resume)
+
+	case startUninstallMsg:
+		return m.startUninstaller(msg.tool)
+
+	case ConfirmResult:
+		return m.handleConfirmResult(msg)
 	}
 
 	return m, nil
@@ -293,6 +313,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 type startInstallMsg struct {
 	tool   *registry.Tool
 	resume bool
+}
+
+// startUninstallMsg triggers uninstallation of a tool
+type startUninstallMsg struct {
+	tool *registry.Tool
 }
 
 // startInstaller creates and starts the installer view
@@ -305,6 +330,53 @@ func (m Model) startInstaller(tool *registry.Tool, resume bool) (tea.Model, tea.
 	initCmd := m.installer.Init()
 	startCmd := func() tea.Msg {
 		return InstallerStartMsg{Resume: resume}
+	}
+
+	return m, tea.Batch(initCmd, startCmd)
+}
+
+// showUninstallConfirm shows the confirmation dialog for uninstalling
+func (m Model) showUninstallConfirm(tool *registry.Tool) (tea.Model, tea.Cmd) {
+	confirm := ConfirmUninstall(tool.DisplayName, tool)
+	confirm.SetSize(m.width, m.height)
+	m.confirmDialog = &confirm
+	m.uninstallTool = tool
+	m.previousView = m.currentView
+	m.currentView = ViewConfirm
+	return m, nil
+}
+
+// handleConfirmResult handles the result from the confirmation dialog
+func (m Model) handleConfirmResult(result ConfirmResult) (tea.Model, tea.Cmd) {
+	// Clear the confirmation dialog
+	m.confirmDialog = nil
+	m.currentView = m.previousView
+
+	if result.Confirmed && m.uninstallTool != nil {
+		// User confirmed - start uninstall
+		tool := m.uninstallTool
+		m.uninstallTool = nil
+		return m, func() tea.Msg {
+			return startUninstallMsg{tool: tool}
+		}
+	}
+
+	// User cancelled - go back
+	m.uninstallTool = nil
+	return m, nil
+}
+
+// startUninstaller creates and starts the uninstaller view
+func (m Model) startUninstaller(tool *registry.Tool) (tea.Model, tea.Cmd) {
+	// Create installer model in uninstall mode
+	installer := NewInstallerModelForUninstall(tool, m.repoRoot)
+	m.installer = &installer
+	m.currentView = ViewInstaller
+
+	// Initialize and start uninstall
+	initCmd := m.installer.Init()
+	startCmd := func() tea.Msg {
+		return InstallerStartMsg{Resume: false, Uninstall: true}
 	}
 
 	return m, tea.Batch(initCmd, startCmd)
@@ -420,6 +492,11 @@ func (m Model) View() string {
 		return m.viewDashboard()
 	case ViewDiagnostics:
 		return m.viewDiagnostics()
+	case ViewConfirm:
+		if m.confirmDialog != nil {
+			return m.confirmDialog.View()
+		}
+		return m.viewDashboard()
 	default:
 		return m.viewDashboard()
 	}
@@ -434,6 +511,31 @@ func (m Model) viewDashboard() string {
 	)
 	b.WriteString(header)
 	b.WriteString("\n\n")
+
+	// Diagnostics banner (if issues found in cache)
+	if issues := m.diagCache.GetIssues(); len(issues) > 0 {
+		critCount := 0
+		for _, issue := range issues {
+			if issue.Severity == diagnostics.SeverityCritical {
+				critCount++
+			}
+		}
+
+		bannerStyle := lipgloss.NewStyle().
+			Foreground(ColorWarning).
+			Bold(true)
+
+		var bannerText string
+		if critCount > 0 {
+			bannerText = fmt.Sprintf("%s %d boot issues found (%d critical) - see Boot Diagnostics",
+				IconWarning, len(issues), critCount)
+		} else {
+			bannerText = fmt.Sprintf("%s %d boot issues found - see Boot Diagnostics",
+				IconWarning, len(issues))
+		}
+		b.WriteString(bannerStyle.Render(bannerText))
+		b.WriteString("\n\n")
+	}
 
 	// Dashboard table
 	b.WriteString(m.renderStatusTable())
@@ -502,9 +604,9 @@ func (m Model) renderStatusTable() string {
 				statusStr = icon + " Update"
 				statusStyle = StatusUpdateStyle
 			} else if status.IsInstalled() {
-				statusStr = icon + " OK"
+				statusStr = icon + " " + status.Status
 			} else {
-				statusStr = icon + " Missing"
+				statusStr = icon + " " + status.Status
 			}
 			versionStr = status.Version
 			latestStr = status.LatestVer
@@ -658,9 +760,8 @@ func (m Model) handleAppMenuEnter() (tea.Model, tea.Cmd) {
 			return startInstallMsg{tool: m.selectedTool, resume: false}
 		}
 	case 2: // Uninstall
-		// TODO: Implement uninstall
 		_ = hasUpdate // Silence unused warning
-		return m, nil
+		return m.showUninstallConfirm(m.selectedTool)
 	case 3: // Back
 		m.currentView = ViewDashboard
 		m.menuCursor = 0

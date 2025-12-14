@@ -19,14 +19,14 @@ const (
 
 // StateCheckpoint represents the saved state of a pipeline execution
 type StateCheckpoint struct {
-	Version         int              `json:"version"`
-	ToolID          string           `json:"tool_id"`
-	Timestamp       time.Time        `json:"timestamp"`
-	CurrentStage    PipelineStage    `json:"current_stage"`
-	CompletedStages []PipelineStage  `json:"completed_stages"`
-	FailedStage     *FailureInfo     `json:"failed_stage,omitempty"`
-	IsResumable     bool             `json:"is_resumable"`
-	Logs            []ExecutionLog   `json:"logs,omitempty"`
+	Version         int             `json:"version"`
+	ToolID          string          `json:"tool_id"`
+	Timestamp       time.Time       `json:"timestamp"`
+	CurrentStage    PipelineStage   `json:"current_stage"`
+	CompletedStages []PipelineStage `json:"completed_stages"`
+	FailedStage     *FailureInfo    `json:"failed_stage,omitempty"`
+	IsResumable     bool            `json:"is_resumable"`
+	Logs            []ExecutionLog  `json:"logs,omitempty"`
 }
 
 // FailureInfo contains details about a pipeline failure

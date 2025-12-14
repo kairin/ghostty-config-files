@@ -5,13 +5,13 @@ package registry
 type InstallMethod string
 
 const (
-	MethodSource        InstallMethod = "source"   // ghostty, feh
-	MethodCharmRepo     InstallMethod = "charm"    // gum, glow, vhs
-	MethodAPT           InstallMethod = "apt"      // fastfetch, zsh
-	MethodTarball       InstallMethod = "tarball"  // go
-	MethodScript        InstallMethod = "script"   // python_uv, nodejs (fnm)
-	MethodGitHubRelease InstallMethod = "github"   // nerdfonts
-	MethodNPM           InstallMethod = "npm"      // ai_tools
+	MethodSource        InstallMethod = "source"  // ghostty, feh
+	MethodCharmRepo     InstallMethod = "charm"   // gum, glow, vhs
+	MethodAPT           InstallMethod = "apt"     // fastfetch, zsh
+	MethodTarball       InstallMethod = "tarball" // go
+	MethodScript        InstallMethod = "script"  // python_uv, nodejs (fnm)
+	MethodGitHubRelease InstallMethod = "github"  // nerdfonts
+	MethodNPM           InstallMethod = "npm"     // ai_tools
 )
 
 // Category groups tools in the TUI menu

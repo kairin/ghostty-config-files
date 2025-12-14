@@ -25,12 +25,16 @@ const (
 
 // InstallerModel manages the installation view
 type InstallerModel struct {
-	// Tool being installed
+	// Tool being installed/uninstalled
 	tool *registry.Tool
 
-	// Pipeline
+	// Pipeline (for installation)
 	pipeline *executor.Pipeline
 	cancel   context.CancelFunc
+
+	// Uninstall pipeline
+	uninstallPipeline *executor.UninstallPipeline
+	isUninstall       bool
 
 	// State
 	state        InstallerState
@@ -41,7 +45,7 @@ type InstallerModel struct {
 	tailSpinner TailSpinner
 
 	// Error handling
-	lastError    error
+	lastError     error
 	hasCheckpoint bool
 
 	// Dimensions
@@ -83,11 +87,33 @@ func NewInstallerModel(tool *registry.Tool, repoRoot string) InstallerModel {
 	}
 }
 
+// NewInstallerModelForUninstall creates an installer model configured for uninstallation
+func NewInstallerModelForUninstall(tool *registry.Tool, repoRoot string) InstallerModel {
+	// Single stage for uninstall
+	stages := []stageStatus{
+		{stage: executor.StageUninstall},
+	}
+
+	ts := NewTailSpinner()
+	ts.SetTitle(fmt.Sprintf("Uninstalling %s", tool.DisplayName))
+	ts.SetDisplayLines(8)
+
+	return InstallerModel{
+		tool:        tool,
+		state:       InstallerIdle,
+		stages:      stages,
+		tailSpinner: ts,
+		repoRoot:    repoRoot,
+		isUninstall: true,
+	}
+}
+
 // Installer message types
 type (
-	// InstallerStartMsg initiates installation
+	// InstallerStartMsg initiates installation or uninstallation
 	InstallerStartMsg struct {
-		Resume bool
+		Resume    bool
+		Uninstall bool
 	}
 
 	// StageProgressMsg updates stage progress
@@ -129,6 +155,9 @@ func (m InstallerModel) Update(msg tea.Msg) (InstallerModel, tea.Cmd) {
 		return m, tea.Batch(cmds...)
 
 	case InstallerStartMsg:
+		if msg.Uninstall {
+			return m.startUninstallPipeline()
+		}
 		return m.startPipeline(msg.Resume)
 
 	case StageProgressMsg:
@@ -148,6 +177,9 @@ func (m InstallerModel) Update(msg tea.Msg) (InstallerModel, tea.Cmd) {
 	case InstallerCancelMsg:
 		if m.pipeline != nil {
 			m.pipeline.Cancel()
+		}
+		if m.uninstallPipeline != nil {
+			m.uninstallPipeline.Cancel()
 		}
 		m.state = InstallerIdle
 		return m, nil
@@ -172,6 +204,9 @@ func (m *InstallerModel) handleKey(msg tea.KeyMsg) tea.Cmd {
 			if m.pipeline != nil {
 				m.pipeline.Cancel()
 			}
+			if m.uninstallPipeline != nil {
+				m.uninstallPipeline.Cancel()
+			}
 			m.state = InstallerPaused
 		}
 		return nil
@@ -180,14 +215,14 @@ func (m *InstallerModel) handleKey(msg tea.KeyMsg) tea.Cmd {
 		if m.state == InstallerFailed || m.state == InstallerPaused {
 			// Restart from beginning
 			return func() tea.Msg {
-				return InstallerStartMsg{Resume: false}
+				return InstallerStartMsg{Resume: false, Uninstall: m.isUninstall}
 			}
 		}
 		return nil
 
 	case "c":
-		if m.state == InstallerFailed && m.hasCheckpoint {
-			// Resume from checkpoint
+		// Resume from checkpoint (only for installation, not uninstall)
+		if m.state == InstallerFailed && m.hasCheckpoint && !m.isUninstall {
 			return func() tea.Msg {
 				return InstallerStartMsg{Resume: true}
 			}
@@ -240,6 +275,72 @@ func (m InstallerModel) startPipeline(resume bool) (InstallerModel, tea.Cmd) {
 	}
 
 	return m, tea.Batch(cmds...)
+}
+
+// startUninstallPipeline begins the uninstallation pipeline
+func (m InstallerModel) startUninstallPipeline() (InstallerModel, tea.Cmd) {
+	// Reset stages
+	for i := range m.stages {
+		m.stages[i].complete = false
+		m.stages[i].success = false
+		m.stages[i].duration = ""
+	}
+
+	// Create uninstall pipeline
+	config := executor.DefaultPipelineConfig(m.repoRoot)
+	m.uninstallPipeline = executor.NewUninstallPipeline(m.tool, config)
+
+	// Create cancellable context
+	ctx, cancel := context.WithCancel(context.Background())
+	m.cancel = cancel
+	m.state = InstallerRunning
+	m.tailSpinner.Clear()
+	m.tailSpinner.SetStage("Uninstalling...")
+
+	// Start commands
+	cmds := []tea.Cmd{
+		m.tailSpinner.Start(),
+		m.runUninstallPipeline(ctx),
+		m.readUninstallOutput(),
+		m.readUninstallProgress(),
+	}
+
+	return m, tea.Batch(cmds...)
+}
+
+// runUninstallPipeline executes the uninstall pipeline in a goroutine
+func (m InstallerModel) runUninstallPipeline(ctx context.Context) tea.Cmd {
+	pipeline := m.uninstallPipeline
+	return func() tea.Msg {
+		err := pipeline.Execute(ctx)
+		return PipelineCompleteMsg{
+			Success: err == nil,
+			Error:   err,
+		}
+	}
+}
+
+// readUninstallOutput reads output from uninstall pipeline
+func (m InstallerModel) readUninstallOutput() tea.Cmd {
+	if m.uninstallPipeline == nil {
+		return nil
+	}
+	return BatchOutputCmd(m.uninstallPipeline.OutputChan())
+}
+
+// readUninstallProgress reads progress updates from uninstall pipeline
+func (m InstallerModel) readUninstallProgress() tea.Cmd {
+	if m.uninstallPipeline == nil {
+		return nil
+	}
+	progressChan := m.uninstallPipeline.ProgressChan()
+	return func() tea.Msg {
+		progress, ok := <-progressChan
+		if !ok {
+			return nil
+		}
+		return StageProgressMsg{Progress: progress}
+	}
 }
 
 // runPipeline executes the pipeline in a goroutine
@@ -320,13 +421,19 @@ func (m InstallerModel) View() string {
 	var b strings.Builder
 
 	// Header
-	header := HeaderStyle.Render(fmt.Sprintf("Installing %s", m.tool.DisplayName))
+	action := "Installing"
+	if m.isUninstall {
+		action = "Uninstalling"
+	}
+	header := HeaderStyle.Render(fmt.Sprintf("%s %s", action, m.tool.DisplayName))
 	b.WriteString(header)
 	b.WriteString("\n\n")
 
-	// Stage progress
-	b.WriteString(m.renderStageProgress())
-	b.WriteString("\n\n")
+	// Stage progress (skip for uninstall - only one stage)
+	if !m.isUninstall {
+		b.WriteString(m.renderStageProgress())
+		b.WriteString("\n\n")
+	}
 
 	// Output spinner
 	b.WriteString(m.tailSpinner.View())
@@ -388,19 +495,24 @@ func (m InstallerModel) renderStageProgress() string {
 
 // renderStatus renders the current status or error message
 func (m InstallerModel) renderStatus() string {
+	action := "Installation"
+	if m.isUninstall {
+		action = "Uninstallation"
+	}
+
 	switch m.state {
 	case InstallerSuccess:
-		return StatusInstalledStyle.Render(fmt.Sprintf("\n%s Installation complete!", IconCheckmark))
+		return StatusInstalledStyle.Render(fmt.Sprintf("\n%s %s complete!", IconCheckmark, action))
 
 	case InstallerFailed:
-		msg := StatusMissingStyle.Render(fmt.Sprintf("\n%s Installation failed", IconCross))
+		msg := StatusMissingStyle.Render(fmt.Sprintf("\n%s %s failed", IconCross, action))
 		if m.lastError != nil {
 			msg += StatusMissingStyle.Render(fmt.Sprintf(": %v", m.lastError))
 		}
 		return msg
 
 	case InstallerPaused:
-		return StatusUpdateStyle.Render(fmt.Sprintf("\n%s Installation paused", IconWarning))
+		return StatusUpdateStyle.Render(fmt.Sprintf("\n%s %s paused", IconWarning, action))
 
 	default:
 		return ""
@@ -414,15 +526,16 @@ func (m InstallerModel) renderHelp() string {
 		return HelpStyle.Render("[ESC] Cancel")
 
 	case InstallerFailed:
-		help := "[R] Restart"
-		if m.hasCheckpoint {
+		help := "[R] Retry"
+		// Only show resume option for installation (not uninstall)
+		if m.hasCheckpoint && !m.isUninstall {
 			help += "  [C] Resume from checkpoint"
 		}
 		help += "  [ESC] Back"
 		return HelpStyle.Render(help)
 
 	case InstallerPaused:
-		return HelpStyle.Render("[R] Restart  [ESC] Back")
+		return HelpStyle.Render("[R] Retry  [ESC] Back")
 
 	case InstallerSuccess:
 		return HelpStyle.Render("[ESC] Back to dashboard")

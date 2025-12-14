@@ -15,8 +15,9 @@ if command -v feh &> /dev/null; then
     fi
     
     log "SUCCESS" "feh is installed: $VERSION"
-    echo "INSTALLED|$VERSION|$METHOD|$LOCATION"
+    # LATEST field is "-" since feh is typically installed via APT with no upstream version tracking
+    echo "INSTALLED|$VERSION|$METHOD|$LOCATION|-"
 else
     log "WARNING" "feh is NOT installed"
-    echo "NOT_INSTALLED|-|-|-"
+    echo "Not Installed|-|-|-|-"
 fi

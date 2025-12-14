@@ -224,9 +224,9 @@ func (m ExtrasModel) renderExtrasTable() string {
 				statusStr = icon + " Update"
 				statusStyle = StatusUpdateStyle
 			} else if status.IsInstalled() {
-				statusStr = icon + " OK"
+				statusStr = icon + " " + status.Status
 			} else {
-				statusStr = icon + " Missing"
+				statusStr = icon + " " + status.Status
 			}
 			versionStr = status.Version
 			latestStr = status.LatestVer
