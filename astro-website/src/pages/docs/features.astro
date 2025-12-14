@@ -152,19 +152,30 @@ import DocsLayout from '../../components/layout/DocsLayout.astro';
     <li><strong>feh</strong> - Lightweight image viewer for context menu</li>
   </ul>
 
-  <h2>Interactive TUI Dashboard</h2>
-  <p>The installer features a beautiful terminal UI with built-in documentation:</p>
+  <h2>Modern Go TUI Dashboard</h2>
+  <p>The installer features a high-performance Go-based terminal UI built with <a href="https://github.com/charmbracelet/bubbletea" target="_blank" rel="noopener">Bubbletea</a> and <a href="https://github.com/charmbracelet/lipgloss" target="_blank" rel="noopener">Lipgloss</a>:</p>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose my-6">
+    <div class="card bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/20">
+      <div class="card-body">
+        <h3 class="card-title text-green-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Native Performance
+        </h3>
+        <p class="text-sm">Compiled Go binary (5MB) with instant startup. No shell interpretation overhead.</p>
+      </div>
+    </div>
     <div class="card bg-base-100">
       <div class="card-body">
         <h3 class="card-title text-primary">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          Show Details
+          Status Dashboard
         </h3>
-        <p class="text-sm">View comprehensive documentation for any tool directly in the TUI. Summary first, then full details on request.</p>
+        <p class="text-sm">Real-time status with version checking. Shows installed version vs latest with update indicators.</p>
       </div>
     </div>
     <div class="card bg-base-100">
@@ -173,9 +184,9 @@ import DocsLayout from '../../components/layout/DocsLayout.astro';
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
           </svg>
-          Progressive Disclosure
+          5-Stage Pipeline
         </h3>
-        <p class="text-sm">Two-stage UX shows a summary modal first, then offers full pager view with search capabilities.</p>
+        <p class="text-sm">Check → Install Deps → Verify → Build → Confirm. Crash-safe with resume capability.</p>
       </div>
     </div>
     <div class="card bg-base-100">
@@ -184,21 +195,42 @@ import DocsLayout from '../../components/layout/DocsLayout.astro';
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
-          11 Tool Docs
+          12 Tools
         </h3>
-        <p class="text-sm">Documentation for Feh, Ghostty, Nerd Fonts, Node.js, Fastfetch, Glow, Go, Gum, Python, VHS, and Zsh.</p>
+        <p class="text-sm">Feh, Ghostty, Nerd Fonts, Node.js, AI Tools (main), Fastfetch, Glow, Go, Gum, Python, VHS, Zsh (extras).</p>
       </div>
     </div>
     <div class="card bg-base-100">
       <div class="card-body">
         <h3 class="card-title text-info">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          Pager Navigation
+          Boot Diagnostics
         </h3>
-        <p class="text-sm">Use <code>q</code> to exit, arrow keys to scroll, and <code>/</code> to search within documentation.</p>
+        <p class="text-sm">Detects and fixes boot issues. Parallel script execution with 24-hour cache.</p>
+      </div>
+    </div>
+    <div class="card bg-base-100">
+      <div class="card-body">
+        <h3 class="card-title text-warning">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          Confirmation Dialog
+        </h3>
+        <p class="text-sm">Safety confirmations before destructive operations like uninstall.</p>
       </div>
     </div>
   </div>
+
+  <h3>Architecture Highlights</h3>
+  <ul>
+    <li><strong>Elm Architecture</strong> - Model-Update-View pattern via Bubbletea</li>
+    <li><strong>Data-Driven Registry</strong> - Single source of truth for 12 tools</li>
+    <li><strong>Status Caching</strong> - 5-minute TTL prevents redundant script execution</li>
+    <li><strong>SemVer Comparison</strong> - Proper version comparison (1.10 > 1.9)</li>
+    <li><strong>Demo Mode</strong> - VHS/asciinema recording support</li>
+  </ul>
 </DocsLayout>
