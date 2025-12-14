@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -54,6 +55,9 @@ type InstallerModel struct {
 
 	// Repo root for script execution
 	repoRoot string
+
+	// Timing for elapsed display
+	startTime time.Time
 }
 
 // stageStatus tracks the status of each pipeline stage
@@ -76,7 +80,7 @@ func NewInstallerModel(tool *registry.Tool, repoRoot string) InstallerModel {
 
 	ts := NewTailSpinner()
 	ts.SetTitle(fmt.Sprintf("Installing %s", tool.DisplayName))
-	ts.SetDisplayLines(8) // Show more lines during installation
+	ts.SetDisplayLines(20) // Show more lines during installation
 
 	return InstallerModel{
 		tool:        tool,
@@ -96,7 +100,7 @@ func NewInstallerModelForUninstall(tool *registry.Tool, repoRoot string) Install
 
 	ts := NewTailSpinner()
 	ts.SetTitle(fmt.Sprintf("Uninstalling %s", tool.DisplayName))
-	ts.SetDisplayLines(8)
+	ts.SetDisplayLines(20)
 
 	return InstallerModel{
 		tool:        tool,
@@ -172,6 +176,16 @@ func (m InstallerModel) Update(msg tea.Msg) (InstallerModel, tea.Cmd) {
 		var cmd tea.Cmd
 		m.tailSpinner, cmd = m.tailSpinner.Update(msg)
 		cmds = append(cmds, cmd)
+
+		// RE-SUBSCRIBE to continue reading output (critical fix)
+		// Without this, only the first batch of output is displayed
+		if m.state == InstallerRunning {
+			if m.isUninstall && m.uninstallPipeline != nil {
+				cmds = append(cmds, BatchOutputCmd(m.uninstallPipeline.OutputChan()))
+			} else if m.pipeline != nil {
+				cmds = append(cmds, BatchOutputCmd(m.pipeline.OutputChan()))
+			}
+		}
 		return m, tea.Batch(cmds...)
 
 	case InstallerCancelMsg:
@@ -250,6 +264,7 @@ func (m InstallerModel) startPipeline(resume bool) (InstallerModel, tea.Cmd) {
 	ctx, cancel := context.WithCancel(context.Background())
 	m.cancel = cancel
 	m.state = InstallerRunning
+	m.startTime = time.Now()
 	m.tailSpinner.Clear()
 
 	// Start pipeline
@@ -294,6 +309,7 @@ func (m InstallerModel) startUninstallPipeline() (InstallerModel, tea.Cmd) {
 	ctx, cancel := context.WithCancel(context.Background())
 	m.cancel = cancel
 	m.state = InstallerRunning
+	m.startTime = time.Now()
 	m.tailSpinner.Clear()
 	m.tailSpinner.SetStage("Uninstalling...")
 
@@ -420,57 +436,81 @@ func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 func (m InstallerModel) View() string {
 	var b strings.Builder
 
-	// Header
-	action := "Installing"
-	if m.isUninstall {
-		action = "Uninstalling"
-	}
-	header := HeaderStyle.Render(fmt.Sprintf("%s %s", action, m.tool.DisplayName))
-	b.WriteString(header)
+	// 1. Spinner + Header at TOP
+	b.WriteString(m.tailSpinner.ViewSpinnerLine())
 	b.WriteString("\n\n")
 
-	// Stage progress (skip for uninstall - only one stage)
+	// 2. Stage info (skip for uninstall - only one stage)
 	if !m.isUninstall {
-		b.WriteString(m.renderStageProgress())
-		b.WriteString("\n\n")
+		b.WriteString(m.renderStageInfo())
+		b.WriteString("\n")
 	}
 
-	// Output spinner
+	// 3. Output viewport (large - 20 lines)
 	b.WriteString(m.tailSpinner.View())
 	b.WriteString("\n")
 
-	// Status/error message
+	// 4. Progress bar at BOTTOM (skip for uninstall)
+	if !m.isUninstall {
+		b.WriteString(m.renderProgressBar())
+		b.WriteString("\n")
+	}
+
+	// 5. Status/error message
 	b.WriteString(m.renderStatus())
 	b.WriteString("\n")
 
-	// Help
+	// 6. Help
 	b.WriteString(m.renderHelp())
 
 	return b.String()
 }
 
-// renderStageProgress renders the 5-stage progress bar
-func (m InstallerModel) renderStageProgress() string {
-	var b strings.Builder
+// renderStageInfo renders just the stage info line (for top of screen)
+func (m InstallerModel) renderStageInfo() string {
+	// Elapsed time
+	elapsed := time.Since(m.startTime).Round(time.Second)
+	elapsedStr := elapsed.String()
+	if elapsed < time.Minute {
+		elapsedStr = fmt.Sprintf("%ds", int(elapsed.Seconds()))
+	}
 
-	b.WriteString(fmt.Sprintf("  Stage %d/5: %s\n",
+	return fmt.Sprintf("  Stage %d/5: %s  (elapsed: %s)",
 		m.currentStage+1,
 		m.currentStage.String(),
-	))
+		elapsedStr,
+	)
+}
 
-	// Progress bar
-	progress := float64(m.currentStage) / float64(executor.StageConfirm+1)
+// renderProgressBar renders the animated progress bar and stage list (for bottom of screen)
+func (m InstallerModel) renderProgressBar() string {
+	var b strings.Builder
+
+	// Animated activity bar - shows movement to indicate work is happening
 	barWidth := 40
-	filled := int(progress * float64(barWidth))
+	highlightWidth := 5
+	elapsedMs := time.Since(m.startTime).Milliseconds()
+	pos := int(elapsedMs/100) % (barWidth - highlightWidth + 1)
 
-	bar := strings.Repeat("█", filled) + strings.Repeat("░", barWidth-filled)
-	percent := int(progress * 100)
+	// Build animated bar
+	runes := make([]rune, barWidth)
+	for i := 0; i < barWidth; i++ {
+		if i >= pos && i < pos+highlightWidth {
+			runes[i] = '▓'
+		} else {
+			runes[i] = '░'
+		}
+	}
+	bar := string(runes)
+
+	// Also show stage progress as fraction
+	stageProgress := fmt.Sprintf("(%d/%d)", m.currentStage+1, len(m.stages))
 
 	barStyle := lipgloss.NewStyle().Foreground(ColorPrimary)
-	b.WriteString(fmt.Sprintf("  %s %d%%\n\n", barStyle.Render(bar), percent))
+	b.WriteString(fmt.Sprintf("  %s %s\n", barStyle.Render(bar), stageProgress))
 
 	// Stage list with checkmarks
-	b.WriteString("  Completed: ")
+	b.WriteString("  ")
 	for i, stage := range m.stages {
 		if stage.complete {
 			icon := IconCheckmark
@@ -553,4 +593,9 @@ func (m InstallerModel) GetState() InstallerState {
 // IsRunning returns whether installation is in progress
 func (m InstallerModel) IsRunning() bool {
 	return m.state == InstallerRunning
+}
+
+// IsSuccess returns whether installation completed successfully
+func (m InstallerModel) IsSuccess() bool {
+	return m.state == InstallerSuccess
 }

@@ -16,11 +16,11 @@ const (
 	// DefaultMaxLines is the maximum number of lines to keep in memory
 	DefaultMaxLines = 500
 	// DefaultDisplayLines is the number of lines visible in the viewport
-	DefaultDisplayLines = 5
+	DefaultDisplayLines = 20
 	// BatchSize is the number of lines to batch before updating UI
-	BatchSize = 10
+	BatchSize = 5
 	// BatchTimeout is how long to wait before flushing a partial batch
-	BatchTimeout = 50 * time.Millisecond
+	BatchTimeout = 30 * time.Millisecond
 )
 
 // TailSpinner combines a spinner with a scrollable output viewport
@@ -193,6 +193,16 @@ func (t *TailSpinner) updateViewport() {
 func (t TailSpinner) View() string {
 	var b strings.Builder
 
+	// Output viewport only - spinner and title shown by parent
+	b.WriteString(t.viewport.View())
+
+	return b.String()
+}
+
+// ViewWithHeader renders spinner + title + viewport (for standalone use)
+func (t TailSpinner) ViewWithHeader() string {
+	var b strings.Builder
+
 	// Title line with spinner
 	if t.isRunning {
 		b.WriteString(t.spinner.View())
@@ -210,6 +220,22 @@ func (t TailSpinner) View() string {
 
 	// Output viewport
 	b.WriteString(t.viewport.View())
+
+	return b.String()
+}
+
+// ViewSpinnerLine renders just the spinner + title line
+func (t TailSpinner) ViewSpinnerLine() string {
+	var b strings.Builder
+
+	if t.isRunning {
+		b.WriteString(t.spinner.View())
+		b.WriteString(" ")
+	}
+
+	if t.title != "" {
+		b.WriteString(t.titleStyle.Render(t.title))
+	}
 
 	return b.String()
 }
