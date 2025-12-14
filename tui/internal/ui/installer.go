@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/kairin/ghostty-installer/internal/executor"
@@ -23,6 +24,55 @@ const (
 	InstallerSuccess
 	InstallerFailed
 )
+
+// recoveryButton represents a selectable recovery action button
+type recoveryButton struct {
+	label    string
+	action   func() tea.Msg
+	shortcut string // "R", "C", or "ESC"
+}
+
+// Recovery key bindings for navigation
+type recoveryKeyMap struct {
+	Left   key.Binding
+	Right  key.Binding
+	Tab    key.Binding
+	Enter  key.Binding
+	Escape key.Binding
+	Retry  key.Binding
+	Resume key.Binding
+}
+
+var recoveryKeys = recoveryKeyMap{
+	Left: key.NewBinding(
+		key.WithKeys("left", "h"),
+		key.WithHelp("←/h", "previous"),
+	),
+	Right: key.NewBinding(
+		key.WithKeys("right", "l"),
+		key.WithHelp("→/l", "next"),
+	),
+	Tab: key.NewBinding(
+		key.WithKeys("tab"),
+		key.WithHelp("tab", "switch"),
+	),
+	Enter: key.NewBinding(
+		key.WithKeys("enter"),
+		key.WithHelp("enter", "select"),
+	),
+	Escape: key.NewBinding(
+		key.WithKeys("esc"),
+		key.WithHelp("esc", "back"),
+	),
+	Retry: key.NewBinding(
+		key.WithKeys("r", "R"),
+		key.WithHelp("r", "retry"),
+	),
+	Resume: key.NewBinding(
+		key.WithKeys("c", "C"),
+		key.WithHelp("c", "resume"),
+	),
+}
 
 // InstallerModel manages the installation view
 type InstallerModel struct {
@@ -62,6 +112,10 @@ type InstallerModel struct {
 
 	// Timing for elapsed display
 	startTime time.Time
+
+	// Recovery button selection (for failed/paused states)
+	recoveryFocused int
+	recoveryButtons []recoveryButton
 }
 
 // stageStatus tracks the status of each pipeline stage
@@ -158,11 +212,48 @@ type (
 
 	// InstallerCancelMsg cancels the installation
 	InstallerCancelMsg struct{}
+
+	// InstallerExitMsg signals the user wants to exit the installer view
+	InstallerExitMsg struct{}
 )
 
 // Init initializes the installer model
 func (m InstallerModel) Init() tea.Cmd {
 	return m.tailSpinner.Init()
+}
+
+// buildRecoveryButtons constructs the appropriate recovery buttons based on current state
+func (m *InstallerModel) buildRecoveryButtons() {
+	m.recoveryButtons = nil
+	isUninstall := m.isUninstall
+
+	// Back (first - default focus for safety)
+	m.recoveryButtons = append(m.recoveryButtons, recoveryButton{
+		label:    "Back",
+		shortcut: "ESC",
+		action:   func() tea.Msg { return InstallerExitMsg{} },
+	})
+
+	// Retry (always available)
+	m.recoveryButtons = append(m.recoveryButtons, recoveryButton{
+		label:    "Retry",
+		shortcut: "R",
+		action: func() tea.Msg {
+			return InstallerStartMsg{Resume: false, Uninstall: isUninstall}
+		},
+	})
+
+	// Resume (only if checkpoint exists and not uninstall/configure)
+	if m.state == InstallerFailed && m.hasCheckpoint && !m.isUninstall && !m.isConfigure {
+		m.recoveryButtons = append(m.recoveryButtons, recoveryButton{
+			label:    "Resume",
+			shortcut: "C",
+			action:   func() tea.Msg { return InstallerStartMsg{Resume: true} },
+		})
+	}
+
+	// Default to Back (index 0) for safety
+	m.recoveryFocused = 0
 }
 
 // Update handles messages for the installer
@@ -255,10 +346,9 @@ func (m InstallerModel) Update(msg tea.Msg) (InstallerModel, tea.Cmd) {
 
 // handleKey processes key presses
 func (m *InstallerModel) handleKey(msg tea.KeyMsg) tea.Cmd {
-	switch msg.String() {
-	case "esc":
-		if m.state == InstallerRunning {
-			// Cancel running pipeline
+	// Running state: only ESC to cancel
+	if m.state == InstallerRunning {
+		if msg.String() == "esc" {
 			if m.pipeline != nil {
 				m.pipeline.Cancel()
 			}
@@ -269,26 +359,69 @@ func (m *InstallerModel) handleKey(msg tea.KeyMsg) tea.Cmd {
 				m.configurePipeline.Cancel()
 			}
 			m.state = InstallerPaused
+			m.buildRecoveryButtons()
 		}
 		return nil
+	}
 
-	case "r":
-		if m.state == InstallerFailed || m.state == InstallerPaused {
-			// Restart from beginning
-			return func() tea.Msg {
-				return InstallerStartMsg{Resume: false, Uninstall: m.isUninstall}
-			}
+	// Success state: only ESC to go back
+	if m.state == InstallerSuccess {
+		if msg.String() == "esc" {
+			return func() tea.Msg { return InstallerExitMsg{} }
 		}
 		return nil
+	}
 
-	case "c":
-		// Resume from checkpoint (only for installation, not uninstall/configure)
-		if m.state == InstallerFailed && m.hasCheckpoint && !m.isUninstall && !m.isConfigure {
-			return func() tea.Msg {
-				return InstallerStartMsg{Resume: true}
+	// Failed or Paused states: handle recovery button navigation
+	if m.state == InstallerFailed || m.state == InstallerPaused {
+		switch {
+		case key.Matches(msg, recoveryKeys.Left):
+			if m.recoveryFocused > 0 {
+				m.recoveryFocused--
 			}
+			return nil
+
+		case key.Matches(msg, recoveryKeys.Right):
+			if m.recoveryFocused < len(m.recoveryButtons)-1 {
+				m.recoveryFocused++
+			}
+			return nil
+
+		case key.Matches(msg, recoveryKeys.Tab):
+			if len(m.recoveryButtons) > 0 {
+				m.recoveryFocused = (m.recoveryFocused + 1) % len(m.recoveryButtons)
+			}
+			return nil
+
+		case key.Matches(msg, recoveryKeys.Enter):
+			if m.recoveryFocused >= 0 && m.recoveryFocused < len(m.recoveryButtons) {
+				return m.recoveryButtons[m.recoveryFocused].action
+			}
+			return nil
+
+		case key.Matches(msg, recoveryKeys.Escape):
+			return func() tea.Msg { return InstallerExitMsg{} }
+
+		case key.Matches(msg, recoveryKeys.Retry):
+			// Find and execute Retry button
+			for i, btn := range m.recoveryButtons {
+				if btn.shortcut == "R" {
+					m.recoveryFocused = i
+					return btn.action
+				}
+			}
+			return nil
+
+		case key.Matches(msg, recoveryKeys.Resume):
+			// Find and execute Resume button (if exists)
+			for i, btn := range m.recoveryButtons {
+				if btn.shortcut == "C" {
+					m.recoveryFocused = i
+					return btn.action
+				}
+			}
+			return nil
 		}
-		return nil
 	}
 
 	return nil
@@ -537,6 +670,8 @@ func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 		// Check if there's a checkpoint for resume
 		checkpoint := executor.NewCheckpointStore()
 		m.hasCheckpoint = checkpoint.HasResumableCheckpoint(m.tool.ID)
+		// Build recovery buttons for the failed state
+		m.buildRecoveryButtons()
 	}
 }
 
@@ -676,17 +811,8 @@ func (m InstallerModel) renderHelp() string {
 	case InstallerRunning:
 		return HelpStyle.Render("[ESC] Cancel")
 
-	case InstallerFailed:
-		help := "[R] Retry"
-		// Only show resume option for installation (not uninstall/configure)
-		if m.hasCheckpoint && !m.isUninstall && !m.isConfigure {
-			help += "  [C] Resume from checkpoint"
-		}
-		help += "  [ESC] Back"
-		return HelpStyle.Render(help)
-
-	case InstallerPaused:
-		return HelpStyle.Render("[R] Retry  [ESC] Back")
+	case InstallerFailed, InstallerPaused:
+		return m.renderRecoveryButtons()
 
 	case InstallerSuccess:
 		return HelpStyle.Render("[ESC] Back to dashboard")
@@ -694,6 +820,44 @@ func (m InstallerModel) renderHelp() string {
 	default:
 		return HelpStyle.Render("[ESC] Cancel")
 	}
+}
+
+// renderRecoveryButtons renders visual selectable buttons for failed/paused states
+func (m InstallerModel) renderRecoveryButtons() string {
+	if len(m.recoveryButtons) == 0 {
+		return HelpStyle.Render("[ESC] Back")
+	}
+
+	// Button styles (matching confirm.go pattern)
+	buttonStyle := lipgloss.NewStyle().
+		Padding(0, 2).
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(ColorMuted)
+
+	selectedStyle := lipgloss.NewStyle().
+		Padding(0, 2).
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(ColorPrimary).
+		Foreground(ColorPrimary).
+		Bold(true)
+
+	var buttons []string
+	for i, btn := range m.recoveryButtons {
+		label := fmt.Sprintf("%s [%s]", btn.label, btn.shortcut)
+		if i == m.recoveryFocused {
+			buttons = append(buttons, selectedStyle.Render(label))
+		} else {
+			buttons = append(buttons, buttonStyle.Render(label))
+		}
+	}
+
+	// Join buttons horizontally with spacing
+	buttonRow := lipgloss.JoinHorizontal(lipgloss.Center, buttons...)
+
+	// Help text for navigation
+	helpText := HelpStyle.Render("[←/→] Select  [Enter] Confirm  [R/C/ESC] Quick select")
+
+	return lipgloss.JoinVertical(lipgloss.Left, buttonRow, "", helpText)
 }
 
 // GetState returns the current installer state
