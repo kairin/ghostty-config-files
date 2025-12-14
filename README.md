@@ -95,6 +95,7 @@ sudo ./scripts/remove_libreoffice.sh  # Remove LibreOffice (~700-800 MB freed)
 - [Installation Guide](astro-website/src/user-guide/installation.md)
 - [Configuration Guide](astro-website/src/user-guide/configuration.md)
 - [Daily Updates](scripts/DAILY_UPDATES_README.md)
+- [Icon Troubleshooting](.claude/instructions-for-agents/guides/troubleshooting-icons.md) - Missing icons, GTK resolution, Ubuntu 25.10 fixes
 
 ### For Developers
 - [Architecture Overview](astro-website/src/developer/architecture.md)
