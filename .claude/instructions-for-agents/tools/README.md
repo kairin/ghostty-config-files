@@ -63,11 +63,25 @@ Tools use two logging approaches:
 
 ## TUI Dashboard Integration
 
-All tools are accessible through `start.sh`:
-- **Main Menu**: ghostty, feh, nerdfonts, nodejs
-- **Extras Menu**: fastfetch, glow, go, gum, python_uv, vhs, zsh
+All tools are accessible through `start.sh` which launches the **Go TUI** (`tui/installer`):
+- **Main Dashboard**: ghostty, feh, nerdfonts, nodejs (magenta border)
+- **Extras Dashboard**: fastfetch, glow, go, gum, python_uv, vhs, zsh (cyan border)
+- **Boot Diagnostics**: System issue detection and fixes
+
+### Go TUI Features (Phase 4)
+- **Data-Driven Registry**: Tool definitions in `tui/internal/registry/`
+- **Status Caching**: 5-minute TTL reduces script execution overhead
+- **Parallel Status Checks**: All 12 tools checked concurrently
+- **Real-Time Output**: TailSpinner shows installation progress
+- **Crash Recovery**: Checkpoint-based resume from failures
+
+### Source Code
+The Go TUI source is in `tui/` directory:
+- Registry: `internal/registry/registry.go` (single source of truth)
+- UI: `internal/ui/` (Bubbletea model, views, styles)
+- Executor: `internal/executor/` (script runner with streaming)
 
 ---
 
-**Version**: 1.0
-**Last Updated**: 2025-12-13
+**Version**: 1.1
+**Last Updated**: 2025-12-14

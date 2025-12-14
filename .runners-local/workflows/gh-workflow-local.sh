@@ -495,6 +495,99 @@ simulate_build() {
     end_timer "Build simulation"
 }
 
+# Build Go TUI binary (Phase 4: Modern Go-based installer)
+build_go_tui() {
+    log "STEP" "🔨 Building Go TUI binary..."
+    start_timer
+
+    local tui_dir="$REPO_DIR/tui"
+    local binary_path="$tui_dir/installer"
+
+    # Check if tui directory exists
+    if [ ! -d "$tui_dir" ]; then
+        log "WARNING" "⚠️ Go TUI directory not found at $tui_dir"
+        end_timer "Go TUI build"
+        return 0  # Non-fatal - may be in minimal install
+    fi
+
+    # Check if Go is installed
+    if ! command -v go >/dev/null 2>&1; then
+        log "WARNING" "⚠️ Go not installed, skipping Go TUI build"
+        log "INFO" "💡 Install Go from: https://go.dev/dl/"
+        end_timer "Go TUI build"
+        return 0  # Non-fatal
+    fi
+
+    # Get Go version
+    local go_version
+    go_version=$(go version | grep -oP 'go\d+\.\d+' | head -1)
+    log "INFO" "Using $go_version"
+
+    # Check for existing binary
+    local rebuild_needed=false
+    if [ ! -f "$binary_path" ] || [ ! -x "$binary_path" ]; then
+        log "INFO" "Binary not found, building..."
+        rebuild_needed=true
+    else
+        # Check if source files are newer than binary
+        local newest_source
+        newest_source=$(find "$tui_dir" -name "*.go" -newer "$binary_path" 2>/dev/null | head -1)
+        if [ -n "$newest_source" ]; then
+            log "INFO" "Source files updated, rebuilding..."
+            rebuild_needed=true
+        fi
+    fi
+
+    if [ "$rebuild_needed" = true ]; then
+        # Build the binary
+        log "INFO" "Building Go TUI binary..."
+        cd "$tui_dir" || return 1
+
+        if go build -v -o installer ./cmd/installer 2>&1 | tee -a "$LOG_DIR/go-build-$(date +%s).log"; then
+            if [ -f "$binary_path" ] && [ -x "$binary_path" ]; then
+                local binary_size
+                binary_size=$(du -h "$binary_path" | cut -f1)
+                log "SUCCESS" "✅ Go TUI binary built successfully ($binary_size)"
+
+                # Warn if binary is unusually large
+                local size_bytes
+                size_bytes=$(stat -c%s "$binary_path" 2>/dev/null || echo "0")
+                if [ "$size_bytes" -gt 15728640 ]; then  # > 15MB
+                    log "WARNING" "⚠️ Binary size ($binary_size) exceeds 15MB threshold"
+                fi
+            else
+                log "ERROR" "❌ Build completed but binary not found"
+                cd "$REPO_DIR"
+                end_timer "Go TUI build"
+                return 1
+            fi
+        else
+            log "ERROR" "❌ Go build failed - check log for details"
+            cd "$REPO_DIR"
+            end_timer "Go TUI build"
+            return 1
+        fi
+
+        cd "$REPO_DIR"
+    else
+        local binary_size
+        binary_size=$(du -h "$binary_path" | cut -f1)
+        log "SUCCESS" "✅ Go TUI binary up-to-date ($binary_size)"
+    fi
+
+    # Run go vet for code quality
+    cd "$tui_dir" || return 1
+    log "INFO" "Running go vet..."
+    if go vet ./... 2>&1; then
+        log "SUCCESS" "✅ go vet passed"
+    else
+        log "WARNING" "⚠️ go vet found issues"
+    fi
+    cd "$REPO_DIR"
+
+    end_timer "Go TUI build"
+}
+
 # GitHub Actions status check
 check_github_status() {
     log "STEP" "🐙 Checking GitHub Actions status..."
@@ -610,6 +703,7 @@ run_complete_workflow() {
     local failed_steps=0
 
     # Run all workflow steps
+    build_go_tui || ((failed_steps++))    # Phase 4: Build Go TUI binary
     validate_config || ((failed_steps++))
     validate_icons || ((failed_steps++))  # Icon cache validation with auto-fix
     validate_context7 || ((failed_steps++))  # Priority 3 Enhancement: Context7 MCP validation
@@ -760,10 +854,11 @@ show_help() {
     echo "  context7    Validate with Context7 MCP best practices (Priority 3)"
     echo "  test        Run performance tests"
     echo "  build       Simulate build process"
+    echo "  go-tui      Build Go TUI binary (Phase 4)"
     echo "  status      Check GitHub Actions status"
     echo "  billing     Check GitHub Actions billing"
     echo "  pages       Simulate GitHub Pages setup"
-    echo "  all         Run complete workflow (validate + icons + context7 + test + build + status + billing + pages)"
+    echo "  all         Run complete workflow (go-tui + validate + icons + context7 + test + build + status + billing + pages)"
     echo "  help        Show this help message"
     echo ""
     echo "Examples:"
@@ -804,6 +899,9 @@ main() {
             ;;
         "build")
             simulate_build
+            ;;
+        "go-tui")
+            build_go_tui
             ;;
         "status")
             check_github_status

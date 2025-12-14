@@ -11,6 +11,10 @@ var (
 	ColorError     = lipgloss.Color("196") // Red
 	ColorMuted     = lipgloss.Color("240") // Gray
 	ColorHighlight = lipgloss.Color("39")  // Cyan
+	ColorExtras    = lipgloss.Color("99")  // Cyan for extras dashboard
+	ColorCritical  = lipgloss.Color("196") // Red for critical issues
+	ColorModerate  = lipgloss.Color("214") // Orange for moderate issues
+	ColorLow       = lipgloss.Color("240") // Gray for low-priority issues
 )
 
 // Nerd Font icons
@@ -23,6 +27,8 @@ const (
 	IconGear      = "\uf013" //
 	IconWrench    = "\uf0ad" //
 	IconWarning   = "\uf071" //
+	IconCircle    = "\uf111" //  (for low severity)
+	IconInfo      = "\uf05a" //  (for info)
 )
 
 // Style definitions
@@ -112,6 +118,39 @@ var (
 			BorderForeground(ColorWarning).
 			Foreground(ColorWarning).
 			Padding(0, 1)
+
+	// Extras dashboard styles (cyan border)
+	ExtrasBoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(ColorExtras).
+			Padding(0, 1)
+
+	ExtrasHeaderStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(ColorExtras).
+				Border(lipgloss.DoubleBorder()).
+				BorderForeground(ColorExtras).
+				Padding(1, 4).
+				Margin(1, 2)
+
+	// Diagnostics severity styles
+	SeverityCriticalStyle = lipgloss.NewStyle().
+				Foreground(ColorCritical).
+				Bold(true)
+
+	SeverityModerateStyle = lipgloss.NewStyle().
+				Foreground(ColorModerate)
+
+	SeverityLowStyle = lipgloss.NewStyle().
+				Foreground(ColorLow)
+
+	// Diagnostics issue styles
+	IssueFixableStyle = lipgloss.NewStyle().
+				Foreground(ColorSuccess).
+				Bold(true)
+
+	IssueNotFixableStyle = lipgloss.NewStyle().
+				Foreground(ColorMuted)
 )
 
 // GetStatusStyle returns the appropriate style for a status string

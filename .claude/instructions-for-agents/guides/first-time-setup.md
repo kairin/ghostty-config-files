@@ -67,12 +67,20 @@ cd ghostty-config-files
 ```
 
 **What Gets Installed:**
-- Ghostty (via Snap package - official distribution)
+- Ghostty (via official .deb package)
 - ZSH with Oh My ZSH framework
 - Node.js (latest) via fnm
 - AI tools (Claude Code, Gemini CLI)
 - Context menu integration
 - Daily update automation
+
+**Modern Go TUI Dashboard:**
+The installation is managed through a modern Go-based TUI (`tui/installer`) which provides:
+- Real-time installation progress with TailSpinner
+- Parallel status checking (all 12 tools at once)
+- Crash recovery with checkpoint-based resume
+- Two dashboards: Main (4 tools) and Extras (7 tools)
+- Boot diagnostics with auto-fix capabilities
 
 ### 3. Verify Installation
 

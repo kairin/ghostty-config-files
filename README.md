@@ -16,6 +16,7 @@ cd ghostty-config-files
 
 ## Features
 
+- **Modern Go TUI** - Bubbletea-powered dashboard with parallel status checks and crash recovery
 - **Ghostty Terminal v1.2.3+** - Fast .deb installation (~2 min) with CGroup optimization
 - **Boot Diagnostics** - Automated detection and one-click fixes for system boot issues
 - **AI Integration** - Claude Code, Gemini CLI with fnm Node.js management
