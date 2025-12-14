@@ -33,14 +33,12 @@ const (
 
 // Style definitions
 var (
-	// Header styles
+	// Header styles (compact - no border for space efficiency)
 	HeaderStyle = lipgloss.NewStyle().
 			Bold(true).
 			Foreground(ColorPrimary).
-			Border(lipgloss.DoubleBorder()).
-			BorderForeground(ColorPrimary).
-			Padding(1, 4).
-			Margin(1, 2)
+			MarginTop(1).
+			MarginBottom(1)
 
 	// Dashboard table styles
 	TableHeaderStyle = lipgloss.NewStyle().
@@ -125,13 +123,12 @@ var (
 			BorderForeground(ColorExtras).
 			Padding(0, 1)
 
+	// Extras header (compact - no border for space efficiency)
 	ExtrasHeaderStyle = lipgloss.NewStyle().
 				Bold(true).
 				Foreground(ColorExtras).
-				Border(lipgloss.DoubleBorder()).
-				BorderForeground(ColorExtras).
-				Padding(1, 4).
-				Margin(1, 2)
+				MarginTop(1).
+				MarginBottom(1)
 
 	// Diagnostics severity styles
 	SeverityCriticalStyle = lipgloss.NewStyle().

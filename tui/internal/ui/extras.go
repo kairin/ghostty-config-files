@@ -152,10 +152,8 @@ func (m ExtrasModel) Update(msg tea.Msg) (ExtrasModel, tea.Cmd) {
 func (m ExtrasModel) View() string {
 	var b strings.Builder
 
-	// Header with cyan styling
-	header := ExtrasHeaderStyle.Render(
-		"Extras Tools\n7 Additional Tools",
-	)
+	// Header (compact single line with cyan styling)
+	header := ExtrasHeaderStyle.Render("Extras Tools • 7 Additional Tools")
 	b.WriteString(header)
 	b.WriteString("\n\n")
 
