@@ -27,9 +27,9 @@ const (
 // DiagnosticsModel manages the boot diagnostics view
 type DiagnosticsModel struct {
 	// State
-	state     DiagnosticsState
-	issues    []*diagnostics.Issue
-	grouped   map[diagnostics.IssueSeverity][]*diagnostics.Issue
+	state   DiagnosticsState
+	issues  []*diagnostics.Issue
+	grouped map[diagnostics.IssueSeverity][]*diagnostics.Issue
 
 	// Selection
 	cursor   int
@@ -39,8 +39,8 @@ type DiagnosticsModel struct {
 	cacheStore *diagnostics.CacheStore
 
 	// Fixer
-	fixer      *diagnostics.Fixer
-	fixResult  *diagnostics.BatchFixResult
+	fixer     *diagnostics.Fixer
+	fixResult *diagnostics.BatchFixResult
 
 	// Components
 	spinner spinner.Model
@@ -55,8 +55,8 @@ type DiagnosticsModel struct {
 	height int
 
 	// Scan metadata
-	lastScan   time.Time
-	scanError  error
+	lastScan  time.Time
+	scanError error
 }
 
 // NewDiagnosticsModel creates a new diagnostics model

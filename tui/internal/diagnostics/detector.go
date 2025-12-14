@@ -136,11 +136,11 @@ func GetMissingDetectors(repoRoot string) []string {
 
 // ScanResult holds the complete scan result
 type ScanResult struct {
-	Issues      []*Issue
-	Errors      []error
-	ScanTime    time.Time
-	Duration    time.Duration
-	ScriptsRan  int
+	Issues        []*Issue
+	Errors        []error
+	ScanTime      time.Time
+	Duration      time.Duration
+	ScriptsRan    int
 	ScriptsFailed int
 }
 

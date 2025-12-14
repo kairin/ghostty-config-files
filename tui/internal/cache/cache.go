@@ -8,12 +8,14 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 const (
 	CacheDir   = ".cache/ghostty-installer"
-	StatusTTL  = 5 * time.Minute  // Dashboard refresh
-	VersionTTL = 24 * time.Hour   // Latest version checks
+	StatusTTL  = 5 * time.Minute // Dashboard refresh
+	VersionTTL = 24 * time.Hour  // Latest version checks
 )
 
 // ToolStatus represents the cached status of a tool
@@ -38,8 +40,29 @@ func (s *ToolStatus) NeedsUpdate() bool {
 	if !s.IsInstalled() || s.LatestVer == "" || s.LatestVer == "-" {
 		return false
 	}
-	// Simple string comparison - in production, use semver
-	return s.Version != s.LatestVer && s.LatestVer > s.Version
+	if s.Version == "" || s.Version == "-" {
+		return false
+	}
+
+	// Use semver for proper version comparison
+	current, err := semver.NewVersion(normalizeVersion(s.Version))
+	if err != nil {
+		// Fallback to string comparison for non-semver versions
+		return s.Version != s.LatestVer
+	}
+
+	latest, err := semver.NewVersion(normalizeVersion(s.LatestVer))
+	if err != nil {
+		// Fallback to string comparison for non-semver versions
+		return s.Version != s.LatestVer
+	}
+
+	return latest.GreaterThan(current)
+}
+
+// normalizeVersion strips leading 'v' prefix if present
+func normalizeVersion(v string) string {
+	return strings.TrimPrefix(v, "v")
 }
 
 // StatusCache manages cached tool statuses
@@ -159,11 +182,22 @@ func ParseCheckOutput(toolID string, output string) *ToolStatus {
 	output = strings.TrimSpace(output)
 	parts := strings.Split(output, "|")
 
+	// Handle partial output gracefully - preserve available information
 	if len(parts) < 5 {
-		return &ToolStatus{
-			ID:     toolID,
-			Status: "Unknown",
+		status := &ToolStatus{ID: toolID, Status: "Unknown"}
+		if len(parts) > 0 && parts[0] != "" {
+			status.Status = parts[0]
 		}
+		if len(parts) > 1 {
+			status.Version = parts[1]
+		}
+		if len(parts) > 2 {
+			status.Method = parts[2]
+		}
+		if len(parts) > 3 {
+			status.Location = parts[3]
+		}
+		return status
 	}
 
 	status := &ToolStatus{

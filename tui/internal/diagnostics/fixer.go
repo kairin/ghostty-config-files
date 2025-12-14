@@ -14,20 +14,20 @@ const FixTimeout = 60 * time.Second
 
 // FixResult represents the result of a single fix attempt
 type FixResult struct {
-	Issue     *Issue
-	Success   bool
-	Output    string
-	Error     error
-	Duration  time.Duration
+	Issue    *Issue
+	Success  bool
+	Output   string
+	Error    error
+	Duration time.Duration
 }
 
 // BatchFixResult represents the results of a batch fix operation
 type BatchFixResult struct {
-	UserLevel  []FixResult
-	SudoLevel  []FixResult
-	TotalFixed int
+	UserLevel   []FixResult
+	SudoLevel   []FixResult
+	TotalFixed  int
 	TotalFailed int
-	Duration   time.Duration
+	Duration    time.Duration
 	NeedsReboot bool
 }
 

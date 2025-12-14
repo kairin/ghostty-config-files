@@ -15,12 +15,12 @@ import (
 
 // StageProgress represents progress through a pipeline stage
 type StageProgress struct {
-	Stage     PipelineStage
-	Complete  bool
-	Success   bool
-	Duration  time.Duration
-	Error     error
-	ExitCode  int
+	Stage    PipelineStage
+	Complete bool
+	Success  bool
+	Duration time.Duration
+	Error    error
+	ExitCode int
 }
 
 // PipelineConfig holds configuration for pipeline execution
@@ -46,9 +46,9 @@ type Pipeline struct {
 	tool       *registry.Tool
 
 	// Cancellation
-	mu       sync.Mutex
-	cancel   context.CancelFunc
-	running  bool
+	mu      sync.Mutex
+	cancel  context.CancelFunc
+	running bool
 
 	// Output channels
 	outputChan   chan OutputLine
@@ -258,9 +258,9 @@ func (p *Pipeline) GetCheckpoint() (*StateCheckpoint, error) {
 type ErrorSeverity int
 
 const (
-	ErrorInfo     ErrorSeverity = iota // Continue without warning
-	ErrorWarn                          // Log warning, continue
-	ErrorFatal                         // Stop pipeline, save checkpoint
+	ErrorInfo  ErrorSeverity = iota // Continue without warning
+	ErrorWarn                       // Log warning, continue
+	ErrorFatal                      // Stop pipeline, save checkpoint
 )
 
 // classifyError determines error severity based on stage and exit code

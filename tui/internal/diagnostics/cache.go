@@ -22,19 +22,19 @@ const (
 
 // DiagnosticsCache holds cached scan results
 type DiagnosticsCache struct {
-	Version   int       `json:"version"`
-	Timestamp time.Time `json:"timestamp"`
-	BootID    string    `json:"boot_id"`
-	Issues    []*Issue  `json:"issues"`
+	Version      int           `json:"version"`
+	Timestamp    time.Time     `json:"timestamp"`
+	BootID       string        `json:"boot_id"`
+	Issues       []*Issue      `json:"issues"`
 	ScanDuration time.Duration `json:"scan_duration"`
 }
 
 // CacheStore manages the diagnostics cache
 type CacheStore struct {
-	mu       sync.RWMutex
-	baseDir  string
-	cached   *DiagnosticsCache
-	bootID   string
+	mu      sync.RWMutex
+	baseDir string
+	cached  *DiagnosticsCache
+	bootID  string
 }
 
 // NewCacheStore creates a new cache store
