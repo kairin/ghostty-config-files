@@ -38,10 +38,10 @@ else
     echo "NOT INSTALLED"
 fi
 
-# Check GitHub Copilot CLI
+# Check GitHub Copilot CLI (npm package @github/copilot)
 echo -n "GitHub Copilot: "
-if command -v gh &> /dev/null && gh extension list 2>/dev/null | grep -q "copilot"; then
-    VER=$(gh copilot --version 2>/dev/null | head -n 1 || echo "installed")
+if command -v copilot &> /dev/null; then
+    VER=$(copilot --version 2>/dev/null | head -n 1 || echo "installed")
     echo "INSTALLED ($VER)"
     ((INSTALLED++))
 else
@@ -56,13 +56,38 @@ if [[ $INSTALLED -eq 0 ]]; then
 fi
 
 echo ""
+echo "PATH verification:"
+if echo "$PATH" | grep -q "$HOME/.local/bin"; then
+    echo "  ✓ $HOME/.local/bin is in PATH"
+else
+    echo "  ✗ WARNING: $HOME/.local/bin NOT in current PATH"
+    echo "    This will be fixed after reloading your shell"
+fi
+
+# Check each tool's availability
+for cmd in claude gemini copilot; do
+    if [ -x "$HOME/.local/bin/$cmd" ] || [ -L "$HOME/.local/bin/$cmd" ]; then
+        if command -v $cmd &> /dev/null; then
+            echo "  ✓ $cmd: accessible via PATH"
+        else
+            echo "  ⚠ $cmd: installed but NOT in current PATH (reload shell)"
+        fi
+    elif command -v $cmd &> /dev/null; then
+        echo "  ✓ $cmd: accessible via PATH"
+    fi
+done
+
+echo ""
 echo "Configuration hints:"
 if command -v claude &> /dev/null; then
     echo "  Claude: Run 'claude' to authenticate with Anthropic"
+elif [ -L "$HOME/.local/bin/claude" ]; then
+    echo "  Claude: Installed at $HOME/.local/bin/claude"
+    echo "          Reload shell to use 'claude' command"
 fi
 if command -v gemini &> /dev/null; then
     echo "  Gemini: Export GOOGLE_API_KEY in your shell profile"
 fi
-if command -v gh &> /dev/null && gh extension list 2>/dev/null | grep -q "copilot"; then
-    echo "  Copilot: Run 'gh auth login' then 'gh copilot suggest'"
+if command -v copilot &> /dev/null; then
+    echo "  Copilot: Run 'copilot' and use /login to authenticate with GitHub"
 fi

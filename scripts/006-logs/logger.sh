@@ -37,7 +37,7 @@ log() {
 }
 
 # Ensure log is initialized
-if [ -z "$LOG_FILE" ]; then
+if [ -z "${LOG_FILE:-}" ]; then
     init_log
 fi
 
@@ -180,4 +180,50 @@ auto_fix_icon_cache() {
     fi
 
     return 0
+}
+
+# =============================================================================
+# Shell Environment Utilities
+# =============================================================================
+
+# Display shell reload instructions (for tools that modify PATH/environment)
+# Usage: show_shell_reload_instructions
+show_shell_reload_instructions() {
+    local shell_config="$HOME/.zshrc"
+    if [ -f "$HOME/.bashrc" ]; then shell_config="$HOME/.bashrc"; fi
+
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  IMPORTANT: Reload your shell to use the new commands"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  Option 1 (recommended): Open a NEW terminal tab/window"
+    echo "  Option 2: Restart current shell: exec zsh"
+    echo "  Option 3: Reload configuration: source $shell_config"
+    echo ""
+}
+
+# Check if a command will be available after shell reload
+# Usage: check_command_in_path_after_reload "claude" "$HOME/.local/bin/claude"
+check_command_in_path_after_reload() {
+    local cmd_name="$1"
+    local cmd_path="$2"
+
+    # Check if command is already in PATH
+    if command -v "$cmd_name" &> /dev/null; then
+        return 0  # Already accessible
+    fi
+
+    # Check if binary exists at expected location
+    if [ -x "$cmd_path" ] || [ -L "$cmd_path" ]; then
+        # Check if .zshrc/.bashrc configures PATH correctly
+        local shell_config="$HOME/.zshrc"
+        if [ -f "$HOME/.bashrc" ]; then shell_config="$HOME/.bashrc"; fi
+
+        if grep -q "$HOME/.local/bin" "$shell_config" 2>/dev/null; then
+            return 0  # Will be available after reload
+        fi
+    fi
+
+    return 1  # Not found or PATH not configured
 }
