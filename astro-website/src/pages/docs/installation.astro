@@ -67,19 +67,29 @@ import DocsLayout from '../../components/layout/DocsLayout.astro';
   </div>
 
   <h3>4. Follow the Interactive Menu</h3>
-  <p>The installer provides a TUI menu to select what you want to install:</p>
+  <p>The installer provides a modern Go-based TUI dashboard to manage your tools:</p>
 
   <div class="mockup-window border border-base-300 not-prose my-6">
     <div class="bg-base-200 px-4 py-8 font-mono text-sm">
-      <p class="text-primary">╭─────────────────────────────────────╮</p>
-      <p class="text-primary">│   Ghostty Config Files Installer    │</p>
-      <p class="text-primary">╰─────────────────────────────────────╯</p>
-      <p class="mt-4">Select components to install:</p>
-      <p class="mt-2">  <span class="text-success">▸</span> [x] Ghostty Terminal</p>
-      <p>  <span class="text-base-content/50">▸</span> [x] ZSH + Oh My ZSH</p>
-      <p>  <span class="text-base-content/50">▸</span> [x] Nerd Fonts</p>
-      <p>  <span class="text-base-content/50">▸</span> [ ] AI Tools (Claude, Gemini)</p>
-      <p>  <span class="text-base-content/50">▸</span> [x] CLI Utilities</p>
+      <p class="text-primary">╭───────────────────────────────────────────────────────────────────────────╮</p>
+      <p class="text-primary">│                          System Installer                                  │</p>
+      <p class="text-primary">├───────────────────────────────────────────────────────────────────────────┤</p>
+      <p class="mt-2">│ APP            STATUS      VERSION       LATEST         METHOD          │</p>
+      <p>│ ─────────────────────────────────────────────────────────────────────── │</p>
+      <p>│ Feh            <span class="text-success">✓ OK</span>       0.28.1        -              APT             │</p>
+      <p>│ Ghostty        <span class="text-success">✓ OK</span>       1.2.3+tip     v1.2.3         Source          │</p>
+      <p>│ Nerd Fonts     <span class="text-warning">↑ Update</span>   3.3.0         v3.4.0         GitHub          │</p>
+      <p>│ Node.js        <span class="text-success">✓ OK</span>       v22.16.0      v22.16.0       fnm             │</p>
+      <p>│ Local AI Tools <span class="text-success">✓ OK</span>       detected      -              npm             │</p>
+      <p class="text-primary">╰───────────────────────────────────────────────────────────────────────────╯</p>
+      <p class="mt-4">Choose:</p>
+      <p class="mt-2">  <span class="text-success">▸</span> Feh</p>
+      <p>  <span class="text-base-content/50"> </span> Ghostty</p>
+      <p>  <span class="text-base-content/50"> </span> Nerd Fonts</p>
+      <p>  <span class="text-base-content/50"> </span> Node.js</p>
+      <p>  <span class="text-base-content/50"> </span> Local AI Tools</p>
+      <p>  <span class="text-base-content/50"> </span> Extras →</p>
+      <p>  <span class="text-base-content/50"> </span> Boot Diagnostics</p>
     </div>
   </div>
 
