@@ -11,8 +11,6 @@ last-updated: 2025-11-21
 [← Back to AGENTS.md](../../../../AGENTS.md)
 
 **Related Sections**:
-- [Local CI/CD Guide](./local-cicd-guide.md) - Workflow operations
-- [Update Management](./update-management.md) - Keeping system current
 - [Critical Requirements](../requirements/CRITICAL-requirements.md) - Prerequisites
 
 ---
@@ -323,8 +321,7 @@ After installation:
 1. **Read Documentation**: [README.md](../../../../README.md)
 2. **Explore Agents**: [.claude/agents/](../../../agents/)
 3. **Review Commands**: [.claude/commands/](../../../commands/)
-4. **Learn Workflows**: [Local CI/CD Guide](./local-cicd-guide.md)
-5. **Understand Architecture**: [System Architecture](../architecture/system-architecture.md)
+4. **Understand Architecture**: [System Architecture](../architecture/system-architecture.md)
 
 ---
 
