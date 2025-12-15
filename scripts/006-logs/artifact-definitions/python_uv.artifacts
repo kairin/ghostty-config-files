@@ -1,0 +1,10 @@
+# Python uv Package Manager - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# uv binary
+binary:$HOME/.local/bin/uv
+binary:$HOME/.local/bin/uvx
+
+# uv cache and data
+dir:$HOME/.cache/uv

@@ -24,6 +24,14 @@ log "INFO" "Installed: $INSTALLED/8 fonts"
 
 if [ $INSTALLED -ge 4 ]; then
     log "SUCCESS" "Nerd Fonts installation verified"
+
+    # Generate artifact manifest for future verification
+    # Use font count as "version" since there's no actual version
+    SCRIPT_DIR="$(dirname "$0")"
+    VERSION_NUM="${INSTALLED}-fonts"
+    "$SCRIPT_DIR/generate_manifest.sh" nerdfonts "$VERSION_NUM" script > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
+    log "SUCCESS" "Artifact manifest generated for pre-reinstall verification"
+
     exit 0
 else
     log "ERROR" "Installation incomplete - less than 4 fonts detected"

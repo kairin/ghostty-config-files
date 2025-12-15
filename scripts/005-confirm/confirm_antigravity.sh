@@ -71,6 +71,13 @@ if [[ $INSTALLED -eq 1 ]]; then
     echo "To launch:"
     echo "  - Run 'antigravity' from terminal"
     echo "  - Or find 'Google Antigravity' in your application menu"
+
+    # Generate artifact manifest for future verification
+    SCRIPT_DIR="$(dirname "$0")"
+    VERSION_NUM="${VERSION:-unknown}"
+    "$SCRIPT_DIR/generate_manifest.sh" antigravity "$VERSION_NUM" apt > /dev/null 2>&1 && \
+        echo "[SUCCESS] Artifact manifest generated for pre-reinstall verification" || \
+        echo "[WARNING] Failed to generate manifest"
     exit 0
 else
     echo "Google Antigravity is NOT installed."

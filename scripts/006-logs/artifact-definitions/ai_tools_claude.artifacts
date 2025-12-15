@@ -1,0 +1,13 @@
+# Claude Code CLI - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+#
+# Note: Claude is installed via npm (fnm managed)
+# The binary path is dynamic based on the active Node.js version
+
+# Configuration directory
+dir:$HOME/.claude
+
+# npm package location (fnm)
+# Note: The actual binary path varies with node version
+# Use `command -v claude` to resolve at runtime

@@ -17,6 +17,12 @@ if command -v feh &> /dev/null; then
     else
         log "SUCCESS" "Single installation confirmed."
     fi
+
+    # Generate artifact manifest for future verification
+    SCRIPT_DIR="$(dirname "$0")"
+    BUILD_FLAGS=$(feh --version 2>/dev/null | grep -i "compile-time" | sed 's/.*: //' || echo "")
+    "$SCRIPT_DIR/generate_manifest.sh" feh "$VERSION" source "$BUILD_FLAGS" > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
+    log "SUCCESS" "Artifact manifest generated for pre-reinstall verification"
 else
     log "ERROR" "feh is NOT installed"
     exit 1

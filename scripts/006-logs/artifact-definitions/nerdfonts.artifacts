@@ -1,0 +1,9 @@
+# Nerd Fonts - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# User fonts directory
+dir:$HOME/.local/share/fonts
+
+# Font cache
+config:$HOME/.cache/fontconfig

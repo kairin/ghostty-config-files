@@ -1,0 +1,6 @@
+# VHS Terminal Recorder - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# Main binary (installed via apt/charm repo)
+binary:/usr/bin/vhs

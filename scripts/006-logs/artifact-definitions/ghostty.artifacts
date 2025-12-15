@@ -1,0 +1,23 @@
+# Ghostty Terminal Emulator - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# Main binary (installed via zig build)
+binary:$HOME/.local/share/ghostty/bin/ghostty
+
+# Desktop integration
+desktop:/usr/local/share/applications/ghostty.desktop
+
+# Icons
+icon:/usr/local/share/icons/hicolor/16x16/apps/com.mitchellh.ghostty.png
+icon:/usr/local/share/icons/hicolor/32x32/apps/com.mitchellh.ghostty.png
+icon:/usr/local/share/icons/hicolor/48x48/apps/com.mitchellh.ghostty.png
+icon:/usr/local/share/icons/hicolor/128x128/apps/com.mitchellh.ghostty.png
+icon:/usr/local/share/icons/hicolor/256x256/apps/com.mitchellh.ghostty.png
+icon:/usr/local/share/icons/hicolor/scalable/apps/com.mitchellh.ghostty.svg
+
+# User configuration
+config:$HOME/.config/ghostty/config
+
+# Themes directory
+dir:$HOME/.config/ghostty/themes

@@ -1,0 +1,13 @@
+# Go Programming Language - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# Main binaries
+binary:/usr/local/go/bin/go
+binary:/usr/local/go/bin/gofmt
+
+# Go installation directory
+dir:/usr/local/go
+
+# User workspace (GOPATH)
+dir:$HOME/go/bin

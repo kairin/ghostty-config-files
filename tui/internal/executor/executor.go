@@ -7,10 +7,38 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
 )
+
+// ansiRegex matches ANSI escape sequences (colors, cursor movement, etc.)
+var ansiRegex = regexp.MustCompile(`\x1b\[[0-9;]*[a-zA-Z]`)
+
+// sanitizeOutput removes control characters that break TUI display
+// Handles: carriage returns (progress bars), ANSI escape sequences, control chars
+func sanitizeOutput(text string) string {
+	// Handle carriage returns - keep only the last segment after \r
+	// This simulates what a real terminal does (overwrites line)
+	if idx := strings.LastIndex(text, "\r"); idx != -1 {
+		text = text[idx+1:]
+	}
+
+	// Strip ANSI escape sequences (colors, cursor movement)
+	text = ansiRegex.ReplaceAllString(text, "")
+
+	// Remove other control characters except tab and newline
+	var result strings.Builder
+	result.Grow(len(text))
+	for _, r := range text {
+		if r >= 32 || r == '\t' || r == '\n' {
+			result.WriteRune(r)
+		}
+	}
+
+	return result.String()
+}
 
 // OutputLine represents a single line of script output
 type OutputLine struct {
@@ -113,7 +141,7 @@ func RunScript(repoRoot, scriptPath string, env map[string]string) (<-chan Outpu
 				lastLine = line
 				lastLineMu.Unlock()
 				output <- OutputLine{
-					Text:      line,
+					Text:      sanitizeOutput(line),
 					Timestamp: time.Now(),
 					IsError:   false,
 				}
@@ -125,7 +153,7 @@ func RunScript(repoRoot, scriptPath string, env map[string]string) (<-chan Outpu
 			scanner := bufio.NewScanner(stderr)
 			for scanner.Scan() {
 				output <- OutputLine{
-					Text:      scanner.Text(),
+					Text:      sanitizeOutput(scanner.Text()),
 					Timestamp: time.Now(),
 					IsError:   true,
 				}

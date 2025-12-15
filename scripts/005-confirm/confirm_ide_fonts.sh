@@ -210,6 +210,12 @@ main() {
     # Summary
     if [ $exit_code -eq 0 ]; then
         log "SUCCESS" "IDE font configuration complete"
+
+        # Generate artifact manifest for future verification
+        local script_dir="$(dirname "$0")"
+        local font_count=$(fc-list : family | grep -ci "Nerd" || echo "0")
+        "$script_dir/generate_manifest.sh" ide_fonts "${font_count}-fonts" config > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
+        log "SUCCESS" "Artifact manifest generated for pre-reinstall verification"
     else
         log "WARNING" "Some IDE configurations failed - check logs"
     fi

@@ -1,0 +1,25 @@
+# Feh Image Viewer - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+#
+# This file defines all artifacts installed by feh for manifest generation
+
+# Main binary
+binary:/usr/local/bin/feh
+
+# Desktop integration
+desktop:/usr/local/share/applications/feh.desktop
+
+# Man page
+man:/usr/local/share/man/man1/feh.1
+
+# Icons
+icon:/usr/local/share/icons/hicolor/48x48/apps/feh.png
+icon:/usr/local/share/icons/hicolor/scalable/apps/feh.svg
+
+# Shared resources (directories)
+dir:/usr/local/share/feh/fonts
+dir:/usr/local/share/feh/images
+
+# Documentation
+dir:/usr/local/share/doc/feh

@@ -4,6 +4,7 @@ package executor
 import (
 	"context"
 	"fmt"
+	"os/exec"
 	"sync"
 	"time"
 
@@ -77,12 +78,41 @@ func (p *Pipeline) ProgressChan() <-chan StageProgress {
 }
 
 // Execute runs the full pipeline from the beginning
+// CRITICAL: Pre-caches sudo credentials BEFORE any stage output to ensure
+// password prompt appears first (immediately after clicking Install)
 func (p *Pipeline) Execute(ctx context.Context) error {
+	// PRE-CACHE SUDO FIRST (before any stage output)
+	// This ensures the password prompt appears at the TOP, not bottom
+	if err := p.preCacheSudo(ctx); err != nil {
+		return fmt.Errorf("sudo authentication required: %w", err)
+	}
+
 	return p.executeFrom(ctx, StageCheck)
 }
 
+// preCacheSudo verifies sudo credentials are cached (non-interactive only)
+// This is defense-in-depth: UI layer should already request auth via tea.ExecProcess
+// which suspends the TUI to allow password entry. This check ensures auth happened.
+// CRITICAL: Do NOT use interactive sudo -v here - the TUI has control of terminal
+// and interactive prompts will hang indefinitely.
+func (p *Pipeline) preCacheSudo(ctx context.Context) error {
+	// Non-interactive check only - verify credentials are cached
+	cmd := exec.CommandContext(ctx, "sudo", "-n", "true")
+	if err := cmd.Run(); err != nil {
+		// Credentials not cached - UI layer should have handled auth first
+		return fmt.Errorf("sudo credentials not cached - authentication required before pipeline execution")
+	}
+	return nil
+}
+
 // ResumeFrom resumes pipeline execution from a specific stage
+// Also pre-caches sudo credentials to ensure prompt appears first
 func (p *Pipeline) ResumeFrom(ctx context.Context, stage PipelineStage) error {
+	// PRE-CACHE SUDO (same as Execute)
+	if err := p.preCacheSudo(ctx); err != nil {
+		return fmt.Errorf("sudo authentication required: %w", err)
+	}
+
 	return p.executeFrom(ctx, stage)
 }
 

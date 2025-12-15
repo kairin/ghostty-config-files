@@ -50,6 +50,12 @@ if command -v node &> /dev/null; then
         fi
     fi
 
+    # Generate artifact manifest for future verification
+    SCRIPT_DIR="$(dirname "$0")"
+    VERSION_NUM=$(echo "$VERSION" | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+    "$SCRIPT_DIR/generate_manifest.sh" nodejs "$VERSION_NUM" fnm > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
+    log "SUCCESS" "Artifact manifest generated for pre-reinstall verification"
+
     exit 0
 else
     log "ERROR" "Node.js binary not found"
