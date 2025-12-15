@@ -1,0 +1,14 @@
+# AI Tools (Claude Code, Gemini CLI) - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# Claude Code (installed via npm global or npx)
+# Note: Location varies based on fnm/node setup
+binary:$HOME/.local/bin/claude
+
+# Gemini CLI (may be aliased)
+binary:$HOME/.local/bin/gemini
+
+# Configuration directories
+dir:$HOME/.claude
+dir:$HOME/.gemini

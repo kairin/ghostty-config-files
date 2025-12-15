@@ -1,0 +1,13 @@
+# GitHub Copilot CLI - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+#
+# Note: Copilot is installed via npm (nvm managed)
+# The binary path is dynamic based on the active Node.js version
+
+# Configuration directory (GitHub CLI config)
+dir:$HOME/.config/gh
+
+# npm package location (nvm)
+# Note: The actual binary path varies with node version
+# Use `command -v copilot` to resolve at runtime

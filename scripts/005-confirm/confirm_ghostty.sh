@@ -149,3 +149,9 @@ install_nautilus_context_menu() {
 
 log "INFO" "Setting up Nautilus context menu..."
 install_nautilus_context_menu
+
+# Generate artifact manifest for future verification
+SCRIPT_DIR="$(dirname "$0")"
+VERSION_NUM=$(echo "$VERSION" | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+"$SCRIPT_DIR/generate_manifest.sh" ghostty "$VERSION_NUM" source > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
+log "SUCCESS" "Artifact manifest generated for pre-reinstall verification"

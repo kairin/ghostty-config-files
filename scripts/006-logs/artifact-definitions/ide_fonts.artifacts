@@ -1,0 +1,9 @@
+# IDE/Programming Fonts - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# User fonts directory (shared with nerdfonts)
+dir:$HOME/.local/share/fonts
+
+# System fonts directory (if installed system-wide)
+dir:/usr/local/share/fonts

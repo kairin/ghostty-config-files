@@ -1,0 +1,12 @@
+# Zsh Shell - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# Main binary (system installed)
+binary:/usr/bin/zsh
+
+# Oh My Zsh directory
+dir:$HOME/.oh-my-zsh
+
+# User configuration
+config:$HOME/.zshrc

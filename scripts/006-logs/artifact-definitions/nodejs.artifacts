@@ -1,0 +1,9 @@
+# Node.js (via fnm) - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# fnm (Fast Node Manager)
+binary:$HOME/.local/bin/fnm
+
+# fnm data directory
+dir:$HOME/.local/share/fnm

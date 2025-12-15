@@ -91,3 +91,26 @@ fi
 if command -v copilot &> /dev/null; then
     echo "  Copilot: Run 'copilot' and use /login to authenticate with GitHub"
 fi
+
+# Generate separate artifact manifests for each tool
+echo ""
+echo "Generating artifact manifests..."
+SCRIPT_DIR="$(dirname "$0")"
+
+if command -v claude &> /dev/null; then
+    CLAUDE_VER=$(claude --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+    "$SCRIPT_DIR/generate_manifest.sh" ai_tools_claude "$CLAUDE_VER" npm > /dev/null 2>&1 && \
+        echo "  ✓ Claude manifest generated" || echo "  ✗ Claude manifest failed"
+fi
+
+if command -v gemini &> /dev/null; then
+    GEMINI_VER=$(gemini --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+    "$SCRIPT_DIR/generate_manifest.sh" ai_tools_gemini "$GEMINI_VER" npm > /dev/null 2>&1 && \
+        echo "  ✓ Gemini manifest generated" || echo "  ✗ Gemini manifest failed"
+fi
+
+if command -v copilot &> /dev/null; then
+    COPILOT_VER=$(copilot --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
+    "$SCRIPT_DIR/generate_manifest.sh" ai_tools_copilot "$COPILOT_VER" npm > /dev/null 2>&1 && \
+        echo "  ✓ Copilot manifest generated" || echo "  ✗ Copilot manifest failed"
+fi

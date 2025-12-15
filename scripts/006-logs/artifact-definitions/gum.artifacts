@@ -1,0 +1,6 @@
+# Gum TUI Tool - Artifact Definition
+# Format: type:path
+# Types: binary, desktop, man, icon, config, dir
+
+# Main binary (installed via go install)
+binary:$HOME/go/bin/gum

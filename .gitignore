@@ -46,14 +46,8 @@ dist/
 *.tsbuildinfo
 
 # Logs (dual-mode output system)
-# Ignore all log files in logs/ and subdirectories
-logs/**/*.log
-logs/**/*.json
-logs/errors.log
-# Keep directory structure
-!logs/.gitkeep
-!logs/installation/.gitkeep
-!logs/components/.gitkeep
+# Ignore entire logs/ directory (runtime data, not version controlled)
+logs/
 # Global log pattern
 *.log
 
