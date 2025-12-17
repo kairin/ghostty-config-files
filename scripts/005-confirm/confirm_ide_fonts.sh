@@ -94,13 +94,14 @@ configure_antigravity() {
     log "INFO" "Applying Nerd Font configuration..."
 
     local temp_file=$(mktemp)
-    jq --arg tf "'$FONT_CONFIG_TERMINAL'" \
-       --arg ef "'$FONT_CONFIG_EDITOR', monospace" \
+    jq --arg tf "$FONT_CONFIG_TERMINAL" \
+       --arg ef "$FONT_CONFIG_EDITOR, monospace" \
        --argjson ts "$FONT_SIZE_TERMINAL" \
        --argjson es "$FONT_SIZE_EDITOR" \
        '. + {
            "terminal.integrated.fontFamily": $tf,
            "terminal.integrated.fontSize": $ts,
+           "terminal.integrated.fontLigatures.enabled": true,
            "editor.fontFamily": $ef,
            "editor.fontSize": $es,
            "editor.fontLigatures": true
@@ -108,7 +109,7 @@ configure_antigravity() {
 
     if [ $? -eq 0 ] && [ -s "$temp_file" ]; then
         mv "$temp_file" "$settings_file"
-        log "SUCCESS" "Antigravity font configuration applied"
+        log "SUCCESS" "Antigravity font configuration applied (with terminal ligatures)"
         log "INFO" "Terminal font: $FONT_CONFIG_TERMINAL ($FONT_SIZE_TERMINAL pt)"
         log "INFO" "Editor font: $FONT_CONFIG_EDITOR ($FONT_SIZE_EDITOR pt)"
     else
@@ -162,13 +163,14 @@ configure_vscode() {
     log "INFO" "Applying Nerd Font configuration..."
 
     local temp_file=$(mktemp)
-    jq --arg tf "'$FONT_CONFIG_TERMINAL'" \
-       --arg ef "'$FONT_CONFIG_EDITOR', monospace" \
+    jq --arg tf "$FONT_CONFIG_TERMINAL" \
+       --arg ef "$FONT_CONFIG_EDITOR, monospace" \
        --argjson ts "$FONT_SIZE_TERMINAL" \
        --argjson es "$FONT_SIZE_EDITOR" \
        '. + {
            "terminal.integrated.fontFamily": $tf,
            "terminal.integrated.fontSize": $ts,
+           "terminal.integrated.fontLigatures.enabled": true,
            "editor.fontFamily": $ef,
            "editor.fontSize": $es,
            "editor.fontLigatures": true
@@ -176,7 +178,7 @@ configure_vscode() {
 
     if [ $? -eq 0 ] && [ -s "$temp_file" ]; then
         mv "$temp_file" "$settings_file"
-        log "SUCCESS" "VS Code font configuration applied"
+        log "SUCCESS" "VS Code font configuration applied (with terminal ligatures)"
     else
         rm -f "$temp_file"
         log "ERROR" "Failed to apply VS Code configuration"

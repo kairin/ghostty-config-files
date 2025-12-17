@@ -26,6 +26,16 @@ if ! command -v dpkg &> /dev/null; then
     MISSING=1
 fi
 
+# Check jq (required for IDE font configuration)
+if ! command -v jq &> /dev/null; then
+    log "INFO" "Installing jq (required for IDE font configuration)..."
+    if sudo apt-get install -y jq; then
+        log "SUCCESS" "jq installed"
+    else
+        log "WARNING" "Failed to install jq - font configuration may not work"
+    fi
+fi
+
 # Check for common desktop dependencies
 DESKTOP_DEPS="libgtk-3-0 libnotify4 libnss3 libxss1 libxtst6 xdg-utils libatspi2.0-0 libsecret-1-0"
 MISSING_DEPS=""
