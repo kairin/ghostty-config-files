@@ -1,6 +1,8 @@
 #!/bin/bash
 # confirm_antigravity.sh - Verify Google Antigravity installation
 
+source "$(dirname "$0")/../006-logs/logger.sh"
+
 echo "Verifying Google Antigravity installation..."
 echo ""
 
@@ -78,6 +80,16 @@ if [[ $INSTALLED -eq 1 ]]; then
     "$SCRIPT_DIR/generate_manifest.sh" antigravity "$VERSION_NUM" apt > /dev/null 2>&1 && \
         echo "[SUCCESS] Artifact manifest generated for pre-reinstall verification" || \
         echo "[WARNING] Failed to generate manifest"
+
+    # Configure IDE fonts if Nerd Fonts are installed
+    if fc-list : family | grep -qi "Nerd"; then
+        log "INFO" "Configuring Antigravity fonts with Nerd Fonts..."
+        "$SCRIPT_DIR/confirm_ide_fonts.sh" || log "WARNING" "Font configuration failed"
+    else
+        log "INFO" "Nerd Fonts not detected - skipping font configuration"
+        log "INFO" "Install Nerd Fonts first, then run: $SCRIPT_DIR/confirm_ide_fonts.sh"
+    fi
+
     exit 0
 else
     echo "Google Antigravity is NOT installed."
