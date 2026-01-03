@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="How to contribute to the Ghostty Configuration Files project"><meta name="author" content="Development Team"><meta name="generator" content="Astro v5.16.6"><!-- Canonical URL for SEO --><link rel="canonical" href="https://kairin.github.io/ghostty-config-files/developer/contributing/"><!-- Favicon --><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://kairin.github.io/ghostty-config-files/developer/contributing/"><meta property="og:title" content="Contributing Guide"><meta property="og:description" content="How to contribute to the Ghostty Configuration Files project"><!-- Twitter --><meta property="twitter:card" content="summary"><meta property="twitter:url" content="https://kairin.github.io/ghostty-config-files/developer/contributing/"><meta property="twitter:title" content="Contributing Guide"><meta property="twitter:description" content="How to contribute to the Ghostty Configuration Files project"><title>Contributing Guide | Ghostty Configuration Files</title><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.SMhSt8ao.css">
+<style>html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;scroll-behavior:smooth}body{line-height:1.6}pre{padding:1rem;border-radius:.5rem;overflow-x:auto}code{font-family:Courier New,Courier,monospace}a{color:#3b82f6;text-decoration:none}a:hover{text-decoration:underline}
+.prose[data-astro-cid-qcdoy3ig]{max-width:75ch}.prose[data-astro-cid-qcdoy3ig] h1[data-astro-cid-qcdoy3ig]{margin-bottom:1rem;font-size:2.25rem;line-height:2.5rem;font-weight:700;--tw-text-opacity: 1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] h2[data-astro-cid-qcdoy3ig]{margin-top:2rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:600;--tw-text-opacity: 1;color:rgb(134 239 172 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] h3[data-astro-cid-qcdoy3ig]{margin-top:1.5rem;margin-bottom:.75rem;font-size:1.5rem;line-height:2rem;font-weight:600;--tw-text-opacity: 1;color:rgb(187 247 208 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] code[data-astro-cid-qcdoy3ig]{border-radius:.25rem;--tw-bg-opacity: 1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1));padding:.125rem .375rem;font-family:JetBrains Mono,ui-monospace,SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:.875rem;line-height:1.25rem;--tw-text-opacity: 1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] pre[data-astro-cid-qcdoy3ig]{border-width:1px;--tw-border-opacity: 1;border-color:rgb(31 41 55 / var(--tw-border-opacity, 1));--tw-bg-opacity: 1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] pre[data-astro-cid-qcdoy3ig] code[data-astro-cid-qcdoy3ig]{background-color:transparent;--tw-text-opacity: 1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] a[data-astro-cid-qcdoy3ig]{--tw-text-opacity: 1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.prose[data-astro-cid-qcdoy3ig] a[data-astro-cid-qcdoy3ig]:hover{--tw-text-opacity: 1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}
+nav[data-astro-cid-pux6a34n] a[data-astro-cid-pux6a34n]{transition:all .2s ease}.group[data-astro-cid-pux6a34n]:hover .group-hover\:opacity-100[data-astro-cid-pux6a34n]{opacity:1;visibility:visible}
+</style></head> <body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">  <div class="flex min-h-screen" data-astro-cid-qcdoy3ig> <!-- Sidebar Navigation --> <aside class="w-64 bg-gray-900 dark:bg-black text-gray-100 border-r border-gray-800 fixed h-full overflow-y-auto" data-astro-cid-qcdoy3ig> <div class="p-6" data-astro-cid-qcdoy3ig> <h2 class="text-xl font-bold mb-4" data-astro-cid-qcdoy3ig> <a href="/ghostty-config-files/developer" class="hover:text-green-400" data-astro-cid-qcdoy3ig>
+👨‍💻 Developer
+</a> </h2> <nav class="space-y-2" data-astro-cid-qcdoy3ig> <a href="/ghostty-config-files/developer/architecture" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+Architecture
+</a> <a href="/ghostty-config-files/developer/contributing" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+Contributing
+</a> <a href="/ghostty-config-files/developer/testing" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+Testing
+</a> </nav>  <hr class="my-6 border-gray-800" data-astro-cid-qcdoy3ig> <h3 class="text-sm font-semibold mb-2 text-gray-400" data-astro-cid-qcdoy3ig>
+Tech Stack
+</h3> <div class="flex flex-wrap gap-2" data-astro-cid-qcdoy3ig> <span class="text-xs bg-gray-800 px-2 py-1 rounded" data-astro-cid-qcdoy3ig> Bash 5.x+ </span><span class="text-xs bg-gray-800 px-2 py-1 rounded" data-astro-cid-qcdoy3ig> Node.js LTS </span><span class="text-xs bg-gray-800 px-2 py-1 rounded" data-astro-cid-qcdoy3ig> Astro.build </span> </div>  <hr class="my-6 border-gray-800" data-astro-cid-qcdoy3ig> <h3 class="text-sm font-semibold mb-2 text-gray-400" data-astro-cid-qcdoy3ig>
+Other Sections
+</h3> <nav class="space-y-2 text-sm" data-astro-cid-qcdoy3ig> <a href="/ghostty-config-files/user-guide" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+📘 User Guide
+</a> <a href="/ghostty-config-files/ai-guidelines" class="block px-3 py-2 rounded hover:bg-gray-800" data-astro-cid-qcdoy3ig>
+🤖 AI Guidelines
+</a> </nav> </div> </aside> <!-- Main Content --> <main class="flex-1 ml-64 p-8 bg-gray-950 text-gray-100" data-astro-cid-qcdoy3ig> <article class="max-w-4xl mx-auto prose prose-lg prose-invert" data-astro-cid-qcdoy3ig> <h1 data-astro-cid-qcdoy3ig>Contributing Guide</h1>  <nav class="bg-white dark:bg-gray-800 shadow-md" data-astro-cid-pux6a34n> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-astro-cid-pux6a34n> <div class="flex justify-between h-16" data-astro-cid-pux6a34n> <!-- Logo and Home Link --> <div class="flex items-center" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/" class="flex items-center space-x-2 text-xl font-bold hover:text-blue-600" data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👻</span> <span data-astro-cid-pux6a34n>Ghostty Config</span> </a> </div> <!-- Main Navigation --> <div class="hidden md:flex items-center space-x-8" data-astro-cid-pux6a34n> <div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Installation, configuration, and usage </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide/installation" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Usage </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Architecture, contributing, and testing </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer/architecture" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+                    " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Testing </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Guidelines for AI assistants </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </div> <!-- Mobile Menu Button --> <div class="md:hidden flex items-center" data-astro-cid-pux6a34n> <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle mobile menu" data-astro-cid-pux6a34n> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-pux6a34n> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" data-astro-cid-pux6a34n></path> </svg> </button> </div> </div> </div> <!-- Mobile Menu --> <div id="mobile-menu" class="hidden md:hidden" data-astro-cid-pux6a34n> <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 dark:bg-gray-900" data-astro-cid-pux6a34n> <div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <a href="/ghostty-config-files/user-guide/installation" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Usage </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <a href="/ghostty-config-files/developer/architecture" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400
+              " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Testing </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </nav> <script type="module">const e=document.getElementById("mobile-menu-button"),t=document.getElementById("mobile-menu");e&&t&&e.addEventListener("click",()=>{t.classList.toggle("hidden")});</script>  <h1 id="contributing-guide">Contributing Guide</h1>
+<p>Thank you for considering contributing to the Ghostty Configuration Files project!</p>
+<h2 id="quick-start">Quick Start</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># 1. Fork the repository</span></span>
+<span class="line"><span style="color:#6A737D"># 2. Clone your fork</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/YOUR_USERNAME/ghostty-config-files.git</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> ghostty-config-files</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 3. Create feature branch (use timestamp format)</span></span>
+<span class="line"><span style="color:#E1E4E8">DATETIME</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">$(</span><span style="color:#B392F0">date</span><span style="color:#9ECBFF"> +"%Y%m%d-%H%M%S"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#79B8FF"> -b</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$DATETIME</span><span style="color:#9ECBFF">-feat-your-feature"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 4. Make changes</span></span>
+<span class="line"><span style="color:#6A737D"># ... edit files ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 5. Test locally</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/runners/gh-workflow-local.sh</span><span style="color:#9ECBFF"> all</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 6. Commit with attribution</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "feat: Your feature description</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">🤖 Generated with [Claude Code](https://claude.com/claude-code)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9ECBFF">Co-Authored-By: Your Name &#x3C;your@email.com>"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># 7. Push and create PR</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#79B8FF"> -u</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$DATETIME</span><span style="color:#9ECBFF">-feat-your-feature"</span></span>
+<span class="line"><span style="color:#B392F0">gh</span><span style="color:#9ECBFF"> pr</span><span style="color:#9ECBFF"> create</span></span></code></pre>
+<h2 id="branch-strategy">Branch Strategy</h2>
+<ul>
+<li><strong>Format</strong>: <code>YYYYMMDD-HHMMSS-type-description</code></li>
+<li><strong>Types</strong>: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>chore</code></li>
+<li><strong>Never delete branches</strong> without explicit permission</li>
+</ul>
+<h2 id="code-standards">Code Standards</h2>
+<h3 id="bash-scripts">Bash Scripts</h3>
+<ul>
+<li>Follow ShellCheck recommendations</li>
+<li>Use <code>set -euo pipefail</code></li>
+<li>Document all functions</li>
+<li>Include module header</li>
+<li>Write unit tests</li>
+</ul>
+<h3 id="configuration-files">Configuration Files</h3>
+<ul>
+<li>Validate with <code>ghostty +show-config</code></li>
+<li>Preserve user customizations</li>
+<li>Document all changes</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>Use Markdown format</li>
+<li>Follow existing structure</li>
+<li>Include code examples</li>
+<li>Test docs build</li>
+</ul>
+<h2 id="testing-requirements">Testing Requirements</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Run all tests</span></span>
+<span class="line"><span style="color:#B392F0">./local-infra/runners/test-runner.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run ShellCheck</span></span>
+<span class="line"><span style="color:#B392F0">shellcheck</span><span style="color:#9ECBFF"> scripts/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate configuration</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span></code></pre>
+<h2 id="pull-request-process">Pull Request Process</h2>
+<ol>
+<li><strong>Update documentation</strong> if needed</li>
+<li><strong>Add tests</strong> for new features</li>
+<li><strong>Run local CI/CD</strong> before pushing</li>
+<li><strong>Create PR</strong> with descriptive title and body</li>
+<li><strong>Respond to feedback</strong> promptly</li>
+</ol>
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li>Check <a href="architecture.md">Architecture Guide</a></li>
+<li>Review existing code patterns</li>
+<li>Ask questions in issues/PRs</li>
+</ul>  </article> </main> </div>  </body></html> 

@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Complete installation guide for Ghostty Configuration Files on Ubuntu 25.04+"><meta name="author" content="Ghostty Configuration Files Team"><meta name="generator" content="Astro v5.16.6"><!-- Canonical URL for SEO --><link rel="canonical" href="https://kairin.github.io/ghostty-config-files/user-guide/installation/"><!-- Favicon --><link rel="icon" type="image/svg+xml" href="/ghostty-config-files/favicon.svg"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://kairin.github.io/ghostty-config-files/user-guide/installation/"><meta property="og:title" content="Installation Guide"><meta property="og:description" content="Complete installation guide for Ghostty Configuration Files on Ubuntu 25.04+"><!-- Twitter --><meta property="twitter:card" content="summary"><meta property="twitter:url" content="https://kairin.github.io/ghostty-config-files/user-guide/installation/"><meta property="twitter:title" content="Installation Guide"><meta property="twitter:description" content="Complete installation guide for Ghostty Configuration Files on Ubuntu 25.04+"><title>Installation Guide | Ghostty Configuration Files</title><link rel="stylesheet" href="/ghostty-config-files/_astro/_slug_.SMhSt8ao.css">
+<style>html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;scroll-behavior:smooth}body{line-height:1.6}pre{padding:1rem;border-radius:.5rem;overflow-x:auto}code{font-family:Courier New,Courier,monospace}a{color:#3b82f6;text-decoration:none}a:hover{text-decoration:underline}
+.prose[data-astro-cid-thuxdmgm]{max-width:65ch}.prose[data-astro-cid-thuxdmgm] h1[data-astro-cid-thuxdmgm]{margin-bottom:1rem;font-size:2.25rem;line-height:2.5rem;font-weight:700}.prose[data-astro-cid-thuxdmgm] h2[data-astro-cid-thuxdmgm]{margin-top:2rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:600}.prose[data-astro-cid-thuxdmgm] h3[data-astro-cid-thuxdmgm]{margin-top:1.5rem;margin-bottom:.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.prose[data-astro-cid-thuxdmgm] code[data-astro-cid-thuxdmgm]{border-radius:.25rem;--tw-bg-opacity: 1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1));padding:.125rem .375rem;font-size:.875rem;line-height:1.25rem}.prose[data-astro-cid-thuxdmgm] code[data-astro-cid-thuxdmgm]:is(.dark *){--tw-bg-opacity: 1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-thuxdmgm] pre[data-astro-cid-thuxdmgm]{--tw-bg-opacity: 1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-thuxdmgm] pre[data-astro-cid-thuxdmgm]:is(.dark *){--tw-bg-opacity: 1;background-color:rgb(3 7 18 / var(--tw-bg-opacity, 1))}.prose[data-astro-cid-thuxdmgm] pre[data-astro-cid-thuxdmgm] code[data-astro-cid-thuxdmgm]{background-color:transparent}
+nav[data-astro-cid-pux6a34n] a[data-astro-cid-pux6a34n]{transition:all .2s ease}.group[data-astro-cid-pux6a34n]:hover .group-hover\:opacity-100[data-astro-cid-pux6a34n]{opacity:1;visibility:visible}
+</style></head> <body class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">  <div class="flex min-h-screen" data-astro-cid-thuxdmgm> <!-- Sidebar Navigation --> <aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 fixed h-full overflow-y-auto" data-astro-cid-thuxdmgm> <div class="p-6" data-astro-cid-thuxdmgm> <h2 class="text-xl font-bold mb-4" data-astro-cid-thuxdmgm> <a href="/ghostty-config-files/" class="hover:text-blue-600" data-astro-cid-thuxdmgm>
+📘 User Guide
+</a> </h2> <nav class="space-y-2" data-astro-cid-thuxdmgm> <a href="/ghostty-config-files/user-guide/installation" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+Installation
+</a> <a href="/ghostty-config-files/user-guide/configuration" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+Configuration
+</a> <a href="/ghostty-config-files/user-guide/usage" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+Usage
+</a> </nav> <hr class="my-6 border-gray-200 dark:border-gray-700" data-astro-cid-thuxdmgm> <h3 class="text-sm font-semibold mb-2 text-gray-600 dark:text-gray-400" data-astro-cid-thuxdmgm>
+Other Sections
+</h3> <nav class="space-y-2 text-sm" data-astro-cid-thuxdmgm> <a href="/ghostty-config-files/developer" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+👨‍💻 Developer Docs
+</a> <a href="/ghostty-config-files/ai-guidelines" class="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-astro-cid-thuxdmgm>
+🤖 AI Guidelines
+</a> </nav> </div> </aside> <!-- Main Content --> <main class="flex-1 ml-64 p-8" data-astro-cid-thuxdmgm> <article class="max-w-4xl mx-auto prose prose-lg dark:prose-invert" data-astro-cid-thuxdmgm> <h1 data-astro-cid-thuxdmgm>Installation Guide</h1>  <nav class="bg-white dark:bg-gray-800 shadow-md" data-astro-cid-pux6a34n> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-astro-cid-pux6a34n> <div class="flex justify-between h-16" data-astro-cid-pux6a34n> <!-- Logo and Home Link --> <div class="flex items-center" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/" class="flex items-center space-x-2 text-xl font-bold hover:text-blue-600" data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👻</span> <span data-astro-cid-pux6a34n>Ghostty Config</span> </a> </div> <!-- Main Navigation --> <div class="hidden md:flex items-center space-x-8" data-astro-cid-pux6a34n> <div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Installation, configuration, and usage </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide/installation" class="
+                      block px-3 py-2 rounded-md text-sm
+                      bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+                    " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Usage </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Architecture, contributing, and testing </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer/architecture" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Testing </a> </div> </div> </div><div class="relative group" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+                flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium
+                transition-colors
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <!-- Dropdown Menu --> <div class="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10" data-astro-cid-pux6a34n> <div class="p-2" data-astro-cid-pux6a34n> <p class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400" data-astro-cid-pux6a34n> Guidelines for AI assistants </p> <hr class="my-2 border-gray-200 dark:border-gray-700" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                      block px-3 py-2 rounded-md text-sm
+                      hover:bg-gray-100 dark:hover:bg-gray-700
+                    " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </div> <!-- Mobile Menu Button --> <div class="md:hidden flex items-center" data-astro-cid-pux6a34n> <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Toggle mobile menu" data-astro-cid-pux6a34n> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-pux6a34n> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" data-astro-cid-pux6a34n></path> </svg> </button> </div> </div> </div> <!-- Mobile Menu --> <div id="mobile-menu" class="hidden md:hidden" data-astro-cid-pux6a34n> <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 dark:bg-gray-900" data-astro-cid-pux6a34n> <div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/user-guide" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>📘</span> <span data-astro-cid-pux6a34n>User Guide</span> </a> <a href="/ghostty-config-files/user-guide/installation" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400
+              " data-astro-cid-pux6a34n> Installation </a><a href="/ghostty-config-files/user-guide/configuration" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Configuration </a><a href="/ghostty-config-files/user-guide/usage" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Usage </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/developer" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>👨‍💻</span> <span data-astro-cid-pux6a34n>Developer</span> </a> <a href="/ghostty-config-files/developer/architecture" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Architecture </a><a href="/ghostty-config-files/developer/contributing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Contributing </a><a href="/ghostty-config-files/developer/testing" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Testing </a> </div><div class="space-y-1" data-astro-cid-pux6a34n> <a href="/ghostty-config-files/ai-guidelines" class="
+              flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
+              hover:bg-gray-100 dark:hover:bg-gray-700
+            " data-astro-cid-pux6a34n> <span data-astro-cid-pux6a34n>🤖</span> <span data-astro-cid-pux6a34n>AI Guidelines</span> </a> <a href="/ghostty-config-files/ai-guidelines/core-principles" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Core Principles </a><a href="/ghostty-config-files/ai-guidelines/git-strategy" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Git Strategy </a><a href="/ghostty-config-files/ai-guidelines/ci-cd-requirements" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> CI/CD Requirements </a><a href="/ghostty-config-files/ai-guidelines/development-commands" class="
+                block pl-11 pr-3 py-2 rounded-md text-sm
+                hover:bg-gray-100 dark:hover:bg-gray-700
+              " data-astro-cid-pux6a34n> Development Commands </a> </div> </div> </div> </nav> <script type="module">const e=document.getElementById("mobile-menu-button"),t=document.getElementById("mobile-menu");e&&t&&e.addEventListener("click",()=>{t.classList.toggle("hidden")});</script>  <h1 id="installation-guide">Installation Guide</h1>
+<p>Welcome to the Ghostty Configuration Files installation guide. This guide will walk you through installing and setting up your complete Ghostty terminal environment on Ubuntu 25.04+.</p>
+<h2 id="quick-start">Quick Start</h2>
+<p>For a fresh Ubuntu installation, use the one-command setup:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> /home/kkk/Apps/ghostty-config-files</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span></span></code></pre>
+<p>This will install:</p>
+<ul>
+<li>Ghostty terminal emulator (built from source)</li>
+<li>ZSH with Oh My ZSH</li>
+<li>Node.js LTS (via NVM)</li>
+<li>Context menu integration (“Open in Ghostty”)</li>
+<li>AI tools (Claude Code, Gemini CLI)</li>
+<li>All configuration and optimizations</li>
+</ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="system-requirements">System Requirements</h3>
+<ul>
+<li><strong>OS</strong>: Ubuntu 25.04+ (or compatible Debian-based distribution)</li>
+<li><strong>Architecture</strong>: x86_64 (amd64)</li>
+<li><strong>Shell</strong>: Bash 5.x+ (default on Ubuntu 25.04)</li>
+<li><strong>Disk Space</strong>: ~2GB for full installation</li>
+<li><strong>Memory</strong>: 2GB+ RAM recommended</li>
+</ul>
+<h3 id="required-packages">Required Packages</h3>
+<p>The installation script will automatically install required dependencies:</p>
+<ul>
+<li>Build tools (gcc, make, pkg-config, cmake)</li>
+<li>Zig compiler (0.14.0) for Ghostty compilation</li>
+<li>Git for repository management</li>
+<li>curl/wget for downloads</li>
+</ul>
+<h2 id="installation-methods">Installation Methods</h2>
+<h3 id="method-1-automated-installation-recommended">Method 1: Automated Installation (Recommended)</h3>
+<p>The simplest method - one command does everything:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Clone the repository</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/your-username/ghostty-config-files.git</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> ghostty-config-files</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run automated installation</span></span>
+<span class="line"><span style="color:#B392F0">./start.sh</span></span></code></pre>
+<p><strong>What this does</strong>:</p>
+<ol>
+<li>Checks for required dependencies</li>
+<li>Installs Node.js LTS via NVM</li>
+<li>Installs Zig compiler 0.14.0</li>
+<li>Builds Ghostty from source</li>
+<li>Configures ZSH with Oh My ZSH</li>
+<li>Installs context menu integration</li>
+<li>Applies all optimizations</li>
+<li>Sets up AI tools</li>
+</ol>
+<h3 id="method-2-using-managesh-new-unified-interface">Method 2: Using manage.sh (New Unified Interface)</h3>
+<p>For more control over what gets installed:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install everything</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Install with specific components</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-node</span><span style="color:#6A737D">      # Skip Node.js</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-zig</span><span style="color:#6A737D">       # Skip Zig</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-ghostty</span><span style="color:#6A737D">   # Skip Ghostty build</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-zsh</span><span style="color:#6A737D">       # Skip ZSH setup</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-theme</span><span style="color:#6A737D">     # Skip theme configuration</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --skip-context-menu</span><span style="color:#6A737D">  # Skip context menu</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Dry run to see what would be installed</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --dry-run</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Force reinstallation</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --force</span></span></code></pre>
+<h3 id="method-3-manual-component-installation">Method 3: Manual Component Installation</h3>
+<p>For advanced users who want full control:</p>
+<h4 id="step-1-install-nodejs">Step 1: Install Node.js</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Using NVM (recommended)</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -o-</span><span style="color:#9ECBFF"> https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> bash</span></span>
+<span class="line"><span style="color:#79B8FF">source</span><span style="color:#9ECBFF"> ~/.bashrc</span></span>
+<span class="line"><span style="color:#B392F0">nvm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --lts</span></span>
+<span class="line"><span style="color:#B392F0">nvm</span><span style="color:#9ECBFF"> use</span><span style="color:#79B8FF"> --lts</span></span></code></pre>
+<h4 id="step-2-install-zig-compiler">Step 2: Install Zig Compiler</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Download and install Zig 0.14.0</span></span>
+<span class="line"><span style="color:#B392F0">wget</span><span style="color:#9ECBFF"> https://ziglang.org/download/0.14.0/zig-linux-x86_64-0.14.0.tar.xz</span></span>
+<span class="line"><span style="color:#B392F0">tar</span><span style="color:#79B8FF"> -xf</span><span style="color:#9ECBFF"> zig-linux-x86_64-0.14.0.tar.xz</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> mv</span><span style="color:#9ECBFF"> zig-linux-x86_64-0.14.0</span><span style="color:#9ECBFF"> /usr/local/zig-0.14.0</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> ln</span><span style="color:#79B8FF"> -s</span><span style="color:#9ECBFF"> /usr/local/zig-0.14.0/zig</span><span style="color:#9ECBFF"> /usr/local/bin/zig</span></span></code></pre>
+<h4 id="step-3-build-ghostty">Step 3: Build Ghostty</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Clone Ghostty repository</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> clone</span><span style="color:#9ECBFF"> https://github.com/ghostty-org/ghostty.git</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> ghostty</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Build with Zig</span></span>
+<span class="line"><span style="color:#B392F0">zig</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -Doptimize=ReleaseFast</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Install binary</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> cp</span><span style="color:#9ECBFF"> zig-out/bin/ghostty</span><span style="color:#9ECBFF"> /usr/local/bin/</span></span></code></pre>
+<h4 id="step-4-install-configuration">Step 4: Install Configuration</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Copy Ghostty configuration</span></span>
+<span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> ~/.config/ghostty</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> configs/ghostty/config</span><span style="color:#9ECBFF"> ~/.config/ghostty/</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> configs/ghostty/</span><span style="color:#79B8FF">*</span><span style="color:#9ECBFF">.conf</span><span style="color:#9ECBFF"> ~/.config/ghostty/</span></span></code></pre>
+<h4 id="step-5-setup-zsh">Step 5: Setup ZSH</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install ZSH</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> zsh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Install Oh My ZSH</span></span>
+<span class="line"><span style="color:#B392F0">sh</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -fsSL</span><span style="color:#9ECBFF"> https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Set as default shell</span></span>
+<span class="line"><span style="color:#B392F0">chsh</span><span style="color:#79B8FF"> -s</span><span style="color:#E1E4E8"> $(</span><span style="color:#79B8FF">which</span><span style="color:#9ECBFF"> zsh</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<h4 id="step-6-context-menu-integration">Step 6: Context Menu Integration</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./scripts/install_context_menu.sh</span></span></code></pre>
+<h2 id="post-installation">Post-Installation</h2>
+<h3 id="verify-installation">Verify Installation</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check Ghostty version</span></span>
+<span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#79B8FF"> --version</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Validate configuration</span></span>
+<span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#9ECBFF"> +show-config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check system status</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> validate</span></span></code></pre>
+<h3 id="first-launch">First Launch</h3>
+<ol>
+<li>Open Ghostty terminal</li>
+<li>Verify theme is applied (Catppuccin)</li>
+<li>Test context menu: Right-click folder → “Open in Ghostty”</li>
+<li>Verify shell integration (auto-complete, directory tracking)</li>
+</ol>
+<h3 id="configure-ai-tools-optional">Configure AI Tools (Optional)</h3>
+<h4 id="claude-code">Claude Code</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install Claude Code CLI</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @anthropic-ai/claude-code</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Authenticate</span></span>
+<span class="line"><span style="color:#B392F0">claude</span><span style="color:#9ECBFF"> auth</span><span style="color:#9ECBFF"> login</span></span></code></pre>
+<h4 id="gemini-cli">Gemini CLI</h4>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install Gemini CLI</span></span>
+<span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> -g</span><span style="color:#9ECBFF"> @google/generative-ai-cli</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Authenticate with API key</span></span>
+<span class="line"><span style="color:#B392F0">gemini-cli</span><span style="color:#9ECBFF"> auth</span></span></code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="ghostty-build-fails">Ghostty Build Fails</h3>
+<p><strong>Issue</strong>: Zig compilation errors</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Ensure correct Zig version</span></span>
+<span class="line"><span style="color:#B392F0">zig</span><span style="color:#9ECBFF"> version</span><span style="color:#6A737D">  # Should be 0.14.0</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Clean and rebuild</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> ghostty</span></span>
+<span class="line"><span style="color:#B392F0">rm</span><span style="color:#79B8FF"> -rf</span><span style="color:#9ECBFF"> zig-cache</span><span style="color:#9ECBFF"> zig-out</span></span>
+<span class="line"><span style="color:#B392F0">zig</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -Doptimize=ReleaseFast</span></span></code></pre>
+<h3 id="configuration-not-applied">Configuration Not Applied</h3>
+<p><strong>Issue</strong>: Ghostty ignores configuration</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Validate configuration syntax</span></span>
+<span class="line"><span style="color:#B392F0">ghostty</span><span style="color:#9ECBFF"> +show-config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check file permissions</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> ~/.config/ghostty/config</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Reset to defaults</span></span>
+<span class="line"><span style="color:#B392F0">cp</span><span style="color:#9ECBFF"> configs/ghostty/config</span><span style="color:#9ECBFF"> ~/.config/ghostty/config</span></span></code></pre>
+<h3 id="context-menu-missing">Context Menu Missing</h3>
+<p><strong>Issue</strong>: “Open in Ghostty” not appearing</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Reinstall context menu</span></span>
+<span class="line"><span style="color:#B392F0">./scripts/install_context_menu.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Restart Nautilus</span></span>
+<span class="line"><span style="color:#B392F0">nautilus</span><span style="color:#79B8FF"> -q</span></span></code></pre>
+<h3 id="zsh-not-default-shell">ZSH Not Default Shell</h3>
+<p><strong>Issue</strong>: Still using bash after installation</p>
+<p><strong>Solution</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Change default shell</span></span>
+<span class="line"><span style="color:#B392F0">chsh</span><span style="color:#79B8FF"> -s</span><span style="color:#E1E4E8"> $(</span><span style="color:#79B8FF">which</span><span style="color:#9ECBFF"> zsh</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Log out and log back in</span></span></code></pre>
+<h2 id="updating">Updating</h2>
+<p>To update your installation:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check for updates</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --check-only</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Apply all updates</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Update specific component</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --component</span><span style="color:#9ECBFF"> ghostty</span></span>
+<span class="line"><span style="color:#B392F0">./manage.sh</span><span style="color:#9ECBFF"> update</span><span style="color:#79B8FF"> --component</span><span style="color:#9ECBFF"> zsh</span></span></code></pre>
+<p>Your user customizations will be automatically preserved during updates.</p>
+<h2 id="uninstallation">Uninstallation</h2>
+<p>To remove Ghostty and related components:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Remove Ghostty binary</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> rm</span><span style="color:#9ECBFF"> /usr/local/bin/ghostty</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Remove configuration</span></span>
+<span class="line"><span style="color:#B392F0">rm</span><span style="color:#79B8FF"> -rf</span><span style="color:#9ECBFF"> ~/.config/ghostty</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Remove context menu</span></span>
+<span class="line"><span style="color:#B392F0">rm</span><span style="color:#9ECBFF"> ~/.local/share/nautilus/scripts/"Open in Ghostty"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Remove ZSH (optional)</span></span>
+<span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> apt</span><span style="color:#9ECBFF"> remove</span><span style="color:#9ECBFF"> zsh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Restore bash as default shell</span></span>
+<span class="line"><span style="color:#B392F0">chsh</span><span style="color:#79B8FF"> -s</span><span style="color:#9ECBFF"> /bin/bash</span></span></code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong><a href="configuration.md">Configuration Guide</a></strong> - Customize your Ghostty setup</li>
+<li><strong><a href="usage.md">Usage Guide</a></strong> - Learn manage.sh commands and workflows</li>
+<li><strong><a href="../developer/architecture.md">Developer Guide</a></strong> - Contribute to the project</li>
+</ul>
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/your-username/ghostty-config-files/issues">Report bugs or request features</a></li>
+<li><strong>Documentation</strong>: Browse <code>docs-source/</code> for comprehensive guides</li>
+<li><strong>Local Validation</strong>: Run <code>./manage.sh validate</code> to check system health</li>
+</ul>  </article> </main> </div>  </body></html> 
