@@ -665,6 +665,11 @@ func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 	if msg.Success {
 		m.state = InstallerSuccess
 		m.tailSpinner.SetTitle("✓ Installation complete")
+		// Mark all stages as complete on success (avoids race with progress channel)
+		for i := range m.stages {
+			m.stages[i].complete = true
+			m.stages[i].success = true
+		}
 	} else {
 		m.state = InstallerFailed
 		m.tailSpinner.SetTitle("✗ Installation failed")
