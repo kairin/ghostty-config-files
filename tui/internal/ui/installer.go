@@ -664,8 +664,10 @@ func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 
 	if msg.Success {
 		m.state = InstallerSuccess
+		m.tailSpinner.SetTitle("✓ Installation complete")
 	} else {
 		m.state = InstallerFailed
+		m.tailSpinner.SetTitle("✗ Installation failed")
 		m.lastError = msg.Error
 		// Check if there's a checkpoint for resume
 		checkpoint := executor.NewCheckpointStore()
