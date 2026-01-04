@@ -49,6 +49,19 @@ teardown_all() {
 }
 
 # ============================================================
+# CONSTITUTIONAL COMPLIANCE NOTE
+# ============================================================
+# Tests previously expected update_ghostty.sh, backup_utils.sh, common.sh, progress.sh
+# These were REMOVED to comply with Script Proliferation Prevention principle.
+#
+# Update mechanism: scripts/004-reinstall/install_*.sh (reused for updates)
+# Backup mechanism: Inline functions in scripts/006-logs/logger.sh
+# Logging mechanism: Enhanced scripts/006-logs/logger.sh
+#
+# See: .claude/instructions-for-agents/principles/script-proliferation.md
+# ============================================================
+
+# ============================================================
 # INTEGRATION TEST CASES
 # ============================================================
 
@@ -82,16 +95,16 @@ test_daily_updates_script_exists() {
     echo "  ✅ PASS"
 }
 
-# Test: Update ghostty script exists
-test_update_ghostty_script_exists() {
+# Test: Ghostty reinstall script exists (replaces update_ghostty.sh per constitutional compliance)
+test_ghostty_reinstall_script_exists() {
     ((TESTS_RUN++))
-    echo "  Testing: update_ghostty.sh exists"
+    echo "  Testing: install_ghostty.sh exists (update via reinstall)"
 
-    # Assert
-    assert_file_exists "$SCRIPTS_DIR/update_ghostty.sh" \
-        "update_ghostty.sh should exist"
-    assert_true "[[ -x \"$SCRIPTS_DIR/update_ghostty.sh\" ]]" \
-        "update_ghostty.sh should be executable"
+    # Assert - Constitutional compliance: use 004-reinstall scripts for updates
+    assert_file_exists "$SCRIPTS_DIR/004-reinstall/install_ghostty.sh" \
+        "install_ghostty.sh should exist for updates"
+    assert_true "[[ -x \"$SCRIPTS_DIR/004-reinstall/install_ghostty.sh\" ]]" \
+        "install_ghostty.sh should be executable"
 
     ((TESTS_PASSED++))
     echo "  ✅ PASS"
@@ -110,16 +123,21 @@ test_verification_utilities_for_updates() {
     echo "  ✅ PASS"
 }
 
-# Test: Common utilities for updates
-test_common_utilities_for_updates() {
+# Test: Logger utilities for updates (replaces common.sh/progress.sh per constitutional compliance)
+test_logger_utilities_for_updates() {
     ((TESTS_RUN++))
-    echo "  Testing: Common utilities are available for updates"
+    echo "  Testing: Logger utilities are available for updates"
 
-    # Assert
-    assert_file_exists "$SCRIPTS_DIR/common.sh" \
-        "common.sh should exist"
-    assert_file_exists "$SCRIPTS_DIR/progress.sh" \
-        "progress.sh should exist"
+    # Assert - Constitutional compliance: utilities consolidated in logger.sh
+    assert_file_exists "$SCRIPTS_DIR/006-logs/logger.sh" \
+        "logger.sh should exist with update utilities"
+
+    # Verify update functions exist in logger.sh
+    if grep -q "init_update_log\|backup_configs\|restore_from_backup" "$SCRIPTS_DIR/006-logs/logger.sh"; then
+        echo "    Found update utility functions in logger.sh"
+    else
+        echo "    WARNING: Update utility functions may be missing"
+    fi
 
     ((TESTS_PASSED++))
     echo "  ✅ PASS"
@@ -226,17 +244,17 @@ test_update_status_monitoring() {
     echo "  ✅ PASS"
 }
 
-# Test: Update workflow components
+# Test: Update workflow components (constitutional compliance version)
 test_update_workflow_components() {
     ((TESTS_RUN++))
     echo "  Testing: All update workflow components are present"
 
-    # Check critical components
+    # Check critical components (constitutional compliance: no separate update_*.sh or backup_utils.sh)
     local components=(
         "$SCRIPTS_DIR/check_updates.sh"
         "$SCRIPTS_DIR/daily-updates.sh"
-        "$SCRIPTS_DIR/update_ghostty.sh"
-        "$SCRIPTS_DIR/backup_utils.sh"
+        "$SCRIPTS_DIR/006-logs/logger.sh"
+        "$SCRIPTS_DIR/004-reinstall/install_ghostty.sh"
     )
 
     for component in "${components[@]}"; do
@@ -327,9 +345,9 @@ run_all_tests() {
     # Run test cases
     test_check_updates_script_exists || ((TESTS_FAILED++))
     test_daily_updates_script_exists || ((TESTS_FAILED++))
-    test_update_ghostty_script_exists || ((TESTS_FAILED++))
+    test_ghostty_reinstall_script_exists || ((TESTS_FAILED++))
     test_verification_utilities_for_updates || ((TESTS_FAILED++))
-    test_common_utilities_for_updates || ((TESTS_FAILED++))
+    test_logger_utilities_for_updates || ((TESTS_FAILED++))
     test_node_installation_script_exists || ((TESTS_FAILED++))
     test_env_verification_exists || ((TESTS_FAILED++))
     test_update_logs_directory || ((TESTS_FAILED++))

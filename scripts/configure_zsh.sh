@@ -310,6 +310,20 @@ fi'
     _add_config_section "p10k" "$p10k_source"
 }
 
+# Configure update management aliases
+# Usage: configure_update_aliases
+configure_update_aliases() {
+    local repo_root="$(dirname "$(dirname "${BASH_SOURCE[0]}")")"
+
+    local alias_config="# Update management aliases (ghostty-config-files)
+alias update-all='${repo_root}/scripts/daily-updates.sh'
+alias update-logs='source ${repo_root}/scripts/006-logs/logger.sh && show_latest_update_summary'
+alias update-check='${repo_root}/scripts/check_updates.sh'"
+
+    _add_config_section "update-aliases" "$alias_config"
+    log "SUCCESS" "Update management aliases configured"
+}
+
 # Apply performance optimizations
 # Usage: optimize_zsh_performance
 optimize_zsh_performance() {
@@ -517,7 +531,10 @@ configure_zsh() {
     # 6. Apply performance optimizations
     optimize_zsh_performance
 
-    # 7. Verify configuration
+    # 7. Configure update management aliases
+    configure_update_aliases
+
+    # 8. Verify configuration
     echo ""
     verify_zsh_configuration
     local verify_result=$?
