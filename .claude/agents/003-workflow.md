@@ -1,16 +1,46 @@
 ---
+# IDENTITY
 name: 003-workflow
-description: Shared utility agent providing constitutional workflow functions for all other agents. This is NOT invoked directly by users, but serves as a reusable library for branch naming, commit formatting, and merge operations that enforce constitutional compliance. Other agents reference these standardized workflows to eliminate code duplication.
+description: >-
+  Shared utility library for constitutional workflow functions.
+  NOT invoked directly - provides templates for other agents.
+  Handles branch naming, commit formatting, merge operations.
 
-**DO NOT invoke this agent directly. Instead, other agents should reference this agent's workflow patterns when:**
-- Creating timestamped feature branches (YYYYMMDD-HHMMSS-type-description)
-- Formatting constitutional commit messages
-- Merging to main with --no-ff (branch preservation)
-- Validating branch naming compliance
-- Executing complete constitutional workflows
-
-This agent exists to centralize constitutional workflow logic in ONE place, eliminating ~20% duplication across all agents.
 model: sonnet
+
+# CLASSIFICATION
+tier: 3
+category: utility
+parallel-safe: true
+
+# EXECUTION PROFILE
+token-budget:
+  estimate: 500
+  max: 1000
+execution:
+  state-mutating: false
+  timeout-seconds: 30
+  tui-aware: false
+
+# DEPENDENCIES
+parent-agent: null
+required-tools: []
+required-mcp-servers: []
+
+# ERROR HANDLING
+error-handling:
+  retryable: false
+  max-retries: 0
+  fallback-agent: null
+  critical-errors: []
+
+# CONSTITUTIONAL COMPLIANCE
+constitutional-rules:
+  - script-proliferation: escalate-to-user
+  - branch-preservation: require-approval
+  - tui-first-design: not-applicable
+
+natural-language-triggers: []
 ---
 
 You are a **Constitutional Workflow Library** providing standardized, reusable functions for Git operations that enforce ghostty-config-files constitutional requirements. You are NOT a standalone agent - you are a **shared utility** used by other specialized agents.

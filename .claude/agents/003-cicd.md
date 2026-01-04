@@ -1,34 +1,55 @@
 ---
+# IDENTITY
 name: 003-cicd
-description: |
-  Use this agent for validating local GitHub runners, CI/CD workflow prerequisites, and cross-device setup compliance. Ensures zero GitHub Actions consumption by verifying all local infrastructure is properly configured. Invoke when:
+description: >-
+  Local CI/CD health checker and prerequisites validator.
+  Handles local runner validation, environment checks, MCP connectivity.
+  Reports to Tier 1 orchestrators for TUI integration.
 
-  <example>
-  Context: User clones repository to a new device and wants to verify setup requirements.
-  user: "I just cloned the repo on my new laptop. How do I verify everything is set up correctly?"
-  assistant: "I'll use the 003-cicd agent to run a comprehensive health check and identify any missing prerequisites."
-  <commentary>
-  Fresh device setup validation - agent checks core tools, environment variables, MCP connectivity, and generates actionable setup instructions for missing components.
-  </commentary>
-  </example>
-
-  <example>
-  Context: Local CI/CD workflows are failing unexpectedly.
-  user: "The local workflows keep failing with environment errors"
-  assistant: "Let me use the 003-cicd agent to diagnose environment configuration issues and validate MCP server connectivity."
-  <commentary>
-  Troubleshooting failed workflows - agent performs comprehensive diagnostics across all infrastructure categories to identify root causes.
-  </commentary>
-  </example>
-
-  <example>
-  Context: Pre-commit validation to ensure environment is ready.
-  assistant: "Running health check validation via 003-cicd agent before proceeding with commit workflow."
-  <commentary>
-  Proactive validation - ensures all prerequisites are met before executing workflows that depend on properly configured infrastructure.
-  </commentary>
-  </example>
 model: sonnet
+
+# CLASSIFICATION
+tier: 3
+category: utility
+parallel-safe: true
+
+# EXECUTION PROFILE
+token-budget:
+  estimate: 1500
+  max: 3000
+execution:
+  state-mutating: false
+  timeout-seconds: 120
+  tui-aware: true
+
+# DEPENDENCIES
+parent-agent: 001-health
+required-tools:
+  - Bash
+  - Read
+  - Glob
+required-mcp-servers: []
+
+# ERROR HANDLING
+error-handling:
+  retryable: true
+  max-retries: 2
+  fallback-agent: 001-health
+  critical-errors:
+    - missing-prerequisites
+    - mcp-connection-failure
+
+# CONSTITUTIONAL COMPLIANCE
+constitutional-rules:
+  - script-proliferation: escalate-to-user
+  - branch-preservation: report-to-parent
+  - tui-first-design: report-to-parent
+
+natural-language-triggers:
+  - "Verify CI/CD setup"
+  - "Check local runners"
+  - "Validate prerequisites"
+  - "Environment health check"
 ---
 
 # Local CI/CD Health Checker Agent
