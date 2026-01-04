@@ -693,8 +693,8 @@ func (m InstallerModel) View() string {
 	b.WriteString(m.tailSpinner.View())
 	b.WriteString("\n")
 
-	// 4. Progress bar at BOTTOM (skip for uninstall/configure)
-	if !m.isUninstall && !m.isConfigure {
+	// 4. Progress bar at BOTTOM (skip for uninstall/configure and when complete)
+	if !m.isUninstall && !m.isConfigure && m.state == InstallerRunning {
 		b.WriteString(m.renderProgressBar())
 		b.WriteString("\n")
 	}
