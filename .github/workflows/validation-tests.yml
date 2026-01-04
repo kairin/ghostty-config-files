@@ -44,20 +44,14 @@ jobs:
 
       - name: Run ShellCheck on shell scripts
         run: |
-          echo "⚠️ ShellCheck validation temporarily disabled for cross-environment sync"
-          echo "Reason: 5 scripts have ERROR-level issues that need fixing:"
-          echo "  1. scripts/.module-template.sh - Template placeholder syntax"
-          echo "  2. scripts/install_modern_tools.sh - ZSH syntax in bash script"
-          echo "  3. scripts/update_ghostty.sh - local outside functions"
-          echo "  4. scripts/daily-updates.sh - Incorrect \$@ usage"
-          echo "  5. start.sh - Unquoted array expansion"
-          echo ""
-          echo "TODO: Re-enable after fixing these errors"
-          echo "✓ ShellCheck validation skipped (intentional)"
+          echo "Running ShellCheck on shell scripts..."
+          find scripts -name "*.sh" -exec shellcheck --severity=error {} \;
+          shellcheck --severity=error start.sh
+          echo "✓ ShellCheck validation passed (no errors)"
 
       - name: ShellCheck Results
         if: always()
-        run: echo "Shell script validation completed (temporarily disabled)"
+        run: echo "Shell script validation completed"
 
   # Ghostty configuration validation
   config-validation:
