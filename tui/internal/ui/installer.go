@@ -681,8 +681,13 @@ func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 func (m InstallerModel) View() string {
 	var b strings.Builder
 
-	// 1. Spinner + Header at TOP
-	b.WriteString(m.tailSpinner.ViewSpinnerLine())
+	// 1. Spinner + Header at TOP (skip spinner animation when complete)
+	if m.state == InstallerRunning {
+		b.WriteString(m.tailSpinner.ViewSpinnerLine())
+	} else {
+		// Show title without spinner when complete/failed
+		b.WriteString(m.tailSpinner.Title())
+	}
 	b.WriteString("\n\n")
 
 	// 2. Stage info (skip for uninstall/configure - only one stage)

@@ -240,6 +240,14 @@ func (t TailSpinner) ViewSpinnerLine() string {
 	return b.String()
 }
 
+// Title returns just the styled title without spinner
+func (t TailSpinner) Title() string {
+	if t.title == "" {
+		return ""
+	}
+	return t.titleStyle.Render(t.title)
+}
+
 // SetDimensions sets the width and height
 func (t *TailSpinner) SetDimensions(width, height int) {
 	t.width = width
