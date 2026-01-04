@@ -227,3 +227,241 @@ check_command_in_path_after_reload() {
 
     return 1  # Not found or PATH not configured
 }
+
+# =============================================================================
+# Update Logging Utilities
+# =============================================================================
+
+# Update log directory and current log file (session-scoped)
+UPDATE_LOG_DIR="${REPO_ROOT}/../.runners-local/logs"
+UPDATE_LOG_FILE=""
+
+# Initialize update summary log
+# Usage: init_update_log
+# Creates: .runners-local/logs/update-summary-YYYYMMDD-HHMMSS.log
+init_update_log() {
+    local timestamp=$(date +"%Y%m%d-%H%M%S")
+    UPDATE_LOG_DIR="$(dirname "$(dirname "${BASH_SOURCE[0]}")")/../.runners-local/logs"
+    mkdir -p "$UPDATE_LOG_DIR"
+    UPDATE_LOG_FILE="${UPDATE_LOG_DIR}/update-summary-${timestamp}.log"
+
+    # Write header
+    cat > "$UPDATE_LOG_FILE" <<EOF
+# Update Summary Log
+# Generated: $(date "+%Y-%m-%d %H:%M:%S")
+# Host: $(hostname)
+# User: $(whoami)
+#
+# Format: TYPE|data1|data2|data3|timestamp
+#
+EOF
+    echo "HEADER|START|$(date +%s)|$(date "+%Y-%m-%d %H:%M:%S")" >> "$UPDATE_LOG_FILE"
+    log "INFO" "Update log initialized: $UPDATE_LOG_FILE"
+}
+
+# Log tool update start
+# Usage: log_update_start "tool_name" "current_version" "target_version"
+log_update_start() {
+    local tool_name="$1"
+    local current_version="${2:--}"
+    local target_version="${3:--}"
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+
+    if [[ -n "$UPDATE_LOG_FILE" ]] && [[ -f "$UPDATE_LOG_FILE" ]]; then
+        echo "UPDATE_START|${tool_name}|${current_version}|${target_version}|${timestamp}" >> "$UPDATE_LOG_FILE"
+    fi
+    log "INFO" "Updating ${tool_name}: ${current_version} -> ${target_version}"
+}
+
+# Log tool update result
+# Usage: log_update_result "tool_name" "SUCCESS|ERROR|SKIPPED" "message"
+log_update_result() {
+    local tool_name="$1"
+    local status="$2"
+    local message="${3:-}"
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+
+    if [[ -n "$UPDATE_LOG_FILE" ]] && [[ -f "$UPDATE_LOG_FILE" ]]; then
+        echo "UPDATE_RESULT|${tool_name}|${status}|${message}|${timestamp}" >> "$UPDATE_LOG_FILE"
+    fi
+
+    case "$status" in
+        SUCCESS) log "SUCCESS" "${tool_name}: ${message:-Update successful}" ;;
+        ERROR)   log "ERROR" "${tool_name}: ${message:-Update failed}" ;;
+        SKIPPED) log "INFO" "${tool_name}: ${message:-Skipped}" ;;
+        *)       log "INFO" "${tool_name}: ${status} - ${message}" ;;
+    esac
+}
+
+# Finalize update summary
+# Usage: finalize_update_log total success failed skipped
+finalize_update_log() {
+    local total="${1:-0}"
+    local success="${2:-0}"
+    local failed="${3:-0}"
+    local skipped="${4:-0}"
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    local duration="${5:-0}"
+
+    if [[ -n "$UPDATE_LOG_FILE" ]] && [[ -f "$UPDATE_LOG_FILE" ]]; then
+        echo "HEADER|END|$(date +%s)|${timestamp}" >> "$UPDATE_LOG_FILE"
+        echo "SUMMARY|total=${total}|success=${success}|failed=${failed}|skipped=${skipped}|duration=${duration}s" >> "$UPDATE_LOG_FILE"
+    fi
+    log "INFO" "Update complete: ${success}/${total} succeeded, ${failed} failed, ${skipped} skipped"
+}
+
+# Show latest update summary (for update-logs alias)
+# Usage: show_latest_update_summary
+show_latest_update_summary() {
+    local log_dir="$(dirname "$(dirname "${BASH_SOURCE[0]}")")/../.runners-local/logs"
+    local latest_log=$(ls -t "${log_dir}"/update-summary-*.log 2>/dev/null | head -1)
+
+    if [[ -z "$latest_log" ]] || [[ ! -f "$latest_log" ]]; then
+        echo "No update logs found in ${log_dir}"
+        return 1
+    fi
+
+    echo ""
+    echo "Latest Update Summary: $(basename "$latest_log")"
+    echo "════════════════════════════════════════════════════════════════"
+
+    # Parse and display summary
+    local summary_line=$(grep "^SUMMARY|" "$latest_log" 2>/dev/null | tail -1)
+    if [[ -n "$summary_line" ]]; then
+        echo "$summary_line" | awk -F'|' '{
+            gsub(/total=/, "Total: ", $2)
+            gsub(/success=/, "Success: ", $3)
+            gsub(/failed=/, "Failed: ", $4)
+            gsub(/skipped=/, "Skipped: ", $5)
+            gsub(/duration=/, "Duration: ", $6)
+            print "  " $2 " | " $3 " | " $4 " | " $5 " | " $6
+        }'
+    fi
+
+    echo ""
+    echo "Update Details:"
+    echo "────────────────────────────────────────────────────────────────"
+    grep "^UPDATE_RESULT|" "$latest_log" 2>/dev/null | while IFS='|' read -r type tool status msg ts; do
+        case "$status" in
+            SUCCESS) printf "  \033[32m%-20s %s\033[0m\n" "$tool" "$msg" ;;
+            ERROR)   printf "  \033[31m%-20s %s\033[0m\n" "$tool" "$msg" ;;
+            SKIPPED) printf "  \033[33m%-20s %s\033[0m\n" "$tool" "$msg" ;;
+            *)       printf "  %-20s %s\n" "$tool" "$msg" ;;
+        esac
+    done
+    echo ""
+}
+
+# =============================================================================
+# Configuration Backup/Restore Utilities
+# =============================================================================
+
+# Backup directory
+BACKUP_DIR="${HOME}/.config/ghostty-backups"
+
+# Backup configurations before updates
+# Usage: backup_configs ["pre-update"|"manual"]
+backup_configs() {
+    local backup_type="${1:-pre-update}"
+    local timestamp=$(date +"%Y%m%d-%H%M%S")
+    local backup_path="${BACKUP_DIR}/${backup_type}-${timestamp}"
+
+    mkdir -p "$backup_path"
+
+    local backed_up=0
+
+    # Backup Ghostty config
+    if [[ -d "${HOME}/.config/ghostty" ]]; then
+        cp -r "${HOME}/.config/ghostty" "${backup_path}/ghostty" 2>/dev/null && ((backed_up++))
+    fi
+
+    # Backup ZSH config
+    if [[ -f "${HOME}/.zshrc" ]]; then
+        cp "${HOME}/.zshrc" "${backup_path}/zshrc" 2>/dev/null && ((backed_up++))
+    fi
+    if [[ -f "${HOME}/.p10k.zsh" ]]; then
+        cp "${HOME}/.p10k.zsh" "${backup_path}/p10k.zsh" 2>/dev/null && ((backed_up++))
+    fi
+
+    # Backup fastfetch config
+    if [[ -d "${HOME}/.config/fastfetch" ]]; then
+        cp -r "${HOME}/.config/fastfetch" "${backup_path}/fastfetch" 2>/dev/null && ((backed_up++))
+    fi
+
+    if [[ $backed_up -gt 0 ]]; then
+        log "SUCCESS" "Backed up ${backed_up} config(s) to ${backup_path}"
+        echo "$backup_path"
+        return 0
+    else
+        log "WARNING" "No configurations found to backup"
+        rmdir "$backup_path" 2>/dev/null
+        return 1
+    fi
+}
+
+# Restore from backup
+# Usage: restore_from_backup "/path/to/backup"
+restore_from_backup() {
+    local backup_path="$1"
+
+    if [[ -z "$backup_path" ]] || [[ ! -d "$backup_path" ]]; then
+        log "ERROR" "Invalid backup path: $backup_path"
+        return 1
+    fi
+
+    local restored=0
+
+    # Restore Ghostty config
+    if [[ -d "${backup_path}/ghostty" ]]; then
+        rm -rf "${HOME}/.config/ghostty"
+        cp -r "${backup_path}/ghostty" "${HOME}/.config/ghostty" && ((restored++))
+    fi
+
+    # Restore ZSH config
+    if [[ -f "${backup_path}/zshrc" ]]; then
+        cp "${backup_path}/zshrc" "${HOME}/.zshrc" && ((restored++))
+    fi
+    if [[ -f "${backup_path}/p10k.zsh" ]]; then
+        cp "${backup_path}/p10k.zsh" "${HOME}/.p10k.zsh" && ((restored++))
+    fi
+
+    # Restore fastfetch config
+    if [[ -d "${backup_path}/fastfetch" ]]; then
+        rm -rf "${HOME}/.config/fastfetch"
+        cp -r "${backup_path}/fastfetch" "${HOME}/.config/fastfetch" && ((restored++))
+    fi
+
+    if [[ $restored -gt 0 ]]; then
+        log "SUCCESS" "Restored ${restored} config(s) from ${backup_path}"
+        return 0
+    else
+        log "WARNING" "No configurations restored"
+        return 1
+    fi
+}
+
+# Cleanup old backups (keep last 5)
+# Usage: cleanup_old_backups
+cleanup_old_backups() {
+    local keep_count=5
+
+    if [[ ! -d "$BACKUP_DIR" ]]; then
+        return 0
+    fi
+
+    local backup_count=$(ls -d "${BACKUP_DIR}"/*/ 2>/dev/null | wc -l)
+
+    if [[ $backup_count -le $keep_count ]]; then
+        log "INFO" "Backup cleanup: ${backup_count} backups (keeping ${keep_count})"
+        return 0
+    fi
+
+    local to_remove=$((backup_count - keep_count))
+
+    ls -dt "${BACKUP_DIR}"/*/ 2>/dev/null | tail -n "$to_remove" | while read -r old_backup; do
+        rm -rf "$old_backup"
+        log "INFO" "Removed old backup: $(basename "$old_backup")"
+    done
+
+    log "SUCCESS" "Backup cleanup: removed ${to_remove} old backup(s)"
+}

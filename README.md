@@ -69,9 +69,28 @@ Automated system health checker that detects and fixes common boot issues:
 
 ```bash
 ./start.sh              # Main TUI - install, configure, update
-update-all              # Run all updates manually
+update-all              # Run all updates interactively
+update-check            # Check for available updates
 update-logs             # View latest update summary
 ```
+
+### Automated Daily Updates
+
+Install cron job for daily updates at 9:00 AM:
+
+```bash
+./scripts/daily-updates.sh --install-cron
+```
+
+Or run updates manually with options:
+
+```bash
+./scripts/daily-updates.sh                 # Interactive mode
+./scripts/daily-updates.sh --dry-run       # Check only, no changes
+./scripts/daily-updates.sh --non-interactive  # For cron/automation
+```
+
+See [Daily Updates README](scripts/DAILY_UPDATES_README.md) for full documentation.
 
 ### Website Development
 
