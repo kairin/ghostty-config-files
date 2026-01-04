@@ -578,19 +578,21 @@ EOF
 
 ## Metrics & Monitoring
 
-### Baseline Metrics (2025-11-21)
+### Baseline Metrics (2026-01-05)
 
 **Current Script Count**:
 ```bash
 # Count all .sh files (excluding tests)
 find /home/kkk/Apps/ghostty-config-files -name "*.sh" -not -path "*/tests/*" | wc -l
-# Target: TBD (establish baseline)
+# Baseline: 118 (established 2026-01-05)
 ```
 
 **Call Depth Analysis**:
 ```bash
 # Maximum call depth in repository
-# Target: ≤ 2 levels (script A → script B, stop)
+# Baseline: 2 levels (verified 2026-01-05)
+# Pattern: installer → config script (acceptable)
+# Pattern: script → logger.sh library (acceptable)
 ```
 
 **Script Purpose Distribution**:
@@ -604,11 +606,11 @@ find /home/kkk/Apps/ghostty-config-files -name "*.sh" -not -path "*/tests/*" | w
 
 | Metric | Current | Target | Alert Threshold |
 |--------|---------|--------|-----------------|
-| Total script count | TBD | Stable/↓ | +5/month |
-| Max call depth | TBD | ≤ 2 levels | 3+ levels |
+| Total script count | 118 | Stable/↓ | +5/month |
+| Max call depth | 2 | ≤ 2 levels | 3+ levels |
 | Wrapper scripts | 0 | 0 | Any wrapper |
-| Helper scripts | TBD | Minimize | +3/month |
-| Orphaned scripts | TBD | 0 | Any orphan |
+| Helper scripts | 0 | Minimize | +3/month |
+| Orphaned scripts | 0 | 0 | Any orphan |
 
 ### Monthly Review
 

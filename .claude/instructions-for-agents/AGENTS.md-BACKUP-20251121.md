@@ -887,7 +887,7 @@ git commit -m "Add conversation log, system state, and CI/CD logs for local infr
 
 # Validate system state
 ghostty +show-config
-# TODO: ./.runners-local/workflows/test-runner.sh not yet implemented
+# Note: Use health-check.sh or gh-workflow-local.sh for comprehensive validation
 
 # Emergency configuration recovery
 cp ~/.config/ghostty/config.backup-* ~/.config/ghostty/config
