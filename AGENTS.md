@@ -151,6 +151,37 @@ HAS DEPENDENCY on another task?
 
 ---
 
+### Dynamic Theme Switching (NEW - 2026)
+**Status**: Active
+**Script**: `scripts/ghostty-theme-switcher.sh`
+**Service**: `~/.config/systemd/user/ghostty-theme-switcher.service` (user-specific, not git-tracked)
+
+**Features**:
+- Automatic detection of GNOME/GTK color-scheme changes
+- Instant switching between Catppuccin Mocha (dark) and Latte (light)
+- Uses SIGUSR2 signal for Ghostty config reload (correct signal per Ghostty docs)
+- Systemd user service for background monitoring
+
+**Commands**:
+```bash
+# Manual control
+./scripts/ghostty-theme-switcher.sh apply    # Apply current system theme
+./scripts/ghostty-theme-switcher.sh dark     # Force dark theme
+./scripts/ghostty-theme-switcher.sh light    # Force light theme
+./scripts/ghostty-theme-switcher.sh status   # Show current status
+./scripts/ghostty-theme-switcher.sh monitor  # Start monitoring (default)
+
+# Systemd service (optional, create manually)
+systemctl --user enable ghostty-theme-switcher.service
+systemctl --user start ghostty-theme-switcher.service
+```
+
+**Theme Files**:
+- Dark: `configs/ghostty/catppuccin-mocha.conf`
+- Light: `configs/ghostty/catppuccin-latte.conf`
+
+---
+
 ## 🛠️ Development Commands (Quick Reference)
 
 ### Environment Setup
