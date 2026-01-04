@@ -162,6 +162,9 @@ if ! check_go_installed; then
         echo "  Then run: cd $SCRIPT_DIR/tui && go build -o installer ./cmd/installer" >&2
         exit 1
     }
+    # Refresh shell command cache after Go installation
+    hash -r 2>/dev/null
+    export PATH="/usr/local/go/bin:$PATH"
 fi
 
 # Step 2: Build the TUI binary
