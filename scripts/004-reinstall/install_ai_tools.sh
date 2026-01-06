@@ -41,7 +41,7 @@ install_gemini() {
     log "INFO" "Installing Gemini CLI..."
     # Remove old incorrect package if exists
     npm uninstall -g @google/generative-ai-cli 2>/dev/null || true
-    if npm install -g @google/gemini-cli; then
+    if npm install -g @google/gemini-cli@latest; then
         log "SUCCESS" "Gemini CLI installed successfully."
         echo "  Run 'gemini' to start."
     else
@@ -58,7 +58,7 @@ install_copilot() {
         log "INFO" "Removing old gh extension..."
         gh extension remove gh-copilot 2>/dev/null || true
     fi
-    if npm install -g @github/copilot; then
+    if npm install -g @github/copilot@latest; then
         log "SUCCESS" "GitHub Copilot CLI installed successfully."
         echo "  Run 'copilot' and use /login to authenticate."
     else

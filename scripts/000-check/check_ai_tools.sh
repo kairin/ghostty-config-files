@@ -75,9 +75,42 @@ else
     LOCATION="-"
 fi
 
-# Aggregate tools: no single "latest version" - disable update detection
-# Individual versions shown in details section with checkmarks
-LATEST="-"
+# Query latest versions from official sources (with timeout to avoid blocking)
+# Claude Code: Query from official release manifest
+# Gemini CLI: npm view @google/gemini-cli version
+# GitHub Copilot: npm view @github/copilot version
+
+CLAUDE_LATEST="-"
+GEMINI_LATEST="-"
+COPILOT_LATEST="-"
+
+# Only query if npm is available (for Gemini and Copilot)
+if command -v npm &> /dev/null; then
+    GEMINI_LATEST=$(timeout 5 npm view @google/gemini-cli version 2>/dev/null || echo "-")
+    COPILOT_LATEST=$(timeout 5 npm view @github/copilot version 2>/dev/null || echo "-")
+fi
+
+# Query Claude latest from official manifest (with timeout)
+CLAUDE_LATEST=$(timeout 5 curl -sL "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/latest/manifest.json" 2>/dev/null | grep -oP '"version":\s*"\K[^"]+' || echo "-")
+
+# Determine if any updates are available
+UPDATES_AVAILABLE=0
+if [[ "$CLAUDE_INSTALLED" -eq 1 && "$CLAUDE_LATEST" != "-" && "$CLAUDE_VER" != "$CLAUDE_LATEST" ]]; then
+    UPDATES_AVAILABLE=1
+fi
+if [[ "$GEMINI_INSTALLED" -eq 1 && "$GEMINI_LATEST" != "-" && "$GEMINI_VER" != "$GEMINI_LATEST" ]]; then
+    UPDATES_AVAILABLE=1
+fi
+if [[ "$COPILOT_INSTALLED" -eq 1 && "$COPILOT_LATEST" != "-" && "$COPILOT_VER" != "$COPILOT_LATEST" ]]; then
+    UPDATES_AVAILABLE=1
+fi
+
+# Build LATEST output - show combined latest versions
+if [[ "$UPDATES_AVAILABLE" -eq 1 ]]; then
+    LATEST="updates"
+else
+    LATEST="-"
+fi
 
 # Output in standard format
 echo "${STATUS}|${VERSION}|${METHOD}|${LOCATION}${EXTRA}|${LATEST}"
