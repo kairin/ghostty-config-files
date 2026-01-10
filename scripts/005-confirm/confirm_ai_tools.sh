@@ -51,6 +51,29 @@ fi
 echo ""
 echo "Summary: $INSTALLED/$TOTAL AI tools installed."
 
+# Setup MCP configuration for Claude Code if it's installed
+if command -v claude &> /dev/null; then
+    echo ""
+    echo "MCP Configuration:"
+    SCRIPT_DIR="$(dirname "$0")"
+    REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+    if [ -f "$REPO_DIR/.mcp.json" ]; then
+        echo "  ✓ MCP configuration exists"
+        # Count configured servers
+        SERVER_COUNT=$(grep -c '"command"\|"type": "http"' "$REPO_DIR/.mcp.json" 2>/dev/null || echo "0")
+        echo "  ✓ $SERVER_COUNT MCP server(s) configured"
+    else
+        echo "  Setting up MCP configuration..."
+        if [ -x "$SCRIPT_DIR/../002-install-first-time/setup_mcp_config.sh" ]; then
+            "$SCRIPT_DIR/../002-install-first-time/setup_mcp_config.sh" 2>&1 | sed 's/^/    /'
+        else
+            echo "  ✗ MCP setup script not found"
+            echo "    Run: scripts/002-install-first-time/setup_mcp_config.sh"
+        fi
+    fi
+fi
+
 if [[ $INSTALLED -eq 0 ]]; then
     exit 1
 fi
