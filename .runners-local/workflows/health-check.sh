@@ -306,9 +306,14 @@ check_mcp_connectivity() {
     if [ -f "$REPO_DIR/.mcp.json" ]; then
         record_check "mcp_servers" "mcp_json" "passed" "configuration file exists"
         log "SUCCESS" "✅ .mcp.json configuration exists"
+        # Count configured servers
+        local server_count=$(grep -c '"command"\|"type": "http"' "$REPO_DIR/.mcp.json" 2>/dev/null || echo "0")
+        log "INFO" "   $server_count MCP server(s) configured"
     else
         record_check "mcp_servers" "mcp_json" "failed" "configuration missing"
         log "ERROR" "❌ .mcp.json configuration not found"
+        log "INFO" "   Run: scripts/002-install-first-time/setup_mcp_config.sh"
+        log "INFO" "   Or run TUI installer and select 'AI Tools'"
     fi
 
     # Check Claude CLI available
