@@ -3,7 +3,7 @@ title: Critical Requirements (NON-NEGOTIABLE)
 category: requirements
 linked-from: AGENTS.md
 status: ACTIVE
-last-updated: 2025-11-21
+last-updated: 2026-01-11
 ---
 
 # 🚨 CRITICAL Requirements (NON-NEGOTIABLE)
@@ -29,13 +29,20 @@ last-updated: 2025-11-21
 
 ## 🚨 CRITICAL: Package Management & Dependencies
 
-### Build-from-Source Applications (2025 Edition)
+### Ghostty Terminal Installation (2026 Edition)
 
-- **Ghostty Terminal**: Installed via Snap (official package)
-  - Package: `ghostty` (snap store)
-  - Installation: `snap install ghostty` (modular installer: `lib/installers/ghostty/`)
-  - Installation time: ~30-60 seconds
-  - Rationale: Official Snap package provides latest stable builds with zero compilation time
+- **Ghostty Terminal v1.2.3+**: Two installation methods supported
+  - **Build from Source** (Default): Compiles latest stable release with Zig
+    - Script: `scripts/002-install-first-time/install_deps_ghostty.sh`
+    - Installation time: ~2-5 minutes (includes dependency installation)
+    - Requires: Zig compiler, Git, build dependencies (auto-installed)
+    - Rationale: Latest features, full control over build options
+  - **Snap Package** (Alternative): Official pre-built package
+    - Installation: `snap install ghostty --classic`
+    - Installation time: ~30-60 seconds
+    - Rationale: Quick installation, automatic updates via Snap store
+
+### Build-from-Source Applications
 
 - **Feh Image Viewer**: Built from source (latest stable) with ALL features enabled
   - Repository: https://github.com/derf/feh
@@ -48,7 +55,7 @@ last-updated: 2025-11-21
     - `xinerama=1` - Multi-monitor support
     - `verscmp=1` - Version comparison support
     - `mkstemps=1` - Secure temp file handling
-  - Installation: `/usr/local/` (modular installer: `lib/installers/feh/`)
+  - Installation: `/usr/local/` (installer: `scripts/002-install-first-time/install_deps_feh.sh`)
   - Build time: ~2-5 minutes
   - Rationale: Maximum versatility with all available features for professional image viewing
   - Configuration preservation: Custom themes (`~/.config/feh/themes`) and desktop file preserved
@@ -87,25 +94,23 @@ last-updated: 2025-11-21
 # 1. Configure environment
 cp .env.example .env  # Add CONTEXT7_API_KEY=ctx7sk-your-api-key
 
-# 2. Verify configuration
-./scripts/check_context7_health.sh
+# 2. Verify MCP server is configured in .mcp.json
+cat .mcp.json  # Should include context7 server configuration
 
 # 3. Restart Claude Code to load MCP servers
 exit && claude
 ```
 
-**Health Check:** `./scripts/check_context7_health.sh`
-
 **Available Tools:**
 - `mcp__context7__resolve-library-id` - Find library IDs for documentation queries
-- `mcp__context7__get-library-docs` - Retrieve up-to-date library documentation
+- `mcp__context7__query-docs` - Retrieve up-to-date library documentation
 
 **Constitutional Compliance:**
 - **MANDATORY**: Query Context7 before major configuration changes
 - **RECOMMENDED**: Add Context7 validation to local CI/CD workflows
 - **BEST PRACTICE**: Document Context7 queries in conversation logs
 
-**Complete Setup Guide:** [Context7 MCP Setup](../../../../documentation/setup/context7-mcp.md)
+**Complete Setup Guide:** [Context7 MCP Setup](../guides/context7-mcp.md)
 
 ---
 
@@ -118,14 +123,12 @@ exit && claude
 # 1. Verify GitHub CLI authentication
 gh auth status
 
-# 2. Run health check
-./scripts/check_github_mcp_health.sh
+# 2. Verify MCP server is configured in .mcp.json
+cat .mcp.json  # Should include github server configuration
 
 # 3. Restart Claude Code to load MCP servers
 exit && claude
 ```
-
-**Health Check:** `./scripts/check_github_mcp_health.sh`
 
 **Core Capabilities:**
 - **Repository Operations**: List, create, manage repositories
@@ -145,7 +148,7 @@ exit && claude
 - ✅ Leverages existing gh CLI authentication
 - ✅ Token auto-refreshes via gh CLI
 
-**Complete Setup Guide:** [GitHub MCP Setup](../../../../documentation/setup/github-mcp.md)
+**Complete Setup Guide:** [GitHub MCP Setup](../guides/github-mcp.md)
 
 ---
 

@@ -17,14 +17,15 @@ cd ghostty-config-files
 ## Features
 
 - **Modern Go TUI** - Bubbletea-powered dashboard with parallel status checks and crash recovery
-- **Ghostty Terminal v1.2.3+** - Fast .deb installation (~2 min) with CGroup optimization
+- **Ghostty Terminal v1.2.3+** - Build-from-source (default) or Snap installation with CGroup optimization
+- **Dynamic Theme Switching** - Automatic light/dark mode with Catppuccin themes
 - **Boot Diagnostics** - Automated detection and one-click fixes for system boot issues
-- **AI Integration** - Claude Code, Gemini CLI with fnm Node.js management
+- **AI Integration** - Claude Code, Gemini CLI with fnm Node.js management, Context7 & GitHub MCP
 - **Charm TUI** - gum, glow, vhs for beautiful terminal interfaces
-- **ZSH + Oh My ZSH** - Modern shell with useful plugins
+- **ZSH + Oh My ZSH** - Modern shell with PowerLevel10k support
 - **Automated Updates** - Daily updates at 9 AM with comprehensive logging
 - **Context Menu** - "Open in Ghostty" right-click integration
-- **System Cleanup** - LibreOffice removal and legacy cleanup utilities
+- **Local CI/CD** - Zero-cost local workflow execution before GitHub deployment
 - **Astro Website** - Documentation site deployed to GitHub Pages
 
 ## Prerequisites
@@ -111,14 +112,15 @@ sudo ./scripts/remove_libreoffice.sh  # Remove LibreOffice (~700-800 MB freed)
 ## Documentation
 
 ### For Users
-- [Installation Guide](astro-website/src/user-guide/installation.md)
-- [Configuration Guide](astro-website/src/user-guide/configuration.md)
-- [Daily Updates](scripts/DAILY_UPDATES_README.md)
+- [Daily Updates](scripts/DAILY_UPDATES_README.md) - Automated update system
 - [Icon Troubleshooting](.claude/instructions-for-agents/guides/troubleshooting-icons.md) - Missing icons, GTK resolution, Ubuntu 25.10 fixes
 
 ### For Developers
-- [Architecture Overview](astro-website/src/developer/architecture.md)
-- [Contributing Guide](.github/CONTRIBUTING.md)
+- [System Architecture](.claude/instructions-for-agents/architecture/system-architecture.md) - Complete architecture overview
+- [PowerLevel10k Integration](astro-website/src/developer/powerlevel10k/README.md) - ZSH prompt theme
+- [Context7 MCP Setup](.claude/instructions-for-agents/guides/context7-mcp.md) - AI documentation server
+- [GitHub MCP Setup](.claude/instructions-for-agents/guides/github-mcp.md) - GitHub integration
+- [Contributing Guide](.github/CONTRIBUTING.md) - Development workflow
 
 ### Live Documentation
 - [GitHub Pages Site](https://kairin.github.io/ghostty-config-files/)
@@ -127,12 +129,15 @@ sudo ./scripts/remove_libreoffice.sh  # Remove LibreOffice (~700-800 MB freed)
 
 ```
 ghostty-config-files/
-├── start.sh                    # Main entry point
-├── configs/                    # Ghostty, ZSH configurations
-├── lib/installers/             # Modular installation scripts
+├── start.sh                    # Main entry point (Go TUI launcher)
+├── configs/ghostty/            # Ghostty configuration & themes
 ├── scripts/
+│   ├── 002-install-first-time/ # Tool installers (11 tools)
+│   ├── 004-reinstall/          # Reinstall scripts (inc. Ghostty build-from-source)
 │   ├── 007-diagnostics/        # Boot diagnostics system
-│   └── updates/                # Daily update system
+│   ├── daily-updates.sh        # Automated updates
+│   └── ghostty-theme-switcher.sh # Dynamic theme switching
+├── .claude/instructions-for-agents/ # AI agent instructions
 ├── astro-website/src/          # Documentation source (editable)
 └── docs/                       # Built site (GitHub Pages)
 ```

@@ -25,7 +25,7 @@
 **Location**: `.claude/instructions-for-agents/architecture/`
 
 - **[System Architecture](/.claude/instructions-for-agents/architecture/system-architecture.md)** - Directory structure, technology stack, core functionality
-- **[Directory Structure](astro-website/src/developer/DIRECTORY_STRUCTURE.md)** - Complete file tree with descriptions
+- **[Directory Structure](/.claude/instructions-for-agents/architecture/DIRECTORY_STRUCTURE.md)** - Complete file tree with descriptions
 
 ### 📚 Operational Guides
 **Location**: `.claude/instructions-for-agents/guides/`
@@ -81,13 +81,9 @@ ghostty +show-config
 **Details**: [Local CI/CD Operations](/.claude/instructions-for-agents/requirements/local-cicd-operations.md#cost-verification-mandatory)
 
 ### 5. Context7 MCP Setup (RECOMMENDED)
-Query Context7 before major configuration changes:
+Query Context7 before major configuration changes.
 
-```bash
-./scripts/check_context7_health.sh  # Verify setup
-```
-
-**Details**: [Critical Requirements - Context7](/.claude/instructions-for-agents/requirements/CRITICAL-requirements.md#-critical-context7-mcp-integration--documentation-synchronization)
+**Details**: [Context7 MCP Setup](astro-website/src/developer/context7-mcp.md) | [Critical Requirements](/.claude/instructions-for-agents/requirements/CRITICAL-requirements.md#-critical-context7-mcp-integration--documentation-synchronization)
 
 ---
 
@@ -266,9 +262,10 @@ ghostty +show-config                    # Validate configuration
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
 ### Setup Guides
-- [Context7 MCP Setup](astro-website/src/developer/context7-mcp.md) - Complete Context7 integration
-- [GitHub MCP Setup](astro-website/src/developer/github-mcp.md) - Complete GitHub MCP integration
-- [Logging Guide](astro-website/src/developer/LOGGING_GUIDE.md) - Dual-mode logging system
+- [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) - Complete Context7 integration
+- [GitHub MCP Setup](/.claude/instructions-for-agents/guides/github-mcp.md) - Complete GitHub MCP integration
+- [Logging Guide](/.claude/instructions-for-agents/guides/LOGGING_GUIDE.md) - Dual-mode logging system
+- [PowerLevel10k Integration](astro-website/src/developer/powerlevel10k/README.md) - ZSH prompt theme
 
 ### Agent & Command Reference
 
@@ -306,10 +303,10 @@ ghostty +show-config                    # Validate configuration
 
 ## 📊 Metadata
 
-**Version**: 3.0-2025-TokenOptimized
-**Last Updated**: 2025-11-21
+**Version**: 3.1-2026-Updated
+**Last Updated**: 2026-01-11
 **Status**: ACTIVE - MANDATORY COMPLIANCE
-**Target**: Ubuntu 25.10 (Questing) with Ghostty 1.1.4+ and zero-cost local CI/CD
+**Target**: Ubuntu 25.10 (Questing) with Ghostty 1.2.3+ and zero-cost local CI/CD
 **Token Count**: ~1,500 tokens (87% reduction from 12,000 tokens)
 **Review**: Required before any major configuration changes
 

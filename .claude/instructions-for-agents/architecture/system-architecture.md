@@ -3,7 +3,7 @@ title: System Architecture Overview
 category: architecture
 linked-from: AGENTS.md
 status: ACTIVE
-last-updated: 2025-11-21
+last-updated: 2026-01-11
 ---
 
 # 🏗️ System Architecture
@@ -29,7 +29,7 @@ last-updated: 2025-11-21
 
 ## Directory Structure (MANDATORY)
 
-**Essential Structure** (Restructured 2025-11-20):
+**Essential Structure** (Updated 2026-01-11):
 
 ```
 /home/kkk/Apps/ghostty-config-files/
@@ -39,24 +39,24 @@ last-updated: 2025-11-21
 ├── README.md                   # User documentation
 │
 ├── configs/                    # Ghostty config, themes, dircolors, workspace
-├── scripts/                    # Utility scripts (manage.sh, daily-updates.sh v2.1, health checks)
-├── lib/                        # Modular task libraries with uninstall support
-│   ├── installers/ghostty/     # Ghostty .deb installation modules + uninstall.sh
-│   ├── installers/gum,glow,vhs/# Charm TUI ecosystem installers
-│   ├── ui/vhs-auto-record.sh   # VHS auto-recording library
-│   ├── tasks/system_audit.sh   # Pre-installation system audit
-│   └── installers/*/           # Other modular installers
+│   └── ghostty/                # Ghostty configuration files & themes
 │
-├── documentation/              # SINGLE documentation folder (consolidated)
-│   ├── setup/                  # Setup guides (MCP, new-device, zsh-security)
-│   ├── architecture/           # Architecture docs (MODULAR_TASK_ARCHITECTURE.md)
-│   ├── developer/              # Developer docs (handoff summaries, guides)
-│   ├── user/                   # User guides
-│   ├── specifications/         # Feature specifications
-│   └── archive/                # Historical documentation
+├── scripts/                    # Utility scripts organized by function
+│   ├── 000-check/              # Pre-installation checks
+│   ├── 001-uninstall/          # Uninstallation scripts
+│   ├── 002-install-first-time/ # First-time installers (11 tools)
+│   ├── 003-verify/             # Verification scripts
+│   ├── 004-reinstall/          # Reinstallation scripts (inc. Ghostty build-from-source)
+│   ├── 005-confirm/            # Confirmation utilities
+│   ├── 006-logs/               # Log management
+│   ├── 007-diagnostics/        # Boot diagnostics system
+│   ├── daily-updates.sh        # Automated update system (v3.0)
+│   ├── ghostty-theme-switcher.sh # Dynamic light/dark theme switching
+│   └── check_updates.sh        # Smart update checker
 │
 ├── astro-website/              # Astro.build source (CONSOLIDATED)
 │   ├── src/                    # Astro source files & markdown content
+│   │   └── developer/          # Developer documentation
 │   ├── public/                 # Static assets (.nojekyll, favicon, manifest)
 │   ├── astro.config.mjs        # Astro configuration (outDir: '../docs')
 │   └── package.json            # Dependencies
@@ -64,20 +64,20 @@ last-updated: 2025-11-21
 ├── docs/                       # Astro BUILD OUTPUT ONLY (GitHub Pages)
 │   └── .nojekyll               # CRITICAL - never delete
 │
-├── tui/                        # Go TUI installer (Bubbletea/Lipgloss)
-│   ├── go.mod, go.sum          # Go module definitions
-│   ├── installer               # Compiled binary (5.0MB)
-│   ├── cmd/installer/          # CLI entry point
-│   └── internal/               # Core packages
-│       ├── registry/           # Data-driven tool catalog (12 tools)
-│       ├── cache/              # Status caching (5-min TTL)
-│       ├── executor/           # Script execution with streaming
-│       ├── diagnostics/        # Boot diagnostics integration
-│       └── ui/                 # Bubbletea model, views, styles
+├── .claude/                    # Claude Code configuration
+│   └── instructions-for-agents/ # AI agent instructions & guides
+│       ├── requirements/       # Critical requirements
+│       ├── architecture/       # System architecture docs
+│       ├── guides/             # Setup guides (MCP, troubleshooting)
+│       ├── principles/         # Constitutional principles
+│       └── tools/              # Tool documentation
+│
+├── logs/                       # Update logs and manifests
+│   └── manifests/              # Update manifests
 │
 ├── tests/                      # Test infrastructure
-├── .runners-local/             # Local CI/CD infrastructure (see below)
-└── archive-spec-kit/           # Archived spec-kit materials (.specify/)
+├── .runners-local/             # Local CI/CD infrastructure
+└── .mcp.json                   # MCP server configuration
 ```
 
 ---
@@ -199,18 +199,18 @@ CI/CD Pipeline Stages:
 
 ---
 
-## Documentation Structure (CONSTITUTIONAL REQUIREMENT - Restructured 2025-11-20)
+## Documentation Structure (CONSTITUTIONAL REQUIREMENT - Updated 2026-01-11)
 
 - **`docs/`** - **Astro.build output ONLY** → GitHub Pages deployment (committed, DO NOT manually edit)
-- **`astro-website/src/`** - **Astro source files** → Editable markdown documentation (user-guide/, ai-guidelines/, developer/)
-- **`documentation/`** - **SINGLE documentation folder** (consolidated from docs-setup/, documentations/, specs/):
-  - `documentation/setup/` - Setup guides (MCP integration, new-device, zsh-security)
-  - `documentation/architecture/` - Architecture docs (MODULAR_TASK_ARCHITECTURE.md, DIRECTORY_STRUCTURE.md)
-  - `documentation/developer/` - Developer docs (handoff summaries, conversation logs, guides)
-  - `documentation/user/` - User guides
-  - `documentation/specifications/` - Feature specifications (001-modern-tui-system/)
-  - `documentation/archive/` - Historical documentation
-- **`archive-spec-kit/`** - **Archived spec-kit materials** (.specify/ folder, no longer active)
+- **`astro-website/src/`** - **Astro source files** → Editable markdown documentation
+  - `astro-website/src/developer/` - Developer documentation (powerlevel10k, etc.)
+  - `astro-website/src/user-guide/` - User guides (installation, configuration)
+- **`.claude/instructions-for-agents/`** - **AI agent instructions & operational docs**:
+  - `requirements/` - Critical requirements (Ghostty, git strategy, CI/CD)
+  - `architecture/` - Architecture docs (system architecture, directory structure)
+  - `guides/` - Setup guides (MCP integration, troubleshooting)
+  - `principles/` - Constitutional principles (script proliferation prevention)
+  - `tools/` - Tool implementation reference
 
 ---
 
@@ -240,27 +240,44 @@ CI/CD Pipeline Stages:
 | 11. Additional uv Tools | `uv tool upgrade <tool>` | uv tool manager | All installed uv tools |
 | 12. Ghostty Terminal | `snap refresh ghostty` | Snap store | Official Snap package auto-updates |
 
-### Snap Package Auto-Updates
+### Ghostty Installation Methods
 
-**Ghostty Terminal** is managed via Snap, which provides automatic updates:
+**Ghostty Terminal v1.2.3+** supports two installation methods:
 
-**Update Detection:**
+**Build from Source** (Default - recommended for latest features):
 ```bash
-# Check for Snap updates
+# Handled by: scripts/004-reinstall/install_ghostty.sh
+# Or via TUI: ./start.sh → Install Tools → Ghostty
+
+# Manual build (if needed)
+zig build -Doptimize=ReleaseFast
+```
+
+**Snap Package** (Alternative - quick installation):
+```bash
+# Install via Snap
+snap install ghostty --classic
+
+# Check for updates
 snap refresh --list
 
-# Manual refresh (if needed)
+# Manual refresh
 snap refresh ghostty
 
-# Verify installed version
+# Verify version
 snap list ghostty
 ```
 
-**Benefits:**
-- **Automatic Updates**: Snap handles updates in the background
-- **Official Builds**: Direct from Ghostty developers via Snap store
-- **Zero Compilation**: Pre-built binaries, instant installation
-- **Rollback Support**: `snap revert ghostty` if needed
+**Benefits of Build from Source:**
+- Latest features and fixes
+- Full control over build options
+- Better integration with system libraries
+
+**Benefits of Snap:**
+- Automatic updates in the background
+- Official builds from Ghostty developers
+- Zero compilation time
+- Rollback support: `snap revert ghostty`
 
 ### Error Handling & Logging
 
