@@ -1,0 +1,85 @@
+# Ghostty Config Files - Recommended ZSH Plugins
+# ================================================
+# This file documents the curated plugin set installed by the TUI.
+# Copy this to your plugins=() array in ~/.zshrc if needed.
+#
+# Installation:
+#   ./start.sh → Extras → ZSH + Oh My Zsh → Install → Configure
+#
+# Manual installation of external plugins:
+#   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+#   git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+#   git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
+
+plugins=(
+  # === Core (Essential) ===
+  git                # Git aliases: ga, gc, gp, gst, etc.
+  z                  # Jump to frecent directories: z projects → ~/Projects
+  sudo               # Press ESC twice to prepend sudo to last command
+  extract            # Universal archive extraction: extract file.tar.gz
+
+  # === Development ===
+  docker             # Docker completions and aliases
+  docker-compose     # Docker Compose completions: dco, dcup, dcdown
+  gh                 # GitHub CLI completions: gh pr, gh issue
+  golang             # Go completions and aliases
+  python             # Python helpers: pyfind, pygrep
+  pip                # pip completions: pip install <TAB>
+
+  # === System (Ubuntu/Debian) ===
+  debian             # apt completions: apt install <TAB>
+  systemd            # systemctl completions: systemctl status <TAB>
+  command-not-found  # Suggests packages for missing commands
+
+  # === Productivity ===
+  colored-man-pages  # Colorized man pages
+  aliases            # List all aliases with 'als'
+  copypath           # Copy current path to clipboard: copypath
+
+  # === External (Installed to custom/plugins) ===
+  zsh-autosuggestions      # Fish-like suggestions as you type
+  zsh-syntax-highlighting  # Real-time syntax highlighting (green/red)
+)
+
+# === Additional Integrations (added after plugins) ===
+#
+# FZF - Fuzzy finder
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Key bindings:
+#   Ctrl+R  Fuzzy history search
+#   Ctrl+T  Fuzzy file finder
+#   Alt+C   Fuzzy directory changer
+#
+# Tool completions
+# command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
+# command -v gum &>/dev/null && eval "$(gum completion zsh)"
+# command -v glow &>/dev/null && eval "$(glow completion zsh)"
+
+# === Plugin Quick Reference ===
+#
+# git aliases:
+#   gst     git status
+#   ga      git add
+#   gc      git commit
+#   gp      git push
+#   gl      git pull
+#   gco     git checkout
+#   gb      git branch
+#   glog    git log --oneline --decorate --graph
+#
+# z (directory jumping):
+#   z proj      Jump to directory matching "proj"
+#   z -l        List frecent directories
+#
+# docker-compose aliases:
+#   dco     docker-compose
+#   dcup    docker-compose up
+#   dcdown  docker-compose down
+#   dclogs  docker-compose logs
+#
+# extract:
+#   extract file.tar.gz    Automatically detects and extracts any archive
+#
+# copypath:
+#   copypath               Copy current directory path to clipboard
+#   copypath file.txt      Copy full path of file to clipboard

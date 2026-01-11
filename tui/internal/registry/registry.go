@@ -231,8 +231,8 @@ var tools = map[string]*Tool{
 	},
 	"zsh": {
 		ID:          "zsh",
-		DisplayName: "Zsh",
-		Description: "Z shell + Oh My Zsh",
+		DisplayName: "ZSH + Plugins",
+		Description: "ZSH + Oh My Zsh + Powerlevel10k + plugins",
 		Category:    CategoryExtras,
 		Method:      MethodAPT,
 		Scripts: ToolScripts{
@@ -242,7 +242,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_zsh.sh",
 			Install:     "scripts/004-reinstall/install_zsh.sh",
 			Confirm:     "scripts/005-confirm/confirm_zsh.sh",
-			Configure:   "scripts/configure_zsh.sh",
+			Configure:   "scripts/004-reinstall/configure_zsh.sh",
 		},
 		VersionCmd:   []string{"zsh", "--version"},
 		VersionRegex: `zsh (\d+\.\d+\.\d+)`,
