@@ -73,6 +73,11 @@ get_go_binary() {
     fi
 }
 
+# Check if gum is available for spinners
+has_gum() {
+    command -v gum &> /dev/null
+}
+
 # Install Go using existing scripts (4-stage pipeline)
 install_go() {
     echo "[Bootstrap] Go not found. Installing Go 1.23+..."
@@ -128,22 +133,36 @@ build_tui() {
         return 1
     fi
 
-    echo "[Bootstrap] Building TUI installer... (this may take a moment)"
-
     cd "$SCRIPT_DIR/tui" || {
         echo "[Bootstrap] ERROR: Cannot access tui/ directory." >&2
         return 1
     }
 
-    # Build with verbose output to show progress
-    if "$go_bin" build -v -o installer ./cmd/installer 2>&1; then
-        echo "[Bootstrap] Build complete!"
-        cd "$SCRIPT_DIR"
-        return 0
+    # Build with spinner feedback if gum available
+    if has_gum; then
+        echo ""
+        if gum spin --spinner dot --title "Building TUI installer..." -- \
+            "$go_bin" build -o installer ./cmd/installer 2>&1; then
+            echo "[Bootstrap] Build complete!"
+            cd "$SCRIPT_DIR"
+            return 0
+        else
+            echo "[Bootstrap] ERROR: Build failed." >&2
+            cd "$SCRIPT_DIR"
+            return 1
+        fi
     else
-        echo "[Bootstrap] ERROR: Build failed." >&2
-        cd "$SCRIPT_DIR"
-        return 1
+        # Fallback without spinner - suppress verbose output for cleaner UX
+        echo "[Bootstrap] Building TUI installer... (this may take a moment)"
+        if "$go_bin" build -o installer ./cmd/installer 2>/dev/null; then
+            echo "[Bootstrap] Build complete!"
+            cd "$SCRIPT_DIR"
+            return 0
+        else
+            echo "[Bootstrap] ERROR: Build failed." >&2
+            cd "$SCRIPT_DIR"
+            return 1
+        fi
     fi
 }
 
@@ -179,6 +198,12 @@ echo ""
 
 # Step 3: Launch the newly built TUI
 if [[ -f "$GO_BINARY" && -x "$GO_BINARY" ]]; then
+    # Show launching message with spinner if gum available
+    if has_gum; then
+        gum spin --spinner dot --title "Launching installer..." -- sleep 0.3
+    else
+        echo "[Bootstrap] Launching installer..."
+    fi
     exec "$GO_BINARY" "$@"
 else
     echo "ERROR: Binary still not found after build." >&2

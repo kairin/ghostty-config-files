@@ -42,11 +42,19 @@ if command -v ghostty &> /dev/null; then
     VERSION=$(ghostty --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' | head -1)
     LOCATION=$(command -v ghostty)
 
+    # Detect installation method
     METHOD="Unknown"
-    if [[ "$LOCATION" == "/usr/local/bin/ghostty" ]]; then
-        METHOD="Source"
-    elif snap list ghostty &> /dev/null; then
+    if snap list ghostty &>/dev/null 2>&1; then
         METHOD="Snap"
+    elif dpkg -l ghostty 2>/dev/null | grep -q '^ii'; then
+        METHOD="apt"
+    elif [[ "$LOCATION" == "/usr/bin/ghostty" ]]; then
+        # If at /usr/bin but not from apt, it's a source build
+        METHOD="Source"
+    elif [[ "$LOCATION" == "/usr/local/bin/ghostty" ]]; then
+        METHOD="Source"
+    elif [[ "$LOCATION" == "$HOME/.local/bin/ghostty" ]]; then
+        METHOD="Local"
     fi
 
     LATEST=$(get_ghostty_latest)

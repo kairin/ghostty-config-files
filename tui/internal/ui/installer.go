@@ -219,7 +219,10 @@ type (
 
 // Init initializes the installer model
 func (m InstallerModel) Init() tea.Cmd {
-	return m.tailSpinner.Init()
+	return tea.Batch(
+		m.tailSpinner.Init(),
+		tea.WindowSize(), // Query terminal size for proper viewport layout
+	)
 }
 
 // buildRecoveryButtons constructs the appropriate recovery buttons based on current state

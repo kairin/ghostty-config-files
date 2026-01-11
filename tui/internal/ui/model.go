@@ -126,6 +126,7 @@ func (m Model) Init() tea.Cmd {
 	return tea.Batch(
 		m.spinner.Tick,
 		m.refreshAllStatuses(),
+		tea.WindowSize(), // Query initial terminal size for proper layout
 	)
 }
 
