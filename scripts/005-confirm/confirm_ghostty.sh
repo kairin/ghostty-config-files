@@ -1,7 +1,10 @@
 #!/bin/bash
 source "$(dirname "$0")/../006-logs/logger.sh"
 
-log "INFO" "Confirming ghostty installation..."
+# Parse method argument (default: source for backwards compatibility)
+METHOD="${1:-source}"
+
+log "INFO" "Confirming ghostty installation (method: $METHOD)..."
 
 if command -v ghostty &> /dev/null; then
     VERSION=$(ghostty --version | head -n 1)
@@ -153,5 +156,5 @@ install_nautilus_context_menu
 # Generate artifact manifest for future verification
 SCRIPT_DIR="$(dirname "$0")"
 VERSION_NUM=$(echo "$VERSION" | grep -oP '\d+\.\d+\.\d+' || echo "unknown")
-"$SCRIPT_DIR/generate_manifest.sh" ghostty "$VERSION_NUM" source > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
-log "SUCCESS" "Artifact manifest generated for pre-reinstall verification"
+"$SCRIPT_DIR/generate_manifest.sh" ghostty "$VERSION_NUM" "$METHOD" > /dev/null 2>&1 || log "WARNING" "Failed to generate manifest"
+log "SUCCESS" "Artifact manifest generated for pre-reinstall verification (method: $METHOD)"

@@ -1,6 +1,54 @@
 #!/bin/bash
 source "$(dirname "$0")/../006-logs/logger.sh"
 
+# Parse method argument (default: source for backwards compatibility)
+METHOD="${1:-source}"
+
+log "INFO" "Installing Ghostty using method: $METHOD..."
+
+# Handle different installation methods
+case "$METHOD" in
+    snap)
+        # === SNAP INSTALLATION ===
+        log "INFO" "Installing Ghostty from Snap Store..."
+        log "INFO" "Publisher: ken-vandine (community maintained)"
+        log "INFO" "Version: latest/stable"
+
+        if sudo snap install ghostty --classic; then
+            GHOSTTY_VERSION=$(ghostty --version 2>&1 | head -1)
+            log "SUCCESS" "Ghostty installed via snap: $GHOSTTY_VERSION"
+
+            # Post-install: Install configurations
+            CONFIG_SCRIPT="$(dirname "$0")/../002-install-first-time/install_ghostty_config.sh"
+            if [ -f "$CONFIG_SCRIPT" ]; then
+                log "INFO" "Installing Ghostty configurations..."
+                bash "$CONFIG_SCRIPT"
+            else
+                log "WARNING" "Config script not found: $CONFIG_SCRIPT"
+            fi
+
+            log "SUCCESS" "Ghostty snap installation complete"
+            exit 0
+        else
+            log "ERROR" "Snap installation failed"
+            log "ERROR" "Check: sudo snap install ghostty --classic"
+            exit 1
+        fi
+        ;;
+
+    source)
+        # Continue with existing build-from-source logic below
+        log "INFO" "Starting build-from-source installation..."
+        ;;
+
+    *)
+        log "ERROR" "Unknown installation method: $METHOD"
+        log "ERROR" "Supported methods: snap, source"
+        exit 1
+        ;;
+esac
+
+# === BUILD-FROM-SOURCE INSTALLATION (Original logic) ===
 log "INFO" "Starting Ghostty build-from-source installation..."
 
 # Configuration
@@ -13,7 +61,7 @@ ZIG_PATH="/usr/local/bin/zig"
 cleanup() {
     if [ -d "$BUILD_DIR" ]; then
         log "INFO" "Cleaning up build directory..."
-        rm -rf "$BUILD_DIR"
+        sudo rm -rf "$BUILD_DIR" 2>/dev/null || rm -rf "$BUILD_DIR" 2>/dev/null
     fi
 }
 trap cleanup EXIT
@@ -40,7 +88,7 @@ CLONE_ATTEMPTS=0
 MAX_CLONE_ATTEMPTS=3
 
 while [ $CLONE_ATTEMPTS -lt $MAX_CLONE_ATTEMPTS ]; do
-    if git clone --depth 1 "$GHOSTTY_REPO" "$BUILD_DIR" 2>&1; then
+    if git clone --depth 1 --branch v1.2.3 "$GHOSTTY_REPO" "$BUILD_DIR" 2>&1; then
         log "SUCCESS" "Repository cloned successfully"
         break
     else
@@ -56,6 +104,29 @@ while [ $CLONE_ATTEMPTS -lt $MAX_CLONE_ATTEMPTS ]; do
 done
 
 cd "$BUILD_DIR" || exit 1
+
+# PATCH: Fix broken dependency URL in v1.2.3
+# (v1.2.3 references GitHub release that returns 404)
+# (main branch has correct CDN URL but requires Zig 0.15.2)
+# This is a temporary patch until v1.2.4/v1.3.0 is released
+log "INFO" "Applying v1.2.3 dependency URL patch..."
+
+if [ -f "build.zig.zon" ]; then
+    # Replace broken GitHub URL with working CDN URL
+    sed -i \
+        's|https://github.com/mbadolato/iTerm2-Color-Schemes/releases/download/release-20251002-142451-4a5043e/ghostty-themes.tgz|https://deps.files.ghostty.org/ghostty-themes-release-20251229-150532-f279991.tgz|' \
+        build.zig.zon
+
+    # Update hash to match new tarball
+    sed -i \
+        's|N-V-__8AALIsAwDyo88G5mGJGN2lSVmmFMx4YePfUvp_2o3Y|N-V-__8AAIdIAwAO4ro1DOaG7QTFq3ewrTQIViIKJ3lKY6lV|' \
+        build.zig.zon
+
+    log "SUCCESS" "Dependency URL patched successfully"
+else
+    log "ERROR" "build.zig.zon not found - cannot apply patch"
+    exit 1
+fi
 
 # Extract required Zig version from build.zig.zon
 REQUIRED_ZIG=$(grep -oP '\.zig_version\s*=\s*\.{\s*\.\K[0-9]+\.[0-9]+\.[0-9]+' build.zig.zon 2>/dev/null || \

@@ -6,6 +6,7 @@ type InstallMethod string
 
 const (
 	MethodSource        InstallMethod = "source"  // ghostty, feh
+	MethodSnap          InstallMethod = "snap"    // ghostty (alternative)
 	MethodCharmRepo     InstallMethod = "charm"   // gum, glow, vhs
 	MethodAPT           InstallMethod = "apt"     // fastfetch, zsh
 	MethodTarball       InstallMethod = "tarball" // go
@@ -46,7 +47,11 @@ type Tool struct {
 	DisplayName string        // Human-readable name, e.g., "Ghostty"
 	Description string        // Short description
 	Category    Category      // main or extras
-	Method      InstallMethod // Installation method
+	Method      InstallMethod // Default installation method
+
+	// Multi-method support (new)
+	MethodOverride   InstallMethod   // User-selected method override (runtime only, not persisted here)
+	SupportedMethods []InstallMethod // Methods this tool supports (e.g., [MethodSnap, MethodSource])
 
 	// Script paths
 	Scripts ToolScripts
@@ -82,4 +87,18 @@ func (t *Tool) GetScriptPath(stage string) string {
 	default:
 		return ""
 	}
+}
+
+// GetActiveMethod returns the active installation method
+// Returns MethodOverride if set, otherwise returns default Method
+func (t *Tool) GetActiveMethod() InstallMethod {
+	if t.MethodOverride != "" {
+		return t.MethodOverride
+	}
+	return t.Method
+}
+
+// SupportsMultipleMethods returns true if this tool supports more than one installation method
+func (t *Tool) SupportsMultipleMethods() bool {
+	return len(t.SupportedMethods) > 1
 }

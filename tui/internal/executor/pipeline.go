@@ -206,8 +206,14 @@ func (p *Pipeline) executeStage(ctx context.Context, stage PipelineStage) (Stage
 
 	start := time.Now()
 
-	// Run the script with streaming output
-	outputChan, resultChan := RunScript(p.config.RepoRoot, scriptPath, nil)
+	// Build script arguments - pass method if override is set
+	var args []string
+	if p.tool.MethodOverride != "" {
+		args = []string{string(p.tool.MethodOverride)}
+	}
+
+	// Run the script with streaming output (args... spreads the slice)
+	outputChan, resultChan := RunScript(p.config.RepoRoot, scriptPath, nil, args...)
 
 	// Forward output to pipeline's output channel
 	go func() {
@@ -306,11 +312,11 @@ func classifyError(stage PipelineStage, exitCode int) ErrorSeverity {
 		// Check failures are informational (tool not installed)
 		return ErrorInfo
 	case StageInstallDeps:
-		// Dependency failures are warnings (user may want to continue)
-		return ErrorWarn
+		// Dependency failures are FATAL - cannot build without deps
+		return ErrorFatal
 	case StageVerifyDeps:
-		// Verification failures are warnings
-		return ErrorWarn
+		// Verification failures are FATAL - deps must be satisfied
+		return ErrorFatal
 	case StageInstall:
 		// Installation failures are fatal
 		return ErrorFatal

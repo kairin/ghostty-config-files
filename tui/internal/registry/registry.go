@@ -25,11 +25,12 @@ var tools = map[string]*Tool{
 		DocsPath:     ".claude/instructions-for-agents/tools/feh.md",
 	},
 	"ghostty": {
-		ID:          "ghostty",
-		DisplayName: "Ghostty",
-		Description: "GPU-accelerated terminal emulator",
-		Category:    CategoryMain,
-		Method:      MethodSource,
+		ID:               "ghostty",
+		DisplayName:      "Ghostty",
+		Description:      "GPU-accelerated terminal emulator",
+		Category:         CategoryMain,
+		Method:           MethodSource,
+		SupportedMethods: []InstallMethod{MethodSnap, MethodSource}, // Supports both snap and source builds
 		Scripts: ToolScripts{
 			Check:       "scripts/000-check/check_ghostty.sh",
 			Uninstall:   "scripts/001-uninstall/uninstall_ghostty.sh",

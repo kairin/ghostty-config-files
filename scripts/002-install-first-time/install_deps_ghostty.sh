@@ -1,6 +1,40 @@
 #!/bin/bash
 source "$(dirname "$0")/../006-logs/logger.sh"
 
+# Parse method argument (default: source for backwards compatibility)
+METHOD="${1:-source}"
+
+log "INFO" "Installing Ghostty dependencies for method: $METHOD..."
+
+# Handle different installation methods
+case "$METHOD" in
+    snap)
+        # Snap method requires minimal dependencies - just ensure snap is available
+        log "INFO" "Snap method requires no additional dependencies"
+
+        if ! command -v snap &>/dev/null; then
+            log "ERROR" "Snap not available on this system"
+            log "ERROR" "Install snapd: sudo apt install snapd"
+            exit 1
+        fi
+
+        log "SUCCESS" "Snap is available"
+        exit 0
+        ;;
+
+    source)
+        # Continue with existing build-from-source logic below
+        log "INFO" "Installing build-from-source dependencies..."
+        ;;
+
+    *)
+        log "ERROR" "Unknown installation method: $METHOD"
+        log "ERROR" "Supported methods: snap, source"
+        exit 1
+        ;;
+esac
+
+# === BUILD-FROM-SOURCE DEPENDENCIES (Original logic) ===
 log "INFO" "Installing Ghostty build-from-source dependencies..."
 
 # Function to wait for apt lock
@@ -37,6 +71,8 @@ BUILD_DEPS=(
     "meson"
     "ninja-build"
     "libwayland-dev"
+    "libgirepository1.0-dev"
+    "valac"
 )
 
 log "INFO" "Installing APT build dependencies..."
@@ -63,8 +99,8 @@ fi
 
 # Build gtk4-layer-shell from source (not available in Ubuntu 24.04 repos)
 install_gtk4_layer_shell() {
-    if pkg-config --exists gtk4-layer-shell 2>/dev/null; then
-        local VERSION=$(pkg-config --modversion gtk4-layer-shell 2>/dev/null)
+    if pkg-config --exists gtk4-layer-shell-0 2>/dev/null; then
+        local VERSION=$(pkg-config --modversion gtk4-layer-shell-0 2>/dev/null)
         log "SUCCESS" "gtk4-layer-shell $VERSION already installed"
         return 0
     fi
@@ -120,11 +156,88 @@ install_gtk4_layer_shell() {
     rm -rf "$BUILD_DIR"
 
     # Verify installation
-    if pkg-config --exists gtk4-layer-shell; then
-        local VERSION=$(pkg-config --modversion gtk4-layer-shell 2>/dev/null)
+    if pkg-config --exists gtk4-layer-shell-0; then
+        local VERSION=$(pkg-config --modversion gtk4-layer-shell-0 2>/dev/null)
         log "SUCCESS" "gtk4-layer-shell $VERSION built and installed"
     else
         log "ERROR" "gtk4-layer-shell installation verification failed"
+        exit 1
+    fi
+}
+
+# Build blueprint-compiler from source (Ubuntu repos only have 0.12.0, need 0.16.0+)
+install_blueprint_compiler() {
+    local REQUIRED_VERSION="0.16.0"
+    local CURRENT_VERSION=$(blueprint-compiler --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+' || echo "0.0.0")
+
+    # Check if already installed with correct version
+    if command -v blueprint-compiler &>/dev/null; then
+        if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$CURRENT_VERSION" | sort -V | head -n1)" = "$REQUIRED_VERSION" ]; then
+            log "SUCCESS" "blueprint-compiler $CURRENT_VERSION already installed (>= $REQUIRED_VERSION)"
+            return 0
+        else
+            log "WARNING" "blueprint-compiler $CURRENT_VERSION installed but need $REQUIRED_VERSION+"
+        fi
+    fi
+
+    log "INFO" "Building blueprint-compiler from source (Ubuntu repos only have 0.12.0)..."
+
+    local BUILD_DIR=$(mktemp -d)
+    local ORIG_DIR=$(pwd)
+
+    cd "$BUILD_DIR" || exit 1
+
+    # Clone the repository
+    log "INFO" "Cloning blueprint-compiler repository..."
+    if ! git clone --depth 1 --branch v0.16.0 https://gitlab.gnome.org/jwestman/blueprint-compiler.git; then
+        log "ERROR" "Failed to clone blueprint-compiler"
+        cd "$ORIG_DIR"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+
+    cd blueprint-compiler || exit 1
+
+    # Build with meson
+    log "INFO" "Configuring build with meson..."
+    if ! meson setup builddir --prefix=/usr/local; then
+        log "ERROR" "Meson setup failed"
+        cd "$ORIG_DIR"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+
+    log "INFO" "Building blueprint-compiler..."
+    if ! ninja -C builddir; then
+        log "ERROR" "Ninja build failed"
+        cd "$ORIG_DIR"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+
+    log "INFO" "Installing blueprint-compiler to /usr/local..."
+    if ! sudo ninja -C builddir install; then
+        log "ERROR" "Installation failed"
+        cd "$ORIG_DIR"
+        rm -rf "$BUILD_DIR"
+        exit 1
+    fi
+
+    # Cleanup
+    cd "$ORIG_DIR"
+    rm -rf "$BUILD_DIR"
+
+    # Verify installation
+    if command -v blueprint-compiler &>/dev/null; then
+        local VERSION=$(blueprint-compiler --version 2>/dev/null | grep -oP '\d+\.\d+\.\d+')
+        if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$VERSION" | sort -V | head -n1)" = "$REQUIRED_VERSION" ]; then
+            log "SUCCESS" "blueprint-compiler $VERSION built and installed successfully"
+        else
+            log "ERROR" "blueprint-compiler installation verification failed (got $VERSION, need $REQUIRED_VERSION+)"
+            exit 1
+        fi
+    else
+        log "ERROR" "blueprint-compiler not found after installation"
         exit 1
     fi
 }
@@ -225,5 +338,6 @@ install_zig() {
 # Install dependencies in order
 install_gtk4_layer_shell
 install_zig
+install_blueprint_compiler
 
 log "SUCCESS" "All Ghostty build dependencies ready"

@@ -83,7 +83,7 @@ func RunCheck(repoRoot, scriptPath string) (string, error) {
 // RunScript executes a bash script with real-time output streaming
 // Returns channels for output lines and the final result
 // Timeout: 5 minutes for installation scripts
-func RunScript(repoRoot, scriptPath string, env map[string]string) (<-chan OutputLine, <-chan ScriptResult) {
+func RunScript(repoRoot, scriptPath string, env map[string]string, args ...string) (<-chan OutputLine, <-chan ScriptResult) {
 	output := make(chan OutputLine, 100)
 	result := make(chan ScriptResult, 1)
 
@@ -96,7 +96,10 @@ func RunScript(repoRoot, scriptPath string, env map[string]string) (<-chan Outpu
 		defer cancel()
 
 		fullPath := filepath.Join(repoRoot, scriptPath)
-		cmd := exec.CommandContext(ctx, "bash", fullPath)
+
+		// Build command with script path and arguments
+		cmdArgs := append([]string{fullPath}, args...)
+		cmd := exec.CommandContext(ctx, "bash", cmdArgs...)
 		cmd.Dir = repoRoot
 
 		// Set environment

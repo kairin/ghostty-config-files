@@ -1,6 +1,36 @@
 #!/bin/bash
 source "$(dirname "$0")/../006-logs/logger.sh"
 
+# Parse method argument (default: source for backwards compatibility)
+METHOD="${1:-source}"
+
+log "INFO" "Verifying Ghostty dependencies for method: $METHOD..."
+
+# Handle different installation methods
+case "$METHOD" in
+    snap)
+        # Snap method only requires snap to be available
+        if command -v snap &>/dev/null; then
+            log "SUCCESS" "Snap is available"
+            exit 0
+        else
+            log "ERROR" "Snap not available on this system"
+            exit 1
+        fi
+        ;;
+
+    source)
+        # Continue with existing build-from-source verification below
+        log "INFO" "Verifying build-from-source dependencies..."
+        ;;
+
+    *)
+        log "ERROR" "Unknown installation method: $METHOD"
+        exit 1
+        ;;
+esac
+
+# === BUILD-FROM-SOURCE VERIFICATION (Original logic) ===
 log "INFO" "Verifying Ghostty build-from-source dependencies..."
 
 MISSING=0

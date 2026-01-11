@@ -10,6 +10,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/kairin/ghostty-installer/internal/cache"
+	"github.com/kairin/ghostty-installer/internal/config"
+	"github.com/kairin/ghostty-installer/internal/detector"
 	"github.com/kairin/ghostty-installer/internal/diagnostics"
 	"github.com/kairin/ghostty-installer/internal/executor"
 	"github.com/kairin/ghostty-installer/internal/registry"
@@ -22,6 +24,7 @@ const (
 	ViewDashboard View = iota
 	ViewExtras
 	ViewAppMenu
+	ViewMethodSelect
 	ViewInstaller
 	ViewDiagnostics
 	ViewConfirm
@@ -61,6 +64,7 @@ type Model struct {
 	extras        *ExtrasModel
 	diagnostics   *DiagnosticsModel
 	confirmDialog *ConfirmModel
+	methodSelector *MethodSelectorModel
 
 	// Pending uninstall (set when confirmation shown)
 	uninstallTool *registry.Tool
@@ -257,6 +261,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Handle confirmation dialog result globally (before view-specific handling)
 		return m.handleConfirmResult(msg)
 
+	case methodSelectedMsg:
+		// User selected installation method - save preference and proceed
+		if m.selectedTool != nil {
+			m.selectedTool.MethodOverride = msg.method
+
+			// Save preference if requested
+			if msg.savePreference && m.selectedTool.ID == "ghostty" {
+				prefStore := config.NewPreferenceStore()
+				_ = prefStore.SetGhosttyMethod(msg.method)
+			}
+
+			// Clear method selector
+			m.methodSelector = nil
+
+			// Proceed with installation using selected method
+			return m.proceedWithInstall(m.selectedTool, msg.resume)
+		}
+		return m, nil
+
 	case InstallerExitMsg:
 		// User requested to exit installer view via recovery button
 		m.batchMode = false
@@ -378,6 +401,21 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, m.spinner.Tick
 			}
 		}
+		return m, cmd
+	}
+
+	// If method selector is active, delegate messages to it
+	if m.currentView == ViewMethodSelect && m.methodSelector != nil {
+		newSelector, cmd := m.methodSelector.Update(msg)
+		m.methodSelector = &newSelector
+
+		// Handle ESC to go back
+		if _, ok := msg.(backMsg); ok {
+			m.methodSelector = nil
+			m.currentView = ViewDashboard
+			return m, nil
+		}
+
 		return m, cmd
 	}
 
@@ -527,6 +565,7 @@ func requestSudoAuth() tea.Cmd {
 }
 
 // startInstaller creates and starts the installer view
+// For multi-method tools (like ghostty), shows method selector first if no preference saved
 func (m Model) startInstaller(tool *registry.Tool, resume bool) (tea.Model, tea.Cmd) {
 	// Check if tool is already installed - need to uninstall first (clean install)
 	// This ensures old versions are removed before installing new ones
@@ -539,6 +578,44 @@ func (m Model) startInstaller(tool *registry.Tool, resume bool) (tea.Model, tea.
 		return m.startUninstaller(tool)
 	}
 
+	// Check for multi-method support (e.g., ghostty supports snap and source)
+	if tool.SupportsMultipleMethods() {
+		// Check for saved preference
+		prefStore := config.NewPreferenceStore()
+		var savedMethod registry.InstallMethod
+
+		if tool.ID == "ghostty" {
+			savedMethod, _ = prefStore.GetGhosttyMethod()
+		}
+
+		if savedMethod != "" {
+			// Use saved preference, skip method selection
+			tool.MethodOverride = savedMethod
+			return m.proceedWithInstall(tool, resume)
+		}
+
+		// No preference - show method selector
+		sysInfo, err := detector.DetectSystem()
+		if err != nil {
+			// Fallback: detector failed, use default method
+			return m.proceedWithInstall(tool, resume)
+		}
+
+		recommendation := detector.RecommendGhosttyMethod(sysInfo)
+
+		selector := NewMethodSelector(tool, recommendation, sysInfo)
+		m.methodSelector = &selector
+		m.selectedTool = tool // Remember tool for later
+		m.currentView = ViewMethodSelect
+		return m, selector.Init()
+	}
+
+	// Single method tool - proceed directly
+	return m.proceedWithInstall(tool, resume)
+}
+
+// proceedWithInstall proceeds with installation after method selection (or directly for single-method tools)
+func (m Model) proceedWithInstall(tool *registry.Tool, resume bool) (tea.Model, tea.Cmd) {
 	// Normal fresh install
 	installer := NewInstallerModel(tool, m.repoRoot)
 	m.installer = &installer
@@ -714,6 +791,11 @@ func (m Model) View() string {
 		return m.viewExtras()
 	case ViewAppMenu:
 		return m.viewAppMenu()
+	case ViewMethodSelect:
+		if m.methodSelector != nil {
+			return m.methodSelector.View()
+		}
+		return m.viewDashboard()
 	case ViewInstaller:
 		if m.installer != nil {
 			return m.installer.View()
