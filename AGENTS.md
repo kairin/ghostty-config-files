@@ -83,7 +83,7 @@ ghostty +show-config
 ### 5. Context7 MCP Setup (RECOMMENDED)
 Query Context7 before major configuration changes.
 
-**Details**: [Context7 MCP Setup](astro-website/src/developer/context7-mcp.md) | [Critical Requirements](/.claude/instructions-for-agents/requirements/CRITICAL-requirements.md#-critical-context7-mcp-integration--documentation-synchronization)
+**Details**: [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) | [Critical Requirements](/.claude/instructions-for-agents/requirements/CRITICAL-requirements.md#-critical-context7-mcp-integration--documentation-synchronization)
 
 ---
 
@@ -262,8 +262,11 @@ ghostty +show-config                    # Validate configuration
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
 ### Setup Guides
-- [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) - Complete Context7 integration
-- [GitHub MCP Setup](/.claude/instructions-for-agents/guides/github-mcp.md) - Complete GitHub MCP integration
+- [MCP New Machine Setup](/.claude/instructions-for-agents/guides/mcp-new-machine-setup.md) - Quick setup for all 4 MCP servers
+- [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) - Documentation server
+- [GitHub MCP Setup](/.claude/instructions-for-agents/guides/github-mcp.md) - Repository operations
+- [MarkItDown MCP Setup](/.claude/instructions-for-agents/guides/markitdown-mcp.md) - Document conversion
+- [Playwright MCP Setup](/.claude/instructions-for-agents/guides/playwright-mcp.md) - Browser automation
 - [Logging Guide](/.claude/instructions-for-agents/guides/LOGGING_GUIDE.md) - Dual-mode logging system
 - [PowerLevel10k Integration](astro-website/src/developer/powerlevel10k/README.md) - ZSH prompt theme
 
@@ -303,8 +306,8 @@ ghostty +show-config                    # Validate configuration
 
 ## 📊 Metadata
 
-**Version**: 3.1-2026-Updated
-**Last Updated**: 2026-01-11
+**Version**: 3.2-2026-MCP-Update
+**Last Updated**: 2026-01-14
 **Status**: ACTIVE - MANDATORY COMPLIANCE
 **Target**: Ubuntu 25.10 (Questing) with Ghostty 1.2.3+ and zero-cost local CI/CD
 **Token Count**: ~1,500 tokens (87% reduction from 12,000 tokens)

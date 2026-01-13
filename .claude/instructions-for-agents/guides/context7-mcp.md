@@ -3,7 +3,7 @@ title: Context7 MCP Setup Guide
 category: guides
 linked-from: AGENTS.md, CRITICAL-requirements.md
 status: ACTIVE
-last-updated: 2026-01-11
+last-updated: 2026-01-14
 ---
 
 # Context7 MCP Setup Guide
@@ -18,32 +18,42 @@ Context7 MCP provides up-to-date documentation and code examples for programming
 
 - Claude Code CLI installed
 - Internet access for MCP server connection
+- Context7 API key (obtain from [Context7](https://context7.com))
 
-## Configuration
+## Configuration (User-Scoped)
 
-### 1. MCP Server Configuration
+MCP servers are configured at user scope (`~/.claude.json`), making them available across all projects.
 
-The Context7 server is configured in `.mcp.json`:
+### 1. Add MCP Server
 
-```json
-{
-  "mcpServers": {
-    "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp"
-    }
-  }
-}
+```bash
+claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp \
+  --header "CONTEXT7_API_KEY: <your-api-key>"
 ```
+
+Replace `<your-api-key>` with your Context7 API key.
 
 ### 2. Verify Configuration
 
 ```bash
-# Check MCP configuration exists
-cat .mcp.json | grep context7
+# Start Claude Code
+claude
 
-# Restart Claude Code to load MCP servers
-exit && claude
+# Check MCP status (in Claude Code)
+/mcp
+```
+
+You should see `context7 · ✔ connected`.
+
+### 3. Remove/Update Server
+
+```bash
+# Remove existing server
+claude mcp remove --scope user context7
+
+# Re-add with new configuration
+claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp \
+  --header "CONTEXT7_API_KEY: <your-new-key>"
 ```
 
 ## Available Tools
@@ -82,9 +92,19 @@ Query Context7 for React hooks documentation using library ID /facebook/react
 
 If Context7 tools aren't showing:
 
-1. Verify `.mcp.json` configuration
-2. Restart Claude Code: `exit && claude`
+1. Verify server is added: `claude mcp list`
+2. Restart Claude Code: exit and run `claude` again
 3. Check internet connectivity
+4. Verify API key is correct
+
+### Authentication Errors
+
+```bash
+# Remove and re-add with correct API key
+claude mcp remove --scope user context7
+claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp \
+  --header "CONTEXT7_API_KEY: <your-api-key>"
+```
 
 ### No Results Returned
 
@@ -96,6 +116,7 @@ If Context7 tools aren't showing:
 
 - [Critical Requirements](../requirements/CRITICAL-requirements.md#-critical-context7-mcp-integration--documentation-synchronization)
 - [GitHub MCP Setup](./github-mcp.md)
+- [MCP New Machine Setup](./mcp-new-machine-setup.md)
 
 ---
 

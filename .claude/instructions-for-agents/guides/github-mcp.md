@@ -3,7 +3,7 @@ title: GitHub MCP Setup Guide
 category: guides
 linked-from: AGENTS.md, CRITICAL-requirements.md
 status: ACTIVE
-last-updated: 2026-01-11
+last-updated: 2026-01-14
 ---
 
 # GitHub MCP Setup Guide
@@ -20,7 +20,9 @@ GitHub MCP provides direct GitHub API integration for repository operations, iss
 - Node.js installed (via fnm)
 - Claude Code CLI installed
 
-## Configuration
+## Configuration (User-Scoped)
+
+MCP servers are configured at user scope (`~/.claude.json`), making them available across all projects.
 
 ### 1. Authenticate GitHub CLI
 
@@ -32,37 +34,37 @@ gh auth login
 gh auth status
 ```
 
-### 2. MCP Server Configuration
+### 2. Add MCP Server
 
-The GitHub MCP server is configured in `.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "github": {
-      "command": "bash",
-      "args": ["-c", "export PATH=\"$HOME/.local/bin:$PATH\" && eval \"$(fnm env)\" && GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github"]
-    }
-  }
-}
+```bash
+claude mcp add --scope user github -- bash -c 'export PATH="$HOME/.local/bin:$PATH" && eval "$(fnm env)" && GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'
 ```
 
 This configuration:
-- Uses the `gh auth token` command to get the authentication token
+- Sets up PATH and fnm environment
+- Uses the `gh auth token` command to get the authentication token dynamically
 - Runs the official `@modelcontextprotocol/server-github` package
-- Automatically sets up the required environment
 
 ### 3. Verify Configuration
 
 ```bash
-# Check GitHub CLI authentication
-gh auth status
+# Start Claude Code
+claude
 
-# Check MCP configuration
-cat .mcp.json | grep github
+# Check MCP status (in Claude Code)
+/mcp
+```
 
-# Restart Claude Code to load MCP servers
-exit && claude
+You should see `github · ✔ connected`.
+
+### 4. Remove/Update Server
+
+```bash
+# Remove existing server
+claude mcp remove --scope user github
+
+# Re-add with updated configuration
+claude mcp add --scope user github -- bash -c 'export PATH="$HOME/.local/bin:$PATH" && eval "$(fnm env)" && GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'
 ```
 
 ## Available Tools
@@ -131,8 +133,16 @@ gh auth status
 2. Verify fnm is configured: `fnm list`
 3. Check the command manually:
    ```bash
-   GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github
+   export PATH="$HOME/.local/bin:$PATH" && eval "$(fnm env)" && GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github
    ```
+
+### Server Shows Disconnected
+
+```bash
+# Remove and re-add the server
+claude mcp remove --scope user github
+claude mcp add --scope user github -- bash -c 'export PATH="$HOME/.local/bin:$PATH" && eval "$(fnm env)" && GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'
+```
 
 ### Rate Limiting
 
@@ -146,13 +156,14 @@ GitHub API has rate limits. If you encounter limits:
 - Token is obtained dynamically via `gh auth token`
 - Token is never stored in files (only in GitHub CLI's secure storage)
 - Token auto-refreshes via GitHub CLI
-- `.env` file (if used) should never be committed
+- No credentials stored in `~/.claude.json`
 
 ## Related Documentation
 
 - [Critical Requirements](../requirements/CRITICAL-requirements.md#-critical-github-mcp-integration--repository-operations)
 - [Context7 MCP Setup](./context7-mcp.md)
 - [Git Strategy](../requirements/git-strategy.md)
+- [MCP New Machine Setup](./mcp-new-machine-setup.md)
 
 ---
 
