@@ -262,7 +262,7 @@ ghostty +show-config                    # Validate configuration
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
 ### Setup Guides
-- [MCP New Machine Setup](/.claude/instructions-for-agents/guides/mcp-new-machine-setup.md) - Quick setup for all 4 MCP servers
+- [MCP New Machine Setup](/.claude/instructions-for-agents/guides/mcp-new-machine-setup.md) - Quick setup for all 7 MCP servers
 - [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) - Documentation server
 - [GitHub MCP Setup](/.claude/instructions-for-agents/guides/github-mcp.md) - Repository operations
 - [MarkItDown MCP Setup](/.claude/instructions-for-agents/guides/markitdown-mcp.md) - Document conversion
