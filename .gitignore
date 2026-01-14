@@ -150,6 +150,10 @@ pnpm-lock.yaml
 .env.test.local
 .env.production.local
 
+# MCP Secrets (API keys - NEVER commit)
+.mcp-secrets
+*/.mcp-secrets
+
 # Vercel
 .vercel
 

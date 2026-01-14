@@ -12,7 +12,19 @@ last-updated: 2026-01-14
 
 ## Overview
 
-This guide provides quick setup instructions for configuring all 4 MCP servers on a new machine. MCP servers are configured at **user scope** (`~/.claude.json`), making them available across all projects.
+This guide provides setup instructions for configuring all **7 MCP servers** on a new machine. MCP servers are configured at **user scope** (`~/.claude.json`), making them available across all projects.
+
+## All 7 MCP Servers
+
+| # | Server | Purpose | Type |
+|---|--------|---------|------|
+| 1 | **context7** | Up-to-date library documentation | HTTP |
+| 2 | **github** | Repository operations, issues, PRs | stdio |
+| 3 | **markitdown** | Document format conversion | stdio |
+| 4 | **playwright** | Browser automation, screenshots | stdio |
+| 5 | **hf-mcp-server** | Hugging Face model hub access | HTTP |
+| 6 | **shadcn** | Official shadcn/ui CLI MCP | stdio |
+| 7 | **shadcn-ui** | shadcn component tools | stdio |
 
 ## Prerequisites Checklist
 
@@ -22,6 +34,7 @@ Before starting, ensure you have:
 - [ ] GitHub CLI (`gh`) installed and authenticated
 - [ ] Node.js via fnm installed
 - [ ] Python UV (`uvx`) installed
+- [ ] API keys ready (Context7, HuggingFace)
 
 ### Quick Prerequisite Install
 
@@ -45,18 +58,41 @@ node --version
 uvx --version
 ```
 
-## Quick Setup (All 4 Servers)
+## Quick Setup (All 7 Servers)
 
-Run these commands to set up all MCP servers:
+### Step 1: Set Up Secrets
 
-### Step 1: Authenticate GitHub CLI
+Copy the secrets template and fill in your API keys:
+
+```bash
+# If you have the ghostty-config-files repo
+cp ~/Apps/ghostty-config-files/configs/mcp/.mcp-secrets.template ~/.mcp-secrets
+
+# Or create manually
+cat > ~/.mcp-secrets << 'EOF'
+# MCP Server Secrets
+export CONTEXT7_API_KEY="your-context7-key"
+export HUGGINGFACE_TOKEN="your-hf-token"
+export HF_TOKEN="$HUGGINGFACE_TOKEN"
+EOF
+
+# Add to shell config
+echo '[ -f ~/.mcp-secrets ] && source ~/.mcp-secrets' >> ~/.zshrc
+source ~/.zshrc
+```
+
+**Get your API keys:**
+- Context7: https://context7.com (sign up for API key)
+- HuggingFace: https://huggingface.co/settings/tokens
+
+### Step 2: Authenticate GitHub CLI
 
 ```bash
 gh auth login
 gh auth status  # Verify
 ```
 
-### Step 2: Create Playwright Wrapper Script
+### Step 3: Create Playwright Wrapper Script
 
 ```bash
 mkdir -p ~/.local/bin
@@ -74,46 +110,103 @@ EOF
 chmod +x ~/.local/bin/playwright-mcp-wrapper.sh
 ```
 
-### Step 3: Add All MCP Servers
+### Step 4: Add All 7 MCP Servers
 
 ```bash
-# Context7 (Documentation Server)
-# Replace <your-api-key> with your Context7 API key
-claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp \
-  --header "CONTEXT7_API_KEY: <your-api-key>"
+# 1. Context7 (Documentation Server)
+claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp
 
-# GitHub (Repository Operations)
-claude mcp add --scope user github -- bash -c 'export PATH="$HOME/.local/bin:$PATH" && eval "$(fnm env)" && GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'
+# 2. GitHub (Repository Operations)
+claude mcp add --scope user github -- bash -c 'GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'
 
-# MarkItDown (Document Conversion)
+# 3. MarkItDown (Document Conversion)
 claude mcp add --scope user markitdown -- uvx markitdown-mcp
 
-# Playwright (Browser Automation)
+# 4. Playwright (Browser Automation)
 claude mcp add --scope user playwright -- ~/.local/bin/playwright-mcp-wrapper.sh
+
+# 5. HuggingFace (Model Hub)
+claude mcp add --scope user hf-mcp-server --transport http https://huggingface.co/mcp
+
+# 6. shadcn (Official CLI MCP)
+claude mcp add --scope user shadcn -- npx shadcn@latest mcp
+
+# 7. shadcn-ui (Component Tools)
+claude mcp add --scope user shadcn-ui -- bash -c 'GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx @jpisnice/shadcn-ui-mcp-server'
 ```
 
-### Step 4: Verify Setup
+### Step 5: Verify Setup
 
 ```bash
-claude
-# In Claude Code, type:
-/mcp
+claude mcp list
 ```
 
-**Expected output:** 4 servers, all showing `✔ connected`:
+**Expected output:** 7 servers, all showing `✓ Connected`:
 - context7
 - github
 - markitdown
 - playwright
+- hf-mcp-server
+- shadcn
+- shadcn-ui
+
+Or in Claude Code:
+```
+/mcp
+```
 
 ## Server Details
 
-| Server | Purpose | Requires |
-|--------|---------|----------|
-| **context7** | Up-to-date library documentation | API key |
-| **github** | Repository operations, issues, PRs | `gh auth login` |
-| **markitdown** | Document format conversion | `uvx` |
-| **playwright** | Browser automation, screenshots | Wrapper script |
+| Server | Purpose | Requires | Tools Provided |
+|--------|---------|----------|----------------|
+| **context7** | Library documentation | API key | resolve-library-id, query-docs |
+| **github** | Repository operations | `gh auth login` | Issues, PRs, file contents, search |
+| **markitdown** | Document conversion | `uvx` | convert_to_markdown |
+| **playwright** | Browser automation | Wrapper script | Navigate, click, screenshot, etc. |
+| **hf-mcp-server** | HuggingFace access | HF login | Model search, download, etc. |
+| **shadcn** | shadcn/ui CLI | Node.js | Component installation |
+| **shadcn-ui** | Component tools | `gh auth login` | Component search, docs |
+
+## Syncing Secrets Between Machines
+
+### Option 1: Manual Copy (Most Secure)
+
+```bash
+# On source machine
+cat ~/.mcp-secrets
+# Copy output
+
+# On target machine
+cat > ~/.mcp-secrets << 'EOF'
+# Paste content here
+EOF
+```
+
+### Option 2: Private Gist
+
+```bash
+# On source machine - create encrypted gist
+gh gist create ~/.mcp-secrets --private --desc "MCP Secrets"
+# Note the gist ID
+
+# On target machine - download
+gh gist view <gist-id> --raw > ~/.mcp-secrets
+chmod 600 ~/.mcp-secrets
+```
+
+### Option 3: Syncthing/Dropbox
+
+Add `~/.mcp-secrets` to your sync folder and create a symlink:
+```bash
+ln -s ~/Sync/.mcp-secrets ~/.mcp-secrets
+```
+
+### Option 4: 1Password/Bitwarden CLI
+
+```bash
+# Using 1Password CLI
+op read "op://Private/MCP Secrets/notes" > ~/.mcp-secrets
+```
 
 ## Troubleshooting
 
@@ -128,19 +221,33 @@ claude mcp remove --scope user <server-name>
 # Then re-run the add command
 ```
 
-### Check Server Status
-
-In Claude Code:
-```
-/mcp
-```
-
 ### Common Issues
 
-1. **GitHub disconnected**: Re-run `gh auth login`
-2. **Playwright disconnected**: Verify wrapper script exists and is executable
-3. **Context7 disconnected**: Check API key is correct
-4. **MarkItDown disconnected**: Verify `uvx` is installed
+| Issue | Solution |
+|-------|----------|
+| GitHub disconnected | Re-run `gh auth login` |
+| Playwright disconnected | Verify wrapper script exists and is executable |
+| Context7 disconnected | Check `CONTEXT7_API_KEY` is set in environment |
+| MarkItDown disconnected | Verify `uvx` is installed |
+| HuggingFace disconnected | Login at huggingface.co in browser first |
+| shadcn disconnected | Verify Node.js is installed via fnm |
+| shadcn-ui disconnected | Check GitHub auth token |
+
+### Check Environment Variables
+
+```bash
+# Verify secrets are loaded
+echo $CONTEXT7_API_KEY | head -c 10
+echo $HUGGINGFACE_TOKEN | head -c 10
+```
+
+### Restart Claude Code
+
+After making changes, restart Claude Code for servers to reconnect:
+```bash
+# Exit current session and start fresh
+claude
+```
 
 ## Managing Servers
 
@@ -161,9 +268,23 @@ claude mcp remove --scope user <server-name>
 claude mcp add --scope user <server-name> -- <command>
 ```
 
+## Automated Setup Script
+
+For even faster setup, use the automated script:
+
+```bash
+./scripts/002-install-first-time/setup_mcp_config.sh
+```
+
+This script will:
+1. Check all prerequisites
+2. Create wrapper scripts
+3. Add all 7 MCP servers
+4. Verify connectivity
+
 ## Detailed Guides
 
-For more information on each server:
+For more information on specific servers:
 
 - [Context7 MCP Setup](./context7-mcp.md)
 - [GitHub MCP Setup](./github-mcp.md)
