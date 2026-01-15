@@ -214,6 +214,9 @@ _work/
 
 # TUI build artifacts (Go binary)
 tui/ghostty-installer
+# Prevent stray TUI binaries at root (should only be in tui/)
+ghostty-installer
+/installer
 
 # Download logs (wget artifacts)
 wget-log
