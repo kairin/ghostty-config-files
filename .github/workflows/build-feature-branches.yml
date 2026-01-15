@@ -58,9 +58,9 @@ jobs:
         working-directory: ./astro-website
         run: |
           echo "Dependency versions:"
-          npm list astro --depth=0
-          npm list typescript --depth=0
-          npm list @astrojs/check --depth=0
+          npm list astro --depth=0 || true
+          npm list typescript --depth=0 || true
+          npm list @astrojs/check --depth=0 || true
 
       - name: Run TypeScript check
         working-directory: ./astro-website
