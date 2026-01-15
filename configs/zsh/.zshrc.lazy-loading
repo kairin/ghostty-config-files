@@ -1,0 +1,106 @@
+# Ghostty Config Files - Lazy Loading for Slow Tools
+# ===================================================
+# This file provides lazy loading patterns for tools that have slow initialization.
+# Instead of running expensive eval commands at shell startup, we defer them
+# until the tool is first used, significantly improving shell startup time.
+#
+# Performance impact:
+#   - Without lazy loading: +200-500ms per tool
+#   - With lazy loading: ~0ms (deferred until first use)
+#
+# Installation: These patterns are sourced by configure_zsh.sh during ZSH setup.
+
+# ==============================================================================
+# FNM - Fast Node Manager (Lazy Loading)
+# ==============================================================================
+# fnm is fast but still adds ~50ms to startup. Defer until first use.
+# Install: curl -fsSL https://fnm.vercel.app/install | bash
+if [[ -d "$HOME/.local/share/fnm" ]] && ! command -v fnm &>/dev/null 2>&1; then
+    export PATH="$HOME/.local/share/fnm:$PATH"
+fi
+
+if command -v fnm &>/dev/null 2>&1; then
+    fnm() {
+        unset -f fnm
+        eval "$(command fnm env --use-on-cd)"
+        fnm "$@"
+    }
+    # Also lazy-load node and npm commands
+    node() {
+        unset -f node fnm npm npx
+        eval "$(command fnm env --use-on-cd)"
+        node "$@"
+    }
+    npm() {
+        unset -f node fnm npm npx
+        eval "$(command fnm env --use-on-cd)"
+        npm "$@"
+    }
+    npx() {
+        unset -f node fnm npm npx
+        eval "$(command fnm env --use-on-cd)"
+        npx "$@"
+    }
+fi
+
+# ==============================================================================
+# NVM - Node Version Manager (Lazy Loading)
+# ==============================================================================
+# nvm is notoriously slow (~300-500ms). Lazy loading is essential.
+# Install: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+if [[ -d "$HOME/.nvm" ]]; then
+    export NVM_DIR="$HOME/.nvm"
+
+    nvm() {
+        unset -f nvm node npm npx
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm "$@"
+    }
+    # Also lazy-load node and npm commands (if not already defined by fnm)
+    if ! declare -f node &>/dev/null; then
+        node() {
+            unset -f nvm node npm npx
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            node "$@"
+        }
+    fi
+    if ! declare -f npm &>/dev/null; then
+        npm() {
+            unset -f nvm node npm npx
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npm "$@"
+        }
+    fi
+    if ! declare -f npx &>/dev/null; then
+        npx() {
+            unset -f nvm node npm npx
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npx "$@"
+        }
+    fi
+fi
+
+# ==============================================================================
+# BUN - JavaScript Runtime (Path Setup)
+# ==============================================================================
+# Bun is fast enough that lazy loading isn't needed, just PATH setup
+# Install: curl -fsSL https://bun.sh/install | bash
+if [[ -d "$HOME/.bun" ]]; then
+    export BUN_INSTALL="$HOME/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+    # Source bun completions if available
+    [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+fi
+
+# ==============================================================================
+# Lazy Loading Pattern Reference
+# ==============================================================================
+# To lazy-load any slow tool, use this pattern:
+#
+#   slow_tool() {
+#       unset -f slow_tool
+#       eval "$(command slow_tool init)"  # or whatever init command
+#       slow_tool "$@"
+#   }
+#
+# This replaces the function with the real command on first invocation.

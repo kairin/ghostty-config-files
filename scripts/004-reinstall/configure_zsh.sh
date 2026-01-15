@@ -6,6 +6,8 @@ source "$(dirname "$0")/../006-logs/logger.sh"
 ZSHRC="$HOME/.zshrc"
 BACKUP_DIR="$HOME/.zshrc.backups"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+SCRIPT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+CONFIGS_DIR="$SCRIPT_DIR/configs/zsh"
 
 # ==============================================================================
 # Pre-flight Checks
@@ -35,6 +37,59 @@ else
     # Replace any ZSH_THEME line with powerlevel10k
     sed -i 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSHRC"
     log "SUCCESS" "Set ZSH_THEME to powerlevel10k"
+fi
+
+# ==============================================================================
+# Step 2b: Add Powerlevel10k Instant Prompt (Performance)
+# ==============================================================================
+log "INFO" "Configuring P10k instant prompt..."
+
+INSTANT_PROMPT_BLOCK='# Enable Powerlevel10k instant prompt (performance optimization)
+# This MUST be near the top of .zshrc
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi'
+
+if grep -q 'p10k-instant-prompt' "$ZSHRC"; then
+    log "INFO" "P10k instant prompt already configured"
+else
+    # Insert at the very top of the file (after any shebang)
+    TEMP_FILE=$(mktemp)
+    if head -1 "$ZSHRC" | grep -q '^#!'; then
+        head -1 "$ZSHRC" > "$TEMP_FILE"
+        echo "" >> "$TEMP_FILE"
+        echo "$INSTANT_PROMPT_BLOCK" >> "$TEMP_FILE"
+        echo "" >> "$TEMP_FILE"
+        tail -n +2 "$ZSHRC" >> "$TEMP_FILE"
+    else
+        echo "$INSTANT_PROMPT_BLOCK" > "$TEMP_FILE"
+        echo "" >> "$TEMP_FILE"
+        cat "$ZSHRC" >> "$TEMP_FILE"
+    fi
+    mv "$TEMP_FILE" "$ZSHRC"
+    log "SUCCESS" "Added P10k instant prompt at top of .zshrc"
+fi
+
+# ==============================================================================
+# Step 2c: Configure Oh My Zsh Auto-Update
+# ==============================================================================
+log "INFO" "Configuring Oh My Zsh auto-update..."
+
+if grep -q "zstyle ':omz:update' mode auto" "$ZSHRC"; then
+    log "INFO" "Auto-update already configured"
+else
+    # Update or add auto-update settings
+    if grep -q "zstyle ':omz:update' mode" "$ZSHRC"; then
+        sed -i "s/zstyle ':omz:update' mode.*/zstyle ':omz:update' mode auto/" "$ZSHRC"
+    else
+        # Add after ZSH_THEME line
+        sed -i '/^ZSH_THEME=/a \
+\
+# Oh My Zsh auto-update settings\
+zstyle '"'"':omz:update'"'"' mode auto      # update automatically without asking\
+zstyle '"'"':omz:update'"'"' frequency 1    # check daily' "$ZSHRC"
+    fi
+    log "SUCCESS" "Configured daily auto-updates"
 fi
 
 # ==============================================================================
@@ -158,21 +213,98 @@ command -v glow \&>/dev/null \&\& eval "$(glow completion zsh)"\
 fi
 
 # ==============================================================================
+# Step 6: Source Modern CLI Aliases
+# ==============================================================================
+log "INFO" "Configuring modern CLI aliases..."
+
+ALIASES_FILE="$CONFIGS_DIR/.zshrc.aliases"
+if [ -f "$ALIASES_FILE" ]; then
+    if grep -q 'ghostty-config:aliases' "$ZSHRC"; then
+        log "INFO" "Aliases already configured"
+    else
+        cat >> "$ZSHRC" << 'EOF'
+
+# >>> ghostty-config:aliases >>>
+# Modern CLI tool aliases (grc, bat, eza)
+# Source the aliases file from ghostty-config-files
+GHOSTTY_ALIASES="${GHOSTTY_CONFIG_DIR:-$HOME/Apps/ghostty-config-files}/configs/zsh/.zshrc.aliases"
+[ -f "$GHOSTTY_ALIASES" ] && source "$GHOSTTY_ALIASES"
+# <<< ghostty-config:aliases <<<
+EOF
+        log "SUCCESS" "Added modern CLI aliases block"
+    fi
+else
+    log "WARNING" "Aliases file not found at $ALIASES_FILE"
+fi
+
+# ==============================================================================
+# Step 7: Source Lazy Loading Patterns
+# ==============================================================================
+log "INFO" "Configuring lazy loading for slow tools..."
+
+LAZY_FILE="$CONFIGS_DIR/.zshrc.lazy-loading"
+if [ -f "$LAZY_FILE" ]; then
+    if grep -q 'ghostty-config:lazy-loading' "$ZSHRC"; then
+        log "INFO" "Lazy loading already configured"
+    else
+        cat >> "$ZSHRC" << 'EOF'
+
+# >>> ghostty-config:lazy-loading >>>
+# Lazy load slow tools (fnm, nvm, bun) for faster startup
+GHOSTTY_LAZY="${GHOSTTY_CONFIG_DIR:-$HOME/Apps/ghostty-config-files}/configs/zsh/.zshrc.lazy-loading"
+[ -f "$GHOSTTY_LAZY" ] && source "$GHOSTTY_LAZY"
+# <<< ghostty-config:lazy-loading <<<
+EOF
+        log "SUCCESS" "Added lazy loading block"
+    fi
+else
+    log "WARNING" "Lazy loading file not found at $LAZY_FILE"
+fi
+
+# ==============================================================================
+# Step 8: Install Default Powerlevel10k Configuration
+# ==============================================================================
+log "INFO" "Checking Powerlevel10k configuration..."
+
+P10K_DEFAULT="$CONFIGS_DIR/.p10k.zsh"
+P10K_USER="$HOME/.p10k.zsh"
+
+if [ -f "$P10K_USER" ]; then
+    log "INFO" "User already has ~/.p10k.zsh (keeping existing)"
+else
+    if [ -f "$P10K_DEFAULT" ]; then
+        cp "$P10K_DEFAULT" "$P10K_USER"
+        log "SUCCESS" "Installed default P10k configuration (rainbow theme)"
+        log "INFO" "Customize with: p10k configure"
+    else
+        log "WARNING" "Default P10k config not found, run 'p10k configure' to create one"
+    fi
+fi
+
+# ==============================================================================
 # Summary
 # ==============================================================================
 log "SUCCESS" ".zshrc configuration complete!"
 log "INFO" ""
 log "INFO" "Changes made:"
 log "INFO" "  - Set theme to Powerlevel10k"
+log "INFO" "  - Added P10k instant prompt (faster startup)"
+log "INFO" "  - Configured daily Oh My Zsh auto-updates"
 log "INFO" "  - Updated plugins array (20 plugins)"
 log "INFO" "  - Added fzf integration"
 log "INFO" "  - Added completions for uv, gum, glow"
+log "INFO" "  - Added modern CLI aliases (grc, bat, eza)"
+log "INFO" "  - Added lazy loading for Node.js tools"
+log "INFO" "  - Installed default P10k config (if missing)"
 log "INFO" ""
 log "INFO" "Backup location: $BACKUP_DIR/.zshrc.$TIMESTAMP"
 log "INFO" ""
 log "INFO" "To apply changes, either:"
 log "INFO" "  1. Run: source ~/.zshrc"
 log "INFO" "  2. Open a new terminal"
+log "INFO" ""
+log "INFO" "To customize your prompt:"
+log "INFO" "  p10k configure"
 log "INFO" ""
 log "INFO" "To restore previous config:"
 log "INFO" "  cp $BACKUP_DIR/.zshrc.$TIMESTAMP ~/.zshrc"

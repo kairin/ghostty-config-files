@@ -6,6 +6,11 @@
 # Installation:
 #   ./start.sh → Extras → ZSH + Oh My Zsh → Install → Configure
 #
+# Related Configuration Files:
+#   .zshrc.aliases      - Modern CLI tool aliases (grc, bat, eza)
+#   .zshrc.lazy-loading - Lazy loading for Node.js tools (fnm, nvm, bun)
+#   .p10k.zsh           - Default Powerlevel10k rainbow theme
+#
 # Manual installation of external plugins:
 #   git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 #   git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting

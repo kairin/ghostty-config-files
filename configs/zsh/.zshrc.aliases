@@ -1,0 +1,63 @@
+# Ghostty Config Files - Modern CLI Tool Aliases
+# ===============================================
+# This file provides aliases for modern CLI tools that enhance the terminal experience.
+# These aliases are only active when the corresponding tools are installed.
+#
+# Tools covered:
+#   - grc: Generic colorizer for common commands
+#   - bat/batcat: Better cat with syntax highlighting
+#   - eza: Modern ls replacement with icons and git status
+#
+# Installation: These aliases are sourced by configure_zsh.sh during ZSH setup.
+# Manual sourcing: source /path/to/ghostty-config-files/configs/zsh/.zshrc.aliases
+
+# ==============================================================================
+# GRC - Generic Colorizer
+# ==============================================================================
+# Colorizes output of common system commands
+# Install: sudo apt install grc
+if command -v grc &>/dev/null; then
+    alias ps='grc --colour=auto ps'
+    alias df='grc --colour=auto df'
+    alias mount='grc --colour=auto mount'
+    alias ping='grc --colour=auto ping'
+    alias tail='grc --colour=auto tail'
+    alias diff='grc --colour=auto diff'
+fi
+
+# ==============================================================================
+# BAT - Better Cat
+# ==============================================================================
+# Syntax highlighting, line numbers, git integration
+# Install: sudo apt install bat (binary is 'batcat' on Debian/Ubuntu)
+if command -v batcat &>/dev/null; then
+    alias bat='batcat'
+    alias cat='batcat'
+elif command -v bat &>/dev/null; then
+    alias cat='bat'
+fi
+
+# ==============================================================================
+# EZA - Modern ls Replacement
+# ==============================================================================
+# Icons, colors, git status, better formatting
+# Install: sudo apt install eza (or cargo install eza)
+if command -v eza &>/dev/null; then
+    alias ls='eza --icons --color=always --git --group-directories-first -F'
+    alias ll='eza -lghH --icons --color=always --git --group-directories-first -F'
+    alias la='eza -laghH --icons --color=always --git --group-directories-first -F'
+    alias l.='eza -laghH --icons --color=always --git --group-directories-first -F --ignore-glob=".git|.idea|.vscode"'
+    alias tree='eza --tree --level=3 --icons'
+fi
+
+# ==============================================================================
+# Alias Quick Reference
+# ==============================================================================
+# ls   - List with icons and git status
+# ll   - Long format with details
+# la   - Long format including hidden files
+# l.   - Long format excluding common dev directories
+# tree - Tree view (3 levels deep)
+# cat  - Syntax-highlighted file viewing
+# ps   - Colorized process list
+# df   - Colorized disk usage
