@@ -104,6 +104,29 @@ update-all
 
 ## Post-Installation Configuration
 
+### Verify fnm Shell Integration (zsh users)
+
+If using zsh (the default shell for this project), verify that fnm is properly initialized:
+
+```bash
+# Check if npm is available
+npm --version
+
+# If "command not found", add fnm to ~/.zshrc:
+echo '# fnm - Fast Node Manager
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(fnm env --use-on-cd)"' >> ~/.zshrc
+
+# Reload shell configuration
+source ~/.zshrc
+
+# Verify it works
+npm --version   # Should show version
+node --version  # Should show version
+```
+
+> **Note**: The fnm installer only configures `.bashrc` by default. Zsh users must manually add fnm initialization to `.zshrc`. See [Node.js Troubleshooting](../tools/nodejs.md#troubleshooting) for details.
+
 ### Setup MCP Servers
 
 #### Context7 MCP (Documentation)

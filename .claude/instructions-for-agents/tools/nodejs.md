@@ -77,3 +77,36 @@ Set by fnm env:
 - `FNM_COREPACK_ENABLED`
 - `FNM_RESOLVE_ENGINES`
 - `FNM_ARCH`
+
+## Troubleshooting
+
+### "npm not found" in zsh
+
+**Symptom**: `npm` or `node` commands fail with "command not found" in zsh terminals, but work in bash.
+
+**Cause**: The fnm installer adds shell integration to `.bashrc` only. If your default shell is zsh (which is the default for this project), you need to add fnm initialization to `.zshrc` as well.
+
+**Fix**: Add these lines to `~/.zshrc`:
+
+```bash
+# fnm - Fast Node Manager
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(fnm env --use-on-cd)"
+```
+
+**Verify**: Open a new terminal and run:
+
+```bash
+npm --version   # Should show version like 11.6.2
+node --version  # Should show version like v25.2.1
+```
+
+### Check Default Shell
+
+```bash
+# View your default shell
+echo $SHELL
+
+# If it shows /usr/bin/zsh or /bin/zsh, you need fnm in .zshrc
+# If it shows /bin/bash, fnm should already work
+```
