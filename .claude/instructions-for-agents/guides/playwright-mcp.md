@@ -3,7 +3,7 @@ title: Playwright MCP Setup Guide
 category: guides
 linked-from: AGENTS.md
 status: ACTIVE
-last-updated: 2026-01-14
+last-updated: 2026-01-16
 ---
 
 # Playwright MCP Setup Guide
@@ -19,6 +19,7 @@ Playwright MCP provides browser automation capabilities, allowing Claude Code to
 - Node.js installed (via fnm)
 - Claude Code CLI installed
 - Wrapper script created (see below)
+- **Ubuntu 23.10+**: AppArmor user namespace fix (see [Ubuntu 23.10+ Fix](#ubuntu-2310-apparmor-sandbox-fix))
 
 ## Configuration (User-Scoped)
 
@@ -42,12 +43,20 @@ if command -v fnm &> /dev/null; then
     eval "$(fnm env)"
 fi
 
-# Run the Playwright MCP server
-exec npx -y @playwright/mcp@latest
+# Use system Chromium instead of Chrome (optional)
+export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/snap/bin/chromium
+
+# Run the Playwright MCP server with Chromium browser
+# --isolated: Use isolated browser instances to prevent stale lock issues
+exec npx -y @playwright/mcp@latest --browser chromium --isolated
 EOF
 
 chmod +x ~/.local/bin/playwright-mcp-wrapper.sh
 ```
+
+**Important flags:**
+- `--isolated`: Creates fresh browser instances, preventing stale browser lock issues between sessions
+- `--browser chromium`: Uses Chromium browser (lighter weight than Chrome)
 
 ### 2. Add MCP Server
 
@@ -130,6 +139,39 @@ claude mcp add --scope user playwright -- ~/.local/bin/playwright-mcp-wrapper.sh
 
 ## Troubleshooting
 
+### Ubuntu 23.10+ AppArmor Sandbox Fix
+
+**Error:** `No usable sandbox! If you are running on Ubuntu 23.10+ or another Linux distro that has disabled unprivileged user namespaces with AppArmor...`
+
+**Cause:** Ubuntu 23.10+ disabled unprivileged user namespaces by default for security. Chromium requires these for its sandbox.
+
+**Fix (one-time setup):**
+
+```bash
+# Step 1: Apply immediately
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+# Step 2: Make permanent (survives reboot)
+echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/99-userns.conf
+```
+
+**Security Note:** This is the default setting on Fedora, Arch, and many other distributions. It's required for:
+- Chromium/Chrome sandbox
+- Flatpak applications
+- Some container tools (Podman, etc.)
+
+### Stale Browser Lock Issues
+
+**Error:** Browser fails to launch with lock file errors after abnormal termination.
+
+**Fix:** Ensure your wrapper script uses the `--isolated` flag:
+
+```bash
+exec npx -y @playwright/mcp@latest --browser chromium --isolated
+```
+
+The `--isolated` flag creates fresh browser instances for each session, preventing stale locks.
+
 ### Browser Not Installed
 
 If you see "browser not installed" errors:
@@ -159,10 +201,13 @@ claude mcp remove --scope user playwright
 claude mcp add --scope user playwright -- ~/.local/bin/playwright-mcp-wrapper.sh
 ```
 
+Then restart Claude Code for changes to take effect.
+
 ### Display Issues (Headless)
 
 Playwright runs in headless mode by default. If you need to see the browser:
-- Modify the wrapper script to pass `--headed` flag
+- Add `--headless` flag to wrapper script (default)
+- Or add `--headed` flag to see browser visually
 - Or use screenshots/snapshots to see page state
 
 ## Wrapper Script Explained
@@ -171,8 +216,10 @@ The wrapper script serves several purposes:
 
 1. **PATH Setup**: Ensures `~/.local/bin` is in PATH
 2. **fnm Initialization**: Loads fnm environment for Node.js
-3. **Latest Version**: Uses `@playwright/mcp@latest` for updates
-4. **Clean Execution**: Uses `exec` to replace shell process
+3. **Chromium Browser**: Uses Chromium instead of Chrome (lighter weight)
+4. **Isolated Mode**: `--isolated` flag prevents stale browser lock issues
+5. **Latest Version**: Uses `@playwright/mcp@latest` for updates
+6. **Clean Execution**: Uses `exec` to replace shell process
 
 ## Related Documentation
 

@@ -3,7 +3,7 @@ title: MCP New Machine Setup Guide
 category: guides
 linked-from: AGENTS.md
 status: ACTIVE
-last-updated: 2026-01-14
+last-updated: 2026-01-16
 ---
 
 # MCP New Machine Setup Guide
@@ -35,6 +35,7 @@ Before starting, ensure you have:
 - [ ] Node.js via fnm installed
 - [ ] Python UV (`uvx`) installed
 - [ ] API keys ready (Context7, HuggingFace)
+- [ ] **Ubuntu 23.10+**: AppArmor fix applied (see [Ubuntu 23.10+ Fix](#ubuntu-2310-apparmor-fix-required))
 
 ### Quick Prerequisite Install
 
@@ -57,6 +58,20 @@ fnm --version
 node --version
 uvx --version
 ```
+
+### Ubuntu 23.10+ AppArmor Fix (REQUIRED)
+
+Ubuntu 23.10+ disabled unprivileged user namespaces by default, which breaks Chromium's sandbox. **This must be fixed before Playwright will work.**
+
+```bash
+# Step 1: Apply immediately
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+# Step 2: Make permanent (survives reboot)
+echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/99-userns.conf
+```
+
+**Why this is safe:** This is the default setting on Fedora, Arch, and many other distributions. It's required for Chromium/Chrome sandbox, Flatpak apps, and some container tools.
 
 ## Quick Setup (All 7 Servers)
 
@@ -104,11 +119,20 @@ export PATH="$HOME/.local/bin:$PATH"
 if command -v fnm &> /dev/null; then
     eval "$(fnm env)"
 fi
-exec npx -y @playwright/mcp@latest
+
+# Use system Chromium instead of Chrome (optional)
+export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/snap/bin/chromium
+
+# --isolated: Prevents stale browser lock issues between sessions
+exec npx -y @playwright/mcp@latest --browser chromium --isolated
 EOF
 
 chmod +x ~/.local/bin/playwright-mcp-wrapper.sh
 ```
+
+**Key flags:**
+- `--isolated`: Creates fresh browser instances, preventing stale lock issues
+- `--browser chromium`: Uses Chromium (lighter than Chrome)
 
 ### Step 4: Add All 7 MCP Servers
 
@@ -227,6 +251,8 @@ claude mcp remove --scope user <server-name>
 |-------|----------|
 | GitHub disconnected | Re-run `gh auth login` |
 | Playwright disconnected | Verify wrapper script exists and is executable |
+| Playwright sandbox error (Ubuntu 23.10+) | Apply [AppArmor fix](#ubuntu-2310-apparmor-fix-required) |
+| Playwright stale lock error | Ensure `--isolated` flag in wrapper script |
 | Context7 disconnected | Check `CONTEXT7_API_KEY` is set in environment |
 | MarkItDown disconnected | Verify `uvx` is installed |
 | HuggingFace disconnected | Login at huggingface.co in browser first |
