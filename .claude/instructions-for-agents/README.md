@@ -228,10 +228,10 @@ Each file includes:
 **README**: [README.md](../../../../README.md)
 
 **External References**:
-- [Context7 MCP Setup](../../../../documentation/setup/context7-mcp.md)
-- [GitHub MCP Setup](../../../../documentation/setup/github-mcp.md)
-- [Directory Structure](../../../../documentation/setup/DIRECTORY_STRUCTURE.md)
-- [Logging Guide](../../../../documentation/developer/LOGGING_GUIDE.md)
+- [Context7 MCP Setup](./guides/context7-mcp.md)
+- [GitHub MCP Setup](./guides/github-mcp.md)
+- [Directory Structure](./architecture/DIRECTORY_STRUCTURE.md)
+- [Logging Guide](./guides/LOGGING_GUIDE.md)
 
 ---
 

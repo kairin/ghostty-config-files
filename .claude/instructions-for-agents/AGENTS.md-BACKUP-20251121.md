@@ -1,4 +1,15 @@
-# Ghostty Configuration Files - LLM Instructions (2025 Edition)
+> ⚠️ **ARCHIVED** - Superseded by modular documentation structure (November 2025)
+>
+> This file is preserved for historical reference only. The current documentation is:
+> - **Gateway File**: `AGENTS.md` (lightweight 1.5KB gateway)
+> - **Modular Structure**: `.claude/instructions-for-agents/` directory
+> - **Index**: `.claude/instructions-for-agents/README.md`
+>
+> **Do NOT update this file.** All changes should go to the modular documentation.
+
+---
+
+# Ghostty Configuration Files - LLM Instructions (2025 Edition) [ARCHIVED]
 
 > 🔧 **CRITICAL**: This file contains NON-NEGOTIABLE requirements that ALL AI assistants (Claude, Gemini, ChatGPT, etc.) working on this repository MUST follow at ALL times.
 

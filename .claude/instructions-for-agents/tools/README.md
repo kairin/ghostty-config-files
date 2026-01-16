@@ -54,6 +54,21 @@ Each tool follows a standardized script structure:
 | 003 | `verify_deps_*.sh` | Verify dependencies |
 | 004 | `install_*.sh` | Main installation |
 | 005 | `confirm_*.sh` | Verify installation succeeded |
+| 007 | `update_*.sh` | In-place updates (NEW - 2026) |
+
+### Update Scripts (NEW - 2026)
+
+Located in `scripts/007-update/`, these scripts provide non-destructive in-place updates:
+
+| Script | Tool | Purpose |
+|--------|------|---------|
+| `update_claude_code.sh` | Claude Code | Update via npm |
+| `update_fnm.sh` | fnm | Update Node version manager |
+| `update_nodejs.sh` | Node.js | Update to latest version |
+| `update_python_uv.sh` | Python UV | Update package manager |
+| `update_zsh.sh` | ZSH | Update Oh My Zsh + plugins |
+
+**Usage**: Called by TUI installer's Update action or directly via CLI.
 
 ## Logging
 
@@ -83,5 +98,5 @@ The Go TUI source is in `tui/` directory:
 
 ---
 
-**Version**: 1.1
-**Last Updated**: 2025-12-14
+**Version**: 1.2
+**Last Updated**: 2026-01-17
