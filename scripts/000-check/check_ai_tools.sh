@@ -28,27 +28,27 @@ EXTRA=""
 if command -v claude &> /dev/null; then
     CLAUDE_INSTALLED=1
     CLAUDE_VER=$(claude --version 2>/dev/null | head -n 1 | grep -oP '\d+\.\d+\.\d+' || echo "installed")
-    EXTRA="$EXTRA^     \xe2\x9c\x93 Claude Code v${CLAUDE_VER}"
+    EXTRA="$EXTRA^     ✓ Claude Code v${CLAUDE_VER}"
 else
-    EXTRA="$EXTRA^     \xe2\x9c\x97 Claude Code"
+    EXTRA="$EXTRA^     ✗ Claude Code"
 fi
 
 # Check Gemini CLI (npm package @google/gemini-cli)
 if command -v gemini &> /dev/null; then
     GEMINI_INSTALLED=1
     GEMINI_VER=$(gemini --version 2>/dev/null | head -n 1 | grep -oP '\d+\.\d+\.\d+' || echo "installed")
-    EXTRA="$EXTRA^     \xe2\x9c\x93 Gemini CLI v${GEMINI_VER}"
+    EXTRA="$EXTRA^     ✓ Gemini CLI v${GEMINI_VER}"
 else
-    EXTRA="$EXTRA^     \xe2\x9c\x97 Gemini CLI"
+    EXTRA="$EXTRA^     ✗ Gemini CLI"
 fi
 
 # Check GitHub Copilot CLI (npm package @github/copilot)
 if command -v copilot &> /dev/null; then
     COPILOT_INSTALLED=1
     COPILOT_VER=$(copilot --version 2>/dev/null | head -n 1 | grep -oP '\d+\.\d+\.\d+' || echo "installed")
-    EXTRA="$EXTRA^     \xe2\x9c\x93 GitHub Copilot v${COPILOT_VER}"
+    EXTRA="$EXTRA^     ✓ GitHub Copilot v${COPILOT_VER}"
 else
-    EXTRA="$EXTRA^     \xe2\x9c\x97 GitHub Copilot"
+    EXTRA="$EXTRA^     ✗ GitHub Copilot"
 fi
 
 # Calculate total installed

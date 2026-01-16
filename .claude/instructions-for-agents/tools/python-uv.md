@@ -41,6 +41,16 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 - **Shell Integration**: Added to PATH by installer
 - **Logging**: Simple echo
 
+## Bundled Tools
+
+Python installation automatically includes the following bundled tools:
+
+| Tool | Purpose |
+|------|---------|
+| **uv** | Fast Python package installer and resolver from Astral |
+
+This is automatically installed and configured when you install Python via the TUI.
+
 ## Dependencies
 
 - curl (for running install script)

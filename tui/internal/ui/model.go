@@ -23,6 +23,7 @@ type View int
 const (
 	ViewDashboard View = iota
 	ViewExtras
+	ViewNerdFonts
 	ViewAppMenu
 	ViewMethodSelect
 	ViewInstaller
@@ -62,6 +63,7 @@ type Model struct {
 	spinner       spinner.Model
 	installer     *InstallerModel
 	extras        *ExtrasModel
+	nerdFonts     *NerdFontsModel
 	diagnostics   *DiagnosticsModel
 	confirmDialog *ConfirmModel
 	methodSelector *MethodSelectorModel
@@ -99,9 +101,10 @@ type Model struct {
 
 // pendingInstall stores installation to execute after sudo auth
 type pendingInstall struct {
-	tool      *registry.Tool
-	resume    bool
-	uninstall bool
+	tool           *registry.Tool
+	resume         bool
+	uninstall      bool
+	forceReinstall bool // Skip update routing, force uninstall→reinstall
 }
 
 // NewModel creates a new Model
@@ -222,13 +225,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if !m.sudoAuthDone && !checkSudoCached() {
 			// Store pending install and request sudo auth
 			m.pendingInstall = &pendingInstall{
-				tool:   msg.tool,
-				resume: msg.resume,
+				tool:           msg.tool,
+				resume:         msg.resume,
+				forceReinstall: msg.forceReinstall,
 			}
 			return m, requestSudoAuth()
 		}
 		m.sudoAuthDone = true
-		return m.startInstaller(msg.tool, msg.resume)
+		return m.startInstaller(msg.tool, msg.resume, msg.forceReinstall)
 
 	case startUninstallMsg:
 		// Check if sudo auth is needed before starting uninstallation
@@ -251,7 +255,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if pending.uninstall {
 				return m.startUninstaller(pending.tool)
 			}
-			return m.startInstaller(pending.tool, pending.resume)
+			return m.startInstaller(pending.tool, pending.resume, pending.forceReinstall)
 		}
 		// Auth failed or cancelled - clear pending and return to previous view
 		m.pendingInstall = nil
@@ -473,6 +477,59 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 	}
 
+	// If Nerd Fonts view is active, delegate messages to it
+	if m.currentView == ViewNerdFonts && m.nerdFonts != nil {
+		newNerdFonts, cmd := m.nerdFonts.Update(msg)
+		m.nerdFonts = &newNerdFonts
+
+		// Handle key presses for Nerd Fonts
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewDashboard
+				m.nerdFonts = nil
+				return m, nil
+			}
+
+			nerdFontsCmd, handled := m.nerdFonts.HandleKey(keyMsg)
+			if handled {
+				// Handle menu actions
+				if m.nerdFonts.IsBackSelected() {
+					m.currentView = ViewDashboard
+					m.nerdFonts = nil
+					return m, nil
+				} else if m.nerdFonts.IsInstallAllSelected() {
+					// Install All - install all Nerd Fonts
+					tool, ok := registry.GetTool("nerdfonts")
+					if !ok {
+						return m, nil
+					}
+
+					m.selectedTool = tool
+					return m, func() tea.Msg {
+						return startInstallMsg{tool: tool, resume: false}
+					}
+				} else if font := m.nerdFonts.GetSelectedFont(); font != nil {
+					// Individual font selected - for now, just install all fonts
+					// TODO: Implement per-family install in Phase 3a
+					tool, ok := registry.GetTool("nerdfonts")
+					if !ok {
+						return m, nil
+					}
+
+					m.selectedTool = tool
+					return m, func() tea.Msg {
+						return startInstallMsg{tool: tool, resume: false}
+					}
+				}
+			}
+			if nerdFontsCmd != nil {
+				return m, nerdFontsCmd
+			}
+		}
+
+		return m, cmd
+	}
+
 	// If diagnostics view is active, delegate messages to it
 	if m.currentView == ViewDiagnostics && m.diagnostics != nil {
 		newDiag, cmd := m.diagnostics.Update(msg)
@@ -534,8 +591,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // startInstallMsg triggers installation of a tool
 type startInstallMsg struct {
-	tool   *registry.Tool
-	resume bool
+	tool           *registry.Tool
+	resume         bool
+	forceReinstall bool // Skip update routing, force uninstall→reinstall
 }
 
 // startUninstallMsg triggers uninstallation of a tool
@@ -566,14 +624,29 @@ func requestSudoAuth() tea.Cmd {
 
 // startInstaller creates and starts the installer view
 // For multi-method tools (like ghostty), shows method selector first if no preference saved
-func (m Model) startInstaller(tool *registry.Tool, resume bool) (tea.Model, tea.Cmd) {
-	// Check if tool is already installed - need to uninstall first (clean install)
-	// This ensures old versions are removed before installing new ones
+// SMART ROUTING: If tool is installed and has update script, routes to UPDATE (non-destructive)
+// instead of UNINSTALL→REINSTALL (destructive) to preserve user data
+// Set forceReinstall=true to skip update routing and force clean reinstall
+func (m Model) startInstaller(tool *registry.Tool, resume bool, forceReinstall bool) (tea.Model, tea.Cmd) {
+	// Nil check: prevent panic when tool is nil
+	if tool == nil {
+		// Return to dashboard with no action if tool is nil
+		return m, nil
+	}
+
+	// Check if tool is already installed
 	m.state.mu.RLock()
 	status, hasStatus := m.state.statuses[tool.ID]
 	m.state.mu.RUnlock()
 
 	if hasStatus && status != nil && status.IsInstalled() {
+		// Tool is installed - check if we should UPDATE (non-destructive) or REINSTALL (destructive)
+		// Route to UPDATE if: tool has update script AND needs update AND not forcing reinstall
+		// This preserves npm globals, auth tokens, and configs
+		if !forceReinstall && tool.HasUpdateScript() && status.NeedsUpdate() {
+			return m.startUpdater(tool)
+		}
+		// No update script, already latest, or forcing reinstall - do clean reinstall (uninstall → install)
 		m.pendingCleanInstall = tool // Remember to install after uninstall
 		return m.startUninstaller(tool)
 	}
@@ -663,6 +736,11 @@ func (m Model) handleConfirmResult(result ConfirmResult) (tea.Model, tea.Cmd) {
 
 // startUninstaller creates and starts the uninstaller view
 func (m Model) startUninstaller(tool *registry.Tool) (tea.Model, tea.Cmd) {
+	// Nil check: prevent panic when tool is nil
+	if tool == nil {
+		return m, nil
+	}
+
 	// Create installer model in uninstall mode
 	installer := NewInstallerModelForUninstall(tool, m.repoRoot)
 	m.installer = &installer
@@ -672,6 +750,28 @@ func (m Model) startUninstaller(tool *registry.Tool) (tea.Model, tea.Cmd) {
 	initCmd := m.installer.Init()
 	startCmd := func() tea.Msg {
 		return InstallerStartMsg{Resume: false, Uninstall: true}
+	}
+
+	return m, tea.Batch(initCmd, startCmd)
+}
+
+// startUpdater creates and starts the updater view (non-destructive in-place update)
+// This preserves user data like npm global packages, auth tokens, and configurations
+func (m Model) startUpdater(tool *registry.Tool) (tea.Model, tea.Cmd) {
+	// Nil check: prevent panic when tool is nil
+	if tool == nil {
+		return m, nil
+	}
+
+	// Create installer model in update mode
+	installer := NewInstallerModelForUpdate(tool, m.repoRoot)
+	m.installer = &installer
+	m.currentView = ViewInstaller
+
+	// Initialize and start update
+	initCmd := m.installer.Init()
+	startCmd := func() tea.Msg {
+		return InstallerStartMsg{Resume: false, Update: true}
 	}
 
 	return m, tea.Batch(initCmd, startCmd)
@@ -699,7 +799,12 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "down", "j":
 		switch m.currentView {
 		case ViewDashboard:
-			maxCursor := registry.MainToolCount() + 3 // Tools + menu items
+			// Calculate max cursor: tools + dynamic menu items
+			menuItemCount := 4 // Nerd Fonts, Extras, Boot Diagnostics, Exit
+			if m.getUpdateCount() > 0 && !m.loading {
+				menuItemCount++ // Add "Update All" option
+			}
+			maxCursor := registry.MainToolCount() + menuItemCount
 			if m.mainCursor < maxCursor-1 {
 				m.mainCursor++
 			}
@@ -713,6 +818,13 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 	case "enter":
 		return m.handleEnter()
+
+	case "u", "U":
+		// Update All shortcut - only works on dashboard when updates available
+		if m.currentView == ViewDashboard && m.getUpdateCount() > 0 && !m.loading {
+			return m.startBatchUpdate()
+		}
+		return m, nil
 
 	case "r":
 		// Refresh all statuses
@@ -746,20 +858,36 @@ func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 			m.currentView = ViewAppMenu
 			m.menuCursor = 0
 		} else {
-			// Menu item
+			// Menu item selected
 			menuIndex := m.mainCursor - toolCount
+			updateCount := m.getUpdateCount()
+
+			// If updates available, "Update All" is at index 0
+			if updateCount > 0 && !m.loading {
+				if menuIndex == 0 {
+					// "Update All" selected
+					return m.startBatchUpdate()
+				}
+				menuIndex-- // Offset for remaining items
+			}
+
 			switch menuIndex {
-			case 0: // Extras
+			case 0: // Nerd Fonts
+				nerdFonts := NewNerdFontsModel(m.state, m.cache, m.repoRoot)
+				m.nerdFonts = &nerdFonts
+				m.currentView = ViewNerdFonts
+				return m, m.nerdFonts.Init()
+			case 1: // Extras
 				extras := NewExtrasModel(m.state, m.cache, m.repoRoot)
 				m.extras = &extras
 				m.currentView = ViewExtras
 				return m, m.extras.Init()
-			case 1: // Boot Diagnostics
+			case 2: // Boot Diagnostics
 				diag := NewDiagnosticsModel(m.repoRoot, m.demoMode, m.sudoCached)
 				m.diagnostics = &diag
 				m.currentView = ViewDiagnostics
 				return m, m.diagnostics.Init()
-			case 2: // Exit
+			case 3: // Exit
 				return m, tea.Quit
 			}
 		}
@@ -782,6 +910,58 @@ func (m Model) getToolStatus(toolID string) *cache.ToolStatus {
 	return nil
 }
 
+// getToolsNeedingUpdates returns all tools (main + extras) that have updates available
+func (m Model) getToolsNeedingUpdates() []*registry.Tool {
+	m.state.mu.RLock()
+	defer m.state.mu.RUnlock()
+
+	var needsUpdate []*registry.Tool
+
+	// Check main tools
+	for _, tool := range registry.GetMainTools() {
+		if status, ok := m.state.statuses[tool.ID]; ok && status.NeedsUpdate() {
+			needsUpdate = append(needsUpdate, tool)
+		}
+	}
+
+	// Check extras tools
+	for _, tool := range registry.GetExtrasTools() {
+		if status, ok := m.state.statuses[tool.ID]; ok && status.NeedsUpdate() {
+			needsUpdate = append(needsUpdate, tool)
+		}
+	}
+
+	return needsUpdate
+}
+
+// getUpdateCount returns the number of tools with updates available
+func (m Model) getUpdateCount() int {
+	return len(m.getToolsNeedingUpdates())
+}
+
+// startBatchUpdate initiates update of all tools with available updates
+func (m Model) startBatchUpdate() (tea.Model, tea.Cmd) {
+	toUpdate := m.getToolsNeedingUpdates()
+
+	if len(toUpdate) == 0 {
+		return m, nil
+	}
+
+	// Reuse batch mode infrastructure
+	m.batchQueue = toUpdate
+	m.batchIndex = 0
+	m.batchMode = true
+
+	// Start with first tool
+	firstTool := m.batchQueue[0]
+	m.selectedTool = firstTool
+	m.currentView = ViewInstaller
+
+	return m, func() tea.Msg {
+		return startInstallMsg{tool: firstTool, resume: false}
+	}
+}
+
 // View renders the UI
 func (m Model) View() string {
 	switch m.currentView {
@@ -789,6 +969,8 @@ func (m Model) View() string {
 		return m.viewDashboard()
 	case ViewExtras:
 		return m.viewExtras()
+	case ViewNerdFonts:
+		return m.viewNerdFonts()
 	case ViewAppMenu:
 		return m.viewAppMenu()
 	case ViewMethodSelect:
@@ -820,6 +1002,19 @@ func (m Model) viewDashboard() string {
 	header := HeaderStyle.Render("System Installer • Ghostty, Feh, Local AI Tools")
 	b.WriteString(header)
 	b.WriteString("\n\n")
+
+	// Updates available banner (shown when tools have updates)
+	updateCount := m.getUpdateCount()
+	if updateCount > 0 && !m.loading {
+		plural := ""
+		if updateCount > 1 {
+			plural = "s"
+		}
+		banner := fmt.Sprintf("%s %d update%s available - press 'u' or select Update All",
+			IconArrowUp, updateCount, plural)
+		b.WriteString(StatusUpdateStyle.Render(banner))
+		b.WriteString("\n\n")
+	}
 
 	// Diagnostics banner (if issues found in cache)
 	if issues := m.diagCache.GetIssues(); len(issues) > 0 {
@@ -854,8 +1049,12 @@ func (m Model) viewDashboard() string {
 	b.WriteString(m.renderMainMenu())
 	b.WriteString("\n")
 
-	// Help
-	help := HelpStyle.Render("↑↓ navigate • enter select • r refresh • q quit")
+	// Help (show 'u' shortcut when updates available)
+	helpText := "↑↓ navigate • enter select • r refresh • q quit"
+	if m.getUpdateCount() > 0 && !m.loading {
+		helpText = "↑↓ navigate • enter select • u update all • r refresh • q quit"
+	}
+	help := HelpStyle.Render(helpText)
 	b.WriteString(help)
 
 	return b.String()
@@ -955,8 +1154,17 @@ func (m Model) renderStatusTable() string {
 		if hasStatus && len(status.Details) > 0 {
 			for _, detail := range status.Details {
 				if detail != "" {
-					b.WriteString(DetailStyle.Render("    " + detail))
-					b.WriteString("\n")
+					// Use section header style for "Bundled:" and "Globals:" headers
+					if detail == "Bundled:" {
+						b.WriteString(SectionHeaderStyle.Render(IconPackage + " Bundled:"))
+						b.WriteString("\n")
+					} else if detail == "Globals:" {
+						b.WriteString(SectionHeaderStyle.Render(IconGear + " Globals:"))
+						b.WriteString("\n")
+					} else {
+						b.WriteString(DetailStyle.Render("    " + detail))
+						b.WriteString("\n")
+					}
 				}
 			}
 		}
@@ -971,7 +1179,13 @@ func (m Model) renderMainMenu() string {
 	tools := registry.GetMainTools()
 	toolCount := len(tools)
 
-	menuItems := []string{"Extras", "Boot Diagnostics", "Exit"}
+	// Build menu items dynamically - add "Update All" if updates available
+	menuItems := []string{}
+	updateCount := m.getUpdateCount()
+	if updateCount > 0 && !m.loading {
+		menuItems = append(menuItems, fmt.Sprintf("Update All (%d)", updateCount))
+	}
+	menuItems = append(menuItems, "Nerd Fonts", "Extras", "Boot Diagnostics", "Exit")
 
 	b.WriteString("\nChoose:\n")
 
@@ -993,6 +1207,13 @@ func (m Model) viewExtras() string {
 		return m.extras.View()
 	}
 	return "Loading extras..."
+}
+
+func (m Model) viewNerdFonts() string {
+	if m.nerdFonts != nil {
+		return m.nerdFonts.View()
+	}
+	return "Loading Nerd Fonts..."
 }
 
 func (m Model) viewAppMenu() string {
@@ -1106,9 +1327,15 @@ func (m Model) handleAppMenuEnter() (tea.Model, tea.Cmd) {
 
 	// Handle action by name
 	switch selectedAction {
-	case "Install", "Update", "Reinstall":
+	case "Install", "Update":
+		// Install/Update: allow smart routing to update if applicable
 		return m, func() tea.Msg {
-			return startInstallMsg{tool: m.selectedTool, resume: false}
+			return startInstallMsg{tool: m.selectedTool, resume: false, forceReinstall: false}
+		}
+	case "Reinstall":
+		// Reinstall: force clean uninstall→install, skip update routing
+		return m, func() tea.Msg {
+			return startInstallMsg{tool: m.selectedTool, resume: false, forceReinstall: true}
 		}
 	case "Uninstall":
 		return m.showUninstallConfirm(m.selectedTool)

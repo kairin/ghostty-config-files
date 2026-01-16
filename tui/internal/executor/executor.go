@@ -201,6 +201,7 @@ const (
 	StageConfirm
 	StageUninstall
 	StageConfigure
+	StageUpdate // In-place update (non-destructive, preserves data)
 )
 
 // String returns the human-readable stage name
@@ -213,6 +214,7 @@ func (s PipelineStage) String() string {
 		"Confirming installation",
 		"Uninstalling",
 		"Configuring",
+		"Updating",
 	}[s]
 }
 
@@ -226,5 +228,6 @@ func (s PipelineStage) ActiveForm() string {
 		"Confirming installation...",
 		"Uninstalling...",
 		"Configuring...",
+		"Updating...",
 	}[s]
 }

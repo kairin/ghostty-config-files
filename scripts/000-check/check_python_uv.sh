@@ -46,8 +46,11 @@ if command -v uv &> /dev/null; then
         METHOD="Other"
     fi
 
+    # Add Bundled: section showing uv version
+    EXTRA="^Bundled:^  uv v$VERSION"
+
     LATEST=$(get_uv_latest)
-    echo "INSTALLED|$VERSION|$METHOD|$LOCATION|$LATEST"
+    echo "INSTALLED|$VERSION|$METHOD|$LOCATION$EXTRA|$LATEST"
 else
     LATEST=$(get_uv_latest)
     echo "NOT_INSTALLED|-|-|-|$LATEST"

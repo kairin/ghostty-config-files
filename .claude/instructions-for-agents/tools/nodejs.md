@@ -55,6 +55,17 @@ eval "$(fnm env --use-on-cd)"
 - **Shell Integration**: fnm env in shell rc file
 - **Logging**: Uses `logger.sh` (structured logging)
 
+## Bundled Tools
+
+Node.js installation automatically includes the following bundled tools:
+
+| Tool | Purpose |
+|------|---------|
+| **fnm** | Fast Node Manager - cross-platform Node.js version manager |
+| **npm** | Node Package Manager (included with Node.js) |
+
+These are automatically installed and configured when you install Node.js via the TUI.
+
 ## Dependencies
 
 - curl (for fnm installation)

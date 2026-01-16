@@ -29,6 +29,7 @@ const (
 	IconWarning   = "\uf071" //
 	IconCircle    = "\uf111" //  (for low severity)
 	IconInfo      = "\uf05a" //  (for info)
+	IconPackage   = "\uf487" //  (for bundled tools)
 )
 
 // Style definitions
@@ -71,6 +72,12 @@ var (
 	DetailStyle = lipgloss.NewStyle().
 			Foreground(ColorMuted).
 			PaddingLeft(4)
+
+	// Section header styles for details (Bundled:, Globals:)
+	SectionHeaderStyle = lipgloss.NewStyle().
+				Foreground(ColorHighlight).
+				Bold(true).
+				PaddingLeft(4)
 
 	// Menu styles
 	MenuItemStyle = lipgloss.NewStyle().

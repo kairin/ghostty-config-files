@@ -26,7 +26,13 @@ type ConfigurePipeline struct {
 }
 
 // NewConfigurePipeline creates a new configure pipeline for a tool
+// Returns nil if tool is nil (caller must handle nil return)
 func NewConfigurePipeline(tool *registry.Tool, config PipelineConfig) *ConfigurePipeline {
+	// Nil check: prevent panic when accessing tool fields later
+	if tool == nil {
+		return nil
+	}
+
 	return &ConfigurePipeline{
 		config:       config,
 		tool:         tool,

@@ -32,6 +32,7 @@ type ToolScripts struct {
 	Install     string // scripts/004-reinstall/install_{id}.sh
 	Confirm     string // scripts/005-confirm/confirm_{id}.sh
 	Configure   string // scripts/configure_{id}.sh (optional post-installation configuration)
+	Update      string // scripts/007-update/update_{id}.sh (in-place update, preserves data)
 }
 
 // SubTool represents a component of an aggregate tool (e.g., AI Tools)
@@ -39,6 +40,15 @@ type SubTool struct {
 	ID      string // e.g., "claude"
 	Name    string // e.g., "Claude Code"
 	Command string // Command to check existence, e.g., "claude"
+}
+
+// BundledTool represents a required dependency installed with the parent tool
+// Unlike SubTools (optional components), these are always installed together
+type BundledTool struct {
+	ID          string // e.g., "fnm"
+	Name        string // e.g., "fnm (Fast Node Manager)"
+	Description string // e.g., "Cross-platform Node.js version manager"
+	VersionCmd  string // e.g., "fnm --version" (for display only)
 }
 
 // Tool represents a single installable tool
@@ -61,9 +71,10 @@ type Tool struct {
 	VersionRegex string   // Regex to extract version from output
 
 	// Special behaviors
-	IsAggregate bool      // True if this is a multi-tool aggregate (AI Tools)
-	SubTools    []SubTool // Component tools for aggregates
-	HasGlobals  bool      // Node.js-specific: track global packages
+	IsAggregate  bool           // True if this is a multi-tool aggregate (AI Tools)
+	SubTools     []SubTool      // Component tools for aggregates
+	HasGlobals   bool           // Node.js-specific: track global packages
+	BundledTools []BundledTool  // Required dependencies installed with this tool (e.g., fnm for Node.js)
 
 	// Documentation
 	DocsPath string // Path to tool documentation
@@ -84,9 +95,16 @@ func (t *Tool) GetScriptPath(stage string) string {
 		return t.Scripts.Install
 	case "confirm":
 		return t.Scripts.Confirm
+	case "update":
+		return t.Scripts.Update
 	default:
 		return ""
 	}
+}
+
+// HasUpdateScript returns true if tool has an in-place update script
+func (t *Tool) HasUpdateScript() bool {
+	return t.Scripts.Update != ""
 }
 
 // GetActiveMethod returns the active installation method
