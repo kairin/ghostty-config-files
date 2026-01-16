@@ -83,7 +83,7 @@ if [ -z "$URL" ]; then
 fi
 
 echo "Downloading $URL..."
-wget -O /tmp/fastfetch.deb "$URL"
+wget -q --show-progress -O /tmp/fastfetch.deb "$URL"
 sudo dpkg -i /tmp/fastfetch.deb
 rm /tmp/fastfetch.deb
 
