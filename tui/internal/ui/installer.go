@@ -91,6 +91,9 @@ type InstallerModel struct {
 	configurePipeline *executor.ConfigurePipeline
 	isConfigure       bool
 
+	// Update mode (non-destructive in-place update)
+	isUpdate bool
+
 	// State
 	state        InstallerState
 	currentStage executor.PipelineStage
@@ -127,6 +130,7 @@ type stageStatus struct {
 }
 
 // NewInstallerModel creates a new installer model
+// Returns nil-safe model if tool is nil (defensive programming)
 func NewInstallerModel(tool *registry.Tool, repoRoot string) InstallerModel {
 	stages := []stageStatus{
 		{stage: executor.StageCheck},
@@ -137,7 +141,13 @@ func NewInstallerModel(tool *registry.Tool, repoRoot string) InstallerModel {
 	}
 
 	ts := NewTailSpinner()
-	ts.SetTitle(fmt.Sprintf("Installing %s", tool.DisplayName))
+
+	// Nil check: prevent panic when accessing tool.DisplayName
+	displayName := "Unknown Tool"
+	if tool != nil {
+		displayName = tool.DisplayName
+	}
+	ts.SetTitle(fmt.Sprintf("Installing %s", displayName))
 	ts.SetDisplayLines(20) // Show more lines during installation
 
 	return InstallerModel{
@@ -150,6 +160,7 @@ func NewInstallerModel(tool *registry.Tool, repoRoot string) InstallerModel {
 }
 
 // NewInstallerModelForUninstall creates an installer model configured for uninstallation
+// Returns nil-safe model if tool is nil (defensive programming)
 func NewInstallerModelForUninstall(tool *registry.Tool, repoRoot string) InstallerModel {
 	// Single stage for uninstall
 	stages := []stageStatus{
@@ -157,7 +168,13 @@ func NewInstallerModelForUninstall(tool *registry.Tool, repoRoot string) Install
 	}
 
 	ts := NewTailSpinner()
-	ts.SetTitle(fmt.Sprintf("Uninstalling %s", tool.DisplayName))
+
+	// Nil check: prevent panic when accessing tool.DisplayName
+	displayName := "Unknown Tool"
+	if tool != nil {
+		displayName = tool.DisplayName
+	}
+	ts.SetTitle(fmt.Sprintf("Uninstalling %s", displayName))
 	ts.SetDisplayLines(20)
 
 	return InstallerModel{
@@ -171,6 +188,7 @@ func NewInstallerModelForUninstall(tool *registry.Tool, repoRoot string) Install
 }
 
 // NewInstallerModelForConfigure creates an installer model configured for configuration
+// Returns nil-safe model if tool is nil (defensive programming)
 func NewInstallerModelForConfigure(tool *registry.Tool, repoRoot string) InstallerModel {
 	// Single stage for configure
 	stages := []stageStatus{
@@ -178,7 +196,13 @@ func NewInstallerModelForConfigure(tool *registry.Tool, repoRoot string) Install
 	}
 
 	ts := NewTailSpinner()
-	ts.SetTitle(fmt.Sprintf("Configuring %s", tool.DisplayName))
+
+	// Nil check: prevent panic when accessing tool.DisplayName
+	displayName := "Unknown Tool"
+	if tool != nil {
+		displayName = tool.DisplayName
+	}
+	ts.SetTitle(fmt.Sprintf("Configuring %s", displayName))
 	ts.SetDisplayLines(20)
 
 	return InstallerModel{
@@ -191,12 +215,44 @@ func NewInstallerModelForConfigure(tool *registry.Tool, repoRoot string) Install
 	}
 }
 
+// NewInstallerModelForUpdate creates an installer model configured for in-place updates
+// This is non-destructive - preserves user data like npm global packages
+// Returns nil-safe model if tool is nil (defensive programming)
+func NewInstallerModelForUpdate(tool *registry.Tool, repoRoot string) InstallerModel {
+	// Update pipeline stages: Check → Update → Confirm
+	stages := []stageStatus{
+		{stage: executor.StageCheck},
+		{stage: executor.StageUpdate},
+		{stage: executor.StageConfirm},
+	}
+
+	ts := NewTailSpinner()
+
+	// Nil check: prevent panic when accessing tool.DisplayName
+	displayName := "Unknown Tool"
+	if tool != nil {
+		displayName = tool.DisplayName
+	}
+	ts.SetTitle(fmt.Sprintf("Updating %s", displayName))
+	ts.SetDisplayLines(20)
+
+	return InstallerModel{
+		tool:        tool,
+		state:       InstallerIdle,
+		stages:      stages,
+		tailSpinner: ts,
+		repoRoot:    repoRoot,
+		isUpdate:    true,
+	}
+}
+
 // Installer message types
 type (
 	// InstallerStartMsg initiates installation or uninstallation
 	InstallerStartMsg struct {
 		Resume    bool
 		Uninstall bool
+		Update    bool // In-place update (non-destructive)
 	}
 
 	// StageProgressMsg updates stage progress
@@ -284,6 +340,9 @@ func (m InstallerModel) Update(msg tea.Msg) (InstallerModel, tea.Cmd) {
 		if m.isConfigure {
 			return m.startConfigurePipeline()
 		}
+		if m.isUpdate {
+			return m.startUpdatePipeline()
+		}
 		return m.startPipeline(msg.Resume)
 
 	case StageProgressMsg:
@@ -295,6 +354,8 @@ func (m InstallerModel) Update(msg tea.Msg) (InstallerModel, tea.Cmd) {
 				return m, m.readConfigureProgress()
 			} else if m.isUninstall && m.uninstallPipeline != nil {
 				return m, m.readUninstallProgress()
+			} else if m.isUpdate && m.pipeline != nil {
+				return m, m.readPipelineProgress()
 			} else if m.pipeline != nil {
 				return m, m.readPipelineProgress()
 			}
@@ -539,6 +600,53 @@ func (m InstallerModel) startConfigurePipeline() (InstallerModel, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
+// startUpdatePipeline begins the update pipeline (non-destructive in-place update)
+func (m InstallerModel) startUpdatePipeline() (InstallerModel, tea.Cmd) {
+	// Reset stages
+	for i := range m.stages {
+		m.stages[i].complete = false
+		m.stages[i].success = false
+		m.stages[i].duration = ""
+	}
+
+	// Create pipeline (reuses standard Pipeline with ExecuteUpdate method)
+	config := executor.DefaultPipelineConfig(m.repoRoot)
+	m.pipeline = executor.NewPipeline(m.tool, config)
+
+	// Create cancellable context
+	ctx, cancel := context.WithCancel(context.Background())
+	m.cancel = cancel
+	m.state = InstallerRunning
+	m.startTime = time.Now()
+	m.tailSpinner.Clear()
+	m.tailSpinner.SetStage("Checking...")
+
+	// Set initial stage
+	m.currentStage = executor.StageCheck
+
+	// Start commands - use runUpdatePipeline which calls ExecuteUpdate
+	cmds := []tea.Cmd{
+		m.tailSpinner.Start(),
+		m.runUpdatePipeline(ctx),
+		m.readPipelineOutput(),
+		m.readPipelineProgress(),
+	}
+
+	return m, tea.Batch(cmds...)
+}
+
+// runUpdatePipeline executes the update pipeline in a goroutine
+func (m InstallerModel) runUpdatePipeline(ctx context.Context) tea.Cmd {
+	pipeline := m.pipeline
+	return func() tea.Msg {
+		err := pipeline.ExecuteUpdate(ctx)
+		return PipelineCompleteMsg{
+			Success: err == nil,
+			Error:   err,
+		}
+	}
+}
+
 // runUninstallPipeline executes the uninstall pipeline in a goroutine
 func (m InstallerModel) runUninstallPipeline(ctx context.Context) tea.Cmd {
 	pipeline := m.uninstallPipeline
@@ -665,9 +773,19 @@ func (m *InstallerModel) updateStageProgress(progress executor.StageProgress) {
 func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 	m.tailSpinner.Stop()
 
+	// Determine action label
+	action := "Installation"
+	if m.isUninstall {
+		action = "Uninstallation"
+	} else if m.isConfigure {
+		action = "Configuration"
+	} else if m.isUpdate {
+		action = "Update"
+	}
+
 	if msg.Success {
 		m.state = InstallerSuccess
-		m.tailSpinner.SetTitle("✓ Installation complete")
+		m.tailSpinner.SetTitle(fmt.Sprintf("✓ %s complete", action))
 		// Mark all stages as complete on success (avoids race with progress channel)
 		for i := range m.stages {
 			m.stages[i].complete = true
@@ -675,7 +793,7 @@ func (m *InstallerModel) handlePipelineComplete(msg PipelineCompleteMsg) {
 		}
 	} else {
 		m.state = InstallerFailed
-		m.tailSpinner.SetTitle("✗ Installation failed")
+		m.tailSpinner.SetTitle(fmt.Sprintf("✗ %s failed", action))
 		m.lastError = msg.Error
 		// Check if there's a checkpoint for resume
 		checkpoint := executor.NewCheckpointStore()
@@ -799,6 +917,8 @@ func (m InstallerModel) renderStatus() string {
 		action = "Uninstallation"
 	} else if m.isConfigure {
 		action = "Configuration"
+	} else if m.isUpdate {
+		action = "Update"
 	}
 
 	switch m.state {
@@ -893,4 +1013,9 @@ func (m InstallerModel) IsSuccess() bool {
 // IsUninstall returns whether this is an uninstall operation
 func (m InstallerModel) IsUninstall() bool {
 	return m.isUninstall
+}
+
+// IsUpdate returns whether this is an update operation
+func (m InstallerModel) IsUpdate() bool {
+	return m.isUpdate
 }

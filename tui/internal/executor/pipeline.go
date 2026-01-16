@@ -57,7 +57,13 @@ type Pipeline struct {
 }
 
 // NewPipeline creates a new pipeline for a tool
+// Returns nil if tool is nil (caller must handle nil return)
 func NewPipeline(tool *registry.Tool, config PipelineConfig) *Pipeline {
+	// Nil check: prevent panic when accessing tool fields later (e.g., in getScriptPath)
+	if tool == nil {
+		return nil
+	}
+
 	return &Pipeline{
 		config:       config,
 		checkpoint:   NewCheckpointStore(),
@@ -260,6 +266,8 @@ func (p *Pipeline) getScriptPath(stage PipelineStage) string {
 		return p.tool.Scripts.Install
 	case StageConfirm:
 		return p.tool.Scripts.Confirm
+	case StageUpdate:
+		return p.tool.Scripts.Update
 	default:
 		return ""
 	}
@@ -323,7 +331,92 @@ func classifyError(stage PipelineStage, exitCode int) ErrorSeverity {
 	case StageConfirm:
 		// Confirmation failures are warnings (consider success)
 		return ErrorWarn
+	case StageUpdate:
+		// Update failures are fatal - but tool should still be functional
+		return ErrorFatal
 	default:
 		return ErrorFatal
 	}
+}
+
+// UpdatePipeline defines the stages for in-place updates (non-destructive)
+// Simpler than install: Check → Update → Confirm (no deps needed for updates)
+var UpdatePipeline = []PipelineStage{StageCheck, StageUpdate, StageConfirm}
+
+// ExecuteUpdate runs the update pipeline (Check → Update → Confirm)
+// This is a non-destructive update that preserves user data
+func (p *Pipeline) ExecuteUpdate(ctx context.Context) error {
+	// PRE-CACHE SUDO FIRST (same as Execute)
+	if err := p.preCacheSudo(ctx); err != nil {
+		return fmt.Errorf("sudo authentication required: %w", err)
+	}
+
+	return p.executeUpdatePipeline(ctx)
+}
+
+// executeUpdatePipeline runs the update-specific stages
+func (p *Pipeline) executeUpdatePipeline(ctx context.Context) error {
+	p.mu.Lock()
+	if p.running {
+		p.mu.Unlock()
+		return fmt.Errorf("pipeline already running")
+	}
+	p.running = true
+
+	// Create cancellable context with overall timeout
+	ctx, cancel := context.WithTimeout(ctx, p.config.OverallTimeout)
+	p.cancel = cancel
+	p.mu.Unlock()
+
+	defer func() {
+		p.mu.Lock()
+		p.running = false
+		p.cancel = nil
+		p.mu.Unlock()
+		close(p.outputChan)
+		close(p.progressChan)
+	}()
+
+	// Execute update stages: Check → Update → Confirm
+	for _, stage := range UpdatePipeline {
+		// Check for cancellation
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+		}
+
+		// Save checkpoint before execution
+		p.checkpoint.Save(p.tool.ID, StateCheckpoint{
+			Version:      1,
+			ToolID:       p.tool.ID,
+			Timestamp:    time.Now(),
+			CurrentStage: stage,
+			IsResumable:  true,
+		})
+
+		// Execute stage with timeout
+		progress, err := p.executeStage(ctx, stage)
+		p.progressChan <- progress
+
+		if err != nil {
+			severity := classifyError(stage, progress.ExitCode)
+
+			if severity == ErrorFatal {
+				p.checkpoint.SaveFailure(p.tool.ID, stage, err, progress.ExitCode)
+				return fmt.Errorf("stage %s failed: %w", stage.String(), err)
+			}
+			// Non-fatal: log warning and continue
+			p.outputChan <- OutputLine{
+				Text:      fmt.Sprintf("[WARN] Stage %s had non-fatal error: %v", stage.String(), err),
+				Timestamp: time.Now(),
+				IsError:   true,
+			}
+		}
+	}
+
+	// Clear checkpoint on success
+	p.checkpoint.Clear(p.tool.ID)
+
+	return nil
 }

@@ -26,7 +26,13 @@ type UninstallPipeline struct {
 }
 
 // NewUninstallPipeline creates a new uninstall pipeline for a tool
+// Returns nil if tool is nil (caller must handle nil return)
 func NewUninstallPipeline(tool *registry.Tool, config PipelineConfig) *UninstallPipeline {
+	// Nil check: prevent panic when accessing tool fields later
+	if tool == nil {
+		return nil
+	}
+
 	return &UninstallPipeline{
 		config:       config,
 		tool:         tool,

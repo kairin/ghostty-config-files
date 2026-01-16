@@ -264,8 +264,17 @@ func (m ExtrasModel) renderExtrasTable() string {
 		if hasStatus && len(status.Details) > 0 {
 			for _, detail := range status.Details {
 				if detail != "" {
-					b.WriteString(DetailStyle.Render("    " + detail))
-					b.WriteString("\n")
+					// Use section header style for "Bundled:" and "Globals:" headers
+					if detail == "Bundled:" {
+						b.WriteString(SectionHeaderStyle.Render(IconPackage + " Bundled:"))
+						b.WriteString("\n")
+					} else if detail == "Globals:" {
+						b.WriteString(SectionHeaderStyle.Render(IconGear + " Globals:"))
+						b.WriteString("\n")
+					} else {
+						b.WriteString(DetailStyle.Render("    " + detail))
+						b.WriteString("\n")
+					}
 				}
 			}
 		}

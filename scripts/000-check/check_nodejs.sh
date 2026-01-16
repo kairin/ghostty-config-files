@@ -40,9 +40,15 @@ if command -v node &> /dev/null; then
     fi
     
     # Append extra info to location field, separated by ^
+    # Group fnm and npm under "Bundled:" section
     EXTRA=""
-    if [ -n "$NPM_VER" ]; then EXTRA="$EXTRA^npm: v$NPM_VER"; fi
-    if [ -n "$FNM_VER" ]; then EXTRA="$EXTRA^fnm: v$FNM_VER"; fi
+    HAS_BUNDLED=""
+    if [ -n "$FNM_VER" ] || [ -n "$NPM_VER" ]; then
+        EXTRA="$EXTRA^Bundled:"
+        HAS_BUNDLED="1"
+    fi
+    if [ -n "$FNM_VER" ]; then EXTRA="$EXTRA^  fnm v$FNM_VER"; fi
+    if [ -n "$NPM_VER" ]; then EXTRA="$EXTRA^  npm v$NPM_VER"; fi
 
     # Check for global npm packages (DaisyUI/Tailwind ecosystem)
     HAS_GLOBALS=""
@@ -63,9 +69,9 @@ if command -v node &> /dev/null; then
     # Output each global on separate line with deeper indentation
     if [ -n "$HAS_GLOBALS" ]; then
         EXTRA="$EXTRA^Globals:"
-        [ -n "$TW_VER" ] && EXTRA="$EXTRA^   tailwind v${TW_VER}"
-        [ -n "$DAISY_VER" ] && EXTRA="$EXTRA^   daisyui v${DAISY_VER}"
-        [ -n "$VITE_VER" ] && EXTRA="$EXTRA^   tw-vite v${VITE_VER}"
+        [ -n "$TW_VER" ] && EXTRA="$EXTRA^  tailwind v${TW_VER}"
+        [ -n "$DAISY_VER" ] && EXTRA="$EXTRA^  daisyui v${DAISY_VER}"
+        [ -n "$VITE_VER" ] && EXTRA="$EXTRA^  tw-vite v${VITE_VER}"
     fi
 
     echo "INSTALLED|$VERSION|$METHOD|$LOCATION$EXTRA|$LATEST_VER"

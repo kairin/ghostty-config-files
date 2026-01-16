@@ -19,6 +19,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_feh.sh",
 			Install:     "scripts/004-reinstall/install_feh.sh",
 			Confirm:     "scripts/005-confirm/confirm_feh.sh",
+			Update:      "scripts/007-update/update_feh.sh",
 		},
 		VersionCmd:   []string{"feh", "--version"},
 		VersionRegex: `feh version (\d+\.\d+\.\d+)`,
@@ -38,6 +39,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_ghostty.sh",
 			Install:     "scripts/004-reinstall/install_ghostty.sh",
 			Confirm:     "scripts/005-confirm/confirm_ghostty.sh",
+			Update:      "scripts/007-update/update_ghostty.sh",
 		},
 		VersionCmd:   []string{"ghostty", "--version"},
 		VersionRegex: `Ghostty (\d+\.\d+\.\d+)`,
@@ -56,6 +58,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_nerdfonts.sh",
 			Install:     "scripts/004-reinstall/install_nerdfonts.sh",
 			Confirm:     "scripts/005-confirm/confirm_nerdfonts.sh",
+			Update:      "scripts/007-update/update_nerdfonts.sh",
 		},
 		VersionCmd:   []string{}, // Uses script-based detection
 		VersionRegex: `v(\d+\.\d+\.\d+)`,
@@ -64,7 +67,7 @@ var tools = map[string]*Tool{
 	"nodejs": {
 		ID:          "nodejs",
 		DisplayName: "Node.js",
-		Description: "JavaScript runtime via fnm",
+		Description: "JavaScript runtime with fnm version manager",
 		Category:    CategoryMain,
 		Method:      MethodScript,
 		Scripts: ToolScripts{
@@ -74,11 +77,20 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_nodejs.sh",
 			Install:     "scripts/004-reinstall/install_nodejs.sh",
 			Confirm:     "scripts/005-confirm/confirm_nodejs.sh",
+			Update:      "scripts/007-update/update_nodejs.sh",
 		},
 		VersionCmd:   []string{"node", "--version"},
 		VersionRegex: `v(\d+\.\d+\.\d+)`,
 		HasGlobals:   true,
-		DocsPath:     ".claude/instructions-for-agents/tools/nodejs.md",
+		BundledTools: []BundledTool{
+			{
+				ID:          "fnm",
+				Name:        "fnm (Fast Node Manager)",
+				Description: "Cross-platform Node.js version manager",
+				VersionCmd:  "fnm --version",
+			},
+		},
+		DocsPath: ".claude/instructions-for-agents/tools/nodejs.md",
 	},
 	"ai_tools": {
 		ID:          "ai_tools",
@@ -93,6 +105,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_ai_tools.sh",
 			Install:     "scripts/004-reinstall/install_ai_tools.sh",
 			Confirm:     "scripts/005-confirm/confirm_ai_tools.sh",
+			Update:      "scripts/007-update/update_ai_tools.sh",
 		},
 		IsAggregate: true,
 		SubTools: []SubTool{
@@ -134,6 +147,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_fastfetch.sh",
 			Install:     "scripts/004-reinstall/install_fastfetch.sh",
 			Confirm:     "scripts/005-confirm/confirm_fastfetch.sh",
+			Update:      "scripts/007-update/update_fastfetch.sh",
 		},
 		VersionCmd:   []string{"fastfetch", "--version"},
 		VersionRegex: `fastfetch (\d+\.\d+\.\d+)`,
@@ -152,6 +166,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_glow.sh",
 			Install:     "scripts/004-reinstall/install_glow.sh",
 			Confirm:     "scripts/005-confirm/confirm_glow.sh",
+			Update:      "scripts/007-update/update_glow.sh",
 		},
 		VersionCmd:   []string{"glow", "--version"},
 		VersionRegex: `glow version (\d+\.\d+\.\d+)`,
@@ -170,6 +185,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_go.sh",
 			Install:     "scripts/004-reinstall/install_go.sh",
 			Confirm:     "scripts/005-confirm/confirm_go.sh",
+			Update:      "scripts/007-update/update_go.sh",
 		},
 		VersionCmd:   []string{"go", "version"},
 		VersionRegex: `go(\d+\.\d+\.\d+)`,
@@ -188,6 +204,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_gum.sh",
 			Install:     "scripts/004-reinstall/install_gum.sh",
 			Confirm:     "scripts/005-confirm/confirm_gum.sh",
+			Update:      "scripts/007-update/update_gum.sh",
 		},
 		VersionCmd:   []string{"gum", "--version"},
 		VersionRegex: `gum version (\d+\.\d+\.\d+)`,
@@ -196,7 +213,7 @@ var tools = map[string]*Tool{
 	"python_uv": {
 		ID:          "python_uv",
 		DisplayName: "Python/uv",
-		Description: "Fast Python package manager",
+		Description: "Python with uv package manager",
 		Category:    CategoryExtras,
 		Method:      MethodScript,
 		Scripts: ToolScripts{
@@ -206,10 +223,19 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_python_uv.sh",
 			Install:     "scripts/004-reinstall/install_python_uv.sh",
 			Confirm:     "scripts/005-confirm/confirm_python_uv.sh",
+			Update:      "scripts/007-update/update_python_uv.sh",
 		},
 		VersionCmd:   []string{"uv", "--version"},
 		VersionRegex: `uv (\d+\.\d+\.\d+)`,
-		DocsPath:     ".claude/instructions-for-agents/tools/python-uv.md",
+		BundledTools: []BundledTool{
+			{
+				ID:          "uv",
+				Name:        "uv (Astral)",
+				Description: "Fast Python package installer and resolver",
+				VersionCmd:  "uv --version",
+			},
+		},
+		DocsPath: ".claude/instructions-for-agents/tools/python-uv.md",
 	},
 	"vhs": {
 		ID:          "vhs",
@@ -224,6 +250,7 @@ var tools = map[string]*Tool{
 			VerifyDeps:  "scripts/003-verify/verify_deps_vhs.sh",
 			Install:     "scripts/004-reinstall/install_vhs.sh",
 			Confirm:     "scripts/005-confirm/confirm_vhs.sh",
+			Update:      "scripts/007-update/update_vhs.sh",
 		},
 		VersionCmd:   []string{"vhs", "--version"},
 		VersionRegex: `vhs version (\d+\.\d+\.\d+)`,
@@ -243,6 +270,7 @@ var tools = map[string]*Tool{
 			Install:     "scripts/004-reinstall/install_zsh.sh",
 			Confirm:     "scripts/005-confirm/confirm_zsh.sh",
 			Configure:   "scripts/004-reinstall/configure_zsh.sh",
+			Update:      "scripts/007-update/update_zsh.sh",
 		},
 		VersionCmd:   []string{"zsh", "--version"},
 		VersionRegex: `zsh (\d+\.\d+\.\d+)`,
@@ -251,7 +279,7 @@ var tools = map[string]*Tool{
 }
 
 // Ordered lists for display
-var mainToolIDs = []string{"feh", "ghostty", "nerdfonts", "nodejs", "ai_tools", "antigravity"}
+var mainToolIDs = []string{"feh", "ghostty", "nodejs", "ai_tools", "antigravity"}
 var extrasToolIDs = []string{"fastfetch", "glow", "go", "gum", "python_uv", "vhs", "zsh"}
 
 // GetTool returns a tool by ID
