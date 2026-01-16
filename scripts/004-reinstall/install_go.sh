@@ -24,7 +24,7 @@ FILENAME="${LATEST_VERSION}.${OS}-${ARCH}.tar.gz"
 URL="https://go.dev/dl/${FILENAME}"
 
 echo "Downloading $URL..."
-wget -O /tmp/go.tar.gz "$URL"
+wget -q --show-progress -O /tmp/go.tar.gz "$URL"
 
 echo "Removing old installation..."
 sudo rm -rf /usr/local/go
