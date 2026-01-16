@@ -296,11 +296,18 @@ snap list ghostty
 
 ---
 
-## Modern TUI System Infrastructure
+## Go TUI Installer Infrastructure (2026)
 
-**Active Spec**: Modern TUI Installation System (001) - Phases 1-6 MVP complete with gum.sh module and comprehensive documentation.
+**Status**: Production-ready Go TUI built with Bubbletea framework, replacing the earlier gum.sh-based prototype.
 
-**Complete Specification**: [spec.md](../../../../documentation/specifications/001-modern-tui-system/spec.md)
+**Features**:
+- Data-driven tool registry with 12 installable tools
+- 5-stage installation pipeline with checkpoint recovery
+- Real-time output streaming with TailSpinner display
+- Nerd Fonts interactive selection with preview
+- Nil-pointer safe design patterns throughout
+
+**Source Code**: `tui/` directory (Go/Bubbletea)
 
 ---
 

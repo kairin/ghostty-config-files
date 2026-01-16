@@ -194,7 +194,7 @@ less ./.runners-local/logs/workflow-*.log | tail -1
 - **Debugging**: Complete information preserved in permanent log files
 - **Location**: `${REPO_ROOT}/logs/` (NOT `/tmp` - persistent across reboots)
 
-**Complete Guide**: [LOGGING_GUIDE.md](../../../../documentation/developer/LOGGING_GUIDE.md)
+**Complete Guide**: [LOGGING_GUIDE.md](../guides/LOGGING_GUIDE.md)
 
 ---
 

@@ -1,4 +1,4 @@
-# Ghostty Configuration Files - LLM Instructions (2025 Edition)
+# Ghostty Configuration Files - LLM Instructions (2026 Edition)
 
 > 🔧 **CRITICAL**: This file contains NON-NEGOTIABLE requirements that ALL AI assistants (Claude, Gemini, ChatGPT, etc.) working on this repository MUST follow at ALL times.
 
@@ -40,7 +40,7 @@
 ### 🔧 Tool Implementation Reference
 **Location**: `.claude/instructions-for-agents/tools/`
 
-- **[Tool Documentation Index](/.claude/instructions-for-agents/tools/README.md)** - Complete reference for all 11 installable tools (fastfetch, ghostty, gum, glow, vhs, feh, go, nerdfonts, nodejs, python-uv, zsh)
+- **[Tool Documentation Index](/.claude/instructions-for-agents/tools/README.md)** - Complete reference for all 12 installable tools (fastfetch, ghostty, gum, glow, vhs, feh, go, nerdfonts, nodejs, python-uv, zsh, plus update scripts)
 
 ---
 
@@ -200,6 +200,13 @@ update-all                              # Manual daily updates
 update-logs                             # View update logs
 ```
 
+### TUI Installer (NEW - 2026)
+```bash
+cd tui && go run ./cmd/installer        # Launch TUI installer
+./tui/ghostty-installer                 # Run compiled binary (if built)
+```
+**Features**: Interactive tool installation, Nerd Fonts management, update/uninstall support, nil-pointer safe
+
 ### Testing & Validation
 ```bash
 ghostty +show-config                    # Validate configuration
@@ -306,12 +313,19 @@ ghostty +show-config                    # Validate configuration
 
 ## 📊 Metadata
 
-**Version**: 3.2-2026-MCP-Update
-**Last Updated**: 2026-01-14
+**Version**: 3.3-2026-TUI-Update
+**Last Updated**: 2026-01-17
 **Status**: ACTIVE - MANDATORY COMPLIANCE
 **Target**: Ubuntu 25.10 (Questing) with Ghostty 1.2.3+ and zero-cost local CI/CD
 **Token Count**: ~1,500 tokens (87% reduction from 12,000 tokens)
 **Review**: Required before any major configuration changes
+
+### Recent Improvements (v3.3)
+- **TUI Installer**: Go-based Bubbletea TUI for interactive tool management
+- **Nerd Fonts Management**: Interactive font installation/uninstallation with preview
+- **Update Scripts**: Per-tool update scripts in `scripts/007-update/`
+- **Nil-Pointer Safety**: Defensive programming patterns in all TUI components
+- **Documentation Links**: Fixed broken cross-references to modular docs
 
 ---
 

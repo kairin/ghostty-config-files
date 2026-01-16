@@ -188,9 +188,9 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
 
 ### Supporting Documentation
 
-- **`documentation/setup/constitutional-compliance-criteria.md`** - Validation rules
-- **`documentation/developer/ARCHITECTURE.md`** - System architecture
-- **`documentation/developer/QUICK_START_FOR_LLM.md`** - Quick onboarding
+- **`.claude/instructions-for-agents/requirements/`** - Constitutional compliance and validation rules
+- **`.claude/instructions-for-agents/architecture/system-architecture.md`** - System architecture
+- **`AGENTS.md`** - Quick onboarding (gateway file)
 - **`astro-website/src/ai-guidelines/`** - Modular extracts (reference only)
 
 ---
@@ -355,8 +355,8 @@ Constitutional compliance checklist:
 
 - **AGENTS.md** - [`../AGENTS.md`](../AGENTS.md)
 - **Script Proliferation Principle** - [`principles/script-proliferation.md`](principles/script-proliferation.md)
-- **Constitutional Compliance** - `documentation/setup/constitutional-compliance-criteria.md`
-- **System Architecture** - `documentation/developer/ARCHITECTURE.md`
+- **Constitutional Compliance** - [`instructions-for-agents/requirements/`](instructions-for-agents/requirements/)
+- **System Architecture** - [`instructions-for-agents/architecture/system-architecture.md`](instructions-for-agents/architecture/system-architecture.md)
 
 ---
 

@@ -2,7 +2,7 @@
 
 > **Status**: ACTIVE - Environment Variable & MCP Configuration Reference
 > **Last Updated**: 2025-11-21
-> **Related**: [MCP Configuration](../../documentation/setup/github-mcp.md), [First-Time Setup](first-time-setup.md)
+> **Related**: [MCP Configuration](./github-mcp.md), [First-Time Setup](./first-time-setup.md)
 
 ## 🎯 Overview
 
@@ -260,7 +260,7 @@ fi
 
 ## 🔗 Related Documentation
 
-- [GitHub MCP Setup Guide](../../documentation/setup/github-mcp.md)
+- [GitHub MCP Setup Guide](./github-mcp.md)
 - [First-Time Setup Guide](first-time-setup.md)
 - [Local CI/CD Operations](../requirements/local-cicd-operations.md)
 - [Critical Requirements](../requirements/CRITICAL-requirements.md)
