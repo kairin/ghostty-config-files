@@ -8,8 +8,7 @@
 # 4. Preserves GOPATH and user projects
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_go"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 # Detect architecture
 ARCH=$(uname -m)

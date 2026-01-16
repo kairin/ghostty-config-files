@@ -6,8 +6,7 @@
 # - Source: Rebuilds from git (preserves config)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_ghostty"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 log "INFO" "Current Ghostty version: $(ghostty --version 2>/dev/null || echo 'none')"
 

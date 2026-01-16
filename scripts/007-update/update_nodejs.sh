@@ -7,8 +7,7 @@
 # 3. Preserving all npm global packages
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_nodejs"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 # Initialize fnm environment
 FNM_PATH="$HOME/.local/share/fnm"

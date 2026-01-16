@@ -4,8 +4,7 @@
 # Detects installation method (apt vs source) and updates accordingly
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_feh"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 log "INFO" "Current feh version: $(feh --version 2>/dev/null | head -n 1 || echo 'none')"
 

@@ -4,8 +4,7 @@
 # apt handles version checking and in-place updates automatically
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_vhs"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 log "INFO" "Current vhs version: $(vhs --version 2>/dev/null || echo 'none')"
 

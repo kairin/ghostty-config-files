@@ -4,8 +4,7 @@
 # uv's install script is idempotent and handles updates automatically
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_python_uv"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 log "INFO" "Current uv version: $(uv --version 2>/dev/null || echo 'none')"
 

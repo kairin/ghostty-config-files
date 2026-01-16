@@ -9,8 +9,7 @@
 # This script uses npm update instead of uninstall/reinstall to preserve configs
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_ai_tools"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 # Initialize fnm for npm access
 FNM_PATH="$HOME/.local/share/fnm"

@@ -4,8 +4,7 @@
 # Re-downloads fonts only if version differs, preserving existing fonts
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../lib/logger.sh"
-log_init "update_nerdfonts"
+source "$SCRIPT_DIR/../006-logs/logger.sh"
 
 FONTS_DIR="$HOME/.local/share/fonts/NerdFonts"
 

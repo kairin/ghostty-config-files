@@ -289,12 +289,12 @@ func (m ExtrasModel) renderExtrasMenu() string {
 
 	toolCount := len(m.tools)
 
-	// Menu items: Individual tools + Install All + Back
-	menuItems := make([]string, 0, toolCount+2)
+	// Menu items: Individual tools + Install All + Create Claude Workflow + Back
+	menuItems := make([]string, 0, toolCount+3)
 	for _, tool := range m.tools {
 		menuItems = append(menuItems, tool.DisplayName)
 	}
-	menuItems = append(menuItems, "Install All", "Back")
+	menuItems = append(menuItems, "Install All", "Create Claude Workflow", "Back")
 
 	b.WriteString("\nChoose:\n")
 
@@ -315,7 +315,7 @@ func (m ExtrasModel) renderExtrasMenu() string {
 func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 	switch msg.String() {
 	case "up", "k":
-		maxCursor := len(m.tools) + 2 // Tools + "Install All" + "Back"
+		maxCursor := len(m.tools) + 3 // Tools + "Install All" + "Create Claude Workflow" + "Back"
 		if m.cursor > 0 {
 			m.cursor--
 		} else {
@@ -324,7 +324,7 @@ func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 		return nil, false
 
 	case "down", "j":
-		maxCursor := len(m.tools) + 2
+		maxCursor := len(m.tools) + 3
 		if m.cursor < maxCursor-1 {
 			m.cursor++
 		} else {
@@ -349,6 +349,9 @@ func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 		} else if m.cursor == toolCount {
 			// "Install All" selected
 			return nil, true
+		} else if m.cursor == toolCount+1 {
+			// "Create Claude Workflow" selected
+			return nil, true
 		} else {
 			// "Back" selected
 			return nil, true
@@ -371,9 +374,14 @@ func (m ExtrasModel) IsInstallAllSelected() bool {
 	return m.cursor == len(m.tools)
 }
 
+// IsClaudeWorkflowSelected returns true if "Create Claude Workflow" is selected
+func (m ExtrasModel) IsClaudeWorkflowSelected() bool {
+	return m.cursor == len(m.tools)+1
+}
+
 // IsBackSelected returns true if "Back" is selected
 func (m ExtrasModel) IsBackSelected() bool {
-	return m.cursor == len(m.tools)+1
+	return m.cursor == len(m.tools)+2
 }
 
 // GetCursor returns the current cursor position
