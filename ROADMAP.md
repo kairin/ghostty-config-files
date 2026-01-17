@@ -275,6 +275,7 @@ Goal: Enable seamless environment sync between multiple machines.
 | Context7 header auth fix | 2026-01-18 | Setup script updated with --header flag |
 | MCP scope verification | 2026-01-18 | User scope confirmed correct via Context7 |
 | ROADMAP wave restructure | 2026-01-18 | Replaced v3.x with Wave 0-4 structure |
+| Wave 0 Foundation Fixes | 2026-01-18 | LICENSE, broken link fix, tier unification - [specs/001-foundation-fixes/](specs/001-foundation-fixes/) |
 
 ---
 
