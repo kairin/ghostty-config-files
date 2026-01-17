@@ -91,9 +91,10 @@ Task Received
 
 | Tier | Model | Cost | Token Budget | When to Use |
 |------|-------|------|--------------|-------------|
-| 4 | Haiku | $ | ~500 tokens | Single atomic task, no judgment |
-| 2-3 | Sonnet | $$ | ~2-3K tokens | Domain operations, sequenced workflow |
+| 0 | Sonnet | $$ | ~2-3K tokens | Complete workflows (000-*), end-to-end operations |
 | 1 | Opus | $$$ | ~10K tokens | Multi-agent parallel orchestration |
+| 2-3 | Sonnet | $$ | ~2-3K tokens | Domain operations, sequenced workflow |
+| 4 | Haiku | $ | ~500 tokens | Single atomic task, no judgment |
 
 **Token Optimization**: ~40% reduction by delegating atomic tasks to Haiku tier.
 

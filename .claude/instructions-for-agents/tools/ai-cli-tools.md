@@ -1,84 +1,99 @@
 # AI CLI Tools Implementation Summary
 
-> **Status**: PLANNED - Installation scripts not yet implemented
+> **Status**: IMPLEMENTED - Full 7-step installation framework in place
 
-This document covers AI CLI tools that are mentioned in the project documentation and daily update scripts but do not yet have full installation scripts.
+This document covers AI CLI tools managed by the Ghostty Configuration Files project installation framework.
 
-## Planned Tools
+## Supported Tools
 
 | Tool | Package Name | Status |
 |------|--------------|--------|
-| Claude Code | `@anthropic-ai/claude-code` | Daily updates only |
-| Gemini CLI | `@google/generative-ai-cli` | Daily updates only |
-| Copilot CLI | `@githubnext/github-copilot-cli` | Daily updates only |
+| Claude Code | `@anthropic-ai/claude-code` | Fully managed |
+| Gemini CLI | `@google/generative-ai-cli` | Fully managed |
+| Copilot CLI | `@githubnext/github-copilot-cli` | Fully managed |
 
-## Current Implementation
+## Implementation Scripts
 
-### Daily Updates (`scripts/updates/daily-updates.sh`)
+The full 7-step installation framework is implemented:
 
-These tools are updated via npm global update:
+| Stage | Script | Path | Status |
+|-------|--------|------|--------|
+| 000 | Check | `scripts/000-check/check_ai_tools.sh` | Implemented |
+| 001 | Uninstall | `scripts/001-uninstall/uninstall_ai_tools.sh` | Implemented |
+| 002 | Dependencies | `scripts/002-install-first-time/install_deps_ai_tools.sh` | Implemented |
+| 003 | Verify | `scripts/003-verify/verify_deps_ai_tools.sh` | Implemented |
+| 004 | Install | `scripts/004-reinstall/install_ai_tools.sh` | Implemented |
+| 005 | Confirm | `scripts/005-confirm/confirm_ai_tools.sh` | Implemented |
+| 007 | Update | `scripts/007-update/update_ai_tools.sh` | Implemented |
+
+## Usage
+
+### Check Installation Status
 ```bash
-npm update -g @anthropic-ai/claude-code
-npm update -g @google/generative-ai-cli
-npm update -g @githubnext/github-copilot-cli
+./scripts/000-check/check_ai_tools.sh
 ```
 
-### TUI Dashboard
+### Fresh Installation
+```bash
+./scripts/002-install-first-time/install_deps_ai_tools.sh
+./scripts/004-reinstall/install_ai_tools.sh
+./scripts/005-confirm/confirm_ai_tools.sh
+```
 
-The "Local AI Tools" option appears in `start.sh` but shows "Missing" status, indicating planned but not yet implemented functionality.
+### Update Existing Installation
+```bash
+./scripts/007-update/update_ai_tools.sh
+```
 
-## Missing Scripts
-
-The 6-step installation framework scripts are not yet created:
-
-| Stage | Script | Status |
-|-------|--------|--------|
-| 000 | `check_ai_tools.sh` | Not created |
-| 001 | `uninstall_ai_tools.sh` | Not created |
-| 002 | `install_deps_ai_tools.sh` | Not created |
-| 003 | `verify_deps_ai_tools.sh` | Not created |
-| 004 | `install_ai_tools.sh` | Not created |
-| 005 | `confirm_ai_tools.sh` | Not created |
-
-### Test File Exists
-
-A test file exists at `.runners-local/tests/unit/test_install_ai_tools.sh` that expects `scripts/install_ai_tools.sh`, but this script does not exist yet.
+### Uninstall
+```bash
+./scripts/001-uninstall/uninstall_ai_tools.sh
+```
 
 ## Prerequisites
 
 All AI CLI tools require:
-- Node.js (npm)
+- Node.js (npm) - managed via fnm
 - API keys for respective services
 
-## Manual Installation (Current)
+### API Key Requirements
+
+| Tool | Environment Variable | Notes |
+|------|---------------------|-------|
+| Claude Code | `ANTHROPIC_API_KEY` | Anthropic API access |
+| Gemini CLI | Google Cloud auth | OAuth or service account |
+| Copilot CLI | GitHub auth | Copilot subscription required |
+
+## Daily Updates Integration
+
+AI tools are included in the daily update routine:
+```bash
+./scripts/daily-updates.sh
+```
+
+Or update individually:
+```bash
+./scripts/007-update/update_ai_tools.sh
+```
+
+## Manual Installation Reference
 
 ### Claude Code
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
-Requires: `ANTHROPIC_API_KEY`
 
 ### Gemini CLI
 ```bash
 npm install -g @google/generative-ai-cli
 ```
-Requires: Google Cloud authentication
 
 ### GitHub Copilot CLI
 ```bash
 npm install -g @githubnext/github-copilot-cli
 ```
-Requires: GitHub Copilot subscription
-
-## Future Implementation
-
-When implemented, these tools should follow the same 6-step framework pattern as other tools, with:
-- Version detection for each tool
-- npm-based installation
-- API key validation (without exposing keys)
-- Integration with TUI dashboard
 
 ---
 
-**Last Updated**: 2025-12-13
-**Status**: Documentation only - awaiting implementation
+**Last Updated**: 2026-01-18
+**Status**: IMPLEMENTED - Full installation framework available

@@ -89,12 +89,21 @@ check_prerequisites() {
         log "SUCCESS" "✓ Node.js (npx) installed"
     fi
 
-    # Check secrets
+    # Check secrets file
     if [ -f "$SECRETS_FILE" ]; then
         log "SUCCESS" "✓ Secrets file exists: $SECRETS_FILE"
     else
         log "WARNING" "Secrets file not found: $SECRETS_FILE"
         log "INFO" "  Create with: cp $SECRETS_TEMPLATE ~/.mcp-secrets"
+        ((WARNINGS++))
+    fi
+
+    # Check Context7 API key (required for header auth)
+    if [ -n "${CONTEXT7_API_KEY:-}" ]; then
+        log "SUCCESS" "✓ CONTEXT7_API_KEY is set"
+    else
+        log "WARNING" "CONTEXT7_API_KEY not set in environment"
+        log "INFO" "  Set in ~/.mcp-secrets and source it: source ~/.mcp-secrets"
         ((WARNINGS++))
     fi
 
@@ -147,7 +156,7 @@ add_mcp_servers() {
 
     # Define all 7 servers
     declare -A SERVERS=(
-        ["context7"]="--transport http context7 https://mcp.context7.com/mcp"
+        ["context7"]="--transport http context7 https://mcp.context7.com/mcp --header 'CONTEXT7_API_KEY: '\$CONTEXT7_API_KEY"
         ["github"]="github -- bash -c 'GITHUB_PERSONAL_ACCESS_TOKEN=\$(gh auth token) npx -y @modelcontextprotocol/server-github'"
         ["markitdown"]="markitdown -- uvx markitdown-mcp"
         ["playwright"]="playwright -- $PLAYWRIGHT_WRAPPER"

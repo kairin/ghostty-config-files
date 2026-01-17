@@ -1,12 +1,22 @@
 # Ghostty Configuration Files - LLM Instructions (2026 Edition)
 
+> ⚠️ **SYMLINK ARCHITECTURE - DO NOT MODIFY**
+>
+> | File | Role | Action |
+> |------|------|--------|
+> | `AGENTS.md` | **Master file** (single source of truth) | Edit this file only |
+> | `CLAUDE.md` | Symlink → AGENTS.md | **NEVER convert to regular file** |
+> | `GEMINI.md` | Symlink → AGENTS.md | **NEVER convert to regular file** |
+>
+> **CONSTITUTIONAL REQUIREMENT**: All edits go to `AGENTS.md`. The symlinks `CLAUDE.md` and `GEMINI.md` must remain as symlinks. DO NOT create separate content, DO NOT break symlinks, DO NOT replace with regular files.
+
 > 🔧 **CRITICAL**: This file contains NON-NEGOTIABLE requirements that ALL AI assistants (Claude, Gemini, ChatGPT, etc.) working on this repository MUST follow at ALL times.
 
 ## 🎯 Project Overview
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI), intelligent update management with zero-cost local CI/CD infrastructure, and system cleanup utilities for Ubuntu bloatware removal.
 
-**Quick Links:** [README](README.md) • [Full Backup](/.claude/instructions-for-agents/AGENTS.md-BACKUP-20251121.md)
+**Quick Links:** [README](README.md) • [ROADMAP](ROADMAP.md) • [Full Backup](/.claude/instructions-for-agents/AGENTS.md-BACKUP-20251121.md)
 
 ---
 
@@ -265,15 +275,16 @@ ghostty +show-config                    # Validate configuration
 
 ### Key Documents
 - [README.md](README.md) - User documentation
+- [ROADMAP.md](ROADMAP.md) - Development roadmap and task tracking
 - [CLAUDE.md](CLAUDE.md) - Claude Code integration (symlink to this file)
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
 ### Setup Guides
-- [MCP New Machine Setup](/.claude/instructions-for-agents/guides/mcp-new-machine-setup.md) - Quick setup for all 7 MCP servers
-- [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) - Documentation server
-- [GitHub MCP Setup](/.claude/instructions-for-agents/guides/github-mcp.md) - Repository operations
-- [MarkItDown MCP Setup](/.claude/instructions-for-agents/guides/markitdown-mcp.md) - Document conversion
-- [Playwright MCP Setup](/.claude/instructions-for-agents/guides/playwright-mcp.md) - Browser automation
+- [MCP Setup Guide](/.claude/instructions-for-agents/guides/mcp-setup.md) - Complete setup for all 7 MCP servers (consolidated)
+- [Context7 MCP](/.claude/instructions-for-agents/guides/context7-mcp.md) - Documentation server (quick reference)
+- [GitHub MCP](/.claude/instructions-for-agents/guides/github-mcp.md) - Repository operations (quick reference)
+- [MarkItDown MCP](/.claude/instructions-for-agents/guides/markitdown-mcp.md) - Document conversion (quick reference)
+- [Playwright MCP](/.claude/instructions-for-agents/guides/playwright-mcp.md) - Browser automation (quick reference)
 - [Logging Guide](/.claude/instructions-for-agents/guides/LOGGING_GUIDE.md) - Dual-mode logging system
 - [PowerLevel10k Integration](astro-website/src/developer/powerlevel10k/README.md) - ZSH prompt theme
 
