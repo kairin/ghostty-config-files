@@ -108,24 +108,29 @@ Track your fleet of Ubuntu systems:
 
 ---
 
-## Wave 1: Foundation (THIS WEEK)
+## Wave 1: Foundation (COMPLETE)
 
-> **Priority**: Enable efficient future work before adding features
+> **Priority**: ✅ COMPLETED - 2026-01-18
 
-| # | Task | Effort | Enables |
-|---|------|--------|---------|
-| 4 | Create /scripts/README.md | 1 hr | Script navigation for AI/humans |
-| 5 | Consolidate MCP documentation | 2 hr | TUI MCP feature clarity |
-| 6 | Create /scripts/007-update/README.md | 30 min | Update script discovery |
-| 7 | Create /scripts/007-diagnostics/README.md | 30 min | Boot diagnostics docs |
-| 8 | Update ai-cli-tools.md (fix "not created" text) | 15 min | Accurate documentation |
+| # | Task | Effort | Enables | Status |
+|---|------|--------|---------|--------|
+| 4 | Create /scripts/README.md | 1 hr | Script navigation for AI/humans | ✅ Done |
+| 5 | Consolidate MCP documentation | 2 hr | TUI MCP feature clarity | ✅ Done |
+| 6 | Create /scripts/007-update/README.md | 30 min | Update script discovery | ✅ Done |
+| 7 | Create /scripts/007-diagnostics/README.md | 30 min | Boot diagnostics docs | ✅ Done |
+| 8 | Update ai-cli-tools.md (fix "not created" text) | 15 min | Accurate documentation | ✅ Done |
 
-**Total**: ~4.5 hours | **Status**: ⏳ Pending Wave 0
+**Total**: ~4.5 hours | **Status**: ✅ COMPLETE
 
-**Details:**
-- /scripts/README.md: 114 scripts with no master index
-- MCP docs: 4+ overlapping guides need consolidation into single source
-- ai-cli-tools.md: States "scripts not yet created" but they exist
+**Completed:**
+- scripts/README.md: Master index for 114 scripts across 11 directories
+- MCP docs: Consolidated 5 guides into single mcp-setup.md with redirect stubs
+- 007-update/README.md: Documents 12 update scripts with usage and troubleshooting
+- 007-diagnostics/README.md: Documents boot diagnostics workflow
+- ai-cli-tools.md: Updated from "PLANNED" to "IMPLEMENTED" with correct paths
+- AGENTS.md: Updated references to point to new mcp-setup.md
+
+**SpecKit Artifacts:** [specs/002-scripts-documentation/](specs/002-scripts-documentation/)
 
 ---
 
@@ -252,15 +257,7 @@ Goal: Enable seamless environment sync between multiple machines.
 
 ## Maintenance Tasks
 
-| Task | Status | Priority | Location |
-|------|--------|----------|----------|
-| Update ai-cli-tools.md documentation | Planned | Moderate | `.claude/instructions-for-agents/tools/ai-cli-tools.md` |
-
-**Details:** Documentation states "scripts not yet created" but they actually exist:
-- `/scripts/004-reinstall/install_ai_tools.sh`
-- `/scripts/001-uninstall/uninstall_ai_tools.sh`
-- `/scripts/005-confirm/confirm_ai_tools.sh`
-- `/scripts/007-update/update_ai_tools.sh`
+*No pending maintenance tasks.*
 
 ---
 
@@ -276,6 +273,7 @@ Goal: Enable seamless environment sync between multiple machines.
 | MCP scope verification | 2026-01-18 | User scope confirmed correct via Context7 |
 | ROADMAP wave restructure | 2026-01-18 | Replaced v3.x with Wave 0-4 structure |
 | Wave 0 Foundation Fixes | 2026-01-18 | LICENSE, broken link fix, tier unification - [specs/001-foundation-fixes/](specs/001-foundation-fixes/) |
+| Wave 1 Scripts Documentation | 2026-01-18 | 5 READMEs, MCP consolidation, ai-cli-tools fix - [specs/002-scripts-documentation/](specs/002-scripts-documentation/) |
 
 ---
 

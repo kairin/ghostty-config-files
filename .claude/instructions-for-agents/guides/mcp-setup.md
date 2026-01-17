@@ -1,18 +1,20 @@
 ---
-title: MCP New Machine Setup Guide
+title: MCP Setup Guide
 category: guides
 linked-from: AGENTS.md
 status: ACTIVE
-last-updated: 2026-01-16
+last-updated: 2026-01-18
 ---
 
-# MCP New Machine Setup Guide
+# MCP Setup Guide
+
+**Last Updated**: 2026-01-18
 
 [← Back to AGENTS.md](../../../../AGENTS.md)
 
 ## Overview
 
-This guide provides setup instructions for configuring all **7 MCP servers** on a new machine. MCP servers are configured at **user scope** (`~/.claude.json`), making them available across all projects.
+This guide provides complete setup instructions for all **7 MCP servers** on a new machine. MCP servers are configured at **user scope** (`~/.claude.json`), making them available across all projects.
 
 ## All 7 MCP Servers
 
@@ -181,17 +183,118 @@ Or in Claude Code:
 /mcp
 ```
 
-## Server Details
+---
 
-| Server | Purpose | Requires | Tools Provided |
-|--------|---------|----------|----------------|
-| **context7** | Library documentation | API key (header auth) | resolve-library-id, query-docs |
-| **github** | Repository operations | `gh auth login` | Issues, PRs, file contents, search |
-| **markitdown** | Document conversion | `uvx` | convert_to_markdown |
-| **playwright** | Browser automation | Wrapper script | Navigate, click, screenshot, etc. |
-| **hf-mcp-server** | HuggingFace access | HF login | Model search, download, etc. |
-| **shadcn** | shadcn/ui CLI | Node.js | Component installation |
-| **shadcn-ui** | Component tools | `gh auth login` | Component search, docs |
+## Server Reference
+
+### Context7
+
+**Purpose**: Up-to-date library documentation and code examples
+
+**Available Tools:**
+- `mcp__context7__resolve-library-id` - Resolve library name to Context7 ID
+- `mcp__context7__query-docs` - Query documentation for a library
+
+**Best Practices:**
+- Query before major changes for current best practices
+- Use `resolve-library-id` first to get correct library ID
+- Be specific with queries for better results
+
+### GitHub
+
+**Purpose**: Repository operations, issues, PRs, code search
+
+**Available Tools:**
+
+| Category | Tools |
+|----------|-------|
+| Repository | `search_repositories`, `create_repository`, `fork_repository`, `get_file_contents` |
+| Issues | `list_issues`, `get_issue`, `create_issue`, `update_issue`, `add_issue_comment` |
+| Pull Requests | `list_pull_requests`, `get_pull_request`, `create_pull_request`, `merge_pull_request`, `create_pull_request_review`, `get_pull_request_files`, `get_pull_request_status` |
+| Branches | `create_branch`, `list_commits`, `create_or_update_file`, `push_files` |
+| Search | `search_code`, `search_issues`, `search_users` |
+
+**Security:**
+- Token obtained dynamically via `gh auth token`
+- Never stored in files (uses GitHub CLI's secure storage)
+- Auto-refreshes via GitHub CLI
+
+### MarkItDown
+
+**Purpose**: Convert documents to markdown
+
+**Available Tools:**
+- `mcp__markitdown__convert_to_markdown` - Convert URI resource to markdown
+
+**Supported Formats:**
+- Documents: PDF, DOCX, PPTX, XLSX
+- Web: HTML pages via URL
+- Images: With OCR capabilities
+- Data: Base64-encoded content via data URIs
+
+**Best Practices:**
+- Use `file://` prefix for local files
+- Use HTTPS for web content
+- Large documents may take longer to process
+
+### Playwright
+
+**Purpose**: Browser automation, screenshots, form filling
+
+**Available Tools:**
+
+| Category | Tools |
+|----------|-------|
+| Navigation | `browser_navigate`, `browser_navigate_back`, `browser_tabs` |
+| Interaction | `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_hover`, `browser_drag`, `browser_press_key` |
+| Capture | `browser_snapshot` (preferred), `browser_take_screenshot` |
+| Dialogs | `browser_handle_dialog`, `browser_file_upload` |
+| Advanced | `browser_evaluate`, `browser_run_code`, `browser_console_messages`, `browser_network_requests`, `browser_wait_for` |
+| Management | `browser_resize`, `browser_close`, `browser_install` |
+
+**Best Practices:**
+- Use `browser_snapshot` over screenshots (accessibility tree is easier to analyze)
+- Use `browser_wait_for` before interacting with dynamic content
+- Always close browsers when done to free resources
+
+### HuggingFace
+
+**Purpose**: Access to HuggingFace model hub
+
+**Requirements:**
+- HuggingFace account and token
+- Login at huggingface.co in browser first
+
+### shadcn / shadcn-ui
+
+**Purpose**: shadcn/ui component management
+
+**Requirements:**
+- Node.js via fnm
+- GitHub authentication (for shadcn-ui)
+
+---
+
+## Managing Servers
+
+### List All Servers
+```bash
+claude mcp list
+```
+
+### Remove a Server
+```bash
+claude mcp remove --scope user <server-name>
+```
+
+### Update a Server
+```bash
+# Remove then re-add with new configuration
+claude mcp remove --scope user <server-name>
+claude mcp add --scope user <server-name> -- <command>
+```
+
+---
 
 ## Syncing Secrets Between Machines
 
@@ -234,18 +337,9 @@ ln -s ~/Sync/.mcp-secrets ~/.mcp-secrets
 op read "op://Private/MCP Secrets/notes" > ~/.mcp-secrets
 ```
 
+---
+
 ## Troubleshooting
-
-### Server Not Connecting
-
-```bash
-# List current servers
-claude mcp list
-
-# Remove and re-add problematic server
-claude mcp remove --scope user <server-name>
-# Then re-run the add command
-```
 
 ### Common Issues
 
@@ -260,6 +354,17 @@ claude mcp remove --scope user <server-name>
 | HuggingFace disconnected | Login at huggingface.co in browser first |
 | shadcn disconnected | Verify Node.js is installed via fnm |
 | shadcn-ui disconnected | Check GitHub auth token |
+
+### Server Not Connecting
+
+```bash
+# List current servers
+claude mcp list
+
+# Remove and re-add problematic server
+claude mcp remove --scope user <server-name>
+# Then re-run the add command
+```
 
 ### Check Environment Variables
 
@@ -277,24 +382,7 @@ After making changes, restart Claude Code for servers to reconnect:
 claude
 ```
 
-## Managing Servers
-
-### List All Servers
-```bash
-claude mcp list
-```
-
-### Remove a Server
-```bash
-claude mcp remove --scope user <server-name>
-```
-
-### Update a Server
-```bash
-# Remove then re-add with new configuration
-claude mcp remove --scope user <server-name>
-claude mcp add --scope user <server-name> -- <command>
-```
+---
 
 ## Automated Setup Script
 
@@ -309,15 +397,6 @@ This script will:
 2. Create wrapper scripts
 3. Add all 7 MCP servers
 4. Verify connectivity
-
-## Detailed Guides
-
-For more information on specific servers:
-
-- [Context7 MCP Setup](./context7-mcp.md)
-- [GitHub MCP Setup](./github-mcp.md)
-- [MarkItDown MCP Setup](./markitdown-mcp.md)
-- [Playwright MCP Setup](./playwright-mcp.md)
 
 ---
 

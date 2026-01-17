@@ -280,11 +280,11 @@ ghostty +show-config                    # Validate configuration
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
 ### Setup Guides
-- [MCP New Machine Setup](/.claude/instructions-for-agents/guides/mcp-new-machine-setup.md) - Quick setup for all 7 MCP servers
-- [Context7 MCP Setup](/.claude/instructions-for-agents/guides/context7-mcp.md) - Documentation server
-- [GitHub MCP Setup](/.claude/instructions-for-agents/guides/github-mcp.md) - Repository operations
-- [MarkItDown MCP Setup](/.claude/instructions-for-agents/guides/markitdown-mcp.md) - Document conversion
-- [Playwright MCP Setup](/.claude/instructions-for-agents/guides/playwright-mcp.md) - Browser automation
+- [MCP Setup Guide](/.claude/instructions-for-agents/guides/mcp-setup.md) - Complete setup for all 7 MCP servers (consolidated)
+- [Context7 MCP](/.claude/instructions-for-agents/guides/context7-mcp.md) - Documentation server (quick reference)
+- [GitHub MCP](/.claude/instructions-for-agents/guides/github-mcp.md) - Repository operations (quick reference)
+- [MarkItDown MCP](/.claude/instructions-for-agents/guides/markitdown-mcp.md) - Document conversion (quick reference)
+- [Playwright MCP](/.claude/instructions-for-agents/guides/playwright-mcp.md) - Browser automation (quick reference)
 - [Logging Guide](/.claude/instructions-for-agents/guides/LOGGING_GUIDE.md) - Dual-mode logging system
 - [PowerLevel10k Integration](astro-website/src/developer/powerlevel10k/README.md) - ZSH prompt theme
 
