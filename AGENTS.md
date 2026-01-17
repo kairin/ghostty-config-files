@@ -6,7 +6,7 @@
 
 **Ghostty Configuration Files** is a comprehensive terminal environment setup featuring Ghostty terminal emulator with 2025 performance optimizations, right-click context menu integration, plus integrated AI tools (Claude Code, Gemini CLI), intelligent update management with zero-cost local CI/CD infrastructure, and system cleanup utilities for Ubuntu bloatware removal.
 
-**Quick Links:** [README](README.md) • [Full Backup](/.claude/instructions-for-agents/AGENTS.md-BACKUP-20251121.md)
+**Quick Links:** [README](README.md) • [ROADMAP](ROADMAP.md) • [Full Backup](/.claude/instructions-for-agents/AGENTS.md-BACKUP-20251121.md)
 
 ---
 
@@ -265,6 +265,7 @@ ghostty +show-config                    # Validate configuration
 
 ### Key Documents
 - [README.md](README.md) - User documentation
+- [ROADMAP.md](ROADMAP.md) - Development roadmap and task tracking
 - [CLAUDE.md](CLAUDE.md) - Claude Code integration (symlink to this file)
 - [GEMINI.md](GEMINI.md) - Gemini CLI integration (symlink to this file)
 
