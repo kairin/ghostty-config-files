@@ -94,7 +94,7 @@ No foundational blocking tasks - all user stories are independent and can procee
 
 **Purpose**: Final verification and ROADMAP update
 
-- [ ] T014 Verify LICENSE detected by GitHub and README badge resolves (manual check after push)
+- [x] T014 Verify LICENSE detected by GitHub and README badge resolves (manual check after push)
 - [x] T015 [P] Run link validation on all documentation in /.claude/instructions-for-agents/
 - [x] T016 [P] Verify all tier references consistent across repository
 - [x] T017 Update /ROADMAP.md to mark Wave 0 tasks complete
