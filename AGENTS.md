@@ -1,5 +1,15 @@
 # Ghostty Configuration Files - LLM Instructions (2026 Edition)
 
+> ⚠️ **SYMLINK ARCHITECTURE - DO NOT MODIFY**
+>
+> | File | Role | Action |
+> |------|------|--------|
+> | `AGENTS.md` | **Master file** (single source of truth) | Edit this file only |
+> | `CLAUDE.md` | Symlink → AGENTS.md | **NEVER convert to regular file** |
+> | `GEMINI.md` | Symlink → AGENTS.md | **NEVER convert to regular file** |
+>
+> **CONSTITUTIONAL REQUIREMENT**: All edits go to `AGENTS.md`. The symlinks `CLAUDE.md` and `GEMINI.md` must remain as symlinks. DO NOT create separate content, DO NOT break symlinks, DO NOT replace with regular files.
+
 > 🔧 **CRITICAL**: This file contains NON-NEGOTIABLE requirements that ALL AI assistants (Claude, Gemini, ChatGPT, etc.) working on this repository MUST follow at ALL times.
 
 ## 🎯 Project Overview
