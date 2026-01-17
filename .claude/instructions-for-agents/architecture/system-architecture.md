@@ -82,12 +82,13 @@ last-updated: 2026-01-11
 
 ---
 
-## Agent Architecture (4-Tier Hierarchy)
+## Agent Architecture (5-Tier Hierarchy)
 
-The project uses a 4-tier agent system for intelligent task delegation:
+The project uses a 5-tier agent system for intelligent task delegation:
 
 | Tier | Model | Count | Purpose |
 |------|-------|-------|---------|
+| 0 | Sonnet | 5 | Complete workflows (000-*) |
 | 1 | Opus | 1 | Multi-agent orchestration |
 | 2-3 | Sonnet | 9 | Core/utility operations |
 | 4 | Haiku | 50 | Atomic execution tasks |
@@ -96,7 +97,7 @@ The project uses a 4-tier agent system for intelligent task delegation:
 
 **Complete Documentation**:
 - [Agent Delegation Guide](./agent-delegation.md) - When to use which tier
-- [Agent Registry](./agent-registry.md) - Complete 60-agent reference
+- [Agent Registry](./agent-registry.md) - Complete 65-agent reference
 
 ---
 

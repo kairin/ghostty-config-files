@@ -138,7 +138,9 @@ chmod +x ~/.local/bin/playwright-mcp-wrapper.sh
 
 ```bash
 # 1. Context7 (Documentation Server)
-claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp
+# Note: Requires CONTEXT7_API_KEY set in environment (from ~/.mcp-secrets)
+claude mcp add --scope user --transport http context7 https://mcp.context7.com/mcp \
+  --header "CONTEXT7_API_KEY: $CONTEXT7_API_KEY"
 
 # 2. GitHub (Repository Operations)
 claude mcp add --scope user github -- bash -c 'GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'
@@ -183,7 +185,7 @@ Or in Claude Code:
 
 | Server | Purpose | Requires | Tools Provided |
 |--------|---------|----------|----------------|
-| **context7** | Library documentation | API key | resolve-library-id, query-docs |
+| **context7** | Library documentation | API key (header auth) | resolve-library-id, query-docs |
 | **github** | Repository operations | `gh auth login` | Issues, PRs, file contents, search |
 | **markitdown** | Document conversion | `uvx` | convert_to_markdown |
 | **playwright** | Browser automation | Wrapper script | Navigate, click, screenshot, etc. |
@@ -253,7 +255,7 @@ claude mcp remove --scope user <server-name>
 | Playwright disconnected | Verify wrapper script exists and is executable |
 | Playwright sandbox error (Ubuntu 23.10+) | Apply [AppArmor fix](#ubuntu-2310-apparmor-fix-required) |
 | Playwright stale lock error | Ensure `--isolated` flag in wrapper script |
-| Context7 disconnected | Check `CONTEXT7_API_KEY` is set in environment |
+| Context7 disconnected | Verify `CONTEXT7_API_KEY` is set and re-add with `--header` flag |
 | MarkItDown disconnected | Verify `uvx` is installed |
 | HuggingFace disconnected | Login at huggingface.co in browser first |
 | shadcn disconnected | Verify Node.js is installed via fnm |
