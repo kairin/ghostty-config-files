@@ -11,7 +11,7 @@ last-updated: 2026-01-11
 [← Back to AGENTS.md](../../../../AGENTS.md)
 
 **Related Sections**:
-- [Agent Delegation](./agent-delegation.md) - 4-tier agent hierarchy
+- [Agent Delegation](./agent-delegation.md) - 5-tier agent hierarchy
 - [Agent Registry](./agent-registry.md) - Complete 60-agent reference
 
 ---

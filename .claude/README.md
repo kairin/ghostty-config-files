@@ -47,18 +47,20 @@
 
 **Use this table to select the appropriate agent for your task:**
 
-| Need | Agent | File |
-|------|-------|------|
-| **Multiple parallel tasks** | 001-orchestrator | `agents/001-orchestrator.md` |
-| **Git operations** | 002-git | `agents/002-git.md` |
-| **Constitutional validation** | 002-compliance | `agents/002-compliance.md` |
-| **Health check** | 002-health | `agents/002-health.md` |
-| **Cleanup operations** | 002-cleanup | `agents/002-cleanup.md` |
-| **Build/deploy** | 002-astro | `agents/002-astro.md` |
-| **Local CI/CD** | 003-cicd | `agents/003-cicd.md` |
-| **Symlink integrity** | 003-symlink | `agents/003-symlink.md` |
-| **Documentation sync** | 003-docs | `agents/003-docs.md` |
-| **Workflow orchestration** | 003-workflow | `agents/003-workflow.md` |
+| Need | Agent | Source File |
+|------|-------|-------------|
+| **Multiple parallel tasks** | 001-orchestrator | `agent-sources/001-orchestrator.md` |
+| **Git operations** | 002-git | `agent-sources/002-git.md` |
+| **Constitutional validation** | 002-compliance | `agent-sources/002-compliance.md` |
+| **Health check** | 002-health | `agent-sources/002-health.md` |
+| **Cleanup operations** | 002-cleanup | `agent-sources/002-cleanup.md` |
+| **Build/deploy** | 002-astro | `agent-sources/002-astro.md` |
+| **Local CI/CD** | 003-cicd | `agent-sources/003-cicd.md` |
+| **Symlink integrity** | 003-symlink | `agent-sources/003-symlink.md` |
+| **Documentation sync** | 003-docs | `agent-sources/003-docs.md` |
+| **Workflow orchestration** | 003-workflow | `agent-sources/003-workflow.md` |
+
+> **Note**: Source files are in `.claude/agent-sources/`. Run `./scripts/install-claude-config.sh` to install to `~/.claude/agents/` for use.
 
 ---
 
@@ -87,26 +89,27 @@ AGENTS.md (master)            ← Single source of truth
     ↓ symlinked by
 CLAUDE.md, GEMINI.md         ← AI assistant entry points
     ↓ references
-.claude/                      ← Agent definitions
+.claude/                      ← Agent & skill source definitions
 ├── README.md                 ← This file (quick reference)
 ├── principles/               ← Constitutional requirements
 │   └── script-proliferation.md  🔴 CRITICAL
-└── agents/                   ← 15 specialized agents (65 total with Haiku)
+├── skill-sources/            ← 4 workflow skills (installed to ~/.claude/commands/)
+│   ├── 001-health-check.md
+│   ├── 001-deploy-site.md
+│   ├── 001-git-sync.md
+│   └── 001-full-workflow.md
+└── agent-sources/            ← 65 agents (installed to ~/.claude/agents/)
     ├── 000-health.md            (Tier 0: Workflow)
     ├── 000-cleanup.md           (Tier 0: Workflow)
     ├── 000-commit.md            (Tier 0: Workflow)
     ├── 000-deploy.md            (Tier 0: Workflow)
     ├── 000-docs.md              (Tier 0: Workflow)
     ├── 001-orchestrator.md      (Tier 1: Opus)
-    ├── 002-git.md               (Tier 2: Sonnet Core)
-    ├── 002-compliance.md        (Tier 2: Sonnet Core)
-    ├── 002-health.md            (Tier 2: Sonnet Core)
-    ├── 002-cleanup.md           (Tier 2: Sonnet Core)
-    ├── 002-astro.md             (Tier 2: Sonnet Core)
-    ├── 003-cicd.md              (Tier 3: Sonnet Utility)
-    ├── 003-symlink.md           (Tier 3: Sonnet Utility)
-    ├── 003-docs.md              (Tier 3: Sonnet Utility)
-    └── 003-workflow.md          (Tier 3: Sonnet Utility)
+    ├── 002-*.md                 (Tier 2: Sonnet Core - 5 agents)
+    ├── 003-*.md                 (Tier 3: Sonnet Utility - 4 agents)
+    └── 0XX-*.md                 (Tier 4: Haiku Atomic - 50 agents)
+
+Installation: ./scripts/install-claude-config.sh
 ```
 
 ---
@@ -180,9 +183,9 @@ lib/installers/ghostty/steps/07-create-desktop-entry.sh
    - Validation checklist
    - Enforcement procedures
 
-3. **Agent Definitions** (`.claude/agents/`)
-   - 15 specialized agents (5 Tier 0 workflows + 10 core agents)
-   - 50 additional Haiku atomic agents (65 total)
+3. **Agent Definitions** (`.claude/agent-sources/`)
+   - 65 agent source files (5 Tier 0 + 1 Tier 1 + 5 Tier 2 + 4 Tier 3 + 50 Tier 4)
+   - Installed to `~/.claude/agents/` via `./scripts/install-claude-config.sh`
    - Detailed capabilities and usage
    - Constitutional compliance enforcement
 

@@ -148,7 +148,7 @@ func (m ExtrasModel) Update(msg tea.Msg) (ExtrasModel, tea.Cmd) {
 	return m, nil
 }
 
-// View renders the extras dashboard
+// View renders the extras dashboard (menu-only, no table)
 func (m ExtrasModel) View() string {
 	var b strings.Builder
 
@@ -157,11 +157,7 @@ func (m ExtrasModel) View() string {
 	b.WriteString(header)
 	b.WriteString("\n\n")
 
-	// Status table
-	b.WriteString(m.renderExtrasTable())
-	b.WriteString("\n")
-
-	// Menu
+	// Menu only (no table - each tool navigates to detail view)
 	b.WriteString(m.renderExtrasMenu())
 	b.WriteString("\n")
 
@@ -289,12 +285,12 @@ func (m ExtrasModel) renderExtrasMenu() string {
 
 	toolCount := len(m.tools)
 
-	// Menu items: Individual tools + Install All + Create Claude Workflow + Back
-	menuItems := make([]string, 0, toolCount+3)
+	// Menu items: Individual tools + Install All + Install Claude Config + MCP Servers + Back
+	menuItems := make([]string, 0, toolCount+4)
 	for _, tool := range m.tools {
 		menuItems = append(menuItems, tool.DisplayName)
 	}
-	menuItems = append(menuItems, "Install All", "Create Claude Workflow", "Back")
+	menuItems = append(menuItems, "Install All", "Install Claude Config", "MCP Servers", "Back")
 
 	b.WriteString("\nChoose:\n")
 
@@ -315,7 +311,7 @@ func (m ExtrasModel) renderExtrasMenu() string {
 func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 	switch msg.String() {
 	case "up", "k":
-		maxCursor := len(m.tools) + 3 // Tools + "Install All" + "Create Claude Workflow" + "Back"
+		maxCursor := len(m.tools) + 4 // Tools + "Install All" + "Install Claude Config" + "MCP Servers" + "Back"
 		if m.cursor > 0 {
 			m.cursor--
 		} else {
@@ -324,7 +320,7 @@ func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 		return nil, false
 
 	case "down", "j":
-		maxCursor := len(m.tools) + 3
+		maxCursor := len(m.tools) + 4
 		if m.cursor < maxCursor-1 {
 			m.cursor++
 		} else {
@@ -350,7 +346,10 @@ func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 			// "Install All" selected
 			return nil, true
 		} else if m.cursor == toolCount+1 {
-			// "Create Claude Workflow" selected
+			// "Install Claude Config" selected
+			return nil, true
+		} else if m.cursor == toolCount+2 {
+			// "MCP Servers" selected
 			return nil, true
 		} else {
 			// "Back" selected
@@ -374,14 +373,19 @@ func (m ExtrasModel) IsInstallAllSelected() bool {
 	return m.cursor == len(m.tools)
 }
 
-// IsClaudeWorkflowSelected returns true if "Create Claude Workflow" is selected
-func (m ExtrasModel) IsClaudeWorkflowSelected() bool {
+// IsClaudeConfigSelected returns true if "Install Claude Config" is selected
+func (m ExtrasModel) IsClaudeConfigSelected() bool {
 	return m.cursor == len(m.tools)+1
+}
+
+// IsMCPServersSelected returns true if "MCP Servers" is selected
+func (m ExtrasModel) IsMCPServersSelected() bool {
+	return m.cursor == len(m.tools)+2
 }
 
 // IsBackSelected returns true if "Back" is selected
 func (m ExtrasModel) IsBackSelected() bool {
-	return m.cursor == len(m.tools)+2
+	return m.cursor == len(m.tools)+3
 }
 
 // GetCursor returns the current cursor position

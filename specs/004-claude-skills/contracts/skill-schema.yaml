@@ -1,0 +1,141 @@
+# Claude Code Skill Schema
+# Defines the structure for skill markdown files in .claude/commands/
+
+openapi: "3.0.3"
+info:
+  title: Claude Code Skill Schema
+  version: "1.0.0"
+  description: |
+    Schema for Claude Code slash command skills.
+    Skills are markdown files with YAML frontmatter.
+
+components:
+  schemas:
+    Skill:
+      type: object
+      description: A Claude Code slash command skill
+      required:
+        - description
+        - body
+      properties:
+        description:
+          type: string
+          maxLength: 100
+          description: Short description shown in skill listings
+          example: "Quick system diagnostics and environment check"
+        handoffs:
+          type: array
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/Handoff'
+          description: Workflow transitions to suggest after execution
+        body:
+          type: string
+          description: Markdown instructions for Claude to execute
+
+    Handoff:
+      type: object
+      description: A workflow transition suggestion
+      required:
+        - label
+        - prompt
+      properties:
+        label:
+          type: string
+          maxLength: 20
+          description: Button text shown to user
+          example: "Deploy Site"
+        prompt:
+          type: string
+          description: Context to pass to next skill
+          example: "Run /deploy-site to build and deploy the Astro website"
+
+    HealthReport:
+      type: object
+      description: Structured output from /health-check
+      properties:
+        components:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Node.js"
+              status:
+                type: string
+                enum: [PASS, FAIL, WARNING]
+              version:
+                type: string
+                example: "22.5.0"
+              message:
+                type: string
+              remediation:
+                type: string
+
+    BuildMetrics:
+      type: object
+      description: Structured output from /deploy-site
+      properties:
+        fileCount:
+          type: integer
+          example: 42
+        bundleSize:
+          type: string
+          example: "85KB"
+        bundleSizeBytes:
+          type: integer
+          example: 87040
+        buildDuration:
+          type: string
+          example: "12.3s"
+        deploymentUrl:
+          type: string
+          format: uri
+          example: "https://kairin.github.io/ghostty-config-files/"
+        nojekyllPresent:
+          type: boolean
+          example: true
+
+    SyncStatus:
+      type: object
+      description: Structured output from /git-sync
+      properties:
+        branch:
+          type: string
+          example: "20260118-143052-feat-skills"
+        status:
+          type: string
+          enum: [up-to-date, behind, ahead, diverged]
+        localCommits:
+          type: integer
+          example: 3
+        remoteCommits:
+          type: integer
+          example: 0
+        branchNameValid:
+          type: boolean
+          example: true
+        branchNameFormat:
+          type: string
+          example: "YYYYMMDD-HHMMSS-type-description"
+
+# Skill File Examples
+x-skill-examples:
+  health-check:
+    frontmatter:
+      description: "Quick system diagnostics and environment check"
+      handoffs:
+        - label: "Deploy Site"
+          prompt: "Run /deploy-site to build and deploy the Astro website"
+    body: |
+      # Health Check
+
+      ## Instructions
+      Run system diagnostics and report environment status.
+
+      ## Steps
+      1. Check core tools (git, gh, node, npm, jq)
+      2. Verify MCP connectivity
+      3. Validate Astro environment
+      4. Report structured summary

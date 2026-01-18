@@ -89,8 +89,14 @@ func (p *UninstallPipeline) Execute(ctx context.Context) error {
 
 	start := time.Now()
 
+	// Build script arguments - pass font arg for single font uninstall
+	var args []string
+	if p.tool.FontArg != "" {
+		args = []string{p.tool.FontArg}
+	}
+
 	// Run the uninstall script with streaming output
-	outputChan, resultChan := RunScript(p.config.RepoRoot, uninstallScript, nil)
+	outputChan, resultChan := RunScript(p.config.RepoRoot, uninstallScript, nil, args...)
 
 	// Forward output to pipeline's output channel
 	go func() {

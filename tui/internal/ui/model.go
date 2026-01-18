@@ -24,11 +24,15 @@ const (
 	ViewDashboard View = iota
 	ViewExtras
 	ViewNerdFonts
+	ViewMCPServers
+	ViewMCPPrereq
+	ViewSecretsWizard
 	ViewAppMenu
 	ViewMethodSelect
 	ViewInstaller
 	ViewDiagnostics
 	ViewConfirm
+	ViewToolDetail
 )
 
 // sharedState holds mutex-protected data that needs to survive model copies
@@ -60,13 +64,18 @@ type Model struct {
 	state *sharedState
 
 	// Components
-	spinner       spinner.Model
-	installer     *InstallerModel
-	extras        *ExtrasModel
-	nerdFonts     *NerdFontsModel
-	diagnostics   *DiagnosticsModel
-	confirmDialog *ConfirmModel
+	spinner        spinner.Model
+	installer      *InstallerModel
+	extras         *ExtrasModel
+	nerdFonts      *NerdFontsModel
+	mcpServers     *MCPServersModel
+	mcpPrereq      *MCPPrereqModel
+	secretsWizard  *SecretsWizardModel
+	diagnostics    *DiagnosticsModel
+	confirmDialog  *ConfirmModel
 	methodSelector *MethodSelectorModel
+	toolDetail     *ToolDetailModel
+	toolDetailFrom View // View to return to when exiting tool detail
 
 	// Pending uninstall (set when confirmation shown)
 	uninstallTool *registry.Tool
@@ -462,14 +471,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, func() tea.Msg {
 						return startInstallMsg{tool: firstTool, resume: false}
 					}
-				} else if m.extras.IsClaudeWorkflowSelected() {
-					// Create Claude Workflow command - check prerequisites and create file
-					return m, createClaudeWorkflowCmd()
+				} else if m.extras.IsClaudeConfigSelected() {
+					// Install Claude Config (skills + agents)
+					return m, installClaudeConfigCmd(m.repoRoot)
+				} else if m.extras.IsMCPServersSelected() {
+					// Navigate to MCP Servers view
+					mcpModel := NewMCPServersModel()
+					m.mcpServers = &mcpModel
+					m.currentView = ViewMCPServers
+					return m, m.mcpServers.Init()
 				} else if tool := m.extras.GetSelectedTool(); tool != nil {
-					m.selectedTool = tool
-					m.currentView = ViewAppMenu
-					m.menuCursor = 0
-					return m, nil
+					// Navigate to tool detail view for extras tools
+					toolDetail := NewToolDetailModel(tool, ViewExtras, m.state, m.cache, m.repoRoot)
+					m.toolDetail = &toolDetail
+					m.toolDetailFrom = ViewExtras
+					m.currentView = ViewToolDetail
+					return m, m.toolDetail.Init()
 				}
 			}
 			if extrasCmd != nil {
@@ -484,6 +501,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.currentView == ViewNerdFonts && m.nerdFonts != nil {
 		newNerdFonts, cmd := m.nerdFonts.Update(msg)
 		m.nerdFonts = &newNerdFonts
+
+		// Handle NerdFontInstallMsg - single font installation/uninstallation
+		if fontMsg, ok := msg.(NerdFontInstallMsg); ok {
+			return m.handleNerdFontInstall(fontMsg)
+		}
 
 		// Handle key presses for Nerd Fonts
 		if keyMsg, ok := msg.(tea.KeyMsg); ok {
@@ -511,22 +533,79 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, func() tea.Msg {
 						return startInstallMsg{tool: tool, resume: false}
 					}
-				} else if font := m.nerdFonts.GetSelectedFont(); font != nil {
-					// Individual font selected - for now, just install all fonts
-					// TODO: Implement per-family install in Phase 3a
-					tool, ok := registry.GetTool("nerdfonts")
-					if !ok {
-						return m, nil
-					}
-
-					m.selectedTool = tool
-					return m, func() tea.Msg {
-						return startInstallMsg{tool: tool, resume: false}
-					}
 				}
+				// Individual font selection is now handled via action menu (NerdFontInstallMsg)
 			}
 			if nerdFontsCmd != nil {
 				return m, nerdFontsCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If MCP Servers view is active, delegate messages to it
+	if m.currentView == ViewMCPServers && m.mcpServers != nil {
+		newMCPServers, cmd := m.mcpServers.Update(msg)
+		m.mcpServers = &newMCPServers
+
+		// Handle key presses for MCP Servers
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewExtras
+				m.mcpServers = nil
+				return m, nil
+			}
+
+			mcpCmd, handled := m.mcpServers.HandleKey(keyMsg)
+			if handled {
+				// Handle menu actions
+				if m.mcpServers.IsBackSelected() {
+					m.currentView = ViewExtras
+					m.mcpServers = nil
+					return m, nil
+				}
+			}
+			if mcpCmd != nil {
+				return m, mcpCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If MCP Prerequisites view is active, delegate messages to it
+	if m.currentView == ViewMCPPrereq && m.mcpPrereq != nil {
+		newMCPPrereq, cmd := m.mcpPrereq.Update(msg)
+		m.mcpPrereq = &newMCPPrereq
+
+		// Handle key presses for MCP Prerequisites
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			_, handled := m.mcpPrereq.HandleKey(keyMsg)
+			if handled {
+				// Go back to MCP Servers view
+				m.currentView = ViewMCPServers
+				m.mcpPrereq = nil
+				return m, nil
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If Secrets Wizard view is active, delegate messages to it
+	if m.currentView == ViewSecretsWizard && m.secretsWizard != nil {
+		newWizard, cmd := m.secretsWizard.Update(msg)
+		m.secretsWizard = &newWizard
+
+		// Handle key presses for Secrets Wizard
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			_, handled := m.secretsWizard.HandleKey(keyMsg)
+			if handled {
+				// Go back to MCP Servers view
+				m.currentView = ViewMCPServers
+				m.secretsWizard = nil
+				return m, nil
 			}
 		}
 
@@ -549,6 +628,48 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			diagCmd := m.diagnostics.HandleKey(keyMsg)
 			if diagCmd != nil {
 				return m, diagCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If tool detail view is active, delegate messages to it
+	if m.currentView == ViewToolDetail && m.toolDetail != nil {
+		newToolDetail, cmd := m.toolDetail.Update(msg)
+		m.toolDetail = &newToolDetail
+
+		// Handle key presses for tool detail
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			toolDetailCmd, handled := m.toolDetail.HandleKey(keyMsg)
+			if handled {
+				// Handle action selection or back
+				if m.toolDetail.IsBackSelected() {
+					// Return to previous view
+					m.currentView = m.toolDetailFrom
+					m.toolDetail = nil
+					return m, nil
+				}
+				// Handle other actions
+				action := m.toolDetail.GetSelectedAction()
+				tool := m.toolDetail.GetTool()
+				if tool != nil {
+					switch action {
+					case "Install", "Update":
+						return m, func() tea.Msg {
+							return startInstallMsg{tool: tool, resume: false, forceReinstall: false}
+						}
+					case "Reinstall":
+						return m, func() tea.Msg {
+							return startInstallMsg{tool: tool, resume: false, forceReinstall: true}
+						}
+					case "Uninstall":
+						return m.showUninstallConfirm(tool)
+					}
+				}
+			}
+			if toolDetailCmd != nil {
+				return m, toolDetailCmd
 			}
 		}
 
@@ -588,17 +709,33 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.refreshPending = false // Reset flag so future refreshes can trigger
 		return m, nil
 
-	case claudeWorkflowResultMsg:
-		// Show result of Claude workflow creation as an info dialog
-		// Use the message as the question - user presses any key to dismiss
-		prefix := "✓ "
-		if !msg.success {
-			prefix = "✗ "
+	case MCPShowPrereqMsg:
+		// Show prerequisites view for MCP server
+		prereqModel := NewMCPPrereqModel(msg.Server)
+		m.mcpPrereq = &prereqModel
+		m.currentView = ViewMCPPrereq
+		return m, nil
+
+	case MCPInstallServerMsg:
+		// Install MCP server (prerequisites already passed)
+		if m.mcpServers != nil {
+			return m, m.mcpServers.installMCPServer(msg.Server)
 		}
-		confirm := NewConfirmModel(prefix+msg.message, "claude_workflow_result")
-		m.confirmDialog = &confirm
-		m.previousView = m.currentView
-		m.currentView = ViewConfirm
+		return m, nil
+
+	case MCPShowSecretsWizardMsg:
+		// Show secrets wizard
+		wizardModel := NewSecretsWizardModel()
+		m.secretsWizard = &wizardModel
+		m.currentView = ViewSecretsWizard
+		return m, m.secretsWizard.Init()
+
+	case claudeConfigResultMsg:
+		// Claude config installation complete - return to extras view
+		// The script output was shown directly via tea.ExecProcess
+		if m.extras != nil {
+			return m, m.extras.Init()
+		}
 		return m, nil
 	}
 
@@ -617,217 +754,17 @@ type startUninstallMsg struct {
 	tool *registry.Tool
 }
 
+// claudeConfigResultMsg reports result of installing Claude config
+type claudeConfigResultMsg struct {
+	success bool
+	output  string
+	err     error
+}
+
 // sudoAuthMsg signals sudo authentication is complete
 type sudoAuthMsg struct {
 	success bool
 	err     error
-}
-
-// claudeWorkflowResultMsg signals the result of creating the Claude workflow command
-type claudeWorkflowResultMsg struct {
-	success bool
-	message string
-}
-
-// createClaudeWorkflowCmd checks if Claude Code is installed and creates the workflow file
-func createClaudeWorkflowCmd() tea.Cmd {
-	return func() tea.Msg {
-		// Check if Claude Code is installed
-		_, err := exec.LookPath("claude")
-		if err != nil {
-			return claudeWorkflowResultMsg{
-				success: false,
-				message: "Claude Code is not installed. Please install it first via 'Local AI Tools'.",
-			}
-		}
-
-		// Create the ~/.claude/commands directory if it doesn't exist
-		homeDir, err := exec.Command("sh", "-c", "echo $HOME").Output()
-		if err != nil {
-			return claudeWorkflowResultMsg{
-				success: false,
-				message: "Failed to determine home directory: " + err.Error(),
-			}
-		}
-		homePath := strings.TrimSpace(string(homeDir))
-		commandsDir := homePath + "/.claude/commands"
-
-		// Create directory
-		if err := exec.Command("mkdir", "-p", commandsDir).Run(); err != nil {
-			return claudeWorkflowResultMsg{
-				success: false,
-				message: "Failed to create commands directory: " + err.Error(),
-			}
-		}
-
-		// Write the workflow file
-		workflowPath := commandsDir + "/full-git-workflow.md"
-		workflowContent := `---
-description: Complete git sync - fetch, commit, push, verify issues/PRs
----
-
-# Full Git Workflow
-
-Execute comprehensive git synchronization and validation for any repository.
-
-## Instructions
-
-When the user invokes ` + "`/full-git-workflow`" + `, execute all steps below in order. Report progress and results for each step.
-
-## Workflow Steps
-
-### Step 1: Pre-Flight Status Check
-Run these commands and report the current state:
-` + "```bash" + `
-git status
-git branch -vv
-` + "```" + `
-Identify: uncommitted changes, untracked files, current branch, tracking status.
-
-### Step 2: Fetch & Analyze Remote
-` + "```bash" + `
-git fetch --all --prune
-git status
-` + "```" + `
-Determine sync status:
-- **Up-to-date**: Local matches remote
-- **Ahead**: Local has commits not on remote
-- **Behind**: Remote has commits not in local
-- **Diverged**: Both local and remote have unique commits
-
-**CRITICAL**: If DIVERGED, STOP the workflow immediately. Show:
-` + "```bash" + `
-git log --oneline HEAD..origin/<branch>  # Remote commits
-git log --oneline origin/<branch>..HEAD  # Local commits
-` + "```" + `
-Ask user: "Local and remote have diverged. Choose resolution: [Rebase] [Merge] [Manual]"
-
-### Step 3: Pull If Behind
-If behind remote:
-` + "```bash" + `
-git pull
-` + "```" + `
-Report any merge conflicts. If conflicts occur, stop and alert user.
-
-### Step 4: Commit Pending Changes
-If there are uncommitted changes:
-
-1. Stage all changes:
-` + "```bash" + `
-git add .
-` + "```" + `
-
-2. Analyze the changes to determine commit type:
-   - New files in features → ` + "`feat`" + `
-   - Bug fixes → ` + "`fix`" + `
-   - Documentation changes → ` + "`docs`" + `
-   - Code restructuring → ` + "`refactor`" + `
-   - Test additions → ` + "`test`" + `
-   - Maintenance → ` + "`chore`" + `
-
-3. Generate a smart commit message based on the actual changes and commit:
-` + "```bash" + `
-git commit -m "$(cat <<'EOF'
-<type>(<scope>): <summary based on actual changes>
-
-<optional body explaining what changed>
-
-Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
-EOF
-)"
-` + "```" + `
-
-If working tree is clean, skip this step and report "No pending changes to commit."
-
-### Step 5: Push to Remote
-` + "```bash" + `
-git push -u origin $(git branch --show-current)
-` + "```" + `
-Verify the push succeeded. Report any errors (e.g., rejected push, authentication issues).
-
-### Step 6: GitHub Status Check (Read-Only)
-Run these gh CLI commands and report results:
-` + "```bash" + `
-gh issue list --state open --limit 10
-gh pr list --state open
-gh pr status
-` + "```" + `
-Optionally check Actions billing if available:
-` + "```bash" + `
-gh api user/settings/billing/actions 2>/dev/null || echo "Billing check not available"
-` + "```" + `
-
-### Step 7: Branch Audit
-Report on branch health:
-` + "```bash" + `
-# Local branches not pushed to remote
-git branch -vv | grep -v '\[origin' || echo "All local branches are pushed"
-
-# Branches not merged to main
-git branch --no-merged main 2>/dev/null || echo "All branches merged to main"
-
-# Count of remote branches
-echo "Remote branches: $(git branch -r | wc -l)"
-` + "```" + `
-
-### Step 8: Final Sync Report
-Generate and display a summary:
-` + "```" + `
-=====================================
-FULL GIT WORKFLOW COMPLETE
-=====================================
-Repository: <repo-name>
-Branch: <current-branch>
-Status: <Clean/Pending>
-
-Actions taken:
-- Fetched: Yes
-- Pulled: <Yes/No/Not needed>
-- Committed: <Yes (message) / No pending changes>
-- Pushed: <Yes / Already up-to-date>
-
-GitHub Status:
-- Open Issues: <count>
-- Open PRs: <count>
-
-Branch Health:
-- Unpushed branches: <count>
-- Unmerged branches: <count>
-
-Result: <SUCCESS / NEEDS ATTENTION>
-=====================================
-` + "```" + `
-
-## Error Handling
-
-- If any step fails, report the error clearly and stop
-- Never force-push or make destructive changes
-- Never delete branches
-- Always ask user before resolving divergence
-
-## Safety Rules
-
-1. **Never force-push** - If push is rejected, alert user
-2. **Never delete branches** - This is a constitutional requirement
-3. **Stop on divergence** - Always ask user for resolution strategy
-4. **Read-only GitHub checks** - Don't create/modify issues or PRs
-5. **Preserve co-authorship** - All commits must include Claude attribution
-`
-
-		// Write file using shell command to handle content properly
-		writeCmd := exec.Command("sh", "-c", fmt.Sprintf("cat > '%s' << 'ENDOFWORKFLOW'\n%s\nENDOFWORKFLOW", workflowPath, workflowContent))
-		if err := writeCmd.Run(); err != nil {
-			return claudeWorkflowResultMsg{
-				success: false,
-				message: "Failed to write workflow file: " + err.Error(),
-			}
-		}
-
-		return claudeWorkflowResultMsg{
-			success: true,
-			message: fmt.Sprintf("Created /full-git-workflow command at:\n%s\n\nUsage: Type /full-git-workflow in any Claude Code session", workflowPath),
-		}
-	}
 }
 
 // checkSudoCached returns true if sudo credentials are currently cached
@@ -842,6 +779,20 @@ func requestSudoAuth() tea.Cmd {
 	c := exec.Command("sudo", "-v")
 	return tea.ExecProcess(c, func(err error) tea.Msg {
 		return sudoAuthMsg{success: err == nil, err: err}
+	})
+}
+
+// installClaudeConfigCmd runs the install-claude-config.sh script
+// This installs skills to ~/.claude/commands/ and agents to ~/.claude/agents/
+// Uses tea.ExecProcess to suspend TUI and show script output directly
+func installClaudeConfigCmd(repoRoot string) tea.Cmd {
+	scriptPath := repoRoot + "/scripts/install-claude-config.sh"
+	c := exec.Command("bash", scriptPath)
+	return tea.ExecProcess(c, func(err error) tea.Msg {
+		return claudeConfigResultMsg{
+			success: err == nil,
+			err:     err,
+		}
 	})
 }
 
@@ -1022,12 +973,14 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "down", "j":
 		switch m.currentView {
 		case ViewDashboard:
-			// Calculate max cursor: tools + dynamic menu items
-			menuItemCount := 4 // Nerd Fonts, Extras, Boot Diagnostics, Exit
+			// Calculate max cursor: table tools + menu items
+			tableToolCount := len(m.getTableTools())
+			menuToolCount := len(m.getMenuTools()) // Ghostty, Feh
+			menuItemCount := menuToolCount + 4     // Ghostty, Feh, Nerd Fonts, Extras, Boot Diagnostics, Exit
 			if m.getUpdateCount() > 0 && !m.loading {
 				menuItemCount++ // Add "Update All" option
 			}
-			maxCursor := registry.MainToolCount() + menuItemCount
+			maxCursor := tableToolCount + menuItemCount
 			if m.mainCursor < maxCursor-1 {
 				m.mainCursor++
 			}
@@ -1072,17 +1025,28 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 	switch m.currentView {
 	case ViewDashboard:
-		tools := registry.GetMainTools()
-		toolCount := len(tools)
+		tableTools := m.getTableTools()
+		tableToolCount := len(tableTools)
+		menuTools := m.getMenuTools()
+		menuToolCount := len(menuTools)
 
-		if m.mainCursor < toolCount {
-			// Selected a tool
-			m.selectedTool = tools[m.mainCursor]
+		if m.mainCursor < tableToolCount {
+			// Selected a tool from the table - go to app menu
+			m.selectedTool = tableTools[m.mainCursor]
 			m.currentView = ViewAppMenu
 			m.menuCursor = 0
+		} else if m.mainCursor < tableToolCount+menuToolCount {
+			// Selected a menu tool (Ghostty or Feh) - go to tool detail view
+			menuToolIndex := m.mainCursor - tableToolCount
+			tool := menuTools[menuToolIndex]
+			toolDetail := NewToolDetailModel(tool, ViewDashboard, m.state, m.cache, m.repoRoot)
+			m.toolDetail = &toolDetail
+			m.toolDetailFrom = ViewDashboard
+			m.currentView = ViewToolDetail
+			return m, m.toolDetail.Init()
 		} else {
-			// Menu item selected
-			menuIndex := m.mainCursor - toolCount
+			// Other menu item selected
+			menuIndex := m.mainCursor - tableToolCount - menuToolCount
 			updateCount := m.getUpdateCount()
 
 			// If updates available, "Update All" is at index 0
@@ -1194,6 +1158,12 @@ func (m Model) View() string {
 		return m.viewExtras()
 	case ViewNerdFonts:
 		return m.viewNerdFonts()
+	case ViewMCPServers:
+		return m.viewMCPServers()
+	case ViewMCPPrereq:
+		return m.viewMCPPrereq()
+	case ViewSecretsWizard:
+		return m.viewSecretsWizard()
 	case ViewAppMenu:
 		return m.viewAppMenu()
 	case ViewMethodSelect:
@@ -1211,6 +1181,11 @@ func (m Model) View() string {
 	case ViewConfirm:
 		if m.confirmDialog != nil {
 			return m.confirmDialog.View()
+		}
+		return m.viewDashboard()
+	case ViewToolDetail:
+		if m.toolDetail != nil {
+			return m.toolDetail.View()
 		}
 		return m.viewDashboard()
 	default:
@@ -1283,6 +1258,32 @@ func (m Model) viewDashboard() string {
 	return b.String()
 }
 
+// getTableTools returns only the tools to display in the main table (excludes menu-only tools)
+func (m Model) getTableTools() []*registry.Tool {
+	allMain := registry.GetMainTools()
+	tableTools := make([]*registry.Tool, 0, 3)
+	// Filter: only show nodejs, ai_tools, antigravity in table
+	// Ghostty and Feh are now menu items for quick access to detail views
+	for _, tool := range allMain {
+		if tool.ID == "nodejs" || tool.ID == "ai_tools" || tool.ID == "antigravity" {
+			tableTools = append(tableTools, tool)
+		}
+	}
+	return tableTools
+}
+
+// getMenuTools returns tools that should appear as menu items (Ghostty, Feh)
+func (m Model) getMenuTools() []*registry.Tool {
+	menuTools := make([]*registry.Tool, 0, 2)
+	if tool, ok := registry.GetTool("ghostty"); ok {
+		menuTools = append(menuTools, tool)
+	}
+	if tool, ok := registry.GetTool("feh"); ok {
+		menuTools = append(menuTools, tool)
+	}
+	return menuTools
+}
+
 func (m Model) renderStatusTable() string {
 	var b strings.Builder
 
@@ -1309,8 +1310,8 @@ func (m Model) renderStatusTable() string {
 	b.WriteString(lipgloss.NewStyle().Foreground(ColorMuted).Render(sep))
 	b.WriteString("\n")
 
-	// Tools
-	tools := registry.GetMainTools()
+	// Tools - only show table tools (nodejs, ai_tools, antigravity)
+	tools := m.getTableTools()
 	for i, tool := range tools {
 		m.state.mu.RLock()
 		status, hasStatus := m.state.statuses[tool.ID]
@@ -1399,15 +1400,25 @@ func (m Model) renderStatusTable() string {
 func (m Model) renderMainMenu() string {
 	var b strings.Builder
 
-	tools := registry.GetMainTools()
-	toolCount := len(tools)
+	tableTools := m.getTableTools()
+	tableToolCount := len(tableTools)
 
-	// Build menu items dynamically - add "Update All" if updates available
+	// Build menu items dynamically
+	// Order: Ghostty, Feh, (Update All if available), Nerd Fonts, Extras, Boot Diagnostics, Exit
 	menuItems := []string{}
+
+	// Add Ghostty and Feh at the top (quick access to detail views)
+	menuTools := m.getMenuTools()
+	for _, tool := range menuTools {
+		menuItems = append(menuItems, tool.DisplayName)
+	}
+
+	// Add "Update All" if updates available
 	updateCount := m.getUpdateCount()
 	if updateCount > 0 && !m.loading {
 		menuItems = append(menuItems, fmt.Sprintf("Update All (%d)", updateCount))
 	}
+
 	menuItems = append(menuItems, "Nerd Fonts", "Extras", "Boot Diagnostics", "Exit")
 
 	b.WriteString("\nChoose:\n")
@@ -1415,7 +1426,7 @@ func (m Model) renderMainMenu() string {
 	for i, item := range menuItems {
 		cursor := " "
 		style := MenuItemStyle
-		if m.mainCursor == toolCount+i {
+		if m.mainCursor == tableToolCount+i {
 			cursor = ">"
 			style = MenuSelectedStyle
 		}
@@ -1437,6 +1448,27 @@ func (m Model) viewNerdFonts() string {
 		return m.nerdFonts.View()
 	}
 	return "Loading Nerd Fonts..."
+}
+
+func (m Model) viewMCPServers() string {
+	if m.mcpServers != nil {
+		return m.mcpServers.View()
+	}
+	return "Loading MCP Servers..."
+}
+
+func (m Model) viewMCPPrereq() string {
+	if m.mcpPrereq != nil {
+		return m.mcpPrereq.View()
+	}
+	return "Loading prerequisites..."
+}
+
+func (m Model) viewSecretsWizard() string {
+	if m.secretsWizard != nil {
+		return m.secretsWizard.View()
+	}
+	return "Loading secrets wizard..."
 }
 
 func (m Model) viewAppMenu() string {
@@ -1603,4 +1635,56 @@ func (m Model) startConfigure(tool *registry.Tool) (tea.Model, tea.Cmd) {
 	}
 
 	return m, tea.Batch(initCmd, startCmd)
+}
+
+// handleNerdFontInstall handles single font installation/uninstallation
+func (m Model) handleNerdFontInstall(msg NerdFontInstallMsg) (tea.Model, tea.Cmd) {
+	// Get nerdfonts tool as template for installation
+	tool, ok := registry.GetTool("nerdfonts")
+	if !ok {
+		return m, nil
+	}
+
+	// Create a modified copy for single font operation
+	singleFontTool := &registry.Tool{
+		ID:          "nerdfonts-" + strings.ToLower(msg.FontName),
+		DisplayName: "Nerd Font: " + msg.FontName,
+		Category:    tool.Category,
+		Scripts: registry.ToolScripts{
+			Check:     tool.Scripts.Check,
+			Install:   tool.Scripts.Install,   // Will be called with font arg
+			Uninstall: tool.Scripts.Uninstall, // Will be called with font arg
+		},
+		FontArg: msg.FontName, // Pass font name as argument
+	}
+
+	m.selectedTool = singleFontTool
+
+	switch msg.Action {
+	case "install", "reinstall":
+		// Create installer for single font
+		installer := NewInstallerModelForSingleFont(singleFontTool, m.repoRoot, msg.FontName)
+		m.installer = &installer
+		m.currentView = ViewInstaller
+
+		initCmd := m.installer.Init()
+		startCmd := func() tea.Msg {
+			return InstallerStartMsg{Resume: false}
+		}
+		return m, tea.Batch(initCmd, startCmd)
+
+	case "uninstall":
+		// Create uninstaller for single font
+		installer := NewInstallerModelForSingleFontUninstall(singleFontTool, m.repoRoot, msg.FontName)
+		m.installer = &installer
+		m.currentView = ViewInstaller
+
+		initCmd := m.installer.Init()
+		startCmd := func() tea.Msg {
+			return InstallerStartMsg{Resume: false, Uninstall: true}
+		}
+		return m, tea.Batch(initCmd, startCmd)
+	}
+
+	return m, nil
 }

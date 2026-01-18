@@ -122,6 +122,17 @@ ghostty-config-files/
 │   └── _astro/                     # Built assets (CSS, JS)
 │
 ├── .claude/                        # Claude Code configuration
+│   ├── skill-sources/              # Skill source files (4 skills)
+│   │   ├── 001-health-check.md     # System health check skill
+│   │   ├── 001-deploy-site.md      # Deploy website skill
+│   │   ├── 001-git-sync.md         # Git synchronization skill
+│   │   └── 001-full-workflow.md    # Complete workflow skill
+│   ├── agent-sources/              # Agent source files (65 agents)
+│   │   ├── 000-*.md                # Tier 0: Workflow orchestrators (5)
+│   │   ├── 001-*.md                # Tier 1: Opus orchestrator (1)
+│   │   ├── 002-*.md                # Tier 2: Domain operations (5)
+│   │   ├── 003-*.md                # Tier 3: Utility/support (4)
+│   │   └── 0XX-*.md                # Tier 4: Atomic execution (50)
 │   └── instructions-for-agents/    # AI agent instructions
 │       ├── requirements/           # Critical requirements
 │       │   ├── CRITICAL-requirements.md
@@ -142,6 +153,9 @@ ghostty-config-files/
 │       │   └── script-proliferation.md
 │       └── tools/                  # Tool documentation
 │           └── README.md
+│
+│   # Note: Run ./scripts/install-claude-config.sh to install
+│   # skills and agents to ~/.claude/commands/ and ~/.claude/agents/
 │
 ├── .runners-local/                 # Local CI/CD infrastructure
 │   └── workflows/                  # Local workflow scripts

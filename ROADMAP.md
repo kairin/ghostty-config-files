@@ -106,6 +106,8 @@ Track your fleet of Ubuntu systems:
 - Broken link: Created `local-cicd-guide.md` in guides/
 - Tier conflict: Unified to 5-tier (0-4) across all 4 architecture files
 
+**SpecKit Artifacts:** [specs/001-foundation-fixes/](specs/001-foundation-fixes/)
+
 ---
 
 ## Wave 1: Foundation (COMPLETE)
@@ -134,122 +136,237 @@ Track your fleet of Ubuntu systems:
 
 ---
 
-## Wave 2: TUI Features (NEXT SPRINT)
+## Wave 2: TUI Features (COMPLETE)
 
-> **Priority**: Build on solid documentation foundation
+> **Priority**: ✅ COMPLETED - 2026-01-18
 
-| # | Task | Effort | Dependencies |
-|---|------|--------|--------------|
-| 9 | Per-family Nerd Font selection | 2 hr | None |
-| 10 | TUI MCP Server Management | 4 hr | #5 (MCP docs) |
-| 11 | MCP prerequisites detection | 2 hr | #10 |
-| 12 | MCP server registry | 1 hr | #10 |
-| 13 | Secrets template setup wizard | 2 hr | #11, #12 |
+| # | Task | Effort | Dependencies | Status |
+|---|------|--------|--------------|--------|
+| 9 | Per-family Nerd Font selection | 2 hr | None | ✅ Done |
+| 10 | TUI MCP Server Management | 4 hr | #5 (MCP docs) | ✅ Done |
+| 11 | MCP prerequisites detection | 2 hr | #10 | ✅ Done |
+| 12 | MCP server registry | 1 hr | #10 | ✅ Done |
+| 13 | Secrets template setup wizard | 2 hr | #11, #12 | ✅ Done |
 
-**Total**: ~11 hours | **Status**: ⏳ Pending Wave 1
+**Total**: ~11 hours | **Status**: ✅ COMPLETE
 
-**Notes:**
-- Nerd Fonts: Currently all 8 families install together, need per-family selection
-- MCP feature: Add 7 MCP servers as category under Extras menu with prerequisites detection
-- Location: `tui/internal/ui/extras.go` (under Extras menu)
+**Completed:**
+- Per-family Nerd Font: Individual font selection with Install/Reinstall/Uninstall actions
+- MCP Server Management: New view under Extras → MCP Servers (7 servers with status)
+- MCP Prerequisites: Auto-check Node.js, uvx, gh auth before install with fix instructions
+- MCP Registry: Data-driven registry in `tui/internal/registry/mcp.go`
+- Secrets Wizard: Interactive setup for ~/.mcp-secrets file
 
----
+**New TUI Files Created:**
+- `tui/internal/registry/mcp.go` - MCP server registry (7 servers)
+- `tui/internal/ui/mcpservers.go` - MCP Servers management view
+- `tui/internal/ui/mcpprereq.go` - Prerequisites failure view
+- `tui/internal/ui/secretswizard.go` - Secrets setup wizard
 
-## Wave 3: Enhancements (LATER)
-
-> **Priority**: Nice-to-have improvements after core features complete
-
-| # | Task | Priority | Notes |
-|---|------|----------|-------|
-| 14 | Glamour markdown viewer (`details.go`) | Medium | TUI polish - render docs in-terminal |
-| 15 | TUI unit tests | Medium | Quality assurance |
-| 16 | "Install All" batch installation | Low | Convenience feature |
-| 17 | Automated link validation | Medium | CI/CD enhancement |
-| 18 | AGENTS.md size tracking | Low | Monitor vs 40KB limit |
-| 19 | Proper semver comparison | Low | TUI version handling |
-| 20 | Rename LOGGING_GUIDE.md | Low | Caps inconsistent |
-| 21 | Standardize script headers | Medium | 61% coverage, need 100% |
-| 22 | Add bidirectional cross-references | Medium | Links go A→B but not B→A |
-| 23 | Create stage-specific READMEs | Medium | 000-005 directories need docs |
-
-**Status**: ⏳ Pending Wave 2
+**SpecKit Artifacts:** [specs/003-tui-features/](specs/003-tui-features/)
 
 ---
 
-## Wave 4: Future Features (BACKLOG)
+## Wave 3: Claude Code Skills (COMPLETE)
 
-### Claude Code Enhancements
+> **Priority**: ✅ COMPLETED - 2026-01-18
+> **Theme**: Custom slash commands and portable configuration
 
-#### Skills/Slash Commands (Not Implemented)
-| Task | Priority | Notes |
-|------|----------|-------|
-| Create `/health-check` skill | Medium | Quick system diagnostics invocation |
-| Create `/deploy-site` skill | Medium | Astro build + deploy workflow |
-| Create `/git-sync` skill | Low | Fetch, pull, push all branches |
-| Create `/full-workflow` skill | Low | Complete commit workflow |
+| # | Task | Effort | Priority | Status |
+|---|------|--------|----------|--------|
+| 14 | Create `/001-health-check` skill | 1 hr | Medium | ✅ Done |
+| 15 | Create `/001-deploy-site` skill | 1 hr | Medium | ✅ Done |
+| 16 | Create `/001-git-sync` skill | 1 hr | Low | ✅ Done |
+| 17 | Create `/001-full-workflow` skill | 1 hr | Low | ✅ Done |
+| 18 | Skills user-level consolidation | 1 hr | **High** | ✅ Done |
+| 19 | Agents user-level consolidation | 2 hr | **High** | ✅ Done |
+| 20 | Combined install script | 1 hr | **High** | ✅ Done |
 
-**What skills provide**: User-invocable `/commands` from `.claude/skills/` directory. Hot-reload enabled (v2.1.0+).
+**Completed (Skills)**:
+- 4 workflow skills created: `/001-health-check`, `/001-deploy-site`, `/001-git-sync`, `/001-full-workflow`
+- Skills moved from `.claude/commands/` → `.claude/skill-sources/` (source files)
+- Install script copies to `~/.claude/commands/` (user-level)
 
-#### Hooks (Not Implemented)
-| Task | Priority | Notes |
-|------|----------|-------|
-| Add PermissionRequest hook | High | Auto-approve safe ops, reduce prompts |
-| Add PreToolUse validation hook | Medium | Validate before tool execution |
-| Add PostToolUse audit hook | Medium | Log/validate after execution |
-| Add Stop hook for CI/CD | Low | Auto-run validation on completion |
-| Add Setup hook | Low | New contributor onboarding |
+**Completed (Agents)**:
+- 65 agents moved from `.claude/agents/` → `.claude/agent-sources/` (source files)
+- Combined install script created: `scripts/install-claude-config.sh`
+- Installs to `~/.claude/agents/` at user level
+
+**What this provides**: Portable Claude Code configuration across all computers. Clone repo, run `./scripts/install-claude-config.sh`, identical setup everywhere.
+
+**Total**: ~7 hours | **Status**: ✅ Complete
+
+**SpecKit Artifacts:** [specs/004-claude-skills/](specs/004-claude-skills/) (skills) | [specs/005-claude-agents/](specs/005-claude-agents/) (agents)
+
+**Reference**: [Skills docs](https://code.claude.com/docs/en/slash-commands)
+
+---
+
+## Wave 4: Claude Code Hooks (READY)
+
+> **Priority**: Automation hooks (HIGH VALUE subset) - reduces permission prompts
+> **Theme**: Pre/post execution automation
+
+| # | Task | Effort | Priority | Notes |
+|---|------|--------|----------|-------|
+| 18 | Add PermissionRequest hook | 2 hr | **High** | Auto-approve safe ops, reduce prompts |
+| 19 | Add PreToolUse validation hook | 1 hr | Medium | Validate before tool execution |
+| 20 | Add PostToolUse audit hook | 1 hr | Medium | Log/validate after execution |
+
+**Deferred to backlog**: Stop hook (Low), Setup hook (Low)
 
 **What hooks provide**: Automated pre/post execution scripts. Configured in settings.json.
 
-#### Memory Rules (Minimal Implementation)
-| Task | Priority | Notes |
-|------|----------|-------|
-| Create `.claude/rules/git-conventions.md` | Medium | Branch naming, commit format rules |
-| Create `.claude/rules/code-standards.md` | Low | Project coding standards |
-| Migrate Tailwind rules to `.claude/rules/` | Low | Move from `rules-tailwindcss/` |
+**Total**: ~4 hours | **Status**: ⏳ Ready to start
+
+**Reference**: [Hooks docs](https://code.claude.com/docs/en/hooks)
+
+---
+
+## Wave 5: Claude Code Memory (READY)
+
+> **Priority**: Persistent rules for consistent behavior - cleaner than AGENTS.md
+> **Theme**: Memory rules and standards
+
+| # | Task | Effort | Priority | Notes |
+|---|------|--------|----------|-------|
+| 21 | Create `.claude/rules/git-conventions.md` | 45 min | Medium | Branch naming, commit format rules |
+| 22 | Create `.claude/rules/code-standards.md` | 45 min | Low | Project coding standards |
+| 23 | Migrate Tailwind rules to `.claude/rules/` | 30 min | Low | Move from `rules-tailwindcss/` |
 
 **What rules provide**: Persistent instructions loaded every session. Cleaner than AGENTS.md.
 
-#### Reference Documentation
-- **Skills docs**: https://code.claude.com/docs/en/slash-commands
-- **Hooks docs**: https://code.claude.com/docs/en/hooks
-- **Memory docs**: https://code.claude.com/docs/en/memory
-- **Plugins docs**: https://code.claude.com/docs/en/plugins (for future consideration)
+**Total**: ~2 hours | **Status**: ⏳ Ready to start
 
-### Cross-System Synchronization
+**Reference**: [Memory docs](https://code.claude.com/docs/en/memory)
 
-Goal: Enable seamless environment sync between multiple machines.
+---
 
-#### Machine Inventory & Tracking
-| Task | Priority | Notes |
-|------|----------|-------|
-| Create `~/.ghostty-fleet/inventory.json` | High | Track all machines with this config |
-| Per-machine version snapshots | Medium | Record tool versions on each system |
-| Sync status reporting | Medium | Show drift between machines |
+## Wave 6a: TUI Detail Views (IN PROGRESS)
 
-#### Update Management
+> **Priority**: Fix TUI UX issues - headers cut off, tables too crowded
+> **Theme**: Navigation restructure for better usability
+
+| # | Task | Effort | Priority | Status |
+|---|------|--------|----------|--------|
+| 24 | Create ViewToolDetail component | 2 hr | **High** | ⏳ Pending |
+| 25 | Simplify main dashboard (3 tools in table) | 1 hr | **High** | ⏳ Pending |
+| 26 | Add Ghostty/Feh as menu items | 1 hr | **High** | ⏳ Pending |
+| 27 | Convert Extras to navigation menu | 1.5 hr | **High** | ⏳ Pending |
+
+**Total**: ~5.5 hours | **Status**: 🟡 In Progress
+
+**What this fixes**:
+- Extras header was cut off (not visible)
+- Main dashboard too crowded with 5 tools
+- Extras showed 7 tools in cramped table
+
+**Solution**:
+- Reusable ViewToolDetail component (based on nerdfonts.go pattern)
+- Main table: Node.js, AI Tools, Antigravity only
+- Ghostty and Feh accessible via menu → detail view
+- Extras: navigation menu → individual detail views
+
+**SpecKit Artifacts:** [specs/006-tui-detail-views/](specs/006-tui-detail-views/)
+
+---
+
+## Wave 6b: TUI Polish (READY)
+
+> **Priority**: Complete TUI functionality after detail views
+> **Theme**: TUI enhancements and quality
+
+| # | Task | Effort | Priority | Notes |
+|---|------|--------|----------|-------|
+| 28 | Glamour markdown viewer (`details.go`) | 2 hr | Medium | Render docs in-terminal |
+| 29 | TUI unit tests | 2 hr | Medium | Quality assurance |
+| 30 | "Install All" batch installation | 1 hr | Low | Convenience feature |
+| 31 | Proper semver comparison | 1 hr | Low | TUI version handling |
+
+**Total**: ~6 hours | **Status**: ⏳ Ready to start
+
+---
+
+## Wave 7: Documentation Cleanup (READY)
+
+> **Priority**: Finalize documentation consistency
+> **Theme**: Documentation standardization
+
+| # | Task | Effort | Priority | Notes |
+|---|------|--------|----------|-------|
+| 32 | Standardize script headers | 2 hr | Medium | 61% coverage → 100% |
+| 33 | Add bidirectional cross-references | 1 hr | Medium | Links go A→B but not B→A |
+| 34 | Create stage-specific READMEs | 1 hr | Medium | 000-005 directories need docs |
+| 35 | Rename LOGGING_GUIDE.md | 15 min | Low | Caps inconsistent |
+
+**Total**: ~4 hours | **Status**: ⏳ Ready to start
+
+---
+
+## Wave 8: CI/CD & Monitoring (READY)
+
+> **Priority**: Automated quality gates
+> **Theme**: Continuous quality monitoring
+
+| # | Task | Effort | Priority | Notes |
+|---|------|--------|----------|-------|
+| 36 | Automated link validation | 1.5 hr | Medium | CI/CD enhancement |
+| 37 | AGENTS.md size tracking | 30 min | Low | Monitor vs 40KB limit |
+
+**Total**: ~2 hours | **Status**: ⏳ Ready to start
+
+---
+
+## Wave 9: Multi-Machine Foundation (READY)
+
+> **Priority**: Core sync infrastructure
+> **Theme**: Cross-system synchronization basics
+
+| # | Task | Effort | Priority | Notes |
+|---|------|--------|----------|-------|
+| 38 | Create `~/.ghostty-fleet/inventory.json` | 2 hr | **High** | Track all machines with this config |
+| 39 | Per-machine version snapshots | 2 hr | Medium | Record tool versions on each system |
+| 40 | Sync status reporting | 2 hr | Medium | Show drift between machines |
+| 41 | MCP server configuration sync | 2 hr | **High** | Same MCP servers on all machines |
+
+**Total**: ~8 hours | **Status**: ⏳ Ready to start
+
+---
+
+## Wave 10: Multi-Machine Advanced (BACKLOG)
+
+> **Priority**: Extended sync capabilities - future consideration
+> **Theme**: Advanced cross-system features
+
 | Task | Priority | Notes |
 |------|----------|-------|
 | Remote sync via SSH | Low | Push updates to other machines |
 | Version pinning per-machine | Medium | Lock specific versions if needed |
 | Rollback capability | Low | Revert to previous tool versions |
-
-#### Claude Code Consistency
-| Task | Priority | Notes |
-|------|----------|-------|
 | Agent version tracking | Medium | Track agent definitions across systems |
 | Permission rule sync | Medium | Ensure identical approval rules |
-| MCP server configuration sync | High | Same MCP servers on all machines (user scope) |
 | MCP secrets portable sync | Medium | Gist export/import via TUI |
+
+**Status**: 📋 Backlog
+
+---
+
+## Wave 11: Advanced Features (BACKLOG)
+
+> **Priority**: Nice-to-have enhancements
+> **Theme**: Future polish and advanced capabilities
+
+| Task | Priority | Notes |
+|------|----------|-------|
+| Add Stop hook for CI/CD | Low | Auto-run validation on completion |
+| Add Setup hook | Low | New contributor onboarding |
+| Context7 health check integration | Medium | `health-check.sh --context7-validate all` |
+| Parallel validation execution | Low | Performance enhancement |
+| HTML report generation | Low | Charts and graphs for reports |
 
 **Future consideration**: Could this become a Claude Code plugin for sharing with others?
 
-### Advanced Features
-| Task | Priority | Notes |
-|------|----------|-------|
-| Context7 health check integration | Medium | `health-check.sh --context7-validate all` |
-| Parallel validation execution | Low | Wave 4 enhancement |
-| HTML report generation | Low | Charts and graphs for performance reports |
+**Reference**: [Plugins docs](https://code.claude.com/docs/en/plugins)
 
 **Status**: 📋 Backlog
 
@@ -274,6 +391,34 @@ Goal: Enable seamless environment sync between multiple machines.
 | ROADMAP wave restructure | 2026-01-18 | Replaced v3.x with Wave 0-4 structure |
 | Wave 0 Foundation Fixes | 2026-01-18 | LICENSE, broken link fix, tier unification - [specs/001-foundation-fixes/](specs/001-foundation-fixes/) |
 | Wave 1 Scripts Documentation | 2026-01-18 | 5 READMEs, MCP consolidation, ai-cli-tools fix - [specs/002-scripts-documentation/](specs/002-scripts-documentation/) |
+| Wave 2 TUI Features | 2026-01-18 | Per-font selection, MCP management, prerequisites, secrets wizard - [specs/003-tui-features/](specs/003-tui-features/) |
+| Wave 3 Skills + Agents | 2026-01-18 | 4 skills + 65 agents consolidated to user-level - [specs/004-claude-skills/](specs/004-claude-skills/) + [specs/005-claude-agents/](specs/005-claude-agents/) |
+
+---
+
+## SpecKit Verification Summary
+
+All completed waves have been verified against their SpecKit specifications:
+
+| Wave | SpecKit Spec | Checklist | Tasks | Status |
+|------|--------------|-----------|-------|--------|
+| Wave 0 | [001-foundation-fixes](specs/001-foundation-fixes/) | 16/16 ✓ | 17/17 ✓ | ✅ Verified |
+| Wave 1 | [002-scripts-documentation](specs/002-scripts-documentation/) | 16/16 ✓ | 54/54 ✓ | ✅ Verified |
+| Wave 2 | [003-tui-features](specs/003-tui-features/) | 16/16 ✓ | 78/78 ✓ | ✅ Verified |
+| Wave 3 | [004-claude-skills](specs/004-claude-skills/) + [005-claude-agents](specs/005-claude-agents/) | 16/16 ✓ | 7/7 ✓ | ✅ Verified |
+| Wave 4 | *Claude Hooks* | - | 3 defined | ⏳ Ready |
+| Wave 5 | *Claude Memory* | - | 3 defined | ⏳ Ready |
+| Wave 6a | [006-tui-detail-views](specs/006-tui-detail-views/) | 16/16 ✓ | 4 defined | 🟡 In Progress |
+| Wave 6b | *TUI Polish* | - | 4 defined | ⏳ Ready |
+| Wave 7 | *Documentation* | - | 4 defined | ⏳ Ready |
+| Wave 8 | *CI/CD & Monitoring* | - | 2 defined | ⏳ Ready |
+| Wave 9 | *Multi-Machine* | - | 4 defined | ⏳ Ready |
+| Wave 10-11 | *Backlog* | - | ~11 defined | 📋 Future |
+
+**Total verified tasks:** 149 across 4 completed waves
+**Pending tasks:** 39 across 8 ready waves + 11 in backlog
+
+**Last verified:** 2026-01-18
 
 ---
 
@@ -282,15 +427,32 @@ Goal: Enable seamless environment sync between multiple machines.
 ### Wave Execution Order
 
 ```
-Wave 0 (IMMEDIATE)     →  Must complete first, blocks everything
-    ↓
-Wave 1 (THIS WEEK)     →  Foundation work, enables features
-    ↓
-Wave 2 (NEXT SPRINT)   →  TUI features, main development
-    ↓
-Wave 3 (LATER)         →  Enhancements, polish
-    ↓
-Wave 4 (BACKLOG)       →  Future features, ideas
+COMPLETED:
+  Wave 0 (Immediate Fixes)      ✅ Done
+  Wave 1 (Foundation Docs)      ✅ Done
+  Wave 2 (TUI Features)         ✅ Done
+
+IN PROGRESS:
+  Wave 6a (TUI Detail Views)    🟡 4 tasks, ~5.5 hr  ← CURRENT
+
+CLAUDE CODE FIRST (improves dev experience):
+  Wave 3 (Claude Skills+Agents) ✅ Done
+      ↓
+  Wave 4 (Claude Hooks)         ⏳ 3 tasks, ~4 hr  ← START HERE
+      ↓
+  Wave 5 (Claude Memory)        ⏳ 3 tasks, ~2 hr
+
+THEN ENHANCEMENTS:
+  Wave 6b (TUI Polish)          ⏳ 4 tasks, ~6 hr
+      ↓
+  Wave 7 (Documentation)        ⏳ 4 tasks, ~4 hr
+      ↓
+  Wave 8 (CI/CD & Monitoring)   ⏳ 2 tasks, ~2 hr
+      ↓
+  Wave 9 (Multi-Machine)        ⏳ 4 tasks, ~8 hr
+
+BACKLOG:
+  Wave 10-11 (Advanced)         📋 ~11 tasks
 ```
 
 ### Status Indicators
@@ -299,6 +461,34 @@ Wave 4 (BACKLOG)       →  Future features, ideas
 - 🟡 **In Progress**: Actively being worked on
 - ✅ **Completed**: Done and merged to main
 - 📋 **Backlog**: Future consideration, no timeline
+
+### SpecKit Workflow for New Waves
+
+When starting a new wave, use SpecKit to manage the development lifecycle:
+
+```
+1. /speckit.specify   →  Create spec.md from ROADMAP tasks
+2. /speckit.checklist →  Generate requirements checklist
+3. /speckit.plan      →  Create implementation plan
+4. /speckit.tasks     →  Generate detailed tasks.md
+5. /speckit.implement →  Execute tasks with tracking
+6. /speckit.analyze   →  Verify completion
+```
+
+**Spec directory structure:**
+```
+specs/
+├── 001-foundation-fixes/      # Wave 0 ✅
+├── 002-scripts-documentation/ # Wave 1 ✅
+├── 003-tui-features/          # Wave 2 ✅
+├── 004-claude-skills/         # Wave 3 (when started)
+├── 005-claude-hooks/          # Wave 4 (when started)
+├── 006-claude-memory/         # Wave 5 (when started)
+├── 007-tui-polish/            # Wave 6 (when started)
+├── 008-documentation/         # Wave 7 (when started)
+├── 009-cicd-monitoring/       # Wave 8 (when started)
+└── 010-multi-machine/         # Wave 9 (when started)
+```
 
 ### Adding New Items
 1. Determine which wave the task belongs to

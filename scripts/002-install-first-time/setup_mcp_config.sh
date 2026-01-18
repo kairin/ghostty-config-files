@@ -14,7 +14,6 @@ source "$(dirname "$0")/../006-logs/logger.sh"
 # Get repo root directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-MCP_CONFIG="$REPO_DIR/.mcp.json"
 SECRETS_TEMPLATE="$REPO_DIR/configs/mcp/.mcp-secrets.template"
 SECRETS_FILE="$HOME/.mcp-secrets"
 PLAYWRIGHT_WRAPPER="$HOME/.local/bin/playwright-mcp-wrapper.sh"
@@ -220,17 +219,9 @@ verify_setup() {
     fi
 }
 
-# Create empty project-level config
-create_project_config() {
-    if [ ! -f "$MCP_CONFIG" ]; then
-        if [ "$DRY_RUN" = true ]; then
-            log "INFO" "[DRY-RUN] Would create: $MCP_CONFIG"
-        else
-            echo '{"mcpServers": {}}' > "$MCP_CONFIG"
-            log "SUCCESS" "Created empty project config: $MCP_CONFIG"
-        fi
-    fi
-}
+# NOTE: Project-level .mcp.json is NOT created
+# All MCP servers are configured at user scope (~/.claude.json) only
+# This prevents conflicts and ensures servers are available across all projects
 
 # Main execution
 main() {
@@ -248,7 +239,6 @@ main() {
     check_prerequisites
     create_wrapper_scripts
     add_mcp_servers
-    create_project_config
     verify_setup
 
     log "INFO" ""

@@ -76,6 +76,9 @@ type Tool struct {
 	HasGlobals   bool           // Node.js-specific: track global packages
 	BundledTools []BundledTool  // Required dependencies installed with this tool (e.g., fnm for Node.js)
 
+	// Font-specific (for per-family Nerd Font installation)
+	FontArg string // Font family name to pass to install script (e.g., "JetBrainsMono")
+
 	// Documentation
 	DocsPath string // Path to tool documentation
 }
