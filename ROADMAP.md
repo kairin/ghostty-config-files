@@ -242,17 +242,46 @@ Track your fleet of Ubuntu systems:
 
 ---
 
-## Wave 6: TUI Polish (READY)
+## Wave 6a: TUI Detail Views (IN PROGRESS)
 
-> **Priority**: Complete TUI functionality before adding new features
+> **Priority**: Fix TUI UX issues - headers cut off, tables too crowded
+> **Theme**: Navigation restructure for better usability
+
+| # | Task | Effort | Priority | Status |
+|---|------|--------|----------|--------|
+| 24 | Create ViewToolDetail component | 2 hr | **High** | ⏳ Pending |
+| 25 | Simplify main dashboard (3 tools in table) | 1 hr | **High** | ⏳ Pending |
+| 26 | Add Ghostty/Feh as menu items | 1 hr | **High** | ⏳ Pending |
+| 27 | Convert Extras to navigation menu | 1.5 hr | **High** | ⏳ Pending |
+
+**Total**: ~5.5 hours | **Status**: 🟡 In Progress
+
+**What this fixes**:
+- Extras header was cut off (not visible)
+- Main dashboard too crowded with 5 tools
+- Extras showed 7 tools in cramped table
+
+**Solution**:
+- Reusable ViewToolDetail component (based on nerdfonts.go pattern)
+- Main table: Node.js, AI Tools, Antigravity only
+- Ghostty and Feh accessible via menu → detail view
+- Extras: navigation menu → individual detail views
+
+**SpecKit Artifacts:** [specs/006-tui-detail-views/](specs/006-tui-detail-views/)
+
+---
+
+## Wave 6b: TUI Polish (READY)
+
+> **Priority**: Complete TUI functionality after detail views
 > **Theme**: TUI enhancements and quality
 
 | # | Task | Effort | Priority | Notes |
 |---|------|--------|----------|-------|
-| 24 | Glamour markdown viewer (`details.go`) | 2 hr | Medium | Render docs in-terminal |
-| 25 | TUI unit tests | 2 hr | Medium | Quality assurance |
-| 26 | "Install All" batch installation | 1 hr | Low | Convenience feature |
-| 27 | Proper semver comparison | 1 hr | Low | TUI version handling |
+| 28 | Glamour markdown viewer (`details.go`) | 2 hr | Medium | Render docs in-terminal |
+| 29 | TUI unit tests | 2 hr | Medium | Quality assurance |
+| 30 | "Install All" batch installation | 1 hr | Low | Convenience feature |
+| 31 | Proper semver comparison | 1 hr | Low | TUI version handling |
 
 **Total**: ~6 hours | **Status**: ⏳ Ready to start
 
@@ -265,10 +294,10 @@ Track your fleet of Ubuntu systems:
 
 | # | Task | Effort | Priority | Notes |
 |---|------|--------|----------|-------|
-| 28 | Standardize script headers | 2 hr | Medium | 61% coverage → 100% |
-| 29 | Add bidirectional cross-references | 1 hr | Medium | Links go A→B but not B→A |
-| 30 | Create stage-specific READMEs | 1 hr | Medium | 000-005 directories need docs |
-| 31 | Rename LOGGING_GUIDE.md | 15 min | Low | Caps inconsistent |
+| 32 | Standardize script headers | 2 hr | Medium | 61% coverage → 100% |
+| 33 | Add bidirectional cross-references | 1 hr | Medium | Links go A→B but not B→A |
+| 34 | Create stage-specific READMEs | 1 hr | Medium | 000-005 directories need docs |
+| 35 | Rename LOGGING_GUIDE.md | 15 min | Low | Caps inconsistent |
 
 **Total**: ~4 hours | **Status**: ⏳ Ready to start
 
@@ -281,8 +310,8 @@ Track your fleet of Ubuntu systems:
 
 | # | Task | Effort | Priority | Notes |
 |---|------|--------|----------|-------|
-| 32 | Automated link validation | 1.5 hr | Medium | CI/CD enhancement |
-| 33 | AGENTS.md size tracking | 30 min | Low | Monitor vs 40KB limit |
+| 36 | Automated link validation | 1.5 hr | Medium | CI/CD enhancement |
+| 37 | AGENTS.md size tracking | 30 min | Low | Monitor vs 40KB limit |
 
 **Total**: ~2 hours | **Status**: ⏳ Ready to start
 
@@ -295,10 +324,10 @@ Track your fleet of Ubuntu systems:
 
 | # | Task | Effort | Priority | Notes |
 |---|------|--------|----------|-------|
-| 34 | Create `~/.ghostty-fleet/inventory.json` | 2 hr | **High** | Track all machines with this config |
-| 35 | Per-machine version snapshots | 2 hr | Medium | Record tool versions on each system |
-| 36 | Sync status reporting | 2 hr | Medium | Show drift between machines |
-| 37 | MCP server configuration sync | 2 hr | **High** | Same MCP servers on all machines |
+| 38 | Create `~/.ghostty-fleet/inventory.json` | 2 hr | **High** | Track all machines with this config |
+| 39 | Per-machine version snapshots | 2 hr | Medium | Record tool versions on each system |
+| 40 | Sync status reporting | 2 hr | Medium | Show drift between machines |
+| 41 | MCP server configuration sync | 2 hr | **High** | Same MCP servers on all machines |
 
 **Total**: ~8 hours | **Status**: ⏳ Ready to start
 
@@ -379,14 +408,15 @@ All completed waves have been verified against their SpecKit specifications:
 | Wave 3 | [004-claude-skills](specs/004-claude-skills/) + [005-claude-agents](specs/005-claude-agents/) | 16/16 ✓ | 7/7 ✓ | ✅ Verified |
 | Wave 4 | *Claude Hooks* | - | 3 defined | ⏳ Ready |
 | Wave 5 | *Claude Memory* | - | 3 defined | ⏳ Ready |
-| Wave 6 | *TUI Polish* | - | 4 defined | ⏳ Ready |
+| Wave 6a | [006-tui-detail-views](specs/006-tui-detail-views/) | 16/16 ✓ | 4 defined | 🟡 In Progress |
+| Wave 6b | *TUI Polish* | - | 4 defined | ⏳ Ready |
 | Wave 7 | *Documentation* | - | 4 defined | ⏳ Ready |
 | Wave 8 | *CI/CD & Monitoring* | - | 2 defined | ⏳ Ready |
 | Wave 9 | *Multi-Machine* | - | 4 defined | ⏳ Ready |
 | Wave 10-11 | *Backlog* | - | ~11 defined | 📋 Future |
 
-**Total verified tasks:** 149 across 3 completed waves
-**Pending tasks:** 35 across 7 ready waves + 11 in backlog
+**Total verified tasks:** 149 across 4 completed waves
+**Pending tasks:** 39 across 8 ready waves + 11 in backlog
 
 **Last verified:** 2026-01-18
 
@@ -402,6 +432,9 @@ COMPLETED:
   Wave 1 (Foundation Docs)      ✅ Done
   Wave 2 (TUI Features)         ✅ Done
 
+IN PROGRESS:
+  Wave 6a (TUI Detail Views)    🟡 4 tasks, ~5.5 hr  ← CURRENT
+
 CLAUDE CODE FIRST (improves dev experience):
   Wave 3 (Claude Skills+Agents) ✅ Done
       ↓
@@ -410,7 +443,7 @@ CLAUDE CODE FIRST (improves dev experience):
   Wave 5 (Claude Memory)        ⏳ 3 tasks, ~2 hr
 
 THEN ENHANCEMENTS:
-  Wave 6 (TUI Polish)           ⏳ 4 tasks, ~6 hr
+  Wave 6b (TUI Polish)          ⏳ 4 tasks, ~6 hr
       ↓
   Wave 7 (Documentation)        ⏳ 4 tasks, ~4 hr
       ↓
