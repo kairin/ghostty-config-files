@@ -148,7 +148,7 @@ func (m ExtrasModel) Update(msg tea.Msg) (ExtrasModel, tea.Cmd) {
 	return m, nil
 }
 
-// View renders the extras dashboard
+// View renders the extras dashboard (menu-only, no table)
 func (m ExtrasModel) View() string {
 	var b strings.Builder
 
@@ -157,11 +157,7 @@ func (m ExtrasModel) View() string {
 	b.WriteString(header)
 	b.WriteString("\n\n")
 
-	// Status table
-	b.WriteString(m.renderExtrasTable())
-	b.WriteString("\n")
-
-	// Menu
+	// Menu only (no table - each tool navigates to detail view)
 	b.WriteString(m.renderExtrasMenu())
 	b.WriteString("\n")
 

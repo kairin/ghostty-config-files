@@ -32,6 +32,7 @@ const (
 	ViewInstaller
 	ViewDiagnostics
 	ViewConfirm
+	ViewToolDetail
 )
 
 // sharedState holds mutex-protected data that needs to survive model copies
@@ -73,6 +74,8 @@ type Model struct {
 	diagnostics    *DiagnosticsModel
 	confirmDialog  *ConfirmModel
 	methodSelector *MethodSelectorModel
+	toolDetail     *ToolDetailModel
+	toolDetailFrom View // View to return to when exiting tool detail
 
 	// Pending uninstall (set when confirmation shown)
 	uninstallTool *registry.Tool
@@ -478,10 +481,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.currentView = ViewMCPServers
 					return m, m.mcpServers.Init()
 				} else if tool := m.extras.GetSelectedTool(); tool != nil {
-					m.selectedTool = tool
-					m.currentView = ViewAppMenu
-					m.menuCursor = 0
-					return m, nil
+					// Navigate to tool detail view for extras tools
+					toolDetail := NewToolDetailModel(tool, ViewExtras, m.state, m.cache, m.repoRoot)
+					m.toolDetail = &toolDetail
+					m.toolDetailFrom = ViewExtras
+					m.currentView = ViewToolDetail
+					return m, m.toolDetail.Init()
 				}
 			}
 			if extrasCmd != nil {
@@ -623,6 +628,48 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			diagCmd := m.diagnostics.HandleKey(keyMsg)
 			if diagCmd != nil {
 				return m, diagCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If tool detail view is active, delegate messages to it
+	if m.currentView == ViewToolDetail && m.toolDetail != nil {
+		newToolDetail, cmd := m.toolDetail.Update(msg)
+		m.toolDetail = &newToolDetail
+
+		// Handle key presses for tool detail
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			toolDetailCmd, handled := m.toolDetail.HandleKey(keyMsg)
+			if handled {
+				// Handle action selection or back
+				if m.toolDetail.IsBackSelected() {
+					// Return to previous view
+					m.currentView = m.toolDetailFrom
+					m.toolDetail = nil
+					return m, nil
+				}
+				// Handle other actions
+				action := m.toolDetail.GetSelectedAction()
+				tool := m.toolDetail.GetTool()
+				if tool != nil {
+					switch action {
+					case "Install", "Update":
+						return m, func() tea.Msg {
+							return startInstallMsg{tool: tool, resume: false, forceReinstall: false}
+						}
+					case "Reinstall":
+						return m, func() tea.Msg {
+							return startInstallMsg{tool: tool, resume: false, forceReinstall: true}
+						}
+					case "Uninstall":
+						return m.showUninstallConfirm(tool)
+					}
+				}
+			}
+			if toolDetailCmd != nil {
+				return m, toolDetailCmd
 			}
 		}
 
@@ -926,12 +973,14 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "down", "j":
 		switch m.currentView {
 		case ViewDashboard:
-			// Calculate max cursor: tools + dynamic menu items
-			menuItemCount := 4 // Nerd Fonts, Extras, Boot Diagnostics, Exit
+			// Calculate max cursor: table tools + menu items
+			tableToolCount := len(m.getTableTools())
+			menuToolCount := len(m.getMenuTools()) // Ghostty, Feh
+			menuItemCount := menuToolCount + 4     // Ghostty, Feh, Nerd Fonts, Extras, Boot Diagnostics, Exit
 			if m.getUpdateCount() > 0 && !m.loading {
 				menuItemCount++ // Add "Update All" option
 			}
-			maxCursor := registry.MainToolCount() + menuItemCount
+			maxCursor := tableToolCount + menuItemCount
 			if m.mainCursor < maxCursor-1 {
 				m.mainCursor++
 			}
@@ -976,17 +1025,28 @@ func (m Model) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 	switch m.currentView {
 	case ViewDashboard:
-		tools := registry.GetMainTools()
-		toolCount := len(tools)
+		tableTools := m.getTableTools()
+		tableToolCount := len(tableTools)
+		menuTools := m.getMenuTools()
+		menuToolCount := len(menuTools)
 
-		if m.mainCursor < toolCount {
-			// Selected a tool
-			m.selectedTool = tools[m.mainCursor]
+		if m.mainCursor < tableToolCount {
+			// Selected a tool from the table - go to app menu
+			m.selectedTool = tableTools[m.mainCursor]
 			m.currentView = ViewAppMenu
 			m.menuCursor = 0
+		} else if m.mainCursor < tableToolCount+menuToolCount {
+			// Selected a menu tool (Ghostty or Feh) - go to tool detail view
+			menuToolIndex := m.mainCursor - tableToolCount
+			tool := menuTools[menuToolIndex]
+			toolDetail := NewToolDetailModel(tool, ViewDashboard, m.state, m.cache, m.repoRoot)
+			m.toolDetail = &toolDetail
+			m.toolDetailFrom = ViewDashboard
+			m.currentView = ViewToolDetail
+			return m, m.toolDetail.Init()
 		} else {
-			// Menu item selected
-			menuIndex := m.mainCursor - toolCount
+			// Other menu item selected
+			menuIndex := m.mainCursor - tableToolCount - menuToolCount
 			updateCount := m.getUpdateCount()
 
 			// If updates available, "Update All" is at index 0
@@ -1123,6 +1183,11 @@ func (m Model) View() string {
 			return m.confirmDialog.View()
 		}
 		return m.viewDashboard()
+	case ViewToolDetail:
+		if m.toolDetail != nil {
+			return m.toolDetail.View()
+		}
+		return m.viewDashboard()
 	default:
 		return m.viewDashboard()
 	}
@@ -1193,6 +1258,32 @@ func (m Model) viewDashboard() string {
 	return b.String()
 }
 
+// getTableTools returns only the tools to display in the main table (excludes menu-only tools)
+func (m Model) getTableTools() []*registry.Tool {
+	allMain := registry.GetMainTools()
+	tableTools := make([]*registry.Tool, 0, 3)
+	// Filter: only show nodejs, ai_tools, antigravity in table
+	// Ghostty and Feh are now menu items for quick access to detail views
+	for _, tool := range allMain {
+		if tool.ID == "nodejs" || tool.ID == "ai_tools" || tool.ID == "antigravity" {
+			tableTools = append(tableTools, tool)
+		}
+	}
+	return tableTools
+}
+
+// getMenuTools returns tools that should appear as menu items (Ghostty, Feh)
+func (m Model) getMenuTools() []*registry.Tool {
+	menuTools := make([]*registry.Tool, 0, 2)
+	if tool, ok := registry.GetTool("ghostty"); ok {
+		menuTools = append(menuTools, tool)
+	}
+	if tool, ok := registry.GetTool("feh"); ok {
+		menuTools = append(menuTools, tool)
+	}
+	return menuTools
+}
+
 func (m Model) renderStatusTable() string {
 	var b strings.Builder
 
@@ -1219,8 +1310,8 @@ func (m Model) renderStatusTable() string {
 	b.WriteString(lipgloss.NewStyle().Foreground(ColorMuted).Render(sep))
 	b.WriteString("\n")
 
-	// Tools
-	tools := registry.GetMainTools()
+	// Tools - only show table tools (nodejs, ai_tools, antigravity)
+	tools := m.getTableTools()
 	for i, tool := range tools {
 		m.state.mu.RLock()
 		status, hasStatus := m.state.statuses[tool.ID]
@@ -1309,15 +1400,25 @@ func (m Model) renderStatusTable() string {
 func (m Model) renderMainMenu() string {
 	var b strings.Builder
 
-	tools := registry.GetMainTools()
-	toolCount := len(tools)
+	tableTools := m.getTableTools()
+	tableToolCount := len(tableTools)
 
-	// Build menu items dynamically - add "Update All" if updates available
+	// Build menu items dynamically
+	// Order: Ghostty, Feh, (Update All if available), Nerd Fonts, Extras, Boot Diagnostics, Exit
 	menuItems := []string{}
+
+	// Add Ghostty and Feh at the top (quick access to detail views)
+	menuTools := m.getMenuTools()
+	for _, tool := range menuTools {
+		menuItems = append(menuItems, tool.DisplayName)
+	}
+
+	// Add "Update All" if updates available
 	updateCount := m.getUpdateCount()
 	if updateCount > 0 && !m.loading {
 		menuItems = append(menuItems, fmt.Sprintf("Update All (%d)", updateCount))
 	}
+
 	menuItems = append(menuItems, "Nerd Fonts", "Extras", "Boot Diagnostics", "Exit")
 
 	b.WriteString("\nChoose:\n")
@@ -1325,7 +1426,7 @@ func (m Model) renderMainMenu() string {
 	for i, item := range menuItems {
 		cursor := " "
 		style := MenuItemStyle
-		if m.mainCursor == toolCount+i {
+		if m.mainCursor == tableToolCount+i {
 			cursor = ">"
 			style = MenuSelectedStyle
 		}
