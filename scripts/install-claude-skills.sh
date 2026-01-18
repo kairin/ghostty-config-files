@@ -1,7 +1,7 @@
 #!/bin/bash
 # Install Claude Code workflow skills to user-level directory
 #
-# This script copies skills from the project's .claude/commands/ to
+# This script copies skills from the project's .claude/skill-sources/ to
 # ~/.claude/commands/ for global availability across all projects.
 #
 # Usage: ./scripts/install-claude-skills.sh
@@ -24,7 +24,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Paths
-PROJECT_SKILLS="$PROJECT_ROOT/.claude/commands"
+PROJECT_SKILLS="$PROJECT_ROOT/.claude/skill-sources"
 USER_SKILLS="$HOME/.claude/commands"
 
 # Skills to install
