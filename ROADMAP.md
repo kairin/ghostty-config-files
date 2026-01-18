@@ -167,21 +167,36 @@ Track your fleet of Ubuntu systems:
 
 ---
 
-## Wave 3: Claude Code Skills (READY)
+## Wave 3: Claude Code Skills (COMPLETE)
 
-> **Priority**: User-invocable `/commands` - improves dev experience for all subsequent work
-> **Theme**: Custom slash commands
+> **Priority**: ✅ COMPLETED - 2026-01-18
+> **Theme**: Custom slash commands and portable configuration
 
-| # | Task | Effort | Priority | Notes |
-|---|------|--------|----------|-------|
-| 14 | Create `/health-check` skill | 1 hr | Medium | Quick system diagnostics |
-| 15 | Create `/deploy-site` skill | 1 hr | Medium | Astro build + deploy workflow |
-| 16 | Create `/git-sync` skill | 1 hr | Low | Fetch, pull, push all branches |
-| 17 | Create `/full-workflow` skill | 1 hr | Low | Complete commit workflow |
+| # | Task | Effort | Priority | Status |
+|---|------|--------|----------|--------|
+| 14 | Create `/001-health-check` skill | 1 hr | Medium | ✅ Done |
+| 15 | Create `/001-deploy-site` skill | 1 hr | Medium | ✅ Done |
+| 16 | Create `/001-git-sync` skill | 1 hr | Low | ✅ Done |
+| 17 | Create `/001-full-workflow` skill | 1 hr | Low | ✅ Done |
+| 18 | Skills user-level consolidation | 1 hr | **High** | ✅ Done |
+| 19 | Agents user-level consolidation | 2 hr | **High** | ✅ Done |
+| 20 | Combined install script | 1 hr | **High** | ✅ Done |
 
-**What skills provide**: User-invocable `/commands` from `.claude/skills/` directory. Hot-reload enabled (v2.1.0+).
+**Completed (Skills)**:
+- 4 workflow skills created: `/001-health-check`, `/001-deploy-site`, `/001-git-sync`, `/001-full-workflow`
+- Skills moved from `.claude/commands/` → `.claude/skill-sources/` (source files)
+- Install script copies to `~/.claude/commands/` (user-level)
 
-**Total**: ~4 hours | **Status**: ⏳ Ready to start
+**Completed (Agents)**:
+- 65 agents moved from `.claude/agents/` → `.claude/agent-sources/` (source files)
+- Combined install script created: `scripts/install-claude-config.sh`
+- Installs to `~/.claude/agents/` at user level
+
+**What this provides**: Portable Claude Code configuration across all computers. Clone repo, run `./scripts/install-claude-config.sh`, identical setup everywhere.
+
+**Total**: ~7 hours | **Status**: ✅ Complete
+
+**SpecKit Artifacts:** [specs/004-claude-skills/](specs/004-claude-skills/) (skills) | [specs/005-claude-agents/](specs/005-claude-agents/) (agents)
 
 **Reference**: [Skills docs](https://code.claude.com/docs/en/slash-commands)
 
@@ -348,6 +363,7 @@ Track your fleet of Ubuntu systems:
 | Wave 0 Foundation Fixes | 2026-01-18 | LICENSE, broken link fix, tier unification - [specs/001-foundation-fixes/](specs/001-foundation-fixes/) |
 | Wave 1 Scripts Documentation | 2026-01-18 | 5 READMEs, MCP consolidation, ai-cli-tools fix - [specs/002-scripts-documentation/](specs/002-scripts-documentation/) |
 | Wave 2 TUI Features | 2026-01-18 | Per-font selection, MCP management, prerequisites, secrets wizard - [specs/003-tui-features/](specs/003-tui-features/) |
+| Wave 3 Skills + Agents | 2026-01-18 | 4 skills + 65 agents consolidated to user-level - [specs/004-claude-skills/](specs/004-claude-skills/) + [specs/005-claude-agents/](specs/005-claude-agents/) |
 
 ---
 
@@ -360,7 +376,7 @@ All completed waves have been verified against their SpecKit specifications:
 | Wave 0 | [001-foundation-fixes](specs/001-foundation-fixes/) | 16/16 ✓ | 17/17 ✓ | ✅ Verified |
 | Wave 1 | [002-scripts-documentation](specs/002-scripts-documentation/) | 16/16 ✓ | 54/54 ✓ | ✅ Verified |
 | Wave 2 | [003-tui-features](specs/003-tui-features/) | 16/16 ✓ | 78/78 ✓ | ✅ Verified |
-| Wave 3 | *Claude Skills* | - | 4 defined | ⏳ Ready |
+| Wave 3 | [004-claude-skills](specs/004-claude-skills/) + [005-claude-agents](specs/005-claude-agents/) | 16/16 ✓ | 7/7 ✓ | ✅ Verified |
 | Wave 4 | *Claude Hooks* | - | 3 defined | ⏳ Ready |
 | Wave 5 | *Claude Memory* | - | 3 defined | ⏳ Ready |
 | Wave 6 | *TUI Polish* | - | 4 defined | ⏳ Ready |
@@ -387,9 +403,9 @@ COMPLETED:
   Wave 2 (TUI Features)         ✅ Done
 
 CLAUDE CODE FIRST (improves dev experience):
-  Wave 3 (Claude Skills)        ⏳ 4 tasks, ~4 hr  ← START HERE
+  Wave 3 (Claude Skills+Agents) ✅ Done
       ↓
-  Wave 4 (Claude Hooks)         ⏳ 3 tasks, ~4 hr
+  Wave 4 (Claude Hooks)         ⏳ 3 tasks, ~4 hr  ← START HERE
       ↓
   Wave 5 (Claude Memory)        ⏳ 3 tasks, ~2 hr
 
