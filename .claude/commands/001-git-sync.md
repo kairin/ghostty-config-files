@@ -2,7 +2,7 @@
 description: "Synchronize repository with remote safely"
 handoffs:
   - label: "Full Workflow"
-    prompt: "Run /full-workflow for complete development cycle"
+    prompt: "Run /001-full-workflow for complete development cycle"
 ---
 
 # Git Sync

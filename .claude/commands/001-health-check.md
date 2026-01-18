@@ -2,7 +2,7 @@
 description: "Quick system diagnostics and environment check"
 handoffs:
   - label: "Deploy Site"
-    prompt: "Run /deploy-site to build and deploy the Astro website"
+    prompt: "Run /001-deploy-site to build and deploy the Astro website"
 ---
 
 # Health Check

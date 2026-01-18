@@ -2,7 +2,7 @@
 description: "Build and deploy Astro website to GitHub Pages"
 handoffs:
   - label: "Git Sync"
-    prompt: "Run /git-sync to synchronize the repository with remote"
+    prompt: "Run /001-git-sync to synchronize the repository with remote"
 ---
 
 # Deploy Site
