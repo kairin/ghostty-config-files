@@ -468,6 +468,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, func() tea.Msg {
 						return startInstallMsg{tool: firstTool, resume: false}
 					}
+				} else if m.extras.IsClaudeConfigSelected() {
+					// Install Claude Config (skills + agents)
+					return m, installClaudeConfigCmd(m.repoRoot)
 				} else if m.extras.IsMCPServersSelected() {
 					// Navigate to MCP Servers view
 					mcpModel := NewMCPServersModel()
@@ -679,6 +682,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.secretsWizard = &wizardModel
 		m.currentView = ViewSecretsWizard
 		return m, m.secretsWizard.Init()
+
+	case claudeConfigResultMsg:
+		// Claude config installation complete - return to extras view
+		// The script output was shown directly via tea.ExecProcess
+		if m.extras != nil {
+			return m, m.extras.Init()
+		}
+		return m, nil
 	}
 
 	return m, nil
@@ -694,6 +705,13 @@ type startInstallMsg struct {
 // startUninstallMsg triggers uninstallation of a tool
 type startUninstallMsg struct {
 	tool *registry.Tool
+}
+
+// claudeConfigResultMsg reports result of installing Claude config
+type claudeConfigResultMsg struct {
+	success bool
+	output  string
+	err     error
 }
 
 // sudoAuthMsg signals sudo authentication is complete
@@ -714,6 +732,20 @@ func requestSudoAuth() tea.Cmd {
 	c := exec.Command("sudo", "-v")
 	return tea.ExecProcess(c, func(err error) tea.Msg {
 		return sudoAuthMsg{success: err == nil, err: err}
+	})
+}
+
+// installClaudeConfigCmd runs the install-claude-config.sh script
+// This installs skills to ~/.claude/commands/ and agents to ~/.claude/agents/
+// Uses tea.ExecProcess to suspend TUI and show script output directly
+func installClaudeConfigCmd(repoRoot string) tea.Cmd {
+	scriptPath := repoRoot + "/scripts/install-claude-config.sh"
+	c := exec.Command("bash", scriptPath)
+	return tea.ExecProcess(c, func(err error) tea.Msg {
+		return claudeConfigResultMsg{
+			success: err == nil,
+			err:     err,
+		}
 	})
 }
 
