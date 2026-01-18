@@ -242,30 +242,35 @@ Track your fleet of Ubuntu systems:
 
 ---
 
-## Wave 6a: TUI Detail Views (IN PROGRESS)
+## Wave 6a: TUI Detail Views (COMPLETE)
 
-> **Priority**: Fix TUI UX issues - headers cut off, tables too crowded
+> **Priority**: ✅ COMPLETED - 2026-01-18
 > **Theme**: Navigation restructure for better usability
 
 | # | Task | Effort | Priority | Status |
 |---|------|--------|----------|--------|
-| 24 | Create ViewToolDetail component | 2 hr | **High** | ⏳ Pending |
-| 25 | Simplify main dashboard (3 tools in table) | 1 hr | **High** | ⏳ Pending |
-| 26 | Add Ghostty/Feh as menu items | 1 hr | **High** | ⏳ Pending |
-| 27 | Convert Extras to navigation menu | 1.5 hr | **High** | ⏳ Pending |
+| 24 | Create ViewToolDetail component | 2 hr | **High** | ✅ Done |
+| 25 | Simplify main dashboard (3 tools in table) | 1 hr | **High** | ✅ Done |
+| 26 | Add Ghostty/Feh as menu items | 1 hr | **High** | ✅ Done |
+| 27 | Convert Extras to navigation menu | 1.5 hr | **High** | ✅ Done |
 
-**Total**: ~5.5 hours | **Status**: 🟡 In Progress
+**Total**: ~5.5 hours | **Status**: ✅ COMPLETE
 
-**What this fixes**:
+**What this fixed**:
 - Extras header was cut off (not visible)
 - Main dashboard too crowded with 5 tools
 - Extras showed 7 tools in cramped table
 
-**Solution**:
-- Reusable ViewToolDetail component (based on nerdfonts.go pattern)
-- Main table: Node.js, AI Tools, Antigravity only
+**Solution implemented**:
+- Created `tui/internal/ui/tooldetail.go` - reusable ViewToolDetail component (~378 lines)
+- Main table: Node.js, AI Tools, Antigravity only (3 tools)
 - Ghostty and Feh accessible via menu → detail view
 - Extras: navigation menu → individual detail views
+
+**New/Modified TUI Files:**
+- `tui/internal/ui/tooldetail.go` - New ViewToolDetail component
+- `tui/internal/ui/model.go` - Added ViewToolDetail routing and dashboard simplification
+- `tui/internal/ui/extras.go` - Converted from table to menu navigation
 
 **SpecKit Artifacts:** [specs/006-tui-detail-views/](specs/006-tui-detail-views/)
 
@@ -393,6 +398,7 @@ Track your fleet of Ubuntu systems:
 | Wave 1 Scripts Documentation | 2026-01-18 | 5 READMEs, MCP consolidation, ai-cli-tools fix - [specs/002-scripts-documentation/](specs/002-scripts-documentation/) |
 | Wave 2 TUI Features | 2026-01-18 | Per-font selection, MCP management, prerequisites, secrets wizard - [specs/003-tui-features/](specs/003-tui-features/) |
 | Wave 3 Skills + Agents | 2026-01-18 | 4 skills + 65 agents consolidated to user-level - [specs/004-claude-skills/](specs/004-claude-skills/) + [specs/005-claude-agents/](specs/005-claude-agents/) |
+| Wave 6a TUI Detail Views | 2026-01-18 | ViewToolDetail component, dashboard simplification, extras menu - [specs/006-tui-detail-views/](specs/006-tui-detail-views/) |
 
 ---
 
@@ -408,15 +414,15 @@ All completed waves have been verified against their SpecKit specifications:
 | Wave 3 | [004-claude-skills](specs/004-claude-skills/) + [005-claude-agents](specs/005-claude-agents/) | 16/16 ✓ | 7/7 ✓ | ✅ Verified |
 | Wave 4 | *Claude Hooks* | - | 3 defined | ⏳ Ready |
 | Wave 5 | *Claude Memory* | - | 3 defined | ⏳ Ready |
-| Wave 6a | [006-tui-detail-views](specs/006-tui-detail-views/) | 16/16 ✓ | 4 defined | 🟡 In Progress |
+| Wave 6a | [006-tui-detail-views](specs/006-tui-detail-views/) | 16/16 ✓ | 44/44 ✓ | ✅ Verified |
 | Wave 6b | *TUI Polish* | - | 4 defined | ⏳ Ready |
 | Wave 7 | *Documentation* | - | 4 defined | ⏳ Ready |
 | Wave 8 | *CI/CD & Monitoring* | - | 2 defined | ⏳ Ready |
 | Wave 9 | *Multi-Machine* | - | 4 defined | ⏳ Ready |
 | Wave 10-11 | *Backlog* | - | ~11 defined | 📋 Future |
 
-**Total verified tasks:** 149 across 4 completed waves
-**Pending tasks:** 39 across 8 ready waves + 11 in backlog
+**Total verified tasks:** 193 across 5 completed waves
+**Pending tasks:** 35 across 7 ready waves + 11 in backlog
 
 **Last verified:** 2026-01-18
 
@@ -431,14 +437,13 @@ COMPLETED:
   Wave 0 (Immediate Fixes)      ✅ Done
   Wave 1 (Foundation Docs)      ✅ Done
   Wave 2 (TUI Features)         ✅ Done
-
-IN PROGRESS:
-  Wave 6a (TUI Detail Views)    🟡 4 tasks, ~5.5 hr  ← CURRENT
-
-CLAUDE CODE FIRST (improves dev experience):
   Wave 3 (Claude Skills+Agents) ✅ Done
-      ↓
+  Wave 6a (TUI Detail Views)    ✅ Done
+
+NEXT UP:
   Wave 4 (Claude Hooks)         ⏳ 3 tasks, ~4 hr  ← START HERE
+      ↓
+  Wave 5 (Claude Memory)        ⏳ 3 tasks, ~2 hr
       ↓
   Wave 5 (Claude Memory)        ⏳ 3 tasks, ~2 hr
 

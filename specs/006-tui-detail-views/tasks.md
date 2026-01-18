@@ -24,10 +24,10 @@
 
 **Purpose**: Verify environment and understand existing code
 
-- [ ] T001 Verify Go 1.23+ installed and TUI compiles: `cd tui && go build ./cmd/installer`
-- [ ] T002 [P] Read reference implementation `tui/internal/ui/nerdfonts.go` to understand component pattern
-- [ ] T003 [P] Read current `tui/internal/ui/model.go` to understand View enum and routing
-- [ ] T004 [P] Read current `tui/internal/ui/extras.go` to understand current table implementation
+- [x] T001 Verify Go 1.23+ installed and TUI compiles: `cd tui && go build ./cmd/installer`
+- [x] T002 [P] Read reference implementation `tui/internal/ui/nerdfonts.go` to understand component pattern
+- [x] T003 [P] Read current `tui/internal/ui/model.go` to understand View enum and routing
+- [x] T004 [P] Read current `tui/internal/ui/extras.go` to understand current table implementation
 
 ---
 
@@ -37,15 +37,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete (ViewToolDetail must exist)
 
-- [ ] T005 Create `tui/internal/ui/tooldetail.go` with ToolDetailModel struct containing: tool, status, cursor, loading, spinner, returnTo, state, cache, repoRoot, width, height fields
-- [ ] T006 Implement NewToolDetailModel constructor in `tui/internal/ui/tooldetail.go` - accept tool, returnTo view, state, cache, repoRoot params
-- [ ] T007 Implement Init() method in `tui/internal/ui/tooldetail.go` - return spinner tick and status load command
-- [ ] T008 Implement Update() method in `tui/internal/ui/tooldetail.go` - handle spinner tick, status loaded, window resize, key messages
-- [ ] T009 Implement View() method in `tui/internal/ui/tooldetail.go` - render header, status table (5 rows), action menu
-- [ ] T010 Implement HandleKey() method in `tui/internal/ui/tooldetail.go` - up/down navigation, enter selection, escape back
-- [ ] T011 Implement helper methods in `tui/internal/ui/tooldetail.go` - IsBackSelected(), GetSelectedAction()
-- [ ] T012 Add ViewToolDetail constant to View enum in `tui/internal/ui/model.go` (after ViewConfirm)
-- [ ] T013 Add toolDetail and toolDetailFrom fields to Model struct in `tui/internal/ui/model.go`
+- [x] T005 Create `tui/internal/ui/tooldetail.go` with ToolDetailModel struct containing: tool, status, cursor, loading, spinner, returnTo, state, cache, repoRoot, width, height fields
+- [x] T006 Implement NewToolDetailModel constructor in `tui/internal/ui/tooldetail.go` - accept tool, returnTo view, state, cache, repoRoot params
+- [x] T007 Implement Init() method in `tui/internal/ui/tooldetail.go` - return spinner tick and status load command
+- [x] T008 Implement Update() method in `tui/internal/ui/tooldetail.go` - handle spinner tick, status loaded, window resize, key messages
+- [x] T009 Implement View() method in `tui/internal/ui/tooldetail.go` - render header, status table (5 rows), action menu
+- [x] T010 Implement HandleKey() method in `tui/internal/ui/tooldetail.go` - up/down navigation, enter selection, escape back
+- [x] T011 Implement helper methods in `tui/internal/ui/tooldetail.go` - IsBackSelected(), GetSelectedAction()
+- [x] T012 Add ViewToolDetail constant to View enum in `tui/internal/ui/model.go` (after ViewConfirm)
+- [x] T013 Add toolDetail and toolDetailFrom fields to Model struct in `tui/internal/ui/model.go`
 
 **Checkpoint**: ViewToolDetail component exists and can be instantiated - user story routing can now begin
 
@@ -59,14 +59,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Add ViewToolDetail case to Update() switch in `tui/internal/ui/model.go` - delegate to toolDetail.Update()
-- [ ] T015 [US1] Add ViewToolDetail case to View() switch in `tui/internal/ui/model.go` - call toolDetail.View()
-- [ ] T016 [US1] Implement navigation TO ViewToolDetail in `tui/internal/ui/model.go` - create ToolDetailModel with selected tool, set toolDetailFrom
-- [ ] T017 [US1] Implement navigation FROM ViewToolDetail in `tui/internal/ui/model.go` - on back/escape, restore toolDetailFrom view
-- [ ] T018 [US1] Wire up Install action in ViewToolDetail - call executor.RunInstall() and return to detail view
-- [ ] T019 [US1] Wire up Uninstall action in ViewToolDetail - show ViewConfirm, then executor.RunUninstall()
-- [ ] T020 [US1] Wire up Reinstall action in ViewToolDetail - call appropriate reinstall flow
-- [ ] T021 [US1] Add refresh (r key) support in ViewToolDetail - reload status via cache
+- [x] T014 [US1] Add ViewToolDetail case to Update() switch in `tui/internal/ui/model.go` - delegate to toolDetail.Update()
+- [x] T015 [US1] Add ViewToolDetail case to View() switch in `tui/internal/ui/model.go` - call toolDetail.View()
+- [x] T016 [US1] Implement navigation TO ViewToolDetail in `tui/internal/ui/model.go` - create ToolDetailModel with selected tool, set toolDetailFrom
+- [x] T017 [US1] Implement navigation FROM ViewToolDetail in `tui/internal/ui/model.go` - on back/escape, restore toolDetailFrom view
+- [x] T018 [US1] Wire up Install action in ViewToolDetail - call executor.RunInstall() and return to detail view
+- [x] T019 [US1] Wire up Uninstall action in ViewToolDetail - show ViewConfirm, then executor.RunUninstall()
+- [x] T020 [US1] Wire up Reinstall action in ViewToolDetail - call appropriate reinstall flow
+- [x] T021 [US1] Add refresh (r key) support in ViewToolDetail - reload status via cache
 
 **Checkpoint**: User Story 1 complete - ViewToolDetail fully functional, can navigate to/from it, all actions work
 
@@ -80,12 +80,12 @@
 
 ### Implementation for User Story 2
 
-- [ ] T022 [US2] Modify renderMainTable() in `tui/internal/ui/model.go` - filter to show only Node.js, AI Tools, Antigravity (3 tools)
-- [ ] T023 [US2] Add Ghostty menu item at position 0 (top) in main dashboard menu in `tui/internal/ui/model.go`
-- [ ] T024 [US2] Add Feh menu item at position 1 in main dashboard menu in `tui/internal/ui/model.go`
-- [ ] T025 [US2] Handle Ghostty menu selection → create ViewToolDetail with ghostty tool, set toolDetailFrom=ViewDashboard
-- [ ] T026 [US2] Handle Feh menu selection → create ViewToolDetail with feh tool, set toolDetailFrom=ViewDashboard
-- [ ] T027 [US2] Update menu indices in main dashboard to account for Ghostty/Feh at top (Update All now at 2, etc.)
+- [x] T022 [US2] Modify renderMainTable() in `tui/internal/ui/model.go` - filter to show only Node.js, AI Tools, Antigravity (3 tools)
+- [x] T023 [US2] Add Ghostty menu item at position 0 (top) in main dashboard menu in `tui/internal/ui/model.go`
+- [x] T024 [US2] Add Feh menu item at position 1 in main dashboard menu in `tui/internal/ui/model.go`
+- [x] T025 [US2] Handle Ghostty menu selection → create ViewToolDetail with ghostty tool, set toolDetailFrom=ViewDashboard
+- [x] T026 [US2] Handle Feh menu selection → create ViewToolDetail with feh tool, set toolDetailFrom=ViewDashboard
+- [x] T027 [US2] Update menu indices in main dashboard to account for Ghostty/Feh at top (Update All now at 2, etc.)
 
 **Checkpoint**: User Story 2 complete - dashboard shows 3 tools, Ghostty/Feh accessible via menu
 
@@ -99,13 +99,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Remove renderExtrasTable() call from View() in `tui/internal/ui/extras.go`
-- [ ] T029 [US3] Replace table with navigation menu rendering in `tui/internal/ui/extras.go` - 7 tools + action items
-- [ ] T030 [US3] Add alphabetically ordered tool menu items in `tui/internal/ui/extras.go`: Fastfetch, Glow, Go, Gum, Python/uv, VHS, ZSH
-- [ ] T031 [US3] Keep existing menu items below tools: Install All, Install Claude Config, MCP Servers, Back
-- [ ] T032 [US3] Handle tool selection in extras → create ViewToolDetail with selected tool, set toolDetailFrom=ViewExtras
-- [ ] T033 [US3] Update ExtrasModel to track which menu item is a tool vs action for proper navigation handling
-- [ ] T034 [US3] Verify Escape from tool detail returns to ViewExtras (not dashboard)
+- [x] T028 [US3] Remove renderExtrasTable() call from View() in `tui/internal/ui/extras.go`
+- [x] T029 [US3] Replace table with navigation menu rendering in `tui/internal/ui/extras.go` - 7 tools + action items
+- [x] T030 [US3] Add alphabetically ordered tool menu items in `tui/internal/ui/extras.go`: Fastfetch, Glow, Go, Gum, Python/uv, VHS, ZSH
+- [x] T031 [US3] Keep existing menu items below tools: Install All, Install Claude Config, MCP Servers, Back
+- [x] T032 [US3] Handle tool selection in extras → create ViewToolDetail with selected tool, set toolDetailFrom=ViewExtras
+- [x] T033 [US3] Update ExtrasModel to track which menu item is a tool vs action for proper navigation handling
+- [x] T034 [US3] Verify Escape from tool detail returns to ViewExtras (not dashboard)
 
 **Checkpoint**: User Story 3 complete - Extras is menu-based, all 7 tools navigate to detail views
 
@@ -115,16 +115,16 @@
 
 **Purpose**: Final validation and documentation
 
-- [ ] T035 Run `cd tui && go build ./cmd/installer` - verify compilation succeeds with no errors
-- [ ] T036 [P] Manual test: Main dashboard shows exactly 3 tools in table
-- [ ] T037 [P] Manual test: Ghostty and Feh appear at top of main menu
-- [ ] T038 [P] Manual test: Selecting Ghostty shows detail view with visible header and all status fields
-- [ ] T039 [P] Manual test: Escape from ViewToolDetail returns to correct parent (dashboard or extras)
-- [ ] T040 [P] Manual test: Extras shows menu with 7 alphabetically ordered tools, no table
-- [ ] T041 [P] Manual test: Each extras tool navigates to its detail view
-- [ ] T042 Manual test: Install, Uninstall, Refresh (r) all work from detail view
-- [ ] T043 Run quickstart.md validation checklist
-- [ ] T044 Update ROADMAP.md Wave 6a tasks to completed status
+- [x] T035 Run `cd tui && go build ./cmd/installer` - verify compilation succeeds with no errors
+- [x] T036 [P] Manual test: Main dashboard shows exactly 3 tools in table
+- [x] T037 [P] Manual test: Ghostty and Feh appear at top of main menu
+- [x] T038 [P] Manual test: Selecting Ghostty shows detail view with visible header and all status fields
+- [x] T039 [P] Manual test: Escape from ViewToolDetail returns to correct parent (dashboard or extras)
+- [x] T040 [P] Manual test: Extras shows menu with 7 alphabetically ordered tools, no table
+- [x] T041 [P] Manual test: Each extras tool navigates to its detail view
+- [x] T042 Manual test: Install, Uninstall, Refresh (r) all work from detail view
+- [x] T043 Run quickstart.md validation checklist
+- [x] T044 Update ROADMAP.md Wave 6a tasks to completed status
 
 ---
 
