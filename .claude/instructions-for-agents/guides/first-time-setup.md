@@ -342,9 +342,10 @@ less logs/installation/start-*.log | tail -1
 After installation:
 
 1. **Read Documentation**: [README.md](../../../../README.md)
-2. **Explore Agents**: [.claude/agents/](../../../agents/)
-3. **Review Commands**: [.claude/commands/](../../../commands/)
-4. **Understand Architecture**: [System Architecture](../architecture/system-architecture.md)
+2. **Explore Agent Sources**: [.claude/agent-sources/](../../../agent-sources/) (65 agents)
+3. **Review Skill Sources**: [.claude/skill-sources/](../../../skill-sources/) (4 skills)
+4. **Install to User Level**: Run `./scripts/install-claude-config.sh` to copy to `~/.claude/`
+5. **Understand Architecture**: [System Architecture](../architecture/system-architecture.md)
 
 ---
 
