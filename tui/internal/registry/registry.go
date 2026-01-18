@@ -276,11 +276,41 @@ var tools = map[string]*Tool{
 		VersionRegex: `zsh (\d+\.\d+\.\d+)`,
 		DocsPath:     ".claude/instructions-for-agents/tools/zsh.md",
 	},
+	"shellcheck": {
+		ID:          "shellcheck",
+		DisplayName: "ShellCheck",
+		Description: "Shell script linter and static analysis tool",
+		Category:    CategoryExtras,
+		Method:      MethodAPT,
+		Scripts: ToolScripts{
+			Check:     "scripts/000-check/check_shellcheck.sh",
+			Uninstall: "scripts/001-uninstall/uninstall_shellcheck.sh",
+			Install:   "scripts/004-reinstall/install_shellcheck.sh",
+			Confirm:   "scripts/005-confirm/confirm_shellcheck.sh",
+			Update:    "scripts/007-update/update_shellcheck.sh",
+		},
+		VersionCmd:   []string{"shellcheck", "--version"},
+		VersionRegex: `version: (\d+\.\d+\.\d+)`,
+	},
+	"icon_cache": {
+		ID:          "icon_cache",
+		DisplayName: "Icon Cache Fix",
+		Description: "Rebuild GTK desktop icon cache",
+		Category:    CategoryExtras,
+		Method:      MethodScript,
+		Scripts: ToolScripts{
+			Check:   "scripts/000-check/check_icon_cache.sh",
+			Install: "scripts/004-reinstall/install_icon_cache.sh",
+			Confirm: "scripts/005-confirm/confirm_icon_cache.sh",
+		},
+		VersionCmd:   []string{"gtk-update-icon-cache", "--version"},
+		VersionRegex: `gtk-update-icon-cache (\d+\.\d+)`,
+	},
 }
 
 // Ordered lists for display
 var mainToolIDs = []string{"feh", "ghostty", "nodejs", "ai_tools", "antigravity"}
-var extrasToolIDs = []string{"fastfetch", "glow", "go", "gum", "python_uv", "vhs", "zsh"}
+var extrasToolIDs = []string{"fastfetch", "glow", "go", "gum", "python_uv", "shellcheck", "icon_cache", "vhs", "zsh"}
 
 // GetTool returns a tool by ID
 func GetTool(id string) (*Tool, bool) {
