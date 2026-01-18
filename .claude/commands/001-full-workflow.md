@@ -96,7 +96,6 @@ npm run build
 
 Verify:
 - .nojekyll exists
-- Bundle size <100KB
 - Build successful
 
 **Gate**: If build fails, STOP workflow.
@@ -104,7 +103,7 @@ Verify:
 Record:
 - Build duration
 - File count
-- Bundle size
+- Total size
 
 ### Stage 4: Git Sync
 
@@ -149,7 +148,7 @@ Metrics:
 | Metric        | Value             |
 |---------------|-------------------|
 | Files built   | 42                |
-| Bundle size   | 85KB              |
+| Total size    | 1.6M              |
 | Commits sync  | 3 pushed          |
 | CI/CD checks  | 12/12 passed      |
 

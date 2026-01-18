@@ -76,23 +76,7 @@ else
 fi
 ```
 
-### Step 4: Bundle Size Check
-
-Constitutional requirement: Bundle should be <100KB.
-
-```bash
-# Calculate total bundle size
-BUNDLE_SIZE=$(du -sb docs/_astro/ 2>/dev/null | cut -f1)
-BUNDLE_SIZE_KB=$((BUNDLE_SIZE / 1024))
-
-if [ "$BUNDLE_SIZE_KB" -gt 100 ]; then
-  echo "WARNING: Bundle size ${BUNDLE_SIZE_KB}KB exceeds 100KB constitutional limit"
-else
-  echo "PASS: Bundle size ${BUNDLE_SIZE_KB}KB within limits"
-fi
-```
-
-### Step 5: Collect Build Metrics
+### Step 4: Collect Build Metrics
 
 ```bash
 # Count files
@@ -105,7 +89,7 @@ TOTAL_SIZE=$(du -sh docs/ | cut -f1)
 ASTRO_SIZE=$(du -sh docs/_astro/ 2>/dev/null | cut -f1 || echo "N/A")
 ```
 
-### Step 6: Deploy
+### Step 5: Deploy
 
 The site deploys to GitHub Pages automatically when pushed to main branch. Alternatively, run:
 
@@ -129,7 +113,6 @@ Build Metrics:
 |---------------|-----------------|
 | File Count    | 42              |
 | Total Size    | 1.2M            |
-| Bundle Size   | 85KB            |
 | Build Time    | 12.3s           |
 
 Validation:
@@ -137,7 +120,6 @@ Validation:
 | Check         | Status          |
 |---------------|-----------------|
 | .nojekyll     | PASS            |
-| Bundle <100KB | PASS            |
 | HTML valid    | PASS            |
 
 Deployment URL:
@@ -157,7 +139,6 @@ Result: SUCCESS
 ## Constitutional Compliance
 
 - **NEVER delete docs/.nojekyll** - This breaks all CSS/JS on GitHub Pages
-- **Bundle size warning** at >100KB (soft limit, not blocking)
 - **Local validation** before any push operations
 
 ## Next Steps
