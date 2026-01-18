@@ -2,7 +2,7 @@
 description: "Build and deploy Astro website to GitHub Pages"
 handoffs:
   - label: "Git Sync"
-    prompt: "Run /001-git-sync to synchronize the repository with remote"
+    prompt: "Run /001-03-git-sync to synchronize the repository with remote"
 ---
 
 # Deploy Site
@@ -143,5 +143,12 @@ Result: SUCCESS
 ## Next Steps
 
 After successful deployment:
-- Suggest `/git-sync` to push changes to remote
+- Suggest `/001-03-git-sync` to push changes to remote
 - Provide deployment URL for verification
+
+**Always include this in your output:**
+```
+Next Skill:
+-----------
+→ /001-03-git-sync - Synchronize repository with remote safely
+```

@@ -30,22 +30,27 @@ PROJECT_AGENTS="$PROJECT_ROOT/.claude/agent-sources"
 USER_SKILLS="$HOME/.claude/commands"
 USER_AGENTS="$HOME/.claude/agents"
 
-# Skills to install
+# Skills to install (numbered 001-XX for workflow ordering)
 SKILLS=(
-    "001-health-check.md"
-    "001-deploy-site.md"
-    "001-git-sync.md"
-    "001-full-workflow.md"
-    "001-issue-cleanup.md"
+    "001-01-health-check.md"
+    "001-02-deploy-site.md"
+    "001-03-git-sync.md"
+    "001-04-full-workflow.md"
+    "001-05-issue-cleanup.md"
 )
 
-# Deprecated skills to remove (old names without 001- prefix)
+# Deprecated skills to remove (old naming conventions)
 DEPRECATED_SKILLS=(
     "full-git-workflow.md"
     "health-check.md"
     "deploy-site.md"
     "git-sync.md"
     "full-workflow.md"
+    "001-health-check.md"
+    "001-deploy-site.md"
+    "001-git-sync.md"
+    "001-full-workflow.md"
+    "001-issue-cleanup.md"
 )
 
 echo "=================================="
@@ -140,5 +145,5 @@ echo "User directories:"
 echo "  Skills:  $USER_SKILLS"
 echo "  Agents:  $USER_AGENTS"
 echo ""
-echo "To use skills, type the skill name in Claude Code (e.g., /001-health-check)"
+echo "To use skills, type the skill name in Claude Code (e.g., /001-01-health-check)"
 echo ""

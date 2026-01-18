@@ -2,7 +2,7 @@
 description: "Close GitHub issues after PR merge when auto-close fails"
 handoffs:
   - label: "Full Workflow"
-    prompt: "Run /001-full-workflow for complete development cycle"
+    prompt: "Run /001-04-full-workflow for complete development cycle"
 ---
 
 # Issue Cleanup
@@ -13,7 +13,7 @@ Close GitHub issues that should have been auto-closed by a PR merge but weren't 
 
 - After merging a PR that references multiple issues (GitHub limits auto-close to ~6 issues)
 - When `gh issue list --state open` shows issues that should be closed
-- After `/001-full-workflow` or `/001-git-sync` when open issues remain
+- After `/001-04-full-workflow` or `/001-03-git-sync` when open issues remain
 - After `/speckit.taskstoissues` tasks are complete and merged
 
 ## Instructions
@@ -169,16 +169,23 @@ Result: REPOSITORY CLEAN
 This skill complements the workflow:
 
 ```
-/001-full-workflow
+/001-04-full-workflow
        │
        ├── Health Check
        ├── Build & Deploy
        ├── Git Sync
        │
-       └── (manual) /001-issue-cleanup  ← Run if open issues remain
+       └── (manual) /001-05-issue-cleanup  ← Run if open issues remain
 ```
 
 **Recommended workflow after PR merge:**
-1. Run `/001-full-workflow` or `/001-git-sync`
+1. Run `/001-04-full-workflow` or `/001-03-git-sync`
 2. Check for open issues: `gh issue list --state open`
-3. If issues remain, run `/001-issue-cleanup`
+3. If issues remain, run `/001-05-issue-cleanup`
+
+**Always include this in your output:**
+```
+Next Skill:
+-----------
+→ /001-04-full-workflow - Complete development cycle (for next iteration)
+```

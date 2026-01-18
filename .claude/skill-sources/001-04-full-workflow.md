@@ -1,5 +1,8 @@
 ---
 description: "Complete development cycle with validation"
+handoffs:
+  - label: "Issue Cleanup"
+    prompt: "Run /001-05-issue-cleanup if open issues remain after PR merge"
 ---
 
 # Full Workflow
@@ -51,7 +54,7 @@ fi
 
 ### Stage 1: Health Check
 
-**Invoke**: `/health-check` skill logic
+**Invoke**: `/001-01-health-check` skill logic
 
 Run system diagnostics:
 ```bash
@@ -86,7 +89,7 @@ Record:
 
 ### Stage 3: Build & Deploy (Full Mode Only)
 
-**Invoke**: `/deploy-site` skill logic
+**Invoke**: `/001-02-deploy-site` skill logic
 
 ```bash
 cd astro-website
@@ -107,7 +110,7 @@ Record:
 
 ### Stage 4: Git Sync
 
-**Invoke**: `/git-sync` skill logic
+**Invoke**: `/001-03-git-sync` skill logic
 
 ```bash
 git fetch --all
@@ -218,4 +221,11 @@ After successful workflow:
 - Show deployment URL
 - Report total time
 - Summarize changes pushed
-- Suggest next development tasks
+- Check for open issues that may need `/001-05-issue-cleanup`
+
+**Always include this in your output:**
+```
+Next Skill:
+-----------
+→ /001-05-issue-cleanup - Close GitHub issues after PR merge (if needed)
+```

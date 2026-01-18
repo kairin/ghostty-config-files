@@ -2,7 +2,7 @@
 description: "Synchronize repository with remote safely"
 handoffs:
   - label: "Full Workflow"
-    prompt: "Run /001-full-workflow for complete development cycle"
+    prompt: "Run /001-04-full-workflow for complete development cycle"
 ---
 
 # Git Sync
@@ -168,5 +168,12 @@ Result: SUCCESS
 ## Next Steps
 
 After successful sync:
-- Suggest `/full-workflow` for complete development cycle
+- Suggest `/001-04-full-workflow` for complete development cycle
 - Show sync summary
+
+**Always include this in your output:**
+```
+Next Skill:
+-----------
+→ /001-04-full-workflow - Complete development cycle with validation
+```

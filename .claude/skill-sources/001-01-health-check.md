@@ -2,7 +2,7 @@
 description: "Quick system diagnostics and environment check"
 handoffs:
   - label: "Deploy Site"
-    prompt: "Run /001-deploy-site to build and deploy the Astro website"
+    prompt: "Run /001-02-deploy-site to build and deploy the Astro website"
 ---
 
 # Health Check
@@ -229,6 +229,13 @@ If any component fails, provide remediation:
 ## Next Steps
 
 After health check completes:
-- If all PASS: Suggest running `/deploy-site` to build and deploy
+- If all PASS: Suggest running `/001-02-deploy-site` to build and deploy
 - If any FAIL: Show remediation steps before proceeding
 - If WARNING: Note issues but allow proceeding
+
+**Always include this in your output:**
+```
+Next Skill:
+-----------
+→ /001-02-deploy-site - Build and deploy Astro website to GitHub Pages
+```
