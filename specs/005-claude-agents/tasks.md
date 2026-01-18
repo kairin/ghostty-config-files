@@ -25,8 +25,8 @@
 
 **Purpose**: Create directory structure for agent migration
 
-- [ ] T001 Create `.claude/agent-sources/` directory for agent source files
-- [ ] T002 Verify `.claude/skill-sources/` exists with 4 skill files
+- [x] T001 Create `.claude/agent-sources/` directory for agent source files
+- [x] T002 Verify `.claude/skill-sources/` exists with 4 skill files
 
 **Checkpoint**: Directory structure ready for agent migration
 
@@ -38,9 +38,9 @@
 
 **⚠️ CRITICAL**: No install script work can begin until this phase is complete
 
-- [ ] T003 Move all 65 agent files from `.claude/agents/` to `.claude/agent-sources/` using `git mv`
-- [ ] T004 Verify all 65 files moved successfully (count files in `.claude/agent-sources/`)
-- [ ] T005 Verify `.claude/agents/` directory is empty after migration
+- [x] T003 Move all 65 agent files from `.claude/agents/` to `.claude/agent-sources/` using `git mv`
+- [x] T004 Verify all 65 files moved successfully (count files in `.claude/agent-sources/`)
+- [x] T005 Verify `.claude/agents/` directory is empty after migration
 
 **Checkpoint**: All 65 agents migrated to source directory - install script can now be created
 
@@ -54,13 +54,13 @@
 
 ### Implementation for User Story 1
 
-- [ ] T006 [US1] Create `scripts/install-claude-config.sh` with header and color definitions
-- [ ] T007 [US1] Add source path variables for skills (`.claude/skill-sources/`) and agents (`.claude/agent-sources/`)
-- [ ] T008 [US1] Add target path variables for user-level skills (`~/.claude/commands/`) and agents (`~/.claude/agents/`)
-- [ ] T009 [US1] Implement agent directory creation logic (`mkdir -p ~/.claude/agents/`)
-- [ ] T010 [US1] Implement agent file copy loop from source to user-level
-- [ ] T011 [US1] Add agent installation counter and success messages
-- [ ] T012 [US1] Add final summary showing skills and agents installed counts
+- [x] T006 [US1] Create `scripts/install-claude-config.sh` with header and color definitions
+- [x] T007 [US1] Add source path variables for skills (`.claude/skill-sources/`) and agents (`.claude/agent-sources/`)
+- [x] T008 [US1] Add target path variables for user-level skills (`~/.claude/commands/`) and agents (`~/.claude/agents/`)
+- [x] T009 [US1] Implement agent directory creation logic (`mkdir -p ~/.claude/agents/`)
+- [x] T010 [US1] Implement agent file copy loop from source to user-level
+- [x] T011 [US1] Add agent installation counter and success messages
+- [x] T012 [US1] Add final summary showing skills and agents installed counts
 
 **Checkpoint**: Fresh installation works - US1 complete and independently testable
 
@@ -74,9 +74,9 @@
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Ensure agent copy overwrites existing files (idempotent behavior)
-- [ ] T014 [US2] Add skip message for agents not found in source (graceful handling)
-- [ ] T015 [US2] Verify script completes successfully on repeated runs with no changes
+- [x] T013 [US2] Ensure agent copy overwrites existing files (idempotent behavior)
+- [x] T014 [US2] Add skip message for agents not found in source (graceful handling)
+- [x] T015 [US2] Verify script completes successfully on repeated runs with no changes
 
 **Checkpoint**: Idempotent updates work - US2 complete and independently testable
 
@@ -90,11 +90,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T016 [US3] Add skills array with 4 skill filenames (001-health-check.md, etc.)
-- [ ] T017 [US3] Add agents array with pattern matching for all 65 agent files
-- [ ] T018 [US3] Implement skills installation loop (copy from skill-sources to commands)
-- [ ] T019 [US3] Add skills installation counter and messages
-- [ ] T020 [US3] Update summary to show both skills and agents counts
+- [x] T016 [US3] Add skills array with 4 skill filenames (001-health-check.md, etc.)
+- [x] T017 [US3] Add agents array with pattern matching for all 65 agent files
+- [x] T018 [US3] Implement skills installation loop (copy from skill-sources to commands)
+- [x] T019 [US3] Add skills installation counter and messages
+- [x] T020 [US3] Update summary to show both skills and agents counts
 
 **Checkpoint**: Combined installation works - US3 complete and independently testable
 
@@ -108,9 +108,9 @@
 
 ### Implementation for User Story 4
 
-- [ ] T021 [US4] Add deprecated skills array (non-prefixed versions: health-check.md, etc.)
-- [ ] T022 [US4] Implement deprecated skills removal loop
-- [ ] T023 [US4] Add removal messages for deprecated files
+- [x] T021 [US4] Add deprecated skills array (non-prefixed versions: health-check.md, etc.)
+- [x] T022 [US4] Implement deprecated skills removal loop
+- [x] T023 [US4] Add removal messages for deprecated files
 
 **Checkpoint**: Deprecated cleanup works - US4 complete and independently testable
 
@@ -120,9 +120,9 @@
 
 **Purpose**: Remove old script, update documentation
 
-- [ ] T024 [P] Remove deprecated `scripts/install-claude-skills.sh` (superseded by combined script)
-- [ ] T025 [P] Update ROADMAP.md to mark agents consolidation complete
-- [ ] T026 [P] Update relevant documentation references to use new install script name
+- [x] T024 [P] Remove deprecated `scripts/install-claude-skills.sh` (superseded by combined script)
+- [x] T025 [P] Update ROADMAP.md to mark agents consolidation complete
+- [x] T026 [P] Update relevant documentation references to use new install script name
 
 ---
 
@@ -130,12 +130,12 @@
 
 **Purpose**: End-to-end validation of complete feature
 
-- [ ] T027 Run `./scripts/install-claude-config.sh` and verify output
-- [ ] T028 Verify `~/.claude/commands/` contains 4 skill files
-- [ ] T029 Verify `~/.claude/agents/` contains 65 agent files
-- [ ] T030 Verify `.claude/agents/` directory is empty (no project-level agents)
-- [ ] T031 Test agent availability in Claude Code (manual check)
-- [ ] T032 Commit all changes with constitutional commit message
+- [x] T027 Run `./scripts/install-claude-config.sh` and verify output
+- [x] T028 Verify `~/.claude/commands/` contains 4 skill files
+- [x] T029 Verify `~/.claude/agents/` contains 65 agent files
+- [x] T030 Verify `.claude/agents/` directory is empty (no project-level agents)
+- [x] T031 Test agent availability in Claude Code (manual check)
+- [x] T032 Commit all changes with constitutional commit message
 
 **Checkpoint**: Feature complete - all user stories verified
 
