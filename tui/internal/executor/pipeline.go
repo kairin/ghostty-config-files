@@ -4,6 +4,7 @@ package executor
 import (
 	"context"
 	"fmt"
+	"os"
 	"os/exec"
 	"sync"
 	"time"
@@ -96,17 +97,22 @@ func (p *Pipeline) Execute(ctx context.Context) error {
 	return p.executeFrom(ctx, StageCheck)
 }
 
-// preCacheSudo verifies sudo credentials are cached (non-interactive only)
-// This is defense-in-depth: UI layer should already request auth via tea.ExecProcess
-// which suspends the TUI to allow password entry. This check ensures auth happened.
-// CRITICAL: Do NOT use interactive sudo -v here - the TUI has control of terminal
-// and interactive prompts will hang indefinitely.
+// preCacheSudo verifies or obtains sudo credentials
+// First attempts non-interactive check, then falls back to interactive prompt if needed.
+// This handles the case where credentials may have been lost between UI auth and pipeline start.
 func (p *Pipeline) preCacheSudo(ctx context.Context) error {
-	// Non-interactive check only - verify credentials are cached
+	// Non-interactive check - verify credentials are already cached
 	cmd := exec.CommandContext(ctx, "sudo", "-n", "true")
 	if err := cmd.Run(); err != nil {
-		// Credentials not cached - UI layer should have handled auth first
-		return fmt.Errorf("sudo credentials not cached - authentication required before pipeline execution")
+		// Credentials not cached - try to cache them now with interactive prompt
+		// This allows the pipeline to work even if the UI layer's auth didn't persist
+		cacheCmd := exec.CommandContext(ctx, "sudo", "-v")
+		cacheCmd.Stdin = os.Stdin
+		cacheCmd.Stdout = os.Stdout
+		cacheCmd.Stderr = os.Stderr
+		if err := cacheCmd.Run(); err != nil {
+			return fmt.Errorf("sudo authentication failed: %w", err)
+		}
 	}
 	return nil
 }

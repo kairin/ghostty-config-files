@@ -302,6 +302,7 @@ var tools = map[string]*Tool{
 			Check:   "scripts/000-check/check_icon_cache.sh",
 			Install: "scripts/004-reinstall/install_icon_cache.sh",
 			Confirm: "scripts/005-confirm/confirm_icon_cache.sh",
+			Update:  "scripts/007-update/update_icon_cache.sh",
 		},
 		VersionCmd:   []string{"gtk-update-icon-cache", "--version"},
 		VersionRegex: `gtk-update-icon-cache (\d+\.\d+)`,
