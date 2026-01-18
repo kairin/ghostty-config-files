@@ -289,12 +289,12 @@ func (m ExtrasModel) renderExtrasMenu() string {
 
 	toolCount := len(m.tools)
 
-	// Menu items: Individual tools + Install All + Create Claude Workflow + MCP Servers + Back
-	menuItems := make([]string, 0, toolCount+4)
+	// Menu items: Individual tools + Install All + MCP Servers + Back
+	menuItems := make([]string, 0, toolCount+3)
 	for _, tool := range m.tools {
 		menuItems = append(menuItems, tool.DisplayName)
 	}
-	menuItems = append(menuItems, "Install All", "Create Claude Workflow", "MCP Servers", "Back")
+	menuItems = append(menuItems, "Install All", "MCP Servers", "Back")
 
 	b.WriteString("\nChoose:\n")
 
@@ -315,7 +315,7 @@ func (m ExtrasModel) renderExtrasMenu() string {
 func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 	switch msg.String() {
 	case "up", "k":
-		maxCursor := len(m.tools) + 4 // Tools + "Install All" + "Create Claude Workflow" + "MCP Servers" + "Back"
+		maxCursor := len(m.tools) + 3 // Tools + "Install All" + "MCP Servers" + "Back"
 		if m.cursor > 0 {
 			m.cursor--
 		} else {
@@ -324,7 +324,7 @@ func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 		return nil, false
 
 	case "down", "j":
-		maxCursor := len(m.tools) + 4
+		maxCursor := len(m.tools) + 3
 		if m.cursor < maxCursor-1 {
 			m.cursor++
 		} else {
@@ -350,9 +350,6 @@ func (m *ExtrasModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 			// "Install All" selected
 			return nil, true
 		} else if m.cursor == toolCount+1 {
-			// "Create Claude Workflow" selected
-			return nil, true
-		} else if m.cursor == toolCount+2 {
 			// "MCP Servers" selected
 			return nil, true
 		} else {
@@ -377,19 +374,14 @@ func (m ExtrasModel) IsInstallAllSelected() bool {
 	return m.cursor == len(m.tools)
 }
 
-// IsClaudeWorkflowSelected returns true if "Create Claude Workflow" is selected
-func (m ExtrasModel) IsClaudeWorkflowSelected() bool {
-	return m.cursor == len(m.tools)+1
-}
-
 // IsMCPServersSelected returns true if "MCP Servers" is selected
 func (m ExtrasModel) IsMCPServersSelected() bool {
-	return m.cursor == len(m.tools)+2
+	return m.cursor == len(m.tools)+1
 }
 
 // IsBackSelected returns true if "Back" is selected
 func (m ExtrasModel) IsBackSelected() bool {
-	return m.cursor == len(m.tools)+3
+	return m.cursor == len(m.tools)+2
 }
 
 // GetCursor returns the current cursor position
