@@ -2,7 +2,7 @@
 # Install Claude Code configuration (skills and agents) to user-level directories
 #
 # This script copies:
-# - Skills (4) from .claude/skill-sources/ to ~/.claude/commands/
+# - Skills (5) from .claude/skill-sources/ to ~/.claude/commands/
 # - Agents (65) from .claude/agent-sources/ to ~/.claude/agents/
 #
 # Usage: ./scripts/install-claude-config.sh
@@ -36,6 +36,7 @@ SKILLS=(
     "001-deploy-site.md"
     "001-git-sync.md"
     "001-full-workflow.md"
+    "001-issue-cleanup.md"
 )
 
 # Deprecated skills to remove (old names without 001- prefix)
