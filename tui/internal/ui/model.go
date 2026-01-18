@@ -24,6 +24,9 @@ const (
 	ViewDashboard View = iota
 	ViewExtras
 	ViewNerdFonts
+	ViewMCPServers
+	ViewMCPPrereq
+	ViewSecretsWizard
 	ViewAppMenu
 	ViewMethodSelect
 	ViewInstaller
@@ -60,12 +63,15 @@ type Model struct {
 	state *sharedState
 
 	// Components
-	spinner       spinner.Model
-	installer     *InstallerModel
-	extras        *ExtrasModel
-	nerdFonts     *NerdFontsModel
-	diagnostics   *DiagnosticsModel
-	confirmDialog *ConfirmModel
+	spinner        spinner.Model
+	installer      *InstallerModel
+	extras         *ExtrasModel
+	nerdFonts      *NerdFontsModel
+	mcpServers     *MCPServersModel
+	mcpPrereq      *MCPPrereqModel
+	secretsWizard  *SecretsWizardModel
+	diagnostics    *DiagnosticsModel
+	confirmDialog  *ConfirmModel
 	methodSelector *MethodSelectorModel
 
 	// Pending uninstall (set when confirmation shown)
@@ -465,6 +471,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				} else if m.extras.IsClaudeWorkflowSelected() {
 					// Create Claude Workflow command - check prerequisites and create file
 					return m, createClaudeWorkflowCmd()
+				} else if m.extras.IsMCPServersSelected() {
+					// Navigate to MCP Servers view
+					mcpModel := NewMCPServersModel()
+					m.mcpServers = &mcpModel
+					m.currentView = ViewMCPServers
+					return m, m.mcpServers.Init()
 				} else if tool := m.extras.GetSelectedTool(); tool != nil {
 					m.selectedTool = tool
 					m.currentView = ViewAppMenu
@@ -484,6 +496,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.currentView == ViewNerdFonts && m.nerdFonts != nil {
 		newNerdFonts, cmd := m.nerdFonts.Update(msg)
 		m.nerdFonts = &newNerdFonts
+
+		// Handle NerdFontInstallMsg - single font installation/uninstallation
+		if fontMsg, ok := msg.(NerdFontInstallMsg); ok {
+			return m.handleNerdFontInstall(fontMsg)
+		}
 
 		// Handle key presses for Nerd Fonts
 		if keyMsg, ok := msg.(tea.KeyMsg); ok {
@@ -511,22 +528,79 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, func() tea.Msg {
 						return startInstallMsg{tool: tool, resume: false}
 					}
-				} else if font := m.nerdFonts.GetSelectedFont(); font != nil {
-					// Individual font selected - for now, just install all fonts
-					// TODO: Implement per-family install in Phase 3a
-					tool, ok := registry.GetTool("nerdfonts")
-					if !ok {
-						return m, nil
-					}
-
-					m.selectedTool = tool
-					return m, func() tea.Msg {
-						return startInstallMsg{tool: tool, resume: false}
-					}
 				}
+				// Individual font selection is now handled via action menu (NerdFontInstallMsg)
 			}
 			if nerdFontsCmd != nil {
 				return m, nerdFontsCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If MCP Servers view is active, delegate messages to it
+	if m.currentView == ViewMCPServers && m.mcpServers != nil {
+		newMCPServers, cmd := m.mcpServers.Update(msg)
+		m.mcpServers = &newMCPServers
+
+		// Handle key presses for MCP Servers
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewExtras
+				m.mcpServers = nil
+				return m, nil
+			}
+
+			mcpCmd, handled := m.mcpServers.HandleKey(keyMsg)
+			if handled {
+				// Handle menu actions
+				if m.mcpServers.IsBackSelected() {
+					m.currentView = ViewExtras
+					m.mcpServers = nil
+					return m, nil
+				}
+			}
+			if mcpCmd != nil {
+				return m, mcpCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If MCP Prerequisites view is active, delegate messages to it
+	if m.currentView == ViewMCPPrereq && m.mcpPrereq != nil {
+		newMCPPrereq, cmd := m.mcpPrereq.Update(msg)
+		m.mcpPrereq = &newMCPPrereq
+
+		// Handle key presses for MCP Prerequisites
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			_, handled := m.mcpPrereq.HandleKey(keyMsg)
+			if handled {
+				// Go back to MCP Servers view
+				m.currentView = ViewMCPServers
+				m.mcpPrereq = nil
+				return m, nil
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If Secrets Wizard view is active, delegate messages to it
+	if m.currentView == ViewSecretsWizard && m.secretsWizard != nil {
+		newWizard, cmd := m.secretsWizard.Update(msg)
+		m.secretsWizard = &newWizard
+
+		// Handle key presses for Secrets Wizard
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			_, handled := m.secretsWizard.HandleKey(keyMsg)
+			if handled {
+				// Go back to MCP Servers view
+				m.currentView = ViewMCPServers
+				m.secretsWizard = nil
+				return m, nil
 			}
 		}
 
@@ -600,6 +674,27 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.previousView = m.currentView
 		m.currentView = ViewConfirm
 		return m, nil
+
+	case MCPShowPrereqMsg:
+		// Show prerequisites view for MCP server
+		prereqModel := NewMCPPrereqModel(msg.Server)
+		m.mcpPrereq = &prereqModel
+		m.currentView = ViewMCPPrereq
+		return m, nil
+
+	case MCPInstallServerMsg:
+		// Install MCP server (prerequisites already passed)
+		if m.mcpServers != nil {
+			return m, m.mcpServers.installMCPServer(msg.Server)
+		}
+		return m, nil
+
+	case MCPShowSecretsWizardMsg:
+		// Show secrets wizard
+		wizardModel := NewSecretsWizardModel()
+		m.secretsWizard = &wizardModel
+		m.currentView = ViewSecretsWizard
+		return m, m.secretsWizard.Init()
 	}
 
 	return m, nil
@@ -1194,6 +1289,12 @@ func (m Model) View() string {
 		return m.viewExtras()
 	case ViewNerdFonts:
 		return m.viewNerdFonts()
+	case ViewMCPServers:
+		return m.viewMCPServers()
+	case ViewMCPPrereq:
+		return m.viewMCPPrereq()
+	case ViewSecretsWizard:
+		return m.viewSecretsWizard()
 	case ViewAppMenu:
 		return m.viewAppMenu()
 	case ViewMethodSelect:
@@ -1439,6 +1540,27 @@ func (m Model) viewNerdFonts() string {
 	return "Loading Nerd Fonts..."
 }
 
+func (m Model) viewMCPServers() string {
+	if m.mcpServers != nil {
+		return m.mcpServers.View()
+	}
+	return "Loading MCP Servers..."
+}
+
+func (m Model) viewMCPPrereq() string {
+	if m.mcpPrereq != nil {
+		return m.mcpPrereq.View()
+	}
+	return "Loading prerequisites..."
+}
+
+func (m Model) viewSecretsWizard() string {
+	if m.secretsWizard != nil {
+		return m.secretsWizard.View()
+	}
+	return "Loading secrets wizard..."
+}
+
 func (m Model) viewAppMenu() string {
 	if m.selectedTool == nil {
 		return "No tool selected - press ESC"
@@ -1603,4 +1725,56 @@ func (m Model) startConfigure(tool *registry.Tool) (tea.Model, tea.Cmd) {
 	}
 
 	return m, tea.Batch(initCmd, startCmd)
+}
+
+// handleNerdFontInstall handles single font installation/uninstallation
+func (m Model) handleNerdFontInstall(msg NerdFontInstallMsg) (tea.Model, tea.Cmd) {
+	// Get nerdfonts tool as template for installation
+	tool, ok := registry.GetTool("nerdfonts")
+	if !ok {
+		return m, nil
+	}
+
+	// Create a modified copy for single font operation
+	singleFontTool := &registry.Tool{
+		ID:          "nerdfonts-" + strings.ToLower(msg.FontName),
+		DisplayName: "Nerd Font: " + msg.FontName,
+		Category:    tool.Category,
+		Scripts: registry.ToolScripts{
+			Check:     tool.Scripts.Check,
+			Install:   tool.Scripts.Install,   // Will be called with font arg
+			Uninstall: tool.Scripts.Uninstall, // Will be called with font arg
+		},
+		FontArg: msg.FontName, // Pass font name as argument
+	}
+
+	m.selectedTool = singleFontTool
+
+	switch msg.Action {
+	case "install", "reinstall":
+		// Create installer for single font
+		installer := NewInstallerModelForSingleFont(singleFontTool, m.repoRoot, msg.FontName)
+		m.installer = &installer
+		m.currentView = ViewInstaller
+
+		initCmd := m.installer.Init()
+		startCmd := func() tea.Msg {
+			return InstallerStartMsg{Resume: false}
+		}
+		return m, tea.Batch(initCmd, startCmd)
+
+	case "uninstall":
+		// Create uninstaller for single font
+		installer := NewInstallerModelForSingleFontUninstall(singleFontTool, m.repoRoot, msg.FontName)
+		m.installer = &installer
+		m.currentView = ViewInstaller
+
+		initCmd := m.installer.Init()
+		startCmd := func() tea.Msg {
+			return InstallerStartMsg{Resume: false, Uninstall: true}
+		}
+		return m, tea.Batch(initCmd, startCmd)
+	}
+
+	return m, nil
 }

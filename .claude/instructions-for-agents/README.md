@@ -16,7 +16,7 @@
 │
 ├── architecture/                       (System design documentation)
 │   ├── system-architecture.md          (Overview, tech stack, goals)
-│   ├── agent-delegation.md             (4-tier hierarchy, delegation decision tree)
+│   ├── agent-delegation.md             (5-tier hierarchy, delegation decision tree)
 │   └── agent-registry.md               (Complete 60-agent reference)
 │
 ├── guides/                            (Operational how-to guides)
@@ -95,7 +95,7 @@
 
 #### `agent-delegation.md` (~500 tokens)
 **Contains:**
-- 4-tier agent hierarchy diagram
+- 5-tier agent hierarchy diagram
 - Delegation decision tree
 - Cost/complexity matrix (Opus $$$ → Sonnet $$ → Haiku $)
 - When to delegate vs execute directly

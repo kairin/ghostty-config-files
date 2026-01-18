@@ -212,9 +212,12 @@ func (p *Pipeline) executeStage(ctx context.Context, stage PipelineStage) (Stage
 
 	start := time.Now()
 
-	// Build script arguments - pass method if override is set
+	// Build script arguments - pass method if override is set, or font arg for single font install
 	var args []string
-	if p.tool.MethodOverride != "" {
+	if p.tool.FontArg != "" {
+		// Single font installation - pass font family name as argument
+		args = []string{p.tool.FontArg}
+	} else if p.tool.MethodOverride != "" {
 		args = []string{string(p.tool.MethodOverride)}
 	}
 

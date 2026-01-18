@@ -246,6 +246,75 @@ func NewInstallerModelForUpdate(tool *registry.Tool, repoRoot string) InstallerM
 	}
 }
 
+// NewInstallerModelForSingleFont creates an installer model for installing a single Nerd Font family
+// The fontArg is passed to the install script as the first argument
+func NewInstallerModelForSingleFont(tool *registry.Tool, repoRoot string, fontArg string) InstallerModel {
+	// Single font installation uses same stages but passes font argument
+	stages := []stageStatus{
+		{stage: executor.StageInstall},
+		{stage: executor.StageConfirm},
+	}
+
+	ts := NewTailSpinner()
+
+	displayName := "Unknown Font"
+	if tool != nil {
+		displayName = tool.DisplayName
+	}
+	ts.SetTitle(fmt.Sprintf("Installing %s", displayName))
+	ts.SetDisplayLines(20)
+
+	// Create a modified tool with FontArg set
+	modifiedTool := tool
+	if tool != nil {
+		// Create a shallow copy with FontArg
+		toolCopy := *tool
+		toolCopy.FontArg = fontArg
+		modifiedTool = &toolCopy
+	}
+
+	return InstallerModel{
+		tool:        modifiedTool,
+		state:       InstallerIdle,
+		stages:      stages,
+		tailSpinner: ts,
+		repoRoot:    repoRoot,
+	}
+}
+
+// NewInstallerModelForSingleFontUninstall creates an installer model for uninstalling a single Nerd Font family
+func NewInstallerModelForSingleFontUninstall(tool *registry.Tool, repoRoot string, fontArg string) InstallerModel {
+	stages := []stageStatus{
+		{stage: executor.StageUninstall},
+	}
+
+	ts := NewTailSpinner()
+
+	displayName := "Unknown Font"
+	if tool != nil {
+		displayName = tool.DisplayName
+	}
+	ts.SetTitle(fmt.Sprintf("Uninstalling %s", displayName))
+	ts.SetDisplayLines(20)
+
+	// Create a modified tool with FontArg set
+	modifiedTool := tool
+	if tool != nil {
+		toolCopy := *tool
+		toolCopy.FontArg = fontArg
+		modifiedTool = &toolCopy
+	}
+
+	return InstallerModel{
+		tool:        modifiedTool,
+		state:       InstallerIdle,
+		stages:      stages,
+		tailSpinner: ts,
+		repoRoot:    repoRoot,
+		isUninstall: true,
+	}
+}
+
 // Installer message types
 type (
 	// InstallerStartMsg initiates installation or uninstallation

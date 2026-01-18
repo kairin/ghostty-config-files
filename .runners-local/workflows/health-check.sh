@@ -78,6 +78,36 @@ record_check() {
     CHECK_DETAILS["${category}:${check_name}"]="$status|$details"
 }
 
+# Detect CI/CD policy (zero-cost vs runner-based)
+# Priority: Constitutional requirement (AGENTS.md) > Local infrastructure > Workflow files
+detect_cicd_policy() {
+    local policy="unknown"
+    local has_zero_cost_constitution=false
+
+    # Check for constitutional zero-cost requirement (HIGHEST PRIORITY)
+    if [ -f "$REPO_DIR/AGENTS.md" ]; then
+        if grep -qi "zero.*cost\|zero.*github.*actions\|local.*ci/cd" "$REPO_DIR/AGENTS.md"; then
+            policy="zero-cost"
+            has_zero_cost_constitution=true
+        fi
+    fi
+
+    # Check for local CI/CD infrastructure (strong indicator of zero-cost)
+    if [ -d "$REPO_DIR/.runners-local" ]; then
+        policy="zero-cost"
+    fi
+
+    # Check if any workflow requires self-hosted runner
+    # ONLY applies if there's no constitutional zero-cost requirement
+    if [ "$has_zero_cost_constitution" = false ] && [ -d "$REPO_DIR/.github/workflows" ]; then
+        if grep -rq "runs-on:.*self-hosted" "$REPO_DIR/.github/workflows/" 2>/dev/null; then
+            policy="runner-required"
+        fi
+    fi
+
+    echo "$policy"
+}
+
 # ═══════════════════════════════════════════════════════════
 # CATEGORY 1: Core Tools Validation
 # ═══════════════════════════════════════════════════════════
@@ -165,74 +195,34 @@ check_core_tools() {
 }
 
 # ═══════════════════════════════════════════════════════════
-# CATEGORY 2: Environment Variables Validation
+# CATEGORY 2: Environment & Authentication (User-Level)
 # ═══════════════════════════════════════════════════════════
 
 check_environment_variables() {
-    log "STEP" "🔐 Checking environment variables..."
+    log "STEP" "🔐 Checking authentication (user-level)..."
 
-    # Check .env file exists
-    if [ -f "$REPO_DIR/.env" ]; then
-        record_check "environment" "env_file" "passed" "exists at $REPO_DIR/.env"
-        log "SUCCESS" "✅ .env file exists"
-    else
-        record_check "environment" "env_file" "failed" "not found"
-        log "ERROR" "❌ .env file not found - copy from .env.example"
-    fi
+    # NOTE: MCP servers handle their own API keys via ~/.claude.json
+    # No need for project-level .env files - MCP connectivity check is sufficient
+    # If claude mcp list shows servers connected, authentication is working
 
-    # Check CONTEXT7_API_KEY exported to shell
-    if [ -n "${CONTEXT7_API_KEY:-}" ]; then
-        record_check "environment" "context7_api_key" "passed" "exported to shell"
-        log "SUCCESS" "✅ CONTEXT7_API_KEY exported to shell"
-    else
-        record_check "environment" "context7_api_key" "failed" "not exported"
-        log "ERROR" "❌ CONTEXT7_API_KEY not exported to shell environment"
-        log "INFO" "   Add to ~/.zshrc: set -a; source $REPO_DIR/.env; set +a"
-    fi
-
-    # Check GITHUB_TOKEN exported to shell
-    if [ -n "${GITHUB_TOKEN:-}" ]; then
-        record_check "environment" "github_token" "passed" "exported to shell"
-        log "SUCCESS" "✅ GITHUB_TOKEN exported to shell"
-    else
-        # Try to get from gh CLI
-        if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-            local gh_token=$(gh auth token 2>/dev/null || echo "")
-            if [ -n "$gh_token" ]; then
-                record_check "environment" "github_token" "warning" "available via gh CLI but not exported"
-                log "WARNING" "⚠️  GITHUB_TOKEN available via gh CLI but not exported"
-                log "INFO" "   Add to .env: GITHUB_TOKEN=\$(gh auth token)"
-            else
-                record_check "environment" "github_token" "failed" "not available"
-                log "ERROR" "❌ GITHUB_TOKEN not available"
-            fi
+    # Check GitHub CLI authentication (needed for git operations)
+    if command -v gh >/dev/null 2>&1; then
+        if gh auth status >/dev/null 2>&1; then
+            record_check "environment" "gh_auth" "passed" "GitHub CLI authenticated"
+            log "SUCCESS" "✅ GitHub CLI authenticated"
         else
-            record_check "environment" "github_token" "failed" "not exported"
-            log "ERROR" "❌ GITHUB_TOKEN not exported to shell environment"
-        fi
-    fi
-
-    # Check shell config loads .env
-    local shell_config=""
-    if [ -n "${ZSH_VERSION:-}" ]; then
-        shell_config="$HOME/.zshrc"
-    elif [ -n "${BASH_VERSION:-}" ]; then
-        shell_config="$HOME/.bashrc"
-    fi
-
-    if [ -n "$shell_config" ] && [ -f "$shell_config" ]; then
-        if grep -q "ghostty-config-files/.env" "$shell_config" || grep -q "source.*\.env" "$shell_config"; then
-            record_check "environment" "shell_config" "passed" "loads .env in $shell_config"
-            log "SUCCESS" "✅ Shell config loads .env"
-        else
-            record_check "environment" "shell_config" "warning" ".env not auto-loaded in $shell_config"
-            log "WARNING" "⚠️  .env not auto-loaded in shell config"
-            log "INFO" "   Consider adding to $shell_config for automatic loading"
+            record_check "environment" "gh_auth" "warning" "not authenticated"
+            log "WARNING" "⚠️  GitHub CLI not authenticated"
+            log "INFO" "   Run: gh auth login"
         fi
     else
-        record_check "environment" "shell_config" "warning" "shell config not found"
-        log "WARNING" "⚠️  Shell config not detected"
+        record_check "environment" "gh_auth" "warning" "gh CLI not installed"
+        log "WARNING" "⚠️  GitHub CLI not installed"
     fi
+
+    # Note about MCP API keys
+    log "INFO" "ℹ️  MCP API keys (Context7, etc.) are managed in ~/.claude.json"
+    log "INFO" "   No project-level .env required - MCP handles authentication"
 }
 
 # ═══════════════════════════════════════════════════════════
@@ -296,24 +286,26 @@ check_local_cicd_infrastructure() {
 }
 
 # ═══════════════════════════════════════════════════════════
-# CATEGORY 4: MCP Server Connectivity
+# CATEGORY 4: MCP Server Connectivity (User-Level)
 # ═══════════════════════════════════════════════════════════
 
 check_mcp_connectivity() {
-    log "STEP" "🔌 Checking MCP server connectivity..."
+    log "STEP" "🔌 Checking MCP server connectivity (user-level)..."
 
-    # Check .mcp.json exists
-    if [ -f "$REPO_DIR/.mcp.json" ]; then
-        record_check "mcp_servers" "mcp_json" "passed" "configuration file exists"
-        log "SUCCESS" "✅ .mcp.json configuration exists"
-        # Count configured servers
-        local server_count=$(grep -c '"command"\|"type": "http"' "$REPO_DIR/.mcp.json" 2>/dev/null || echo "0")
-        log "INFO" "   $server_count MCP server(s) configured"
+    # Check user-level MCP config (~/.claude.json) - NOT project-level .mcp.json
+    # MCP servers should be configured at user level for all projects to access
+    if [ -f "$HOME/.claude.json" ]; then
+        if jq -e '.mcpServers' "$HOME/.claude.json" > /dev/null 2>&1; then
+            local server_count=$(jq '.mcpServers | keys | length' "$HOME/.claude.json" 2>/dev/null || echo "0")
+            record_check "mcp_servers" "user_config" "passed" "$server_count servers at user level"
+            log "SUCCESS" "✅ MCP config: ~/.claude.json ($server_count servers)"
+        else
+            record_check "mcp_servers" "user_config" "warning" "no mcpServers section"
+            log "WARNING" "⚠️  ~/.claude.json exists but no mcpServers configured"
+        fi
     else
-        record_check "mcp_servers" "mcp_json" "failed" "configuration missing"
-        log "ERROR" "❌ .mcp.json configuration not found"
-        log "INFO" "   Run: scripts/002-install-first-time/setup_mcp_config.sh"
-        log "INFO" "   Or run TUI installer and select 'AI Tools'"
+        record_check "mcp_servers" "user_config" "warning" "~/.claude.json not found"
+        log "WARNING" "⚠️  User-level MCP config not found (~/.claude.json)"
     fi
 
     # Check Claude CLI available
@@ -321,40 +313,82 @@ check_mcp_connectivity() {
         record_check "mcp_servers" "claude_cli" "passed" "Claude Code CLI available"
         log "SUCCESS" "✅ Claude Code CLI available"
 
-        # Try to check MCP server status (non-blocking)
-        local mcp_status=$(timeout 5s claude mcp list 2>/dev/null | grep -i context7 || echo "")
-        if [ -n "$mcp_status" ]; then
-            if echo "$mcp_status" | grep -qi "connected"; then
-                record_check "mcp_servers" "context7_connection" "passed" "connected"
-                log "SUCCESS" "✅ Context7 MCP connected"
-            else
-                record_check "mcp_servers" "context7_connection" "warning" "not connected"
-                log "WARNING" "⚠️  Context7 MCP not connected"
-            fi
-        else
-            record_check "mcp_servers" "context7_connection" "warning" "status unknown (timeout)"
-            log "WARNING" "⚠️  Context7 MCP status unknown (check manually)"
-        fi
+        # Use claude mcp list for actual connectivity check (source of truth)
+        local mcp_output=$(timeout 10s claude mcp list 2>/dev/null || echo "")
+        # Count "Connected" (case-insensitive) - grep -c returns number, || 0 for safety
+        local connected_count=$(echo "$mcp_output" | grep -ci "connected" || echo 0)
+        # Count server entries (lines containing colon and path)
+        local total_count=$(echo "$mcp_output" | grep -c ":" || echo 0)
 
-        # Check GitHub MCP
-        local github_mcp=$(timeout 5s claude mcp list 2>/dev/null | grep -i github || echo "")
-        if [ -n "$github_mcp" ]; then
-            if echo "$github_mcp" | grep -qi "connected"; then
-                record_check "mcp_servers" "github_connection" "passed" "connected"
-                log "SUCCESS" "✅ GitHub MCP connected"
-            else
-                record_check "mcp_servers" "github_connection" "warning" "not connected"
-                log "WARNING" "⚠️  GitHub MCP not connected"
-            fi
+        if [ "$connected_count" -gt 0 ] 2>/dev/null; then
+            record_check "mcp_servers" "connectivity" "passed" "$connected_count servers connected"
+            log "SUCCESS" "✅ MCP servers: $connected_count connected"
+        elif [ -n "$mcp_output" ]; then
+            record_check "mcp_servers" "connectivity" "warning" "servers configured but not connected"
+            log "WARNING" "⚠️  MCP servers configured but none connected"
         else
-            record_check "mcp_servers" "github_connection" "warning" "status unknown (timeout)"
-            log "WARNING" "⚠️  GitHub MCP status unknown (check manually)"
+            record_check "mcp_servers" "connectivity" "warning" "could not check (timeout or error)"
+            log "WARNING" "⚠️  MCP connectivity check timed out"
         fi
     else
         record_check "mcp_servers" "claude_cli" "warning" "not installed (optional for local CI/CD)"
         log "WARNING" "⚠️  Claude Code CLI not found (optional)"
-        record_check "mcp_servers" "context7_connection" "warning" "cannot check (claude CLI missing)"
-        record_check "mcp_servers" "github_connection" "warning" "cannot check (claude CLI missing)"
+        record_check "mcp_servers" "connectivity" "warning" "cannot check (claude CLI missing)"
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════
+# CATEGORY 4b: MCP Config Conflict Detection
+# ═══════════════════════════════════════════════════════════
+
+check_mcp_config_conflicts() {
+    log "STEP" "🔍 Checking for MCP config conflicts..."
+
+    # User-level config is the expected setup
+    if [ ! -f "$HOME/.claude.json" ]; then
+        log "INFO" "ℹ️  No user-level config - skipping conflict check"
+        return 0
+    fi
+
+    # Check for project-level .mcp.json (potential conflict source)
+    if [ -f "$REPO_DIR/.mcp.json" ]; then
+        record_check "mcp_servers" "project_mcp_json" "warning" "project-level .mcp.json exists"
+        log "WARNING" "⚠️  Project-level .mcp.json detected at $REPO_DIR/.mcp.json"
+
+        # Extract server names from both configs
+        local user_servers=$(jq -r '.mcpServers | keys[]' "$HOME/.claude.json" 2>/dev/null | sort)
+        local project_servers=$(jq -r '.mcpServers | keys[]' "$REPO_DIR/.mcp.json" 2>/dev/null | sort)
+
+        if [ -z "$project_servers" ]; then
+            log "INFO" "   .mcp.json has no servers defined (safe to delete)"
+            record_check "mcp_servers" "config_conflict" "warning" "empty project .mcp.json"
+        else
+            # Find conflicts (servers defined in BOTH configs)
+            local conflicts=$(comm -12 <(echo "$user_servers") <(echo "$project_servers") 2>/dev/null)
+
+            if [ -n "$conflicts" ]; then
+                record_check "mcp_servers" "config_conflict" "failed" "conflicting servers detected"
+                log "ERROR" "❌ MCP SERVER CONFLICT DETECTED:"
+                log "ERROR" "   The following servers exist in BOTH configs:"
+                echo "$conflicts" | while read -r server; do
+                    [ -n "$server" ] && log "ERROR" "   • $server"
+                done
+                log "INFO" ""
+                log "INFO" "   RESOLUTION OPTIONS:"
+                log "INFO" "   1. Delete project .mcp.json: rm $REPO_DIR/.mcp.json"
+                log "INFO" "   2. Rename servers in .mcp.json to avoid conflict"
+                log "INFO" "   3. Remove duplicates from .mcp.json, keep only project-specific servers"
+            else
+                record_check "mcp_servers" "config_conflict" "warning" "no conflicts but project .mcp.json exists"
+                log "WARNING" "⚠️  No naming conflicts, but project .mcp.json may cause confusion"
+                log "INFO" "   Project servers: $(echo "$project_servers" | tr '\n' ', ' | sed 's/,$//')"
+                log "INFO" "   Consider consolidating to ~/.claude.json for consistency"
+            fi
+        fi
+    else
+        record_check "mcp_servers" "project_mcp_json" "passed" "no project-level .mcp.json"
+        record_check "mcp_servers" "config_conflict" "passed" "user-level only (correct setup)"
+        log "SUCCESS" "✅ No project-level .mcp.json (clean - user-level only)"
     fi
 }
 
@@ -365,38 +399,48 @@ check_mcp_connectivity() {
 check_astro_environment() {
     log "STEP" "🌐 Checking Astro build environment..."
 
-    # Check website/package.json
-    if [ -f "$REPO_DIR/website/package.json" ]; then
-        record_check "astro_build" "package_json" "passed" "exists"
-        log "SUCCESS" "✅ website/package.json exists"
+    # Astro website can be in website/ or astro-website/ directory
+    local ASTRO_DIR=""
+    if [ -f "$REPO_DIR/astro-website/package.json" ]; then
+        ASTRO_DIR="$REPO_DIR/astro-website"
+    elif [ -f "$REPO_DIR/website/package.json" ]; then
+        ASTRO_DIR="$REPO_DIR/website"
+    fi
+
+    # Check package.json
+    if [ -n "$ASTRO_DIR" ]; then
+        record_check "astro_build" "package_json" "passed" "exists at ${ASTRO_DIR#$REPO_DIR/}"
+        log "SUCCESS" "✅ Astro package.json exists (${ASTRO_DIR#$REPO_DIR/})"
     else
-        record_check "astro_build" "package_json" "failed" "not found"
-        log "ERROR" "❌ website/package.json not found"
+        record_check "astro_build" "package_json" "warning" "not found (optional)"
+        log "WARNING" "⚠️  Astro website not found (optional component)"
+        # Skip remaining Astro checks if no website directory
+        return 0
     fi
 
     # Check node_modules installed
-    if [ -d "$REPO_DIR/website/node_modules" ]; then
+    if [ -d "$ASTRO_DIR/node_modules" ]; then
         record_check "astro_build" "node_modules" "passed" "dependencies installed"
         log "SUCCESS" "✅ Dependencies installed"
     else
         record_check "astro_build" "node_modules" "warning" "not installed"
-        log "WARNING" "⚠️  Dependencies not installed - run: npm install"
+        log "WARNING" "⚠️  Dependencies not installed - run: cd ${ASTRO_DIR#$REPO_DIR/} && npm install"
     fi
 
     # Check astro.config.mjs
-    if [ -f "$REPO_DIR/website/astro.config.mjs" ]; then
+    if [ -f "$ASTRO_DIR/astro.config.mjs" ]; then
         record_check "astro_build" "astro_config" "passed" "configuration exists"
         log "SUCCESS" "✅ astro.config.mjs exists"
 
         # Verify outDir setting
-        if grep -q 'outDir.*docs' "$REPO_DIR/website/astro.config.mjs"; then
+        if grep -q 'outDir.*docs' "$ASTRO_DIR/astro.config.mjs"; then
             log "SUCCESS" "✅ outDir correctly set to ../docs"
         else
             log "WARNING" "⚠️  outDir may not be set to ../docs"
         fi
     else
-        record_check "astro_build" "astro_config" "failed" "not found"
-        log "ERROR" "❌ astro.config.mjs not found"
+        record_check "astro_build" "astro_config" "warning" "not found"
+        log "WARNING" "⚠️  astro.config.mjs not found"
     fi
 
     # Check docs/ build output directory
@@ -425,53 +469,62 @@ check_astro_environment() {
 }
 
 # ═══════════════════════════════════════════════════════════
-# CATEGORY 6: Self-Hosted Runner (Optional)
+# CATEGORY 6: CI/CD Policy & Runner Check (Context-Aware)
 # ═══════════════════════════════════════════════════════════
 
 check_self_hosted_runner() {
-    log "STEP" "🏃 Checking self-hosted runner (optional)..."
+    local policy=$(detect_cicd_policy)
 
-    # Check if runner directory exists
-    if [ -d "$HOME/actions-runner" ]; then
-        record_check "runner" "runner_installed" "passed" "installed at $HOME/actions-runner"
-        log "SUCCESS" "✅ Self-hosted runner installed"
+    log "STEP" "🏃 Checking CI/CD policy and runner status..."
+    log "INFO" "   Detected policy: $policy"
 
-        # Check if systemd service configured
-        local service_name="github-actions-runner-$(whoami)"
-        if systemctl list-unit-files | grep -q "$service_name"; then
-            record_check "runner" "systemd_service" "passed" "service configured"
-            log "SUCCESS" "✅ Systemd service configured"
-
-            # Check service status
-            if systemctl is-active --quiet "$service_name"; then
-                record_check "runner" "service_running" "passed" "service active"
-                log "SUCCESS" "✅ Runner service active"
+    case "$policy" in
+        "zero-cost")
+            # Zero-cost policy: no runner = compliant, runner = optional
+            if [ -d "$HOME/actions-runner" ]; then
+                record_check "runner" "zero_cost_compliance" "passed" "runner exists but not required"
+                log "INFO" "ℹ️  Self-hosted runner installed (optional - zero-cost policy active)"
             else
-                record_check "runner" "service_running" "warning" "service not running"
-                log "WARNING" "⚠️  Runner service not running"
+                record_check "runner" "zero_cost_compliance" "passed" "no runner needed (zero-cost policy)"
+                log "SUCCESS" "✅ Zero-cost compliance: Local CI/CD only, no GitHub Actions runner required"
             fi
-        else
-            record_check "runner" "systemd_service" "warning" "service not configured"
-            log "WARNING" "⚠️  Systemd service not configured"
-            record_check "runner" "service_running" "warning" "cannot check (no service)"
-        fi
+            ;;
+        "runner-required")
+            # Runner-required policy: no runner = warning, runner = check health
+            if [ -d "$HOME/actions-runner" ]; then
+                record_check "runner" "runner_installed" "passed" "installed at $HOME/actions-runner"
+                log "SUCCESS" "✅ Self-hosted runner installed"
 
-        # Check runner registration (via logs)
-        if [ -f "$LOG_DIR/runner-name.txt" ]; then
-            local runner_name=$(cat "$LOG_DIR/runner-name.txt")
-            record_check "runner" "registration" "passed" "registered as $runner_name"
-            log "SUCCESS" "✅ Runner registered: $runner_name"
-        else
-            record_check "runner" "registration" "warning" "registration status unknown"
-            log "WARNING" "⚠️  Runner registration status unknown"
-        fi
-    else
-        record_check "runner" "runner_installed" "warning" "not installed (optional)"
-        log "INFO" "ℹ️  Self-hosted runner not installed (optional component)"
-        record_check "runner" "systemd_service" "warning" "not applicable"
-        record_check "runner" "service_running" "warning" "not applicable"
-        record_check "runner" "registration" "warning" "not applicable"
-    fi
+                # Check if systemd service configured
+                local service_name="github-actions-runner-$(whoami)"
+                if systemctl list-unit-files | grep -q "$service_name" 2>/dev/null; then
+                    record_check "runner" "systemd_service" "passed" "service configured"
+                    log "SUCCESS" "✅ Systemd service configured"
+
+                    # Check service status
+                    if systemctl is-active --quiet "$service_name" 2>/dev/null; then
+                        record_check "runner" "service_running" "passed" "service active"
+                        log "SUCCESS" "✅ Runner service active"
+                    else
+                        record_check "runner" "service_running" "warning" "service not running"
+                        log "WARNING" "⚠️  Runner service not running"
+                    fi
+                else
+                    record_check "runner" "systemd_service" "warning" "service not configured"
+                    log "WARNING" "⚠️  Systemd service not configured"
+                fi
+            else
+                record_check "runner" "runner_required" "warning" "workflows require self-hosted runner but not installed"
+                log "WARNING" "⚠️  Self-hosted runner required by workflows but not installed"
+                log "INFO" "   Install with: mkdir ~/actions-runner && cd ~/actions-runner && curl -o actions-runner-linux-x64.tar.gz -L <runner-url>"
+            fi
+            ;;
+        *)
+            # Unknown policy: informational only
+            record_check "runner" "policy_check" "passed" "no specific CI/CD policy detected"
+            log "INFO" "ℹ️  No specific CI/CD policy detected (runner check skipped)"
+            ;;
+    esac
 }
 
 # ═══════════════════════════════════════════════════════════
@@ -667,6 +720,8 @@ main() {
     check_local_cicd_infrastructure
     echo ""
     check_mcp_connectivity
+    echo ""
+    check_mcp_config_conflicts
     echo ""
     check_astro_environment
     echo ""

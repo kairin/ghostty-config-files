@@ -33,6 +33,12 @@ type NerdFontsModel struct {
 	// State
 	loading bool
 
+	// Action menu state (for individual font selection)
+	menuMode     bool     // true when showing action menu for a font
+	actionItems  []string // ["Install", "Reinstall", "Uninstall", "Back"]
+	actionCursor int      // cursor within action menu
+	selectedFont *FontFamily // font being acted upon
+
 	// Shared state (statuses and loading flags from parent)
 	state *sharedState
 
@@ -207,12 +213,22 @@ func (m NerdFontsModel) View() string {
 	b.WriteString(m.renderFontsTable())
 	b.WriteString("\n")
 
-	// Menu
-	b.WriteString(m.renderNerdFontsMenu())
+	// Show action menu if in menu mode, otherwise show main menu
+	if m.menuMode && m.selectedFont != nil {
+		b.WriteString(m.renderActionMenu())
+	} else {
+		b.WriteString(m.renderNerdFontsMenu())
+	}
 	b.WriteString("\n")
 
 	// Help
-	help := HelpStyle.Render("↑↓ navigate • enter select • r refresh • esc back")
+	var helpText string
+	if m.menuMode {
+		helpText = "↑↓ navigate • enter select • esc cancel"
+	} else {
+		helpText = "↑↓ navigate • enter select • r refresh • esc back"
+	}
+	help := HelpStyle.Render(helpText)
 	b.WriteString(help)
 
 	return b.String()
@@ -334,8 +350,37 @@ func (m NerdFontsModel) renderNerdFontsMenu() string {
 	return b.String()
 }
 
+// renderActionMenu renders the action menu for a selected font
+func (m NerdFontsModel) renderActionMenu() string {
+	var b strings.Builder
+
+	// Show which font is selected
+	fontStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("141")). // Purple
+		Bold(true)
+	b.WriteString(fmt.Sprintf("\nActions for %s:\n", fontStyle.Render(m.selectedFont.DisplayName)))
+
+	// Render action items
+	for i, item := range m.actionItems {
+		cursor := " "
+		style := MenuItemStyle
+		if i == m.actionCursor {
+			cursor = ">"
+			style = MenuSelectedStyle
+		}
+		b.WriteString(fmt.Sprintf("%s %s\n", MenuCursorStyle.Render(cursor), style.Render(item)))
+	}
+
+	return b.String()
+}
+
 // HandleKey processes key presses in Nerd Fonts view
 func (m *NerdFontsModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
+	// Handle action menu mode separately
+	if m.menuMode {
+		return m.handleActionMenuKey(msg)
+	}
+
 	// Calculate menu boundaries
 	fontCount := len(m.fonts)
 	missingCount := 0
@@ -382,12 +427,87 @@ func (m *NerdFontsModel) HandleKey(msg tea.KeyMsg) (tea.Cmd, bool) {
 	case "enter":
 		// Handle selection
 		if m.cursor < fontCount {
-			// Selected a font family - not implemented yet (future enhancement)
-			// For now, just return true to signal selection
-			return nil, true
+			// Selected a font family - show action menu
+			m.showActionMenu(&m.fonts[m.cursor])
+			return nil, false
 		} else {
-			// Menu item selected
+			// Menu item selected (Install All or Back)
 			return nil, true
+		}
+	}
+
+	return nil, false
+}
+
+// showActionMenu prepares and displays the action menu for a font
+func (m *NerdFontsModel) showActionMenu(font *FontFamily) {
+	m.selectedFont = font
+	m.menuMode = true
+	m.actionCursor = 0
+
+	// Build action items based on font status
+	if font.Status == "Installed" {
+		m.actionItems = []string{"Reinstall", "Uninstall", "Back"}
+	} else {
+		m.actionItems = []string{"Install", "Back"}
+	}
+}
+
+// handleActionMenuKey processes key presses when in action menu mode
+func (m *NerdFontsModel) handleActionMenuKey(msg tea.KeyMsg) (tea.Cmd, bool) {
+	switch msg.String() {
+	case "up", "k":
+		if m.actionCursor > 0 {
+			m.actionCursor--
+		} else {
+			m.actionCursor = len(m.actionItems) - 1 // Wrap to bottom
+		}
+		return nil, false
+
+	case "down", "j":
+		if m.actionCursor < len(m.actionItems)-1 {
+			m.actionCursor++
+		} else {
+			m.actionCursor = 0 // Wrap to top
+		}
+		return nil, false
+
+	case "esc":
+		// Cancel action menu
+		m.menuMode = false
+		m.selectedFont = nil
+		m.actionItems = nil
+		m.actionCursor = 0
+		return nil, false
+
+	case "enter":
+		// Execute selected action
+		if m.actionCursor < len(m.actionItems) {
+			action := m.actionItems[m.actionCursor]
+			switch action {
+			case "Install", "Reinstall":
+				// Return command to install single font
+				cmd := m.installSingleFont(m.selectedFont.DisplayName)
+				m.menuMode = false
+				m.selectedFont = nil
+				m.actionItems = nil
+				m.actionCursor = 0
+				return cmd, false
+			case "Uninstall":
+				// Return command to uninstall font
+				cmd := m.uninstallSingleFont(m.selectedFont.DisplayName)
+				m.menuMode = false
+				m.selectedFont = nil
+				m.actionItems = nil
+				m.actionCursor = 0
+				return cmd, false
+			case "Back":
+				m.menuMode = false
+				m.selectedFont = nil
+				m.actionItems = nil
+				m.actionCursor = 0
+				return nil, false
+			}
 		}
 	}
 
@@ -434,4 +554,30 @@ func (m NerdFontsModel) IsBackSelected() bool {
 		return m.cursor == fontCount+1 // Install All + Back
 	}
 	return m.cursor == fontCount // Just Back
+}
+
+// NerdFontInstallMsg signals a single font installation request
+type NerdFontInstallMsg struct {
+	FontName string
+	Action   string // "install", "reinstall", "uninstall"
+}
+
+// installSingleFont returns a command that triggers single font installation
+func (m *NerdFontsModel) installSingleFont(fontName string) tea.Cmd {
+	return func() tea.Msg {
+		return NerdFontInstallMsg{
+			FontName: fontName,
+			Action:   "install",
+		}
+	}
+}
+
+// uninstallSingleFont returns a command that triggers single font uninstallation
+func (m *NerdFontsModel) uninstallSingleFont(fontName string) tea.Cmd {
+	return func() tea.Msg {
+		return NerdFontInstallMsg{
+			FontName: fontName,
+			Action:   "uninstall",
+		}
+	}
 }
