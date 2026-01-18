@@ -43,8 +43,7 @@ Please navigate to the ghostty-config-files repository.
 ### Step 1: Install Dependencies
 
 ```bash
-cd astro-website
-npm install
+(cd astro-website && npm install)
 ```
 
 Report any dependency installation issues.
@@ -52,10 +51,10 @@ Report any dependency installation issues.
 ### Step 2: Build Site
 
 ```bash
-# Run the Astro build
-npm run build
+# Run the Astro build (subshell isolates directory change)
+(cd astro-website && npm run build)
 
-# Or use the local workflow script
+# Or use the local workflow script (runs from repo root)
 # ./.runners-local/workflows/astro-build-local.sh
 ```
 
@@ -66,7 +65,7 @@ Capture build output for metrics.
 **CRITICAL**: This file MUST exist for GitHub Pages to serve _astro/ assets correctly.
 
 ```bash
-# Check for .nojekyll in docs/
+# Check for .nojekyll in docs/ (from repo root)
 if [ ! -f "docs/.nojekyll" ]; then
   echo "WARNING: .nojekyll missing - creating it now"
   touch docs/.nojekyll
