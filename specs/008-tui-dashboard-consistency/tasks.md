@@ -1,455 +1,263 @@
-# TUI Dashboard Consistency - Implementation Tasks
+# Tasks: TUI Dashboard Consistency
 
-## Task Summary
+**Input**: Design documents from `/specs/008-tui-dashboard-consistency/`
+**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-| ID | Task | Priority | Effort | Status |
-|----|------|----------|--------|--------|
-| T01 | Route table tools through ViewToolDetail | P1 | Low | TODO |
-| T02 | Create ViewBatchPreview component | P1 | Medium | TODO |
-| T03 | Add Update All preview screen | P2 | Low | TODO |
-| T04 | Add Install All (Extras) preview | P2 | Low | TODO |
-| T05 | Add Install All (Nerd Fonts) preview | P2 | Low | TODO |
-| T06 | Convert Claude Config to ViewInstaller | P1 | Medium | TODO |
-| T07 | Remove ViewAppMenu (cleanup) | P3 | Low | TODO |
-| T08 | Update ViewState enum | P1 | Low | TODO |
-| T09 | Add tests for new components | P2 | Medium | TODO |
-| T10 | Update documentation | P3 | Low | TODO |
+**Tests**: Not explicitly requested in spec - tests omitted per Task Generation Rules.
 
----
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
-## Detailed Tasks
+## Format: `[ID] [P?] [Story] Description`
 
-### T01: Route Table Tools Through ViewToolDetail
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3, US4)
+- Include exact file paths in descriptions
 
-**Priority**: P1 | **Effort**: Low | **Risk**: Low
+## Path Conventions
 
-**Description**: Change table tool selection to navigate to ViewToolDetail instead of ViewAppMenu.
-
-**File**: `tui/internal/ui/model.go`
-
-**Current Code** (lines 1033-1037):
-```go
-if m.mainCursor < tableToolCount {
-    m.selectedTool = tableTools[m.mainCursor]
-    m.currentView = ViewAppMenu
-    m.menuCursor = 0
-}
-```
-
-**New Code**:
-```go
-if m.mainCursor < tableToolCount {
-    tool := tableTools[m.mainCursor]
-    toolDetail := NewToolDetailModel(tool, ViewDashboard, m.state, m.cache, m.repoRoot)
-    m.toolDetail = &toolDetail
-    m.toolDetailFrom = ViewDashboard
-    m.currentView = ViewToolDetail
-    return m, m.toolDetail.Init()
-}
-```
-
-**Acceptance Criteria**:
-- [ ] Selecting nodejs from table shows ViewToolDetail
-- [ ] Selecting ai_tools from table shows ViewToolDetail
-- [ ] Selecting antigravity from table shows ViewToolDetail
-- [ ] All actions (Install, Reinstall, Uninstall) work from ViewToolDetail
-- [ ] ESC returns to Dashboard
+- **TUI Application**: `tui/internal/ui/` for UI components
+- **Registry**: `tui/internal/registry/` for tool definitions
+- **Commands**: `tui/cmd/installer/` for entry point
 
 ---
 
-### T02: Create ViewBatchPreview Component
+## Phase 1: Setup
 
-**Priority**: P1 | **Effort**: Medium | **Risk**: Low
+**Purpose**: Project initialization and ViewState foundation
 
-**Description**: Create reusable component for previewing batch operations.
-
-**File**: `tui/internal/ui/batchpreview.go` (NEW)
-
-**Structure**:
-```go
-type BatchPreviewModel struct {
-    title       string           // "Install All - Preview"
-    items       []BatchItem      // Items to process
-    skipped     []BatchItem      // Items already done
-    cursor      int              // Button selection
-    confirmText string           // "Install" or "Update"
-    returnView  View             // Where to go on cancel
-}
-
-type BatchItem struct {
-    Name        string
-    Description string
-    CurrentVer  string
-    NewVer      string
-    Icon        string  // *, ^, x
-}
-
-func (m BatchPreviewModel) Init() tea.Cmd
-func (m BatchPreviewModel) Update(msg tea.Msg) (BatchPreviewModel, tea.Cmd)
-func (m BatchPreviewModel) View() string
-```
-
-**View Layout**:
-```
-+------------------------------------------------------------------+
-|  {title}                                                         |
-+------------------------------------------------------------------+
-|                                                                  |
-|  The following will be {action}:                                 |
-|                                                                  |
-|  [ ] Item 1        (description)                                 |
-|  [ ] Item 2        (description)                                 |
-|                                                                  |
-|  Already done (will skip):                                       |
-|  [*] Item 3        v1.2.3                                        |
-|                                                                  |
-|  Total: N to {action}, M already done                            |
-|                                                                  |
-|  [Cancel]    [{confirmText}]                                     |
-+------------------------------------------------------------------+
-```
-
-**Acceptance Criteria**:
-- [ ] Component compiles without errors
-- [ ] Shows list of items to process
-- [ ] Shows list of skipped items
-- [ ] Cancel button returns to previous view
-- [ ] Confirm button returns BatchConfirmMsg
+- [X] T001 Verify current build compiles with `cd tui && go build ./cmd/installer`
+- [X] T002 Add ViewBatchPreview constant to View enum in tui/internal/ui/model.go
+- [X] T003 [P] Add batchPreview field (*BatchPreviewModel) to Model struct in tui/internal/ui/model.go
 
 ---
 
-### T03: Add Update All Preview Screen
+## Phase 2: Foundational (Blocking Prerequisites)
 
-**Priority**: P2 | **Effort**: Low | **Risk**: Low
+**Purpose**: Core BatchPreviewModel component that ALL user stories depend on
 
-**Description**: Add preview before "Update All" executes.
+**⚠️ CRITICAL**: User Stories 2 and 4 cannot begin until this phase is complete
 
-**File**: `tui/internal/ui/model.go`
+- [X] T004 Create tui/internal/ui/batchpreview.go with BatchPreviewModel struct
+- [X] T005 Implement NewBatchPreviewModel constructor for tools in tui/internal/ui/batchpreview.go
+- [X] T006 Implement NewBatchPreviewModelForFonts constructor in tui/internal/ui/batchpreview.go
+- [X] T007 Implement Init() method returning nil in tui/internal/ui/batchpreview.go
+- [X] T008 Implement Update() method with keyboard navigation in tui/internal/ui/batchpreview.go
+- [X] T009 Implement View() method with item list and buttons in tui/internal/ui/batchpreview.go
+- [X] T010 Implement helper methods (IsConfirmed, IsCancelled, GetTools, GetFonts, GetReturnView) in tui/internal/ui/batchpreview.go
+- [X] T011 Add ViewBatchPreview case to View() switch in tui/internal/ui/model.go
+- [X] T012 Add ViewBatchPreview handling in Update() for key messages in tui/internal/ui/model.go
+- [X] T013 Verify batchpreview.go compiles with `cd tui && go build ./cmd/installer`
 
-**Changes**:
-1. Add `batchPreview *BatchPreviewModel` to Model
-2. In `handleEnter()` for Update All:
-   - Get tools needing updates
-   - Create BatchPreviewModel with update info
-   - Navigate to ViewBatchPreview
-
-**Current Code** (line 1054):
-```go
-if menuIndex == 0 {
-    return m.startBatchUpdate()
-}
-```
-
-**New Code**:
-```go
-if menuIndex == 0 {
-    updates := m.getToolsNeedingUpdates()
-    preview := NewBatchPreviewModel(
-        "Update All - Preview",
-        updates,
-        m.getUpToDateTools(),
-        "Update",
-        ViewDashboard,
-    )
-    m.batchPreview = &preview
-    m.currentView = ViewBatchPreview
-    return m, nil
-}
-```
-
-**Acceptance Criteria**:
-- [ ] Selecting "Update All" shows preview screen
-- [ ] Preview lists tools with current → new versions
-- [ ] Cancel returns to dashboard
-- [ ] Confirm starts batch update
+**Checkpoint**: BatchPreviewModel component ready - user story implementation can now begin
 
 ---
 
-### T04: Add Install All (Extras) Preview
+## Phase 3: User Story 1 - Consistent Tool Navigation (Priority: P1) 🎯 MVP
 
-**Priority**: P2 | **Effort**: Low | **Risk**: Low
+**Goal**: All tools (table and menu) navigate through ViewToolDetail before showing actions
 
-**Description**: Add preview before "Install All" in Extras executes.
+**Independent Test**: Select nodejs from the table and verify it shows ViewToolDetail before actions. Compare to selecting Ghostty from menu.
 
-**File**: `tui/internal/ui/model.go`
+### Implementation for User Story 1
 
-**Changes**: In extras handling section, replace immediate batch start with preview.
+- [X] T014 [US1] Locate handleEnter() function table tool handling in tui/internal/ui/model.go (~line 1033)
+- [X] T015 [US1] Replace ViewAppMenu navigation with ViewToolDetail for table tools in tui/internal/ui/model.go
+- [X] T016 [US1] Ensure ToolDetailModel receives correct returnView (ViewDashboard) in tui/internal/ui/model.go
+- [ ] T017 [US1] Verify nodejs table selection shows ViewToolDetail by running TUI manually
+- [ ] T018 [US1] Verify ai_tools table selection shows ViewToolDetail by running TUI manually
+- [ ] T019 [US1] Verify antigravity table selection shows ViewToolDetail by running TUI manually
+- [ ] T020 [US1] Verify ESC from ViewToolDetail returns to Dashboard
 
-**Current Code** (lines 455-472):
-```go
-} else if m.extras.IsInstallAllSelected() {
-    toInstall := registry.GetExtrasTools()
-    // ... starts batch immediately
-}
-```
-
-**New Code**:
-```go
-} else if m.extras.IsInstallAllSelected() {
-    allTools := registry.GetExtrasTools()
-    toInstall, alreadyInstalled := m.partitionByInstallStatus(allTools)
-    preview := NewBatchPreviewModel(
-        "Install All Extras - Preview",
-        toInstall,
-        alreadyInstalled,
-        "Install",
-        ViewExtras,
-    )
-    m.batchPreview = &preview
-    m.currentView = ViewBatchPreview
-    return m, nil
-}
-```
-
-**Acceptance Criteria**:
-- [ ] Selecting "Install All" in Extras shows preview
-- [ ] Preview distinguishes installed vs not installed
-- [ ] Cancel returns to Extras
-- [ ] Confirm starts batch install
+**Checkpoint**: User Story 1 complete - all table tools now use ViewToolDetail like menu tools
 
 ---
 
-### T05: Add Install All (Nerd Fonts) Preview
+## Phase 4: User Story 2 - Batch Operation Preview (Priority: P2)
 
-**Priority**: P2 | **Effort**: Low | **Risk**: Low
+**Goal**: "Update All" and "Install All" show preview screens before execution
 
-**Description**: Add preview before "Install All" in Nerd Fonts executes.
+**Independent Test**: Select "Update All" and verify a preview screen shows which tools will be updated before starting.
 
-**File**: `tui/internal/ui/model.go`
+### Implementation for User Story 2
 
-**Changes**: In nerdfonts handling section, replace immediate start with preview.
+- [X] T021 [US2] Locate startBatchUpdate call in handleEnter() in tui/internal/ui/model.go (~line 1054)
+- [X] T022 [US2] Create helper function getToolsNeedingUpdates() returning []*registry.Tool in tui/internal/ui/model.go
+- [X] T023 [US2] Replace immediate startBatchUpdate with BatchPreviewModel creation in tui/internal/ui/model.go
+- [X] T024 [US2] Add status map copy for preview display in tui/internal/ui/model.go
+- [X] T025 [US2] Handle BatchPreview confirmation to start batch update in tui/internal/ui/model.go
+- [X] T026 [US2] Locate Extras Install All handling in tui/internal/ui/model.go (~line 455)
+- [X] T027 [US2] Replace immediate batch start with BatchPreviewModel for Extras Install All in tui/internal/ui/model.go
+- [ ] T028 [US2] Verify "Update All" shows preview by running TUI manually
+- [ ] T029 [US2] Verify "Install All" (Extras) shows preview by running TUI manually
+- [ ] T030 [US2] Verify Cancel returns to origin view in both cases
 
-**Acceptance Criteria**:
-- [ ] Selecting "Install All" in Nerd Fonts shows preview
-- [ ] Preview lists fonts to install vs already installed
-- [ ] Cancel returns to Nerd Fonts
-- [ ] Confirm starts batch install
-
----
-
-### T06: Convert Claude Config to ViewInstaller
-
-**Priority**: P1 | **Effort**: Medium | **Risk**: Medium
-
-**Description**: Keep Claude Config installation within TUI using ViewInstaller.
-
-**Files**:
-- `tui/internal/registry/registry.go` - Add Claude Config tool entry
-- `tui/internal/ui/model.go` - Change handler to use ViewInstaller
-
-**Current Code** (model.go:786-797):
-```go
-func installClaudeConfigCmd(repoRoot string) tea.Cmd {
-    scriptPath := repoRoot + "/scripts/install-claude-config.sh"
-    c := exec.Command("bash", scriptPath)
-    return tea.ExecProcess(c, func(err error) tea.Msg {
-        return claudeConfigResultMsg{success: err == nil, err: err}
-    })
-}
-```
-
-**New Approach**:
-1. Create registry entry:
-```go
-{
-    ID:          "claude_config",
-    DisplayName: "Claude Config",
-    Category:    "extras",
-    Description: "Install Claude Code skills and agents",
-    Scripts: ToolScripts{
-        Check:   "scripts/000-check/check_claude_config.sh",
-        Install: "scripts/install-claude-config.sh",
-    },
-}
-```
-
-2. Change handler:
-```go
-} else if m.extras.IsClaudeConfigSelected() {
-    tool, _ := registry.GetTool("claude_config")
-    return m, func() tea.Msg {
-        return startInstallMsg{tool: tool, resume: false}
-    }
-}
-```
-
-**Acceptance Criteria**:
-- [ ] Claude Config appears as tool entry
-- [ ] Selecting it shows ViewInstaller
-- [ ] Installation progress shown in TUI
-- [ ] Success/failure displayed in TUI
-- [ ] ESC returns to Extras
+**Checkpoint**: User Story 2 complete - batch operations show preview before execution
 
 ---
 
-### T07: Remove ViewAppMenu (Cleanup)
+## Phase 5: User Story 3 - Claude Config In-TUI Progress (Priority: P1)
 
-**Priority**: P3 | **Effort**: Low | **Risk**: Low
+**Goal**: "Install Claude Config" shows progress within TUI instead of exiting to terminal
 
-**Description**: Remove ViewAppMenu after all tools use ViewToolDetail.
+**Independent Test**: Select "Install Claude Config" from Extras and verify progress is shown in a TUI view.
 
-**File**: `tui/internal/ui/model.go`
+### Implementation for User Story 3
 
-**Changes**:
-1. Remove ViewAppMenu from View enum
-2. Remove viewAppMenu() function
-3. Remove ViewAppMenu case from View() switch
-4. Remove ViewAppMenu case from Update() switch
-5. Remove handleAppMenuEnter() function
-6. Update menuCursor references
+- [X] T031 [US3] Locate IsClaudeConfigSelected handling in extras section of tui/internal/ui/model.go
+- [X] T032 [US3] Create pseudo-tool struct for Claude Config inline in tui/internal/ui/model.go
+- [X] T033 [US3] Remove tea.ExecProcess call for Claude Config in tui/internal/ui/model.go
+- [X] T034 [US3] Create InstallerModel with pseudo-tool for Claude Config in tui/internal/ui/model.go
+- [X] T035 [US3] Set currentView to ViewInstaller and emit start message in tui/internal/ui/model.go
+- [ ] T036 [US3] Verify "Install Claude Config" shows ViewInstaller by running TUI manually
+- [ ] T037 [US3] Verify installation progress displays in TUI
+- [ ] T038 [US3] Verify ESC returns to Extras after completion
 
-**Prerequisite**: T01 must be complete and verified
-
-**Acceptance Criteria**:
-- [ ] ViewAppMenu removed from enum
-- [ ] All ViewAppMenu code removed
-- [ ] Code compiles without errors
-- [ ] All tools still work via ViewToolDetail
+**Checkpoint**: User Story 3 complete - Claude Config installation stays within TUI
 
 ---
 
-### T08: Update ViewState Enum
+## Phase 6: User Story 4 - Nerd Fonts Install All Preview (Priority: P2)
 
-**Priority**: P1 | **Effort**: Low | **Risk**: Low
+**Goal**: "Install All" in Nerd Fonts shows preview of fonts to be installed
 
-**Description**: Add new ViewStates to the enum.
+**Independent Test**: From Nerd Fonts with some fonts missing, select "Install All" and verify preview is shown.
 
-**File**: `tui/internal/ui/model.go`
+### Implementation for User Story 4
 
-**Current Enum**:
-```go
-const (
-    ViewDashboard View = iota
-    ViewExtras
-    ViewNerdFonts
-    ViewMCPServers
-    ViewMCPPrereq
-    ViewSecretsWizard
-    ViewAppMenu
-    ViewMethodSelect
-    ViewInstaller
-    ViewDiagnostics
-    ViewConfirm
-    ViewToolDetail
-)
-```
+- [X] T039 [US4] Locate IsInstallAllSelected handling in nerdfonts section of tui/internal/ui/model.go
+- [X] T040 [US4] Extract missing fonts from NerdFontsModel state in tui/internal/ui/model.go
+- [X] T041 [US4] Create BatchPreviewModelForFonts with missing fonts list in tui/internal/ui/model.go
+- [X] T042 [US4] Handle confirmation to start nerdfonts batch install in tui/internal/ui/model.go
+- [ ] T043 [US4] Verify "Install All" (Nerd Fonts) shows preview by running TUI manually
+- [ ] T044 [US4] Verify preview lists only missing fonts, not all fonts
+- [ ] T045 [US4] Verify Cancel returns to ViewNerdFonts
 
-**New Enum**:
-```go
-const (
-    ViewDashboard View = iota
-    ViewExtras
-    ViewNerdFonts
-    ViewMCPServers
-    ViewMCPPrereq
-    ViewSecretsWizard
-    ViewAppMenu        // DEPRECATED - to be removed in T07
-    ViewMethodSelect
-    ViewInstaller
-    ViewDiagnostics
-    ViewConfirm
-    ViewToolDetail
-    ViewBatchPreview   // NEW
-)
-```
-
-**Acceptance Criteria**:
-- [ ] ViewBatchPreview added to enum
-- [ ] View() switch handles ViewBatchPreview
-- [ ] Update() handles ViewBatchPreview messages
+**Checkpoint**: User Story 4 complete - Nerd Fonts batch install shows preview
 
 ---
 
-### T09: Add Tests for New Components
+## Phase 7: Polish & Cross-Cutting Concerns
 
-**Priority**: P2 | **Effort**: Medium | **Risk**: Low
+**Purpose**: Cleanup and verification
 
-**Description**: Add unit tests for BatchPreviewModel.
-
-**File**: `tui/internal/ui/batchpreview_test.go` (NEW)
-
-**Test Cases**:
-1. `TestBatchPreviewModel_Init` - Initializes correctly
-2. `TestBatchPreviewModel_View` - Renders expected layout
-3. `TestBatchPreviewModel_Cancel` - Returns to previous view
-4. `TestBatchPreviewModel_Confirm` - Sends BatchConfirmMsg
-5. `TestBatchPreviewModel_EmptyItems` - Handles empty list
-6. `TestBatchPreviewModel_Navigation` - Keyboard navigation works
-
-**Acceptance Criteria**:
-- [ ] All tests pass
-- [ ] Tests cover happy path and edge cases
-- [ ] Tests run with `go test ./...`
+- [ ] T046 Remove unused ViewAppMenu code from tui/internal/ui/model.go (after all stories verified)
+- [X] T047 [P] Search for remaining tea.ExecProcess usage to ensure only sudo operations remain
+- [X] T048 Run `cd tui && go build ./cmd/installer` to verify final build
+- [ ] T049 Manual verification of all 26 menu items per research.md inventory
+- [ ] T050 [P] Update quickstart.md verification steps if needed in specs/008-tui-dashboard-consistency/quickstart.md
 
 ---
 
-### T10: Update Documentation
+## Dependencies & Execution Order
 
-**Priority**: P3 | **Effort**: Low | **Risk**: Low
+### Phase Dependencies
 
-**Description**: Update TUI documentation to reflect changes.
+- **Setup (Phase 1)**: No dependencies - can start immediately
+- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS User Stories 2 and 4
+- **User Story 1 (Phase 3)**: Can start after Setup (no BatchPreview needed)
+- **User Story 2 (Phase 4)**: Depends on Foundational (uses BatchPreviewModel)
+- **User Story 3 (Phase 5)**: Can start after Setup (no BatchPreview needed)
+- **User Story 4 (Phase 6)**: Depends on Foundational (uses BatchPreviewModelForFonts)
+- **Polish (Phase 7)**: Depends on all user stories being complete
 
-**Files**:
-- `.claude/instructions-for-agents/tools/tui-installer.md`
-- `README.md` (if TUI section exists)
-
-**Changes**:
-1. Document new ViewStates
-2. Document consistent navigation flow
-3. Update keyboard shortcut reference
-4. Add preview screen screenshots/diagrams
-
-**Acceptance Criteria**:
-- [ ] Documentation updated
-- [ ] All ViewStates documented
-- [ ] Navigation flow documented
-
----
-
-## Implementation Order
+### User Story Dependencies
 
 ```
-Phase 1: Foundation (P1 items)
-├── T08: Update ViewState enum
-├── T02: Create ViewBatchPreview component
-├── T01: Route table tools through ViewToolDetail
-└── T06: Convert Claude Config to ViewInstaller
+Setup (Phase 1)
+    │
+    ├──────────────────────────────────┐
+    │                                  │
+    ▼                                  ▼
+Foundational (Phase 2)          US1 (Phase 3) - P1
+    │                                  │
+    ├─────────────┐                    │
+    │             │                    │
+    ▼             ▼                    │
+US2 (Phase 4)  US4 (Phase 6)           │
+    │             │                    │
+    └─────────────┴────────────────────┘
+                  │
+                  ▼
+           US3 (Phase 5) - P1
+                  │
+                  ▼
+           Polish (Phase 7)
+```
 
-Phase 2: Preview Screens (P2 items)
-├── T03: Add Update All preview
-├── T04: Add Install All (Extras) preview
-├── T05: Add Install All (Nerd Fonts) preview
-└── T09: Add tests
+### Parallel Opportunities
 
-Phase 3: Cleanup (P3 items)
-├── T07: Remove ViewAppMenu
-└── T10: Update documentation
+**After Setup:**
+- US1 and US3 can start immediately (both P1, independent)
+- Foundational (Phase 2) can run in parallel with US1/US3
+
+**After Foundational:**
+- US2 and US4 can run in parallel (both P2, independent)
+
+### Within Each Phase
+
+- Tasks marked [P] within a phase can run in parallel
+- Sequential tasks depend on prior task completion
+
+---
+
+## Parallel Example: Setup + User Story 1 + User Story 3
+
+```bash
+# These can run in parallel after T001 completes:
+
+# Thread 1: Foundational work
+Task: "T004 Create tui/internal/ui/batchpreview.go..."
+Task: "T005 Implement NewBatchPreviewModel..."
+# ...continues through T013
+
+# Thread 2: User Story 1 (table tools)
+Task: "T014 [US1] Locate handleEnter() function..."
+Task: "T015 [US1] Replace ViewAppMenu navigation..."
+# ...continues through T020
+
+# Thread 3: User Story 3 (Claude Config)
+Task: "T031 [US3] Locate IsClaudeConfigSelected..."
+Task: "T032 [US3] Create pseudo-tool struct..."
+# ...continues through T038
 ```
 
 ---
 
-## Estimated Timeline
+## Implementation Strategy
 
-| Phase | Tasks | Effort |
-|-------|-------|--------|
-| Phase 1 | T08, T02, T01, T06 | ~4 hours |
-| Phase 2 | T03, T04, T05, T09 | ~3 hours |
-| Phase 3 | T07, T10 | ~1 hour |
-| **Total** | | **~8 hours** |
+### MVP First (User Stories 1 + 3)
+
+1. Complete Phase 1: Setup
+2. Start Phase 3: User Story 1 (table tool navigation) - HIGH IMPACT
+3. Start Phase 5: User Story 3 (Claude Config in TUI) - HIGH IMPACT
+4. **STOP and VALIDATE**: Test both independently
+5. These are both P1 priority and can be delivered immediately
+
+### Incremental Delivery
+
+1. Setup + US1 + US3 → Test → Deploy (MVP - 77% → 92% consistency)
+2. Add Foundational + US2 + US4 → Test → Deploy (100% consistency)
+3. Polish → Final cleanup and verification
+
+### Single Developer Strategy
+
+1. Setup (30 min)
+2. User Story 1 (1 hour) - biggest user impact
+3. User Story 3 (1 hour) - stops TUI exits
+4. Foundational (1.5 hours)
+5. User Story 2 (1 hour)
+6. User Story 4 (45 min)
+7. Polish (30 min)
+
+**Total: ~6 hours**
 
 ---
 
-## Verification Checklist
+## Notes
 
-After all tasks complete:
-
-- [ ] All 26 menu items tested manually
-- [ ] Table tools go through ViewToolDetail
-- [ ] "Update All" shows preview
-- [ ] "Install All" (Extras) shows preview
-- [ ] "Install All" (Nerd Fonts) shows preview
-- [ ] "Install Claude Config" stays in TUI
-- [ ] ViewAppMenu removed
-- [ ] `go build` succeeds
-- [ ] `go test ./...` passes
-- [ ] No tea.ExecProcess for user operations (only sudo)
+- [P] tasks = different files, no dependencies on incomplete tasks
+- [Story] label maps task to specific user story for traceability
+- Each user story should be independently completable and testable
+- Commit after each task or logical group
+- Stop at any checkpoint to validate story independently
+- All file paths are relative to repository root

@@ -1,4 +1,14 @@
-# TUI Dashboard Consistency - Research & Gap Analysis
+# Research: TUI Dashboard Consistency
+
+**Feature Branch**: `008-tui-dashboard-consistency`
+**Research Date**: 2026-01-20
+**Status**: Complete
+
+## Overview
+
+This document captures research findings for implementing consistent navigation patterns across the TUI dashboard, batch operation previews, and in-TUI progress for Claude Config installation.
+
+---
 
 ## Current State Analysis
 
@@ -11,7 +21,7 @@
 | 3 | Dashboard Table | Google Antigravity | Dashboard → ViewAppMenu → ViewInstaller | Dashboard → ViewToolDetail → ViewInstaller | YES |
 | 4 | Dashboard Menu | Ghostty | Dashboard → ViewToolDetail → ViewInstaller | (same) | NO |
 | 5 | Dashboard Menu | Feh | Dashboard → ViewToolDetail → ViewInstaller | (same) | NO |
-| 6 | Dashboard Menu | Update All | Dashboard → ViewInstaller (immediate) | Dashboard → ViewUpdatePreview → ViewInstaller | YES |
+| 6 | Dashboard Menu | Update All | Dashboard → ViewInstaller (immediate) | Dashboard → ViewBatchPreview → ViewInstaller | YES |
 | 7 | Dashboard Menu | Nerd Fonts | Dashboard → ViewNerdFonts | (same) | NO |
 | 8 | Dashboard Menu | Extras | Dashboard → ViewExtras | (same) | NO |
 | 9 | Dashboard Menu | Boot Diagnostics | Dashboard → ViewDiagnostics | (same) | NO |
