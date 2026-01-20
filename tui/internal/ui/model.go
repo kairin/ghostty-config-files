@@ -33,6 +33,7 @@ const (
 	ViewDiagnostics
 	ViewConfirm
 	ViewToolDetail
+	ViewBatchPreview // NEW: Batch operation preview screen
 )
 
 // sharedState holds mutex-protected data that needs to survive model copies
@@ -76,6 +77,9 @@ type Model struct {
 	methodSelector *MethodSelectorModel
 	toolDetail     *ToolDetailModel
 	toolDetailFrom View // View to return to when exiting tool detail
+
+	// Batch preview component (for Install All / Update All previews)
+	batchPreview *BatchPreviewModel
 
 	// Pending uninstall (set when confirmation shown)
 	uninstallTool *registry.Tool
@@ -453,27 +457,43 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.extras = nil
 					return m, nil
 				} else if m.extras.IsInstallAllSelected() {
-					// Install All reinstalls all extras tools regardless of status
+					// Install All - show preview first
 					toInstall := registry.GetExtrasTools()
 
 					if len(toInstall) == 0 {
 						return m, nil
 					}
 
-					// Start batch installation
-					m.batchQueue = toInstall
-					m.batchIndex = 0
-					m.batchMode = true
-
-					// Start first tool installation
-					firstTool := m.batchQueue[0]
-					m.selectedTool = firstTool
-					return m, func() tea.Msg {
-						return startInstallMsg{tool: firstTool, resume: false}
+					// Copy status map for preview display
+					m.state.mu.RLock()
+					statuses := make(map[string]*cache.ToolStatus)
+					for k, v := range m.state.statuses {
+						statuses[k] = v
 					}
+					m.state.mu.RUnlock()
+					preview := NewBatchPreviewModel(toInstall, statuses, "Install", ViewExtras)
+					m.batchPreview = &preview
+					m.currentView = ViewBatchPreview
+					return m, nil
 				} else if m.extras.IsClaudeConfigSelected() {
-					// Install Claude Config (skills + agents)
-					return m, installClaudeConfigCmd(m.repoRoot)
+					// Install Claude Config (skills + agents) - use InstallerModel for in-TUI progress
+					claudeConfigTool := &registry.Tool{
+						ID:          "claude_config",
+						DisplayName: "Claude Config",
+						Scripts: registry.ToolScripts{
+							Install: "scripts/install-claude-config.sh",
+						},
+					}
+					m.selectedTool = claudeConfigTool
+					installer := NewInstallerModel(claudeConfigTool, m.repoRoot)
+					m.installer = &installer
+					m.currentView = ViewInstaller
+
+					initCmd := m.installer.Init()
+					startCmd := func() tea.Msg {
+						return InstallerStartMsg{Resume: false}
+					}
+					return m, tea.Batch(initCmd, startCmd)
 				} else if m.extras.IsMCPServersSelected() {
 					// Navigate to MCP Servers view
 					mcpModel := NewMCPServersModel()
@@ -523,16 +543,21 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.nerdFonts = nil
 					return m, nil
 				} else if m.nerdFonts.IsInstallAllSelected() {
-					// Install All - install all Nerd Fonts
-					tool, ok := registry.GetTool("nerdfonts")
-					if !ok {
+					// Install All - show preview of fonts to be installed
+					// Get missing fonts for preview
+					var missingFonts []FontFamily
+					for _, font := range m.nerdFonts.fonts {
+						if font.Status != "Installed" {
+							missingFonts = append(missingFonts, font)
+						}
+					}
+					if len(missingFonts) == 0 {
 						return m, nil
 					}
-
-					m.selectedTool = tool
-					return m, func() tea.Msg {
-						return startInstallMsg{tool: tool, resume: false}
-					}
+					preview := NewBatchPreviewModelForFonts(missingFonts, "Install", ViewNerdFonts)
+					m.batchPreview = &preview
+					m.currentView = ViewBatchPreview
+					return m, nil
 				}
 				// Individual font selection is now handled via action menu (NerdFontInstallMsg)
 			}
@@ -683,6 +708,57 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 	}
 
+	// If batch preview is active, delegate messages to it
+	if m.currentView == ViewBatchPreview && m.batchPreview != nil {
+		newPreview, cmd := m.batchPreview.Update(msg)
+		m.batchPreview = &newPreview
+
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			switch keyMsg.String() {
+			case "enter":
+				if m.batchPreview.IsConfirmed() {
+					// Start batch operation
+					if m.batchPreview.IsFont() {
+						// Font batch - use nerdfonts tool
+						tool, _ := registry.GetTool("nerdfonts")
+						m.selectedTool = tool
+						returnView := m.batchPreview.GetReturnView()
+						m.batchPreview = nil
+						m.currentView = returnView
+						return m, func() tea.Msg {
+							return startInstallMsg{tool: tool, resume: false}
+						}
+					} else {
+						m.batchQueue = m.batchPreview.GetTools()
+						m.batchIndex = 0
+						m.batchMode = true
+						m.batchPreview = nil
+						if len(m.batchQueue) > 0 {
+							firstTool := m.batchQueue[0]
+							m.selectedTool = firstTool
+							return m, func() tea.Msg {
+								return startInstallMsg{tool: firstTool, resume: false}
+							}
+						}
+					}
+				}
+				if m.batchPreview.IsCancelled() {
+					returnView := m.batchPreview.GetReturnView()
+					m.batchPreview = nil
+					m.currentView = returnView
+					return m, nil
+				}
+			case "esc":
+				returnView := m.batchPreview.GetReturnView()
+				m.batchPreview = nil
+				m.currentView = returnView
+				return m, nil
+			}
+		}
+
+		return m, cmd
+	}
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		return m.handleKeyPress(msg)
@@ -779,20 +855,6 @@ func requestSudoAuth() tea.Cmd {
 	c := exec.Command("sudo", "-v")
 	return tea.ExecProcess(c, func(err error) tea.Msg {
 		return sudoAuthMsg{success: err == nil, err: err}
-	})
-}
-
-// installClaudeConfigCmd runs the install-claude-config.sh script
-// This installs skills to ~/.claude/commands/ and agents to ~/.claude/agents/
-// Uses tea.ExecProcess to suspend TUI and show script output directly
-func installClaudeConfigCmd(repoRoot string) tea.Cmd {
-	scriptPath := repoRoot + "/scripts/install-claude-config.sh"
-	c := exec.Command("bash", scriptPath)
-	return tea.ExecProcess(c, func(err error) tea.Msg {
-		return claudeConfigResultMsg{
-			success: err == nil,
-			err:     err,
-		}
 	})
 }
 
@@ -1031,10 +1093,13 @@ func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 		menuToolCount := len(menuTools)
 
 		if m.mainCursor < tableToolCount {
-			// Selected a tool from the table - go to app menu
-			m.selectedTool = tableTools[m.mainCursor]
-			m.currentView = ViewAppMenu
-			m.menuCursor = 0
+			// Selected a tool from the table - go to tool detail view (consistent with menu tools)
+			tool := tableTools[m.mainCursor]
+			toolDetail := NewToolDetailModel(tool, ViewDashboard, m.state, m.cache, m.repoRoot)
+			m.toolDetail = &toolDetail
+			m.toolDetailFrom = ViewDashboard
+			m.currentView = ViewToolDetail
+			return m, m.toolDetail.Init()
 		} else if m.mainCursor < tableToolCount+menuToolCount {
 			// Selected a menu tool (Ghostty or Feh) - go to tool detail view
 			menuToolIndex := m.mainCursor - tableToolCount
@@ -1052,8 +1117,22 @@ func (m Model) handleEnter() (tea.Model, tea.Cmd) {
 			// If updates available, "Update All" is at index 0
 			if updateCount > 0 && !m.loading {
 				if menuIndex == 0 {
-					// "Update All" selected
-					return m.startBatchUpdate()
+					// "Update All" selected - show preview first
+					toUpdate := m.getToolsNeedingUpdates()
+					if len(toUpdate) == 0 {
+						return m, nil
+					}
+					// Copy status map for preview display
+					m.state.mu.RLock()
+					statuses := make(map[string]*cache.ToolStatus)
+					for k, v := range m.state.statuses {
+						statuses[k] = v
+					}
+					m.state.mu.RUnlock()
+					preview := NewBatchPreviewModel(toUpdate, statuses, "Update", ViewDashboard)
+					m.batchPreview = &preview
+					m.currentView = ViewBatchPreview
+					return m, nil
 				}
 				menuIndex-- // Offset for remaining items
 			}
@@ -1186,6 +1265,11 @@ func (m Model) View() string {
 	case ViewToolDetail:
 		if m.toolDetail != nil {
 			return m.toolDetail.View()
+		}
+		return m.viewDashboard()
+	case ViewBatchPreview:
+		if m.batchPreview != nil {
+			return m.batchPreview.View()
 		}
 		return m.viewDashboard()
 	default:
