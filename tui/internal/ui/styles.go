@@ -155,6 +155,32 @@ var (
 
 	IssueNotFixableStyle = lipgloss.NewStyle().
 				Foreground(ColorMuted)
+
+	// SpecKit Updater styles
+	SpecKitHeaderStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(ColorHighlight).
+				MarginTop(1).
+				MarginBottom(1)
+
+	SpecKitBoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(ColorHighlight).
+			Padding(0, 1)
+
+	// Diff view styles
+	DiffAddedStyle = lipgloss.NewStyle().
+			Foreground(ColorSuccess)
+
+	DiffRemovedStyle = lipgloss.NewStyle().
+				Foreground(ColorError)
+
+	DiffContextStyle = lipgloss.NewStyle().
+				Foreground(ColorMuted)
+
+	DiffHeaderStyle = lipgloss.NewStyle().
+			Foreground(ColorHighlight).
+			Bold(true)
 )
 
 // GetStatusStyle returns the appropriate style for a status string

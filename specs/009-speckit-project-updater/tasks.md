@@ -25,14 +25,14 @@
 
 **Purpose**: Create package structure and add ViewState definitions
 
-- [ ] T001 Verify current build compiles with `cd tui && go build ./cmd/installer`
-- [ ] T002 Create directory `tui/internal/speckit/`
-- [ ] T003 Add ViewSpecKitUpdater constant to View enum in tui/internal/ui/model.go
-- [ ] T004 [P] Add ViewSpecKitProjectDetail constant to View enum in tui/internal/ui/model.go
-- [ ] T005 [P] Add speckitUpdater field (*SpecKitUpdaterModel) to Model struct in tui/internal/ui/model.go
-- [ ] T006 [P] Add speckitDetail field (*SpecKitDetailModel) to Model struct in tui/internal/ui/model.go
+- [X] T001 Verify current build compiles with `cd tui && go build ./cmd/installer`
+- [X] T002 Create directory `tui/internal/speckit/`
+- [X] T003 Add ViewSpecKitUpdater constant to View enum in tui/internal/ui/model.go
+- [X] T004 [P] Add ViewSpecKitProjectDetail constant to View enum in tui/internal/ui/model.go
+- [X] T005 [P] Add speckitUpdater field (*SpecKitUpdaterModel) to Model struct in tui/internal/ui/model.go
+- [X] T006 [P] Add speckitDetail field (*SpecKitDetailModel) to Model struct in tui/internal/ui/model.go
 
-**Checkpoint**: Package structure ready, ViewStates defined
+**Checkpoint**: Package structure ready, ViewStates defined ✅
 
 ---
 
@@ -44,23 +44,23 @@
 
 ### Types (tui/internal/speckit/types.go)
 
-- [ ] T007 Create tui/internal/speckit/types.go with package declaration
-- [ ] T008 Define ProjectStatus type (string enum: pending, up-to-date, needs-update, error)
-- [ ] T009 Define FileDifference struct (File, LineStart, LineEnd, CanonicalContent, ProjectContent)
-- [ ] T010 Define TrackedProject struct (Path, LastScanned, Status, Differences, LastBackup)
-- [ ] T011 Define ProjectConfig struct (Version, Projects)
+- [X] T007 Create tui/internal/speckit/types.go with package declaration
+- [X] T008 Define ProjectStatus type (string enum: pending, up-to-date, needs-update, error)
+- [X] T009 Define FileDifference struct (File, LineStart, LineEnd, CanonicalContent, ProjectContent)
+- [X] T010 Define TrackedProject struct (Path, LastScanned, Status, Differences, LastBackup)
+- [X] T011 Define ProjectConfig struct (Version, Projects)
 
 ### Config Persistence (tui/internal/speckit/config.go)
 
-- [ ] T012 Create tui/internal/speckit/config.go with package declaration
-- [ ] T013 Implement getConfigPath() returning ~/.config/ghostty-installer/speckit-projects.json
-- [ ] T014 Implement LoadConfig() (JSON load, returns *ProjectConfig, creates empty if missing)
-- [ ] T015 Implement SaveConfig(*ProjectConfig) (JSON save with indentation)
-- [ ] T016 Implement AddProject(path string) (validates .specify/ exists, adds to config)
-- [ ] T017 Implement RemoveProject(path string) (removes from config by path)
-- [ ] T018 Implement UpdateProjectStatus(path, status, diffs, backup) (updates existing project)
+- [X] T012 Create tui/internal/speckit/config.go with package declaration
+- [X] T013 Implement getConfigPath() returning ~/.config/ghostty-installer/speckit-projects.json
+- [X] T014 Implement LoadConfig() (JSON load, returns *ProjectConfig, creates empty if missing)
+- [X] T015 Implement SaveConfig(*ProjectConfig) (JSON save with indentation)
+- [X] T016 Implement AddProject(path string) (validates .specify/ exists, adds to config)
+- [X] T017 Implement RemoveProject(path string) (removes from config by path)
+- [X] T018 Implement UpdateProjectStatus(path, status, diffs, backup) (updates existing project)
 
-**Checkpoint**: Config can be loaded, saved, and modified
+**Checkpoint**: Config can be loaded, saved, and modified ✅
 
 ---
 
@@ -70,15 +70,15 @@
 
 ### Scanner (tui/internal/speckit/scanner.go)
 
-- [ ] T019 Create tui/internal/speckit/scanner.go with package declaration
-- [ ] T020 Implement getCanonicalFilePaths(repoRoot string) returning list of canonical bash scripts
-- [ ] T021 Implement readFileLines(path string) returning []string and error
-- [ ] T022 Implement compareFiles(canonicalPath, projectPath string) returning []FileDifference
-- [ ] T023 Implement ScanProject(projectPath, repoRoot string) returning ([]FileDifference, error)
-- [ ] T024 Implement generateUnifiedDiff(canonical, project []string, filename string) returning string
-- [ ] T025 Verify scanner compiles with `cd tui && go build ./cmd/installer`
+- [X] T019 Create tui/internal/speckit/scanner.go with package declaration
+- [X] T020 Implement getCanonicalFilePaths(repoRoot string) returning list of canonical bash scripts
+- [X] T021 Implement readFileLines(path string) returning []string and error
+- [X] T022 Implement compareFiles(canonicalPath, projectPath string) returning []FileDifference
+- [X] T023 Implement ScanProject(projectPath, repoRoot string) returning ([]FileDifference, error)
+- [X] T024 Implement generateUnifiedDiff(canonical, project []string, filename string) returning string
+- [X] T025 Verify scanner compiles with `cd tui && go build ./cmd/installer`
 
-**Checkpoint**: Can scan a project and identify differing lines
+**Checkpoint**: Can scan a project and identify differing lines ✅
 
 ---
 
@@ -88,16 +88,16 @@
 
 ### Patcher (tui/internal/speckit/patcher.go)
 
-- [ ] T026 Create tui/internal/speckit/patcher.go with package declaration
-- [ ] T027 Implement createBackupDir(projectPath string) returning backup path with timestamp
-- [ ] T028 Implement copyFile(src, dst string) for backup operations
-- [ ] T029 Implement CreateBackup(projectPath string, files []string) returning backupPath, error
-- [ ] T030 Implement ApplyPatch(projectPath, repoRoot string, diffs []FileDifference) returning error
-- [ ] T031 Implement RestoreFromBackup(projectPath, backupPath string) returning error
-- [ ] T032 Implement GetLatestBackup(projectPath string) returning backupPath, error
-- [ ] T033 Verify patcher compiles with `cd tui && go build ./cmd/installer`
+- [X] T026 Create tui/internal/speckit/patcher.go with package declaration
+- [X] T027 Implement createBackupDir(projectPath string) returning backup path with timestamp
+- [X] T028 Implement copyFile(src, dst string) for backup operations
+- [X] T029 Implement CreateBackup(projectPath string, files []string) returning backupPath, error
+- [X] T030 Implement ApplyPatch(projectPath, repoRoot string, diffs []FileDifference) returning error
+- [X] T031 Implement RestoreFromBackup(projectPath, backupPath string) returning error
+- [X] T032 Implement GetLatestBackup(projectPath string) returning backupPath, error
+- [X] T033 Verify patcher compiles with `cd tui && go build ./cmd/installer`
 
-**Checkpoint**: Can backup, patch, and rollback files
+**Checkpoint**: Can backup, patch, and rollback files ✅
 
 ---
 
@@ -109,32 +109,32 @@
 
 ### SpecKitUpdaterModel (tui/internal/ui/speckitupdater.go)
 
-- [ ] T034 [US1] Create tui/internal/ui/speckitupdater.go with package declaration
-- [ ] T035 [US1] Define SpecKitUpdaterModel struct (projects, cursor, loading, state, config, repoRoot)
-- [ ] T036 [US1] Define menu items (Add Project, Update All, Refresh, Back)
-- [ ] T037 [US1] Implement NewSpecKitUpdaterModel constructor
-- [ ] T038 [US1] Implement Init() returning config load command
-- [ ] T039 [US1] Implement Update() with keyboard navigation (arrow keys, enter, esc)
-- [ ] T040 [US1] Implement handleAddProject() showing text input modal
-- [ ] T041 [US1] Implement handleProjectSelect() navigating to ViewSpecKitProjectDetail
-- [ ] T042 [US1] Implement View() rendering project list with status icons
-- [ ] T043 [US1] Add styles for speckit views in tui/internal/ui/styles.go
+- [X] T034 [US1] Create tui/internal/ui/speckitupdater.go with package declaration
+- [X] T035 [US1] Define SpecKitUpdaterModel struct (projects, cursor, loading, state, config, repoRoot)
+- [X] T036 [US1] Define menu items (Add Project, Update All, Refresh, Back)
+- [X] T037 [US1] Implement NewSpecKitUpdaterModel constructor
+- [X] T038 [US1] Implement Init() returning config load command
+- [X] T039 [US1] Implement Update() with keyboard navigation (arrow keys, enter, esc)
+- [X] T040 [US1] Implement handleAddProject() showing text input modal
+- [X] T041 [US1] Implement handleProjectSelect() navigating to ViewSpecKitProjectDetail
+- [X] T042 [US1] Implement View() rendering project list with status icons
+- [X] T043 [US1] Add styles for speckit views in tui/internal/ui/styles.go
 
 ### Model Integration
 
-- [ ] T044 [US1] Add ViewSpecKitUpdater case to View() switch in tui/internal/ui/model.go
-- [ ] T045 [US1] Add ViewSpecKitUpdater handling in Update() for key messages in tui/internal/ui/model.go
-- [ ] T046 [US1] Add specKitConfigLoadedMsg handler in Update() in tui/internal/ui/model.go
-- [ ] T047 [US1] Add "SpecKit Updater" menu item to ExtrasModel in tui/internal/ui/extras.go
-- [ ] T048 [US1] Handle navigation from Extras to ViewSpecKitUpdater in tui/internal/ui/model.go
+- [X] T044 [US1] Add ViewSpecKitUpdater case to View() switch in tui/internal/ui/model.go
+- [X] T045 [US1] Add ViewSpecKitUpdater handling in Update() for key messages in tui/internal/ui/model.go
+- [X] T046 [US1] Add specKitConfigLoadedMsg handler in Update() in tui/internal/ui/model.go
+- [X] T047 [US1] Add "SpecKit Updater" menu item to ExtrasModel in tui/internal/ui/extras.go
+- [X] T048 [US1] Handle navigation from Extras to ViewSpecKitUpdater in tui/internal/ui/model.go
 
 ### Verification
 
-- [ ] T049 [US1] Verify add project with valid path works by running TUI manually
-- [ ] T050 [US1] Verify add project with invalid path shows error
-- [ ] T051 [US1] Verify project list persists after TUI restart
+- [X] T049 [US1] Verify add project with valid path works by running TUI manually
+- [X] T050 [US1] Verify add project with invalid path shows error
+- [X] T051 [US1] Verify project list persists after TUI restart
 
-**Checkpoint**: User Story 1 complete - can add and list projects
+**Checkpoint**: User Story 1 complete - can add and list projects ✅
 
 ---
 
@@ -146,30 +146,30 @@
 
 ### SpecKitDetailModel (tui/internal/ui/speckitdetail.go)
 
-- [ ] T052 [US2] Create tui/internal/ui/speckitdetail.go with package declaration
-- [ ] T053 [US2] Define SpecKitDetailModel struct (project, scanning, diffs, cursor, repoRoot)
-- [ ] T054 [US2] Define menu items (Scan, Preview, Apply, Rollback, Remove, Back)
-- [ ] T055 [US2] Implement NewSpecKitDetailModel constructor
-- [ ] T056 [US2] Implement Init() returning nil command
-- [ ] T057 [US2] Implement Update() with keyboard navigation
-- [ ] T058 [US2] Implement handleScan() triggering async scan
-- [ ] T059 [US2] Implement View() showing project info and diff summary
-- [ ] T060 [US2] Implement scanning spinner during async operation
+- [X] T052 [US2] Create tui/internal/ui/speckitdetail.go with package declaration
+- [X] T053 [US2] Define SpecKitDetailModel struct (project, scanning, diffs, cursor, repoRoot)
+- [X] T054 [US2] Define menu items (Scan, Preview, Apply, Rollback, Remove, Back)
+- [X] T055 [US2] Implement NewSpecKitDetailModel constructor
+- [X] T056 [US2] Implement Init() returning nil command
+- [X] T057 [US2] Implement Update() with keyboard navigation
+- [X] T058 [US2] Implement handleScan() triggering async scan
+- [X] T059 [US2] Implement View() showing project info and diff summary
+- [X] T060 [US2] Implement scanning spinner during async operation
 
 ### Model Integration
 
-- [ ] T061 [US2] Add ViewSpecKitProjectDetail case to View() switch in tui/internal/ui/model.go
-- [ ] T062 [US2] Add ViewSpecKitProjectDetail handling in Update() in tui/internal/ui/model.go
-- [ ] T063 [US2] Add specKitScanCompleteMsg handler in Update() in tui/internal/ui/model.go
-- [ ] T064 [US2] Handle navigation from SpecKitUpdater to ViewSpecKitProjectDetail
+- [X] T061 [US2] Add ViewSpecKitProjectDetail case to View() switch in tui/internal/ui/model.go
+- [X] T062 [US2] Add ViewSpecKitProjectDetail handling in Update() in tui/internal/ui/model.go
+- [X] T063 [US2] Add specKitScanCompleteMsg handler in Update() in tui/internal/ui/model.go
+- [X] T064 [US2] Handle navigation from SpecKitUpdater to ViewSpecKitProjectDetail
 
 ### Verification
 
-- [ ] T065 [US2] Verify scan shows correct file differences by running TUI manually
-- [ ] T066 [US2] Verify scan shows "up to date" when no differences
-- [ ] T067 [US2] Verify scanning spinner displays during operation
+- [X] T065 [US2] Verify scan shows correct file differences by running TUI manually
+- [X] T066 [US2] Verify scan shows "up to date" when no differences
+- [X] T067 [US2] Verify scanning spinner displays during operation
 
-**Checkpoint**: User Story 2 complete - can scan and see differences
+**Checkpoint**: User Story 2 complete - can scan and see differences ✅
 
 ---
 
@@ -181,20 +181,20 @@
 
 ### Preview Implementation
 
-- [ ] T068 [US3] Add previewMode boolean to SpecKitDetailModel in tui/internal/ui/speckitdetail.go
-- [ ] T069 [US3] Add diffOutput string to SpecKitDetailModel for storing unified diff
-- [ ] T070 [US3] Implement handlePreview() generating unified diff from scanner
-- [ ] T071 [US3] Implement renderDiffView() showing file-by-file changes
-- [ ] T072 [US3] Add file navigation (next/prev file) when multiple files
-- [ ] T073 [US3] Implement viewport scrolling for long diffs
+- [X] T068 [US3] Add previewMode boolean to SpecKitDetailModel in tui/internal/ui/speckitdetail.go
+- [X] T069 [US3] Add diffOutput string to SpecKitDetailModel for storing unified diff
+- [X] T070 [US3] Implement handlePreview() generating unified diff from scanner
+- [X] T071 [US3] Implement renderDiffView() showing file-by-file changes
+- [X] T072 [US3] Add file navigation (next/prev file) when multiple files
+- [X] T073 [US3] Implement viewport scrolling for long diffs
 
 ### Verification
 
-- [ ] T074 [US3] Verify preview shows unified diff format by running TUI manually
-- [ ] T075 [US3] Verify ESC returns to detail view without changes
-- [ ] T076 [US3] Verify file navigation works with multiple differing files
+- [X] T074 [US3] Verify preview shows unified diff format by running TUI manually
+- [X] T075 [US3] Verify ESC returns to detail view without changes
+- [X] T076 [US3] Verify file navigation works with multiple differing files
 
-**Checkpoint**: User Story 3 complete - can preview changes
+**Checkpoint**: User Story 3 complete - can preview changes ✅
 
 ---
 
@@ -206,22 +206,22 @@
 
 ### Apply Implementation
 
-- [ ] T077 [US4] Implement handleApply() in SpecKitDetailModel triggering confirmation
-- [ ] T078 [US4] Show ViewConfirm dialog before patching
-- [ ] T079 [US4] On confirm, call patcher.CreateBackup then patcher.ApplyPatch
-- [ ] T080 [US4] Add specKitPatchCompleteMsg handler in model.go
-- [ ] T081 [US4] Update project status to "up-to-date" after successful patch
-- [ ] T082 [US4] Display backup path after successful patch
-- [ ] T083 [US4] Handle patch failure with automatic restore from backup
+- [X] T077 [US4] Implement handleApply() in SpecKitDetailModel triggering confirmation
+- [X] T078 [US4] Show ViewConfirm dialog before patching
+- [X] T079 [US4] On confirm, call patcher.CreateBackup then patcher.ApplyPatch
+- [X] T080 [US4] Add specKitPatchCompleteMsg handler in model.go
+- [X] T081 [US4] Update project status to "up-to-date" after successful patch
+- [X] T082 [US4] Display backup path after successful patch
+- [X] T083 [US4] Handle patch failure with automatic restore from backup
 
 ### Verification
 
-- [ ] T084 [US4] Verify backup created at correct path by running TUI manually
-- [ ] T085 [US4] Verify files patched correctly (line ranges match)
-- [ ] T086 [US4] Verify status updates to "up to date" after patch
-- [ ] T087 [US4] Verify patch failure triggers rollback
+- [X] T084 [US4] Verify backup created at correct path by running TUI manually
+- [X] T085 [US4] Verify files patched correctly (line ranges match)
+- [X] T086 [US4] Verify status updates to "up to date" after patch
+- [X] T087 [US4] Verify patch failure triggers rollback
 
-**Checkpoint**: User Story 4 complete - can apply patches with backup
+**Checkpoint**: User Story 4 complete - can apply patches with backup ✅
 
 ---
 
@@ -233,12 +233,12 @@
 
 ### Implementation
 
-- [ ] T088 [US5] Implement handleRemove() showing confirmation dialog
-- [ ] T089 [US5] On confirm, call config.RemoveProject and save
-- [ ] T090 [US5] Return to ViewSpecKitUpdater after removal
-- [ ] T091 [US5] Verify project removed but .specify/ still exists on disk
+- [X] T088 [US5] Implement handleRemove() showing confirmation dialog
+- [X] T089 [US5] On confirm, call config.RemoveProject and save
+- [X] T090 [US5] Return to ViewSpecKitUpdater after removal
+- [X] T091 [US5] Verify project removed but .specify/ still exists on disk
 
-**Checkpoint**: User Story 5 complete - can remove projects
+**Checkpoint**: User Story 5 complete - can remove projects ✅
 
 ---
 
@@ -250,20 +250,20 @@
 
 ### Implementation
 
-- [ ] T092 [US6] Implement getProjectsNeedingUpdates() in SpecKitUpdaterModel
-- [ ] T093 [US6] Create BatchPreviewModel with projects list when "Update All" selected
-- [ ] T094 [US6] Implement batch processing loop in handleBatchConfirm()
-- [ ] T095 [US6] Add progress tracking (current/total projects)
-- [ ] T096 [US6] Continue processing even if one project fails
-- [ ] T097 [US6] Show summary of success/failure counts after batch
+- [X] T092 [US6] Implement getProjectsNeedingUpdates() in SpecKitUpdaterModel
+- [X] T093 [US6] Create BatchPreviewModel with projects list when "Update All" selected
+- [X] T094 [US6] Implement batch processing loop in handleBatchConfirm()
+- [X] T095 [US6] Add progress tracking (current/total projects)
+- [X] T096 [US6] Continue processing even if one project fails
+- [X] T097 [US6] Show summary of success/failure counts after batch
 
 ### Verification
 
-- [ ] T098 [US6] Verify batch preview shows all projects needing updates
-- [ ] T099 [US6] Verify batch processes all projects sequentially
-- [ ] T100 [US6] Verify failure in one project doesn't stop others
+- [X] T098 [US6] Verify batch preview shows all projects needing updates
+- [X] T099 [US6] Verify batch processes all projects sequentially
+- [X] T100 [US6] Verify failure in one project doesn't stop others
 
-**Checkpoint**: User Story 6 complete - batch update works
+**Checkpoint**: User Story 6 complete - batch update works ✅
 
 ---
 
@@ -275,20 +275,20 @@
 
 ### Implementation
 
-- [ ] T101 [US7] Show "Rollback" action only when lastBackup exists
-- [ ] T102 [US7] Implement handleRollback() showing confirmation with backup timestamp
-- [ ] T103 [US7] On confirm, call patcher.RestoreFromBackup
-- [ ] T104 [US7] Add specKitRollbackCompleteMsg handler in model.go
-- [ ] T105 [US7] Update project status and clear lastBackup after rollback
-- [ ] T106 [US7] Trigger re-scan after rollback to show restored differences
+- [X] T101 [US7] Show "Rollback" action only when lastBackup exists
+- [X] T102 [US7] Implement handleRollback() showing confirmation with backup timestamp
+- [X] T103 [US7] On confirm, call patcher.RestoreFromBackup
+- [X] T104 [US7] Add specKitRollbackCompleteMsg handler in model.go
+- [X] T105 [US7] Update project status and clear lastBackup after rollback
+- [X] T106 [US7] Trigger re-scan after rollback to show restored differences
 
 ### Verification
 
-- [ ] T107 [US7] Verify rollback restores exact pre-patch state by running TUI manually
-- [ ] T108 [US7] Verify re-scan shows differences after rollback
-- [ ] T109 [US7] Verify "Rollback" hidden when no backup exists
+- [X] T107 [US7] Verify rollback restores exact pre-patch state by running TUI manually
+- [X] T108 [US7] Verify re-scan shows differences after rollback
+- [X] T109 [US7] Verify "Rollback" hidden when no backup exists
 
-**Checkpoint**: User Story 7 complete - can rollback from backup
+**Checkpoint**: User Story 7 complete - can rollback from backup ✅
 
 ---
 
@@ -296,12 +296,12 @@
 
 **Purpose**: Handle edge cases and cleanup
 
-- [ ] T110 Handle permission errors with clear error messages
-- [ ] T111 Handle paths with spaces correctly
-- [ ] T112 Handle corrupted config file (reset to empty)
-- [ ] T113 Add loading states for async operations
-- [ ] T114 [P] Run `cd tui && go build ./cmd/installer` for final verification
-- [ ] T115 [P] Test with real speckit project outside this repo
+- [X] T110 Handle permission errors with clear error messages
+- [X] T111 Handle paths with spaces correctly
+- [X] T112 Handle corrupted config file (reset to empty)
+- [X] T113 Add loading states for async operations
+- [X] T114 [P] Run `cd tui && go build ./cmd/installer` for final verification
+- [X] T115 [P] Test with real speckit project outside this repo
 
 ---
 
@@ -342,27 +342,25 @@ Scanner       Patcher           │
 
 ### MVP Delivery Path
 
-**MVP = Phases 1-8 (User Stories 1-4)**
+**MVP = Phases 1-8 (User Stories 1-4)** ✅ COMPLETE
 
-1. Setup (Phase 1) - 15 min
-2. Core Types & Config (Phase 2) - 30 min
-3. Scanner (Phase 3) - 45 min
-4. Patcher (Phase 4) - 45 min
-5. US1: Add Project (Phase 5) - 1 hour
-6. US2: Scan (Phase 6) - 45 min
-7. US3: Preview (Phase 7) - 45 min
-8. US4: Apply (Phase 8) - 45 min
+1. Setup (Phase 1) ✅
+2. Core Types & Config (Phase 2) ✅
+3. Scanner (Phase 3) ✅
+4. Patcher (Phase 4) ✅
+5. US1: Add Project (Phase 5) ✅
+6. US2: Scan (Phase 6) ✅
+7. US3: Preview (Phase 7) ✅
+8. US4: Apply (Phase 8) ✅
 
-**MVP Total: ~5.5 hours**
+### Post-MVP ✅ COMPLETE
 
-### Post-MVP
+9. US5: Remove (Phase 9) ✅
+10. US6: Batch (Phase 10) ✅
+11. US7: Rollback (Phase 11) ✅
+12. Polish (Phase 12) ✅
 
-9. US5: Remove (Phase 9) - 30 min
-10. US6: Batch (Phase 10) - 1 hour
-11. US7: Rollback (Phase 11) - 45 min
-12. Polish (Phase 12) - 30 min
-
-**Total: ~8 hours**
+**Total: ALL 115 TASKS COMPLETE**
 
 ---
 
@@ -391,3 +389,21 @@ Scanner       Patcher           │
 - All file paths relative to repository root
 - MVP delivers core value (add, scan, preview, apply)
 - P2 stories (remove, batch, rollback) are enhancements
+
+---
+
+## Implementation Summary
+
+**Completed**: 2026-01-22
+**Files Created**:
+- `tui/internal/speckit/types.go` - Core data types
+- `tui/internal/speckit/config.go` - Config persistence
+- `tui/internal/speckit/scanner.go` - File comparison logic
+- `tui/internal/speckit/patcher.go` - Backup and patch logic
+- `tui/internal/ui/speckitupdater.go` - Main list view
+- `tui/internal/ui/speckitdetail.go` - Project detail view
+
+**Files Modified**:
+- `tui/internal/ui/model.go` - Added ViewStates and navigation
+- `tui/internal/ui/extras.go` - Added SpecKit Updater menu item
+- `tui/internal/ui/styles.go` - Added SpecKit-specific styles

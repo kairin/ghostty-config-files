@@ -15,6 +15,7 @@ import (
 	"github.com/kairin/ghostty-installer/internal/diagnostics"
 	"github.com/kairin/ghostty-installer/internal/executor"
 	"github.com/kairin/ghostty-installer/internal/registry"
+	"github.com/kairin/ghostty-installer/internal/speckit"
 )
 
 // View represents the current screen
@@ -33,7 +34,9 @@ const (
 	ViewDiagnostics
 	ViewConfirm
 	ViewToolDetail
-	ViewBatchPreview // NEW: Batch operation preview screen
+	ViewBatchPreview         // NEW: Batch operation preview screen
+	ViewSpecKitUpdater       // SpecKit Project Updater main view
+	ViewSpecKitProjectDetail // SpecKit single project detail view
 )
 
 // sharedState holds mutex-protected data that needs to survive model copies
@@ -80,6 +83,10 @@ type Model struct {
 
 	// Batch preview component (for Install All / Update All previews)
 	batchPreview *BatchPreviewModel
+
+	// SpecKit Updater components
+	speckitUpdater *SpecKitUpdaterModel
+	speckitDetail  *SpecKitDetailModel
 
 	// Pending uninstall (set when confirmation shown)
 	uninstallTool *registry.Tool
@@ -500,6 +507,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.mcpServers = &mcpModel
 					m.currentView = ViewMCPServers
 					return m, m.mcpServers.Init()
+				} else if m.extras.IsSpecKitUpdaterSelected() {
+					// Navigate to SpecKit Updater view
+					speckitModel := NewSpecKitUpdaterModel(m.repoRoot)
+					m.speckitUpdater = &speckitModel
+					m.currentView = ViewSpecKitUpdater
+					return m, m.speckitUpdater.Init()
 				} else if tool := m.extras.GetSelectedTool(); tool != nil {
 					// Navigate to tool detail view for extras tools
 					toolDetail := NewToolDetailModel(tool, ViewExtras, m.state, m.cache, m.repoRoot)
@@ -631,6 +644,93 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.currentView = ViewMCPServers
 				m.secretsWizard = nil
 				return m, nil
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If SpecKit Updater view is active, delegate messages to it
+	if m.currentView == ViewSpecKitUpdater && m.speckitUpdater != nil {
+		newSpeckit, cmd := m.speckitUpdater.Update(msg)
+		m.speckitUpdater = &newSpeckit
+
+		// Handle key presses for SpecKit Updater
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewExtras
+				m.speckitUpdater = nil
+				return m, nil
+			}
+
+			speckitCmd, handled := m.speckitUpdater.HandleKey(keyMsg)
+			if handled {
+				// Handle menu actions
+				if m.speckitUpdater.IsBackSelected() {
+					m.currentView = ViewExtras
+					m.speckitUpdater = nil
+					return m, nil
+				} else if project := m.speckitUpdater.GetSelectedProject(); project != nil {
+					// Navigate to project detail view
+					detailModel := NewSpecKitDetailModel(project, m.speckitUpdater.GetConfig(), m.repoRoot)
+					m.speckitDetail = &detailModel
+					m.currentView = ViewSpecKitProjectDetail
+					return m, m.speckitDetail.Init()
+				}
+			}
+			if speckitCmd != nil {
+				return m, speckitCmd
+			}
+		}
+
+		return m, cmd
+	}
+
+	// If SpecKit Detail view is active, delegate messages to it
+	if m.currentView == ViewSpecKitProjectDetail && m.speckitDetail != nil {
+		newDetail, cmd := m.speckitDetail.Update(msg)
+		m.speckitDetail = &newDetail
+
+		// Handle key presses for SpecKit Detail
+		if keyMsg, ok := msg.(tea.KeyMsg); ok {
+			if keyMsg.String() == "esc" {
+				m.currentView = ViewSpecKitUpdater
+				m.speckitDetail = nil
+				return m, nil
+			}
+
+			detailCmd, handled := m.speckitDetail.HandleKey(keyMsg)
+			if handled {
+				action := m.speckitDetail.GetSelectedAction()
+				switch action {
+				case "Back":
+					m.currentView = ViewSpecKitUpdater
+					m.speckitDetail = nil
+					return m, nil
+				case "Apply":
+					// Show confirmation and apply
+					return m, m.speckitDetail.StartPatch(m.repoRoot)
+				case "Rollback":
+					// Show confirmation and rollback
+					return m, m.speckitDetail.StartRollback()
+				case "Remove":
+					// Remove project from tracking
+					if m.speckitDetail.GetProject() != nil && m.speckitDetail.GetConfig() != nil {
+						config := m.speckitDetail.GetConfig()
+						speckit.RemoveProject(config, m.speckitDetail.GetProject().Path)
+						speckit.SaveConfig(config)
+						m.currentView = ViewSpecKitUpdater
+						m.speckitDetail = nil
+						// Refresh the updater view
+						if m.speckitUpdater != nil {
+							return m, m.speckitUpdater.Init()
+						}
+					}
+					return m, nil
+				}
+			}
+			if detailCmd != nil {
+				return m, detailCmd
 			}
 		}
 
@@ -1270,6 +1370,16 @@ func (m Model) View() string {
 	case ViewBatchPreview:
 		if m.batchPreview != nil {
 			return m.batchPreview.View()
+		}
+		return m.viewDashboard()
+	case ViewSpecKitUpdater:
+		if m.speckitUpdater != nil {
+			return m.speckitUpdater.View()
+		}
+		return m.viewDashboard()
+	case ViewSpecKitProjectDetail:
+		if m.speckitDetail != nil {
+			return m.speckitDetail.View()
 		}
 		return m.viewDashboard()
 	default:
