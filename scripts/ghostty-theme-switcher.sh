@@ -60,8 +60,10 @@ apply_theme() {
     
     # Signal Ghostty to reload config (SIGUSR2 per Ghostty documentation)
     if pgrep -x ghostty >/dev/null; then
+        # Debounce: Wait 500ms to avoid interrupting terminal output
+        sleep 0.5
         pkill -SIGUSR2 ghostty 2>/dev/null
-        log "Sent SIGUSR2 to Ghostty for config reload"
+        log "Sent SIGUSR2 to Ghostty for config reload (debounced)"
     else
         log "Ghostty not running, theme will apply on next launch"
     fi
