@@ -262,7 +262,26 @@ else
 fi
 
 # ==============================================================================
-# Step 8: Install Default Powerlevel10k Configuration
+# Step 8: Ensure ~/.local/bin is in PATH
+# ==============================================================================
+log "INFO" "Ensuring ~/.local/bin is in PATH..."
+
+if grep -q 'ghostty-config:local-bin' "$ZSHRC"; then
+    log "INFO" "~/.local/bin PATH already configured"
+else
+    cat >> "$ZSHRC" << 'EOF'
+
+# >>> ghostty-config:local-bin >>>
+# Ensure ~/.local/bin is in PATH (for fnm, pip packages, npm globals, etc.)
+# This is critical for tools installed via the TUI to remain accessible
+export PATH="$HOME/.local/bin:$PATH"
+# <<< ghostty-config:local-bin <<<
+EOF
+    log "SUCCESS" "Added ~/.local/bin to PATH"
+fi
+
+# ==============================================================================
+# Step 9: Install Default Powerlevel10k Configuration
 # ==============================================================================
 log "INFO" "Checking Powerlevel10k configuration..."
 
@@ -295,6 +314,7 @@ log "INFO" "  - Added fzf integration"
 log "INFO" "  - Added completions for uv, gum, glow"
 log "INFO" "  - Added modern CLI aliases (grc, bat, eza)"
 log "INFO" "  - Added lazy loading for Node.js tools"
+log "INFO" "  - Ensured ~/.local/bin is in PATH (fnm, pip, npm globals)"
 log "INFO" "  - Installed default P10k config (if missing)"
 log "INFO" ""
 log "INFO" "Backup location: $BACKUP_DIR/.zshrc.$TIMESTAMP"
