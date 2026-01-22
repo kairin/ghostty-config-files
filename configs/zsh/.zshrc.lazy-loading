@@ -15,8 +15,9 @@
 # ==============================================================================
 # fnm is fast but still adds ~50ms to startup. Defer until first use.
 # Install: curl -fsSL https://fnm.vercel.app/install | bash
-if [[ -d "$HOME/.local/share/fnm" ]] && ! command -v fnm &>/dev/null 2>&1; then
-    export PATH="$HOME/.local/share/fnm:$PATH"
+# Ensure ~/.local/bin is in PATH (fnm, pip packages, npm globals, etc.)
+if [[ -d "$HOME/.local/bin" ]] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 if command -v fnm &>/dev/null 2>&1; then
