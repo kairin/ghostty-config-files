@@ -86,7 +86,7 @@ var mcpServers = map[string]*MCPServer{
 		DisplayName: "GitHub",
 		Description: "Repository operations, issues, PRs",
 		Transport:   TransportStdio,
-		Command:     `bash -c 'GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github'`,
+		Command:     `export PATH="$HOME/.local/bin:$PATH"; eval "$(fnm env 2>/dev/null)" 2>/dev/null; GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github`,
 		Prerequisites: []MCPPrerequisite{
 			{
 				ID:              "nodejs",
@@ -172,7 +172,7 @@ var mcpServers = map[string]*MCPServer{
 		DisplayName: "shadcn-ui",
 		Description: "shadcn component tools",
 		Transport:   TransportStdio,
-		Command:     `bash -c 'GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx @jpisnice/shadcn-ui-mcp-server'`,
+		Command:     `export PATH="$HOME/.local/bin:$PATH"; eval "$(fnm env 2>/dev/null)" 2>/dev/null; GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @jpisnice/shadcn-ui-mcp-server`,
 		Prerequisites: []MCPPrerequisite{
 			{
 				ID:              "nodejs",

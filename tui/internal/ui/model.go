@@ -311,7 +311,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.batchIndex = 0
 		m.pendingCleanInstall = nil
 
-		// Return to extras view if we came from there
+		// Return to tool detail view to show updated status (if we came from extras via tool detail)
+		if m.toolDetail != nil {
+			m.currentView = ViewToolDetail
+			m.installer = nil
+			m.refreshPending = false
+			// Refresh the tool status to show updated installation state
+			return m, m.toolDetail.Init()
+		}
+
+		// Fallback to extras view if we came from there (batch operations)
 		if m.extras != nil {
 			m.currentView = ViewExtras
 			m.installer = nil
@@ -483,24 +492,23 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.currentView = ViewBatchPreview
 					return m, nil
 				} else if m.extras.IsClaudeConfigSelected() {
-					// Install Claude Config (skills + agents) - use InstallerModel for in-TUI progress
+					// Install Claude Config (skills + agents) - show ViewToolDetail first
 					claudeConfigTool := &registry.Tool{
 						ID:          "claude_config",
 						DisplayName: "Claude Config",
+						Description: "Install SpecKit skills and agents for Claude Code",
 						Scripts: registry.ToolScripts{
-							Install: "scripts/install-claude-config.sh",
+							Install:   "scripts/install-claude-config.sh",
+							Uninstall: "scripts/uninstall-claude-config.sh",
+							Check:     "scripts/status-claude-config.sh",
 						},
 					}
 					m.selectedTool = claudeConfigTool
-					installer := NewInstallerModel(claudeConfigTool, m.repoRoot)
-					m.installer = &installer
-					m.currentView = ViewInstaller
-
-					initCmd := m.installer.Init()
-					startCmd := func() tea.Msg {
-						return InstallerStartMsg{Resume: false}
-					}
-					return m, tea.Batch(initCmd, startCmd)
+					toolDetail := NewToolDetailModel(claudeConfigTool, ViewExtras, m.state, m.cache, m.repoRoot)
+					m.toolDetail = &toolDetail
+					m.toolDetailFrom = ViewExtras
+					m.currentView = ViewToolDetail
+					return m, m.toolDetail.Init()
 				} else if m.extras.IsMCPServersSelected() {
 					// Navigate to MCP Servers view
 					mcpModel := NewMCPServersModel()
