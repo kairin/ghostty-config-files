@@ -1,5 +1,15 @@
 # Ghostty Configuration Files
 
+> ## ARCHIVED
+>
+> This repository has been **archived**. All content has been migrated to [000-dotfiles](https://github.com/kairin/000-dotfiles).
+>
+> **Reason**: Ghostty 1.3.0 exhibited multiple stability issues (rendering artifacts, crashes, input lag). Migrated to a general development environment setup without terminal-specific dependencies.
+>
+> **New Repository**: https://github.com/kairin/000-dotfiles
+
+---
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-25.10+-E95420?logo=ubuntu)](https://ubuntu.com/)
 [![Ghostty](https://img.shields.io/badge/Ghostty-v1.2.3+-purple)](https://ghostty.org/)
