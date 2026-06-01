@@ -57,7 +57,7 @@ and pane borders use Catppuccin Mocha surface colors so it looks clean.
 
 ## Installed Nerd Fonts
 
-FiraCode · Hack · JetBrainsMono · JetBrainsMonoNL · MesloLGL · MesloLGM · MesloLGS
+Run `font-picker` to see the live list — it reads `fc-list` directly. On this machine the base families are FiraCode, Hack, JetBrainsMono, JetBrainsMonoNL, MesloLGL, MesloLGLDZ, MesloLGM, MesloLGMDZ, MesloLGS, MesloLGSDZ (each also offered as 'Nerd Font Mono' and 'Nerd Font Propo' variants).
 
 ## Validate config
 

@@ -5,13 +5,16 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 ## What this repo contains
 
 - `configs/ghostty/config` — single Ghostty config file (no modular split)
+- `configs/tmux/tmux.conf` — minimal tmux config (no status bar, Mocha pane borders, mouse on)
 - `scripts/font-picker.fish` — fish font picker function
+- `scripts/dev.fish` — fish function that launches the tmux dev layout (claude left, nu right)
 - `scripts/install.sh` / `uninstall.sh` — deploy/remove scripts
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed)
 
 ## Rules
 
 - Do NOT split the Ghostty config back into modular files.
+- Keep EXACTLY ONE unquoted `font-family =` line in `configs/ghostty/config`. font-picker.fish replaces it via `sed` on `^font-family`; a second line or a quoted value breaks font selection.
 - Do NOT add blur (`background-blur`) — it crashes Ghostty on Linux.
 - Do NOT set `scrollback-limit` above 50000.
 - Do NOT add `config-reload-on-focus-in` — it is not a valid Ghostty 1.3.1 option and fails validation.
@@ -25,6 +28,8 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 ghostty +validate-config --config-file=configs/ghostty/config   # must exit 0
 shellcheck scripts/install.sh scripts/uninstall.sh
 ```
+
+shellcheck applies only to the `.sh` scripts; the `.fish` functions (`font-picker.fish`, `dev.fish`) are not shellcheck-compatible.
 
 ## User context
 
