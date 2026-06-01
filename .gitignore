@@ -149,6 +149,7 @@ pnpm-lock.yaml
 .env.development.local
 .env.test.local
 .env.production.local
+.envrc.local
 
 # MCP Secrets (API keys - NEVER commit)
 .mcp-secrets
