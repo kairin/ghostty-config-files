@@ -32,3 +32,12 @@ shellcheck scripts/install.sh scripts/uninstall.sh
 - Terminal: Ghostty 1.3.1 on Ubuntu 26.04.
 - Left split: `claude` (Claude Code). Right split: `fish` → `nu`.
 - Font picker: `font-picker` fish function (zenity + SIGUSR2 reload).
+
+## tmux integration
+
+- `configs/tmux/tmux.conf` — minimal tmux config for use inside Ghostty
+- `scripts/dev.fish` — fish function that creates the dev layout (claude left, nu right)
+- tmux is installed via `sudo apt install tmux` (not managed by this repo)
+- Status bar is intentionally OFF (`set -g status off`) — do not re-enable
+- Pane borders use Catppuccin Mocha surface0 (#313244) and mauve (#cba6f7)
+- Do NOT configure tmux splits inside Ghostty native splits — choose one layer only
