@@ -54,7 +54,7 @@ window-decoration = auto
 gtk-tabs-location = top
 window-new-tab-position = end
 
-clipboard-trim-trailing-spaces = true
+clipboard-trim-trailing-spaces = false
 clipboard-paste-protection = true
 copy-on-select = true
 
