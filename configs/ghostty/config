@@ -1,38 +1,67 @@
-# Ghostty Configuration File - Optimized for 2025
-# A complete list of options can be found by running ghostty +show-config --default --docs
+# Ghostty Configuration - Fish + Nushell + Claude Code workflow
+# managed-by: ghostty-config-files
+# Ghostty 1.3.1 on Ubuntu 26.04. Single consolidated file (no modular includes).
+# Reload after edits: press ctrl+shift+, (default reload_config keybind)
+#   or run: pkill -SIGUSR2 ghostty   (Ghostty's documented live-reload signal)
+# Show all options: ghostty +show-config --default --docs
+# Validate this file: ghostty +validate-config --config-file=PATH
 
-# =============================================================================
-# PERFORMANCE OPTIMIZATIONS (Critical for Linux)
-# =============================================================================
 linux-cgroup = single-instance
 linux-cgroup-memory-limit = 2147483648
 linux-cgroup-processes-limit = 1000
 
-# GTK configuration removed - gtk-adwaita is not a valid option
-
-# =============================================================================
-# SHELL INTEGRATION (Enhanced for 2025)
-# =============================================================================
 shell-integration = detect
 shell-integration-features = sudo,title,ssh-env
 
-# =============================================================================
-# SECURITY
-# =============================================================================
-clipboard-paste-protection = true
+# FONT (change interactively with the `font-picker` fish function).
+# Keep EXACTLY ONE font-family line, unquoted: font-picker's sed replaces it.
+font-family = JetBrainsMono Nerd Font
+font-size = 14
 
-# =============================================================================
-# UI IMPROVEMENTS
-# =============================================================================
+# APPEARANCE - Catppuccin Mocha, dark only, 80% opacity, no blur.
+background-opacity = 0.8
+background = #1e1e2e
+foreground = #cdd6f4
+cursor-color = #f5e0dc
+cursor-text = #1e1e2e
+selection-background = #45475a
+selection-foreground = #cdd6f4
+cursor-style = block
+cursor-style-blink = true
+palette = 0=#45475a
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#f5c2e7
+palette = 6=#94e2d5
+palette = 7=#bac2de
+palette = 8=#585b70
+palette = 9=#f38ba8
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#89b4fa
+palette = 13=#f5c2e7
+palette = 14=#94e2d5
+palette = 15=#a6adc8
+
+scrollback-limit = 10000
+
+window-padding-x = 12
+window-padding-y = 12
+window-padding-balance = true
+window-decoration = auto
 gtk-tabs-location = top
 window-new-tab-position = end
 
-# =============================================================================
-# MODULAR CONFIGURATION
-# =============================================================================
-config-file = theme.conf
-config-file = scroll.conf
-config-file = layout.conf
-config-file = keybindings.conf
-config-file = clipboard.conf
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = true
+copy-on-select = true
+
+# KEYBINDS - ctrl+alt+d splits right; ctrl+alt+left/right navigates splits.
+# ctrl+shift+, (reload_config) is a built-in default and is NOT redefined here.
+keybind = ctrl+alt+d=new_split:right
+keybind = ctrl+alt+left=goto_split:left
+keybind = ctrl+alt+right=goto_split:right
+keybind = ctrl+shift+t=new_tab
 keybind = shift+enter=text:\x1b\r
