@@ -20,7 +20,7 @@ if [ -f "$DST_GHOSTTY" ] && grep -q 'managed-by: ghostty-config-files' "$DST_GHO
     else
         echo "Removed $DST_GHOSTTY (no backup to restore)."
     fi
-    rm -f "${DST_GHOSTTY}.bak."* 2>/dev/null || true
+    rm -f "${DST_GHOSTTY}.bak."* 2>/dev/null
 elif [ -L "$DST_GHOSTTY" ] && [[ "$(readlink "$DST_GHOSTTY")" == "$REPO_ROOT"* ]]; then
     rm -f "$DST_GHOSTTY"
     echo "Removed symlink $DST_GHOSTTY"
