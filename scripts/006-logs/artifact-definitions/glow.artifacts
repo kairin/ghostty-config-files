@@ -1,6 +1,0 @@
-# Glow Markdown Viewer - Artifact Definition
-# Format: type:path
-# Types: binary, desktop, man, icon, config, dir
-
-# Main binary (installed via apt)
-binary:/usr/bin/glow
