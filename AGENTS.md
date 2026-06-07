@@ -5,9 +5,9 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 ## What this repo contains
 
 - `configs/ghostty/config` — single Ghostty config file (no modular split)
-- `configs/tmux/tmux.conf` — minimal tmux config (no status bar, Mocha pane borders, mouse on)
+- `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
 - `scripts/font-picker.fish` — fish font picker function
-- `scripts/dev.fish` — fish function that launches the tmux dev layout (claude left, nu right)
+- `scripts/dev.fish` — fish function that launches the tmux dev workspace (`main`, `codex-agy`, `nushell`)
 - `scripts/install.sh` / `uninstall.sh` — deploy/remove scripts
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed)
 
@@ -35,14 +35,14 @@ shellcheck applies only to the `.sh` scripts; the `.fish` functions (`font-picke
 
 - Shell: fish (primary), nushell (secondary). No zsh.
 - Terminal: Ghostty 1.3.1 on Ubuntu 26.04.
-- Left split: `claude` (Claude Code). Right split: `fish` → `nu`.
+- tmux dev workspace: `main` has `claude` left and `fish` right; `codex-agy` has `codex` left and `agy` right; `nushell` runs `nu` full-screen.
 - Font picker: `font-picker` fish function (zenity + SIGUSR2 reload).
 
 ## tmux integration
 
 - `configs/tmux/tmux.conf` — minimal tmux config for use inside Ghostty
-- `scripts/dev.fish` — fish function that creates the dev layout (claude left, nu right)
+- `scripts/dev.fish` — fish function that creates three tmux windows: `main`, `codex-agy`, and `nushell`
 - tmux is installed via `sudo apt install tmux` (not managed by this repo)
-- Status bar is intentionally OFF (`set -g status off`) — do not re-enable
+- Status bar is intentionally minimal and shows window-switching hints.
 - Pane borders use Catppuccin Mocha surface0 (#313244) and mauve (#cba6f7)
 - Do NOT configure tmux splits inside Ghostty native splits — choose one layer only

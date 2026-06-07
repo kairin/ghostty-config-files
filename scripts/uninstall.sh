@@ -12,7 +12,7 @@ DST_DEV="$HOME/.config/fish/functions/dev.fish"
 
 # Ghostty config: detect via managed-by marker or stale symlink
 if [ -f "$DST_GHOSTTY" ] && grep -q 'managed-by: ghostty-config-files' "$DST_GHOSTTY" 2>/dev/null; then
-    LATEST_BAK=$(ls -t "${DST_GHOSTTY}.bak."* 2>/dev/null | head -1 || true)
+    LATEST_BAK=$(find "$(dirname "$DST_GHOSTTY")" -maxdepth 1 -type f -name "$(basename "$DST_GHOSTTY").bak.*" -printf '%T@ %p\n' | sort -nr | head -n 1 | cut -d' ' -f2-)
     rm -f "$DST_GHOSTTY"
     if [ -n "$LATEST_BAK" ]; then
         mv "$LATEST_BAK" "$DST_GHOSTTY"

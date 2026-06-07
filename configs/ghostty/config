@@ -1,4 +1,4 @@
-# Ghostty Configuration - Fish + Nushell + Claude Code workflow
+# Ghostty Configuration - Fish + Nushell + AI coding workflow
 # managed-by: ghostty-config-files
 # Ghostty 1.3.1 on Ubuntu 26.04. Single consolidated file (no modular includes).
 # Reload after edits: press ctrl+shift+, (default reload_config keybind)
@@ -56,7 +56,7 @@ window-new-tab-position = end
 
 clipboard-trim-trailing-spaces = true
 clipboard-paste-protection = true
-copy-on-select = true
+copy-on-select = clipboard
 
 # KEYBINDS - ctrl+alt+d splits right; ctrl+alt+left/right navigates splits.
 # ctrl+shift+, (reload_config) is a built-in default and is NOT redefined here.

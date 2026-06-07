@@ -1,14 +1,14 @@
 # ghostty-config-files
 
-Ghostty terminal config for a Fish + Nushell + Claude Code workflow on Ubuntu.
-Uses tmux inside Ghostty for scripted split layout (claude left, nushell right).
+Ghostty terminal config for a Fish + Nushell + AI coding workflow on Ubuntu.
+Uses tmux inside Ghostty for a scripted dev workspace.
 
 ## What's included
 
 - `configs/ghostty/config` — single consolidated Ghostty config (Catppuccin Mocha, 80% opacity, no blur)
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed to `~/.config/ghostty/`)
-- `configs/tmux/tmux.conf` — minimal tmux config (no status bar, Mocha pane borders, mouse on)
-- `scripts/dev.fish` — fish function: run `dev` to launch the split layout automatically
+- `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
+- `scripts/dev.fish` — fish function: run `dev` to launch the tmux dev workspace automatically
 - `scripts/font-picker.fish` — fish function to pick a Nerd Font via zenity with live reload
 - `scripts/install.sh` — deploys all configs + installs fish functions
 - `scripts/uninstall.sh` — reverses install, restores backup
@@ -35,16 +35,30 @@ dev
 This launches tmux inside Ghostty and automatically creates:
 
 ```
-┌─────────────────────┬──────────────────┐
-│   claude (left)     │   nushell (right)│
-│   50%               │   50%            │
-└─────────────────────┴──────────────────┘
+tmux session: dev
+
+1:main
+┌────────────────────────────────────────┬────────────────────┐
+│ claude                                 │ fish               │
+└────────────────────────────────────────┴────────────────────┘
+
+2:codex-agy
+┌──────────────────────────────┬──────────────────────────────┐
+│ codex                        │ agy                          │
+└──────────────────────────────┴──────────────────────────────┘
+
+3:nushell
+┌─────────────────────────────────────────────────────────────┐
+│ nu                                                          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 | Action | How |
 |--------|-----|
-| Launch dev layout | `dev` |
+| Launch dev workspace | `dev` |
 | Navigate splits | mouse click or tmux prefix + arrow |
+| List tmux windows | tmux prefix + `w` |
+| Switch tmux windows | tmux prefix + `1`, `2`, or `3` |
 | Pick a different font | `font-picker` (zenity list) |
 | Reload Ghostty config | `ctrl+shift+,` or `pkill -SIGUSR2 ghostty` |
 | New Ghostty tab | `ctrl+shift+t` |
@@ -52,7 +66,7 @@ This launches tmux inside Ghostty and automatically creates:
 ## How it works
 
 tmux runs inside Ghostty as a process. Ghostty handles the window/tabs/opacity;
-tmux handles the splits and scripted layout. The status bar is hidden (`set -g status off`)
+tmux handles the splits and scripted layout. The status bar shows window switching hints,
 and pane borders use Catppuccin Mocha surface colors so it looks clean.
 
 ## Installed Nerd Fonts
