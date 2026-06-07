@@ -73,7 +73,7 @@ cat <<'MSG'
 Next steps:
   1. Install tmux if not present:  sudo apt install tmux
   2. Open Ghostty and run:  dev
-     -> splits into claude (left) and nushell (right) automatically.
+     -> creates tmux windows: main (claude/fish), codex-agy (codex/agy), nushell (nu).
   3. Run `font-picker` to change the Ghostty font (zenity list + live reload).
   4. Reload Ghostty config: ctrl+shift+,  (or: pkill -SIGUSR2 ghostty)
 MSG
