@@ -15,10 +15,7 @@ load_secret() {
 }
 
 # --- GitHub CLI (gh) ---
-load_secret GH_TOKEN "/home/kkk/.github/gh.token"
-if [ -n "${GH_TOKEN:-}" ]; then
-  export GITHUB_TOKEN="$GH_TOKEN"
-fi
+load_secret GITHUB_MCP_TOKEN "/home/kkk/.github/gh.token"
 
 # --- Billing API ---
 # shellcheck source=/dev/null
