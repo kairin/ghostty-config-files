@@ -8,7 +8,7 @@ Uses tmux inside Ghostty for a scripted dev workspace.
 - `configs/ghostty/config` — single consolidated Ghostty config (Catppuccin Mocha, 80% opacity, no blur)
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed to `~/.config/ghostty/`)
 - `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
-- `scripts/dev.fish` — fish function: run `dev` to launch the tmux dev workspace automatically
+- `scripts/dev.fish` — fish function: `dev` toggles the `og-tools` tmux session (`claude`/`codex`/`agy`, rooted in `~/Apps/OG-tools`)
 - `scripts/font-picker.fish` — fish function to pick a Nerd Font via zenity with live reload
 - `scripts/install.sh` — deploys all configs + installs fish functions
 - `scripts/uninstall.sh` — reverses install, restores backup
@@ -32,30 +32,39 @@ Open Ghostty and type:
 dev
 ```
 
-This launches tmux inside Ghostty and automatically creates:
+`dev` is a **toggle**:
+
+- First `dev` (in a plain terminal) builds the session and attaches.
+- `dev` again while attached **detaches** — the panes keep running in the background and you drop back to the normal terminal.
+- `dev` once more **reattaches** to the same session, exactly as you left it.
+- `dev reset` tears the session down and rebuilds it fresh (new `claude`/`codex`/`agy`).
+
+It launches tmux inside Ghostty and creates the `og-tools` session (all panes rooted in `~/Apps/OG-tools`):
 
 ```
-tmux session: dev
+tmux session: og-tools
 
-1:main
+1:claude
 ┌────────────────────────────────────────┬────────────────────┐
 │ claude                                 │ fish               │
 └────────────────────────────────────────┴────────────────────┘
 
-2:codex-agy
-┌──────────────────────────────┬──────────────────────────────┐
-│ codex                        │ agy                          │
-└──────────────────────────────┴──────────────────────────────┘
-
-3:nushell
+2:codex
 ┌─────────────────────────────────────────────────────────────┐
-│ nu                                                          │
+│ codex                                                       │
+└─────────────────────────────────────────────────────────────┘
+
+3:agy
+┌─────────────────────────────────────────────────────────────┐
+│ agy                                                         │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 | Action | How |
 |--------|-----|
-| Launch dev workspace | `dev` |
+| Launch / reattach dev workspace | `dev` |
+| Detach (hide) dev workspace | `dev` again while attached |
+| Rebuild dev workspace from scratch | `dev reset` |
 | Navigate splits | mouse click or tmux prefix + arrow |
 | List tmux windows | tmux prefix + `w` |
 | Switch tmux windows | tmux prefix + `1`, `2`, or `3` |
