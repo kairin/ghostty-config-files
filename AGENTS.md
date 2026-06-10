@@ -7,7 +7,7 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 - `configs/ghostty/config` — single Ghostty config file (no modular split)
 - `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
 - `scripts/font-picker.fish` — fish font picker function
-- `scripts/dev.fish` — fish function that launches the tmux dev workspace (`main`, `codex-agy`, `nushell`)
+- `scripts/dev.fish` — fish function that toggles the `og-tools` tmux session (`claude`, `codex`, `agy`; rooted in `~/Apps/OG-tools`)
 - `scripts/install.sh` / `uninstall.sh` — deploy/remove scripts
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed)
 
@@ -35,13 +35,14 @@ shellcheck applies only to the `.sh` scripts; the `.fish` functions (`font-picke
 
 - Shell: fish (primary), nushell (secondary). No zsh.
 - Terminal: Ghostty 1.3.1 on Ubuntu 26.04.
-- tmux dev workspace: `main` has `claude` left and `fish` right; `codex-agy` has `codex` left and `agy` right; `nushell` runs `nu` full-screen.
+- tmux dev session `og-tools` (rooted in `~/Apps/OG-tools`): `claude` window has `claude` left and `fish` right; `codex` window runs `codex`; `agy` window runs `agy`.
+- `dev` is a toggle: outside tmux it attaches (creating the session first if needed); inside tmux it `detach-client`s so the session keeps running in the background. `dev reset` kills the session and rebuilds it fresh.
 - Font picker: `font-picker` fish function (zenity + SIGUSR2 reload).
 
 ## tmux integration
 
 - `configs/tmux/tmux.conf` — minimal tmux config for use inside Ghostty
-- `scripts/dev.fish` — fish function that creates three tmux windows: `main`, `codex-agy`, and `nushell`
+- `scripts/dev.fish` — fish function that toggles the `og-tools` session (rooted in `~/Apps/OG-tools`): `claude` (claude/fish split), `codex`, `agy`. Attach/detach on repeat; `dev reset` rebuilds. Run `dev reset` from outside tmux or a status-bar `run-shell` binding — not from a pane inside the session it is killing.
 - tmux is installed via `sudo apt install tmux` (not managed by this repo)
 - Status bar is intentionally minimal and shows window-switching hints.
 - Pane borders use Catppuccin Mocha surface0 (#313244) and mauve (#cba6f7)

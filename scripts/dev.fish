@@ -1,38 +1,51 @@
 # scripts/dev.fish (symlinked to ~/.config/fish/functions/dev.fish at install time)
-# Launches the dev workspace:
-#   1:main      claude (left) / fish (right)
-#   2:codex-agy codex  (left) / agy  (right)
-#   3:nushell   nu     (full window)
-# Requires tmux.
+# Toggles the og-tools tmux dev session, rooted at ~/Apps/OG-tools:
+#   claude  claude (left) / fish (right)
+#   codex   codex
+#   agy     agy
+# `dev` inside tmux detaches (hides); outside it reattaches, creating the session if needed.
+# `dev reset` kills the session and rebuilds it. Requires tmux.
 
-function dev --description 'Launch tmux dev workspace: main, codex-agy, nushell'
+function dev --description 'Toggle the og-tools tmux dev session (dev reset rebuilds)'
+    set -l session og-tools
+    set -l project /home/kkk/Apps/OG-tools
+
     if not command -q tmux
         echo "tmux not installed. Run: sudo apt install tmux"
         return 1
     end
 
-    # Always kill and recreate — use 'tmux attach -t dev' to reattach manually.
-    tmux kill-session -t dev 2>/dev/null
+    # 'dev reset' tears the session down so the block below rebuilds it.
+    if test "$argv[1]" = reset
+        tmux kill-session -t "$session" 2>/dev/null
+    else
+        # Toggle: inside tmux -> hide (detach); session already running -> reattach.
+        if set -q TMUX
+            tmux detach-client
+            return
+        end
+        if tmux has-session -t "$session" 2>/dev/null
+            tmux attach-session -t "$session"
+            return
+        end
+    end
 
-    tmux new-session -d -s dev -n main
+    tmux new-session -d -s "$session" -c "$project" -n claude "claude"
+    tmux set-option -t "$session" status on
+    tmux set-option -t "$session" status-position bottom
+    tmux set-option -t "$session" mouse on
 
-    # Capture stable pane IDs via -P -F; tmux pane indexes change after splits.
-    set -l claude (tmux display-message -p -t dev:main '#{pane_id}')
-    set -l fish_pane (tmux split-window -h -t "$claude" -p 35 -P -F '#{pane_id}')
-    tmux send-keys -t "$claude" 'claude' Enter
-    tmux send-keys -t "$fish_pane" 'fish' Enter
+    tmux split-window -h -p 50 -t "$session:claude" -c "$project" "fish"
+    tmux select-pane -t "$session:claude.{left}"
 
-    tmux new-window -t dev:2 -n codex-agy
-    set -l codex (tmux display-message -p -t dev:codex-agy '#{pane_id}')
-    set -l agy (tmux split-window -h -t "$codex" -p 50 -P -F '#{pane_id}')
-    tmux send-keys -t "$codex" 'codex' Enter
-    tmux send-keys -t "$agy" 'agy' Enter
+    tmux new-window -t "$session:" -c "$project" -n codex "codex"
+    tmux new-window -t "$session:" -c "$project" -n agy "agy"
+    tmux select-window -t "$session:claude"
 
-    tmux new-window -t dev:3 -n nushell
-    set -l nu (tmux display-message -p -t dev:nushell '#{pane_id}')
-    tmux send-keys -t "$nu" 'nu' Enter
-
-    tmux select-window -t dev:main
-    tmux select-pane -t "$fish_pane"
-    tmux attach -t dev
+    # 'dev reset' from inside a *different* tmux session -> switch; else attach.
+    if set -q TMUX
+        tmux switch-client -t "$session"
+    else
+        tmux attach-session -t "$session"
+    end
 end
