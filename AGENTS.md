@@ -47,3 +47,19 @@ shellcheck applies only to the `.sh` scripts; the `.fish` functions (`font-picke
 - Status bar is intentionally minimal and shows window-switching hints.
 - Pane borders use Catppuccin Mocha surface0 (#313244) and mauve (#cba6f7)
 - Do NOT configure tmux splits inside Ghostty native splits — choose one layer only
+
+## Codacy gate — cloud CLI (`codacy`)
+
+The `codacy` cloud CLI (binary `codacy`, distinct from the local analyzer
+`codacy-cli`) reads `CODACY_API_TOKEN`, which `.envrc.local` exports via direnv —
+there is **no `codacy login`**. Always run it through direnv so the token loads:
+
+```bash
+direnv exec /home/kkk/Apps/ghostty-config-files codacy pr gh kairin ghostty-config-files <PR#> --diff
+```
+
+To unblock a failing Codacy PR gate in one pass: pull the `--diff`-scoped issues,
+fix the real ones, add any tests they need, dismiss false positives with a logged
+reason (append `--ignore-all-false-positives`), then re-run the scan before merging.
+Never run bare `codacy` from `/home/kkk/Apps` (workspace root) — direnv has not
+loaded the token there and it fails with `No API token found`.
