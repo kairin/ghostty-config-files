@@ -6,9 +6,11 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 
 - `configs/ghostty/config` — single Ghostty config file (no modular split)
 - `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
+- `configs/fish/config.fish` — fish interactive env (PATH, fnm, bun, uv/gum/glow completions, fzf, zoxide, starship, mcp-secrets shim)
+- `configs/starship/starship.toml` — Catppuccin Mocha prompt (replaces the old powerlevel10k zsh prompt)
 - `scripts/font-picker.fish` — fish font picker function
 - `scripts/dev.fish` — fish function that toggles the `og-tools` tmux session (`claude`, `codex`, `agy`; rooted in `~/Apps/OG-tools`)
-- `scripts/install.sh` / `uninstall.sh` — deploy/remove scripts
+- `scripts/install.sh` / `uninstall.sh` — deploy/remove scripts (install.sh also sets up the fish shell env; `--no-shell` skips that)
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed)
 
 ## Rules
@@ -19,6 +21,8 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 - Do NOT set `scrollback-limit` above 50000.
 - Do NOT add `config-reload-on-focus-in` — it is not a valid Ghostty 1.3.1 option and fails validation.
 - Do NOT create new `.sh` scripts; extend install.sh / uninstall.sh instead.
+- `configs/fish/config.fish` and `configs/starship/starship.toml` are SYMLINKED into `~/.config` by install.sh (like the tmux/fish-function symlinks) so `git pull` propagates updates. Never store secrets in them.
+- NEVER put secrets in the repo. `~/.mcp-secrets` is bash-syntax, machine-local, synced out-of-band; config.fish only parses it at startup.
 - NEVER commit directly to main — use a timestamped branch `YYYYMMDD-HHMMSS-description`.
 - Keep `CLAUDE.md` and `GEMINI.md` as symlinks to this file. Never overwrite them with regular files.
 
@@ -29,11 +33,13 @@ ghostty +validate-config --config-file=configs/ghostty/config   # must exit 0
 shellcheck scripts/install.sh scripts/uninstall.sh
 ```
 
-shellcheck applies only to the `.sh` scripts; the `.fish` functions (`font-picker.fish`, `dev.fish`) are not shellcheck-compatible.
+shellcheck applies only to the `.sh` scripts; the `.fish` files (`config.fish`, `font-picker.fish`, `dev.fish`) are not shellcheck-compatible — sanity-check them with `fish --no-execute configs/fish/config.fish` instead.
 
 ## User context
 
-- Shell: fish (primary), nushell (secondary). No zsh.
+- Shell: fish (primary), nushell (secondary). No zsh. Prompt: starship (Catppuccin Mocha), replacing the old powerlevel10k zsh setup.
+- Shell env lives in `configs/fish/config.fish`: PATH (`~/.local/bin`, `~/.bun/bin`), `fnm --use-on-cd`, bun, uv/gum/glow completions, fzf, zoxide (`z`), starship, and a parser for the machine-local bash-syntax `~/.mcp-secrets`.
+- `install.sh` installs fish + zoxide (apt) and starship (userspace `~/.local/bin`), then offers `chsh` to fish. Tolerant of no-sudo / non-interactive runs (warns, never hangs).
 - Terminal: Ghostty 1.3.1 on Ubuntu 26.04.
 - tmux dev session `og-tools` (rooted in `~/Apps/OG-tools`): `claude` window has `claude` left and `fish` right; `codex` window runs `codex`; `agy` window runs `agy`.
 - `dev` is a toggle: outside tmux it attaches (creating the session first if needed); inside tmux it `detach-client`s so the session keeps running in the background. `dev reset` kills the session and rebuilds it fresh.

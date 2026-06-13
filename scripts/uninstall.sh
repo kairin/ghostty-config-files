@@ -9,6 +9,8 @@ DST_GHOSTTY="$HOME/.config/ghostty/config"
 DST_TMUX="$HOME/.config/tmux/tmux.conf"
 DST_FONT_PICKER="$HOME/.config/fish/functions/font-picker.fish"
 DST_DEV="$HOME/.config/fish/functions/dev.fish"
+DST_FISH_CONFIG="$HOME/.config/fish/config.fish"
+DST_STARSHIP="$HOME/.config/starship.toml"
 
 # Ghostty config: detect via managed-by marker or stale symlink
 if [ -f "$DST_GHOSTTY" ] && grep -q 'managed-by: ghostty-config-files' "$DST_GHOSTTY" 2>/dev/null; then
@@ -36,8 +38,8 @@ else
     echo "tmux config is not managed by this repo - skipping."
 fi
 
-# Fish function symlinks
-for dst in "$DST_FONT_PICKER" "$DST_DEV"; do
+# Fish function + shell config symlinks
+for dst in "$DST_FONT_PICKER" "$DST_DEV" "$DST_FISH_CONFIG" "$DST_STARSHIP"; do
     if [ -L "$dst" ] && [[ "$(readlink "$dst")" == "$REPO_ROOT"* ]]; then
         rm -f "$dst"
         echo "Removed $(basename "$dst") symlink $dst"
@@ -45,3 +47,8 @@ for dst in "$DST_FONT_PICKER" "$DST_DEV"; do
         echo "$(basename "$dst") is not managed by this repo - skipping."
     fi
 done
+
+# Note: apt packages (fish, zoxide), starship, and the chsh default-shell change
+# are intentionally NOT reverted here. To fully roll back the shell:
+#   chsh -s "$(command -v zsh || command -v bash)"   # restore previous login shell
+echo "Note: fish/zoxide/starship and your default shell (chsh) were left in place."
