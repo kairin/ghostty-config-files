@@ -8,9 +8,11 @@ Uses tmux inside Ghostty for a scripted dev workspace.
 - `configs/ghostty/config` — single consolidated Ghostty config (Catppuccin Mocha, 80% opacity, no blur)
 - `configs/ghostty/catppuccin-mocha.conf` — Mocha palette reference (not deployed to `~/.config/ghostty/`)
 - `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
+- `configs/fish/config.fish` — fish interactive env: PATH, fnm, bun, uv/gum/glow completions, fzf, zoxide (`z`), starship, and a `~/.mcp-secrets` parser
+- `configs/starship/starship.toml` — Catppuccin Mocha prompt (replaces powerlevel10k)
 - `scripts/dev.fish` — fish function: `dev` toggles the `og-tools` tmux session (`claude`/`codex`/`agy`, rooted in `~/Apps/OG-tools`)
 - `scripts/font-picker.fish` — fish function to pick a Nerd Font via zenity with live reload
-- `scripts/install.sh` — deploys all configs + installs fish functions
+- `scripts/install.sh` — deploys all configs, installs fish functions, and sets up the fish shell env (`--no-shell` skips the shell setup)
 - `scripts/uninstall.sh` — reverses install, restores backup
 
 ## Setup
@@ -22,7 +24,23 @@ cd ~/Apps/ghostty-config-files
 ./scripts/install.sh
 ```
 
-Re-run with `--force` to overwrite an existing Ghostty config (a timestamped backup is made).
+`install.sh` deploys the Ghostty/tmux/fish configs and sets up the fish shell environment:
+it installs **fish** + **zoxide** (`sudo apt`) and **starship** (userspace `~/.local/bin`),
+symlinks `config.fish`/`starship.toml` into `~/.config`, and offers to `chsh` to fish.
+It is idempotent and degrades gracefully without sudo (it warns instead of failing).
+Pass `--no-shell` to deploy only the Ghostty/tmux configs. Re-run with `--force` to
+overwrite an existing Ghostty config (a timestamped backup is made).
+
+### Shell environment & secrets
+
+`config.fish` is symlinked into `~/.config/fish/`, so `git pull` keeps every machine in sync.
+It loads `~/.mcp-secrets` if present — a **machine-local**, bash-syntax (`export KEY=VALUE`)
+file synced out-of-band and **never committed** to this repo (fish parses its `export`
+lines natively). After install, set fish as your login shell and re-login:
+
+```bash
+chsh -s "$(command -v fish)"
+```
 
 ## Daily workflow
 
