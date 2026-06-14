@@ -10,6 +10,7 @@ Uses tmux inside Ghostty for a scripted dev workspace.
 - `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
 - `configs/fish/config.fish` — fish interactive env: PATH, fnm, bun, uv/gum/glow completions, fzf, zoxide (`z`), starship, and a `~/.mcp-secrets` parser
 - `configs/starship/starship.toml` — Catppuccin Mocha prompt (replaces powerlevel10k)
+- `configs/fish/functions/` — tab-title engine: `🌐 <label> 📁 <path> <icon> <cmd>` (host shown only over SSH; `<label>` from machine-local `~/.host-label`, e.g. `DGX`). The per-command emoji is derived from the command's apt `Section` (cached per session, small override list for non-apt tools)
 - `scripts/dev.fish` — fish function: `dev` toggles the `og-tools` tmux session (`claude`/`codex`/`agy`, rooted in `~/Apps/OG-tools`)
 - `scripts/font-picker.fish` — fish function to pick a Nerd Font via zenity with live reload
 - `scripts/install.sh` — deploys all configs, installs fish functions, and sets up the fish shell env (`--no-shell` skips the shell setup)

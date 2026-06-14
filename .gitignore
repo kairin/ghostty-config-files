@@ -150,9 +150,15 @@ pnpm-lock.yaml
 .env.test.local
 .env.production.local
 .envrc.local
+# direnv bootstrap is machine-local (sources .envrc.local); keep only the
+# tracked .envrc.local.example template. Never commit a real .envrc.
+.envrc
 
 # MCP Secrets (API keys - NEVER commit)
 .mcp-secrets
+# Per-machine tab-title label (e.g. "DGX") and any local Codacy token files
+.host-label
+.codacy/
 */.mcp-secrets
 
 # Vercel

@@ -38,8 +38,13 @@ else
     echo "tmux config is not managed by this repo - skipping."
 fi
 
+DST_FISH_TITLE="$HOME/.config/fish/functions/fish_title.fish"
+DST_APP_ICON="$HOME/.config/fish/functions/__app_icon.fish"
+DST_APP_SECTION_ICON="$HOME/.config/fish/functions/__app_section_icon.fish"
+
 # Fish function + shell config symlinks
-for dst in "$DST_FONT_PICKER" "$DST_DEV" "$DST_FISH_CONFIG" "$DST_STARSHIP"; do
+for dst in "$DST_FONT_PICKER" "$DST_DEV" "$DST_FISH_CONFIG" "$DST_STARSHIP" \
+           "$DST_FISH_TITLE" "$DST_APP_ICON" "$DST_APP_SECTION_ICON"; do
     if [ -L "$dst" ] && [[ "$(readlink "$dst")" == "$REPO_ROOT"* ]]; then
         rm -f "$dst"
         echo "Removed $(basename "$dst") symlink $dst"

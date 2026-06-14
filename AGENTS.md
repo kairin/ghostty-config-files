@@ -8,6 +8,7 @@ This is a minimal Ghostty terminal config repo. Keep it simple.
 - `configs/tmux/tmux.conf` — minimal tmux config (window hint status bar, Mocha pane borders, mouse on)
 - `configs/fish/config.fish` — fish interactive env (PATH, fnm, bun, uv/gum/glow completions, fzf, zoxide, starship, mcp-secrets shim)
 - `configs/starship/starship.toml` — Catppuccin Mocha prompt (replaces the old powerlevel10k zsh prompt)
+- `configs/fish/functions/` — tab-title engine: `fish_title.fish` shows `🌐 <label> 📁 <path> <icon> <cmd>` (host shown only over SSH; `<label>` from machine-local `~/.host-label`, e.g. "DGX"). `__app_icon.fish` derives the per-command emoji from the command's apt `Section` (cached per session, small override list for non-apt tools); `__app_section_icon.fish` is the Section→emoji map. Single-codepoint emoji only (GTK tab labels can't render VS16/Nerd glyphs).
 - `scripts/font-picker.fish` — fish font picker function
 - `scripts/dev.fish` — fish function that toggles the `og-tools` tmux session (`claude`, `codex`, `agy`; rooted in `~/Apps/OG-tools`)
 - `scripts/install.sh` / `uninstall.sh` — deploy/remove scripts (install.sh also sets up the fish shell env; `--no-shell` skips that)
