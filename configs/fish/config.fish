@@ -54,8 +54,10 @@ if test -f "$HOME/.mcp-secrets"
     for line in (grep -E '^[[:space:]]*export[[:space:]]' "$HOME/.mcp-secrets")
         set -l kv (string replace -r '^[[:space:]]*export[[:space:]]+' '' -- $line)
         set -l parts (string split -m1 '=' -- $kv)
-        if test (count $parts) -eq 2
-            set -gx $parts[1] (string trim --chars=\"\' -- $parts[2])
+        # Only well-formed `NAME=value` with a valid shell identifier.
+        if test (count $parts) -eq 2; and string match -qr '^[A-Za-z_][A-Za-z0-9_]*$' -- $parts[1]
+            # Trim surrounding whitespace, then strip one layer of quotes.
+            set -gx $parts[1] (string trim -- $parts[2] | string trim --chars=\"\')
         end
     end
 end

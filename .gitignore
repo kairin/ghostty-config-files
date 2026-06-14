@@ -150,6 +150,9 @@ pnpm-lock.yaml
 .env.test.local
 .env.production.local
 .envrc.local
+# direnv bootstrap is machine-local (sources .envrc.local); keep only the
+# tracked .envrc.local.example template. Never commit a real .envrc.
+.envrc
 
 # MCP Secrets (API keys - NEVER commit)
 .mcp-secrets

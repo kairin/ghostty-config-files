@@ -12,6 +12,7 @@ SRC_GHOSTTY="$REPO_ROOT/configs/ghostty/config"
 SRC_TMUX="$REPO_ROOT/configs/tmux/tmux.conf"
 SRC_FONT_PICKER="$REPO_ROOT/scripts/font-picker.fish"
 SRC_DEV="$REPO_ROOT/scripts/dev.fish"
+SRC_FISH_FUNCS_DIR="$REPO_ROOT/configs/fish/functions"
 SRC_FISH_CONFIG="$REPO_ROOT/configs/fish/config.fish"
 SRC_STARSHIP="$REPO_ROOT/configs/starship/starship.toml"
 
@@ -67,6 +68,24 @@ ln -sfn "$SRC_FONT_PICKER" "$FISH_FUNCS/font-picker.fish"
 echo "Linked font-picker -> $FISH_FUNCS/font-picker.fish"
 ln -sfn "$SRC_DEV" "$FISH_FUNCS/dev.fish"
 echo "Linked dev -> $FISH_FUNCS/dev.fish"
+
+# Tab-title engine: fish_title + apt-Section emoji resolver (__app_icon,
+# __app_section_icon). Symlinked so `git pull` propagates updates.
+for fn in fish_title __app_icon __app_section_icon; do
+    ln -sfn "$SRC_FISH_FUNCS_DIR/$fn.fish" "$FISH_FUNCS/$fn.fish"
+    echo "Linked $fn -> $FISH_FUNCS/$fn.fish"
+done
+
+# Friendly per-machine label for the SSH tab title (e.g. "DGX"). Seed it with the
+# short hostname if absent; edit ~/.host-label to taste. Never tracked by the repo.
+if [ ! -e "$HOME/.host-label" ] && [ ! -L "$HOME/.host-label" ]; then
+    _hl="$(hostname -s 2>/dev/null || hostname 2>/dev/null || echo localhost)"
+    if printf '%s\n' "$_hl" > "$HOME/.host-label" 2>/dev/null; then
+        echo "Seeded ~/.host-label -> $_hl (edit to taste)"
+    else
+        echo "NOTE: could not seed ~/.host-label - create it manually if desired."
+    fi
+fi
 
 # --- Fish shell environment (fish + starship + zoxide, config, default shell) -
 # Honors the repo's "fish primary, no zsh" standard. Idempotent. Tolerant of
