@@ -21,7 +21,7 @@ function __app_section_icon --argument s --description 'Debian/apt Section -> si
         case utils cli-mono misc;           echo 🧰
         case shells;                        echo 🐚
         case net comm;                      echo 📡
-        case web httpd;                     echo 🌐
+        case web httpd;                     echo 🧭
         case mail;                          echo 📧
         case news;                          echo 📰
         case database;                      echo 💽
@@ -41,7 +41,7 @@ function __app_section_icon --argument s --description 'Debian/apt Section -> si
         case tex;                           echo 📐
         case x11 gnome kde xfce;            echo 🪟
         case otherosfs;                     echo 💾
-        case metapackages tasks;            echo 📦
+        case metapackages tasks;            echo 🧱
         case '*';                           echo ''   # unknown -> caller falls back
     end
 end

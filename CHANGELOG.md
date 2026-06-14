@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Tab-title engine (`configs/fish/functions/`): `fish_title` shows `🌐 <label> 📁 <path> <icon> <cmd>` — host/label shown only over SSH (`<label>` from machine-local `~/.host-label`, e.g. "DGX", seeded from hostname by install.sh). The per-command emoji is derived **systematically from the command's apt `Section`** (`__app_icon` → `dpkg -S` → `${Section}` → `__app_section_icon`), cached per session with a small override list for non-apt tools; default `⚡`. Single-codepoint emoji only so GTK/AppKit tab labels render them. install.sh symlinks the functions; uninstall.sh removes them.
-- `.gitignore` now also excludes `.envrc` (machine-local direnv bootstrap), `.host-label`, and `.codacy/` so no machine-local config or token can be committed.
+- `.gitignore` now also excludes `.envrc` (machine-local direnv bootstrap that sources the gitignored `.envrc.local`) so it can't be committed by accident.
 - Fish shell environment captured in the repo for reproducible multi-machine setup: `configs/fish/config.fish` (PATH, fnm, bun, uv/gum/glow completions, fzf, zoxide `z`, starship, and a parser for the machine-local bash-syntax `~/.mcp-secrets`) and `configs/starship/starship.toml` (Catppuccin Mocha prompt, replacing the old powerlevel10k zsh setup).
 - `install.sh` now sets up the fish shell env: installs fish + zoxide (`sudo apt`) and starship (userspace `~/.local/bin`), symlinks `config.fish`/`starship.toml` into `~/.config`, and offers `chsh` to fish. Idempotent and tolerant of no-sudo / non-interactive runs. `--no-shell` skips it; `uninstall.sh` removes the new symlinks (apt/starship/chsh left in place).
 

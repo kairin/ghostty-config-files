@@ -34,7 +34,7 @@ ghostty +validate-config --config-file=configs/ghostty/config   # must exit 0
 shellcheck scripts/install.sh scripts/uninstall.sh
 ```
 
-shellcheck applies only to the `.sh` scripts; the `.fish` files (`config.fish`, `font-picker.fish`, `dev.fish`) are not shellcheck-compatible — sanity-check them with `fish --no-execute configs/fish/config.fish` instead.
+shellcheck applies only to the `.sh` scripts; the `.fish` files (`config.fish`, `font-picker.fish`, `dev.fish`, and `configs/fish/functions/*.fish`) are not shellcheck-compatible — sanity-check them with `fish --no-execute <file>` instead.
 
 ## User context
 

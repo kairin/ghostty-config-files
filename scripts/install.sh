@@ -78,9 +78,13 @@ done
 
 # Friendly per-machine label for the SSH tab title (e.g. "DGX"). Seed it with the
 # short hostname if absent; edit ~/.host-label to taste. Never tracked by the repo.
-if [ ! -e "$HOME/.host-label" ]; then
-    hostname -s > "$HOME/.host-label" 2>/dev/null || hostname > "$HOME/.host-label"
-    echo "Seeded ~/.host-label -> $(cat "$HOME/.host-label" 2>/dev/null) (edit to taste)"
+if [ ! -e "$HOME/.host-label" ] && [ ! -L "$HOME/.host-label" ]; then
+    _hl="$(hostname -s 2>/dev/null || hostname 2>/dev/null || echo localhost)"
+    if printf '%s\n' "$_hl" > "$HOME/.host-label" 2>/dev/null; then
+        echo "Seeded ~/.host-label -> $_hl (edit to taste)"
+    else
+        echo "NOTE: could not seed ~/.host-label - create it manually if desired."
+    fi
 fi
 
 # --- Fish shell environment (fish + starship + zoxide, config, default shell) -

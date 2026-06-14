@@ -7,14 +7,16 @@ function fish_title
     set -l host ""
     if set -q SSH_TTY
         set -l label
-        test -r ~/.host-label; and set label (string trim < ~/.host-label)
+        # flatten any newlines and cap length, same as the hostname fallback
+        test -r ~/.host-label; and set label (string trim < ~/.host-label | string join ' ' | string sub -l 12)
         test -z "$label"; and set label (prompt_hostname | string sub -l 12)
         set host "🌐 $label "
     end
 
     set -l cmd
     if set -q argv[1]
-        set cmd (string trim -- $argv[1])
+        # collapse newlines so a multi-line command can't fan out into a list
+        set cmd (string trim -- $argv[1] | string collect | string replace -a -- \n ' ')
     else
         set cmd (status current-command)
         test "$cmd" = fish; and set cmd ""
