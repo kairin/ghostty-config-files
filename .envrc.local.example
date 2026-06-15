@@ -18,8 +18,7 @@ load_secret() {
 load_secret GITHUB_MCP_TOKEN "/home/kkk/.github/gh.token"
 
 # --- Billing API ---
-# shellcheck source=/dev/null
-[ -r "/home/kkk/Apps/.git/billing-api.token" ] && source "/home/kkk/Apps/.git/billing-api.token"
+load_secret BILLING_API_TOKEN "/home/kkk/Apps/.git/billing-api.token"
 
 # --- Documentation / MCP ---
 load_secret CONTEXT7_API_KEY "/home/kkk/.context7/context7.token"
@@ -28,12 +27,9 @@ load_secret CONTEXT7_API_KEY "/home/kkk/.context7/context7.token"
 load_secret ANTHROPIC_API_KEY "/home/kkk/.anthropic/anthropic.token"
 load_secret OPENAI_API_KEY "/home/kkk/.openai/openai.token"
 
-# --- Hugging Face CLI (hf / huggingface-cli) ---
+# --- Hugging Face CLI (hf) ---
 # Hugging Face officially stores the CLI token here when HF_HOME/HF_TOKEN_PATH are unset.
 load_secret HF_TOKEN "/home/kkk/.cache/huggingface/token"
-if [ -n "${HF_TOKEN:-}" ]; then
-  export HUGGINGFACE_TOKEN="$HF_TOKEN"
-fi
 
 # --- Codacy CLI ---
 load_secret CODACY_ACCOUNT_TOKEN "/home/kkk/.codacy/account-token"
