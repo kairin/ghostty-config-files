@@ -1,7 +1,16 @@
 # shellcheck shell=bash
-# Copy to .envrc.local and adjust token file paths for this machine.
-# .envrc.local must stay untracked. Do not paste secret values into this file.
-# Run `direnv allow` after editing .envrc.local.
+# Copy to .envrc.local and adjust paths for this machine.
+#   cp .envrc.local.example .envrc.local
+# Then: direnv allow
+#
+# .envrc.local is gitignored — never commit API tokens or passwords.
+#
+# Parent ~/Apps/.envrc.local (via source_up in .envrc) already loads shared
+# workspace tokens from ~/.dotfiles/: GH_*, HF_TOKEN/HUGGINGFACE_TOKEN,
+# CODACY_ACCOUNT_TOKEN, CODACY_API_TOKEN, CONTEXT7_API_KEY, DEEPSEEK_API_KEY,
+# SAKANA_API_KEY, PLAYWRIGHT_MCP_EXTENSION_TOKEN, and billing vars.
+#
+# Keep this file minimal: Codacy project token + org metadata for THIS repo only.
 
 load_secret() {
   local var_name="$1"
@@ -9,50 +18,13 @@ load_secret() {
   local value
 
   if [ -r "$token_file" ]; then
-    value="$(tr -d '\r\n' < "$token_file")"
+    value="$(LC_ALL=C tr -d '\000\r\n' < "$token_file")"
     export "$var_name=$value"
   fi
 }
 
-# --- GitHub CLI (gh) ---
-load_secret GITHUB_MCP_TOKEN "/home/kkk/.github/gh.token"
-
-# --- Billing API ---
-# shellcheck source=/dev/null
-[ -r "/home/kkk/Apps/.git/billing-api.token" ] && source "/home/kkk/Apps/.git/billing-api.token"
-
-# --- Documentation / MCP ---
-load_secret CONTEXT7_API_KEY "/home/kkk/.context7/context7.token"
-
-# --- Model APIs ---
-load_secret ANTHROPIC_API_KEY "/home/kkk/.anthropic/anthropic.token"
-load_secret OPENAI_API_KEY "/home/kkk/.openai/openai.token"
-
-# --- Hugging Face CLI (hf / huggingface-cli) ---
-# Hugging Face officially stores the CLI token here when HF_HOME/HF_TOKEN_PATH are unset.
-load_secret HF_TOKEN "/home/kkk/.cache/huggingface/token"
-if [ -n "${HF_TOKEN:-}" ]; then
-  export HUGGINGFACE_TOKEN="$HF_TOKEN"
-fi
-
-# --- Codacy CLI ---
-load_secret CODACY_ACCOUNT_TOKEN "/home/kkk/.codacy/account-token"
-load_secret CODACY_API_TOKEN "/home/kkk/.codacy/api-token"
-if [ -z "${CODACY_API_TOKEN:-}" ] && [ -n "${CODACY_ACCOUNT_TOKEN:-}" ]; then
-  export CODACY_API_TOKEN="$CODACY_ACCOUNT_TOKEN"
-fi
-load_secret CODACY_PROJECT_TOKEN "/home/kkk/.codacy/kairin-ghostty-config-files.project-token"
+# --- Codacy CLI (project-level) ---
+load_secret CODACY_PROJECT_TOKEN "/home/kkk/.dotfiles/.codacy/kairin-ghostty-config-files.project-token"
 export CODACY_ORGANIZATION_PROVIDER="gh"
 export CODACY_USERNAME="kairin"
 export CODACY_PROJECT_NAME="ghostty-config-files"
-
-# --- Project-specific optional secrets ---
-load_secret HAMPERS_PLUMBER_WEBHOOK_ENCRYPTION_KEY "/home/kkk/.hampers/plumber-webhook-encryption.token"
-load_secret FOR_EDU_SG_Key_key_live_v1_ "/home/kkk/.for-edu-sg/key_live_v1.token"
-
-# Harness (app.harness.io) project token.
-load_secret HARNESS_API_KEY "/home/kkk/.harness/api.token"
-load_secret HARNESS_PLATFORM_API_KEY "/home/kkk/.harness/platform-api.token"
-if [ -z "${HARNESS_PLATFORM_API_KEY:-}" ] && [ -n "${HARNESS_API_KEY:-}" ]; then
-  export HARNESS_PLATFORM_API_KEY="$HARNESS_API_KEY"
-fi
