@@ -225,3 +225,6 @@ ghostty-installer
 # Download logs (wget artifacts)
 wget-log
 wget-log.*
+
+# Compiled TUI installer binary (build artifact)
+tui/installer
