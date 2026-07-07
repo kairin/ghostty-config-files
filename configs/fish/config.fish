@@ -61,3 +61,7 @@ if test -f "$HOME/.mcp-secrets"
         end
     end
 end
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/home/kkk/.local/bin" $PATH
