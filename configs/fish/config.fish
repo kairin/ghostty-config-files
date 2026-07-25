@@ -46,6 +46,15 @@ if type -q starship
     starship init fish | source
 end
 
+# --- Tabby working directory reporting -----------------------------------------
+# Tabby can't see cwd for remote/WSL/tmux/screen shells on its own, so report it
+# via OSC 1337 on every prompt (drives "same dir" new tabs, Copy current path,
+# and the SFTP panel). Harmless no-op in terminals that don't understand OSC 1337.
+# https://github.com/Eugeny/tabby/wiki/Shell-working-directory-reporting
+function __tabby_working_directory_reporting --on-event fish_prompt
+    echo -en "\e]1337;CurrentDir=$PWD\x7"
+end
+
 # --- MCP secrets --------------------------------------------------------------
 # ~/.mcp-secrets is bash syntax (`export KEY=VALUE`) and is synced between
 # machines out-of-band. It is NEVER committed to this repo. Fish cannot `source`
