@@ -8,7 +8,7 @@
 # Parent ~/Apps/.envrc.local (via source_up in .envrc) already loads shared
 # workspace tokens from ~/.dotfiles/: GH_*, HF_TOKEN/HUGGINGFACE_TOKEN,
 # CODACY_ACCOUNT_TOKEN, CODACY_API_TOKEN, CONTEXT7_API_KEY, DEEPSEEK_API_KEY,
-# SAKANA_API_KEY, PLAYWRIGHT_MCP_EXTENSION_TOKEN, and billing vars.
+# PLAYWRIGHT_MCP_EXTENSION_TOKEN and billing vars.
 #
 # Keep this file minimal: Codacy project token + org metadata for THIS repo only.
 
