@@ -58,7 +58,6 @@ function __app_icon --description 'Emoji for a command, derived from its apt Sec
         case gh;                                set icon 🐙
         case starship;                          set icon 🚀
         case zoxide z;                          set icon 📂
-        case codacy codacy-cli codacy-cli-v2;   set icon ✅
         case ghostty;                           set icon 👻
         case nvidia-smi nvtop gpustat nvitop;   set icon 🎮
         case aws gcloud az;                     set icon ⛅
