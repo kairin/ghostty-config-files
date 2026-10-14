@@ -98,3 +98,12 @@ Commit as `Mister K <678459+kairin@users.noreply.github.com>`. This is the
 public GitHub name and the GitHub noreply email. Do not commit with another
 name or with a personal email address. Check with `git config user.name` and
 `git config user.email` before you commit.
+
+## Routine core sync
+
+The owner requires `update` to sync all nine core repositories before release
+and application checks. It must save and restore unfinished local work and
+the original branch. Routine sync does not commit or push that work. A failed
+sync or restoration blocks updater replacement and application updates.
+See `../000-0-workspace/docs/repository-protection.md` for this exception to
+the delivery workflow. The implementation belongs to `000-0-ai`.
