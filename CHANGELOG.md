@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-15: Development tool checks
+
+- Add the dotfiles doctor and installer stage before application updates.
+- Document ownership, startup commands, sudo rules and the process diagram.
+- Keep the full procedure in workspace and short guides in core READMEs.
+
 ## 2026-10-15: Updater 1.0.001
 
 - Documented core repository sync before release and application checks.
