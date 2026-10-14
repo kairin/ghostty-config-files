@@ -44,7 +44,7 @@ updates Ghostty is in 000-0-ai.
 | Agent skill and Claude prompt hook for updates | [000-0-ai](https://github.com/kairin/000-0-ai) | `skills/update/SKILL.md`, `hooks/claude/update_reminder.py` |
 | Nerd Fonts | [000-0-dotfiles](https://github.com/kairin/000-0-dotfiles) | `docs/nerd-fonts.md` |
 | Bash setup and `~/.bashrc.d` (ble.sh, Starship, atuin, fzf, zoxide, direnv) | [000-0-dotfiles](https://github.com/kairin/000-0-dotfiles) | `docs/configuration-reference.md` (section bash), `docs/rhel-10-setup.md` |
-| Routine maintenance (run `update`) | [000-0-workspace](https://github.com/kairin/000-0-workspace) | README section "AI harness maintenance" |
+| Routine maintenance (run `update`) | [000-0-workspace](https://github.com/kairin/000-0-workspace) | README section "AI, Bash tool and Ghostty maintenance" |
 | Ghostty configuration | This repository | `config.ghostty`, `bashrc.d/90-ghostty.sh` |
 
 ## Why a Flatpak
@@ -117,12 +117,38 @@ first.
 
 ## Update
 
+The updater release is **1.0.0** (**2026-10-15**), owned and published by
+`000-0-ai` as
+[`update-v1.0.0`](https://github.com/kairin/000-0-ai/releases/tag/update-v1.0.0).
+See its [installed-file inventory](../000-0-ai/README.md#installed-files) for
+all destinations. Both installation modes copy the command and fingerprint
+metadata; full installation also refreshes shared instructions, the update
+skills and the Claude reminder hook. `--command-only` leaves agent integration
+untouched. Neither installer mode installs or updates applications.
+
+The command starts with its own version and code release date.
+`update --version` displays just this identity without updating applications
+or contacting the network; it does not report application versions.
+
 Run `update` (all tools) or `update --only ghostty`. The command compares the
-installed Flatpak with the newest `vX.Y.Z` tag of `ghostty-org/ghostty`. If
+installed Flatpak with the highest numeric `X.Y.Z` or `vX.Y.Z` tag among
+the first 100 tags returned by `ghostty-org/ghostty`. This target is discovered
+at run time; the updater does not pin a Ghostty release number. If
 Ghostty is missing or older, it builds and installs the new release in place,
 checks that it starts, and removes the build files and unused Flatpak
 runtimes. Restart Ghostty to use the new version. `flatpak update` does not
 update Ghostty, because it is a local build.
+
+The result reports version evidence and identifies numeric tags as the target
+source. Expected per-tool failures are reported without preventing other
+selected tools from updating. The updater itself is a tested copy from
+`000-0-ai`: `update --check-self` compares local source and installation
+fingerprints without updating applications. After reviewed updater changes,
+refresh the command with
+`python3 ~/Apps/000-0-ai/local-bin/install-update.py --command-only`.
+The full installer also refreshes AI context,
+skills and the reminder hook. See the shared
+[update procedure](../000-0-ai/README.md#update-command).
 
 ## Facts about the Flatpak
 
