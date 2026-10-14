@@ -1,5 +1,12 @@
 # Changelog
 
+## [2026-10-15] — Updater maintenance
+
+- Documented updater 1.0.0 (`update-v1.0.0`), its installed-file inventory,
+  full vs command-only installation, release banner and `--version`.
+- Documented runtime numeric-tag discovery, version evidence, per-tool failure
+  isolation and the local updater freshness check owned by `000-0-ai`.
+
 ## [2026-10-11] — Agent pointer files and website artifact intent
 
 ### Changed

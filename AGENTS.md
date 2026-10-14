@@ -28,7 +28,10 @@ They are in other core repositories:
 | Routine maintenance | `000-0-workspace` |
 
 A change to how Ghostty is built or updated goes into `000-0-ai`. Then update
-the README of this repository if a fact here changes.
+the README of this repository if a fact here changes. The updater discovers
+numeric release tags at run time and reports version evidence; its
+`--check-self` local freshness check and installer `--command-only` mode also
+belong to `000-0-ai`. Do not duplicate the updater here.
 
 ## Contents
 
