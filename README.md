@@ -117,9 +117,9 @@ first.
 
 ## Update
 
-The updater release is **1.0.0** (**2026-10-15**), owned and published by
+The updater release is **1.0.001** (**2026-10-15**), owned and published by
 `000-0-ai` as
-[`update-v1.0.0`](https://github.com/kairin/000-0-ai/releases/tag/update-v1.0.0).
+[`update-v1.0.001`](https://github.com/kairin/000-0-ai/releases/tag/update-v1.0.001).
 See its [installed-file inventory](../000-0-ai/README.md#installed-files) for
 all destinations. Both installation modes copy the command and fingerprint
 metadata; full installation also refreshes shared instructions, the update
@@ -182,3 +182,30 @@ Rules for the file:
 - Do not add `background-blur`. It causes crashes on Linux.
 - Keep `scrollback-limit` at 50000 or lower.
 - Use a font that `fc-list : family | grep 'Nerd Font Mono'` shows.
+
+## Core repository sync in `update`
+
+Updater **1.0.001** starts each normal run with the nine core repositories.
+It fetches remote `main` and advances local `main` only when a fast-forward
+is possible. It temporarily saves staged, unstaged and untracked changes in
+a local Git recovery snapshot. It restores the original working branch and
+local changes before it starts the next repository. Ignored files stay in
+place. It keeps the recovery snapshot and records incomplete restoration.
+
+This routine sync does not commit or push unfinished work. If a repository
+cannot sync or restore its local work, the command reports an incomplete
+result and stops before updater replacement or application updates. Existing
+merge operations, diverged history and unresolved recovery records need
+attention. The command does not discard local commits or force a reset.
+
+After all nine repositories sync and restore, the command checks published
+`update-v*` releases in `000-0-ai`. It installs newer updater code from the
+exact published tag, then restarts once with the original arguments. It does
+not install unreleased working tree code. Application updates run last.
+`--only` limits application updates, not the nine-repository sync.
+`--version` and `--check-self` remain local checks. `--dry-run` makes no changes.
+
+The owner release sequence is `1.0.001` through `1.0.999`, then `1.1.0`.
+This is the updater version scheme, not application version pinning.
+See the [shared update procedure](../000-0-ai/README.md#update-command) and
+[repository sync requirements](../000-0-workspace/docs/repository-protection.md#routine-core-sync-in-update).

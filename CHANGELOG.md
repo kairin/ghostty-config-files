@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-15: Updater 1.0.001
+
+- Documented core repository sync before release and application checks.
+- Documented local work restoration and the exception to commit/push delivery.
+- Documented the updater release sequence through patch 999.
+
+
 ## [2026-10-15] — Updater maintenance
 
 - Documented updater 1.0.0 (`update-v1.0.0`), its installed-file inventory,
