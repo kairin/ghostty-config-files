@@ -243,3 +243,17 @@ catalog. `000-0-workspace` owns the
 [full procedure](../000-0-workspace/docs/update-and-development-tools.md),
 including first setup, failure paths, preview limits and the ownership table.
 See [dotfiles](../000-0-dotfiles/README.md#development-tools) for tool details.
+
+## Workflow review — 2026-10-15
+
+The live run found numeric Ghostty version `1.3.1`, equal to its numeric tag
+target. The binary's `1.3.1-dev+0000000` and `tip` labels are expected for an
+official release source-tarball build unless its version string is overridden;
+they do not by themselves identify a nightly build.
+
+The next assurance improvement is a durable build receipt with the source tag,
+archive digest, signature result, build flags and installed Flatpak commit.
+That receipt would support later source-provenance checks in addition to
+numeric freshness. See
+the owner's [adversarial workflow review](../000-0-workspace/docs/update-workflow-review-2026-10-15.md)
+and its upstream Ghostty references.

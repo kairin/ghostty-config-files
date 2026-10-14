@@ -121,3 +121,11 @@ Do not reinstall healthy tools or reinstall for PATH or authentication problems.
 Incomplete checks or repairs block app updates. The local quality checker never installs tools.
 Only DNF repairs use `sudo -n`. Use `sudo -v` first when needed.
 If authorization expires, report the failure. Never run `sudo update`.
+
+## Workflow review follow-up
+
+Treat the numeric release comparison and build provenance as separate evidence.
+Official source-tarball builds can report `-dev+0000000` and channel `tip`.
+Do not call that label a nightly build without source evidence. A future build
+receipt must name the source tag, archive digest, signature result, build flags
+and installed Flatpak commit. The adapter implementation remains in `000-0-ai`.

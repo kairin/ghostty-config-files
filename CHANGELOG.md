@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-15: Adversarial update review
+
+- Explain the expected `-dev+0000000` and `tip` labels for an official release
+  source-tarball build.
+- Record a future durable build receipt as a provenance improvement.
+
 ## 2026-10-15: Development tool checks
 
 - Add the dotfiles doctor and installer stage before application updates.
