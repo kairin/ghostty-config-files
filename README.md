@@ -257,3 +257,12 @@ That receipt would support later source-provenance checks in addition to
 numeric freshness. See
 the owner's [adversarial workflow review](../000-0-workspace/docs/update-workflow-review-2026-10-15.md)
 and its upstream Ghostty references.
+
+## Office toolset and Node.js policy (2026-10-15)
+
+The office computer now has updater `1.0.002` and development tools `1.0.002`.
+The office checks did not rebuild Ghostty or establish its latest release status.
+Ghostty updates remain part of the updater in `000-0-ai`.
+The shared Node.js LTS policy does not change Ghostty release selection.
+
+See the [office installation record and shared version policy](../000-0-workspace/docs/office-toolset-2026-10-15.md).
