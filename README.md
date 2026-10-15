@@ -117,9 +117,9 @@ first.
 
 ## Update
 
-The updater release is **1.0.002** (**2026-10-15**), owned and published by
+The updater release is **1.0.004** (**2026-10-15**), owned and published by
 `000-0-ai` as
-[`update-v1.0.002`](https://github.com/kairin/000-0-ai/releases/tag/update-v1.0.002).
+[`update-v1.0.004`](https://github.com/kairin/000-0-ai/releases/tag/update-v1.0.004).
 See its [installed-file inventory](../000-0-ai/README.md#installed-files) for
 all destinations. Both installation modes copy the command and fingerprint
 metadata; full installation also refreshes shared instructions, the update
@@ -185,7 +185,7 @@ Rules for the file:
 
 ## Core repository sync in `update`
 
-Updater **1.0.002** starts each normal run with the nine core repositories.
+Updater **1.0.004** starts each normal run with the nine core repositories.
 It fetches remote `main` and advances local `main` only when a fast-forward
 is possible. It temporarily saves staged, unstaged and untracked changes in
 a local Git recovery snapshot. It restores the original working branch and
@@ -260,7 +260,7 @@ and its upstream Ghostty references.
 
 ## Office toolset and Node.js policy (2026-10-15)
 
-The office computer now has updater `1.0.002` and development tools `1.0.002`.
+The earlier office installation used updater `1.0.002` and development tools `1.0.002`.
 The office checks did not rebuild Ghostty or establish its latest release status.
 Ghostty updates remain part of the updater in `000-0-ai`.
 The shared Node.js LTS policy does not change Ghostty release selection.

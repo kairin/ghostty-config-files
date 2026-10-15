@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-15: Final office update evidence
+
+- Record the completed office update and current updater release.
+- Preserve earlier results and the limits of native channel checks.
+
 ## 2026-10-15: Office toolset and Node.js LTS policy
 
 - Record the office installation checks and their limits.
