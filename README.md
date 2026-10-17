@@ -1,5 +1,13 @@
 # 000-0-ghostty
 
+```mermaid
+flowchart TD
+    A["000-0-ai update command"] --> B["Verify signed Ghostty release and build Flatpak"]
+    B --> C["Ghostty terminal"]
+    D["config.ghostty and host Bash integration"] --> C
+    E["000-0-dotfiles fonts and Bash setup"] --> C
+```
+
 <!-- key-information:start -->
 ## Key information
 
