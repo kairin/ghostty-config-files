@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18: Shared instruction references
+
+- Link shared workspace rules instead of repeating them in repository guides.
+- Keep local commands, checks, and README diagrams.
+
 ## 2026-10-15: Final office update evidence
 
 - Record the completed office update and current updater release.

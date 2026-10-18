@@ -4,11 +4,8 @@ Single source of truth for AI agents in this repository. `CLAUDE.md` and `GEMINI
 
 ## Security and secrets
 
-- Never expose, print, log, commit, or include in diffs, prompts, fixtures, screenshots, or generated files any API key, token, password, credential, private key, session cookie, or other secret. Redact with `<REDACTED>`.
-- Never ask the user to paste a secret into chat. Do not read or display secret-file contents. If a credential is missing, stop and explain how to provide it securely.
-- Secrets live in the owner's `pass` password store. A command gets a secret only through `with-secret <service>/<name> -- <command>`. Never put a secret in `.env`, `.envrc`, `.envrc.local`, source code, config or documentation.
-- These rules apply only to real secret values: a real key, token, password or credential. Documentation that tells how to make, store or use a credential is not a secret. A placeholder such as `<REDACTED>` or `PASTE-TOKEN-HERE` is not a secret. Report a secret problem only when you find a real value. Do not report placeholders or setup steps as secret problems.
-- Do not send personal or sensitive data to an external service unless the user explicitly authorizes it.
+Read `~/Apps/000-0-workspace/docs/repository-protection.md` for shared secret
+rules.
 - This repository is public. Do not add local absolute paths (use `~`), personal email addresses or phone numbers.
 
 ## Project overview
@@ -80,47 +77,17 @@ A task is done only when you show evidence: command output, a log line or a scre
 - `README.md`: for users.
 - `AGENTS.md` (this file): for agents. Update it when a tool, a command or a rule changes.
 
-## Owner decisions and unchecked claims
+## Shared workspace policy
 
-- The owner's stated decision beats a general rule. Before you flag
-  something, check whether the owner already decided on it (repository
-  docs, AGENTS.md, earlier instructions). If they did, do not flag it again.
-- Check a claim yourself before acting on it, above all a claim from an
-  earlier session, a subagent or a report. Look at the file, image or data.
-- Do only what was asked. Do not add new "outstanding issues" to a task, and
-  do not raise again one the owner dismissed.
-- Never propose deleting, purging or unpublishing anything because of a claim
-  you have not checked yourself.
-
-## Git identity
-
-Commit as `Mister K <678459+kairin@users.noreply.github.com>`. This is the
-public GitHub name and the GitHub noreply email. Do not commit with another
-name or with a personal email address. Check with `git config user.name` and
-`git config user.email` before you commit.
-
-## Routine core sync
-
-The owner requires `update` to sync all nine core repositories before release
-and application checks. It must save and restore unfinished local work and
-the original branch. Routine sync does not commit or push that work. A failed
-sync or restoration blocks updater replacement and application updates.
-See `../000-0-workspace/docs/repository-protection.md` for this exception to
-the delivery workflow. The implementation belongs to `000-0-ai`.
-
-## Development tool ownership and startup
-
-Use `../000-0-workspace/docs/update-and-development-tools.md` for the procedure.
-`000-0-ai` owns `update`. `000-0-dotfiles` owns the non-AI doctor, installer and
-catalog. This new system does not restore the retired dotfiles engine.
-
-Run `update` as the owner. It syncs core repos, checks its published release,
-then calls the doctor and repairs missing or broken required tools.
-Do not repeat those calls manually during routine updates.
-Do not reinstall healthy tools or reinstall for PATH or authentication problems.
-Incomplete checks or repairs block app updates. The local quality checker never installs tools.
-Only DNF repairs use `sudo -n`. Use `sudo -v` first when needed.
-If authorization expires, report the failure. Never run `sudo update`.
+Read `~/Apps/000-0-workspace/docs/repository-protection.md` for delivery,
+branches, external isolated worktrees, visibility, Git identity, and secrets. Read
+`~/Apps/000-0-workspace/docs/agent-instruction-files.md` for pointer rules,
+policy routing, owner decisions, unchecked claims, and shared conduct. Read
+`~/Apps/000-0-workspace/docs/project-quality-checks.md` for the local baseline
+and verification. Read `~/Apps/000-0-workspace/docs/update-and-development-tools.md`
+before maintenance work, including retired-boundary rules. These references are
+instructions to read. If required policy is missing, the affected task is
+incomplete; do not clone, install, or reconstruct it.
 
 ## Workflow review follow-up
 
