@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-18: Documentation consistency review
+
+- Route readers to the current core map and owning procedures.
+- Clarify historical guidance and remove conflicting document copies where applicable.
+
 ## 2026-10-18: Shared instruction references
 
 - Link shared workspace rules instead of repeating them in repository guides.
