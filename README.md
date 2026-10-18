@@ -193,30 +193,9 @@ Rules for the file:
 
 ## Core repository sync in `update`
 
-Updater **1.0.004** starts each normal run with the nine core repositories.
-It fetches remote `main` and advances local `main` only when a fast-forward
-is possible. It temporarily saves staged, unstaged and untracked changes in
-a local Git recovery snapshot. It restores the original working branch and
-local changes before it starts the next repository. Ignored files stay in
-place. It keeps the recovery snapshot and records incomplete restoration.
-
-This routine sync does not commit or push unfinished work. If a repository
-cannot sync or restore its local work, the command reports an incomplete
-result and stops before updater replacement or application updates. Existing
-merge operations, diverged history and unresolved recovery records need
-attention. The command does not discard local commits or force a reset.
-
-After all nine repositories sync and restore, the command checks published
-`update-v*` releases in `000-0-ai`. It installs newer updater code from the
-exact published tag, then restarts once with the original arguments. It does
-not install unreleased working tree code. Application updates run last.
-`--only` limits application updates, not the nine-repository sync.
-`--version` and `--check-self` remain local checks. `--dry-run` makes no changes.
-
-The owner release sequence is `1.0.001` through `1.0.999`, then `1.1.0`.
-This is the updater version scheme, not application version pinning.
-See the [shared update procedure](../000-0-ai/README.md#update-command) and
-[repository sync requirements](../000-0-workspace/docs/repository-protection.md#routine-core-sync-in-update).
+Read the [shared update procedure](../000-0-workspace/docs/update-and-development-tools.md)
+and [repository protection requirements](../000-0-workspace/docs/repository-protection.md).
+They are instructions to read before maintenance work.
 
 ## Update startup and automatic calls
 
@@ -232,25 +211,9 @@ flowchart TD
     E --> F["Update selected AI tools, Bash tools and Ghostty"]
 ```
 
-This diagram shows the successful path. A failed sync, release check or tool
-repair stops the process before app updates. Healthy tools need no repair.
-
-| Need | Command |
-|---|---|
-| Routine maintenance | `update` |
-| Read-only tool check | `dev-doctor` |
-| Show a repair plan | `dev-install` |
-| Apply repairs | `dev-install --apply` |
-
-Only system-package repairs through DNF need sudo. If needed, run `sudo -v`
-first. Repairs use `sudo -n` and fail if authorization expires.
-Never run `sudo update`. User-owned binary and Ruff repairs need no sudo.
-
-`000-0-ai` owns the updater. `000-0-dotfiles` owns the doctor, installer and
-catalog. `000-0-workspace` owns the
-[full procedure](../000-0-workspace/docs/update-and-development-tools.md),
-including first setup, failure paths, preview limits and the ownership table.
-See [dotfiles](../000-0-dotfiles/README.md#development-tools) for tool details.
+Read `../000-0-workspace/docs/update-and-development-tools.md` for commands,
+repair rules, ownership, and failure paths. Also read
+`../000-0-workspace/docs/repository-protection.md` before maintenance work.
 
 ## Workflow review — 2026-10-15
 
