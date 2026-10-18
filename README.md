@@ -18,8 +18,9 @@ flowchart TD
 - **On a new computer:** set it up step 7 of 7 in the core tier.
 
 This folder is part of the `~/Apps` SOP (Standard Operating Procedure). The
-number in the name of each folder is its tier. The SOP map is at
-<https://claude.ai/artifact/W1ajTT5RGF5ZmKuJ4cRAwa>. It is a private claude.ai page. Log in to open it.
+number in its name is its tier. View the current
+[core repository map](https://github.com/kairin/000-0-workspace/blob/main/docs/workspace-layout.md#how-the-core-repositories-work-together).
+The map is in the private workspace repository; GitHub access is required.
 
 | Folder | Tier | Goal | GitHub |
 |---|---|---|---|
