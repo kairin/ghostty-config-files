@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-23: Updater 1.0.007
+
+- Install mapped Ghostty build prerequisites through helper-gated APT or DNF repair.
+- Add the canonical user Flathub remote only when it is absent. Preserve an
+  existing remote and do not add operating-system package sources.
+- Keep manual DNF setup as a valid first-setup route.
+- Check the builder exit status and installed Ghostty version after signature
+  verification. Error-prefixed output alone does not mean that the build failed.
+
 ## 2026-10-18: Documentation consistency review
 
 - Route readers to the current core map and owning procedures.

@@ -80,6 +80,16 @@ downloads the correct Zig, so you do not install Zig.
 Do the steps for 000-0-dotfiles (Nerd Fonts, bash) and 000-0-ai (`update`)
 first.
 
+Updater 1.0.007 installs Ghostty and its mapped build prerequisites through
+supported helper-gated routes. A usable graphical helper is required before a
+missing Ghostty install, including the user-scope Flatpak. For each
+system-package operation, the updater checks cached sudo first. If needed, the
+helper can request the system sudo password. The updater does not start an AI
+provider sign-in or request API keys. The manual DNF command remains a valid
+first-setup route. If the user Flathub remote is absent, the updater adds the
+canonical remote with `flatpak remote-add --user --if-not-exists`. It preserves
+an existing Flathub remote and does not add APT or DNF sources.
+
 1. Install the build tools and add the Flathub remote:
 
    ```bash
